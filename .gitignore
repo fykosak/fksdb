@@ -1,0 +1,7 @@
+nbproject
+log/*
+!log/.htaccess
+temp/*
+!temp/.htaccess
+app/config/config.neon
+
