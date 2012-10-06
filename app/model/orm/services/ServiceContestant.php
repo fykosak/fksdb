@@ -3,14 +3,14 @@
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServicePerson extends AbstractServiceSingle {
+class ServiceContestant extends AbstractServiceSingle {
 
-    protected static $staticTableName = DbNames::TAB_PERSON;
-    protected static $staticModelClassName = 'ModelPerson';
+    protected static $staticTableName = DbNames::TAB_CONTESTANT;
+    protected static $staticModelClassName = 'ModelContestant';
 
     /**
      * @param NConnection $connection
-     * @return ServicePerson
+     * @return ServiceContestant
      */
     public static function getInstance(NConnection $connection = null) {
         if (!isset(self::$instances[self::$staticTableName])) {

@@ -9,7 +9,7 @@
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractService extends NTableSelection {
+abstract class AbstractServiceSingle extends NTableSelection {
 
     /**
      * @var string
@@ -25,21 +25,23 @@ abstract class AbstractService extends NTableSelection {
      * Use this method to create new models!
      * 
      * @param array $data
-     * @return AbstractModel
+     * @return AbstractModelSingle
      */
     public function createNew($data = null) {
         $className = $this->modelClassName;
-        if($data === null){
+        if ($data === null) {
             $data = $this->getDefaultData();
         }
-        return new $className($data, $this);
+        $result = new $className($data, $this);
+        $result->setNew();
+        return $result;
     }
 
     /**
      * Syntactic sugar.
      * 
      * @param int $key
-     * @return NTableRow|null
+     * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
         $result = $this->find($key)->fetch();
@@ -51,17 +53,17 @@ abstract class AbstractService extends NTableSelection {
     }
 
     /**
-     * Use this method to store model!
+     * Use this method to store a model!
      * 
-     * @param NTableRow $model
+     * @param AbstractModelSingle $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function save(NTableRow & $model) {
+    public function save(AbstractModelSingle & $model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        if (!isset($model[$this->getPrimary()])) { // new model
+        if ($model->isNew()) {
             $result = $this->insert($model->toArray());
             if ($result !== false) {
                 $model = $result;
@@ -69,26 +71,51 @@ abstract class AbstractService extends NTableSelection {
                 throw new InvalidStateException('Error when storing a model.'); //TODO expressive description
             }
         } else {
-            if($model->update() === false){
+            if ($model->update() === false) {
                 throw new InvalidStateException('Error when storing a model.'); //TODO expressive description
             }
         }
     }
-    
+
+    /**
+     * Use this method to delete a model!
+     * (Name chosen not to collide with parent.)
+     * 
+     * @param AbstractModelSingle $model
+     * @throws InvalidArgumentException
+     * @throws InvalidStateException
+     */
+    public function dispose(AbstractModelSingle $model) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+        if ($model->delete() === false) {
+            throw new InvalidStateException('Error when deleting a model.'); //TODO expressive description
+        }
+    }
+
+    protected $defaults = null;
+
     /**
      * Default data for the new model.
      * 
      * @return array
      */
-    protected function getDefaultData(){
-        return array();
+    protected function getDefaultData() {
+        if ($this->defaults == null) {
+            $this->defaults = array();
+            foreach ($this->getConnection()->getSupplementalDriver()->getColumns($this->name) as $column) {
+                $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
+            }
+        }
+        return $this->defaults;
     }
 
     /**
      * This override ensures returned objects are of correct class.
      * 
      * @param array $row
-     * @return \className
+     * @return AbstractModelSingle
      */
     protected function createRow(array $row) {
         $className = $this->modelClassName;
