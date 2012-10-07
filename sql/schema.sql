@@ -10,14 +10,14 @@ USE fksdb;
 -- kontakty
 
 CREATE TABLE person (
-	person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) NOT NULL,
-	gender ENUM('M', 'F') NOT NULL
+person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+first_name VARCHAR(255) NOT NULL,
+last_name VARCHAR(255) NOT NULL,
+gender ENUM('M', 'F') NOT NULL
 );
 
 CREATE TABLE country (		
-	country_iso CHAR(2) NOT NULL PRIMARY KEY COMMENT 'dvojznakový ISO kód země',
+	country_iso CHAR(2) NOT NULL PRIMARY KEY COMMENT 'dvojznakový kód země dle ISO 3166-1',
 	name_cs VARCHAR(255) NOT NULL,
 	name_en VARCHAR(255) NOT NULL
 )
@@ -26,14 +26,13 @@ CREATE TABLE country (
 CREATE TABLE region (		
 	region_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	country_iso CHAR(2) NOT NULL,
-	name VARCHAR(255) NOT NULL,
+	name VARCHAR(255) NOT NULL,
 	FOREIGN KEY (country_iso) REFERENCES country(country_iso)
 )
 	COMMENT = 'Ciselnik regionu pro vyber skoly v registraci';
 
 CREATE TABLE address (		
 	address_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	country_iso CHAR(2) NOT NULL,
 	street VARCHAR(255),
 	house_nr VARCHAR(255),
 	city VARCHAR(255) NOT NULL,
@@ -134,7 +133,7 @@ CREATE TABLE contest (
 CREATE TABLE contestant (		
 	ct_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	contest_id INT NOT NULL		COMMENT 'seminář',
-	year TINYINT NOT NULL		COMMENT 'Rocnik semináře',
+	year TINYINT NOT NULL		COMMENT 'Rocnik semináře',
 	person_id INT NOT NULL,
 	school_id INT,
 	class VARCHAR(16) COMMENT 'třída, do níž chodí, př. IV.B',
@@ -180,7 +179,7 @@ CREATE TABLE task (
 CREATE TABLE submit (
 	ct_id INT NOT NULL		COMMENT 'Contestant',
 	task_id INT NOT NULL		COMMENT 'Task',
-	submitted_on DATETIME NOT NULL,
+	submitted_on DATETIME NOT NULL,
 	source enum('post', 'upload') NOT NULL	COMMENT 'odkud přišlo řešení',
 	note VARCHAR(255)		COMMENT 'Pocet stranek a jine poznamky',
 	raw_points DECIMAL(4,2)	COMMENT 'Pred prepoctem',
