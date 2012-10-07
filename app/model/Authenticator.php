@@ -20,7 +20,7 @@ class Authenticator extends NObject implements IAuthenticator {
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
 
-        $login = $this->serviceLogin->where('login = ? OR email = ?', $id, $id)->where('active = 1')->fetch();
+        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->where('active = 1')->fetch();
 
         if (!$login) {
             throw new NAuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);

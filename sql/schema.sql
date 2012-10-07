@@ -145,7 +145,8 @@ CREATE TABLE contestant (
 	COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
 
 CREATE TABLE org (
-	person_id INT NOT NULL PRIMARY KEY,
+	org_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	person_id INT NOT NULL,
 	contest_id INT NOT NULL,
 	since TINYINT NOT NULL		COMMENT 'od kterého ročníku orguje',
 	until TINYINT NULL		COMMENT 'v kterém rončíku skončil',
@@ -153,7 +154,8 @@ CREATE TABLE org (
 	note TEXT,
 	`order` TINYINT NOT NULL	COMMENT 'pořadí pro řazení ve výpisech',
 	tex_signature VARCHAR(32)	COMMENT 'zkratka používaná v TeXových vzorácích',
-	UNIQUE(tex_signature),
+	UNIQUE(contest_id, person_id),
+	UNIQUE(contest_id, tex_signature),
 	FOREIGN KEY (person_id) REFERENCES person(person_id),
 	FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
 );
@@ -177,6 +179,7 @@ CREATE TABLE task (
 -- TODO rozšířit pro ukládání textů úloh
 
 CREATE TABLE submit (
+	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ct_id INT NOT NULL		COMMENT 'Contestant',
 	task_id INT NOT NULL		COMMENT 'Task',
 	submitted_on DATETIME NOT NULL,
