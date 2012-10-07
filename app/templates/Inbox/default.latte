@@ -1,0 +1,22 @@
+{block title}Příjem řešení{/block}
+
+{block content}
+
+
+{control inboxForm begin}
+{control inboxForm errors}
+
+{foreach $control['inboxForm']['grid']->getComponents(false) as $contestantCont}
+    {$contestants[$contestantCont->name]->getPerson()->getFullname()}
+    {foreach $contestantCont->getComponents(false) as $bla}
+            {$bla['submitted_on']->control}
+    {/foreach}
+    <br>
+{/foreach}    
+{control inboxForm end}
+
+
+
+
+
+{/block}

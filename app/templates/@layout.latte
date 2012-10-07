@@ -4,16 +4,18 @@
         <meta charset="UTF-8">
         <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-        <title>{block title}FKSDB{/block}</title>
+        <title>FKSDB {include #title}</title>
 
 
         <script src="{$basePath}/js/netteForms.js"></script>
+        <link rel="stylesheet" href="{$basePath}/css/screen.css" />
 	{block head}{/block}
     </head>
 
     <body>
-        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-        <div n:if="$user->isLoggedIn()" class="user-info">Přihlášen {$user->getIdentity()->getFullname()} <a n:href="authentication:logout">Odhlásit</a></div>
-	{include #content}
+    <h1>{include #title}</h1>
+    <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+    <div n:if="$user->isLoggedIn()" class="user-info">Přihlášen {$user->getIdentity()->getFullname()} <a n:href="authentication:logout">Odhlásit</a></div>
+    {include #content}
     </body>
 </html>

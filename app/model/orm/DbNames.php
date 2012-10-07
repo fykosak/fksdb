@@ -16,6 +16,7 @@ class DbNames {
     const TAB_POST_CONTACT  = 'post_contact';
     const TAB_SCHOOL        = 'school';
     const TAB_SPAMEE        = 'si_spamee';
+    const TAB_SUBMIT        = 'submit';
     const TAB_TASK          = 'task';
 
 }
