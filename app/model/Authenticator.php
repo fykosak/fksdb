@@ -1,56 +1,47 @@
 <?php
+
 /**
  * Users authenticator.
  */
-class Authenticator extends NObject implements IAuthenticator
-{
-	/** @var NConnection */
-	private $database;
+class Authenticator extends NObject implements IAuthenticator {
 
+    /** @var ServiceLogin */
+    private $serviceLogin;
 
+    public function __construct(ServiceLogin $serviceLogin) {
+        $this->serviceLogin = $serviceLogin;
+    }
 
-	public function __construct(NConnection $database)
-	{
-		$this->database = $database;
-	}
+    /**
+     * Performs an authentication.
+     * @return NIdentity
+     * @throws NAuthenticationException
+     */
+    public function authenticate(array $credentials) {
+        list($id, $password) = $credentials;
 
+        $login = $this->serviceLogin->where('login = ? OR email = ?', $id, $id)->where('active = 1')->fetch();
 
+        if (!$login) {
+            throw new NAuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+        }
 
-	/**
-	 * Performs an authentication.
-	 * @return NIdentity
-	 * @throws NAuthenticationException
-	 */
-	public function authenticate(array $credentials)
-	{
-		list($username, $password) = $credentials;
-		$row = $this->database->table('users')->where('username', $username)->fetch();
+        if ($login->hash !== $this->calculateHash($password, $login)) {
+            throw new NAuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+        }
 
-		if (!$row) {
-			throw new NAuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
-		}
+        $login->last_login = NDateTime53::from(time());
+        $this->serviceLogin->save($login);
 
-		if ($row->password !== $this->calculateHash($password, $row->password)) {
-			throw new NAuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
-		}
+        return $login->getPerson();
+    }
 
-		unset($row->password);
-		return new NIdentity($row->id, $row->role, $row->toArray());
-	}
-
-
-
-	/**
-	 * Computes salted password hash.
-	 * @param  string
-	 * @return string
-	 */
-	public static function calculateHash($password, $salt = NULL)
-	{
-		if ($password === NStrings::upper($password)) { // perhaps caps lock is on
-			$password = NStrings::lower($password);
-		}
-		return crypt($password, ($tmp=$salt) ? $tmp : '$2a$07$' . NStrings::random(22));
-	}
+    /**
+     * @param  string
+     * @return string
+     */
+    public static function calculateHash($password, $login) {
+        return md5($password); //TODO
+    }
 
 }

@@ -17,9 +17,18 @@ abstract class AbstractServiceSingle extends NTableSelection {
     protected $modelClassName;
 
     /**
+     * @var string
+     */
+    protected $tableName;
+
+    /**
      * @var array of AbstractService  singleton instances of descedants
      */
     protected static $instances = array();
+
+    public function __construct(NConnection $connection) {
+        parent::__construct($this->tableName, $connection);
+    }
 
     /**
      * Use this method to create new models!

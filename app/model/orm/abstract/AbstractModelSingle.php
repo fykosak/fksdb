@@ -14,7 +14,6 @@ abstract class AbstractModelSingle extends NTableRow {
     public function setNew($value = true) {
         $this->stored = !$value;
     }
-   
 
 }
 

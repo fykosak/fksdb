@@ -24,8 +24,8 @@ $configurator->addConfig(dirname(__FILE__) . '/config/config.neon');
 $container = $configurator->createContainer();
 
 // Setup router
-$container->router[] = new NRoute('index.php', 'Homepage:default', NRoute::ONE_WAY);
-$container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Homepage:default', NRoute::SECURED);
+$container->router[] = new NRoute('index.php', 'Dashboard:default', NRoute::ONE_WAY);
+$container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Dashboard:default', NRoute::SECURED);
 
 
 // Configure and run the application!

@@ -24,9 +24,18 @@ common:
             expiration: 14 days
 
 
+
     services:
         authenticator: Authenticator
-
+        # ORM services
+        ServiceAddress:         ServiceAddress
+        ServiceLogin:           ServiceLogin
+        ServiceMPostContact:    ServiceMPostContact
+        ServicePerson:          ServicePerson
+        ServicePostContact:     ServicePostContact
+            
+        nette.userStorage: PersonUserStorage
+            
 
     factories:
 

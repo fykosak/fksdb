@@ -34,10 +34,9 @@ abstract class AbstractServiceMulti extends NObject {
      * @param AbstractServiceSingle $joinedService
      * @param string $modelClassName
      */
-    protected function __construct($mainService, $joinedService, $modelClassName) {
+    public function __construct($mainService, $joinedService) {
         $this->setMainService($mainService);
         $this->setJoinedService($joinedService);
-        $this->modelClassName = $modelClassName;
     }
 
     /**

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="robots" content="{$robots}" n:ifset="$robots">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-	<title>{block title}FKSDB{/block}</title>
+        <title>{block title}FKSDB{/block}</title>
 
 
-	<script src="{$basePath}/js/netteForms.js"></script>
+        <script src="{$basePath}/js/netteForms.js"></script>
 	{block head}{/block}
-</head>
+    </head>
 
-<body>
-	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-
+    <body>
+        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        <div n:if="$user->isLoggedIn()" class="user-info">Přihlášen {$user->getIdentity()->getFullname()} <a n:href="authentication:logout">Odhlásit</a></div>
 	{include #content}
-</body>
+    </body>
 </html>
