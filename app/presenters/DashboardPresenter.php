@@ -7,14 +7,13 @@ class DashboardPresenter extends AuthenticatedPresenter {
 
     public function renderDefault() {
         $this->template->anyVariable = 'any value';
+        
 
 
 //                $service = ServicePerson::getInstance();
 //                $person = $service->findByPrimary(1);
 //                
 //                $srv2 = ServiceMPostContact::getInstance();
-        $srv2 = $this->getService('ServiceLogin');
-        $login = $srv2->findByPrimary('1');
 ////                $mpc = $srv2->createNew(array('street' => 'Lobačevská'));
 ////                $mpc->getJoinedModel()->person_id = $person->person_id;
 ////                

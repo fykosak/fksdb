@@ -1,0 +1,28 @@
+{block title}Zadávání bodů{/block}
+
+{block content}
+
+
+{control pointsForm begin}
+{control pointsForm errors}
+
+{foreach $tasks as $task}
+    {$task->label} | 
+{/foreach}<br>
+
+{foreach $control['pointsForm']['grid']->getComponents(false) as $contestantCont}
+    {$contestants[$contestantCont->name]->getPerson()->getFullname()}
+    {foreach $contestantCont->getComponents(false) as $cell}
+            {$cell['raw_points']->control},
+    {/foreach}
+    <br>
+{/foreach}
+    
+{$control['pointsForm']['save']->control}
+{control pointsForm end}
+
+
+
+
+
+{/block}

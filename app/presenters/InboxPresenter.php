@@ -1,25 +1,18 @@
 <?php
 
-/**
- * Homepage presenter.
- */
-class InboxPresenter extends AuthenticatedPresenter {
+class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function renderDefault() {
-        $this->template->contestants = $this->getContestants(1, 1)->fetchPairs('ct_id');
-        $this->template->tasks = $this->getTasks(1, 1, 1)->fetchPairs('task_id');
+        $this->template->contestants = $this->getContestants();
+        $this->template->tasks = $this->getTasks()->fetchPairs('task_id');
     }
 
     protected function createComponentInboxForm($name) {
         $form = new NAppForm($this, $name);
 
-        $contest_id = 1;
-        $year = 1;
-        $series = 1;
-
-        $contestants = $this->getContestants($contest_id, $year);
-        $tasks = $this->getTasks($contest_id, $year, $series);
-        $submitsTable = $this->getSubmitsTable($contest_id, $year, $series);
+        $contestants = $this->getContestants();
+        $tasks = $this->getTasks();
+        $submitsTable = $this->getSubmitsTable();
 
         $grid = $form->addContainer('grid');
         foreach ($contestants as $contestant) {
@@ -30,8 +23,9 @@ class InboxPresenter extends AuthenticatedPresenter {
                 $text = $subcontainer->addText('submitted_on');
                 $note = $subcontainer->addText('note');
                 if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
-                    $text->setDefaultValue($submitsTable[$contestant->ct_id][$task->task_id]->submitted_on);
-                    $note->setDefaultValue($submitsTable[$contestant->ct_id][$task->task_id]->note);
+                    $submit = $submitsTable[$contestant->ct_id][$task->task_id];
+                    $text->setDefaultValue($submit->submitted_on);
+                    $note->setDefaultValue($submit->note);
                 }
             }
         }
@@ -43,7 +37,7 @@ class InboxPresenter extends AuthenticatedPresenter {
     public function inboxFormSuccess(NAppForm $form) {
         $values = $form->getValues();
         $grid = $values['grid'];
-        $submitsTable = $this->getSubmitsTable(1, 1, 1);
+        $submitsTable = $this->getSubmitsTable();
         $serviceSubmit = $this->context->getService('ServiceSubmit');
         $serviceSubmit->getConnection()->beginTransaction();
 
@@ -58,7 +52,7 @@ class InboxPresenter extends AuthenticatedPresenter {
                         'source' => ModelSubmit::SOURCE_POST,
                             ));
                 }
-                
+
                 $submit->note = $elements['note'];
                 if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
                     $submit->submitted_on = $elements['submitted_on'];
@@ -72,43 +66,9 @@ class InboxPresenter extends AuthenticatedPresenter {
             }
         }
         $serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Přijatá řešení uložena.');
+        $this->flashMessage('Informace o řešeních uložena.');
         $this->redirect('this');
     }
 
-    protected function getContestants($contest_id, $year) {
-        $serviceContestant = $this->context->getService('ServiceContestant');
-        return $serviceContestant->getTable()->where(array(
-                    'contest_id' => $contest_id,
-                    'year' => $year
-                ))->order('person.last_name, person.first_name');
-    }
-
-    protected function getTasks($contest_id, $year, $series) {
-        $serviceTask = $this->context->getService('ServiceTask');
-        return $serviceTask->getTable()->where(array(
-                    'contest_id' => $contest_id,
-                    'year' => $year,
-                    'series' => $series
-                ))->order('tasknr');
-    }
-
-    protected function getSubmitsTable($contest_id, $year, $series) {
-        $serviceSubmit = $this->context->getService('ServiceSubmit');
-
-        $submits = $serviceSubmit->getTable()
-                ->where('ct_id', $this->getContestants($contest_id, $year))
-                ->where('task_id', $this->getTasks($contest_id, $year, $series));
-
-        // store submits in 2D hash for better access
-        $submitsTable = array();
-        foreach ($submits as $submit) {
-            if (!isset($submitsTable[$submit->ct_id])) {
-                $submitsTable[$submit->ct_id] = array();
-            }
-            $submitsTable[$submit->ct_id][$submit->task_id] = ModelSubmit::createFromTableRow($submit);
-        }
-        return $submitsTable;
-    }
 
 }
