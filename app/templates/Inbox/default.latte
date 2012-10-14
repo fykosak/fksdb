@@ -6,13 +6,20 @@
 {control inboxForm begin}
 {control inboxForm errors}
 
+{foreach $tasks as $task}
+    {$task->label} | 
+{/foreach}<br>
+
 {foreach $control['inboxForm']['grid']->getComponents(false) as $contestantCont}
     {$contestants[$contestantCont->name]->getPerson()->getFullname()}
-    {foreach $contestantCont->getComponents(false) as $bla}
-            {$bla['submitted_on']->control}
+    {foreach $contestantCont->getComponents(false) as $cell}
+            {$cell['submitted_on']->control}
+            {$cell['note']->control},
     {/foreach}
     <br>
-{/foreach}    
+{/foreach}
+    
+{$control['inboxForm']['save']->control}
 {control inboxForm end}
 
 

@@ -22,12 +22,17 @@ abstract class AbstractServiceSingle extends NTableSelection {
     protected $tableName;
 
     /**
+     * @var NConnection
+     */
+    protected $connection;
+
+    /**
      * @var array of AbstractService  singleton instances of descedants
      */
     protected static $instances = array();
 
     public function __construct(NConnection $connection) {
-        parent::__construct($this->tableName, $connection);
+        $this->connection = $connection;
     }
 
     /**
@@ -41,7 +46,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
-        $result = new $className($data, $this);
+        $result = new $className($data, $this->getTable());
         $result->setNew();
         return $result;
     }
@@ -53,7 +58,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
-        $result = $this->find($key)->fetch();
+        $result = $this->getTable()->find($key)->fetch();
         if ($result !== false) {
             return $result;
         } else {
@@ -73,7 +78,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         if ($model->isNew()) {
-            $result = $this->insert($model->toArray());
+            $result = $this->getTable()->insert($model->toArray());
             if ($result !== false) {
                 $model = $result;
             } else {
@@ -98,9 +103,16 @@ abstract class AbstractServiceSingle extends NTableSelection {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        if ($model->delete() === false) {
+        if (!$model->isNew() && $model->delete() === false) {
             throw new InvalidStateException('Error when deleting a model.'); //TODO expressive description
         }
+    }
+
+    /**
+     * @return NTableSelection
+     */
+    public function getTable() {
+        return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);
     }
 
     protected $defaults = null;
@@ -113,22 +125,11 @@ abstract class AbstractServiceSingle extends NTableSelection {
     protected function getDefaultData() {
         if ($this->defaults == null) {
             $this->defaults = array();
-            foreach ($this->getConnection()->getSupplementalDriver()->getColumns($this->name) as $column) {
+            foreach ($this->connection->getSupplementalDriver()->getColumns($this->name) as $column) {
                 $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
             }
         }
         return $this->defaults;
-    }
-
-    /**
-     * This override ensures returned objects are of correct class.
-     * 
-     * @param array $row
-     * @return AbstractModelSingle
-     */
-    protected function createRow(array $row) {
-        $className = $this->modelClassName;
-        return new $className($row, $this);
     }
 
 }

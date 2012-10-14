@@ -28,6 +28,19 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function getActiveOrgs(YearCalculator $yearCalculator) {
+        $result = array();
+        foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
+            $year = $yearCalculator->getCurrentYear($org->contest_id);
+            if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
+                $result[$org->org_id] = ModelOrg::createFromTableRow($org);
+            }
+        }
+        return $result;
+    }
+
+    // ----- IIdentity implementation ----------
+
     public function getId() {
         return $this->person_id;
     }

@@ -5,7 +5,11 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelOrg extends AbstractModelSingle {
-    //put your code here
+
+    public static function createFromTableRow(NTableRow $row) {
+        return new self($row->toArray(), $row->getTable());
+    }
+
 }
 
 ?>

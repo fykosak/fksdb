@@ -14,8 +14,17 @@
 
     <body>
     <h1>{include #title}</h1>
-    <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-    <div n:if="$user->isLoggedIn()" class="user-info">Přihlášen {$user->getIdentity()->getFullname()} <a n:href="authentication:logout">Odhlásit</a></div>
+<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+<div n:if="$user->isLoggedIn()" class="user-info">
+    Přihlášen {$user->getIdentity()->getFullname()}
+    <a n:href="authentication:logout">Odhlásit</a>
+    Rola orga:
+        {foreach $control->getActiveOrgs() as $org}
+    <a n:href="changeOrg!, orgId => $org->org_id" n:tag-if="$org->org_id != $control->orgId">{$org->contest->name}</a>
+        {/foreach}
+
+            {control formSelectYear}
+</div>
     {include #content}
-    </body>
+</body>
 </html>

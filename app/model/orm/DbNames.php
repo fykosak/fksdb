@@ -8,6 +8,7 @@ class DbNames {
     const TAB_ACTION        = 'action';
     const TAB_ACTION_APP    = 'action_application';
     const TAB_ADDRESS       = 'address';
+    const TAB_CONTEST       = 'contest';
     const TAB_CONTESTANT    = 'contestant';
     const TAB_LOGIN         = 'login';
     const TAB_ORG           = 'org';
