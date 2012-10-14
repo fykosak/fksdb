@@ -250,6 +250,8 @@ CREATE TABLE `action` (
 	registration_end DATE NULL	COMMENT 'případný konec webové registrace',
 	name VARCHAR(255) NOT NULL	COMMENT 'název akce',
 	collection_id INT NULL		COMMENT 'spamovací sběr z této akce, je-li webově přihlašovaná',
+	fb_album_id BIGINT NULL 	COMMENT 'id galerie na Facebooku',
+	report TEXT NULL 			COMMENT '(HTML) zápis z proběhlé akce',
 	FOREIGN KEY (contest_id) REFERENCES contest(contest_id),
 	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id)
 );
