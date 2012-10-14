@@ -43,7 +43,7 @@ CREATE TABLE address (
 	COMMENT = 'Adresa jako hodnotový objekt'; -- i jako immutable? TODO rozmyslet změnu adresy/stěhování
 
 CREATE TABLE school (
-	school_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	school_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- Klíčem není IČ/IZO, neboť zahraniční školy
 	name_full VARCHAR(255)	COMMENT 'plný název školy',
 	name VARCHAR(255) NOT NULL COMMENT 'zkrácený název školy (na obálku)',
 	name_abbrev VARCHAR(32) NOT NULL	COMMENT 'Zkratka pouzivana napr. ve vysledkove listine',
