@@ -348,7 +348,8 @@ class KdybyReplicator extends NFormContainer {
         $rows = array();
         $subComponents = array_flip($subComponents);
         foreach ($httpData as $item) {
-            $rows[] = array_filter(array_diff_key($item, $subComponents)) ? : FALSE;
+            $filtered = array_filter(array_diff_key($item, $subComponents));
+            $rows[] =  $filtered ? $filtered : FALSE;
         }
 
         return count(array_filter($rows));
