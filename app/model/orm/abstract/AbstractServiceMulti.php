@@ -120,7 +120,7 @@ abstract class AbstractServiceMulti extends NObject {
             return null;
         }
         $result = array();
-        foreach ($service->getConnection()->getSupplementalDriver()->getColumns($service->getName()) as $column) {
+        foreach ($service->getConnection()->getSupplementalDriver()->getColumns($service->getTable()->getName()) as $column) {
             $name = $column['name'];
             if (array_key_exists($name, $data)) {
                 $result[$name] = $data[$name];

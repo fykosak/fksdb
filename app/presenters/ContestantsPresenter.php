@@ -31,6 +31,16 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
             // update post contacts
             // TODO
+            $serviceAddress = $this->getService('ServiceAddress');
+            $dataAddress = $wizard->getData(WizardCreateContestant::STEP_POST_CONTACTS);
+            
+            $serviceContact = $this->getService('ServiceMPostContact');
+            $postContact = $serviceContact->createNew(FormUtils::emptyStrToNull($dataAddress));
+            $postContact->getPostContact()->person_id = $person->person_id;
+            $postContact->getPostContact()->type = 'P';
+            
+            $serviceContact->save($postContact);
+            
             // create contestant
             $serviceContestant = $this->getService('ServiceContestant');
             $dataContestant = $wizard->getData(WizardCreateContestant::STEP_CREATE_CONTESTANT);
