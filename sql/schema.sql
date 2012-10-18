@@ -27,6 +27,7 @@ CREATE TABLE country (
 CREATE TABLE region (		
 	region_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	country_iso CHAR(2) NOT NULL,
+	nuts VARCHAR(5) UNIQUE,
 	name VARCHAR(255) NOT NULL,
 	FOREIGN KEY (country_iso) REFERENCES country(country_iso)
 )
