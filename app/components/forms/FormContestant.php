@@ -27,7 +27,7 @@ class FormContestant extends NAppForm {
 
     public function loadSchools() {
         $service = $this->getPresenter()->getService('ServiceSchool');
-        $this[FormContestant::SCHOOL]->setItems($service->getTable()->fetchPairs('school_id', 'name'));
+        $this[FormContestant::SCHOOL]->setItems($service->getTable()->order('name')->fetchPairs('school_id', 'name'));
     }
 
 }

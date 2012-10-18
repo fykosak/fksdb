@@ -46,6 +46,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
+        $data = $this->filterData($data);
         $result = new $className($data, $this->getTable());
         $result->setNew();
         return $result;
@@ -136,6 +137,20 @@ abstract class AbstractServiceSingle extends NTableSelection {
             }
         }
         return $this->defaults;
+    }
+
+    protected function filterData($data) {
+        if ($data === null) {
+            return null;
+        }
+        $result = array();
+        foreach ($this->getConnection()->getSupplementalDriver()->getColumns($this->getTable()->getName()) as $column) {
+            $name = $column['name'];
+            if (array_key_exists($name, $data)) {
+                $result[$name] = $data[$name];
+            }
+        }
+        return $result;
     }
 
 }

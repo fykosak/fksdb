@@ -46,8 +46,8 @@ abstract class AbstractServiceMulti extends NObject {
      * @return AbstractModelMulti
      */
     public function createNew($data = null) {
-        $mainModel = $this->getMainService()->createNew($this->filterData($data, $this->getMainService()));
-        $joinedModel = $this->getJoinedService()->createNew($this->filterData($data, $this->getJoinedService()));
+        $mainModel = $this->getMainService()->createNew($this->getMainService()->filterData($data));
+        $joinedModel = $this->getJoinedService()->createNew($this->getJoinedService()->filterData($data));
 
         $className = $this->modelClassName;
         $result = new $className($mainModel, $joinedModel);
@@ -113,20 +113,6 @@ abstract class AbstractServiceMulti extends NObject {
 
     protected function setJoinedService(AbstractServiceSingle $joinedService) {
         $this->joinedService = $joinedService;
-    }
-
-    private function filterData($data, AbstractServiceSingle $service) {
-        if ($data === null) {
-            return null;
-        }
-        $result = array();
-        foreach ($service->getConnection()->getSupplementalDriver()->getColumns($service->getTable()->getName()) as $column) {
-            $name = $column['name'];
-            if (array_key_exists($name, $data)) {
-                $result[$name] = $data[$name];
-            }
-        }
-        return $result;
     }
 
 }

@@ -30,7 +30,7 @@ class FormPostContacts extends NAppForm {
         $container->addText('street', 'Ulice');
         $container->addText('house_nr', 'Č P/O');
         $container->addText('city', 'Město')
-                ->addRule(NForm::FILLED);
+                ->addRule(NForm::FILLED, 'Adresa musí mít vyplněné alespoň město.');
         $container->addText('postal_code', 'PSČ')
                 ->addRule(NForm::MAX_LENGTH, null, 5);
         $countries = $container->addSelect('country_iso', 'Stát');

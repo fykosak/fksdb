@@ -94,7 +94,7 @@ class ContestantsPresenter extends AuthenticatedPresenter {
             $this->redirect('Contestants:default');
         } catch (ModelException $e) {
             $connection->rollBack();
-            throw $e;
+            NDebugger::log($e, NDebugger::ERROR);
             $this->flashMessage($person->gender == 'F' ? 'Řešitel nebyl založen, došlo k chybě.' : 'Řešitelka nebyla založena, došlo k chybě.', 'error');
             $this->restoreRequest($this->backlink);
             $this->redirect('Contestants:default');
