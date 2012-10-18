@@ -11,9 +11,10 @@ USE fksdb;
 
 CREATE TABLE person (
 person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-first_name VARCHAR(255) NOT NULL,
-last_name VARCHAR(255) NOT NULL,
-gender ENUM('M', 'F') NOT NULL
+display_name VARCHAR(511) NOT NULL COMMENT 'Celé jméno vč. příjmení',
+sort_name VARCHAR(255) NOT NULL COMMENT '„Příjmení“ (prioritní při abecedním řazení)',
+gender ENUM('M', 'F') NOT NULL,
+olddb_uid INT UNIQUE NULL COMMENT 'users.id ze staré DB'
 );
 
 CREATE TABLE country (		
