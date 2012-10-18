@@ -41,7 +41,7 @@ class Authenticator extends NObject implements IAuthenticator {
      * @return string
      */
     public static function calculateHash($password, $login) {
-        return md5($password); //TODO
+        return sha1($password); //TODO
     }
 
 }

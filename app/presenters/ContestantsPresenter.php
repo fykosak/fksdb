@@ -26,6 +26,10 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
             // create person
             $person = $wizard->getPerson();
+            $person->display_name = $person->first_name . ' ' . $person->last_name;
+            $person->sort_name = $person->last_name . ' ' . $person->first_name;
+            unset($person->first_name);
+            unset($person->last_name);
             $servicePerson->save($person);
 
 
@@ -33,18 +37,18 @@ class ContestantsPresenter extends AuthenticatedPresenter {
             // TODO
             $serviceAddress = $this->getService('ServiceAddress');
             $dataAddress = $wizard->getData(WizardCreateContestant::STEP_POST_CONTACTS);
-            
+
             $serviceContact = $this->getService('ServiceMPostContact');
             $postContact = $serviceContact->createNew(FormUtils::emptyStrToNull($dataAddress));
             $postContact->getPostContact()->person_id = $person->person_id;
             $postContact->getPostContact()->type = 'P';
-            
+
             $serviceContact->save($postContact);
-            
+
             // create contestant
             $serviceContestant = $this->getService('ServiceContestant');
             $dataContestant = $wizard->getData(WizardCreateContestant::STEP_CREATE_CONTESTANT);
-            
+
             $contestant = $serviceContestant->createNew(FormUtils::emptyStrToNull($dataContestant));
 
             $contestant->person_id = $person->person_id;
@@ -88,6 +92,7 @@ class ContestantsPresenter extends AuthenticatedPresenter {
             $this->redirect('Contestants:default');
         } catch (ModelException $e) {
             $connection->rollBack();
+            throw $e;
             $this->flashMessage($person->gender == 'F' ? 'Řešitel nebyl založen, došlo k chybě.' : 'Řešitelka nebyla založena, došlo k chybě.', 'error');
             $this->restoreRequest($this->backlink);
             $this->redirect('Contestants:default');
