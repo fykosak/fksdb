@@ -34,16 +34,18 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
 
             // update post contacts
-            // TODO
-            $serviceAddress = $this->getService('ServiceAddress');
-            $dataAddress = $wizard->getData(WizardCreateContestant::STEP_POST_CONTACTS);
+            $servicePostContact = $this->getService('ServiceMPostContact');
 
-            $serviceContact = $this->getService('ServiceMPostContact');
-            $postContact = $serviceContact->createNew(FormUtils::emptyStrToNull($dataAddress));
-            $postContact->getPostContact()->person_id = $person->person_id;
-            $postContact->getPostContact()->type = 'P';
+            $dataPostContacts = $wizard->getData(WizardCreateContestant::STEP_POST_CONTACTS);
+            foreach ($dataPostContacts['post_contacts'] as $dataPostContact) {
+                $postContact = $servicePostContact->createNew(FormUtils::emptyStrToNull((array) $dataPostContact));
+                $postContact->getPostContact()->person_id = $person->person_id;
+                //TODO region from country and PSČ
 
-            $serviceContact->save($postContact);
+                $servicePostContact->save($postContact);
+            }
+
+
 
             // create contestant
             $serviceContestant = $this->getService('ServiceContestant');

@@ -27,6 +27,8 @@ $container = $configurator->createContainer();
 $container->router[] = new NRoute('index.php', 'Dashboard:default', NRoute::ONE_WAY);
 $container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Dashboard:default', NRoute::SECURED);
 
+// Register addons
+KdybyReplicator::register();
 
 // Configure and run the application!
 $container->application->run();

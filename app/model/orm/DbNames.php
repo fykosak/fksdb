@@ -10,6 +10,7 @@ class DbNames {
     const TAB_ADDRESS       = 'address';
     const TAB_CONTEST       = 'contest';
     const TAB_CONTESTANT    = 'contestant';
+    const TAB_COUNTRY       = 'country';
     const TAB_LOGIN         = 'login';
     const TAB_ORG           = 'org';
     const TAB_PERSON        = 'person';
