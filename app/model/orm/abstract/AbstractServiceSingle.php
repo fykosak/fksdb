@@ -71,23 +71,29 @@ abstract class AbstractServiceSingle extends NTableSelection {
      * 
      * @param AbstractModelSingle $model
      * @throws InvalidArgumentException
-     * @throws InvalidStateException
+     * @throws ModelException
      */
     public function save(AbstractModelSingle & $model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        if ($model->isNew()) {
-            $result = $this->getTable()->insert($model->toArray());
-            if ($result !== false) {
-                $model = $result;
+        $result = true;
+        try {
+            if ($model->isNew()) {
+                $result = $this->getTable()->insert($model->toArray());
+                if ($result !== false) {
+                    $model = $result;
+                } else {
+                    $result = false;
+                }
             } else {
-                throw new InvalidStateException('Error when storing a model.'); //TODO expressive description
+                $result = $model->update() !== false;
             }
-        } else {
-            if ($model->update() === false) {
-                throw new InvalidStateException('Error when storing a model.'); //TODO expressive description
-            }
+        } catch (PDOException $e) {
+            throw new ModelException('Error when storing model.', null, $e);
+        }
+        if (!$result) {
+            throw new ModelException('Error when storing a model.'); //TODO expressive description
         }
     }
 
@@ -104,7 +110,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         if (!$model->isNew() && $model->delete() === false) {
-            throw new InvalidStateException('Error when deleting a model.'); //TODO expressive description
+            throw new ModelException('Error when deleting a model.'); //TODO expressive description
         }
     }
 

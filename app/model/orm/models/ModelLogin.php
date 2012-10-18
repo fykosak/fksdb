@@ -12,6 +12,18 @@ class ModelLogin extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
+    
+    public function resetPassword(){
+        //TODO
+    }
+    
+    public function sendResetNotification(){
+        //TODO
+    }
+    
+    public function sendCreateNotification(){
+        //TODO
+    }
 
 }
 

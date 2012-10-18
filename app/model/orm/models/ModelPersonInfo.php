@@ -4,7 +4,7 @@
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelContestant extends AbstractModelSingle {
+class ModelPersonInfo extends AbstractModelSingle {
 
     public static function createFromTableRow(NTableRow $row) {
         return new self($row->toArray(), $row->getTable());
@@ -18,3 +18,4 @@ class ModelContestant extends AbstractModelSingle {
     }
 
 }
+

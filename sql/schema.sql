@@ -89,9 +89,9 @@ CREATE TABLE post_contact (
 
 CREATE TABLE login (
 	person_id INT NOT NULL PRIMARY KEY,
-	login VARCHAR(255) NOT NULL	COMMENT 'Login name',
+	login VARCHAR(255) NULL	COMMENT 'Login name',
 	email VARCHAR(255) NOT NULL,
-	hash VARCHAR(255) NOT NULL	COMMENT 'SHA1 hash hesla',
+	hash VARCHAR(255) NULL 		COMMENT 'SHA1 hash hesla', -- TODO
 	fb_id VARCHAR(255) NULL		COMMENT 'ID pro přihlášení přes FB',
 	created DATETIME NOT NULL,
 	last_login DATETIME NULL,
@@ -141,7 +141,8 @@ CREATE TABLE contestant (
 	study_year TINYINT NOT NULL	COMMENT 'ročník, který studuje 6--9 nebo 1--4', 
 	FOREIGN KEY (person_id) REFERENCES person(person_id),
 	FOREIGN KEY (school_id) REFERENCES school(school_id),
-	FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
+	FOREIGN KEY (contest_id) REFERENCES contest(contest_id),
+	UNIQUE(contest_id, year, person_id)
 )
 	COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
 
