@@ -88,9 +88,9 @@ CREATE TABLE post_contact (
 
 CREATE TABLE login (
 	person_id INT NOT NULL PRIMARY KEY,
-	login VARCHAR(255) NOT NULL	COMMENT 'Login name',
+	login VARCHAR(255) NULL	COMMENT 'Login name',
 	email VARCHAR(255) NOT NULL,
-	hash VARCHAR(255) NOT NULL	COMMENT 'SHA1 hash hesla',
+	hash VARCHAR(255) NULL 		COMMENT 'SHA1 hash hesla', -- TODO
 	fb_id VARCHAR(255) NULL		COMMENT 'ID pro přihlášení přes FB',
 	created DATETIME NOT NULL,
 	last_login DATETIME NULL,
