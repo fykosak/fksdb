@@ -9,8 +9,7 @@ class FormPostContacts extends NAppForm {
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('first_name', 'Jméno')->setDisabled();
-        $this->addText('last_name', 'Příjmení')->setDisabled();
+        $this->addText('display_name', 'Jméno')->setDisabled();
 
         $texts = $this->addDynamic('post_contacts', array($this, 'appendAddressDynamic'), 1);
         $texts->addSubmit('add', 'Přidat další adresu')->addCreateOnClick();

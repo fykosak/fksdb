@@ -9,10 +9,8 @@ class FormPerson extends NAppForm {
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('first_name', 'Jméno')
+        $this->addText('display_name', 'Zobrazované jméno')
                 ->addRule(NForm::FILLED, 'Vyplňte jméno.');
-        $this->addText('last_name', 'Příjmení')
-                ->addRule(NForm::FILLED, 'Vyplňte příjmení.');
         $this->addRadioList('gender', 'Pohlaví', array(
                     'F' => 'žena',
                     'M' => 'muž',

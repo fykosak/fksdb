@@ -26,10 +26,9 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
             // create person
             $person = $wizard->getPerson();
-            $person->display_name = $person->first_name . ' ' . $person->last_name;
-            $person->sort_name = $person->last_name . ' ' . $person->first_name;
-            unset($person->first_name);
-            unset($person->last_name);
+            
+            $person->sort_name = implode(' ', array_reverse(explode(' ', $person->display_name))); //TODO
+
             $servicePerson->save($person);
 
 

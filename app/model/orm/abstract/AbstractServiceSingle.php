@@ -139,7 +139,13 @@ abstract class AbstractServiceSingle extends NTableSelection {
         return $this->defaults;
     }
 
-    protected function filterData($data) {
+    /**
+     * Omits array elements whose keys aren't columns in the table.
+     * 
+     * @param array|null $data
+     * @return array|null
+     */
+    public function filterData($data) {
         if ($data === null) {
             return null;
         }

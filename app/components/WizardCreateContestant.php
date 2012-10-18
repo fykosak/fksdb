@@ -111,7 +111,7 @@ class WizardCreateContestant extends WizardComponent {
     private function initCreatePerson(NAppForm $form) {
         $values = $this->getData(self::STEP_FIND);
         $fullname = $values[FormPersonFind::FULLNAME];
-        $form->setDefaults(ModelPerson::parseFullname($fullname));
+        $form->setDefaults(array('display_name' => $fullname));
     }
 
     private function initPostContact(NAppForm $form) {
