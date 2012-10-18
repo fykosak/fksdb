@@ -24,6 +24,21 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
         return $this->ref(DbNames::TAB_PERSON_INFO, 'person_id');
     }
 
+    public function getContestants() {
+        $this->person_id = null;
+        return $this->related(DbNames::TAB_CONTESTANT, 'person_id');
+    }
+
+    public function getLastContestant(ModelContest $contest) {
+        $contestant = $this->getContestants()->where('contest_id = ?', $contest->contest_id)->order('year DESC')->fetch();
+
+        if ($contestant) {
+            return ModelContestant::createFromTableRow($contestant);
+        } else {
+            return null;
+        }
+    }
+
     public function getFullname() {
         return $this->first_name . ' ' . $this->last_name;
     }
@@ -37,6 +52,27 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
             }
         }
         return $result;
+    }
+
+    /**
+     * 
+     * @param str $fullname
+     * @return array
+     */
+    public static function parseFullname($fullname) {
+        $names = explode(' ', $fullname);
+        $firstName = implode(' ', array_slice($names, 0, count($names) - 1));
+        $lastName = $names[count($names)-1];
+        if (mb_substr($lastName, -1) == 'á') {
+            $gender = 'F';
+        } else {
+            $gender = 'M';
+        }
+        return array(
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'gender' => $gender,
+        );
     }
 
     // ----- IIdentity implementation ----------
