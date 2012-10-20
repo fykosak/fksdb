@@ -83,7 +83,8 @@ CREATE TABLE dakos_person (
 
 CREATE TABLE olddb_person (
 	olddb_uid INT NOT NULL PRIMARY KEY COMMENT 'users.id ze staré DB',
-	PERSON_ID INT NOT NULL,
+	person_id INT NOT NULL,
+	olddb_redundant BOOL NOT NULL COMMENT 'Tato data se nezkopírovala',
 	FOREIGN KEY (person_id) REFERENCES person(person_id)
 );
 
