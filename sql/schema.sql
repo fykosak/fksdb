@@ -13,7 +13,7 @@ CREATE TABLE person (
 person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 display_name VARCHAR(511) NOT NULL COMMENT 'Celé jméno vč. příjmení',
 sort_name VARCHAR(255) NOT NULL COMMENT '„Příjmení“ (prioritní při abecedním řazení)',
-gender ENUM('M', 'F') NOT NULL,
+gender ENUM('M', 'F') NOT NULL
 );
 
 CREATE TABLE country (		
@@ -76,15 +76,15 @@ CREATE TABLE person_info (
 
 CREATE TABLE dakos_person (
 	dakos_id INT NOT NULL PRIMARY KEY COMMENT 'Id účastníka z dakosího exportu',
-	person_id INT NOT NULL
-	FOREIGN KEY (person_id) REFERENCES person(person_id);
+	person_id INT NOT NULL,
+	FOREIGN KEY (person_id) REFERENCES person(person_id)
 )
 	COMMENT = 'Identifikace osoby z DaKoSu';
 
 CREATE TABLE olddb_person (
 	olddb_uid INT NOT NULL PRIMARY KEY COMMENT 'users.id ze staré DB',
-	PERSON_ID INT NOT NULL
-	FOREIGN KEY (person_id) REFERENCES person(person_id);
+	PERSON_ID INT NOT NULL,
+	FOREIGN KEY (person_id) REFERENCES person(person_id)
 );
 
 CREATE TABLE post_contact (
