@@ -14,7 +14,6 @@ person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 display_name VARCHAR(511) NOT NULL COMMENT 'Celé jméno vč. příjmení',
 sort_name VARCHAR(255) NOT NULL COMMENT '„Příjmení“ (prioritní při abecedním řazení)',
 gender ENUM('M', 'F') NOT NULL,
-olddb_uid INT UNIQUE NULL COMMENT 'users.id ze staré DB'
 );
 
 CREATE TABLE country (		
@@ -74,6 +73,19 @@ CREATE TABLE person_info (
 	FOREIGN KEY (person_id) REFERENCES person(person_id)
 )
 	COMMENT = 'Podrobné informace o osobě, zde jsou všechny osobní údaje (tm)';
+
+CREATE TABLE dakos_person (
+	dakos_id INT NOT NULL PRIMARY KEY COMMENT 'Id účastníka z dakosího exportu',
+	person_id INT NOT NULL
+	FOREIGN KEY (person_id) REFERENCES person(person_id);
+)
+	COMMENT = 'Identifikace osoby z DaKoSu';
+
+CREATE TABLE olddb_person (
+	olddb_uid INT NOT NULL PRIMARY KEY COMMENT 'users.id ze staré DB',
+	PERSON_ID INT NOT NULL
+	FOREIGN KEY (person_id) REFERENCES person(person_id);
+);
 
 CREATE TABLE post_contact (
 	post_contact_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -146,6 +158,8 @@ CREATE TABLE contestant (
 	UNIQUE(contest_id, year, person_id)
 )
 	COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
+
+
 
 CREATE TABLE org (
 	org_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
