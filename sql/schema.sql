@@ -43,6 +43,11 @@ CREATE TABLE address (
 )
 	COMMENT = 'Adresa jako hodnotový objekt'; -- i jako immutable? TODO rozmyslet změnu adresy/stěhování
 
+CREATE TABLE check_address (
+	address_id INT NOT NULL PRIMARY KEY,
+	FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
 CREATE TABLE school (
 	school_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- Klíčem není IČ/IZO, neboť zahraniční školy
 	name_full VARCHAR(255)	COMMENT 'plný název školy',
@@ -55,8 +60,13 @@ CREATE TABLE school (
 	active BOOL			COMMENT 'Platný záznam školy',
 	note VARCHAR(255),
 	UNIQUE(ic),
-	UNIQUE(izo),
+	UNIQUE(izo), -- právnické osoby, nebo školy (druhá možnost je problematická)?
 	FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+CREATE TABLE check_school (
+	school_id INT NOT NULL PRIMARY KEY,
+	FOREIGN KEY (school_id) REFERENCES school(school_id)
 );
 
 CREATE TABLE person_info (
