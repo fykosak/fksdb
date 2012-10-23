@@ -69,6 +69,12 @@ CREATE TABLE check_school (
 	FOREIGN KEY (school_id) REFERENCES school(school_id)
 );
 
+CREATE TABLE dakos_school (
+	dakos_SKOLA_Id INT NOT NULL PRIMARY KEY,
+	school_id INT NOT NULL,
+	FOREIGN KEY (school_id) REFERENCES school(school_id)
+);
+
 CREATE TABLE person_info (
 	person_id INT NOT NULL PRIMARY KEY,
 	born DATE NULL			COMMENT 'datum narození',

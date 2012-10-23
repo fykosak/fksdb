@@ -2,9 +2,25 @@ USE fksdb;
 
 INSERT INTO country (country_iso, name_cs, name_en) VALUES
 ('CZ', 'Česká republika', 'Czech republic'),
-('SK', 'Slovensko', 'Slovakia');
+('SK', 'Slovensko', 'Slovakia'),
+('DE', 'Německo', 'Germany'),
+('FR', 'Francie', 'France'),
+('BY', 'Bělorusko', 'Belarus'),
+('RS', 'Srbsko', 'Serbia'),
+('TR', 'Turecko', 'Turkey'),
+('HU', 'Maďarsko', 'Hungary'),
+('LT', 'Litva', 'Lithuania');
 
 INSERT INTO region (country_iso, nuts, name) VALUES
+('SK', 'SK', 'Slovensko'),
+('CZ', 'CZ', 'Česká republika'),
+('DE', 'DE', 'Deutschland'),
+('FR', 'FR', 'France'),
+('BY', 'BY', 'Беларусь'),
+('RS', 'RS', 'Srbija'),
+('TR', 'TR', 'Türkiye'),
+('HU', 'HU', 'Magyarország'),
+('LT', 'LT', 'Lietuva'),
 ('SK', 'SK010', 'Bratislavský kraj'),
 ('SK', 'SK021', 'Trnavský kraj'),
 ('SK', 'SK022', 'Trenčiansky kraj'),
