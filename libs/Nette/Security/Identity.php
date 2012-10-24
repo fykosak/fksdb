@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Security
  */
+
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -22,9 +25,8 @@
  * @property   mixed $id
  * @property   array $roles
  * @property-read array $data
- * @package Nette\Security
  */
-class NIdentity extends NFreezableObject implements IIdentity
+class Identity extends Nette\FreezableObject implements IIdentity
 {
 	/** @var mixed */
 	private $id;
@@ -45,7 +47,7 @@ class NIdentity extends NFreezableObject implements IIdentity
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
-		$this->data = $data instanceof Traversable ? iterator_to_array($data) : (array) $data;
+		$this->data = $data instanceof \Traversable ? iterator_to_array($data) : (array) $data;
 	}
 
 
@@ -53,7 +55,7 @@ class NIdentity extends NFreezableObject implements IIdentity
 	/**
 	 * Sets the ID of user.
 	 * @param  mixed
-	 * @return NIdentity  provides a fluent interface
+	 * @return Identity  provides a fluent interface
 	 */
 	public function setId($id)
 	{
@@ -78,7 +80,7 @@ class NIdentity extends NFreezableObject implements IIdentity
 	/**
 	 * Sets a list of roles that the user is a member of.
 	 * @param  array
-	 * @return NIdentity  provides a fluent interface
+	 * @return Identity  provides a fluent interface
 	 */
 	public function setRoles(array $roles)
 	{
@@ -163,11 +165,11 @@ class NIdentity extends NFreezableObject implements IIdentity
 	 * Removes property.
 	 * @param  string  property name
 	 * @return void
-	 * @throws MemberAccessException
+	 * @throws Nette\MemberAccessException
 	 */
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		Nette\ObjectMixin::remove($this, $name);
 	}
 
 }

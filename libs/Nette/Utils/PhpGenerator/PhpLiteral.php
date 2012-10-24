@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils\PhpGenerator
  */
+
+namespace Nette\Utils\PhpGenerator;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * PHP literal value.
  *
  * @author     David Grudl
- * @package Nette\Utils\PhpGenerator
  */
-class NPhpLiteral
+class PhpLiteral
 {
 	/** @var string */
 	public $value = '';

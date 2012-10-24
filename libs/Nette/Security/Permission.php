@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Security
  */
+
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -24,9 +27,8 @@
  * @property-read array $resources
  * @property-read mixed $queriedRole
  * @property-read mixed $queriedResource
- * @package Nette\Security
  */
-class NPermission extends NObject implements IAuthorizator
+class Permission extends Nette\Object implements IAuthorizator
 {
 	/** @var array  Role storage */
 	private $roles = array();
@@ -63,15 +65,15 @@ class NPermission extends NObject implements IAuthorizator
 	 * takes precedence over parents that were previously added.
 	 * @param  string
 	 * @param  string|array
-	 * @throws InvalidArgumentException
-	 * @throws InvalidStateException
-	 * @return NPermission  provides a fluent interface
+	 * @throws Nette\InvalidArgumentException
+	 * @throws Nette\InvalidStateException
+	 * @return Permission  provides a fluent interface
 	 */
 	public function addRole($role, $parents = NULL)
 	{
 		$this->checkRole($role, FALSE);
 		if (isset($this->roles[$role])) {
-			throw new InvalidStateException("Role '$role' already exists in the list.");
+			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
 
 		$roleParents = array();
@@ -115,16 +117,16 @@ class NPermission extends NObject implements IAuthorizator
 	 * Checks whether Role is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkRole($role, $need = TRUE)
 	{
 		if (!is_string($role) || $role === '') {
-			throw new InvalidArgumentException("Role must be a non-empty string.");
+			throw new Nette\InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
-			throw new InvalidStateException("Role '$role' does not exist.");
+			throw new Nette\InvalidStateException("Role '$role' does not exist.");
 		}
 	}
 
@@ -160,7 +162,7 @@ class NPermission extends NObject implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @throws InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function roleInheritsFrom($role, $inherit, $onlyParents = FALSE)
@@ -189,8 +191,8 @@ class NPermission extends NObject implements IAuthorizator
 	 * Removes the Role from the list.
 	 *
 	 * @param  string
-	 * @throws InvalidStateException
-	 * @return NPermission  provides a fluent interface
+	 * @throws Nette\InvalidStateException
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeRole($role)
 	{
@@ -230,7 +232,7 @@ class NPermission extends NObject implements IAuthorizator
 	/**
 	 * Removes all Roles from the list.
 	 *
-	 * @return NPermission  provides a fluent interface
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeAllRoles()
 	{
@@ -260,16 +262,16 @@ class NPermission extends NObject implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string
-	 * @throws InvalidArgumentException
-	 * @throws InvalidStateException
-	 * @return NPermission  provides a fluent interface
+	 * @throws Nette\InvalidArgumentException
+	 * @throws Nette\InvalidStateException
+	 * @return Permission  provides a fluent interface
 	 */
 	public function addResource($resource, $parent = NULL)
 	{
 		$this->checkResource($resource, FALSE);
 
 		if (isset($this->resources[$resource])) {
-			throw new InvalidStateException("Resource '$resource' already exists in the list.");
+			throw new Nette\InvalidStateException("Resource '$resource' already exists in the list.");
 		}
 
 		if ($parent !== NULL) {
@@ -304,16 +306,16 @@ class NPermission extends NObject implements IAuthorizator
 	 * Checks whether Resource is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkResource($resource, $need = TRUE)
 	{
 		if (!is_string($resource) || $resource === '') {
-			throw new InvalidArgumentException("Resource must be a non-empty string.");
+			throw new Nette\InvalidArgumentException("Resource must be a non-empty string.");
 
 		} elseif ($need && !isset($this->resources[$resource])) {
-			throw new InvalidStateException("Resource '$resource' does not exist.");
+			throw new Nette\InvalidStateException("Resource '$resource' does not exist.");
 		}
 	}
 
@@ -337,7 +339,7 @@ class NPermission extends NObject implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @throws InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function resourceInheritsFrom($resource, $inherit, $onlyParent = FALSE)
@@ -373,8 +375,8 @@ class NPermission extends NObject implements IAuthorizator
 	 * Removes a Resource and all of its children.
 	 *
 	 * @param  string
-	 * @throws InvalidStateException
-	 * @return NPermission  provides a fluent interface
+	 * @throws Nette\InvalidStateException
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeResource($resource)
 	{
@@ -407,7 +409,7 @@ class NPermission extends NObject implements IAuthorizator
 
 	/**
 	 * Removes all Resources.
-	 * @return NPermission  provides a fluent interface
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeAllResources()
 	{
@@ -433,11 +435,11 @@ class NPermission extends NObject implements IAuthorizator
 	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
-	 * @param  string|array|NPermission::ALL  roles
-	 * @param  string|array|NPermission::ALL  resources
-	 * @param  string|array|NPermission::ALL  privileges
+	 * @param  string|array|Permission::ALL  roles
+	 * @param  string|array|Permission::ALL  resources
+	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return NPermission  provides a fluent interface
+	 * @return Permission  provides a fluent interface
 	 */
 	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
@@ -451,11 +453,11 @@ class NPermission extends NObject implements IAuthorizator
 	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
 	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
-	 * @param  string|array|NPermission::ALL  roles
-	 * @param  string|array|NPermission::ALL  resources
-	 * @param  string|array|NPermission::ALL  privileges
+	 * @param  string|array|Permission::ALL  roles
+	 * @param  string|array|Permission::ALL  resources
+	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @return NPermission  provides a fluent interface
+	 * @return Permission  provides a fluent interface
 	 */
 	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
@@ -468,10 +470,10 @@ class NPermission extends NObject implements IAuthorizator
 	/**
 	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|array|NPermission::ALL  roles
-	 * @param  string|array|NPermission::ALL  resources
-	 * @param  string|array|NPermission::ALL  privileges
-	 * @return NPermission  provides a fluent interface
+	 * @param  string|array|Permission::ALL  roles
+	 * @param  string|array|Permission::ALL  resources
+	 * @param  string|array|Permission::ALL  privileges
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeAllow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
@@ -484,10 +486,10 @@ class NPermission extends NObject implements IAuthorizator
 	/**
 	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
-	 * @param  string|array|NPermission::ALL  roles
-	 * @param  string|array|NPermission::ALL  resources
-	 * @param  string|array|NPermission::ALL  privileges
-	 * @return NPermission  provides a fluent interface
+	 * @param  string|array|Permission::ALL  roles
+	 * @param  string|array|Permission::ALL  resources
+	 * @param  string|array|Permission::ALL  privileges
+	 * @return Permission  provides a fluent interface
 	 */
 	public function removeDeny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL)
 	{
@@ -501,12 +503,12 @@ class NPermission extends NObject implements IAuthorizator
 	 * Performs operations on Access Control List rules.
 	 * @param  bool  operation add?
 	 * @param  bool  type
-	 * @param  string|array|NPermission::ALL  roles
-	 * @param  string|array|NPermission::ALL  resources
-	 * @param  string|array|NPermission::ALL  privileges
+	 * @param  string|array|Permission::ALL  roles
+	 * @param  string|array|Permission::ALL  resources
+	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @throws InvalidStateException
-	 * @return NPermission  provides a fluent interface
+	 * @throws Nette\InvalidStateException
+	 * @return Permission  provides a fluent interface
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
 	{
@@ -546,7 +548,7 @@ class NPermission extends NObject implements IAuthorizator
 			$privileges = array($privileges);
 		}
 
-		$assertion = $assertion ? new NCallback($assertion) : NULL;
+		$assertion = $assertion ? new Nette\Callback($assertion) : NULL;
 
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {
@@ -618,10 +620,10 @@ class NPermission extends NObject implements IAuthorizator
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|NPermission::ALL|IRole  role
-	 * @param  string|NPermission::ALL|IResource  resource
-	 * @param  string|NPermission::ALL  privilege
-	 * @throws InvalidStateException
+	 * @param  string|Permission::ALL|IRole  role
+	 * @param  string|Permission::ALL|IResource  resource
+	 * @param  string|Permission::ALL  privilege
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
@@ -755,9 +757,9 @@ class NPermission extends NObject implements IAuthorizator
 
 	/**
 	 * Returns the rule type associated with the specified Resource, Role, and privilege.
-	 * @param  string|NPermission::ALL
-	 * @param  string|NPermission::ALL
-	 * @param  string|NPermission::ALL
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
 	 * @return mixed  NULL if a rule does not exist or assertion fails, otherwise returns ALLOW or DENY
 	 */
 	private function getRuleType($resource, $role, $privilege)
@@ -798,8 +800,8 @@ class NPermission extends NObject implements IAuthorizator
 	/**
 	 * Returns the rules associated with a Resource and a Role, or NULL if no such rules exist.
 	 * If the $create parameter is TRUE, then a rule set is first created and then returned to the caller.
-	 * @param  string|NPermission::ALL
-	 * @param  string|NPermission::ALL
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
 	 * @param  bool
 	 * @return array|NULL
 	 */

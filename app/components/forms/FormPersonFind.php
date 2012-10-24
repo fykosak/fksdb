@@ -1,10 +1,13 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormPersonFind extends NAppForm {
+class FormPersonFind extends Form {
 
     const ID_PERSON = 'person_id';
     const FULLNAME = 'fullname';

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Hidden form control used to store a non-displayed value.
  *
  * @author     David Grudl
- * @package Nette\Forms\Controls
  */
-class NHiddenField extends NFormControl
+class HiddenField extends BaseControl
 {
 	/** @var string */
 	private $forcedValue;
@@ -49,7 +51,7 @@ class NHiddenField extends NFormControl
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return NHiddenField  provides a fluent interface
+	 * @return HiddenField  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
@@ -61,7 +63,7 @@ class NHiddenField extends NFormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{

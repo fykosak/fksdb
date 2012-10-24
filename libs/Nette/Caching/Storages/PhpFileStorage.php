@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Caching\Storages
  */
+
+namespace Nette\Caching\Storages;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * PHP files cache storage.
  *
  * @author     David Grudl
- * @package Nette\Caching\Storages
  */
-class NPhpFileStorage extends NFileStorage
+class PhpFileStorage extends FileStorage
 {
 	/** @var string */
 	public $hint;
@@ -49,7 +51,7 @@ class NPhpFileStorage extends NFileStorage
 		return parent::getCacheFile(substr_replace(
 			$key,
 			trim(strtr($this->hint, '\\/@', '.._'), '.') . '-',
-			strpos($key, NCache::NAMESPACE_SEPARATOR) + 1,
+			strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1,
 			0
 		)) . '.php';
 	}

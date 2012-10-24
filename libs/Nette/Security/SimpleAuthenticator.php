@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Security
  */
+
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Trivial implementation of IAuthenticator.
  *
  * @author     David Grudl
- * @package Nette\Security
  */
-class NSimpleAuthenticator extends NObject implements IAuthenticator
+class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 {
 	/** @var array */
 	private $userlist;
@@ -36,10 +38,10 @@ class NSimpleAuthenticator extends NObject implements IAuthenticator
 
 	/**
 	 * Performs an authentication against e.g. database.
-	 * and returns IIdentity on success or throws NAuthenticationException
+	 * and returns IIdentity on success or throws AuthenticationException
 	 * @param  array
 	 * @return IIdentity
-	 * @throws NAuthenticationException
+	 * @throws AuthenticationException
 	 */
 	public function authenticate(array $credentials)
 	{
@@ -47,13 +49,13 @@ class NSimpleAuthenticator extends NObject implements IAuthenticator
 		foreach ($this->userlist as $name => $pass) {
 			if (strcasecmp($name, $username) === 0) {
 				if ((string) $pass === (string) $password) {
-					return new NIdentity($name);
+					return new Identity($name);
 				} else {
-					throw new NAuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
+					throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
 				}
 			}
 		}
-		throw new NAuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
+		throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 	}
 
 }

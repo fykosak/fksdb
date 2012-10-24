@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config
  */
+
+namespace Nette\Config;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Adapter for reading and writing configuration files.
  *
  * @author     David Grudl
- * @package Nette\Config
  */
-interface IConfigAdapter
+interface IAdapter
 {
 
 	/**

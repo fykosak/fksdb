@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application
  */
+
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * The bi-directional router.
  *
  * @author     David Grudl
- * @package Nette\Application
  */
 interface IRouter
 {
@@ -28,14 +30,14 @@ interface IRouter
 
 	/**
 	 * Maps HTTP request to a Request object.
-	 * @return NPresenterRequest|NULL
+	 * @return Request|NULL
 	 */
-	function match(IHttpRequest $httpRequest);
+	function match(Nette\Http\IRequest $httpRequest);
 
 	/**
 	 * Constructs absolute URL from Request object.
 	 * @return string|NULL
 	 */
-	function constructUrl(NPresenterRequest $appRequest, NUrl $refUrl);
+	function constructUrl(Request $appRequest, Nette\Http\Url $refUrl);
 
 }

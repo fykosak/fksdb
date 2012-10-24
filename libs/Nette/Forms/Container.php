@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms
  */
+
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -18,19 +21,18 @@
  * @author     David Grudl
  *
  * @property-write $defaults
- * @property   NArrayHash $values
+ * @property   Nette\ArrayHash $values
  * @property-read bool $valid
- * @property   NFormGroup $currentGroup
- * @property-read ArrayIterator $controls
- * @property-read NForm $form
- * @package Nette\Forms
+ * @property   ControlGroup $currentGroup
+ * @property-read \ArrayIterator $controls
+ * @property-read Form $form
  */
-class NFormContainer extends NComponentContainer implements ArrayAccess
+class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 {
 	/** @var array of function(Form $sender); Occurs when the form is validated */
 	public $onValidate;
 
-	/** @var NFormGroup */
+	/** @var ControlGroup */
 	protected $currentGroup;
 
 	/** @var bool */
@@ -46,7 +48,7 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Fill-in with default values.
 	 * @param  array|Traversable  values used to fill the form
 	 * @param  bool     erase other default values?
-	 * @return NFormContainer  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
 	public function setDefaults($values, $erase = FALSE)
 	{
@@ -63,19 +65,19 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Fill-in with values.
 	 * @param  array|Traversable  values used to fill the form
 	 * @param  bool     erase other controls?
-	 * @return NFormContainer  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
 	public function setValues($values, $erase = FALSE)
 	{
-		if ($values instanceof Traversable) {
+		if ($values instanceof \Traversable) {
 			$values = iterator_to_array($values);
 
 		} elseif (!is_array($values)) {
-			throw new InvalidArgumentException("First parameter must be an array, " . gettype($values) ." given.");
+			throw new Nette\InvalidArgumentException("First parameter must be an array, " . gettype($values) ." given.");
 		}
 
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IFormControl) {
+			if ($control instanceof IControl) {
 				if (array_key_exists($name, $values)) {
 					$control->setValue($values[$name]);
 
@@ -83,7 +85,7 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 					$control->setValue(NULL);
 				}
 
-			} elseif ($control instanceof NFormContainer) {
+			} elseif ($control instanceof Container) {
 				if (array_key_exists($name, $values)) {
 					$control->setValues($values[$name], $erase);
 
@@ -100,16 +102,16 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	/**
 	 * Returns the values submitted by the form.
 	 * @param  bool  return values as an array?
-	 * @return NArrayHash|array
+	 * @return Nette\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{
-		$values = $asArray ? array() : new NArrayHash;
+		$values = $asArray ? array() : new Nette\ArrayHash;
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IFormControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
+			if ($control instanceof IControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
 				$values[$name] = $control->getValue();
 
-			} elseif ($control instanceof NFormContainer) {
+			} elseif ($control instanceof Container) {
 				$values[$name] = $control->getValues($asArray);
 			}
 		}
@@ -158,9 +160,9 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 
 
 	/**
-	 * @return NFormContainer  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
-	public function setCurrentGroup(NFormGroup $group = NULL)
+	public function setCurrentGroup(ControlGroup $group = NULL)
 	{
 		$this->currentGroup = $group;
 		return $this;
@@ -170,7 +172,7 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 
 	/**
 	 * Returns current group.
-	 * @return NFormGroup
+	 * @return ControlGroup
 	 */
 	public function getCurrentGroup()
 	{
@@ -184,13 +186,13 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  IComponent
 	 * @param  string
 	 * @param  string
-	 * @return NFormContainer  provides a fluent interface
-	 * @throws InvalidStateException
+	 * @return Container  provides a fluent interface
+	 * @throws Nette\InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
+	public function addComponent(Nette\ComponentModel\IComponent $component, $name, $insertBefore = NULL)
 	{
 		parent::addComponent($component, $name, $insertBefore);
-		if ($this->currentGroup !== NULL && $component instanceof IFormControl) {
+		if ($this->currentGroup !== NULL && $component instanceof IControl) {
 			$this->currentGroup->add($component);
 		}
 		return $this;
@@ -200,11 +202,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 
 	/**
 	 * Iterates over all form controls.
-	 * @return ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getControls()
 	{
-		return $this->getComponents(TRUE, 'IFormControl');
+		return $this->getComponents(TRUE, 'Nette\Forms\IControl');
 	}
 
 
@@ -212,11 +214,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	/**
 	 * Returns form.
 	 * @param  bool   throw exception if form doesn't exist?
-	 * @return NForm
+	 * @return Form
 	 */
 	public function getForm($need = TRUE)
 	{
-		return $this->lookup('NForm', $need);
+		return $this->lookup('Nette\Forms\Form', $need);
 	}
 
 
@@ -231,11 +233,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  label
 	 * @param  int  width of the control
 	 * @param  int  maximum number of characters the user may enter
-	 * @return NTextInput
+	 * @return Nette\Forms\Controls\TextInput
 	 */
 	public function addText($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
-		return $this[$name] = new NTextInput($label, $cols, $maxLength);
+		return $this[$name] = new Controls\TextInput($label, $cols, $maxLength);
 	}
 
 
@@ -246,11 +248,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  label
 	 * @param  int  width of the control
 	 * @param  int  maximum number of characters the user may enter
-	 * @return NTextInput
+	 * @return Nette\Forms\Controls\TextInput
 	 */
 	public function addPassword($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
-		$control = new NTextInput($label, $cols, $maxLength);
+		$control = new Controls\TextInput($label, $cols, $maxLength);
 		$control->setType('password');
 		return $this[$name] = $control;
 	}
@@ -263,11 +265,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  label
 	 * @param  int  width of the control
 	 * @param  int  height of the control in text lines
-	 * @return NTextArea
+	 * @return Nette\Forms\Controls\TextArea
 	 */
 	public function addTextArea($name, $label = NULL, $cols = 40, $rows = 10)
 	{
-		return $this[$name] = new NTextArea($label, $cols, $rows);
+		return $this[$name] = new Controls\TextArea($label, $cols, $rows);
 	}
 
 
@@ -276,11 +278,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Adds control that allows the user to upload files.
 	 * @param  string  control name
 	 * @param  string  label
-	 * @return NUploadControl
+	 * @return Nette\Forms\Controls\UploadControl
 	 */
 	public function addUpload($name, $label = NULL)
 	{
-		return $this[$name] = new NUploadControl($label);
+		return $this[$name] = new Controls\UploadControl($label);
 	}
 
 
@@ -289,11 +291,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Adds hidden form control used to store a non-displayed value.
 	 * @param  string  control name
 	 * @param  mixed   default value
-	 * @return NHiddenField
+	 * @return Nette\Forms\Controls\HiddenField
 	 */
 	public function addHidden($name, $default = NULL)
 	{
-		$control = new NHiddenField;
+		$control = new Controls\HiddenField;
 		$control->setDefaultValue($default);
 		return $this[$name] = $control;
 	}
@@ -304,11 +306,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Adds check box control to the form.
 	 * @param  string  control name
 	 * @param  string  caption
-	 * @return NCheckbox
+	 * @return Nette\Forms\Controls\Checkbox
 	 */
 	public function addCheckbox($name, $caption = NULL)
 	{
-		return $this[$name] = new NCheckbox($caption);
+		return $this[$name] = new Controls\Checkbox($caption);
 	}
 
 
@@ -318,11 +320,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  control name
 	 * @param  string  label
 	 * @param  array   options from which to choose
-	 * @return NRadioList
+	 * @return Nette\Forms\Controls\RadioList
 	 */
 	public function addRadioList($name, $label = NULL, array $items = NULL)
 	{
-		return $this[$name] = new NRadioList($label, $items);
+		return $this[$name] = new Controls\RadioList($label, $items);
 	}
 
 
@@ -333,11 +335,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  label
 	 * @param  array   items from which to choose
 	 * @param  int     number of rows that should be visible
-	 * @return NSelectBox
+	 * @return Nette\Forms\Controls\SelectBox
 	 */
 	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new NSelectBox($label, $items, $size);
+		return $this[$name] = new Controls\SelectBox($label, $items, $size);
 	}
 
 
@@ -348,11 +350,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  label
 	 * @param  array   options from which to choose
 	 * @param  int     number of rows that should be visible
-	 * @return NMultiSelectBox
+	 * @return Nette\Forms\Controls\MultiSelectBox
 	 */
 	public function addMultiSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new NMultiSelectBox($label, $items, $size);
+		return $this[$name] = new Controls\MultiSelectBox($label, $items, $size);
 	}
 
 
@@ -361,11 +363,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Adds button used to submit form.
 	 * @param  string  control name
 	 * @param  string  caption
-	 * @return NSubmitButton
+	 * @return Nette\Forms\Controls\SubmitButton
 	 */
 	public function addSubmit($name, $caption = NULL)
 	{
-		return $this[$name] = new NSubmitButton($caption);
+		return $this[$name] = new Controls\SubmitButton($caption);
 	}
 
 
@@ -374,11 +376,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * Adds push buttons with no default behavior.
 	 * @param  string  control name
 	 * @param  string  caption
-	 * @return NButton
+	 * @return Nette\Forms\Controls\Button
 	 */
 	public function addButton($name, $caption)
 	{
-		return $this[$name] = new NButton($caption);
+		return $this[$name] = new Controls\Button($caption);
 	}
 
 
@@ -388,11 +390,11 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 * @param  string  control name
 	 * @param  string  URI of the image
 	 * @param  string  alternate text for the image
-	 * @return NImageButton
+	 * @return Nette\Forms\Controls\ImageButton
 	 */
 	public function addImage($name, $src = NULL, $alt = NULL)
 	{
-		return $this[$name] = new NImageButton($src, $alt);
+		return $this[$name] = new Controls\ImageButton($src, $alt);
 	}
 
 
@@ -400,25 +402,25 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	/**
 	 * Adds naming container to the form.
 	 * @param  string  name
-	 * @return NFormContainer
+	 * @return Container
 	 */
 	public function addContainer($name)
 	{
-		$control = new NFormContainer;
+		$control = new Container;
 		$control->currentGroup = $this->currentGroup;
 		return $this[$name] = $control;
 	}
 
 
 
-	/********************* interface ArrayAccess ****************d*g**/
+	/********************* interface \ArrayAccess ****************d*g**/
 
 
 
 	/**
 	 * Adds the component to the container.
 	 * @param  string  component name
-	 * @param  IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	final public function offsetSet($name, $component)
@@ -431,8 +433,8 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
-	 * @return IComponent
-	 * @throws InvalidArgumentException
+	 * @return Nette\ComponentModel\IComponent
+	 * @throws Nette\InvalidArgumentException
 	 */
 	final public function offsetGet($name)
 	{
@@ -473,7 +475,7 @@ class NFormContainer extends NComponentContainer implements ArrayAccess
 	 */
 	final public function __clone()
 	{
-		throw new NotImplementedException('Form cloning is not supported yet.');
+		throw new Nette\NotImplementedException('Form cloning is not supported yet.');
 	}
 
 

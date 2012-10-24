@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application
  */
+
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -16,15 +19,14 @@
  * Any response returned by presenter.
  *
  * @author     David Grudl
- * @package Nette\Application
  */
-interface IPresenterResponse
+interface IResponse
 {
 
 	/**
 	 * Sends response to output.
 	 * @return void
 	 */
-	function send(IHttpRequest $httpRequest, IHttpResponse $httpResponse);
+	function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse);
 
 }

@@ -1,5 +1,8 @@
 <?php
 
+use Nette\Http\UserStorage;
+use Nette\Application\UI\Form;
+
 /**
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
@@ -28,7 +31,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     protected function loginRedirect() {
-        if ($this->user->logoutReason === NUserStorage::INACTIVITY) {
+        if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.');
         } else {
             $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.');
@@ -75,7 +78,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     // ----- year choosing ----
     //
     protected function createComponentFormSelectYear($name) {
-        $form = new NAppForm($this, $name);
+        $form = new Form($this, $name);
         $yc = $this->getService('yearCalculator');
         $currentYear = $yc->getCurrentYear($this->activeOrgs[$this->orgId]->contest_id);
 

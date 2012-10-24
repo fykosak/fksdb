@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette,
+	Nette\Diagnostics\Debugger;
 
 
 
@@ -16,9 +20,8 @@
  * String tools library.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-class NStrings
+class Strings
 {
 
 	/**
@@ -26,7 +29,7 @@ class NStrings
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new Nette\StaticClassException;
 	}
 
 
@@ -391,9 +394,9 @@ class NStrings
 	 */
 	public static function random($length = 10, $charlist = '0-9a-z')
 	{
-		$charlist = str_shuffle(preg_replace_callback('#.-.#', create_function('$m', '
-			return implode(\'\', range($m[0][0], $m[0][2]));
-		'), $charlist));
+		$charlist = str_shuffle(preg_replace_callback('#.-.#', function($m) {
+			return implode('', range($m[0][0], $m[0][2]));
+		}, $charlist));
 		$chLen = strlen($charlist);
 
 		$s = '';
@@ -420,10 +423,10 @@ class NStrings
 	 */
 	public static function split($subject, $pattern, $flags = 0)
 	{
-		NDebugger::tryError();
+		Debugger::tryError();
 		$res = preg_split($pattern, $subject, -1, $flags | PREG_SPLIT_DELIM_CAPTURE);
-		if (NDebugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
-			throw new NRegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
+		if (Debugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
+			throw new RegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
 		}
 		return $res;
 	}
@@ -443,10 +446,10 @@ class NStrings
 		if ($offset > strlen($subject)) {
 			return NULL;
 		}
-		NDebugger::tryError();
+		Debugger::tryError();
 		$res = preg_match($pattern, $subject, $m, $flags, $offset);
-		if (NDebugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
-			throw new NRegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
+		if (Debugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
+			throw new RegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
 		}
 		if ($res) {
 			return $m;
@@ -468,14 +471,14 @@ class NStrings
 		if ($offset > strlen($subject)) {
 			return array();
 		}
-		NDebugger::tryError();
+		Debugger::tryError();
 		$res = preg_match_all(
 			$pattern, $subject, $m,
 			($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),
 			$offset
 		);
-		if (NDebugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
-			throw new NRegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
+		if (Debugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
+			throw new RegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
 		}
 		return $m;
 	}
@@ -493,24 +496,24 @@ class NStrings
 	public static function replace($subject, $pattern, $replacement = NULL, $limit = -1)
 	{
 		if (is_object($replacement) || is_array($replacement)) {
-			if ($replacement instanceof NCallback) {
+			if ($replacement instanceof Nette\Callback) {
 				$replacement = $replacement->getNative();
 			}
 			if (!is_callable($replacement, FALSE, $textual)) {
-				throw new InvalidStateException("Callback '$textual' is not callable.");
+				throw new Nette\InvalidStateException("Callback '$textual' is not callable.");
 			}
 
 			foreach ((array) $pattern as $tmp) {
-				NDebugger::tryError();
+				Debugger::tryError();
 				preg_match($tmp, '');
-				if (NDebugger::catchError($e)) { // compile error
-					throw new NRegexpException($e->getMessage(), NULL, $tmp);
+				if (Debugger::catchError($e)) { // compile error
+					throw new RegexpException($e->getMessage(), NULL, $tmp);
 				}
 			}
 
 			$res = preg_replace_callback($pattern, $replacement, $subject, $limit);
 			if ($res === NULL && preg_last_error()) { // run-time error
-				throw new NRegexpException(NULL, preg_last_error(), $pattern);
+				throw new RegexpException(NULL, preg_last_error(), $pattern);
 			}
 			return $res;
 
@@ -519,10 +522,10 @@ class NStrings
 			$pattern = array_keys($pattern);
 		}
 
-		NDebugger::tryError();
+		Debugger::tryError();
 		$res = preg_replace($pattern, $replacement, $subject, $limit);
-		if (NDebugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
-			throw new NRegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
+		if (Debugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
+			throw new RegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
 		}
 		return $res;
 	}
@@ -533,9 +536,8 @@ class NStrings
 
 /**
  * The exception that indicates error of the last Regexp execution.
- * @package Nette\Utils
  */
-class NRegexpException extends Exception
+class RegexpException extends \Exception
 {
 	static public $messages = array(
 				PREG_INTERNAL_ERROR => 'Internal error',

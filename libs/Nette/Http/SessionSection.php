@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -16,11 +19,10 @@
  * Session section.
  *
  * @author     David Grudl
- * @package Nette\Http
  */
-final class NSessionSection extends NObject implements IteratorAggregate, ArrayAccess
+final class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
-	/** @var NSession */
+	/** @var Session */
 	private $session;
 
 	/** @var string */
@@ -38,12 +40,12 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 
 
 	/**
-	 * Do not call directly. Use NSession::getSection().
+	 * Do not call directly. Use Session::getSection().
 	 */
-	public function __construct(NSession $session, $name)
+	public function __construct(Session $session, $name)
 	{
 		if (!is_string($name)) {
-			throw new InvalidArgumentException("Session namespace must be a string, " . gettype($name) ." given.");
+			throw new Nette\InvalidArgumentException("Session namespace must be a string, " . gettype($name) ." given.");
 		}
 
 		$this->session = $session;
@@ -53,7 +55,7 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 
 
 	/**
-	 * Do not call directly. Use NSession::getNamespace().
+	 * Do not call directly. Use Session::getNamespace().
 	 */
 	private function start()
 	{
@@ -68,15 +70,15 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 
 	/**
 	 * Returns an iterator over all section variables.
-	 * @return ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getIterator()
 	{
 		$this->start();
 		if (isset($this->data)) {
-			return new ArrayIterator($this->data);
+			return new \ArrayIterator($this->data);
 		} else {
-			return new ArrayIterator;
+			return new \ArrayIterator;
 		}
 	}
 
@@ -93,7 +95,7 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 		$this->start();
 		$this->data[$name] = $value;
 		if (is_object($value)) {
-			$this->meta[$name]['V'] = NClassReflection::from($value)->getAnnotation('serializationVersion');
+			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
 		}
 	}
 
@@ -197,7 +199,7 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 	 * Sets the expiration of the section or specific variables.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
 	 * @param  mixed   optional list of variables / single variable to expire
-	 * @return NSessionSection  provides a fluent interface
+	 * @return SessionSection  provides a fluent interface
 	 */
 	public function setExpiration($time, $variables = NULL)
 	{
@@ -206,7 +208,7 @@ final class NSessionSection extends NObject implements IteratorAggregate, ArrayA
 			$time = NULL;
 			$whenBrowserIsClosed = TRUE;
 		} else {
-			$time = NDateTime53::from($time)->format('U');
+			$time = Nette\DateTime::from($time)->format('U');
 			$max = ini_get('session.gc_maxlifetime');
 			if ($time - time() > $max + 3) { // bulgarian constant
 				trigger_error("The expiration time is greater than the session expiration $max seconds", E_USER_NOTICE);

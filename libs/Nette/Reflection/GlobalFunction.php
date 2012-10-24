@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Reflection
  */
+
+namespace Nette\Reflection;
+
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -18,8 +22,8 @@
  * @author     David Grudl
  * @property-read array $defaultParameters
  * @property-read bool $closure
- * @property-read NExtensionReflection $extension
- * @property-read NParameterReflection[] $parameters
+ * @property-read Extension $extension
+ * @property-read Parameter[] $parameters
  * @property-read bool $disabled
  * @property-read bool $deprecated
  * @property-read bool $internal
@@ -35,9 +39,8 @@
  * @property-read string $shortName
  * @property-read int $startLine
  * @property-read array $staticVariables
- * @package Nette\Reflection
  */
-class NFunctionReflection extends ReflectionFunction
+class GlobalFunction extends \ReflectionFunction
 {
 	/** @var string|Closure */
 	private $value;
@@ -51,11 +54,11 @@ class NFunctionReflection extends ReflectionFunction
 
 
 	/**
-	 * @return NCallback
+	 * @return Nette\Callback
 	 */
 	public function toCallback()
 	{
-		return new NCallback($this->value);
+		return new Nette\Callback($this->value);
 	}
 
 
@@ -79,73 +82,73 @@ class NFunctionReflection extends ReflectionFunction
 
 
 	/**
-	 * @return NExtensionReflection
+	 * @return Extension
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new NExtensionReflection($name) : NULL;
+		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
 
 	/**
-	 * @return NParameterReflection[]
+	 * @return Parameter[]
 	 */
 	public function getParameters()
 	{
 		foreach ($res = parent::getParameters() as $key => $val) {
-			$res[$key] = new NParameterReflection($this->value, $val->getName());
+			$res[$key] = new Parameter($this->value, $val->getName());
 		}
 		return $res;
 	}
 
 
 
-	/********************* NObject behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return NClassReflection
+	 * @return ClassType
 	 */
-	public function getReflection()
+	public static function getReflection()
 	{
-		return new NClassReflection($this);
+		return new ClassType(get_called_class());
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::call($this, $name, $args);
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return NObjectMixin::get($this, $name);
+		return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return NObjectMixin::set($this, $name, $value);
+		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return NObjectMixin::has($this, $name);
+		return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		ObjectMixin::remove($this, $name);
 	}
 
 }

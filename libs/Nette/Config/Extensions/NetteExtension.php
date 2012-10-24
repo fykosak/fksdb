@@ -7,8 +7,13 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config\Extensions
  */
+
+namespace Nette\Config\Extensions;
+
+use Nette,
+	Nette\DI\ContainerBuilder,
+	Nette\Utils\Validators;
 
 
 
@@ -16,9 +21,8 @@
  * Core Nette Framework services.
  *
  * @author     David Grudl
- * @package Nette\Config\Extensions
  */
-class NNetteExtension extends NConfigCompilerExtension
+class NetteExtension extends Nette\Config\CompilerExtension
 {
 	public $defaults = array(
 		'xhtml' => TRUE,
@@ -70,7 +74,7 @@ class NNetteExtension extends NConfigCompilerExtension
 		'options' => NULL,
 		'debugger' => TRUE,
 		'explain' => TRUE,
-		'reflection' => 'NDiscoveredReflection',
+		'reflection' => 'Nette\Database\Reflection\DiscoveredReflection',
 	);
 
 
@@ -83,46 +87,46 @@ class NNetteExtension extends NConfigCompilerExtension
 
 		// cache
 		$container->addDefinition($this->prefix('cacheJournal'))
-			->setClass('NFileJournal', array('%tempDir%'));
+			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
 
 		$container->addDefinition('cacheStorage') // no namespace for back compatibility
-			->setClass('NFileStorage', array('%tempDir%/cache'));
+			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
 
 		$container->addDefinition($this->prefix('templateCacheStorage'))
-			->setClass('NPhpFileStorage', array('%tempDir%/cache'))
+			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
 			->setAutowired(FALSE);
 
 		$container->addDefinition($this->prefix('cache'))
-			->setClass('NCache', array(1 => '%namespace%'))
+			->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))
 			->setParameters(array('namespace' => NULL));
 
 
 		// http
 		$container->addDefinition($this->prefix('httpRequestFactory'))
-			->setClass('NHttpRequestFactory')
+			->setClass('Nette\Http\RequestFactory')
 			->addSetup('setEncoding', array('UTF-8'))
 			->setInternal(TRUE);
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility
-			->setClass('NHttpRequest')
-			->setFactory('@\NHttpRequestFactory::createHttpRequest');
+			->setClass('Nette\Http\Request')
+			->setFactory('@Nette\Http\RequestFactory::createHttpRequest');
 
 		$container->addDefinition('httpResponse') // no namespace for back compatibility
-			->setClass('NHttpResponse');
+			->setClass('Nette\Http\Response');
 
 		$container->addDefinition($this->prefix('httpContext'))
-			->setClass('NHttpContext');
+			->setClass('Nette\Http\Context');
 
 
 		// session
 		$session = $container->addDefinition('session') // no namespace for back compatibility
-			->setClass('NSession');
+			->setClass('Nette\Http\Session');
 
 		if (isset($config['session']['expiration'])) {
 			$session->addSetup('setExpiration', array($config['session']['expiration']));
 		}
 		if (isset($config['session']['iAmUsingBadHost'])) {
-			$session->addSetup('NFramework::$iAmUsingBadHost = ?;', array((bool) $config['session']['iAmUsingBadHost']));
+			$session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['session']['iAmUsingBadHost']));
 		}
 		unset($config['session']['expiration'], $config['session']['autoStart'], $config['session']['iAmUsingBadHost']);
 		if (!empty($config['session'])) {
@@ -132,25 +136,25 @@ class NNetteExtension extends NConfigCompilerExtension
 
 		// security
 		$container->addDefinition($this->prefix('userStorage'))
-			->setClass('NUserStorage');
+			->setClass('Nette\Http\UserStorage');
 
 		$user = $container->addDefinition('user') // no namespace for back compatibility
-			->setClass('NUser');
+			->setClass('Nette\Security\User');
 
 		if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
-			$user->addSetup('NDebugger::$bar->addPanel(?)', array(
-				new NDIStatement('NUserPanel')
+			$user->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
 			));
 		}
 
 		if ($config['security']['users']) {
 			$container->addDefinition($this->prefix('authenticator'))
-				->setClass('NSimpleAuthenticator', array($config['security']['users']));
+				->setClass('Nette\Security\SimpleAuthenticator', array($config['security']['users']));
 		}
 
 		if ($config['security']['roles'] || $config['security']['resources']) {
 			$authorizator = $container->addDefinition($this->prefix('authorizator'))
-				->setClass('NPermission');
+				->setClass('Nette\Security\Permission');
 			foreach ($config['security']['roles'] as $role => $parents) {
 				$authorizator->addSetup('addRole', array($role, $parents));
 			}
@@ -162,31 +166,31 @@ class NNetteExtension extends NConfigCompilerExtension
 
 		// application
 		$application = $container->addDefinition('application') // no namespace for back compatibility
-			->setClass('NApplication')
+			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', $config['application']['catchExceptions'])
 			->addSetup('$errorPresenter', $config['application']['errorPresenter']);
 
 		if ($config['application']['debugger']) {
-			$application->addSetup('NRoutingDebugger::initializePanel');
+			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
 		}
 
 		$container->addDefinition($this->prefix('presenterFactory'))
-			->setClass('NPresenterFactory', array(
+			->setClass('Nette\Application\PresenterFactory', array(
 				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
 
 
 		// routing
 		$router = $container->addDefinition('router') // no namespace for back compatibility
-			->setClass('NRouteList');
+			->setClass('Nette\Application\Routers\RouteList');
 
 		foreach ($config['routing']['routes'] as $mask => $action) {
-			$router->addSetup('$service[] = new NRoute(?, ?);', array($mask, $action));
+			$router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?);', array($mask, $action));
 		}
 
 		if (!$container->parameters['productionMode'] && $config['routing']['debugger']) {
-			$application->addSetup('NDebugger::$bar->addPanel(?)', array(
-				new NDIStatement('NRoutingDebugger')
+			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
 		}
 
@@ -194,43 +198,43 @@ class NNetteExtension extends NConfigCompilerExtension
 		// mailer
 		if (empty($config['mailer']['smtp'])) {
 			$container->addDefinition($this->prefix('mailer'))
-				->setClass('NSendmailMailer');
+				->setClass('Nette\Mail\SendmailMailer');
 		} else {
 			$container->addDefinition($this->prefix('mailer'))
-				->setClass('NSmtpMailer', array($config['mailer']));
+				->setClass('Nette\Mail\SmtpMailer', array($config['mailer']));
 		}
 
 		$container->addDefinition($this->prefix('mail'))
-			->setClass('NMail')
+			->setClass('Nette\Mail\Message')
 			->addSetup('setMailer')
 			->setShared(FALSE);
 
 
 		// forms
 		$container->addDefinition($this->prefix('basicForm'))
-			->setClass('NForm')
+			->setClass('Nette\Forms\Form')
 			->setShared(FALSE);
 
 
 		// templating
 		$latte = $container->addDefinition($this->prefix('latte'))
-			->setClass('NLatteFilter')
+			->setClass('Nette\Latte\Engine')
 			->setShared(FALSE);
 
 		if (empty($config['xhtml'])) {
-			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', NLatteCompiler::CONTENT_HTML);
+			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
 		}
 
 		$container->addDefinition($this->prefix('template'))
-			->setClass('NFileTemplate')
+			->setClass('Nette\Templating\FileTemplate')
 			->addSetup('registerFilter', array($latte))
-			->addSetup('registerHelperLoader', array('NTemplateHelpers::loader'))
+			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
 			->setShared(FALSE);
 
 
 		// database
 		$container->addDefinition($this->prefix('database'))
-				->setClass('NDINestedAccessor', array('@container', $this->prefix('database')));
+				->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix('database')));
 
 		if (isset($config['database']['dsn'])) {
 			$config['database'] = array('default' => $config['database']);
@@ -250,26 +254,26 @@ class NNetteExtension extends NConfigCompilerExtension
 			}
 
 			$connection = $container->addDefinition($this->prefix("database.$name"))
-				->setClass('NConnection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
+				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('setCacheStorage')
-				->addSetup('NDebugger::$blueScreen->addPanel(?)', array(
-					'NDatabasePanel::renderException'
+				->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
+					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
 			if ($info['reflection']) {
 				$connection->addSetup('setDatabaseReflection', is_string($info['reflection'])
-					? array(new NDIStatement(preg_match('#^[a-z]+$#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
-					: NConfigCompiler::filterArguments(array($info['reflection']))
+					? array(new Nette\DI\Statement(preg_match('#^[a-z]+$#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
+					: Nette\Config\Compiler::filterArguments(array($info['reflection']))
 				);
 			}
 
 			if (!$container->parameters['productionMode'] && $info['debugger']) {
 				$panel = $container->addDefinition($this->prefix("database.{$name}ConnectionPanel"))
-					->setClass('NDatabasePanel')
+					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
 					->addSetup('$explain', !empty($info['explain']))
-					->addSetup('NDebugger::$bar->addPanel(?)', array('@self'));
+					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 
 				$connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
 			}
@@ -278,7 +282,7 @@ class NNetteExtension extends NConfigCompilerExtension
 
 
 
-	public function afterCompile(NPhpClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
 		$container = $this->getContainerBuilder();
@@ -287,26 +291,26 @@ class NNetteExtension extends NConfigCompilerExtension
 		// debugger
 		foreach (array('email', 'editor', 'browser', 'strictMode', 'maxLen', 'maxDepth') as $key) {
 			if (isset($config['debugger'][$key])) {
-				$initialize->addBody('NDebugger::$? = ?;', array($key, $config['debugger'][$key]));
+				$initialize->addBody('Nette\Diagnostics\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
 			}
 		}
 
 		if (!$container->parameters['productionMode']) {
 			if ($config['container']['debugger']) {
-				$config['debugger']['bar'][] = 'NContainerPanel';
+				$config['debugger']['bar'][] = 'Nette\DI\Diagnostics\ContainerPanel';
 			}
 
 			foreach ((array) $config['debugger']['bar'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'NDebugger::$bar->addPanel(?);',
-					NConfigCompiler::filterArguments(array(is_string($item) ? new NDIStatement($item) : $item))
+					'Nette\Diagnostics\Debugger::$bar->addPanel(?);',
+					Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
 				));
 			}
 
 			foreach ((array) $config['debugger']['blueScreen'] as $item) {
 				$initialize->addBody($container->formatPhp(
-					'NDebugger::$blueScreen->addPanel(?);',
-					NConfigCompiler::filterArguments(array($item))
+					'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
+					Nette\Config\Compiler::filterArguments(array($item))
 				));
 			}
 		}
@@ -316,7 +320,7 @@ class NNetteExtension extends NConfigCompilerExtension
 		}
 
 		foreach ((array) $config['forms']['messages'] as $name => $text) {
-			$initialize->addBody('NRules::$defaultMessages[NForm::?] = ?;', array($name, $text));
+			$initialize->addBody('Nette\Forms\Rules::$defaultMessages[Nette\Forms\Form::?] = ?;', array($name, $text));
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
@@ -326,7 +330,7 @@ class NNetteExtension extends NConfigCompilerExtension
 		}
 
 		if (empty($config['xhtml'])) {
-			$initialize->addBody('NHtml::$xhtml = ?;', array((bool) $config['xhtml']));
+			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
 		}
 
 		if (isset($config['security']['frames']) && $config['security']['frames'] !== TRUE) {
@@ -353,7 +357,7 @@ class NNetteExtension extends NConfigCompilerExtension
 		// checks whether directory is writable
 		$uniq = uniqid('_', TRUE);
 		if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
-			throw new InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
+			throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 		}
 
 		// tests subdirectory mode
@@ -361,7 +365,7 @@ class NNetteExtension extends NConfigCompilerExtension
 		@unlink("$dir/$uniq/_");
 		@rmdir("$dir/$uniq"); // @ - directory may not already exist
 
-		return 'NFileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
+		return 'Nette\Caching\Storages\FileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
 	}
 
 }

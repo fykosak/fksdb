@@ -7,8 +7,15 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette,
+	Nette\Utils\Validators,
+	Nette\Utils\Strings,
+	Nette\Utils\PhpGenerator\Helpers as PhpHelpers,
+	Nette\Utils\PhpGenerator\PhpLiteral;
 
 
 
@@ -16,11 +23,10 @@
  * Basic container builder.
  *
  * @author     David Grudl
- * @property-read NDIServiceDefinition[] $definitions
+ * @property-read ServiceDefinition[] $definitions
  * @property-read array $dependencies
- * @package Nette\DI
  */
-class NDIContainerBuilder extends NObject
+class ContainerBuilder extends Nette\Object
 {
 	const CREATED_SERVICE = 'self',
 		THIS_CONTAINER = 'container';
@@ -28,7 +34,7 @@ class NDIContainerBuilder extends NObject
 	/** @var array  %param% will be expanded */
 	public $parameters = array();
 
-	/** @var NDIServiceDefinition[] */
+	/** @var ServiceDefinition[] */
 	private $definitions = array();
 
 	/** @var array for auto-wiring */
@@ -42,14 +48,14 @@ class NDIContainerBuilder extends NObject
 	/**
 	 * Adds new service definition. The expressions %param% and @service will be expanded.
 	 * @param  string
-	 * @return NDIServiceDefinition
+	 * @return ServiceDefinition
 	 */
 	public function addDefinition($name)
 	{
 		if (isset($this->definitions[$name])) {
-			throw new InvalidStateException("Service '$name' has already been added.");
+			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
-		return $this->definitions[$name] = new NDIServiceDefinition;
+		return $this->definitions[$name] = new ServiceDefinition;
 	}
 
 
@@ -69,12 +75,12 @@ class NDIContainerBuilder extends NObject
 	/**
 	 * Gets the service definition.
 	 * @param  string
-	 * @return NDIServiceDefinition
+	 * @return ServiceDefinition
 	 */
 	public function getDefinition($name)
 	{
 		if (!isset($this->definitions[$name])) {
-			throw new NMissingServiceException("Service '$name' not found.");
+			throw new MissingServiceException("Service '$name' not found.");
 		}
 		return $this->definitions[$name];
 	}
@@ -112,7 +118,7 @@ class NDIContainerBuilder extends NObject
 	 * Resolves service name by type.
 	 * @param  string  class or interface
 	 * @return string  service name or NULL
-	 * @throws NServiceCreationException
+	 * @throws ServiceCreationException
 	 */
 	public function getByType($class)
 	{
@@ -124,7 +130,7 @@ class NDIContainerBuilder extends NObject
 			return $this->classes[$lower][0];
 
 		} else {
-			throw new NServiceCreationException("Multiple services of type $class found: " . implode(', ', $this->classes[$lower]));
+			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $this->classes[$lower]));
 		}
 	}
 
@@ -154,20 +160,20 @@ class NDIContainerBuilder extends NObject
 	 */
 	public function autowireArguments($class, $method, array $arguments)
 	{
-		$rc = NClassReflection::from($class);
+		$rc = Nette\Reflection\ClassType::from($class);
 		if (!$rc->hasMethod($method)) {
-			if (!NValidators::isList($arguments)) {
-				throw new NServiceCreationException("Unable to pass specified arguments to $class::$method().");
+			if (!Nette\Utils\Validators::isList($arguments)) {
+				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
 			}
 			return $arguments;
 		}
 
 		$rm = $rc->getMethod($method);
 		if ($rm->isAbstract() || !$rm->isPublic()) {
-			throw new NServiceCreationException("$rm is not callable.");
+			throw new ServiceCreationException("$rm is not callable.");
 		}
 		$this->addDependency($rm->getFileName());
-		return NDIHelpers::autowireArguments($rm, $arguments, $this);
+		return Helpers::autowireArguments($rm, $arguments, $this);
 	}
 
 
@@ -193,10 +199,10 @@ class NDIContainerBuilder extends NObject
 			if ($def->class) {
 				$def->class = $this->expand($def->class);
 				if (!$def->factory) {
-					$def->factory = new NDIStatement($def->class);
+					$def->factory = new Statement($def->class);
 				}
 			} elseif (!$def->factory) {
-				throw new NServiceCreationException("Class and factory are missing in service '$name' definition.");
+				throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
 			}
 		}
 
@@ -213,9 +219,9 @@ class NDIContainerBuilder extends NObject
 				continue;
 			}
 			if (!class_exists($def->class) && !interface_exists($def->class)) {
-				throw new InvalidStateException("Class $def->class has not been found.");
+				throw new Nette\InvalidStateException("Class $def->class has not been found.");
 			}
-			$def->class = NClassReflection::from($def->class)->getName();
+			$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
 			if ($def->autowired) {
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][] = $name;
@@ -224,7 +230,7 @@ class NDIContainerBuilder extends NObject
 		}
 
 		foreach ($this->classes as $class => $foo) {
-			$this->addDependency(NClassReflection::from($class)->getFileName());
+			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
 		}
 	}
 
@@ -233,7 +239,7 @@ class NDIContainerBuilder extends NObject
 	private function resolveClass($name, $recursive = array())
 	{
 		if (isset($recursive[$name])) {
-			throw new InvalidArgumentException('Circular reference detected for services: ' . implode(', ', array_keys($recursive)) . '.');
+			throw new Nette\InvalidArgumentException('Circular reference detected for services: ' . implode(', ', array_keys($recursive)) . '.');
 		}
 		$recursive[$name] = TRUE;
 
@@ -245,29 +251,29 @@ class NDIContainerBuilder extends NObject
 
 		} elseif (is_array($factory)) { // method calling
 			if ($service = $this->getServiceName($factory[0])) {
-				if (NStrings::contains($service, '\\')) { // @Class
-					throw new NServiceCreationException("Unable resolve class name for service '$name'.");
+				if (Strings::contains($service, '\\')) { // @\Class
+					throw new ServiceCreationException("Unable resolve class name for service '$name'.");
 				}
 				$factory[0] = $this->resolveClass($service, $recursive);
 				if (!$factory[0]) {
 					return;
 				}
 			}
-			$factory = new NCallback($factory);
+			$factory = new Nette\Callback($factory);
 			if (!$factory->isCallable()) {
-				throw new InvalidStateException("Factory '$factory' is not callable.");
+				throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
 			}
 			try {
 				$reflection = $factory->toReflection();
 				$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
-				if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof ReflectionMethod) {
-					}
-			} catch (ReflectionException $e) {
+				if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
+					$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;
+				}
+			} catch (\ReflectionException $e) {
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
-			if (NStrings::contains($service, '\\')) { // @Class
-				$service = ltrim($service, '\\');
+			if (Strings::contains($service, '\\')) { // @\Class
 				$def->autowired = FALSE;
 				return $def->class = $service;
 			}
@@ -285,7 +291,7 @@ class NDIContainerBuilder extends NObject
 
 	/**
 	 * Adds a file to the list of dependencies.
-	 * @return NDIContainerBuilder  provides a fluent interface
+	 * @return ContainerBuilder  provides a fluent interface
 	 */
 	public function addDependency($file)
 	{
@@ -313,16 +319,16 @@ class NDIContainerBuilder extends NObject
 
 	/**
 	 * Generates PHP class.
-	 * @return NPhpClassType
+	 * @return Nette\Utils\PhpGenerator\ClassType
 	 */
-	public function generateClass($parentClass = 'NDIContainer')
+	public function generateClass($parentClass = 'Nette\DI\Container')
 	{
 		unset($this->definitions[self::THIS_CONTAINER]);
 		$this->addDefinition(self::THIS_CONTAINER)->setClass($parentClass);
 
 		$this->prepareClassList();
 
-		$class = new NPhpClassType('Container');
+		$class = new Nette\Utils\PhpGenerator\ClassType('Container');
 		$class->addExtend($parentClass);
 		$class->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->expand($this->parameters)));
@@ -331,8 +337,8 @@ class NDIContainerBuilder extends NObject
 		foreach ($this->classes as $name => $foo) {
 			try {
 				$classes->value[$name] = $this->getByType($name);
-			} catch (NServiceCreationException $e) {
-				$classes->value[$name] = new NPhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
+			} catch (ServiceCreationException $e) {
+				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
 		}
 
@@ -343,19 +349,19 @@ class NDIContainerBuilder extends NObject
 		foreach ($definitions as $name => $def) {
 			if ($def->shared) {
 				foreach ($this->expand($def->tags) as $tag => $value) {
-					$meta->value[$name][NDIContainer::TAGS][$tag] = $value;
+					$meta->value[$name][Container::TAGS][$tag] = $value;
 				}
 			}
 		}
 
 		foreach ($definitions as $name => $def) {
 			try {
-				$type = ($tmp=$def->class) ? $tmp : 'object';
-				$methodName = NDIContainer::getMethodName($name, $def->shared);
-				if (!NPhpHelpers::isIdentifier($methodName)) {
-					throw new NServiceCreationException('Name contains invalid characters.');
+				$type = $def->class ?: 'object';
+				$methodName = Container::getMethodName($name, $def->shared);
+				if (!PhpHelpers::isIdentifier($methodName)) {
+					throw new ServiceCreationException('Name contains invalid characters.');
 				}
-				if ($def->shared && !$def->internal && NPhpHelpers::isIdentifier($name)) {
+				if ($def->shared && !$def->internal && PhpHelpers::isIdentifier($name)) {
 					$class->addDocument("@property $type \$$name");
 				}
 				$method = $class->addMethod($methodName)
@@ -370,8 +376,8 @@ class NDIContainerBuilder extends NObject
 						$param->setTypeHint($tmp[0]);
 					}
 				}
-			} catch (Exception $e) {
-				throw new NServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+			} catch (\Exception $e) {
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 		}
 
@@ -390,21 +396,21 @@ class NDIContainerBuilder extends NObject
 		$parameters = $this->parameters;
 		foreach ($this->expand($def->parameters) as $k => $v) {
 			$v = explode(' ', is_int($k) ? $v : $k);
-			$parameters[end($v)] = new NPhpLiteral('$' . end($v));
+			$parameters[end($v)] = new PhpLiteral('$' . end($v));
 		}
 
-		$code = '$service = ' . $this->formatStatement(NDIHelpers::expand($def->factory, $parameters, TRUE)) . ";\n";
+		$code = '$service = ' . $this->formatStatement(Helpers::expand($def->factory, $parameters, TRUE)) . ";\n";
 
 		$entity = $this->normalizeEntity($def->factory->entity);
 		if ($def->class && $def->class !== $entity && !$this->getServiceName($entity)) {
-			$code .= NPhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
-				. "\tthrow new UnexpectedValueException(?);\n}\n",
+			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
+				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
 				array("Unable to create service '$name', value returned by factory is not $def->class type.")
 			);
 		}
 
 		foreach ((array) $def->setup as $setup) {
-			$setup = NDIHelpers::expand($setup, $parameters, TRUE);
+			$setup = Helpers::expand($setup, $parameters, TRUE);
 			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
 				$setup->entity = array("@$name", $setup->entity);
 			}
@@ -421,49 +427,49 @@ class NDIContainerBuilder extends NObject
 	 * @return string
 	 * @internal
 	 */
-	public function formatStatement(NDIStatement $statement, $self = NULL)
+	public function formatStatement(Statement $statement, $self = NULL)
 	{
 		$entity = $this->normalizeEntity($statement->entity);
 		$arguments = $statement->arguments;
 
-		if (is_string($entity) && NStrings::contains($entity, '?')) { // PHP literal
+		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
 			return $this->formatPhp($entity, $arguments, $self);
 
 		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
 			if ($this->definitions[$service]->shared) {
 				if ($arguments) {
-					throw new NServiceCreationException("Unable to call service '$entity'.");
+					throw new ServiceCreationException("Unable to call service '$entity'.");
 				}
 				return $this->formatPhp('$this->getService(?)', array($service));
 			}
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
-				$params[] = preg_replace('#\w+$#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . NPhpHelpers::dump($v));
+				$params[] = preg_replace('#\w+$#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
 			}
-			$rm = new NFunctionReflection(create_function(implode(', ', $params), ''));
-			$arguments = NDIHelpers::autowireArguments($rm, $arguments, $this);
-			return $this->formatPhp('$this->?(?*)', array(NDIContainer::getMethodName($service, FALSE), $arguments), $self);
+			$rm = new Nette\Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
+			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
+			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service, FALSE), $arguments), $self);
 
 		} elseif ($entity === 'not') { // operator
 			return $this->formatPhp('!?', array($arguments[0]));
 
 		} elseif (is_string($entity)) { // class name
-			if ($constructor = NClassReflection::from($entity)->getConstructor()) {
+			if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
-				$arguments = NDIHelpers::autowireArguments($constructor, $arguments, $this);
+				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {
-				throw new NServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
+				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
 			}
 			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments), $self);
 
-		} elseif (!NValidators::isList($entity) || count($entity) !== 2) {
-			throw new InvalidStateException("Expected class, method or property, " . NPhpHelpers::dump($entity) . " given.");
+		} elseif (!Validators::isList($entity) || count($entity) !== 2) {
+			throw new Nette\InvalidStateException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
 
 		} elseif ($entity[0] === '') { // globalFunc
 			return $this->formatPhp("$entity[1](?*)", array($arguments), $self);
 
-		} elseif (NStrings::contains($entity[1], '$')) { // property setter
-			NValidators::assert($arguments, 'list:1', "setup arguments for '" . NCallback::create($entity) . "'");
+		} elseif (Strings::contains($entity[1], '$')) { // property setter
+			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Callback::create($entity) . "'");
 			if ($this->getServiceName($entity[0], $self)) {
 				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]), $self);
 			} else {
@@ -491,21 +497,21 @@ class NDIContainerBuilder extends NObject
 	public function formatPhp($statement, $args, $self = NULL)
 	{
 		$that = $this;
-		array_walk_recursive($args, create_function('&$val', 'extract(NCFix::$vars['.NCFix::uses(array('self'=>$self,'that'=> $that)).'], EXTR_REFS);
+		array_walk_recursive($args, function(&$val) use ($self, $that) {
 			list($val) = $that->normalizeEntity(array($val));
 
-			if ($val instanceof NDIStatement) {
-				$val = new NPhpLiteral($that->formatStatement($val, $self));
+			if ($val instanceof Statement) {
+				$val = new PhpLiteral($that->formatStatement($val, $self));
 
-			} elseif ($val === \'@\' . NDIContainerBuilder::THIS_CONTAINER) {
-				$val = new NPhpLiteral(\'$this\');
+			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
+				$val = new PhpLiteral('$this');
 
 			} elseif ($service = $that->getServiceName($val, $self)) {
-				$val = $service === $self ? \'$service\' : $that->formatStatement(new NDIStatement($val));
-				$val = new NPhpLiteral($val);
+				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
+				$val = new PhpLiteral($val);
 			}
-		'));
-		return NPhpHelpers::formatArgs($statement, $args);
+		});
+		return PhpHelpers::formatArgs($statement, $args);
 	}
 
 
@@ -517,7 +523,7 @@ class NDIContainerBuilder extends NObject
 	 */
 	public function expand($value)
 	{
-		return NDIHelpers::expand($value, $this->parameters, TRUE);
+		return Helpers::expand($value, $this->parameters, TRUE);
 	}
 
 
@@ -525,20 +531,20 @@ class NDIContainerBuilder extends NObject
 	/** @internal */
 	public function normalizeEntity($entity)
 	{
-		if (is_string($entity) && NStrings::contains($entity, '::') && !NStrings::contains($entity, '?')) { // NClass::method -> [Class, method]
+		if (is_string($entity) && Strings::contains($entity, '::') && !Strings::contains($entity, '?')) { // Class::method -> [Class, method]
 			$entity = explode('::', $entity);
 		}
 
-		if (is_array($entity) && $entity[0] instanceof NDIServiceDefinition) { // [ServiceDefinition, ...] -> [@serviceName, ...]
+		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // [ServiceDefinition, ...] -> [@serviceName, ...]
 			$tmp = array_keys($this->definitions, $entity[0], TRUE);
 			$entity[0] = "@$tmp[0]";
 
-		} elseif ($entity instanceof NDIServiceDefinition) { // ServiceDefinition -> @serviceName
+		} elseif ($entity instanceof ServiceDefinition) { // ServiceDefinition -> @serviceName
 			$tmp = array_keys($this->definitions, $entity, TRUE);
 			$entity = "@$tmp[0]";
 
 		} elseif (is_array($entity) && $entity[0] === $this) { // [$this, ...] -> [@container, ...]
-			$entity[0] = '@' . NDIContainerBuilder::THIS_CONTAINER;
+			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;
 		}
 		return $entity; // Class, @service, [Class, member], [@service, member], [, globalFunc]
 	}
@@ -546,7 +552,7 @@ class NDIContainerBuilder extends NObject
 
 
 	/**
-	 * Converts @service or @Class -> service name and checks its existence.
+	 * Converts @service or @\Class -> service name and checks its existence.
 	 * @param  mixed
 	 * @return string  of FALSE, if argument is not service name
 	 */
@@ -559,18 +565,18 @@ class NDIContainerBuilder extends NObject
 		if ($service === self::CREATED_SERVICE) {
 			$service = $self;
 		}
-		if (NStrings::contains($service, '\\')) {
+		if (Strings::contains($service, '\\')) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList
 				return $service;
 			}
 			$res = $this->getByType($service);
 			if (!$res) {
-				throw new NServiceCreationException("Reference to missing service of type $service.");
+				throw new ServiceCreationException("Reference to missing service of type $service.");
 			}
 			return $res;
 		}
 		if (!isset($this->definitions[$service])) {
-			throw new NServiceCreationException("Reference to missing service '$service'.");
+			throw new ServiceCreationException("Reference to missing service '$service'.");
 		}
 		return $service;
 	}

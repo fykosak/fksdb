@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Templating
  */
+
+namespace Nette\Templating;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * The exception occured during template compilation.
  *
  * @author     David Grudl
- * @package Nette\Templating
  */
-class NTemplateException extends InvalidStateException
+class FilterException extends Nette\InvalidStateException
 {
 	/** @var string */
 	public $sourceFile;

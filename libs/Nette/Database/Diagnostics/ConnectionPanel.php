@@ -7,18 +7,22 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Diagnostics
  */
+
+namespace Nette\Database\Diagnostics;
+
+use Nette,
+	Nette\Database\Helpers,
+	Nette\Diagnostics\Debugger;
 
 
 
 /**
- * Debug panel for NDatabase.
+ * Debug panel for Nette\Database.
  *
  * @author     David Grudl
- * @package Nette\Database\Diagnostics
  */
-class NDatabasePanel extends NObject implements IBarPanel
+class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;
@@ -40,13 +44,13 @@ class NDatabasePanel extends NObject implements IBarPanel
 
 
 
-	public function logQuery(NStatement $result, array $params = NULL)
+	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
 	{
 		if ($this->disabled) {
 			return;
 		}
 		$source = NULL;
-		foreach (PHP_VERSION_ID < 50205 ? debug_backtrace() :debug_backtrace(FALSE) as $row) {
+		foreach (debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
@@ -62,18 +66,18 @@ class NDatabasePanel extends NObject implements IBarPanel
 
 	public static function renderException($e)
 	{
-		if (!$e instanceof PDOException) {
+		if (!$e instanceof \PDOException) {
 			return;
 		}
 		if (isset($e->queryString)) {
 	 		$sql = $e->queryString;
 
-	 	} elseif ($item = NDebugHelpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+	 	} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 	 		$sql = $item['args'][0];
 	 	}
 		return isset($sql) ? array(
 			'tab' => 'SQL',
-			'panel' => NDatabaseHelpers::dumpSql($sql),
+			'panel' => Helpers::dumpSql($sql),
 		) : NULL;
 	}
 
@@ -103,7 +107,7 @@ class NDatabasePanel extends NObject implements IBarPanel
 				try {
 					$cmd = is_string($this->explain) ? $this->explain : 'EXPLAIN';
 					$explain = $connection->queryArgs("$cmd $sql", $params)->fetchAll();
-				} catch (PDOException $e) {}
+				} catch (\PDOException $e) {}
 			}
 
 			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
@@ -113,7 +117,7 @@ class NDatabasePanel extends NObject implements IBarPanel
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . NDatabaseHelpers::dumpSql(self::$maxLength ? NStrings::truncate($sql, self::$maxLength) : $sql);
+			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Helpers::dumpSql(self::$maxLength ? Nette\Utils\Strings::truncate($sql, self::$maxLength) : $sql);
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
@@ -130,12 +134,12 @@ class NDatabasePanel extends NObject implements IBarPanel
 				$s .= "</table>";
 			}
 			if ($source) {
-				$s .= NDebugHelpers::editorLink($source[0], $source[1])->class('nette-DbConnectionPanel-source');
+				$s .= Nette\Diagnostics\Helpers::editorLink($source[0], $source[1])->class('nette-DbConnectionPanel-source');
 			}
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= NDebugger::dump($param, TRUE);
+				$s .= Debugger::dump($param, TRUE);
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -19,9 +22,8 @@
  *
  * @property-read bool $submittedBy
  * @property   mixed $validationScope
- * @package Nette\Forms\Controls
  */
-class NSubmitButton extends NButton implements ISubmitterControl
+class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 {
 	/** @var array of function(SubmitButton $sender); Occurs when the button is clicked and form is successfully validated */
 	public $onClick;
@@ -48,7 +50,7 @@ class NSubmitButton extends NButton implements ISubmitterControl
 	/**
 	 * Sets 'pressed' indicator.
 	 * @param  bool
-	 * @return NSubmitButton  provides a fluent interface
+	 * @return SubmitButton  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
@@ -74,7 +76,7 @@ class NSubmitButton extends NButton implements ISubmitterControl
 	/**
 	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
 	 * @param  mixed
-	 * @return NSubmitButton  provides a fluent interface
+	 * @return SubmitButton  provides a fluent interface
 	 */
 	public function setValidationScope($scope)
 	{
@@ -112,7 +114,7 @@ class NSubmitButton extends NButton implements ISubmitterControl
 	 * Submitted validator: has been button pressed?
 	 * @return bool
 	 */
-	public static function validateSubmitted(ISubmitterControl $control)
+	public static function validateSubmitted(Nette\Forms\ISubmitterControl $control)
 	{
 		return $control->isSubmittedBy();
 	}

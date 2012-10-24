@@ -1,5 +1,8 @@
 <?php
 
+use Nette\Diagnostics\Debugger;
+use Nette\DateTime;
+
 class ContestantsPresenter extends AuthenticatedPresenter {
 
     /**
@@ -66,7 +69,7 @@ class ContestantsPresenter extends AuthenticatedPresenter {
                 $login = $serviceLogin->createNew(FormUtils::emptyStrToNull($dataLogin));
 
                 $login->person_id = $person->person_id;
-                $login->created = NDateTime53::from(time());
+                $login->created = DateTime::from(time());
 
                 $serviceLogin->save($login);
                 //TODO reset pwd & send notification
@@ -93,7 +96,7 @@ class ContestantsPresenter extends AuthenticatedPresenter {
             $this->redirect('Contestants:default');
         } catch (ModelException $e) {
             $connection->rollBack();
-            NDebugger::log($e, NDebugger::ERROR);
+            Debugger::log($e, Debugger::ERROR);
             $this->flashMessage($person->gender == 'F' ? 'Řešitel nebyl založen, došlo k chybě.' : 'Řešitelka nebyla založena, došlo k chybě.', 'error');
             $this->restoreRequest($this->backlink);
             $this->redirect('Contestants:default');

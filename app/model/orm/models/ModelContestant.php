@@ -6,10 +6,6 @@
  */
 class ModelContestant extends AbstractModelSingle {
 
-    public static function createFromTableRow(NTableRow $row) {
-        return new self($row->toArray(), $row->getTable());
-    }
-
     /**
      * @return ModelPerson
      */

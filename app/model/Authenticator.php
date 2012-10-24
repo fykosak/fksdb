@@ -1,9 +1,14 @@
 <?php
 
+use Nette\Object;
+use Nette\Security\IAuthenticator;
+use Nette\Security\AuthenticationException;
+use Nette\DateTime;
+
 /**
  * Users authenticator.
  */
-class Authenticator extends NObject implements IAuthenticator {
+class Authenticator extends Object implements IAuthenticator {
 
     /** @var ServiceLogin */
     private $serviceLogin;
@@ -14,8 +19,8 @@ class Authenticator extends NObject implements IAuthenticator {
 
     /**
      * Performs an authentication.
-     * @return NIdentity
-     * @throws NAuthenticationException
+     * @return \Nette\Security\IIdentity
+     * @throws AuthenticationException
      */
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
@@ -23,14 +28,14 @@ class Authenticator extends NObject implements IAuthenticator {
         $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->where('active = 1')->fetch();
 
         if (!$login) {
-            throw new NAuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
         }
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
-            throw new NAuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
         }
 
-        $login->last_login = NDateTime53::from(time());
+        $login->last_login = DateTime::from(time());
         $this->serviceLogin->save($login);
 
         return $login->getPerson();

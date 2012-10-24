@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Templating
  */
+
+namespace Nette\Templating;
+
+use Nette,
+	Nette\Caching;
 
 
 
@@ -16,9 +20,8 @@
  * Template.
  *
  * @author     David Grudl
- * @package Nette\Templating
  */
-class NTemplate extends NObject implements ITemplate
+class Template extends Nette\Object implements ITemplate
 {
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
@@ -38,7 +41,7 @@ class NTemplate extends NObject implements ITemplate
 	/** @var array */
 	private $helperLoaders = array();
 
-	/** @var ICacheStorage */
+	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
 
 
@@ -46,7 +49,7 @@ class NTemplate extends NObject implements ITemplate
 	/**
 	 * Sets template source code.
 	 * @param  string
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function setSource($source)
 	{
@@ -77,19 +80,19 @@ class NTemplate extends NObject implements ITemplate
 	 */
 	public function render()
 	{
-		$cache = new NCache($storage = $this->getCacheStorage(), 'Nette.Template');
+		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
 		$cached = $compiled = $cache->load($this->source);
 
 		if ($compiled === NULL) {
 			$compiled = $this->compile();
-			$cache->save($this->source, $compiled, array(NCache::CONSTS => 'NFramework::REVISION'));
+			$cache->save($this->source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
 			$cached = $cache->load($this->source);
 		}
 
-		if ($cached !== NULL && $storage instanceof NPhpFileStorage) {
-			NLimitedScope::load($cached['file'], $this->getParameters());
+		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
+			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
 		} else {
-			NLimitedScope::evaluate($compiled, $this->getParameters());
+			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
 		}
 	}
 
@@ -103,7 +106,7 @@ class NTemplate extends NObject implements ITemplate
 	public function save($file)
 	{
 		if (file_put_contents($file, $this->__toString(TRUE)) === FALSE) {
-			throw new IOException("Unable to save file '$file'.");
+			throw new Nette\IOException("Unable to save file '$file'.");
 		}
 	}
 
@@ -122,7 +125,7 @@ class NTemplate extends NObject implements ITemplate
 			$this->render();
 			return ob_get_clean();
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			ob_end_clean();
 			if ($args && $args[0]) {
 				throw $e;
@@ -147,11 +150,11 @@ class NTemplate extends NObject implements ITemplate
 		$code = $this->getSource();
 		foreach ($this->filters as $filter) {
 			$code = self::extractPhp($code, $blocks);
-			$code = $filter->invoke($code);
+			$code = $filter($code);
 			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return NTemplateHelpers::optimizePhp($code);
+		return Helpers::optimizePhp($code);
 	}
 
 
@@ -163,13 +166,13 @@ class NTemplate extends NObject implements ITemplate
 	/**
 	 * Registers callback as template compile-time filter.
 	 * @param  callable
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerFilter($callback)
 	{
-		$callback = new NCallback($callback);
+		$callback = new Nette\Callback($callback);
 		if (in_array($callback, $this->filters)) {
-			throw new InvalidStateException("Filter '$callback' was registered twice.");
+			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
 		return $this;
@@ -192,11 +195,11 @@ class NTemplate extends NObject implements ITemplate
 	 * Registers callback as template run-time helper.
 	 * @param  string
 	 * @param  callable
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = new NCallback($callback);
+		$this->helpers[strtolower($name)] = new Nette\Callback($callback);
 		return $this;
 	}
 
@@ -205,11 +208,11 @@ class NTemplate extends NObject implements ITemplate
 	/**
 	 * Registers callback as template run-time helpers loader.
 	 * @param  callable
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelperLoader($callback)
 	{
-		$this->helperLoaders[] = new NCallback($callback);
+		$this->helperLoaders[] = new Nette\Callback($callback);
 		return $this;
 	}
 
@@ -248,7 +251,7 @@ class NTemplate extends NObject implements ITemplate
 		$lname = strtolower($name);
 		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = $loader->invoke($lname);
+				$helper = $loader($lname);
 				if ($helper) {
 					$this->registerHelper($lname, $helper);
 					return $this->helpers[$lname]->invokeArgs($args);
@@ -264,9 +267,9 @@ class NTemplate extends NObject implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
-	public function setTranslator(ITranslator $translator = NULL)
+	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
 		return $this;
@@ -282,12 +285,12 @@ class NTemplate extends NObject implements ITemplate
 	 * Adds new template parameter.
 	 * @param  string  name
 	 * @param  mixed   value
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function add($name, $value)
 	{
 		if (array_key_exists($name, $this->params)) {
-			throw new InvalidStateException("The variable '$name' already exists.");
+			throw new Nette\InvalidStateException("The variable '$name' already exists.");
 		}
 
 		$this->params[$name] = $value;
@@ -299,7 +302,7 @@ class NTemplate extends NObject implements ITemplate
 	/**
 	 * Sets all parameters.
 	 * @param  array
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
 	public function setParameters(array $params)
 	{
@@ -398,9 +401,9 @@ class NTemplate extends NObject implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @return NTemplate  provides a fluent interface
+	 * @return Template  provides a fluent interface
 	 */
-	public function setCacheStorage(ICacheStorage $storage)
+	public function setCacheStorage(Caching\IStorage $storage)
 	{
 		$this->cacheStorage = $storage;
 		return $this;
@@ -409,12 +412,12 @@ class NTemplate extends NObject implements ITemplate
 
 
 	/**
-	 * @return ICacheStorage
+	 * @return Nette\Caching\IStorage
 	 */
 	public function getCacheStorage()
 	{
 		if ($this->cacheStorage === NULL) {
-			return new NDevNullStorage;
+			return new Caching\Storages\DevNullStorage;
 		}
 		return $this->cacheStorage;
 	}

@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\Responses
  */
+
+namespace Nette\Application\Responses;
+
+use Nette,
+	Nette\Http;
 
 
 
@@ -19,9 +23,8 @@
  *
  * @property-read string $url
  * @property-read int $code
- * @package Nette\Application\Responses
  */
-class NRedirectResponse extends NObject implements IPresenterResponse
+class RedirectResponse extends Nette\Object implements Nette\Application\IResponse
 {
 	/** @var string */
 	private $url;
@@ -35,7 +38,7 @@ class NRedirectResponse extends NObject implements IPresenterResponse
 	 * @param  string  URI
 	 * @param  int     HTTP code 3xx
 	 */
-	public function __construct($url, $code = IHttpResponse::S302_FOUND)
+	public function __construct($url, $code = Http\IResponse::S302_FOUND)
 	{
 		$this->url = (string) $url;
 		$this->code = (int) $code;
@@ -67,7 +70,7 @@ class NRedirectResponse extends NObject implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(IHttpRequest $httpRequest, IHttpResponse $httpResponse)
+	public function send(Http\IRequest $httpRequest, Http\IResponse $httpResponse)
 	{
 		$httpResponse->redirect($this->url, $this->code);
 	}

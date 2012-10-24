@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils\PhpGenerator
  */
+
+namespace Nette\Utils\PhpGenerator;
+
+use Nette;
 
 
 
@@ -25,9 +28,8 @@
  * @method ClassType addImplement(string $interface)
  * @method ClassType addTrait(string $trait)
  * @method ClassType addDocument(string $doc)
- * @package Nette\Utils\PhpGenerator
  */
-class NPhpClassType extends NObject
+class ClassType extends Nette\Object
 {
 	/** @var string */
 	public $name;
@@ -56,10 +58,10 @@ class NPhpClassType extends NObject
 	/** @var mixed[] name => value */
 	public $consts = array();
 
-	/** @var NPhpProperty[] name => Property */
+	/** @var Property[] name => Property */
 	public $properties = array();
 
-	/** @var NPhpMethod[] name => Method */
+	/** @var Method[] name => Method */
 	public $methods = array();
 
 
@@ -70,7 +72,7 @@ class NPhpClassType extends NObject
 
 
 
-	/** @return NPhpClassType */
+	/** @return ClassType */
 	public function addConst($name, $value)
 	{
 		$this->consts[$name] = $value;
@@ -79,19 +81,19 @@ class NPhpClassType extends NObject
 
 
 
-	/** @return NPhpProperty */
+	/** @return Property */
 	public function addProperty($name, $value = NULL)
 	{
-		$property = new NPhpProperty;
+		$property = new Property;
 		return $this->properties[$name] = $property->setName($name)->setValue($value);
 	}
 
 
 
-	/** @return NPhpMethod */
+	/** @return Method */
 	public function addMethod($name)
 	{
-		$method = new NPhpMethod;
+		$method = new Method;
 		if ($this->type === 'interface') {
 			$method->setVisibility('')->setBody(FALSE);
 		} else {
@@ -104,7 +106,7 @@ class NPhpClassType extends NObject
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::callProperty($this, $name, $args);
+		return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
 
 
@@ -114,16 +116,16 @@ class NPhpClassType extends NObject
 	{
 		$consts = array();
 		foreach ($this->consts as $name => $value) {
-			$consts[] = "const $name = " . NPhpHelpers::dump($value) . ";\n";
+			$consts[] = "const $name = " . Helpers::dump($value) . ";\n";
 		}
 		$properties = array();
 		foreach ($this->properties as $property) {
 			$properties[] = ($property->documents ? str_replace("\n", "\n * ", "/**\n" . implode("\n", (array) $property->documents)) . "\n */\n" : '')
 				. $property->visibility . ($property->static ? ' static' : '') . ' $' . $property->name
-				. ($property->value === NULL ? '' : ' = ' . NPhpHelpers::dump($property->value))
+				. ($property->value === NULL ? '' : ' = ' . Helpers::dump($property->value))
 				. ";\n";
 		}
-		return NStrings::normalize(
+		return Nette\Utils\Strings::normalize(
 			($this->documents ? str_replace("\n", "\n * ", "/**\n" . implode("\n", (array) $this->documents)) . "\n */\n" : '')
 			. ($this->abstract ? 'abstract ' : '')
 			. ($this->final ? 'final ' : '')
@@ -132,7 +134,7 @@ class NPhpClassType extends NObject
 			. ($this->extends ? 'extends ' . implode(', ', (array) $this->extends) . ' ' : '')
 			. ($this->implements ? 'implements ' . implode(', ', (array) $this->implements) . ' ' : '')
 			. "\n{\n\n"
-			. NStrings::indent(
+			. Nette\Utils\Strings::indent(
 				($this->traits ? "use " . implode(', ', (array) $this->traits) . ";\n\n" : '')
 				. ($this->consts ? implode('', $consts) . "\n\n" : '')
 				. ($this->properties ? implode("\n", $properties) . "\n\n" : '')

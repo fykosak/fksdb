@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Loaders
  */
+
+namespace Nette\Loaders;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Auto loader is responsible for loading classes and interfaces.
  *
  * @author     David Grudl
- * @package Nette\Loaders
  */
-abstract class NAutoLoader extends NObject
+abstract class AutoLoader extends Nette\Object
 {
 	/** @var array  list of registered loaders */
 	static private $loaders = array();
@@ -37,7 +39,7 @@ abstract class NAutoLoader extends NObject
 	{
 		foreach (func_get_args() as $type) {
 			if (!class_exists($type)) {
-				throw new InvalidStateException("Unable to load class or interface '$type'.");
+				throw new Nette\InvalidStateException("Unable to load class or interface '$type'.");
 			}
 		}
 	}
@@ -46,7 +48,7 @@ abstract class NAutoLoader extends NObject
 
 	/**
 	 * Return all registered autoloaders.
-	 * @return NAutoLoader[]
+	 * @return AutoLoader[]
 	 */
 	final public static function getLoaders()
 	{
@@ -62,7 +64,7 @@ abstract class NAutoLoader extends NObject
 	public function register()
 	{
 		if (!function_exists('spl_autoload_register')) {
-			throw new NotSupportedException('spl_autoload does not exist in this PHP installation.');
+			throw new Nette\NotSupportedException('spl_autoload does not exist in this PHP installation.');
 		}
 
 		spl_autoload_register(array($this, 'tryLoad'));

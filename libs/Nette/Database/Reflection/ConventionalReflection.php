@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Reflection
  */
+
+namespace Nette\Database\Reflection;
+
+use Nette;
 
 
 
@@ -17,10 +20,9 @@
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @property-write NConnection $connection
- * @package Nette\Database\Reflection
+ * @property-write Nette\Database\Connection $connection
  */
-class NConventionalReflection extends NObject implements IReflection
+class ConventionalReflection extends Nette\Object implements Nette\Database\IReflection
 {
 	/** @var string */
 	protected $primary;
@@ -77,7 +79,7 @@ class NConventionalReflection extends NObject implements IReflection
 
 
 
-	public function setConnection(NConnection $connection)
+	public function setConnection(Nette\Database\Connection $connection)
 	{}
 
 

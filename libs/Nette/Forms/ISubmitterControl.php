@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms
  */
+
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Defines method that must be implemented to allow a control to submit web form.
  *
  * @author     David Grudl
- * @package Nette\Forms
  */
-interface ISubmitterControl extends IFormControl
+interface ISubmitterControl extends IControl
 {
 
 	/**

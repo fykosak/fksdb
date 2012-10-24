@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * The dependency injection container default implementation.
  *
  * @author     David Grudl
- * @package Nette\DI
  */
-class NDIContainer extends NFreezableObject implements IDIContainer
+class Container extends Nette\FreezableObject implements IContainer
 {
 	const TAGS = 'tags';
 
@@ -68,26 +70,26 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	 * @param  string
 	 * @param  mixed   object, class name or callable
 	 * @param  array   service meta information
-	 * @return NDIContainer  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
 	public function addService($name, $service, array $meta = NULL)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
-			throw new InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		if (isset($this->registry[$name])) {
-			throw new InvalidStateException("Service '$name' has already been registered.");
+			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
-		if (is_object($service) && !$service instanceof Closure && !$service instanceof NCallback) {
+		if (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$name] = $service;
 			$this->meta[$name] = $meta;
 			return $this;
 
-		} elseif (!is_string($service) || strpos($service, ':') !== FALSE|| $service[0] === "\0") { // callable
-			$service = new NCallback($service);
+		} elseif (!is_string($service) || strpos($service, ':') !== FALSE) { // callable
+			$service = new Nette\Callback($service);
 		}
 
 		$this->factories[$name] = array($service);
@@ -122,7 +124,7 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 			return $this->registry[$name];
 
 		} elseif (isset($this->creating[$name])) {
-			throw new InvalidStateException("Circular reference detected for services: "
+			throw new Nette\InvalidStateException("Circular reference detected for services: "
 				. implode(', ', array_keys($this->creating)) . ".");
 		}
 
@@ -130,31 +132,31 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 			list($factory) = $this->factories[$name];
 			if (is_string($factory)) {
 				if (!class_exists($factory)) {
-					throw new InvalidStateException("Cannot instantiate service, class '$factory' not found.");
+					throw new Nette\InvalidStateException("Cannot instantiate service, class '$factory' not found.");
 				}
 				try {
 					$this->creating[$name] = TRUE;
 					$service = new $factory;
-				} catch (Exception $e) {}
+				} catch (\Exception $e) {}
 
 			} elseif (!$factory->isCallable()) {
-				throw new InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
+				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
 
 			} else {
 				$this->creating[$name] = TRUE;
 				try {
-					$service = $factory->invoke($this);
-				} catch (Exception $e) {}
+					$service = $factory($this);
+				} catch (\Exception $e) {}
 			}
 
-		} elseif (method_exists($this, $factory = NDIContainer::getMethodName($name)) && $this->getReflection()->getMethod($factory)->getName() === $factory) {
+		} elseif (method_exists($this, $factory = Container::getMethodName($name)) && $this->getReflection()->getMethod($factory)->getName() === $factory) {
 			$this->creating[$name] = TRUE;
 			try {
 				$service = $this->$factory();
-			} catch (Exception $e) {}
+			} catch (\Exception $e) {}
 
 		} else {
-			throw new NMissingServiceException("Service '$name' not found.");
+			throw new MissingServiceException("Service '$name' not found.");
 		}
 
 		unset($this->creating[$name]);
@@ -163,7 +165,7 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 			throw $e;
 
 		} elseif (!is_object($service)) {
-			throw new UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
+			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
 		}
 
 		return $this->registry[$name] = $service;
@@ -180,7 +182,7 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	{
 		return isset($this->registry[$name])
 			|| isset($this->factories[$name])
-			|| method_exists($this, $method = NDIContainer::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
+			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
 
 
@@ -193,7 +195,7 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	public function isCreated($name)
 	{
 		if (!$this->hasService($name)) {
-			throw new NMissingServiceException("Service '$name' not found.");
+			throw new MissingServiceException("Service '$name' not found.");
 		}
 		return isset($this->registry[$name]);
 	}
@@ -205,17 +207,17 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	 * @param  string  class or interface
 	 * @param  bool    throw exception if service doesn't exist?
 	 * @return object  service or NULL
-	 * @throws NMissingServiceException
+	 * @throws MissingServiceException
 	 */
 	public function getByType($class, $need = TRUE)
 	{
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
 			if ($need) {
-				throw new NMissingServiceException("Service of type $class not found.");
+				throw new MissingServiceException("Service of type $class not found.");
 			}
 		} elseif ($this->classes[$lower] === FALSE) {
-			throw new NMissingServiceException("Multiple services of type $class found.");
+			throw new MissingServiceException("Multiple services of type $class found.");
 		} else {
 			return $this->getService($this->classes[$lower]);
 		}
@@ -250,19 +252,19 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	 * @param  string  class
 	 * @param  array   arguments
 	 * @return object
-	 * @throws InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public function createInstance($class, array $args = array())
 	{
-		$rc = NClassReflection::from($class);
+		$rc = Nette\Reflection\ClassType::from($class);
 		if (!$rc->isInstantiable()) {
-			throw new NServiceCreationException("Class $class is not instantiable.");
+			throw new ServiceCreationException("Class $class is not instantiable.");
 
 		} elseif ($constructor = $rc->getConstructor()) {
-			return $rc->newInstanceArgs(NDIHelpers::autowireArguments($constructor, $args, $this));
+			return $rc->newInstanceArgs(Helpers::autowireArguments($constructor, $args, $this));
 
 		} elseif ($args) {
-			throw new NServiceCreationException("Unable to pass arguments, class $class has no constructor.");
+			throw new ServiceCreationException("Unable to pass arguments, class $class has no constructor.");
 		}
 		return new $class;
 	}
@@ -277,8 +279,8 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	 */
 	public function callMethod($function, array $args = array())
 	{
-		$callback = new NCallback($function);
-		return $callback->invokeArgs(NDIHelpers::autowireArguments($callback->toReflection(), $args, $this));
+		$callback = new Nette\Callback($function);
+		return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
 	}
 
 
@@ -294,7 +296,7 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	 */
 	public function expand($s)
 	{
-		return NDIHelpers::expand($s, $this->parameters);
+		return Helpers::expand($s, $this->parameters);
 	}
 
 
@@ -324,13 +326,13 @@ class NDIContainer extends NFreezableObject implements IDIContainer
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
-			throw new InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 
 		} elseif (isset($this->registry[$name])) {
-			throw new InvalidStateException("Service '$name' has already been registered.");
+			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 
 		} elseif (!is_object($service)) {
-			throw new InvalidArgumentException("Service must be a object, " . gettype($service) . " given.");
+			throw new Nette\InvalidArgumentException("Service must be a object, " . gettype($service) . " given.");
 		}
 		$this->registry[$name] = $service;
 	}

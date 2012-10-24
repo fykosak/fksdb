@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -17,11 +20,10 @@
  *
  * @author     David Grudl
  * @property-read bool $callable
- * @property-read string|array|Closure $native
+ * @property-read string|array|\Closure $native
  * @property-read bool $static
- * @package Nette
  */
-final class NCallback extends NObject
+final class Callback extends Object
 {
 	/** @var callable */
 	private $cb;
@@ -32,7 +34,7 @@ final class NCallback extends NObject
 	 * Factory. Workaround for missing (new Callback)->invoke() in PHP 5.3.
 	 * @param  mixed   class, object, callable
 	 * @param  string  method
-	 * @return NCallback
+	 * @return Callback
 	 */
 	public static function create($callback, $m = NULL)
 	{
@@ -55,19 +57,6 @@ final class NCallback extends NObject
 			return;
 		}
 
-		if (PHP_VERSION_ID < 50202 && is_string($cb) && strpos($cb, '::')) {
-			$cb = explode('::', $cb, 2);
-		} elseif (is_object($cb) && !$cb instanceof NClosure) {
-			$cb = array($cb, '__invoke');
-		}
-
-		// remove class namespace
-		if (is_string($this->cb) && $a = strrpos($this->cb, '\\')) {
-			$this->cb = substr($this->cb, $a + 1);
-
-		} elseif (is_array($this->cb) && is_string($this->cb[0]) && $a = strrpos($this->cb[0], '\\')) {
-			$this->cb[0] = substr($this->cb[0], $a + 1);
-		}
 		if (!is_callable($cb, TRUE)) {
 			throw new InvalidArgumentException("Invalid callback.");
 		}
@@ -134,7 +123,7 @@ final class NCallback extends NObject
 
 	/**
 	 * Returns PHP callback pseudotype.
-	 * @return string|array|Closure
+	 * @return string|array|\Closure
 	 */
 	public function getNative()
 	{
@@ -145,18 +134,18 @@ final class NCallback extends NObject
 
 	/**
 	 * Returns callback reflection.
-	 * @return NFunctionReflection|NMethodReflection
+	 * @return Nette\Reflection\GlobalFunction|Nette\Reflection\Method
 	 */
 	public function toReflection()
 	{
 		if (is_string($this->cb) && strpos($this->cb, '::')) {
-			return new NMethodReflection($this->cb);
+			return new Nette\Reflection\Method($this->cb);
 		} elseif (is_array($this->cb)) {
-			return new NMethodReflection($this->cb[0], $this->cb[1]);
-		} elseif (is_object($this->cb) && !$this->cb instanceof Closure) {
-			return new NMethodReflection($this->cb, '__invoke');
+			return new Nette\Reflection\Method($this->cb[0], $this->cb[1]);
+		} elseif (is_object($this->cb) && !$this->cb instanceof \Closure) {
+			return new Nette\Reflection\Method($this->cb, '__invoke');
 		} else {
-			return new NFunctionReflection($this->cb);
+			return new Nette\Reflection\GlobalFunction($this->cb);
 		}
 	}
 
@@ -177,7 +166,7 @@ final class NCallback extends NObject
 	 */
 	public function __toString()
 	{
-		if ($this->cb instanceof Closure) {
+		if ($this->cb instanceof \Closure) {
 			return '{closure}';
 		} elseif (is_string($this->cb) && $this->cb[0] === "\0") {
 			return '{lambda}';

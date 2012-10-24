@@ -7,16 +7,18 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
 /**
  * Service not found exception.
- * @package Nette\DI
  */
-class NMissingServiceException extends InvalidStateException
+class MissingServiceException extends Nette\InvalidStateException
 {
 }
 
@@ -24,8 +26,7 @@ class NMissingServiceException extends InvalidStateException
 
 /**
  * Service creation exception.
- * @package Nette\DI
  */
-class NServiceCreationException extends InvalidStateException
+class ServiceCreationException extends Nette\InvalidStateException
 {
 }

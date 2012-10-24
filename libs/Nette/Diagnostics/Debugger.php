@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
@@ -20,9 +23,8 @@
  * - output: HTML / AJAX / CLI / other (e.g. XML)
  *
  * @author     David Grudl
- * @package Nette\Diagnostics
  */
-final class NDebugger
+final class Debugger
 {
 	/** @var bool in production mode is suppressed any debugging output */
 	public static $productionMode;
@@ -45,15 +47,15 @@ final class NDebugger
 	/** @var string command to open browser (use 'start ""' in Windows) */
 	public static $browser;
 
-	/********************* NDebugger::dump() ****************d*g**/
+	/********************* Debugger::dump() ****************d*g**/
 
-	/** @var int  how many nested levels of array/object properties display {@link NDebugger::dump()} */
+	/** @var int  how many nested levels of array/object properties display {@link Debugger::dump()} */
 	public static $maxDepth = 3;
 
-	/** @var int  how long strings display {@link NDebugger::dump()} */
+	/** @var int  how long strings display {@link Debugger::dump()} */
 	public static $maxLen = 150;
 
-	/** @var bool display location? {@link NDebugger::dump()} */
+	/** @var bool display location? {@link Debugger::dump()} */
 	public static $showLocation = FALSE;
 
 	/** @var array */
@@ -72,12 +74,12 @@ final class NDebugger
 
 	/********************* errors and exceptions reporting ****************d*g**/
 
-	/** server modes {@link NDebugger::enable()} */
+	/** server modes {@link Debugger::enable()} */
 	const DEVELOPMENT = FALSE,
 		PRODUCTION = TRUE,
 		DETECT = NULL;
 
-	/** @var NDebugBlueScreen */
+	/** @var BlueScreen */
 	public static $blueScreen;
 
 	/** @var bool|int determines whether any error will cause immediate death; if integer that it's matched against error severity */
@@ -89,18 +91,18 @@ final class NDebugger
 	/** @var array of callables specifies the functions that are automatically called after fatal error */
 	public static $onFatalError = array();
 
-	/** @var bool {@link NDebugger::enable()} */
+	/** @var bool {@link Debugger::enable()} */
 	private static $enabled = FALSE;
 
-	/** @var mixed {@link NDebugger::tryError()} FALSE means catching is disabled */
+	/** @var mixed {@link Debugger::tryError()} FALSE means catching is disabled */
 	private static $lastError = FALSE;
 
 	/********************* logging ****************d*g**/
 
-	/** @var NLogger */
+	/** @var Logger */
 	public static $logger;
 
-	/** @var NFireLogger */
+	/** @var FireLogger */
 	public static $fireLogger;
 
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
@@ -117,18 +119,18 @@ final class NDebugger
 
 	/********************* debug bar ****************d*g**/
 
-	/** @var NDebugBar */
+	/** @var Bar */
 	public static $bar;
 
-	/** @var NDefaultBarPanel */
+	/** @var DefaultBarPanel */
 	private static $errorPanel;
 
-	/** @var NDefaultBarPanel */
+	/** @var DefaultBarPanel */
 	private static $dumpPanel;
 
 	/********************* Firebug extension ****************d*g**/
 
-	/** {@link NDebugger::log()} and {@link NDebugger::fireLog()} */
+	/** {@link Debugger::log()} and {@link Debugger::fireLog()} */
 	const DEBUG = 'debug',
 		INFO = 'info',
 		WARNING = 'warning',
@@ -142,7 +144,7 @@ final class NDebugger
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new Nette\StaticClassException;
 	}
 
 
@@ -167,44 +169,44 @@ final class NDebugger
 			}
 		}
 
-		self::$logger = new NLogger;
+		self::$logger = new Logger;
 		self::$logDirectory = & self::$logger->directory;
 		self::$email = & self::$logger->email;
 		self::$mailer = & self::$logger->mailer;
-		self::$emailSnooze = & NLogger::$emailSnooze;
+		self::$emailSnooze = & Logger::$emailSnooze;
 
-		self::$fireLogger = new NFireLogger;
+		self::$fireLogger = new FireLogger;
 
-		self::$blueScreen = new NDebugBlueScreen;
-		self::$blueScreen->addPanel(create_function('$e', '
-			if ($e instanceof NTemplateException) {
+		self::$blueScreen = new BlueScreen;
+		self::$blueScreen->addPanel(function($e) {
+			if ($e instanceof Nette\Templating\FilterException) {
 				return array(
-					\'tab\' => \'Template\',
-					\'panel\' => \'<p><b>File:</b> \' . NDebugHelpers::editorLink($e->sourceFile, $e->sourceLine)
-					. \'&nbsp; <b>Line:</b> \' . ($e->sourceLine ? $e->sourceLine : \'n/a\') . \'</p>\'
-					. ($e->sourceLine ? NDebugBlueScreen::highlightFile($e->sourceFile, $e->sourceLine) : \'\')
+					'tab' => 'Template',
+					'panel' => '<p><b>File:</b> ' . Helpers::editorLink($e->sourceFile, $e->sourceLine)
+					. '&nbsp; <b>Line:</b> ' . ($e->sourceLine ? $e->sourceLine : 'n/a') . '</p>'
+					. ($e->sourceLine ? BlueScreen::highlightFile($e->sourceFile, $e->sourceLine) : '')
 				);
-			} elseif ($e instanceof NNeonException && preg_match(\'#line (\\d+)#\', $e->getMessage(), $m)) {
-				if ($item = NDebugHelpers::findTrace($e->getTrace(), \'NConfigNeonAdapter::load\')) {
+			} elseif ($e instanceof Nette\Utils\NeonException && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
+				if ($item = Helpers::findTrace($e->getTrace(), 'Nette\Config\Adapters\NeonAdapter::load')) {
 					return array(
-						\'tab\' => \'NEON\',
-						\'panel\' => \'<p><b>File:</b> \' . NDebugHelpers::editorLink($item[\'args\'][0], $m[1]) . \'&nbsp; <b>Line:</b> \' . $m[1] . \'</p>\'
-							. NDebugBlueScreen::highlightFile($item[\'args\'][0], $m[1])
+						'tab' => 'NEON',
+						'panel' => '<p><b>File:</b> ' . Helpers::editorLink($item['args'][0], $m[1]) . '&nbsp; <b>Line:</b> ' . $m[1] . '</p>'
+							. BlueScreen::highlightFile($item['args'][0], $m[1])
 					);
-				} elseif ($item = NDebugHelpers::findTrace($e->getTrace(), \'NNeon::decode\')) {
+				} elseif ($item = Helpers::findTrace($e->getTrace(), 'Nette\Utils\Neon::decode')) {
 					return array(
-						\'tab\' => \'NEON\',
-						\'panel\' => NDebugBlueScreen::highlightPhp($item[\'args\'][0], $m[1])
+						'tab' => 'NEON',
+						'panel' => BlueScreen::highlightPhp($item['args'][0], $m[1])
 					);
 				}
 			}
-		'));
+		});
 
-		self::$bar = new NDebugBar;
-		self::$bar->addPanel(new NDefaultBarPanel('time'));
-		self::$bar->addPanel(new NDefaultBarPanel('memory'));
-		self::$bar->addPanel(self::$errorPanel = new NDefaultBarPanel('errors')); // filled by _errorHandler()
-		self::$bar->addPanel(self::$dumpPanel = new NDefaultBarPanel('dumps')); // filled by barDump()
+		self::$bar = new Bar;
+		self::$bar->addPanel(new DefaultBarPanel('time'));
+		self::$bar->addPanel(new DefaultBarPanel('memory'));
+		self::$bar->addPanel(self::$errorPanel = new DefaultBarPanel('errors')); // filled by _errorHandler()
+		self::$bar->addPanel(self::$dumpPanel = new DefaultBarPanel('dumps')); // filled by barDump()
 	}
 
 
@@ -274,8 +276,8 @@ final class NDebugger
 			define('E_DEPRECATED', 8192);
 		}
 
-		if (!defined('E_USER_WARNING')) {
-			define('E_USER_WARNING', 16384);
+		if (!defined('E_USER_DEPRECATED')) {
+			define('E_USER_DEPRECATED', 16384);
 		}
 
 		if (!self::$enabled) {
@@ -302,7 +304,7 @@ final class NDebugger
 	/**
 	 * Logs message or exception to file (if not disabled) and sends email notification (if enabled).
 	 * @param  string|Exception
-	 * @param  int  one of constant NDebugger::INFO, WARNING, ERROR (sends email), CRITICAL (sends email)
+	 * @param  int  one of constant Debugger::INFO, WARNING, ERROR (sends email), CRITICAL (sends email)
 	 * @return string logged error filename
 	 */
 	public static function log($message, $priority = self::INFO)
@@ -311,19 +313,19 @@ final class NDebugger
 			return;
 
 		} elseif (!self::$logDirectory) {
-			throw new InvalidStateException('Logging directory is not specified in NDebugger::$logDirectory.');
+			throw new Nette\InvalidStateException('Logging directory is not specified in Nette\Diagnostics\Debugger::$logDirectory.');
 		}
 
-		if ($message instanceof Exception) {
+		if ($message instanceof \Exception) {
 			$exception = $message;
-			$message = ($message instanceof FatalErrorException
+			$message = ($message instanceof Nette\FatalErrorException
 				? 'Fatal error: ' . $exception->getMessage()
 				: get_class($exception) . ": " . $exception->getMessage())
 				. " in " . $exception->getFile() . ":" . $exception->getLine();
 
-			$hash = md5($exception . (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : '')));
+			$hash = md5($exception );
 			$exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
-			foreach (new DirectoryIterator(self::$logDirectory) as $entry) {
+			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
 				if (strpos($entry, $hash)) {
 					$exceptionFilename = $entry;
 					$saved = TRUE;
@@ -343,7 +345,7 @@ final class NDebugger
 			$exceptionFilename = self::$logDirectory . '/' . $exceptionFilename;
 			if (empty($saved) && $logHandle = @fopen($exceptionFilename, 'w')) {
 				ob_start(); // double buffer prevents sending HTTP headers in some PHP
-				ob_start(create_function('$buffer', 'extract(NCFix::$vars['.NCFix::uses(array('logHandle'=>$logHandle)).'], EXTR_REFS); fwrite($logHandle, $buffer); '), 4096);
+				ob_start(function($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 4096);
 				self::$blueScreen->render($exception);
 				ob_end_flush();
 				ob_end_clean();
@@ -375,7 +377,7 @@ final class NDebugger
 		);
 		$error = error_get_last();
 		if (isset($types[$error['type']])) {
-			self::_exceptionHandler(new FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL));
+			self::_exceptionHandler(new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL));
 		}
 
 		// debug bar (require HTML & development mode)
@@ -388,11 +390,11 @@ final class NDebugger
 
 	/**
 	 * Handler to catch uncaught exception.
-	 * @param  Exception
+	 * @param  \Exception
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(Exception $exception)
+	public static function _exceptionHandler(\Exception $exception)
 	{
 		if (!headers_sent()) { // for PHP < 5.2.4
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
@@ -403,7 +405,7 @@ final class NDebugger
 			if (self::$productionMode) {
 				try {
 					self::log($exception, self::ERROR);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					echo 'FATAL ERROR: unable to log error';
 				}
 
@@ -411,7 +413,7 @@ final class NDebugger
 					echo "ERROR: the server encountered an internal error and was unable to complete your request.\n";
 
 				} elseif (self::isHtmlMode()) {
-					require dirname(__FILE__) . '/templates/error.phtml';
+					require __DIR__ . '/templates/error.phtml';
 				}
 
 			} else {
@@ -442,7 +444,7 @@ final class NDebugger
 				call_user_func($handler, $exception);
 			}
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if (self::$productionMode) {
 				echo self::isHtmlMode() ? '<meta name=robots content=noindex>FATAL ERROR' : 'FATAL ERROR';
 			} else {
@@ -465,7 +467,7 @@ final class NDebugger
 	 * @param  int    line number the error was raised at
 	 * @param  array  an array of variables that existed in the scope the error was triggered in
 	 * @return bool   FALSE to call normal error handler, NULL otherwise
-	 * @throws FatalErrorException
+	 * @throws Nette\FatalErrorException
 	 * @internal
 	 */
 	public static function _errorHandler($severity, $message, $file, $line, $context)
@@ -475,22 +477,22 @@ final class NDebugger
 		}
 
 		if (self::$lastError !== FALSE && ($severity & error_reporting()) === $severity) { // tryError mode
-			self::$lastError = new ErrorException($message, 0, $severity, $file, $line);
+			self::$lastError = new \ErrorException($message, 0, $severity, $file, $line);
 			return NULL;
 		}
 
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
-			if (NDebugHelpers::findTrace(PHP_VERSION_ID < 50205 ? debug_backtrace() :debug_backtrace(FALSE), '*::__toString')) {
-				$previous = isset($context['e']) && $context['e'] instanceof Exception ? $context['e'] : NULL;
-				self::_exceptionHandler(new FatalErrorException($message, 0, $severity, $file, $line, $context, $previous));
+			if (Helpers::findTrace(debug_backtrace(FALSE), '*::__toString')) {
+				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
+				self::_exceptionHandler(new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context, $previous));
 			}
-			throw new FatalErrorException($message, 0, $severity, $file, $line, $context);
+			throw new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context);
 
 		} elseif (($severity & error_reporting()) !== $severity) {
 			return FALSE; // calls normal error handler to fill-in error_get_last()
 
 		} elseif (!self::$productionMode && (is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity))) {
-			self::_exceptionHandler(new FatalErrorException($message, 0, $severity, $file, $line, $context));
+			self::_exceptionHandler(new Nette\FatalErrorException($message, 0, $severity, $file, $line, $context));
 		}
 
 		static $types = array(
@@ -501,7 +503,7 @@ final class NDebugger
 			E_USER_NOTICE => 'Notice',
 			E_STRICT => 'Strict standards',
 			E_DEPRECATED => 'Deprecated',
-			E_USER_WARNING => 'Deprecated',
+			E_USER_DEPRECATED => 'Deprecated',
 		);
 
 		$message = 'PHP ' . (isset($types[$severity]) ? $types[$severity] : 'Unknown error') . ": $message";
@@ -515,7 +517,7 @@ final class NDebugger
 			return NULL;
 
 		} else {
-			$ok = self::fireLog(new ErrorException($message, 0, $severity, $file, $line), self::WARNING);
+			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line), self::WARNING);
 			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
 
@@ -526,10 +528,10 @@ final class NDebugger
 
 	/**
 	 * Handles exception thrown in __toString().
-	 * @param  Exception
+	 * @param  \Exception
 	 * @return void
 	 */
-	public static function toStringException(Exception $exception)
+	public static function toStringException(\Exception $exception)
 	{
 		if (self::$enabled) {
 			self::_exceptionHandler($exception);
@@ -556,7 +558,7 @@ final class NDebugger
 
 	/**
 	 * Returns catched error/warning message.
-	 * @param  ErrorException  catched error
+	 * @param  \ErrorException  catched error
 	 * @return bool
 	 */
 	public static function catchError(& $error)
@@ -587,11 +589,11 @@ final class NDebugger
 			return $var;
 		}
 
-		$output = "<pre class=\"nette-dump\">" . NDebugHelpers::htmlDump($var) . "</pre>\n";
+		$output = "<pre class=\"nette-dump\">" . Helpers::htmlDump($var) . "</pre>\n";
 
 		if (!$return) {
-			$trace = PHP_VERSION_ID < 50205 ? debug_backtrace() :debug_backtrace(FALSE);
-			$item = ($tmp=NDebugHelpers::findTrace($trace, 'dump')) ? $tmp : NDebugHelpers::findTrace($trace, __CLASS__ . '::dump');
+			$trace = debug_backtrace(FALSE);
+			$item = Helpers::findTrace($trace, 'dump') ?: Helpers::findTrace($trace, __CLASS__ . '::dump');
 			if (isset($item['file'], $item['line']) && is_file($item['file'])) {
 				$lines = file($item['file']);
 				preg_match('#dump\((.*)\)#', $lines[$item['line'] - 1], $m);
@@ -603,7 +605,7 @@ final class NDebugger
 				if (self::$showLocation) {
 					$output = substr_replace(
 						$output,
-						' <small>in ' . NDebugHelpers::editorLink($item['file'], $item['line']) . ":{$item['line']}</small>",
+						' <small>in ' . Helpers::editorLink($item['file'], $item['line']) . ":{$item['line']}</small>",
 						-8, 0);
 				}
 			}
@@ -611,9 +613,9 @@ final class NDebugger
 
 		if (self::$consoleMode) {
 			if (self::$consoleColors && substr(getenv('TERM'), 0, 5) === 'xterm') {
-				$output = preg_replace_callback('#<span class="php-(\w+)">|</span>#', create_function('$m', '
-					return "\\033[" . (isset($m[1], NDebugger::$consoleColors[$m[1]]) ? NDebugger::$consoleColors[$m[1]] : \'0\') . "m";
-				'), $output);
+				$output = preg_replace_callback('#<span class="php-(\w+)">|</span>#', function($m) {
+					return "\033[" . (isset($m[1], Debugger::$consoleColors[$m[1]]) ? Debugger::$consoleColors[$m[1]] : '0') . "m";
+				}, $output);
 			}
 			$output = htmlspecialchars_decode(strip_tags($output), ENT_QUOTES);
 		}
@@ -656,7 +658,7 @@ final class NDebugger
 		if (!self::$productionMode) {
 			$dump = array();
 			foreach ((is_array($var) ? $var : array('' => $var)) as $key => $val) {
-				$dump[$key] = NDebugHelpers::clickableDump($val);
+				$dump[$key] = Helpers::clickableDump($val);
 			}
 			self::$dumpPanel->data[] = array('title' => $title, 'dump' => $dump);
 		}

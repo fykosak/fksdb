@@ -1,5 +1,8 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\Security\AuthenticationException;
+
 final class AuthenticationPresenter extends BasePresenter {
 
     /** @persistent */
@@ -29,12 +32,12 @@ final class AuthenticationPresenter extends BasePresenter {
      * @return mixed
      */
     protected function createComponentLoginForm() {
-        $form = new NAppForm($this, 'loginForm');
+        $form = new Form($this, 'loginForm');
         $form->addText('id', 'Přihlašovací jméno/email')
-                ->addRule(NForm::FILLED, 'Zadejte přihlašovací jméno nebo emailovou adresu.');
+                ->addRule(Form::FILLED, 'Zadejte přihlašovací jméno nebo emailovou adresu.');
 
         $form->addPassword('password', 'Heslo')
-                ->addRule(NForm::FILLED, 'Zadejte heslo.');
+                ->addRule(Form::FILLED, 'Zadejte heslo.');
         //$form->addCheckbox('remember', 'Zapamatovat si přihlášení');
 
         $form->addSubmit('login', 'Přihlásit');
@@ -55,7 +58,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $this->application->restoreRequest($this->backlink);
             $this->redirect('Dashboard:default');
-        } catch (NAuthenticationException $e) {
+        } catch (AuthenticationException $e) {
             $form->addError($e->getMessage());
         }
     }

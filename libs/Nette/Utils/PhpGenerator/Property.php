@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils\PhpGenerator
  */
+
+namespace Nette\Utils\PhpGenerator;
+
+use Nette;
 
 
 
@@ -22,9 +25,8 @@
  * @method Property setStatic(bool $on)
  * @method Property setVisibility(string $access)
  * @method Property addDocument(string $doc)
- * @package Nette\Utils\PhpGenerator
  */
-class NPhpProperty extends NObject
+class Property extends Nette\Object
 {
 	/** @var string */
 	public $name;
@@ -44,7 +46,7 @@ class NPhpProperty extends NObject
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::callProperty($this, $name, $args);
+		return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
 
 }

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Latte parser token.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NLatteToken extends NObject
+class Token extends Nette\Object
 {
 	const TEXT = 'text',
 		MACRO_TAG = 'macroTag', // latte macro tag

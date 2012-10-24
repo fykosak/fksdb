@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
@@ -16,11 +19,10 @@
  * SQL preprocessor.
  *
  * @author     David Grudl
- * @package Nette\Database
  */
-class NSqlPreprocessor extends NObject
+class SqlPreprocessor extends Nette\Object
 {
-	/** @var NConnection */
+	/** @var Connection */
 	private $connection;
 
 	/** @var ISupplementalDriver */
@@ -40,7 +42,7 @@ class NSqlPreprocessor extends NObject
 
 
 
-	public function __construct(NConnection $connection)
+	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 		$this->driver = $connection->getSupplementalDriver();
@@ -60,7 +62,7 @@ class NSqlPreprocessor extends NObject
 		$this->remaining = array();
 		$this->arrayMode = 'assoc';
 
-		$sql = NStrings::replace($sql, '~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE)\b~si', array($this, 'callback'));
+		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE|UPDATE)\b~si', array($this, 'callback'));
 
 		while ($this->counter < count($params)) {
 			$sql .= ' ' . $this->formatValue($params[$this->counter++]);
@@ -112,10 +114,10 @@ class NSqlPreprocessor extends NObject
 		} elseif ($value === NULL) {
 			return 'NULL';
 
-		} elseif ($value instanceof NTableRow) {
+		} elseif ($value instanceof Table\ActiveRow) {
 			return $value->getPrimary();
 
-		} elseif (is_array($value) || $value instanceof Traversable) {
+		} elseif (is_array($value) || $value instanceof \Traversable) {
 			$vx = $kx = array();
 
 			if (isset($value[0])) { // non-associative; value, value, value
@@ -145,10 +147,10 @@ class NSqlPreprocessor extends NObject
 				return '(' . implode(', ', $vx) . ')';
 			}
 
-		} elseif ($value instanceof DateTime) {
+		} elseif ($value instanceof \DateTime) {
 			return $this->driver->formatDateTime($value);
 
-		} elseif ($value instanceof NSqlLiteral) {
+		} elseif ($value instanceof SqlLiteral) {
 			return $value->__toString();
 
 		} else {

@@ -9,14 +9,16 @@
  * @param      array     $exception
  * @param      array     $panels
  * @return     void
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
 /**
  * Page title.
- * @package Nette\Diagnostics
  */
 static $errorTypes = array(
 	E_ERROR => 'Fatal Error',
@@ -33,10 +35,10 @@ static $errorTypes = array(
 	E_USER_NOTICE => 'User Notice',
 	E_STRICT => 'Strict',
 	E_DEPRECATED => 'Deprecated',
-	E_USER_WARNING => 'User Deprecated',
+	E_USER_DEPRECATED => 'User Deprecated',
 );
 
-$title = ($exception instanceof FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
+$title = ($exception instanceof Nette\FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
 
 $expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
 $counter = 0;
@@ -112,13 +114,13 @@ $counter = 0;
 			<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Source file <abbr><?php echo ($collapsed = $expanded !== NULL) ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
 
 			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
-				<p><b>File:</b> <?php echo NDebugHelpers::editorLink($ex->getFile(), $ex->getLine()) ?> &nbsp; <b>Line:</b> <?php echo $ex->getLine() ?></p>
+				<p><b>File:</b> <?php echo Helpers::editorLink($ex->getFile(), $ex->getLine()) ?> &nbsp; <b>Line:</b> <?php echo $ex->getLine() ?></p>
 				<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
 			</div></div>
 
 
 
-			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'NDebugger' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
+			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Diagnostics\Debugger' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
 			<?php if ($stack): ?>
 			<div class="panel">
 				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Call stack <abbr>&#x25bc;</abbr></a></h2>
@@ -129,7 +131,7 @@ $counter = 0;
 					<li><p>
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<?php echo NDebugHelpers::editorLink($row['file'], $row['line']), ':', $row['line'] ?>
+						<?php echo Helpers::editorLink($row['file'], $row['line']), ':', $row['line'] ?>
 					<?php else: ?>
 						<i>inner-code</i><?php if (isset($row['line'])) echo ':', $row['line'] ?>
 					<?php endif ?>
@@ -147,14 +149,14 @@ $counter = 0;
 						<table>
 						<?php
 						try {
-							$r = isset($row['class']) ? new ReflectionMethod($row['class'], $row['function']) : new ReflectionFunction($row['function']);
+							$r = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) : new \ReflectionFunction($row['function']);
 							$params = $r->getParameters();
-						} catch (Exception $e) {
+						} catch (\Exception $e) {
 							$params = array();
 						}
 						foreach ($row['args'] as $k => $v) {
 							echo '<tr><th>', htmlspecialchars(isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
-							echo NDebugHelpers::clickableDump($v);
+							echo Helpers::clickableDump($v);
 							echo "</td></tr>\n";
 						}
 						?>
@@ -184,7 +186,7 @@ $counter = 0;
 			<table>
 			<?php
 			foreach ($ex->context as $k => $v) {
-					echo '<tr><th>$', htmlspecialchars($k), '</th><td>', NDebugHelpers::clickableDump($v), "</td></tr>\n";
+					echo '<tr><th>$', htmlspecialchars($k), '</th><td>', Helpers::clickableDump($v), "</td></tr>\n";
 			}
 			?>
 			</table>
@@ -219,7 +221,7 @@ $counter = 0;
 			<div id="netteBsPnl<?php echo $counter ?>" class="outer">
 			<table>
 			<?php
-			foreach ($_SERVER as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', NDebugHelpers::clickableDump($v), "</td></tr>\n";
+			foreach ($_SERVER as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Helpers::clickableDump($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
@@ -232,7 +234,7 @@ $counter = 0;
 			<?php else: ?>
 			<table>
 			<?php
-			foreach ($_SESSION as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', $k === '__NF' ? '<i>Nette Session</i>' : NDebugHelpers::clickableDump($v), "</td></tr>\n";
+			foreach ($_SESSION as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', $k === '__NF' ? '<i>Nette Session</i>' : Helpers::clickableDump($v), "</td></tr>\n";
 			?>
 			</table>
 			<?php endif ?>
@@ -244,7 +246,7 @@ $counter = 0;
 			<div id="netteBsPnl<?php echo $counter ?>" class="outer">
 			<table>
 			<?php
-			foreach ($_SESSION['__NF']['DATA'] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', NDebugHelpers::clickableDump($v), "</td></tr>\n";
+			foreach ($_SESSION['__NF']['DATA'] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Helpers::clickableDump($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
@@ -260,7 +262,7 @@ $counter = 0;
 			<?php
 			foreach ($list['user'] as $k => $v) {
 				echo '<tr><th>', htmlspecialchars($k), '</th>';
-				echo '<td>', NDebugHelpers::clickableDump($v), "</td></tr>\n";
+				echo '<td>', Helpers::clickableDump($v), "</td></tr>\n";
 			}
 			?>
 			</table>
@@ -312,7 +314,7 @@ $counter = 0;
 			<div class="outer">
 			<table>
 			<?php
-			foreach ($GLOBALS[$name] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', NDebugHelpers::clickableDump($v), "</td></tr>\n";
+			foreach ($GLOBALS[$name] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Helpers::clickableDump($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
@@ -350,15 +352,15 @@ $counter = 0;
 
 
 		<ul>
-			<li>Report generated at <?php echo @date('Y/m/d H:i:s', NDebugger::$time) ?></li>
-			<?php if (preg_match('#^https?://#', NDebugger::$source)): ?>
-				<li><a href="<?php echo htmlSpecialChars(NDebugger::$source) ?>"><?php echo htmlSpecialChars(NDebugger::$source) ?></a></li>
-			<?php elseif (NDebugger::$source): ?>
-				<li><?php echo htmlSpecialChars(NDebugger::$source) ?></li>
+			<li>Report generated at <?php echo @date('Y/m/d H:i:s', Debugger::$time) ?></li>
+			<?php if (preg_match('#^https?://#', Debugger::$source)): ?>
+				<li><a href="<?php echo htmlSpecialChars(Debugger::$source) ?>"><?php echo htmlSpecialChars(Debugger::$source) ?></a></li>
+			<?php elseif (Debugger::$source): ?>
+				<li><?php echo htmlSpecialChars(Debugger::$source) ?></li>
 			<?php endif ?>
 			<li>PHP <?php echo htmlSpecialChars(PHP_VERSION) ?></li>
 			<?php if (isset($_SERVER['SERVER_SOFTWARE'])): ?><li><?php echo htmlSpecialChars($_SERVER['SERVER_SOFTWARE']) ?></li><?php endif ?>
-			<?php if (class_exists('NFramework')): ?><li><?php echo htmlSpecialChars('Nette Framework ' . NFramework::VERSION) ?> <i>(revision <?php echo htmlSpecialChars(NFramework::REVISION) ?>)</i></li><?php endif ?>
+			<?php if (class_exists('Nette\Framework')): ?><li><?php echo htmlSpecialChars('Nette Framework ' . Nette\Framework::VERSION) ?> <i>(revision <?php echo htmlSpecialChars(Nette\Framework::REVISION) ?>)</i></li><?php endif ?>
 		</ul>
 	</div>
 </div>

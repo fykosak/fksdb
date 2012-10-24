@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\UI
  */
+
+namespace Nette\Application\UI;
+
+use Nette;
 
 
 
@@ -16,18 +19,17 @@
  * Component multiplier.
  *
  * @author     David Grudl
- * @package Nette\Application\UI
  */
-class NMultiplier extends NPresenterComponent
+class Multiplier extends PresenterComponent
 {
-	/** @var NCallback */
+	/** @var Nette\Callback */
 	private $factory;
 
 
 	public function __construct($factory)
 	{
 		parent::__construct();
-		$this->factory = new NCallback($factory);
+		$this->factory = new Nette\Callback($factory);
 	}
 
 

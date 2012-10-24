@@ -7,8 +7,13 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette,
+	PDO,
+	Nette\ObjectMixin;
 
 
 
@@ -17,13 +22,12 @@
  *
  * @author     David Grudl
  *
- * @property-read NConnection $connection
+ * @property-read Connection $connection
  * @property-write $fetchMode
- * @package Nette\Database
  */
-class NStatement extends PDOStatement
+class Statement extends \PDOStatement
 {
-	/** @var NConnection */
+	/** @var Connection */
 	private $connection;
 
 	/** @var float */
@@ -34,16 +38,16 @@ class NStatement extends PDOStatement
 
 
 
-	protected function __construct(NConnection $connection)
+	protected function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
-		$this->setFetchMode(PDO::FETCH_CLASS, 'NRow', array($this));
+		$this->setFetchMode(PDO::FETCH_CLASS, 'Nette\Database\Row', array($this));
 	}
 
 
 
 	/**
-	 * @return NConnection
+	 * @return Connection
 	 */
 	public function getConnection()
 	{
@@ -55,7 +59,7 @@ class NStatement extends PDOStatement
 	/**
 	 * Executes statement.
 	 * @param  array
-	 * @return NStatement  provides a fluent interface
+	 * @return Statement  provides a fluent interface
 	 */
 	public function execute($params = array())
 	{
@@ -70,7 +74,7 @@ class NStatement extends PDOStatement
 		$time = microtime(TRUE);
 		try {
 			parent::execute();
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			$e->queryString = $this->queryString;
 			throw $e;
 		}
@@ -114,7 +118,7 @@ class NStatement extends PDOStatement
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 
 			} elseif ($type === IReflection::FIELD_DATETIME || $type === IReflection::FIELD_DATE || $type === IReflection::FIELD_TIME) {
-				$row[$key] = new NDateTime53($value);
+				$row[$key] = new Nette\DateTime($value);
 
 			}
 		}
@@ -132,7 +136,7 @@ class NStatement extends PDOStatement
 				$col = 0;
 				while ($meta = $this->getColumnMeta($col++)) {
 					if (isset($meta['native_type'])) {
-						$this->types[$meta['name']] = NDatabaseHelpers::detectType($meta['native_type']);
+						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
 				}
 			}
@@ -162,56 +166,56 @@ class NStatement extends PDOStatement
 	 */
 	public function dump()
 	{
-		NDatabaseHelpers::dumpResult($this);
+		Helpers::dumpResult($this);
 	}
 
 
 
-	/********************* NObject behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return NClassReflection
+	 * @return Nette\Reflection\ClassType
 	 */
-	public function getReflection()
+	public static function getReflection()
 	{
-		return new NClassReflection($this);
+		return new Nette\Reflection\ClassType(get_called_class());
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::call($this, $name, $args);
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return NObjectMixin::get($this, $name);
+		return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return NObjectMixin::set($this, $name, $value);
+		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return NObjectMixin::has($this, $name);
+		return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		ObjectMixin::remove($this, $name);
 	}
 
 }

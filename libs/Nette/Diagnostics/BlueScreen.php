@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Red BlueScreen.
  *
  * @author     David Grudl
- * @package Nette\Diagnostics
  */
-class NDebugBlueScreen extends NObject
+class BlueScreen extends Nette\Object
 {
 	/** @var array */
 	private $panels = array();
@@ -28,7 +30,7 @@ class NDebugBlueScreen extends NObject
 	/**
 	 * Add custom panel.
 	 * @param  callable
-	 * @return NDebugBlueScreen  provides a fluent interface
+	 * @return BlueScreen  provides a fluent interface
 	 */
 	public function addPanel($panel)
 	{
@@ -42,13 +44,13 @@ class NDebugBlueScreen extends NObject
 
 	/**
 	 * Renders blue screen.
-	 * @param  Exception
+	 * @param  \Exception
 	 * @return void
 	 */
-	public function render(Exception $exception)
+	public function render(\Exception $exception)
 	{
 		$panels = $this->panels;
-		require dirname(__FILE__) . '/templates/bluescreen.phtml';
+		require __DIR__ . '/templates/bluescreen.phtml';
 	}
 
 
@@ -64,7 +66,7 @@ class NDebugBlueScreen extends NObject
 	{
 		$source = @file_get_contents($file); // intentionally @
 		if ($source) {
-			return self::highlightPhp($source, $line, $lines, $vars);
+			return static::highlightPhp($source, $line, $lines, $vars);
 		}
 	}
 
@@ -125,11 +127,11 @@ class NDebugBlueScreen extends NObject
 		}
 		$out .= str_repeat('</span>', $spans) . '</code>';
 
-		$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('vars'=>$vars)).'], EXTR_REFS);
+		$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function($m) use ($vars) {
 			return isset($vars[$m[1]])
-				? \'" title="\' . str_replace(\'"\', \'&quot;\', strip_tags(NDebugHelpers::htmlDump($vars[$m[1]]))) . $m[0]
+				? '" title="' . str_replace('"', '&quot;', strip_tags(Helpers::htmlDump($vars[$m[1]]))) . $m[0]
 				: $m[0];
-		'), $out);
+		}, $out);
 
 		return "<pre><div>$out</div></pre>";
 	}

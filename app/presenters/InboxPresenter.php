@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Application\UI\Form;
+
 class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function renderDefault() {
@@ -8,7 +10,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     }
 
     protected function createComponentInboxForm($name) {
-        $form = new NAppForm($this, $name);
+        $form = new Form($this, $name);
 
         $contestants = $this->getContestants();
         $tasks = $this->getTasks();
@@ -34,7 +36,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
     }
 
-    public function inboxFormSuccess(NAppForm $form) {
+    public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
         $grid = $values['grid'];
         $submitsTable = $this->getSubmitsTable();
@@ -69,6 +71,5 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $this->flashMessage('Informace o řešeních uložena.');
         $this->redirect('this');
     }
-
 
 }

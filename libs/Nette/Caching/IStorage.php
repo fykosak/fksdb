@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Caching
  */
+
+namespace Nette\Caching;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Cache storage.
  *
  * @author     David Grudl
- * @package Nette\Caching
  */
-interface ICacheStorage
+interface IStorage
 {
 
 	/**

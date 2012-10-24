@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils\PhpGenerator
  */
+
+namespace Nette\Utils\PhpGenerator;
+
+use Nette;
 
 
 
@@ -25,9 +28,8 @@
  * @method Method setAbstract(bool $on)
  * @method Method setReturnReference(bool $on)
  * @method Method addDocument(string $doc)
- * @package Nette\Utils\PhpGenerator
  */
-class NPhpMethod extends NObject
+class Method extends Nette\Object
 {
 	/** @var string */
 	public $name;
@@ -60,10 +62,10 @@ class NPhpMethod extends NObject
 	public $documents = array();
 
 
-	/** @return NPhpParameter */
+	/** @return Parameter */
 	public function addParameter($name, $defaultValue = NULL)
 	{
-		$param = new NPhpParameter;
+		$param = new Parameter;
 		if (func_num_args() > 1) {
 			$param->setOptional(TRUE)->setDefaultValue($defaultValue);
 		}
@@ -72,28 +74,28 @@ class NPhpMethod extends NObject
 
 
 
-	/** @return NPhpParameter */
+	/** @return Parameter */
 	public function addUse($name)
 	{
-		$param = new NPhpParameter;
+		$param = new Parameter;
 		return $this->uses[] = $param->setName($name);
 	}
 
 
 
-	/** @return NPhpMethod */
+	/** @return Method */
 	public function setBody($statement, array $args = NULL)
 	{
-		$this->body = func_num_args() > 1 ? NPhpHelpers::formatArgs($statement, $args) : $statement;
+		$this->body = func_num_args() > 1 ? Helpers::formatArgs($statement, $args) : $statement;
 		return $this;
 	}
 
 
 
-	/** @return NPhpMethod */
+	/** @return Method */
 	public function addBody($statement, array $args = NULL)
 	{
-		$this->body .= (func_num_args() > 1 ? NPhpHelpers::formatArgs($statement, $args) : $statement) . "\n";
+		$this->body .= (func_num_args() > 1 ? Helpers::formatArgs($statement, $args) : $statement) . "\n";
 		return $this;
 	}
 
@@ -101,7 +103,7 @@ class NPhpMethod extends NObject
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::callProperty($this, $name, $args);
+		return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
 
 
@@ -114,7 +116,7 @@ class NPhpMethod extends NObject
 			$parameters[] = ($param->typeHint ? $param->typeHint . ' ' : '')
 				. ($param->reference ? '&' : '')
 				. '$' . $param->name
-				. ($param->optional ? ' = ' . NPhpHelpers::dump($param->defaultValue) : '');
+				. ($param->optional ? ' = ' . Helpers::dump($param->defaultValue) : '');
 		}
 		$uses = array();
 		foreach ($this->uses as $param) {
@@ -131,7 +133,7 @@ class NPhpMethod extends NObject
 			. '(' . implode(', ', $parameters) . ')'
 			. ($this->uses ? ' use (' . implode(', ', $uses) . ')' : '')
 			. ($this->abstract || $this->body === FALSE ? ';'
-				: ($this->name ? "\n" : ' ') . "{\n" . NStrings::indent(trim($this->body), 1) . "\n}");
+				: ($this->name ? "\n" : ' ') . "{\n" . Nette\Utils\Strings::indent(trim($this->body), 1) . "\n}");
 	}
 
 }

@@ -9,15 +9,17 @@
  * the file license.txt that was distributed with this source code.
  */
 
+use Nette\Diagnostics\Debugger;
+
 
 
 /**
- * NDebugger::dump shortcut.
+ * Nette\Diagnostics\Debugger::dump shortcut.
  */
 function dump($var)
 {
 	foreach (func_get_args() as $arg) {
-		NDebugger::dump($arg);
+		Debugger::dump($arg);
 	}
 	return $var;
 }

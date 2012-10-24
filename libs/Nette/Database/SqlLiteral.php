@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * SQL literal value.
  *
  * @author     Jakub Vrana
- * @package Nette\Database
  */
-class NSqlLiteral extends NObject
+class SqlLiteral extends Nette\Object
 {
 	/** @var string */
 	private $value = '';

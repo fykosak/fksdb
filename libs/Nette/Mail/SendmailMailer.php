@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Mail
  */
+
+namespace Nette\Mail;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Sends emails via the PHP internal mail() function.
  *
  * @author     David Grudl
- * @package Nette\Mail
  */
-class NSendmailMailer extends NObject implements IMailer
+class SendmailMailer extends Nette\Object implements IMailer
 {
 	/** @var string */
 	public $commandArgs;
@@ -29,31 +31,31 @@ class NSendmailMailer extends NObject implements IMailer
 	 * Sends email.
 	 * @return void
 	 */
-	public function send(NMail $mail)
+	public function send(Message $mail)
 	{
 		$tmp = clone $mail;
 		$tmp->setHeader('Subject', NULL);
 		$tmp->setHeader('To', NULL);
 
-		$parts = explode(NMail::EOL . NMail::EOL, $tmp->generateMessage(), 2);
+		$parts = explode(Message::EOL . Message::EOL, $tmp->generateMessage(), 2);
 
-		NDebugger::tryError();
+		Nette\Diagnostics\Debugger::tryError();
 		$args = array(
-			str_replace(NMail::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
-			str_replace(NMail::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
-			str_replace(NMail::EOL, PHP_EOL, $parts[1]),
-			str_replace(NMail::EOL, PHP_EOL, $parts[0]),
+			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
+			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
+			str_replace(Message::EOL, PHP_EOL, $parts[1]),
+			str_replace(Message::EOL, PHP_EOL, $parts[0]),
 		);
 		if ($this->commandArgs) {
 			$args[] = (string) $this->commandArgs;
 		}
 		$res = call_user_func_array('mail', $args);
 
-		if (NDebugger::catchError($e)) {
-			throw new InvalidStateException('mail(): ' . $e->getMessage(), 0, $e);
+		if (Nette\Diagnostics\Debugger::catchError($e)) {
+			throw new Nette\InvalidStateException('mail(): ' . $e->getMessage(), 0, $e);
 
 		} elseif (!$res) {
-			throw new InvalidStateException('Unable to send email.');
+			throw new Nette\InvalidStateException('Unable to send email.');
 		}
 	}
 

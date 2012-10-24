@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Check box control. Allows the user to select a true or false condition.
  *
  * @author     David Grudl
- * @package Nette\Forms\Controls
  */
-class NCheckbox extends NFormControl
+class Checkbox extends BaseControl
 {
 
 	/**
@@ -36,7 +38,7 @@ class NCheckbox extends NFormControl
 	/**
 	 * Sets control's value.
 	 * @param  bool
-	 * @return NCheckbox  provides a fluent interface
+	 * @return Checkbox  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
@@ -48,7 +50,7 @@ class NCheckbox extends NFormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{

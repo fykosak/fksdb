@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config
  */
+
+namespace Nette\Config;
+
+use Nette,
+	Nette\DI\ContainerBuilder;
 
 
 
@@ -17,12 +21,11 @@
  *
  * @author     David Grudl
  * @property-read array $config
- * @property-read NDIContainerBuilder $containerBuilder
- * @package Nette\Config
+ * @property-read Nette\DI\ContainerBuilder $containerBuilder
  */
-abstract class NConfigCompilerExtension extends NObject
+abstract class CompilerExtension extends Nette\Object
 {
-	/** @var NConfigCompiler */
+	/** @var Compiler */
 	protected $compiler;
 
 	/** @var string */
@@ -30,7 +33,7 @@ abstract class NConfigCompilerExtension extends NObject
 
 
 
-	public function setCompiler(NConfigCompiler $compiler, $name)
+	public function setCompiler(Compiler $compiler, $name)
 	{
 		$this->compiler = $compiler;
 		$this->name = $name;
@@ -50,14 +53,14 @@ abstract class NConfigCompilerExtension extends NObject
 		$config = $this->compiler->getConfig();
 		$config = isset($config[$this->name]) ? $config[$this->name] : array();
 		unset($config['services'], $config['factories']);
-		$config = NConfigHelpers::merge($config, $defaults);
+		$config = Helpers::merge($config, $defaults);
 		return $expand ? $this->compiler->getContainerBuilder()->expand($config) : $config;
 	}
 
 
 
 	/**
-	 * @return NDIContainerBuilder
+	 * @return Nette\DI\ContainerBuilder
 	 */
 	public function getContainerBuilder()
 	{
@@ -73,7 +76,7 @@ abstract class NConfigCompilerExtension extends NObject
 	 */
 	public function loadFromFile($file)
 	{
-		$loader = new NConfigLoader;
+		$loader = new Loader;
 		$res = $loader->load($file);
 		$container = $this->compiler->getContainerBuilder();
 		foreach ($loader->getDependencies() as $file) {
@@ -120,7 +123,7 @@ abstract class NConfigCompilerExtension extends NObject
 	 * Adjusts DI container compiled to PHP class. Intended to be overridden by descendant.
 	 * @return void
 	 */
-	public function afterCompile(NPhpClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 	}
 

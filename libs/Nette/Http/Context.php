@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -18,21 +21,20 @@
  * @author     David Grudl
  *
  * @property-read bool $modified
- * @property-read IHttpRequest $request
- * @property-read IHttpResponse $response
- * @package Nette\Http
+ * @property-read IRequest $request
+ * @property-read IResponse $response
  */
-class NHttpContext extends NObject
+class Context extends Nette\Object
 {
-	/** @var IHttpRequest */
+	/** @var IRequest */
 	private $request;
 
-	/** @var IHttpResponse */
+	/** @var IResponse */
 	private $response;
 
 
 
-	public function __construct(IHttpRequest $request, IHttpResponse $response)
+	public function __construct(IRequest $request, IResponse $response)
 	{
 		$this->request = $request;
 		$this->response = $response;
@@ -85,14 +87,14 @@ class NHttpContext extends NObject
 			return TRUE;
 		}
 
-		$this->response->setCode(IHttpResponse::S304_NOT_MODIFIED);
+		$this->response->setCode(IResponse::S304_NOT_MODIFIED);
 		return FALSE;
 	}
 
 
 
 	/**
-	 * @return IHttpRequest
+	 * @return IRequest
 	 */
 	public function getRequest()
 	{
@@ -102,7 +104,7 @@ class NHttpContext extends NObject
 
 
 	/**
-	 * @return IHttpResponse
+	 * @return IResponse
 	 */
 	public function getResponse()
 	{

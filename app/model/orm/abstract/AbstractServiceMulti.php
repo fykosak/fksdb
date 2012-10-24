@@ -1,12 +1,13 @@
 <?php
 
+use Nette\Object;
 /**
  * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
  *       duplicated in all descedant classes.
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceMulti extends NObject {
+abstract class AbstractServiceMulti extends Object {
 
     /**
      * @var string

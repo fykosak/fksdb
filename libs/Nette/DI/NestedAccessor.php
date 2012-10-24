@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
@@ -17,14 +20,13 @@
  *
  * @author     David Grudl
  * @internal
- * @package Nette\DI
  */
-class NDINestedAccessor extends NObject
+class NestedAccessor extends Nette\Object
 {
 	/** @var array */
 	public $parameters;
 
-	/** @var NDIContainer */
+	/** @var Container */
 	private $container;
 
 	/** @var string */
@@ -32,7 +34,7 @@ class NDINestedAccessor extends NObject
 
 
 
-	public function __construct(NDIContainer $container, $namespace)
+	public function __construct(Container $container, $namespace)
 	{
 		$this->container = $container;
 		$this->namespace = $namespace . '.';
@@ -49,10 +51,10 @@ class NDINestedAccessor extends NObject
 		if (substr($name, 0, 6) === 'create') {
 			return call_user_func_array(array(
 				$this->container,
-				NDIContainer::getMethodName($this->namespace . substr($name, 6), FALSE)
+				Container::getMethodName($this->namespace . substr($name, 6), FALSE)
 			), $args);
 		}
-		throw new NotSupportedException;
+		throw new Nette\NotSupportedException;
 	}
 
 
@@ -73,7 +75,7 @@ class NDINestedAccessor extends NObject
 	 */
 	public function __set($name, $service)
 	{
-		throw new NotSupportedException;
+		throw new Nette\NotSupportedException;
 	}
 
 
@@ -93,7 +95,7 @@ class NDINestedAccessor extends NObject
 	 */
 	public function __unset($name)
 	{
-		throw new NotSupportedException;
+		throw new Nette\NotSupportedException;
 	}
 
 }

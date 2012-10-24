@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Security\Diagnostics
  */
+
+namespace Nette\Security\Diagnostics;
+
+use Nette,
+	Nette\Diagnostics\Helpers;
 
 
 
@@ -16,16 +20,15 @@
  * User panel for Debugger Bar.
  *
  * @author     David Grudl
- * @package Nette\Security\Diagnostics
  */
-class NUserPanel extends NObject implements IBarPanel
+class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
-	/** @var NUser */
+	/** @var Nette\Security\User */
 	private $user;
 
 
 
-	public function __construct(NUser $user)
+	public function __construct(Nette\Security\User $user)
 	{
 		$this->user = $user;
 	}
@@ -39,7 +42,7 @@ class NUserPanel extends NObject implements IBarPanel
 	public function getTab()
 	{
 		ob_start();
-		require dirname(__FILE__) . '/templates/UserPanel.tab.phtml';
+		require __DIR__ . '/templates/UserPanel.tab.phtml';
 		return ob_get_clean();
 	}
 
@@ -52,7 +55,7 @@ class NUserPanel extends NObject implements IBarPanel
 	public function getPanel()
 	{
 		ob_start();
-		require dirname(__FILE__) . '/templates/UserPanel.panel.phtml';
+		require __DIR__ . '/templates/UserPanel.panel.phtml';
 		return ob_get_clean();
 	}
 

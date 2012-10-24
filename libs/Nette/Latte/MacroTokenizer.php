@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Macro tag tokenizer.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NMacroTokenizer extends NTokenizer
+class MacroTokenizer extends Nette\Utils\Tokenizer
 {
 	const T_WHITESPACE = 1,
 		T_COMMENT = 2,
@@ -37,7 +39,7 @@ class NMacroTokenizer extends NTokenizer
 		parent::__construct(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
-			self::T_STRING => NParser::RE_STRING,
+			self::T_STRING => Parser::RE_STRING,
 			self::T_KEYWORD => '(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\w\pL_])', // keyword or const
 			self::T_CAST => '\((?:expand|string|array|int|integer|float|bool|boolean|object)\)', // type casting
 			self::T_VARIABLE => '\$[\w\pL_]+',

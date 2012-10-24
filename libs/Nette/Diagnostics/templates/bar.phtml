@@ -10,12 +10,14 @@
  *
  * @param      array     $panels
  * @return     void
- * @package Nette\Diagnostics
  */
 
+namespace Nette\Diagnostics;
 
+use Nette;
 
 ?>
+
 
 
 
@@ -70,7 +72,7 @@ Math.round(100*Math.random())-20,top:c.position().top-Math.round(100*Math.random
 		<ul>
 			<li id="nette-debug-logo" title="PHP <?php echo htmlSpecialChars(PHP_VERSION . " |\n"
 			. (isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] . " |\n" : '')
-			. (class_exists('NFramework') ? 'Nette Framework ' . NFramework::VERSION . ' (' . substr(NFramework::REVISION, 8) . ')' : '')) ?>">&nbsp;<span>Nette Framework</span></li>
+			. (class_exists('Nette\Framework') ? 'Nette Framework ' . Nette\Framework::VERSION . ' (' . substr(Nette\Framework::REVISION, 8) . ')' : '')) ?>">&nbsp;<span>Nette Framework</span></li>
 			<?php foreach ($panels as $panel): if (!$panel['tab']) continue; ?>
 			<li><?php if ($panel['panel']): ?><a href="#" rel="<?php echo $panel['id'] ?>"><?php echo trim($panel['tab']) ?></a><?php else: echo '<span>', trim($panel['tab']), '</span>'; endif ?></li>
 			<?php endforeach ?>
@@ -89,7 +91,7 @@ Math.round(100*Math.random())-20,top:c.position().top-Math.round(100*Math.random
 		if (typeof onloadOrig === 'function') onloadOrig();
 		var debug = document.getElementById('nette-debug');
 		document.body.appendChild(debug);
-		debug.innerHTML = <?php echo json_encode(NStrings::fixEncoding($output)) ?>;
+		debug.innerHTML = <?php echo json_encode(Nette\Utils\Strings::fixEncoding($output)) ?>;
 		for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
 		(new Nette.Debug.Bar).init();
 		Nette.Q.factory(debug).show();

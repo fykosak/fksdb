@@ -1,10 +1,13 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormPersonInfo extends NAppForm {
+class FormPersonInfo extends Form {
 
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);

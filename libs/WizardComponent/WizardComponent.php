@@ -1,15 +1,18 @@
 <?php
 
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class WizardComponent extends NControl {
+class WizardComponent extends Control {
 
     const ID_ELEMENT = 'wizardId';
 
     /**
-     * @var array of callback(NAppForm $formToInit)
+     * @var array of callback(Form $formToInit)
      */
     public $onStepInit;
 
@@ -20,7 +23,7 @@ class WizardComponent extends NControl {
     public $onProcess;
 
     /**
-     * @var array of str|callback(NAppForm $submittedForm)
+     * @var array of str|callback(Form $submittedForm)
      */
     private $nextCallbacks = array();
 
@@ -45,12 +48,12 @@ class WizardComponent extends NControl {
     private $wizardId;
 
     /**
-     * @param NAppForm $form                form displayed in the step
+     * @param Form $form                form displayed in the step
      * @param str $name                     name of the step (for reference)
      * @param callback|str $nextCallback    name of the following step or callback
      *                                      that should return name of the following step
      */
-    public function addStep(NAppForm $form, $name, $nextCallback = null) {
+    public function addStep(Form $form, $name, $nextCallback = null) {
         $form->addHidden(self::ID_ELEMENT);
         $form->onSuccess[] = array($this, 'stepSubmitted');
         $this->addComponent($form, $name);
@@ -160,9 +163,9 @@ class WizardComponent extends NControl {
 
     /**
      * @interal
-     * @param AppForm $form
+     * @param Form $form
      */
-    public function stepSubmitted(NAppForm $form) {
+    public function stepSubmitted(Form $form) {
         // detect where we are
         $name = $form->getName();
         $this->setCurrentStep($name);

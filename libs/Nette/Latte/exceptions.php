@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,10 +19,10 @@
  * The exception occured during Latte compilation.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NCompileException extends NTemplateException
+class CompileException extends Nette\Templating\FilterException
 {
 }
 
 
+class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');

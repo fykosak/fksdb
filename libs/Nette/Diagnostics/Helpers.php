@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
@@ -16,29 +19,28 @@
  * Rendering helpers for Debugger.
  *
  * @author     David Grudl
- * @package Nette\Diagnostics
  */
-final class NDebugHelpers
+final class Helpers
 {
 
 	/**
 	 * Returns link to editor.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public static function editorLink($file, $line)
 	{
-		if (NDebugger::$editor && is_file($file)) {
+		if (Debugger::$editor && is_file($file)) {
 			$dir = dirname(strtr($file, '/', DIRECTORY_SEPARATOR));
 			$base = isset($_SERVER['SCRIPT_FILENAME']) ? dirname(dirname(strtr($_SERVER['SCRIPT_FILENAME'], '/', DIRECTORY_SEPARATOR))) : dirname($dir);
 			if (substr($dir, 0, strlen($base)) === $base) {
 				$dir = '...' . substr($dir, strlen($base));
 			}
-			return NHtml::el('a')
-				->href(strtr(NDebugger::$editor, array('%file' => rawurlencode($file), '%line' => $line)))
+			return Nette\Utils\Html::el('a')
+				->href(strtr(Debugger::$editor, array('%file' => rawurlencode($file), '%line' => $line)))
 				->title("$file:$line")
 				->setHtml(htmlSpecialChars(rtrim($dir, DIRECTORY_SEPARATOR)) . DIRECTORY_SEPARATOR . '<b>' . htmlSpecialChars(basename($file)) . '</b>');
 		} else {
-			return NHtml::el('span')->setText($file);
+			return Nette\Utils\Html::el('span')->setText($file);
 		}
 	}
 
@@ -87,8 +89,8 @@ final class NDebugHelpers
 			return "<span class=\"php-float\">$var</span>\n";
 
 		} elseif (is_string($var)) {
-			if (NDebugger::$maxLen && strlen($var) > NDebugger::$maxLen) {
-				$s = htmlSpecialChars(substr($var, 0, NDebugger::$maxLen), ENT_NOQUOTES, 'ISO-8859-1') . ' ... ';
+			if (Debugger::$maxLen && strlen($var) > Debugger::$maxLen) {
+				$s = htmlSpecialChars(substr($var, 0, Debugger::$maxLen), ENT_NOQUOTES, 'ISO-8859-1') . ' ... ';
 			} else {
 				$s = htmlSpecialChars($var, ENT_NOQUOTES, 'ISO-8859-1');
 			}
@@ -111,7 +113,7 @@ final class NDebugHelpers
 				$brackets = $var[$marker];
 				$s .= "$brackets[0] *RECURSION* $brackets[1]";
 
-			} elseif ($level < NDebugger::$maxDepth || !NDebugger::$maxDepth) {
+			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth) {
 				$s .= "<code>$brackets[0]\n";
 				$var[$marker] = $brackets;
 				foreach ($var as $k => &$v) {
@@ -131,8 +133,8 @@ final class NDebugHelpers
 			return $s . "\n";
 
 		} elseif (is_object($var)) {
-			if ($var instanceof Closure) {
-				$rc = new ReflectionFunction($var);
+			if ($var instanceof \Closure) {
+				$rc = new \ReflectionFunction($var);
 				$arr = array();
 				foreach ($rc->getParameters() as $param) {
 					$arr[] = '$' . $param->getName();
@@ -150,7 +152,7 @@ final class NDebugHelpers
 			} elseif (in_array($var, $list, TRUE)) {
 				$s .= "{ *RECURSION* }";
 
-			} elseif ($level < NDebugger::$maxDepth || !NDebugger::$maxDepth || $var instanceof Closure) {
+			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth || $var instanceof \Closure) {
 				$s .= "<code>{\n";
 				$list[] = $var;
 				foreach ($arr as $k => &$v) {
@@ -202,12 +204,12 @@ final class NDebugHelpers
 	{
 		return '<pre class="nette-dump">' . preg_replace_callback(
 			'#^( *)((?>[^(\r\n]{1,200}))\((\d+)\) <code>#m',
-			create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('collapsed'=>$collapsed)).'], EXTR_REFS);
-				return "$m[1]<a href=\'#\' rel=\'next\'>$m[2]($m[3]) "
+			function($m) use ($collapsed) {
+				return "$m[1]<a href='#' rel='next'>$m[2]($m[3]) "
 					. (($m[1] || !$collapsed) && ($m[3] < 7)
-					? \'<abbr>&#x25bc;</abbr> </a><code>\'
-					: \'<abbr>&#x25ba;</abbr> </a><code class="nette-collapsed">\');
-			'),
+					? '<abbr>&#x25bc;</abbr> </a><code>'
+					: '<abbr>&#x25ba;</abbr> </a><code class="nette-collapsed">');
+			},
 			self::htmlDump($dump)
 		) . '</pre>';
 	}

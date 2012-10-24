@@ -1,6 +1,7 @@
 <?php
+use Nette\Object;
 
-class YearCalculator extends NObject {
+class YearCalculator extends Object {
 
     const YEAR = 31557600; //365.25*24*3600
 

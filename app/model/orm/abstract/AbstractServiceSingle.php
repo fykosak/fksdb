@@ -1,5 +1,8 @@
 <?php
 
+use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Connection;
+
 /**
  * Service class to high-level manipulation with ORM objects.
  * Use singleton descedants implemetations.
@@ -9,7 +12,7 @@
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends NTableSelection {
+abstract class AbstractServiceSingle extends TableSelection {
 
     /**
      * @var string
@@ -22,7 +25,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
     protected $tableName;
 
     /**
-     * @var NConnection
+     * @var Connection
      */
     protected $connection;
 
@@ -31,7 +34,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
      */
     protected static $instances = array();
 
-    public function __construct(NConnection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
@@ -116,7 +119,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
     }
 
     /**
-     * @return NTableSelection
+     * @return TableSelection
      */
     public function getTable() {
         return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);

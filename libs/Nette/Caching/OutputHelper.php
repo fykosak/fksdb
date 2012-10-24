@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Caching
  */
+
+namespace Nette\Caching;
+
+use Nette;
 
 
 
@@ -16,14 +19,13 @@
  * Output caching helper.
  *
  * @author     David Grudl
- * @package Nette\Caching
  */
-class NCachingHelper extends NObject
+class OutputHelper extends Nette\Object
 {
 	/** @var array */
 	public $dependencies;
 
-	/** @var NCache */
+	/** @var Cache */
 	private $cache;
 
 	/** @var string */
@@ -31,7 +33,7 @@ class NCachingHelper extends NObject
 
 
 
-	public function __construct(NCache $cache, $key)
+	public function __construct(Cache $cache, $key)
 	{
 		$this->cache = $cache;
 		$this->key = $key;
@@ -48,7 +50,7 @@ class NCachingHelper extends NObject
 	public function end(array $dp = NULL)
 	{
 		if ($this->cache === NULL) {
-			throw new InvalidStateException('Output cache has already been saved.');
+			throw new Nette\InvalidStateException('Output cache has already been saved.');
 		}
 		$this->cache->save($this->key, ob_get_flush(), (array) $dp + (array) $this->dependencies);
 		$this->cache = NULL;

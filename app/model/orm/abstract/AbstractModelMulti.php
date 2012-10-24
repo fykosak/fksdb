@@ -1,9 +1,11 @@
 <?php
 
+use Nette\Object;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelMulti extends NObject {
+abstract class AbstractModelMulti extends Object {
 
     /**
      * @var AbstractModelSingle 

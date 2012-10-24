@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Push button control with no default behavior.
  *
  * @author     David Grudl
- * @package Nette\Forms\Controls
  */
-class NButton extends NFormControl
+class Button extends BaseControl
 {
 
 	/**
@@ -46,7 +48,7 @@ class NButton extends NFormControl
 	/**
 	 * Generates control's HTML element.
 	 * @param  string
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl($caption = NULL)
 	{

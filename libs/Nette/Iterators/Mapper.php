@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Iterators
  */
+
+namespace Nette\Iterators;
+
+use Nette;
 
 
 
@@ -16,18 +19,17 @@
  * Applies the callback to the elements of the inner iterator.
  *
  * @author     David Grudl
- * @package Nette\Iterators
  */
-class NMapIterator extends IteratorIterator
+class Mapper extends \IteratorIterator
 {
 	/** @var callable */
 	private $callback;
 
 
-	public function __construct(Traversable $iterator, $callback)
+	public function __construct(\Traversable $iterator, $callback)
 	{
 		parent::__construct($iterator);
-		$this->callback = new NCallback($callback);
+		$this->callback = new Nette\Callback($callback);
 	}
 
 

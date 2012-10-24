@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Assignment or calling statement.
  *
  * @author     David Grudl
- * @package Nette\DI
  */
-class NDIStatement extends NObject
+class Statement extends Nette\Object
 {
 	/** @var string  class|method|$property */
 	public $entity;

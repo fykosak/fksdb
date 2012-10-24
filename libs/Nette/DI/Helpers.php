@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * The DI helpers.
  *
  * @author     David Grudl
- * @package Nette\DI
  */
-final class NDIHelpers
+final class Helpers
 {
 
 	/**
@@ -27,7 +29,7 @@ final class NDIHelpers
 	 * @param  array
 	 * @param  bool
 	 * @return mixed
-	 * @throws InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public static function expand($var, array $params, $recursive = FALSE)
 	{
@@ -38,8 +40,8 @@ final class NDIHelpers
 			}
 			return $res;
 
-		} elseif ($var instanceof NDIStatement) {
-			return new NDIStatement(self::expand($var->entity, $params, $recursive), self::expand($var->arguments, $params, $recursive));
+		} elseif ($var instanceof Statement) {
+			return new Statement(self::expand($var->entity, $params, $recursive), self::expand($var->arguments, $params, $recursive));
 
 		} elseif (!is_string($var)) {
 			return $var;
@@ -55,10 +57,10 @@ final class NDIHelpers
 				$res .= '%';
 
 			} elseif (isset($recursive[$part])) {
-				throw new InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
+				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
 
 			} else {
-				$val = NArrays::get($params, explode('.', $part));
+				$val = Nette\Utils\Arrays::get($params, explode('.', $part));
 				if ($recursive) {
 					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : array()) + array($part => 1));
 				}
@@ -66,7 +68,7 @@ final class NDIHelpers
 					return $val;
 				}
 				if (!is_scalar($val)) {
-					throw new InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$var'.");
+					throw new Nette\InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$var'.");
 				}
 				$res .= $val;
 			}
@@ -84,9 +86,9 @@ final class NDIHelpers
 	public static function escape($value)
 	{
 		if (is_array($value)) {
-			array_walk_recursive($value, create_function('&$val', '
-				$val = is_string($val) ? str_replace(\'%\', \'%%\', $val) : $val;
-			'));
+			array_walk_recursive($value, function(&$val) {
+				$val = is_string($val) ? str_replace('%', '%%', $val) : $val;
+			});
 		} elseif (is_string($value)) {
 			$value = str_replace('%', '%%', $value);
 		}
@@ -97,10 +99,10 @@ final class NDIHelpers
 
 	/**
 	 * Generates list of arguments using autowiring.
-	 * @param  NFunctionReflection|NMethodReflection
+	 * @param  Nette\Reflection\GlobalFunction|Nette\Reflection\Method
 	 * @return array
 	 */
-	public static function autowireArguments(ReflectionFunctionAbstract $method, array $arguments, $container)
+	public static function autowireArguments(\ReflectionFunctionAbstract $method, array $arguments, $container)
 	{
 		$optCount = 0;
 		$num = -1;
@@ -123,10 +125,10 @@ final class NDIHelpers
 					if ($parameter->allowsNull()) {
 						$optCount++;
 					} else {
-						throw new NServiceCreationException("No service of type {$class} found. Make sure the type hint in $method is written correctly and service of this type is registered.");
+						throw new ServiceCreationException("No service of type {$class} found. Make sure the type hint in $method is written correctly and service of this type is registered.");
 					}
 				} else {
-					if ($container instanceof NDIContainerBuilder) {
+					if ($container instanceof ContainerBuilder) {
 						$res[$num] = '@' . $res[$num];
 					}
 					$optCount = 0;
@@ -138,7 +140,7 @@ final class NDIHelpers
 				$optCount++;
 
 			} else {
-				throw new NServiceCreationException("Parameter $parameter has no type hint, so its value must be specified.");
+				throw new ServiceCreationException("Parameter $parameter has no type hint, so its value must be specified.");
 			}
 		}
 
@@ -149,7 +151,7 @@ final class NDIHelpers
 			$optCount = 0;
 		}
 		if ($arguments) {
-			throw new NServiceCreationException("Unable to pass specified arguments to $method.");
+			throw new ServiceCreationException("Unable to pass specified arguments to $method.");
 		}
 
 		return $optCount ? array_slice($res, 0, -$optCount) : $res;

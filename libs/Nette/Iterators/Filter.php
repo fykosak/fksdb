@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Iterators
  */
+
+namespace Nette\Iterators;
+
+use Nette;
 
 
 
@@ -16,18 +19,17 @@
  * Callback iterator filter.
  *
  * @author     David Grudl
- * @package Nette\Iterators
  */
-class NNCallbackFilterIterator extends FilterIterator
+class Filter extends \FilterIterator
 {
 	/** @var callable */
 	private $callback;
 
 
-	public function __construct(Iterator $iterator, $callback)
+	public function __construct(\Iterator $iterator, $callback)
 	{
 		parent::__construct($iterator);
-		$this->callback = new NCallback($callback);
+		$this->callback = new Nette\Callback($callback);
 	}
 
 

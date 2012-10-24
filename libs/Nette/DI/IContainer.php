@@ -7,16 +7,18 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
 /**
  * @deprecated
- * @package Nette\DI
  */
-interface IDIContainer
+interface IContainer
 {
 
 	/**

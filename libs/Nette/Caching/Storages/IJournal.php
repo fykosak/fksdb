@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Caching\Storages
  */
+
+namespace Nette\Caching\Storages;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Cache journal provider.
  *
  * @author     Jan Smitka
- * @package Nette\Caching\Storages
  */
-interface ICacheJournal
+interface IJournal
 {
 
 	/**

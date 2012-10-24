@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
@@ -17,9 +20,8 @@
  *
  * @see http://firelogger.binaryage.com
  * @author     David Grudl
- * @package Nette\Diagnostics
  */
-class NFireLogger extends NObject
+class FireLogger extends Nette\Object
 {
 	const DEBUG = 'debug',
 		INFO = 'info',
@@ -46,7 +48,7 @@ class NFireLogger extends NObject
 			'name' => 'PHP',
 			'level' => $priority,
 			'order' => count(self::$payload['logs']),
-			'time' => str_pad(number_format((microtime(TRUE) - NDebugger::$time) * 1000, 1, '.', ' '), 8, '0', STR_PAD_LEFT) . ' ms',
+			'time' => str_pad(number_format((microtime(TRUE) - Debugger::$time) * 1000, 1, '.', ' '), 8, '0', STR_PAD_LEFT) . ' ms',
 			'template' => '',
 			'message' => '',
 			'style' => 'background:#767ab6',
@@ -57,24 +59,24 @@ class NFireLogger extends NObject
 			$item['template'] = array_shift($args);
 		}
 
-		if (isset($args[0]) && $args[0] instanceof Exception) {
+		if (isset($args[0]) && $args[0] instanceof \Exception) {
 			$e = array_shift($args);
 			$trace = $e->getTrace();
-			if (isset($trace[0]['class']) && $trace[0]['class'] === 'NDebugger'
+			if (isset($trace[0]['class']) && $trace[0]['class'] === 'Nette\Diagnostics\Debugger'
 				&& ($trace[0]['function'] === '_shutdownHandler' || $trace[0]['function'] === '_errorHandler')
 			) {
 				unset($trace[0]);
 			}
 
 			$file = str_replace(dirname(dirname(dirname($e->getFile()))), "\xE2\x80\xA6", $e->getFile());
-			$item['template'] = ($e instanceof ErrorException ? '' : get_class($e) . ': ')
+			$item['template'] = ($e instanceof \ErrorException ? '' : get_class($e) . ': ')
 				. $e->getMessage() . ($e->getCode() ? ' #' . $e->getCode() : '') . ' in ' . $file . ':' . $e->getLine();
 			$item['pathname'] = $e->getFile();
 			$item['lineno'] = $e->getLine();
 
 		} else {
 			$trace = debug_backtrace();
-			if (isset($trace[1]['class']) && $trace[1]['class'] === 'NDebugger'
+			if (isset($trace[1]['class']) && $trace[1]['class'] === 'Nette\Diagnostics\Debugger'
 				&& ($trace[1]['function'] === 'fireLog')
 			) {
 				unset($trace[0]);
@@ -125,10 +127,10 @@ class NFireLogger extends NObject
 			return $var;
 
 		} elseif (is_string($var)) {
-			if (NDebugger::$maxLen && strlen($var) > NDebugger::$maxLen) {
-				$var = substr($var, 0, NDebugger::$maxLen) . " \xE2\x80\xA6 ";
+			if (Debugger::$maxLen && strlen($var) > Debugger::$maxLen) {
+				$var = substr($var, 0, Debugger::$maxLen) . " \xE2\x80\xA6 ";
 			}
-			return NStrings::fixEncoding($var);
+			return Nette\Utils\Strings::fixEncoding($var);
 
 		} elseif (is_array($var)) {
 			static $marker;
@@ -138,7 +140,7 @@ class NFireLogger extends NObject
 			if (isset($var[$marker])) {
 				return "\xE2\x80\xA6RECURSION\xE2\x80\xA6";
 
-			} elseif ($level < NDebugger::$maxDepth || !NDebugger::$maxDepth) {
+			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth) {
 				$var[$marker] = TRUE;
 				$res = array();
 				foreach ($var as $k => &$v) {
@@ -159,7 +161,7 @@ class NFireLogger extends NObject
 			if (in_array($var, $list, TRUE)) {
 				return "\xE2\x80\xA6RECURSION\xE2\x80\xA6";
 
-			} elseif ($level < NDebugger::$maxDepth || !NDebugger::$maxDepth) {
+			} elseif ($level < Debugger::$maxDepth || !Debugger::$maxDepth) {
 				$list[] = $var;
 				$res = array("\x00" => '(object) ' . get_class($var));
 				foreach ($arr as $k => &$v) {

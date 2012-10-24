@@ -1,11 +1,15 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+use Nette\Forms\Container as FormContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormSchool extends NAppForm {
-    
+class FormSchool extends Form {
+
     const SCHOOL = 'school';
     const ADDRESS = 'address';
 
@@ -14,39 +18,38 @@ class FormSchool extends NAppForm {
 
         $school = $this->addContainer(self::SCHOOL);
         $address = $this->addContainer(self::ADDRESS);
-        
+
         $this->addSchool($school);
         FormPostContacts::appendAddress($address, $serviceCountry);
     }
-    
-    private function addSchool(NFormContainer $container){
-        
+
+    private function addSchool(FormContainer $container) {
+
         $container->addText('name_full', 'Plný název')
                 ->setOption('description', 'Úplný nezkrácený název školy.');
 
         $container->addText('name', 'Název')
-                ->addRule(NForm::FILLED, 'Název je povinný.')
+                ->addRule(Form::FILLED, 'Název je povinný.')
                 ->setOption('description', 'Název na obálku.');
 
         $container->addText('name_abbrev', 'Zkrácený název')
-                ->addRule(NForm::FILLED, 'Zkrácený název je povinný.')
+                ->addRule(Form::FILLED, 'Zkrácený název je povinný.')
                 ->setOption('description', 'Název krátký do výsledkovky.');
 
         $container->addText('email', 'Kontaktní e-mail')
-                ->addCondition(NForm::FILLED)
-                ->addRule(NForm::EMAIL);
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::EMAIL);
 
         $container->addText('ic', 'IČ')
-                ->addRule(NForm::MAX_LENGTH, 'Délka IČ je omezena na 8 znaků.', 8);
+                ->addRule(Form::MAX_LENGTH, 'Délka IČ je omezena na 8 znaků.', 8);
 
         $container->addText('izo', 'IZO')
-                ->addRule(NForm::MAX_LENGTH, 'Délka IZO je omezena na 32 znaků.', 32);
+                ->addRule(Form::MAX_LENGTH, 'Délka IZO je omezena na 32 znaků.', 32);
 
         $container->addCheckbox('active', 'Aktivní záznam')
                 ->setDefaultValue(true);
 
         $container->addText('note', 'Poznámka');
-        
     }
 
 }

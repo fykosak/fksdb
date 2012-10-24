@@ -7,8 +7,13 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette,
+	Nette\ObjectMixin,
+	PDO;
 
 
 
@@ -20,9 +25,8 @@
  * @property       IReflection          $databaseReflection
  * @property-read  ISupplementalDriver  $supplementalDriver
  * @property-read  string               $dsn
- * @package Nette\Database
  */
-class NConnection extends PDO
+class Connection extends PDO
 {
 	/** @var string */
 	private $dsn;
@@ -30,13 +34,13 @@ class NConnection extends PDO
 	/** @var ISupplementalDriver */
 	private $driver;
 
-	/** @var NSqlPreprocessor */
+	/** @var SqlPreprocessor */
 	private $preprocessor;
 
 	/** @var IReflection */
 	private $databaseReflection;
 
-	/** @var NCache */
+	/** @var Nette\Caching\Cache */
 	private $cache;
 
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
@@ -48,11 +52,11 @@ class NConnection extends PDO
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('NStatement', array($this)));
+		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$driverClass = ($tmp=$driverClass) ? $tmp : 'N' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
 		$this->driver = new $driverClass($this, (array) $options);
-		$this->preprocessor = new NSqlPreprocessor($this);
+		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
@@ -74,7 +78,7 @@ class NConnection extends PDO
 
 	/**
 	 * Sets database reflection.
-	 * @return NConnection   provides a fluent interface
+	 * @return Connection   provides a fluent interface
 	 */
 	public function setDatabaseReflection(IReflection $databaseReflection)
 	{
@@ -89,7 +93,7 @@ class NConnection extends PDO
 	public function getDatabaseReflection()
 	{
 		if (!$this->databaseReflection) {
-			$this->setDatabaseReflection(new NConventionalReflection);
+			$this->setDatabaseReflection(new Reflection\ConventionalReflection);
 		}
 		return $this->databaseReflection;
 	}
@@ -98,11 +102,11 @@ class NConnection extends PDO
 
 	/**
 	 * Sets cache storage engine.
-	 * @return NConnection   provides a fluent interface
+	 * @return Connection   provides a fluent interface
 	 */
-	public function setCacheStorage(ICacheStorage $storage = NULL)
+	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
 	{
-		$this->cache = $storage ? new NCache($storage, 'Nette.Database.' . md5($this->dsn)) : NULL;
+		$this->cache = $storage ? new Nette\Caching\Cache($storage, 'Nette.Database.' . md5($this->dsn)) : NULL;
 		return $this;
 	}
 
@@ -119,7 +123,7 @@ class NConnection extends PDO
 	 * Generates and executes SQL query.
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
-	 * @return NStatement
+	 * @return Statement
 	 */
 	public function query($statement)
 	{
@@ -146,7 +150,7 @@ class NConnection extends PDO
 	/**
 	 * @param  string  statement
 	 * @param  array
-	 * @return NStatement
+	 * @return Statement
 	 */
 	public function queryArgs($statement, $params)
 	{
@@ -172,7 +176,7 @@ class NConnection extends PDO
 	 * Shortcut for query()->fetch()
 	 * @param  string  statement
 	 * @param  mixed   [parameters, ...]
-	 * @return NRow
+	 * @return Row
 	 */
 	public function fetch($args)
 	{
@@ -231,60 +235,60 @@ class NConnection extends PDO
 	/**
 	 * Creates selector for table.
 	 * @param  string
-	 * @return NTableSelection
+	 * @return Nette\Database\Table\Selection
 	 */
 	public function table($table)
 	{
-		return new NTableSelection($table, $this);
+		return new Table\Selection($table, $this);
 	}
 
 
 
-	/********************* NObject behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return NClassReflection
+	 * @return Nette\Reflection\ClassType
 	 */
-	public function getReflection()
+	public static function getReflection()
 	{
-		return new NClassReflection($this);
+		return new Nette\Reflection\ClassType(get_called_class());
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::call($this, $name, $args);
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return NObjectMixin::get($this, $name);
+		return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return NObjectMixin::set($this, $name, $value);
+		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return NObjectMixin::has($this, $name);
+		return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		ObjectMixin::remove($this, $name);
 	}
 
 }

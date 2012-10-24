@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Multiline text input control.
  *
  * @author     David Grudl
- * @package Nette\Forms\Controls
  */
-class NTextArea extends NTextBase
+class TextArea extends TextBase
 {
 
 	/**
@@ -39,7 +41,7 @@ class NTextArea extends NTextBase
 
 	/**
 	 * Generates control's HTML element.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{

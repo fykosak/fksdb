@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Limited scope for PHP code evaluation and script including.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-final class NLimitedScope
+final class LimitedScope
 {
 	private static $vars;
 
@@ -27,7 +29,7 @@ final class NLimitedScope
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new Nette\StaticClassException;
 	}
 
 
@@ -46,7 +48,7 @@ final class NLimitedScope
 		}
 		$res = eval('?>' . func_get_arg(0));
 		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
-			throw new FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
+			throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
 		}
 		return $res;
 	}

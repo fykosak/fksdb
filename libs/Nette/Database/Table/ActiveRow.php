@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Table
  */
+
+namespace Nette\Database\Table;
+
+use Nette;
 
 
 
@@ -17,22 +20,21 @@
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
- * @package Nette\Database\Table
  */
-class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
+class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
-	/** @var NTableSelection */
+	/** @var Selection */
 	private $table;
 
 	/** @var array of row data */
 	private $data;
 
-	/** @var array of new values {@see NTableRow::update()} */
+	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
 
 
-	public function __construct(array $data, NTableSelection $table)
+	public function __construct(array $data, Selection $table)
 	{
 		$this->data = $data;
 		$this->table = $table;
@@ -44,7 +46,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	 * @internal
 	 * @ignore
 	 */
-	public function setTable(NTableSelection $table)
+	public function setTable(Selection $table)
 	{
 		$this->table = $table;
 	}
@@ -66,7 +68,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	{
 		try {
 			return (string) $this->getPrimary();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
@@ -91,7 +93,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	public function getPrimary()
 	{
 		if (!isset($this->data[$this->table->getPrimary()])) {
-			throw new NotSupportedException("Table {$this->table->getName()} does not have any primary key.");
+			throw new Nette\NotSupportedException("Table {$this->table->getName()} does not have any primary key.");
 		}
 		return $this[$this->table->getPrimary()];
 	}
@@ -102,7 +104,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	 * Returns referenced row.
 	 * @param  string
 	 * @param  string
-	 * @return NTableRow or NULL if the row does not exist
+	 * @return ActiveRow or NULL if the row does not exist
 	 */
 	public function ref($key, $throughColumn = NULL)
 	{
@@ -119,7 +121,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	 * Returns referencing rows.
 	 * @param  string
 	 * @param  string
-	 * @return NGroupedTableSelection
+	 * @return GroupedSelection
 	 */
 	public function related($key, $throughColumn = NULL)
 	{
@@ -171,7 +173,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 	public function getIterator()
 	{
 		$this->access(NULL);
-		return new ArrayIterator($this->data);
+		return new \ArrayIterator($this->data);
 	}
 
 
@@ -252,7 +254,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 		}
 
 		$this->access($key, NULL);
-		throw new MemberAccessException("Cannot read an undeclared column \"$key\".");
+		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
 	}
 
 
@@ -296,7 +298,7 @@ class NTableRow extends NObject implements IteratorAggregate, ArrayAccess
 			$this->access($column);
 
 			$value = $this->data[$column];
-			$value = $value instanceof NTableRow ? $value->getPrimary() : $value;
+			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
 
 			$referenced = $this->table->getReferencedTable($table, $column, !empty($this->modified[$column]));
 			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist

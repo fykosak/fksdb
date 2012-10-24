@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\DI
  */
+
+namespace Nette\DI;
+
+use Nette;
 
 
 
@@ -16,17 +19,16 @@
  * Definition used by ContainerBuilder.
  *
  * @author     David Grudl
- * @package Nette\DI
  */
-class NDIServiceDefinition extends NObject
+class ServiceDefinition extends Nette\Object
 {
 	/** @var string  class or interface name */
 	public $class;
 
-	/** @var NDIStatement */
+	/** @var Statement */
 	public $factory;
 
-	/** @var NDIStatement[] */
+	/** @var Statement[] */
 	public $setup = array();
 
 	/** @var array */
@@ -59,7 +61,7 @@ class NDIServiceDefinition extends NObject
 
 	public function setFactory($factory, array $args = array())
 	{
-		$this->factory = new NDIStatement($factory, $args);
+		$this->factory = new Statement($factory, $args);
 		return $this;
 	}
 
@@ -83,7 +85,7 @@ class NDIServiceDefinition extends NObject
 			$args = func_get_args();
 			array_shift($args);
 		}
-		$this->setup[] = new NDIStatement($target, $args);
+		$this->setup[] = new Statement($target, $args);
 		return $this;
 	}
 

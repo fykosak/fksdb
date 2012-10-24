@@ -7,8 +7,13 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Table
  */
+
+namespace Nette\Database\Table;
+
+use Nette,
+	Nette\Database\ISupplementalDriver,
+	PDO;
 
 
 
@@ -18,14 +23,13 @@
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @package Nette\Database\Table
  */
-class NSqlBuilder extends NObject
+class SqlBuilder extends Nette\Object
 {
-	/** @var NTableSelection */
+	/** @var Selection */
 	protected $selection;
 
-	/** @var NConnection */
+	/** @var Nette\Database\Connection */
 	protected $connection;
 
 	/** @var string delimited table name */
@@ -60,7 +64,7 @@ class NSqlBuilder extends NObject
 
 
 
-	public function __construct(NTableSelection $selection)
+	public function __construct(Selection $selection)
 	{
 		$this->selection = $selection;
 		$this->connection = $selection->getConnection();
@@ -69,7 +73,7 @@ class NSqlBuilder extends NObject
 
 
 
-	public function setSelection(NTableSelection $selection)
+	public function setSelection(Selection $selection)
 	{
 		$this->selection = $selection;
 	}
@@ -97,7 +101,7 @@ class NSqlBuilder extends NObject
 
 
 
-	public function importConditions(NSqlBuilder $builder)
+	public function importConditions(SqlBuilder $builder)
 	{
 		$this->where = $builder->where;
 		$this->parameters = $builder->parameters;
@@ -147,7 +151,7 @@ class NSqlBuilder extends NObject
 		} elseif ($parameters === NULL) { // where('column', NULL)
 			$condition .= ' IS NULL';
 
-		} elseif ($parameters instanceof NTableSelection) { // where('column', $db->$table())
+		} elseif ($parameters instanceof Selection) { // where('column', $db->$table())
 			$clone = clone $parameters;
 			if (!$clone->getSqlBuilder()->select) {
 				$clone->select($clone->primary);
@@ -369,9 +373,9 @@ class NSqlBuilder extends NObject
 	protected function tryDelimite($s)
 	{
 		$driver = $this->connection->getSupplementalDriver();
-		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|$)#i', create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('driver'=>$driver)).'], EXTR_REFS);
+		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|$)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
-		'), $s);
+		}, $s);
 	}
 
 

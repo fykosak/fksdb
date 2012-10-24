@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config\Extensions
  */
+
+namespace Nette\Config\Extensions;
+
+use Nette,
+	Nette\DI\ContainerBuilder;
 
 
 
@@ -16,17 +20,16 @@
  * PHP directives definition.
  *
  * @author     David Grudl
- * @package Nette\Config\Extensions
  */
-class NPhpExtension extends NConfigCompilerExtension
+class PhpExtension extends Nette\Config\CompilerExtension
 {
 
-	public function afterCompile(NPhpClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
 		foreach ($this->getConfig() as $name => $value) {
 			if (!is_scalar($value)) {
-				throw new InvalidStateException("Configuration value for directive '$name' is not scalar.");
+				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
 
 			} elseif ($name === 'include_path') {
 				$initialize->addBody('set_include_path(?);', array(str_replace(';', PATH_SEPARATOR, $value)));
@@ -44,7 +47,7 @@ class NPhpExtension extends NConfigCompilerExtension
 				$initialize->addBody('ini_set(?, ?);', array($name, $value));
 
 			} elseif (ini_get($name) != $value) { // intentionally ==
-				throw new NotSupportedException('Required function ini_set() is disabled.');
+				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 			}
 		}
 	}

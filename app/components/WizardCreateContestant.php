@@ -1,5 +1,8 @@
 <?php
 
+use Nette\ComponentModel\IContainer as IComponentContainer;
+use Nette\Application\UI\Form;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -58,7 +61,7 @@ class WizardCreateContestant extends WizardComponent {
     }
 
     //   --- submit handlers ----
-    public function findSubmitted(NAppForm $form) {
+    public function findSubmitted(Form $form) {
         $values = $form->getValues();
         //TODO find results display again
         if ($values[FormPersonFind::ID_PERSON]) {
@@ -68,7 +71,7 @@ class WizardCreateContestant extends WizardComponent {
         }
     }
 
-    public function contestantSubmitted(NAppForm $form) {
+    public function contestantSubmitted(Form $form) {
         if($form[self::SUBMIT_FINISH]->isSubmittedBy()){
             return null;
         }
@@ -88,7 +91,7 @@ class WizardCreateContestant extends WizardComponent {
     }
 
     //   --- step initialization ---
-    public function initStep(NAppForm $form) {
+    public function initStep(Form $form) {
         switch ($form->getName()) {
             case self::STEP_CREATE_PERSON:
                 $this->initCreatePerson($form);
@@ -108,18 +111,18 @@ class WizardCreateContestant extends WizardComponent {
         }
     }
 
-    private function initCreatePerson(NAppForm $form) {
+    private function initCreatePerson(Form $form) {
         $values = $this->getData(self::STEP_FIND);
         $fullname = $values[FormPersonFind::FULLNAME];
         $form->setDefaults(array('display_name' => $fullname));
     }
 
-    private function initPostContact(NAppForm $form) {
+    private function initPostContact(Form $form) {
         $form->setValues($this->getPerson()->toArray());
         //TODO
     }
 
-    private function initCreateContestant(NAppForm $form) {
+    private function initCreateContestant(Form $form) {
         $form->setValues($this->getPerson()->toArray());
         //TODO update school year, class for current year
         //TODO predict from spamee
@@ -129,12 +132,12 @@ class WizardCreateContestant extends WizardComponent {
         }        
     }
 
-    private function initCreateLogin(NAppForm $form) {
+    private function initCreateLogin(Form $form) {
         $form->setValues($this->getPerson()->toArray());
         //TODO intentionally empty?
     }
 
-    private function initPersonInfo(NAppForm $form) {
+    private function initPersonInfo(Form $form) {
         $form->setValues($this->getPerson()->toArray());
         //TODO intentionally empty?
     }

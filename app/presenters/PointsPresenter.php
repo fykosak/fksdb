@@ -1,4 +1,5 @@
 <?php
+use Nette\Application\UI\Form;
 
 class PointsPresenter extends TaskTimesContestantPresenter {
 
@@ -8,7 +9,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
     }
 
     protected function createComponentPointsForm($name) {
-        $form = new NAppForm($this, $name);
+        $form = new Form($this, $name);
 
         $contestants = $this->getContestants($this->getSeries());
         $tasks = $this->getTasks();
@@ -27,8 +28,8 @@ class PointsPresenter extends TaskTimesContestantPresenter {
                 $text = $subcontainer->addHidden('submitted_on');
                 $note = $subcontainer->addHidden('note');
                 $points = $subcontainer->addText('raw_points');
-                $points->addCondition(NForm::FILLED)
-                        ->addRule(NForm::NUMERIC, 'Počet bodů má být přirozené číslo.');
+                $points->addCondition(Form::FILLED)
+                        ->addRule(Form::NUMERIC, 'Počet bodů má být přirozené číslo.');
                 $points->getControlPrototype()->tabindex($ct_i + $ct_cnt * $t_i + 1);
 
                 if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
@@ -50,7 +51,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
     }
 
-    public function pointsFormSuccess(NAppForm $form) {
+    public function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
         $grid = $values['grid'];
         $submitsTable = $this->getSubmitsTable();

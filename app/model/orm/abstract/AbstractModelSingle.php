@@ -1,9 +1,11 @@
 <?php
 
+use Nette\Database\Table\ActiveRow as TableRow;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelSingle extends NTableRow {
+abstract class AbstractModelSingle extends TableRow {
 
     protected $stored = true;
 
@@ -13,6 +15,10 @@ abstract class AbstractModelSingle extends NTableRow {
 
     public function setNew($value = true) {
         $this->stored = !$value;
+    }
+
+    public static function createFromTableRow(TableRow $row) {
+        return new static($row->toArray(), $row->getTable());
     }
 
 }
