@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils\PhpGenerator
  */
+
+namespace Nette\Utils\PhpGenerator;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * PHP code generator utils.
  *
  * @author     David Grudl
- * @package Nette\Utils\PhpGenerator
  */
-class NPhpHelpers
+class Helpers
 {
 	const PHP_IDENT = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
@@ -36,7 +38,7 @@ class NPhpHelpers
 
 	private static function _dump(&$var, $level = 0)
 	{
-		if ($var instanceof NPhpLiteral) {
+		if ($var instanceof PhpLiteral) {
 			return $var->value;
 
 		} elseif (is_float($var)) {
@@ -74,7 +76,7 @@ class NPhpHelpers
 			if (empty($var)) {
 
 			} elseif ($level > 50 || isset($var[$marker])) {
-				throw new InvalidArgumentException('Nesting level too deep or recursive dependency.');
+				throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
 
 			} else {
 				$s .= "\n";
@@ -100,7 +102,7 @@ class NPhpHelpers
 			if (empty($arr)) {
 
 			} elseif ($level > 50 || in_array($var, $list, TRUE)) {
-				throw new InvalidArgumentException('Nesting level too deep or recursive dependency.');
+				throw new Nette\InvalidArgumentException('Nesting level too deep or recursive dependency.');
 
 			} else {
 				$s .= "\n";
@@ -146,12 +148,12 @@ class NPhpHelpers
 		$a = strpos($statement, '?');
 		while ($a !== FALSE) {
 			if (!$args) {
-				throw new InvalidArgumentException('Insufficient number of arguments.');
+				throw new Nette\InvalidArgumentException('Insufficient number of arguments.');
 			}
 			$arg = array_shift($args);
 			if (substr($statement, $a + 1, 1) === '*') { // ?*
 				if (!is_array($arg)) {
-					throw new InvalidArgumentException('Argument must be an array.');
+					throw new Nette\InvalidArgumentException('Argument must be an array.');
 				}
 				$arg = implode(', ', array_map(array(__CLASS__, 'dump'), $arg));
 				$statement = substr_replace($statement, $arg, $a, 2);
@@ -174,7 +176,7 @@ class NPhpHelpers
 	 */
 	public static function formatMember($name)
 	{
-		return $name instanceof NPhpLiteral || !self::isIdentifier($name)
+		return $name instanceof PhpLiteral || !self::isIdentifier($name)
 			? '{' . self::_dump($name) . '}'
 			: $name ;
 	}

@@ -8,14 +8,14 @@ abstract class TaskTimesContestantPresenter extends AuthenticatedPresenter {
 
     /**
      * @param int $series when not null return only contestants with submits in the series
-     * @return NTableSelection
+     * @return Nette\Database\Table\Selection
      */
     protected function getContestants($series = null) {
         $serviceContestant = $this->context->getService('ServiceContestant');
         return $serviceContestant->getTable()->where(array(
                     'contest_id' => $this->getSelectedContest()->contest_id,
                     'year' => $this->getSelectedYear(),
-                ))->order('person.last_name, person.first_name');
+                ))->order('person.sort_name, person.display_name');
         //TODO series
     }
 

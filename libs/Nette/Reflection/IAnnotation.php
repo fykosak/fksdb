@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Reflection
  */
+
+namespace Nette\Reflection;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * Code annotation.
  *
  * @author     David Grudl
- * @package Nette\Reflection
  */
 interface IAnnotation
 {

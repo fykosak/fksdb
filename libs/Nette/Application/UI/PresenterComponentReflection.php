@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\UI
  */
+
+namespace Nette\Application\UI;
+
+use Nette,
+	Nette\Application\BadRequestException;
 
 
 
@@ -17,9 +21,8 @@
  *
  * @author     David Grudl
  * @internal
- * @package Nette\Application\UI
  */
-class NPresenterComponentReflection extends NClassReflection
+class PresenterComponentReflection extends Nette\Reflection\ClassType
 {
 	/** @var array getPersistentParams cache */
 	private static $ppCache = array();
@@ -44,9 +47,9 @@ class NPresenterComponentReflection extends NClassReflection
 			return $params;
 		}
 		$params = array();
-		if (is_subclass_of($class, 'NPresenterComponent')) {
+		if (is_subclass_of($class, 'Nette\Application\UI\PresenterComponent')) {
 			$defaults = get_class_vars($class);
-			foreach (call_user_func(array($class, 'getPersistentParams'), $class) as $name => $meta) {
+			foreach ($class::getPersistentParams()as $name => $meta) {
 				if (is_string($meta)) {
 					$name = $meta;
 				}
@@ -81,8 +84,8 @@ class NPresenterComponentReflection extends NClassReflection
 			return $components;
 		}
 		$components = array();
-		if (is_subclass_of($class, 'NPresenter')) {
-			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $meta) {
+		if (is_subclass_of($class, 'Nette\Application\UI\Presenter')) {
+			foreach ($class::getPersistentComponents()as $name => $meta) {
 				if (is_string($meta)) {
 					$name = $meta;
 				}
@@ -107,9 +110,9 @@ class NPresenterComponentReflection extends NClassReflection
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache === NULL) try {
 			$cache = FALSE;
-			$rm = NMethodReflection::from($class, $method);
+			$rm = Nette\Reflection\Method::from($class, $method);
 			$cache = $this->isInstantiable() && $rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic();
-		} catch (ReflectionException $e) {
+		} catch (\ReflectionException $e) {
 		}
 		return $cache;
 	}
@@ -119,7 +122,7 @@ class NPresenterComponentReflection extends NClassReflection
 	/**
 	 * @return array
 	 */
-	public static function combineArgs(ReflectionFunctionAbstract $method, $args)
+	public static function combineArgs(\ReflectionFunctionAbstract $method, $args)
 	{
 		$res = array();
 		$i = 0;
@@ -129,8 +132,8 @@ class NPresenterComponentReflection extends NClassReflection
 				$res[$i++] = $args[$name];
 				$type = $param->isArray() ? 'array' : ($param->isDefaultValueAvailable() && $param->isOptional() ? gettype($param->getDefaultValue()) : 'NULL');
 				if (!self::convertType($res[$i-1], $type)) {
-				    $mName = $method instanceof ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
-					throw new NBadRequestException("Invalid value for parameter '$name' in method $mName(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
+				    $mName = $method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
+					throw new BadRequestException("Invalid value for parameter '$name' in method $mName(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
 			} else {
 				$res[$i++] = $param->isDefaultValueAvailable() && $param->isOptional() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);

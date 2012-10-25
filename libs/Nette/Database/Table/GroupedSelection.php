@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Table
  */
+
+namespace Nette\Database\Table;
+
+use Nette;
 
 
 
@@ -18,11 +21,10 @@
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @package Nette\Database\Table
  */
-class NGroupedTableSelection extends NTableSelection
+class GroupedSelection extends Selection
 {
-	/** @var NTableSelection referenced table */
+	/** @var Selection referenced table */
 	protected $refTable;
 
 	/** @var string grouping column name */
@@ -35,11 +37,11 @@ class NGroupedTableSelection extends NTableSelection
 
 	/**
 	 * Creates filtered and grouped table representation.
-	 * @param  NTableSelection  $refTable
+	 * @param  Selection  $refTable
 	 * @param  string  database table name
 	 * @param  string  joining column
 	 */
-	public function __construct(NTableSelection $refTable, $table, $column)
+	public function __construct(Selection $refTable, $table, $column)
 	{
 		parent::__construct($table, $refTable->connection);
 		$this->refTable = $refTable;
@@ -52,7 +54,7 @@ class NGroupedTableSelection extends NTableSelection
 	 * Sets active group.
 	 * @internal
 	 * @param  int  primary key of grouped rows
-	 * @return NGroupedTableSelection
+	 * @return GroupedSelection
 	 */
 	public function setActive($active)
 	{
@@ -193,7 +195,7 @@ class NGroupedTableSelection extends NTableSelection
 	{
 		$refObj = $this->refTable;
 		$refPath = $this->name . '.';
-		while ($refObj instanceof NGroupedTableSelection) {
+		while ($refObj instanceof GroupedSelection) {
 			$refPath .= $refObj->name . '.';
 			$refObj = $refObj->refTable;
 		}
@@ -209,11 +211,11 @@ class NGroupedTableSelection extends NTableSelection
 
 	public function insert($data)
 	{
-		if ($data instanceof Traversable && !$data instanceof NTableSelection) {
+		if ($data instanceof \Traversable && !$data instanceof Selection) {
 			$data = iterator_to_array($data);
 		}
 
-		if (NValidators::isList($data)) {
+		if (Nette\Utils\Validators::isList($data)) {
 			foreach (array_keys($data) as $key) {
 				$data[$key][$this->column] = $this->active;
 			}
@@ -230,7 +232,7 @@ class NGroupedTableSelection extends NTableSelection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new NSqlBuilder($this);
+		$this->sqlBuilder = new SqlBuilder($this);
 		$this->where($this->column, $this->active);
 		$return = parent::update($data);
 
@@ -244,7 +246,7 @@ class NGroupedTableSelection extends NTableSelection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new NSqlBuilder($this);
+		$this->sqlBuilder = new SqlBuilder($this);
 		$this->where($this->column, $this->active);
 		$return = parent::delete();
 

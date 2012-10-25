@@ -1,15 +1,16 @@
 <?php
-
+use Nette\Application\Routers\Route;
+use Nette\Config\Configurator;
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
 
 
 // Configure application
-$configurator = new NConfigurator;
+$configurator = new Configurator();
 
 // Enable Nette Debugger for error visualisation & logging
-//$configurator->setDebugMode(NConfigurator::AUTO);
+//$configurator->setDebugMode(Configurator::AUTO);
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 
 // Enable RobotLoader - this will load all classes automatically
@@ -24,9 +25,11 @@ $configurator->addConfig(dirname(__FILE__) . '/config/config.neon');
 $container = $configurator->createContainer();
 
 // Setup router
-$container->router[] = new NRoute('index.php', 'Dashboard:default', NRoute::ONE_WAY);
-$container->router[] = new NRoute('<presenter>/<action>[/<id>]', 'Dashboard:default', NRoute::SECURED);
+$container->router[] = new Route('index.php', 'Dashboard:default', Route::ONE_WAY);
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Dashboard:default', Route::SECURED);
 
+// Register addons
+\Kdyby\Extension\Forms\Replicator\Replicator::register();
 
 // Configure and run the application!
 $container->application->run();

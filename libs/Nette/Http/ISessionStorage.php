@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * User session storage. @see http://php.net/session_set_save_handler
  *
  * @author     David Grudl
- * @package Nette\Http
  */
 interface ISessionStorage
 {

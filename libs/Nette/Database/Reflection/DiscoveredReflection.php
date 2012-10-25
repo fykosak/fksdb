@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Reflection
  */
+
+namespace Nette\Database\Reflection;
+
+use Nette;
 
 
 
@@ -16,18 +19,17 @@
  * Reflection metadata class with discovery for a database.
  *
  * @author     Jan Skrasek
- * @property-write NConnection $connection
- * @package Nette\Database\Reflection
+ * @property-write Nette\Database\Connection $connection
  */
-class NDiscoveredReflection extends NObject implements IReflection
+class DiscoveredReflection extends Nette\Object implements Nette\Database\IReflection
 {
-	/** @var NCache */
+	/** @var Nette\Caching\Cache */
 	protected $cache;
 
-	/** @var ICacheStorage */
+	/** @var Nette\Caching\IStorage */
 	protected $cacheStorage;
 
-	/** @var NConnection */
+	/** @var Nette\Database\Connection */
 	protected $connection;
 
 	/** @var array */
@@ -38,19 +40,19 @@ class NDiscoveredReflection extends NObject implements IReflection
 	/**
 	 * Create autodiscovery structure.
 	 */
-	public function __construct(ICacheStorage $storage = NULL)
+	public function __construct(Nette\Caching\IStorage $storage = NULL)
 	{
 		$this->cacheStorage = $storage;
 	}
 
 
 
-	public function setConnection(NConnection $connection)
+	public function setConnection(Nette\Database\Connection $connection)
 	{
 		$this->connection = $connection;
 		if ($this->cacheStorage) {
-			$this->cache = new NCache($this->cacheStorage, 'Nette.Database.' . md5($connection->getDsn()));
-			$this->structure = ($tmp=$this->cache->load('structure')) ? $tmp : $this->structure;
+			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.' . md5($connection->getDsn()));
+			$this->structure = $this->cache->load('structure') ?: $this->structure;
 		}
 	}
 
@@ -122,12 +124,12 @@ class NDiscoveredReflection extends NObject implements IReflection
 			}
 
 			if (!$refresh && !empty($candidates)) {
-				throw new PDOException('Ambiguous joining column in related call.');
+				throw new \PDOException('Ambiguous joining column in related call.');
 			}
 		}
 
 		if (!$refresh) {
-			throw new PDOException("No reference found for \${$table}->related({$key}).");
+			throw new \PDOException("No reference found for \${$table}->related({$key}).");
 		}
 
 		$this->reloadAllForeignKeys();
@@ -151,7 +153,7 @@ class NDiscoveredReflection extends NObject implements IReflection
 		}
 
 		if (!$refresh) {
-			throw new PDOException("No reference found for \${$table}->{$key}.");
+			throw new \PDOException("No reference found for \${$table}->{$key}.");
 		}
 
 		$this->reloadForeignKeys($table);
@@ -169,9 +171,9 @@ class NDiscoveredReflection extends NObject implements IReflection
 		}
 
 		foreach (array_keys($this->structure['hasMany']) as $table) {
-			uksort($this->structure['hasMany'][$table], create_function('$a, $b', '
+			uksort($this->structure['hasMany'][$table], function($a, $b) {
 				return strlen($a) - strlen($b);
-			'));
+			});
 		}
 	}
 
@@ -185,9 +187,9 @@ class NDiscoveredReflection extends NObject implements IReflection
 		}
 
 		if (isset($this->structure['belongsTo'][$table])) {
-			uksort($this->structure['belongsTo'][$table], create_function('$a, $b', '
+			uksort($this->structure['belongsTo'][$table], function($a, $b) {
 				return strlen($a) - strlen($b);
-			'));
+			});
 		}
 	}
 

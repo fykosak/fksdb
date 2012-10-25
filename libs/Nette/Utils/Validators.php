@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Validation utilites.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-class NValidators extends NObject
+class Validators extends Nette\Object
 {
 	protected static $validators = array(
 		'bool' => 'is_bool',
@@ -53,7 +55,7 @@ class NValidators extends NObject
 
 	protected static $counters = array(
 		'string' =>  'strlen',
-		'unicode' => array('NStrings', 'length'),
+		'unicode' => array('Nette\Utils\Strings', 'length'),
 		'array' => 'count',
 		'list' => 'count',
 		'alnum' => 'strlen',
@@ -76,7 +78,7 @@ class NValidators extends NObject
 	 */
 	public static function assert($value, $expected, $label = 'variable')
 	{
-		if (!self::is($value, $expected)) {
+		if (!static::is($value, $expected)) {
 			$expected = str_replace(array('|', ':'), array(' or ', ' in range '), $expected);
 			if (is_array($value)) {
 				$type = 'array(' . count($value) . ')';
@@ -87,7 +89,7 @@ class NValidators extends NObject
 			} else {
 				$type = gettype($value);
 			}
-			throw new NAssertionException("The $label expects to be $expected, $type given.");
+			throw new AssertionException("The $label expects to be $expected, $type given.");
 		}
 	}
 
@@ -104,10 +106,10 @@ class NValidators extends NObject
 	{
 		self::assert($arr, 'array', 'first argument');
 		if (!array_key_exists($field, $arr)) {
-			throw new NAssertionException('Missing ' . str_replace('%', $field, $label) . '.');
+			throw new AssertionException('Missing ' . str_replace('%', $field, $label) . '.');
 
 		} elseif ($expected) {
-			self::assert($arr[$field], $expected, str_replace('%', $field, $label));
+			static::assert($arr[$field], $expected, str_replace('%', $field, $label));
 		}
 	}
 
@@ -123,8 +125,8 @@ class NValidators extends NObject
 	{
 		foreach (explode('|', $expected) as $item) {
 			list($type) = $item = explode(':', $item, 2);
-			if (isset(self::$validators[$type])) {
-				if (!call_user_func(self::$validators[$type], $value)) {
+			if (isset(static::$validators[$type])) {
+				if (!call_user_func(static::$validators[$type], $value)) {
 					continue;
 				}
 			} elseif ($type === 'number') {
@@ -141,8 +143,8 @@ class NValidators extends NObject
 			}
 
 			if (isset($item[1])) {
-				if (isset(self::$counters[$type])) {
-					$value = call_user_func(self::$counters[$type], $value);
+				if (isset(static::$counters[$type])) {
+					$value = call_user_func(static::$counters[$type], $value);
 				}
 				$range = explode('..', $item[1]);
 				if (!isset($range[1])) {
@@ -280,8 +282,7 @@ class NValidators extends NObject
 
 /**
  * The exception that indicates assertion error.
- * @package Nette\Utils
  */
-class NAssertionException extends Exception
+class AssertionException extends \Exception
 {
 }

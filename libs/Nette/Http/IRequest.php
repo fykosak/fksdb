@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * IHttpRequest provides access scheme for request sent via HTTP.
  *
  * @author     David Grudl
- * @package Nette\Http
  */
-interface IHttpRequest
+interface IRequest
 {
 	/** HTTP request method */
 	const
@@ -30,7 +32,7 @@ interface IHttpRequest
 
 	/**
 	 * Returns URL object.
-	 * @return NUrlScript
+	 * @return UrlScript
 	 */
 	function getUrl();
 
@@ -57,7 +59,7 @@ interface IHttpRequest
 	/**
 	 * Returns uploaded file.
 	 * @param  string key (or more keys)
-	 * @return NHttpUploadedFile
+	 * @return FileUpload
 	 */
 	function getFile($key);
 

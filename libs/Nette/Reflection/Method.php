@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Reflection
  */
+
+namespace Nette\Reflection;
+
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -17,10 +21,10 @@
  *
  * @author     David Grudl
  * @property-read array $defaultParameters
- * @property-read NClassReflection $declaringClass
- * @property-read NMethodReflection $prototype
- * @property-read NExtensionReflection $extension
- * @property-read NParameterReflection[] $parameters
+ * @property-read ClassType $declaringClass
+ * @property-read Method $prototype
+ * @property-read Extension $extension
+ * @property-read Parameter[] $parameters
  * @property-read IAnnotation[][] $annotations
  * @property-read string $description
  * @property-read bool $public
@@ -48,29 +52,28 @@
  * @property-read string $shortName
  * @property-read int $startLine
  * @property-read array $staticVariables
- * @package Nette\Reflection
  */
-class NMethodReflection extends ReflectionMethod
+class Method extends \ReflectionMethod
 {
 
 	/**
 	 * @param  string|object
 	 * @param  string
-	 * @return NMethodReflection
+	 * @return Method
 	 */
 	public static function from($class, $method)
 	{
-		return new self(is_object($class) ? get_class($class) : $class, $method);
+		return new static(is_object($class) ? get_class($class) : $class, $method);
 	}
 
 
 
 	/**
-	 * @return NCallback
+	 * @return Nette\Callback
 	 */
 	public function toCallback()
 	{
-		return new NCallback(parent::getDeclaringClass()->getName(), $this->getName());
+		return new Nette\Callback(parent::getDeclaringClass()->getName(), $this->getName());
 	}
 
 
@@ -87,51 +90,51 @@ class NMethodReflection extends ReflectionMethod
 
 
 	/**
-	 * @return NClassReflection
+	 * @return ClassType
 	 */
 	public function getDeclaringClass()
 	{
-		return new NClassReflection(parent::getDeclaringClass()->getName());
+		return new ClassType(parent::getDeclaringClass()->getName());
 	}
 
 
 
 	/**
-	 * @return NMethodReflection
+	 * @return Method
 	 */
 	public function getPrototype()
 	{
 		$prototype = parent::getPrototype();
-		return new NMethodReflection($prototype->getDeclaringClass()->getName(), $prototype->getName());
+		return new Method($prototype->getDeclaringClass()->getName(), $prototype->getName());
 	}
 
 
 
 	/**
-	 * @return NExtensionReflection
+	 * @return Extension
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new NExtensionReflection($name) : NULL;
+		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
 
 	/**
-	 * @return NParameterReflection[]
+	 * @return Parameter[]
 	 */
 	public function getParameters()
 	{
 		$me = array(parent::getDeclaringClass()->getName(), $this->getName());
 		foreach ($res = parent::getParameters() as $key => $val) {
-			$res[$key] = new NParameterReflection($me, $val->getName());
+			$res[$key] = new Parameter($me, $val->getName());
 		}
 		return $res;
 	}
 
 
 
-	/********************* NAnnotations support ****************d*g**/
+	/********************* Nette\Annotations support ****************d*g**/
 
 
 
@@ -142,7 +145,7 @@ class NMethodReflection extends ReflectionMethod
 	 */
 	public function hasAnnotation($name)
 	{
-		$res = NAnnotationsParser::getAll($this);
+		$res = AnnotationsParser::getAll($this);
 		return !empty($res[$name]);
 	}
 
@@ -155,7 +158,7 @@ class NMethodReflection extends ReflectionMethod
 	 */
 	public function getAnnotation($name)
 	{
-		$res = NAnnotationsParser::getAll($this);
+		$res = AnnotationsParser::getAll($this);
 		return isset($res[$name]) ? end($res[$name]) : NULL;
 	}
 
@@ -167,7 +170,7 @@ class NMethodReflection extends ReflectionMethod
 	 */
 	public function getAnnotations()
 	{
-		return NAnnotationsParser::getAll($this);
+		return AnnotationsParser::getAll($this);
 	}
 
 
@@ -183,51 +186,51 @@ class NMethodReflection extends ReflectionMethod
 
 
 
-	/********************* NObject behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return NClassReflection
+	 * @return ClassType
 	 */
-	public function getReflection()
+	public static function getReflection()
 	{
-		return new NClassReflection($this);
+		return new ClassType(get_called_class());
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::call($this, $name, $args);
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return NObjectMixin::get($this, $name);
+		return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return NObjectMixin::set($this, $name, $value);
+		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return NObjectMixin::has($this, $name);
+		return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		ObjectMixin::remove($this, $name);
 	}
 
 }

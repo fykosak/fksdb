@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config\Extensions
  */
+
+namespace Nette\Config\Extensions;
+
+use Nette,
+	Nette\DI\ContainerBuilder;
 
 
 
@@ -16,12 +20,11 @@
  * Constant definitions.
  *
  * @author     David Grudl
- * @package Nette\Config\Extensions
  */
-class NConstantsExtension extends NConfigCompilerExtension
+class ConstantsExtension extends Nette\Config\CompilerExtension
 {
 
-	public function afterCompile(NPhpClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		foreach ($this->getConfig() as $name => $value) {
 			$class->methods['initialize']->addBody('define(?, ?);', array($name, $value));

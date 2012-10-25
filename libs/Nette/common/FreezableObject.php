@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -18,9 +21,8 @@
  * @author     David Grudl
  *
  * @property-read bool $frozen
- * @package Nette
  */
-abstract class NFreezableObject extends NObject implements IFreezable
+abstract class FreezableObject extends Object implements IFreezable
 {
 	/** @var bool */
 	private $frozen = FALSE;

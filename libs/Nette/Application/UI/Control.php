@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\UI
  */
+
+namespace Nette\Application\UI;
+
+use Nette;
 
 
 
@@ -17,13 +20,12 @@
  *
  * @author     David Grudl
  *
- * @property-read ITemplate $template
+ * @property-read Nette\Templating\ITemplate $template
  * @property-read string $snippetId
- * @package Nette\Application\UI
  */
-abstract class NControl extends NPresenterComponent implements IRenderable
+abstract class Control extends PresenterComponent implements IRenderable
 {
-	/** @var ITemplate */
+	/** @var Nette\Templating\ITemplate */
 	private $template;
 
 	/** @var array */
@@ -39,15 +41,15 @@ abstract class NControl extends NPresenterComponent implements IRenderable
 
 
 	/**
-	 * @return ITemplate
+	 * @return Nette\Templating\ITemplate
 	 */
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!$value instanceof ITemplate && $value !== NULL) {
+			if (!$value instanceof Nette\Templating\ITemplate && $value !== NULL) {
 				$class2 = get_class($value); $class = get_class($this);
-				throw new UnexpectedValueException("Object returned by $class::createTemplate() must be instance of ITemplate, '$class2' given.");
+				throw new Nette\UnexpectedValueException("Object returned by $class::createTemplate() must be instance of Nette\\Templating\\ITemplate, '$class2' given.");
 			}
 			$this->template = $value;
 		}
@@ -58,23 +60,23 @@ abstract class NControl extends NPresenterComponent implements IRenderable
 
 	/**
 	 * @param  string|NULL
-	 * @return ITemplate
+	 * @return Nette\Templating\ITemplate
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$template = $class ? new $class : new NFileTemplate;
+		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('NTemplateHelpers::loader');
+		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 		// default parameters
 		$template->control = $template->_control = $this;
 		$template->presenter = $template->_presenter = $presenter;
-		if ($presenter instanceof NPresenter) {
+		if ($presenter instanceof Presenter) {
 			$template->setCacheStorage($presenter->getContext()->nette->templateCacheStorage);
 			$template->user = $presenter->getUser();
 			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->getByType('ICacheStorage');
+			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
 			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
 			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
 
@@ -95,7 +97,7 @@ abstract class NControl extends NPresenterComponent implements IRenderable
 
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
-	 * @param  NTemplate
+	 * @param  Nette\Templating\Template
 	 * @return void
 	 */
 	public function templatePrepareFilters($template)
@@ -108,7 +110,7 @@ abstract class NControl extends NPresenterComponent implements IRenderable
 	/**
 	 * Returns widget component specified by name.
 	 * @param  string
-	 * @return IComponent
+	 * @return Nette\ComponentModel\IComponent
 	 */
 	public function getWidget($name)
 	{
@@ -193,7 +195,7 @@ abstract class NControl extends NPresenterComponent implements IRenderable
 								return TRUE;
 							}
 
-						} elseif ($component instanceof IComponentContainer) {
+						} elseif ($component instanceof Nette\ComponentModel\IContainer) {
 							$queue[] = $component;
 						}
 					}

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Database helpers.
  *
  * @author     David Grudl
- * @package Nette\Database
  */
-class NDatabaseHelpers
+class Helpers
 {
 	/** @var array */
 	public static $typePatterns = array(
@@ -39,7 +41,7 @@ class NDatabaseHelpers
 	 * Displays complete result set as HTML table for debug purposes.
 	 * @return void
 	 */
-	public static function dumpResult(NStatement $statement)
+	public static function dumpResult(Statement $statement)
 	{
 		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($statement->queryString) . "</caption>\n";
 		if (!$statement->columnCount()) {
@@ -95,19 +97,19 @@ class NDatabaseHelpers
 
 		// syntax highlight
 		$sql = htmlSpecialChars($sql);
-		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is", create_function('$matches', '
+		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is", function($matches) {
 			if (!empty($matches[1])) // comment
-				return \'<em style="color:gray">\' . $matches[1] . \'</em>\';
+				return '<em style="color:gray">' . $matches[1] . '</em>';
 
 			if (!empty($matches[2])) // error
-				return \'<strong style="color:red">\' . $matches[2] . \'</strong>\';
+				return '<strong style="color:red">' . $matches[2] . '</strong>';
 
 			if (!empty($matches[3])) // most important keywords
-				return \'<strong style="color:blue">\' . $matches[3] . \'</strong>\';
+				return '<strong style="color:blue">' . $matches[3] . '</strong>';
 
 			if (!empty($matches[4])) // other keywords
-				return \'<strong style="color:green">\' . $matches[4] . \'</strong>\';
-		'), $sql);
+				return '<strong style="color:green">' . $matches[4] . '</strong>';
+		}, $sql);
 
 		return '<pre class="dump">' . trim($sql) . "</pre>\n";
 	}
@@ -140,13 +142,13 @@ class NDatabaseHelpers
 	 * Import SQL dump from file - extreme fast.
 	 * @return int  count of commands
 	 */
-	public static function loadFromFile(NConnection $connection, $file)
+	public static function loadFromFile(Connection $connection, $file)
 	{
 		@set_time_limit(0); // intentionally @
 
 		$handle = @fopen($file, 'r'); // intentionally @
 		if (!$handle) {
-			throw new FileNotFoundException("Cannot open file '$file'.");
+			throw new Nette\FileNotFoundException("Cannot open file '$file'.");
 		}
 
 		$count = 0;

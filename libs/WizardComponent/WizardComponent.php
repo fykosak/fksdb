@@ -1,15 +1,18 @@
 <?php
 
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class WizardComponent extends NControl {
+class WizardComponent extends Control {
 
     const ID_ELEMENT = 'wizardId';
 
     /**
-     * @var array of callback(NAppForm $formToInit)
+     * @var array of callback(Form $formToInit)
      */
     public $onStepInit;
 
@@ -20,9 +23,14 @@ class WizardComponent extends NControl {
     public $onProcess;
 
     /**
-     * @var array of str|callback(NAppForm $submittedForm)
+     * @var array of str|callback(Form $submittedForm)
      */
     private $nextCallbacks = array();
+
+    /**
+     * @var array of array
+     */
+    private $stepSubmitters = array();
 
     /**
      * @var str
@@ -40,18 +48,44 @@ class WizardComponent extends NControl {
     private $wizardId;
 
     /**
-     * @param NAppForm $form                form displayed in the step
+     * @param Form $form                form displayed in the step
      * @param str $name                     name of the step (for reference)
      * @param callback|str $nextCallback    name of the following step or callback
      *                                      that should return name of the following step
      */
-    public function addStep(NAppForm $form, $name, $nextCallback = null) {
+    public function addStep(Form $form, $name, $nextCallback = null) {
         $form->addHidden(self::ID_ELEMENT);
         $form->onSuccess[] = array($this, 'stepSubmitted');
         $this->addComponent($form, $name);
         if ($nextCallback !== null) {
             $this->nextCallbacks[$name] = $nextCallback;
         }
+    }
+
+    /**
+     * Register the button as the 'next' button in the wizard's current step.
+     * 
+     * @param str $stepName
+     * @param str $buttonName
+     */
+    public function registerStepSubmitter($stepName, $buttonName) {
+        if (!isset($this->stepSubmitters[$stepName])) {
+            $this->stepSubmitters[$stepName] = array();
+        }
+        $this->stepSubmitters[$stepName][$buttonName] = true;
+    }
+
+    /**
+     * Inverse method to registerStepSubmitter.
+     * 
+     * @param str $stepName
+     * @param str $buttonName
+     */
+    public function unregisterStepSubmitter($stepName, $buttonName) {
+        if (!isset($this->stepSubmitters[$stepName])) {
+            return;
+        }
+        unset($this->stepSubmitters[$stepName][$buttonName]);
     }
 
     /**
@@ -116,6 +150,9 @@ class WizardComponent extends NControl {
         $this->wizardId = $wizardId;
     }
 
+    /**
+     * Render the form for the current step.
+     */
     public function render() {
         $name = $this->getCurrentStep();
         $currentForm = $this->getComponent($name);
@@ -126,23 +163,29 @@ class WizardComponent extends NControl {
 
     /**
      * @interal
-     * @param AppForm $form
+     * @param Form $form
      */
-    public function stepSubmitted(NAppForm $form) {
-        // realize where we are
+    public function stepSubmitted(Form $form) {
+        // detect where we are
         $name = $form->getName();
         $this->setCurrentStep($name);
 
-        // store data to session
         $values = $form->getValues();
         $this->setWizardId($values[self::ID_ELEMENT]);
         unset($values[self::ID_ELEMENT]);
 
+        // should we continue in wizard
+        $submitter = $form->isSubmitted() ? $form->isSubmitted()->getName() : null;
+        if (!$submitter || !isset($this->stepSubmitters[$name]) || !isset($this->stepSubmitters[$name][$submitter])) {
+            return;
+        }
+
+        // store data to session
         $session = $this->getSession();
         $session->$name = $values;
 
 
-        // find next component
+        // find the next step or finish
         if (isset($this->nextCallbacks[$name])) {
             $next = $this->nextCallbacks[$name];
             if (is_string($next) && $this->getComponent($next, false)) {

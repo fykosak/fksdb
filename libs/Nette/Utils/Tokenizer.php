@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Simple lexical analyser.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-class NTokenizer extends NObject
+class Tokenizer extends Nette\Object
 {
 	/** @var array */
 	public $tokens;
@@ -65,7 +67,7 @@ class NTokenizer extends NObject
 	{
 		$this->input = $input;
 		if ($this->types) {
-			$this->tokens = NStrings::matchAll($input, $this->re);
+			$this->tokens = Strings::matchAll($input, $this->re);
 			$len = 0;
 			$count = count($this->types);
 			$line = 1;
@@ -87,9 +89,9 @@ class NTokenizer extends NObject
 			}
 
 		} else {
-			$this->tokens = NStrings::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
-			if ($this->tokens && !NStrings::match(end($this->tokens), $this->re)) {
-				$tmp = NStrings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+			$this->tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
+			if ($this->tokens && !Strings::match(end($this->tokens), $this->re)) {
+				$tmp = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 				list(, $errorOffset) = end($tmp);
 			}
 		}
@@ -98,7 +100,7 @@ class NTokenizer extends NObject
 			$line = $errorOffset ? substr_count($this->input, "\n", 0, $errorOffset) + 1 : 1;
 			$col = $errorOffset - strrpos(substr($this->input, 0, $errorOffset), "\n") + 1;
 			$token = str_replace("\n", '\n', substr($input, $errorOffset, 10));
-			throw new NTokenizerException("Unexpected '$token' on line $line, column $col.");
+			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
 		return $this->tokens;
 	}
@@ -119,7 +121,7 @@ class NTokenizer extends NObject
 	 */
 	public function getOffset($i)
 	{
-		$tokens = NStrings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+		$tokens = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 		$offset = isset($tokens[$i]) ? $tokens[$i][1] : strlen($this->input);
 		return array(
 			$offset,
@@ -293,8 +295,7 @@ class NTokenizer extends NObject
 
 /**
  * The exception that indicates tokenizer error.
- * @package Nette\Utils
  */
-class NTokenizerException extends Exception
+class TokenizerException extends \Exception
 {
 }

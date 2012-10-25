@@ -7,13 +7,22 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte\Macros
  */
+
+namespace Nette\Latte\Macros;
+
+use Nette,
+	Nette\Latte,
+	Nette\Latte\MacroNode,
+	Nette\Latte\PhpWriter,
+	Nette\Latte\CompileException,
+	Nette\Forms\Form,
+	Nette\Utils\Strings;
 
 
 
 /**
- * Macros for NForms.
+ * Macros for Nette\Forms.
  *
  * - {form name} ... {/form}
  * - {input name}
@@ -21,17 +30,16 @@
  * - {formContainer name} ... {/formContainer}
  *
  * @author     David Grudl
- * @package Nette\Latte\Macros
  */
-class NFormMacros extends NMacroSet
+class FormMacros extends MacroSet
 {
 
-	public static function install(NLatteCompiler $compiler)
+	public static function install(Latte\Compiler $compiler)
 	{
-		$me = new self($compiler);
+		$me = new static($compiler);
 		$me->addMacro('form',
-			'NFormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
-			'NFormMacros::renderFormEnd($_form)');
+			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
+			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', 'echo $_form[%node.word]->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = $_form[%node.word]', '$_form = array_pop($_formStack)');
@@ -45,7 +53,7 @@ class NFormMacros extends NMacroSet
 	/**
 	 * {label ...} and optionally {/label}
 	 */
-	public function macroLabel(NMacroNode $node, NPhpWriter $writer)
+	public function macroLabel(MacroNode $node, PhpWriter $writer)
 	{
 		$cmd = 'if ($_label = $_form[%node.word]->getLabel()) echo $_label->addAttributes(%node.array)';
 		if ($node->isEmpty = (substr($node->args, -1) === '/')) {
@@ -61,7 +69,7 @@ class NFormMacros extends NMacroSet
 	/**
 	 * n:input
 	 */
-	public function macroAttrInput(NMacroNode $node, NPhpWriter $writer)
+	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
 		if ($node->htmlNode->attrs) {
 			$reset = array_fill_keys(array_keys($node->htmlNode->attrs), NULL);
@@ -80,7 +88,7 @@ class NFormMacros extends NMacroSet
 	 * Renders form begin.
 	 * @return void
 	 */
-	public static function renderFormBegin(NForm $form, array $attrs)
+	public static function renderFormBegin(Form $form, array $attrs)
 	{
 		$el = $form->getElementPrototype();
 		$el->action = (string) $el->action;
@@ -97,7 +105,7 @@ class NFormMacros extends NMacroSet
 	 * Renders form end.
 	 * @return string
 	 */
-	public static function renderFormEnd(NForm $form)
+	public static function renderFormEnd(Form $form)
 	{
 		$s = '';
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
@@ -107,19 +115,19 @@ class NFormMacros extends NMacroSet
 					$parts = explode('=', $param, 2);
 					$name = urldecode($parts[0]);
 					if (!isset($form[$name])) {
-						$s .= NHtml::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
+						$s .= Nette\Utils\Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
 					}
 				}
 			}
 		}
 
-		foreach ($form->getComponents(TRUE, 'NHiddenField') as $control) {
+		foreach ($form->getComponents(TRUE, 'Nette\Forms\Controls\HiddenField') as $control) {
 			if (!$control->getOption('rendered')) {
 				$s .= $control->getControl();
 			}
 		}
 
-		if (iterator_count($form->getComponents(TRUE, 'NTextInput')) < 2) {
+		if (iterator_count($form->getComponents(TRUE, 'Nette\Forms\Controls\TextInput')) < 2) {
 			$s .= '<!--[if IE]><input type=IEbug disabled style="display:none"><![endif]-->';
 		}
 

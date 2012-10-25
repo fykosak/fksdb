@@ -7,14 +7,16 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
 /**
  * Information about tables and columns structure.
- * @package Nette\Database
  */
 interface IReflection
 {
@@ -61,6 +63,6 @@ interface IReflection
 	/**
 	 * Injects database connection.
 	 */
-	function setConnection(NConnection $connection);
+	function setConnection(Connection $connection);
 
 }

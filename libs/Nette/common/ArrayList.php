@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -17,10 +20,9 @@
  *
  * @author     David Grudl
  *
- * @property-read ArrayIterator $iterator
- * @package Nette
+ * @property-read \ArrayIterator $iterator
  */
-class NArrayList extends NObject implements ArrayAccess, Countable, IteratorAggregate
+class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAggregate
 {
 	private $list = array();
 
@@ -28,11 +30,11 @@ class NArrayList extends NObject implements ArrayAccess, Countable, IteratorAggr
 
 	/**
 	 * Returns an iterator over all items.
-	 * @return ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getIterator()
 	{
-		return new ArrayIterator($this->list);
+		return new \ArrayIterator($this->list);
 	}
 
 

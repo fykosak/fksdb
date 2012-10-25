@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Select box control that allows multiple item selection.
  *
  * @author     David Grudl
- * @package Nette\Forms\Controls
  */
-class NMultiSelectBox extends NSelectBox
+class MultiSelectBox extends SelectBox
 {
 
 
@@ -81,7 +83,7 @@ class NMultiSelectBox extends NSelectBox
 
 	/**
 	 * Generates control's HTML element.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{
@@ -92,11 +94,11 @@ class NMultiSelectBox extends NSelectBox
 
 	/**
 	 * Count/length validator.
-	 * @param  NMultiSelectBox
+	 * @param  MultiSelectBox
 	 * @param  array  min and max length pair
 	 * @return bool
 	 */
-	public static function validateLength(NMultiSelectBox $control, $range)
+	public static function validateLength(MultiSelectBox $control, $range)
 	{
 		if (!is_array($range)) {
 			$range = array($range, $range);

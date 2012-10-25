@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms
  */
+
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * Defines method that must implement form renderer.
  *
  * @author     David Grudl
- * @package Nette\Forms
  */
 interface IFormRenderer
 {
@@ -25,6 +27,6 @@ interface IFormRenderer
 	 * Provides complete form rendering.
 	 * @return string
 	 */
-	function render(NForm $form);
+	function render(Form $form);
 
 }

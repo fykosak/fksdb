@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\ComponentModel
  */
+
+namespace Nette\ComponentModel;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Containers are objects that logically contain zero or more IComponent components.
  *
  * @author     David Grudl
- * @package Nette\ComponentModel
  */
-interface IComponentContainer extends IComponent
+interface IContainer extends IComponent
 {
 
 	/**
@@ -47,7 +49,7 @@ interface IComponentContainer extends IComponent
 	 * Iterates over a components.
 	 * @param  bool    recursive?
 	 * @param  string  class types filter
-	 * @return Iterator
+	 * @return \Iterator
 	 */
 	function getComponents($deep = FALSE, $filterType = NULL);
 

@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Templating
  */
+
+namespace Nette\Templating;
+
+use Nette,
+	Nette\Caching;
 
 
 
@@ -16,9 +20,8 @@
  * Template stored in file.
  *
  * @author     David Grudl
- * @package Nette\Templating
  */
-class NFileTemplate extends NTemplate implements IFileTemplate
+class FileTemplate extends Template implements IFileTemplate
 {
 	/** @var string */
 	private $file;
@@ -41,13 +44,13 @@ class NFileTemplate extends NTemplate implements IFileTemplate
 	/**
 	 * Sets the path to the template file.
 	 * @param  string  template file path
-	 * @return NFileTemplate  provides a fluent interface
+	 * @return FileTemplate  provides a fluent interface
 	 */
 	public function setFile($file)
 	{
 		$this->file = realpath($file);
 		if (!$this->file) {
-			throw new FileNotFoundException("Missing template file '$file'.");
+			throw new Nette\FileNotFoundException("Missing template file '$file'.");
 		}
 		return $this;
 	}
@@ -87,11 +90,11 @@ class NFileTemplate extends NTemplate implements IFileTemplate
 	public function render()
 	{
 		if ($this->file == NULL) { // intentionally ==
-			throw new InvalidStateException("Template file name was not specified.");
+			throw new Nette\InvalidStateException("Template file name was not specified.");
 		}
 
-		$cache = new NCache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
-		if ($storage instanceof NPhpFileStorage) {
+		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
+		if ($storage instanceof Caching\Storages\PhpFileStorage) {
 			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
 		}
 		$cached = $compiled = $cache->load($this->file);
@@ -100,22 +103,22 @@ class NFileTemplate extends NTemplate implements IFileTemplate
 			try {
 				$compiled = "<?php\n\n// source file: $this->file\n\n?>" . $this->compile();
 
-			} catch (NTemplateException $e) {
+			} catch (FilterException $e) {
 				$e->setSourceFile($this->file);
 				throw $e;
 			}
 
 			$cache->save($this->file, $compiled, array(
-				NCache::FILES => $this->file,
-				NCache::CONSTS => 'NFramework::REVISION',
+				Caching\Cache::FILES => $this->file,
+				Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
 			));
 			$cached = $cache->load($this->file);
 		}
 
-		if ($cached !== NULL && $storage instanceof NPhpFileStorage) {
-			NLimitedScope::load($cached['file'], $this->getParameters());
+		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
+			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
 		} else {
-			NLimitedScope::evaluate($compiled, $this->getParameters());
+			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
 		}
 	}
 

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Diagnostics
  */
+
+namespace Nette\Diagnostics;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Logger.
  *
  * @author     David Grudl
- * @package Nette\Diagnostics
  */
-class NLogger extends NObject
+class Logger extends Nette\Object
 {
 	const DEBUG = 'debug',
 		INFO = 'info',
@@ -49,7 +51,7 @@ class NLogger extends NObject
 	public function log($message, $priority = self::INFO)
 	{
 		if (!is_dir($this->directory)) {
-			throw new DirectoryNotFoundException("Directory '$this->directory' is not found or is not directory.");
+			throw new Nette\DirectoryNotFoundException("Directory '$this->directory' is not found or is not directory.");
 		}
 
 		if (is_array($message)) {
@@ -61,7 +63,7 @@ class NLogger extends NObject
 			&& @filemtime($this->directory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
 			&& @file_put_contents($this->directory . '/email-sent', 'sent') // @ - file may not be writable
 		) {
-			NCallback::create($this->mailer)->invoke($message, $this->email);
+			Nette\Callback::create($this->mailer)->invoke($message, $this->email);
 		}
 		return $res;
 	}

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -27,9 +30,8 @@
  * @property-read bool $image
  * @property-read array $imageSize
  * @property-read string $contents
- * @package Nette\Http
  */
-class NHttpUploadedFile extends NObject
+class FileUpload extends Nette\Object
 {
 	/** @var string */
 	private $name;
@@ -81,7 +83,7 @@ class NHttpUploadedFile extends NObject
 	 */
 	public function getSanitizedName()
 	{
-		return trim(NStrings::webalize($this->name, '.', FALSE), '.-');
+		return trim(Nette\Utils\Strings::webalize($this->name, '.', FALSE), '.-');
 	}
 
 
@@ -93,7 +95,7 @@ class NHttpUploadedFile extends NObject
 	public function getContentType()
 	{
 		if ($this->isOk() && $this->type === NULL) {
-			$this->type = NMimeTypeDetector::fromFile($this->tmpName);
+			$this->type = Nette\Utils\MimeTypeDetector::fromFile($this->tmpName);
 		}
 		return $this->type;
 	}
@@ -158,14 +160,13 @@ class NHttpUploadedFile extends NObject
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return NHttpUploadedFile  provides a fluent interface
+	 * @return FileUpload  provides a fluent interface
 	 */
 	public function move($dest)
 	{
 		@mkdir(dirname($dest), 0777, TRUE); // @ - dir may already exist
-		if (substr(PHP_OS, 0, 3) === 'WIN') { @unlink($dest); }
 		if (!call_user_func(is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename', $this->tmpName, $dest)) {
-			throw new InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
+			throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
 		chmod($dest, 0666);
 		$this->tmpName = $dest;
@@ -187,11 +188,11 @@ class NHttpUploadedFile extends NObject
 
 	/**
 	 * Returns the image.
-	 * @return NImage
+	 * @return Nette\Image
 	 */
 	public function toImage()
 	{
-		return NImage::fromFile($this->tmpName);
+		return Nette\Image::fromFile($this->tmpName);
 	}
 
 

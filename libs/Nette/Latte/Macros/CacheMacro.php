@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte\Macros
  */
+
+namespace Nette\Latte\Macros;
+
+use Nette,
+	Nette\Latte;
 
 
 
@@ -16,9 +20,8 @@
  * Macro {cache} ... {/cache}
  *
  * @author     David Grudl
- * @package Nette\Latte\Macros
  */
-class NCacheMacro extends NObject implements IMacro
+class CacheMacro extends Nette\Object implements Latte\IMacro
 {
 	/** @var bool */
 	private $used;
@@ -43,7 +46,7 @@ class NCacheMacro extends NObject implements IMacro
 	public function finalize()
 	{
 		if ($this->used) {
-			return array('NCacheMacro::initRuntime($template, $_g);');
+			return array('Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);');
 		}
 	}
 
@@ -53,13 +56,13 @@ class NCacheMacro extends NObject implements IMacro
 	 * New node is found.
 	 * @return bool
 	 */
-	public function nodeOpened(NMacroNode $node)
+	public function nodeOpened(Latte\MacroNode $node)
 	{
 		$this->used = TRUE;
 		$node->isEmpty = FALSE;
-		$node->openingCode = NPhpWriter::using($node)
-			->write('<?php if (NCacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
-				NStrings::random()
+		$node->openingCode = Latte\PhpWriter::using($node)
+			->write('<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, %var, $_g->caches, %node.array?)) { ?>',
+				Nette\Utils\Strings::random()
 			);
 	}
 
@@ -69,7 +72,7 @@ class NCacheMacro extends NObject implements IMacro
 	 * Node is closed.
 	 * @return void
 	 */
-	public function nodeClosed(NMacroNode $node)
+	public function nodeClosed(Latte\MacroNode $node)
 	{
 		$node->closingCode = '<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); } ?>';
 	}
@@ -83,24 +86,24 @@ class NCacheMacro extends NObject implements IMacro
 	/**
 	 * @return void
 	 */
-	public static function initRuntime(NFileTemplate $template, stdClass $global)
+	public static function initRuntime(Nette\Templating\FileTemplate $template, \stdClass $global)
 	{
 		if (!empty($global->caches)) {
-			end($global->caches)->dependencies[NCache::FILES][] = $template->getFile();
+			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
 		}
 	}
 
 
 
 	/**
-	 * Starts the output cache. Returns NCachingHelper object if buffering was started.
-	 * @param  ICacheStorage
+	 * Starts the output cache. Returns Nette\Caching\OutputHelper object if buffering was started.
+	 * @param  Nette\Caching\IStorage
 	 * @param  string
-	 * @param  NCachingHelper[]
+	 * @param  Nette\Caching\OutputHelper[]
 	 * @param  array
-	 * @return NCachingHelper
+	 * @return Nette\Caching\OutputHelper
 	 */
-	public static function createCache(ICacheStorage $cacheStorage, $key, & $parents, array $args = NULL)
+	public static function createCache(Nette\Caching\IStorage $cacheStorage, $key, & $parents, array $args = NULL)
 	{
 		if ($args) {
 			if (array_key_exists('if', $args) && !$args['if']) {
@@ -109,17 +112,17 @@ class NCacheMacro extends NObject implements IMacro
 			$key = array_merge(array($key), array_intersect_key($args, range(0, count($args))));
 		}
 		if ($parents) {
-			end($parents)->dependencies[NCache::ITEMS][] = $key;
+			end($parents)->dependencies[Nette\Caching\Cache::ITEMS][] = $key;
 		}
 
-		$cache = new NCache($cacheStorage, 'Nette.Templating.Cache');
+		$cache = new Nette\Caching\Cache($cacheStorage, 'Nette.Templating.Cache');
 		if ($helper = $cache->start($key)) {
 			if (isset($args['expire'])) {
 				$args['expiration'] = $args['expire']; // back compatibility
 			}
 			$helper->dependencies = array(
-				NCache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
-				NCache::EXPIRATION => isset($args['expiration']) ? $args['expiration'] : '+ 7 days',
+				Nette\Caching\Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
+				Nette\Caching\Cache::EXPIRATION => isset($args['expiration']) ? $args['expiration'] : '+ 7 days',
 			);
 			$parents[] = $helper;
 		}

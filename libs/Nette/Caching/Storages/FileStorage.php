@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Caching\Storages
  */
+
+namespace Nette\Caching\Storages;
+
+use Nette,
+	Nette\Caching\Cache;
 
 
 
@@ -16,9 +20,8 @@
  * Cache file storage.
  *
  * @author     David Grudl
- * @package Nette\Caching\Storages
  */
-class NFileStorage extends NObject implements ICacheStorage
+class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/**
 	 * Atomic thread safe logic:
@@ -58,7 +61,7 @@ class NFileStorage extends NObject implements ICacheStorage
 	/** @var bool */
 	private $useDirs;
 
-	/** @var ICacheJournal */
+	/** @var IJournal */
 	private $journal;
 
 	/** @var array */
@@ -66,17 +69,17 @@ class NFileStorage extends NObject implements ICacheStorage
 
 
 
-	public function __construct($dir, ICacheJournal $journal = NULL)
+	public function __construct($dir, IJournal $journal = NULL)
 	{
 		$this->dir = realpath($dir);
 		if ($this->dir === FALSE) {
-			throw new DirectoryNotFoundException("Directory '$dir' not found.");
+			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
 		}
 
-		$this->useDirs = (bool) self::$useDirectories;
+		$this->useDirs = (bool) static::$useDirectories;
 		$this->journal = $journal;
 
-		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
+		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
 			$this->clean(array());
 		}
 	}
@@ -120,7 +123,7 @@ class NFileStorage extends NObject implements ICacheStorage
 				break;
 			}
 
-			if (!empty($meta[self::META_CALLBACKS]) && !NCache::checkCallbacks($meta[self::META_CALLBACKS])) {
+			if (!empty($meta[self::META_CALLBACKS]) && !Cache::checkCallbacks($meta[self::META_CALLBACKS])) {
 				break;
 			}
 
@@ -180,16 +183,16 @@ class NFileStorage extends NObject implements ICacheStorage
 			self::META_TIME => microtime(),
 		);
 
-		if (isset($dp[NCache::EXPIRATION])) {
-			if (empty($dp[NCache::SLIDING])) {
-				$meta[self::META_EXPIRE] = $dp[NCache::EXPIRATION] + time(); // absolute time
+		if (isset($dp[Cache::EXPIRATION])) {
+			if (empty($dp[Cache::SLIDING])) {
+				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRATION] + time(); // absolute time
 			} else {
-				$meta[self::META_DELTA] = (int) $dp[NCache::EXPIRATION]; // sliding time
+				$meta[self::META_DELTA] = (int) $dp[Cache::EXPIRATION]; // sliding time
 			}
 		}
 
-		if (isset($dp[NCache::ITEMS])) {
-			foreach ((array) $dp[NCache::ITEMS] as $item) {
+		if (isset($dp[Cache::ITEMS])) {
+			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMetaAndLock($depFile, LOCK_SH);
 				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME]; // may be NULL
@@ -197,8 +200,8 @@ class NFileStorage extends NObject implements ICacheStorage
 			}
 		}
 
-		if (isset($dp[NCache::CALLBACKS])) {
-			$meta[self::META_CALLBACKS] = $dp[NCache::CALLBACKS];
+		if (isset($dp[Cache::CALLBACKS])) {
+			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
 		if (!isset($this->locks[$key])) {
@@ -212,9 +215,9 @@ class NFileStorage extends NObject implements ICacheStorage
 
 		$cacheFile = $this->getCacheFile($key);
 
-		if (isset($dp[NCache::TAGS]) || isset($dp[NCache::PRIORITY])) {
+		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->journal) {
-				throw new InvalidStateException('CacheJournal has not been provided.');
+				throw new Nette\InvalidStateException('CacheJournal has not been provided.');
 			}
 			$this->journal->write($cacheFile, $dp);
 		}
@@ -275,13 +278,13 @@ class NFileStorage extends NObject implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		$all = !empty($conds[NCache::ALL]);
+		$all = !empty($conds[Cache::ALL]);
 		$collector = empty($conds);
 
 		// cleaning using file iterator
 		if ($all || $collector) {
 			$now = time();
-			foreach (NFinder::find('_*')->from($this->dir)->childFirst() as $entry) {
+			foreach (Nette\Utils\Finder::find('_*')->from($this->dir)->childFirst() as $entry) {
 				$path = (string) $entry;
 				if ($entry->isDir()) { // collector: remove empty dirs
 					@rmdir($path); // @ - removing dirs is not necessary
@@ -387,7 +390,7 @@ class NFileStorage extends NObject implements ICacheStorage
 	protected function getCacheFile($key)
 	{
 		$file = urlencode($key);
-		if ($this->useDirs && $a = strrpos($file, '%00')) { // %00 = urlencode(NCache::NAMESPACE_SEPARATOR)
+		if ($this->useDirs && $a = strrpos($file, '%00')) { // %00 = urlencode(Nette\Caching\Cache::NAMESPACE_SEPARATOR)
 			$file = substr_replace($file, '/_', $a, 3);
 		}
 		return $this->dir . '/_' . $file;

@@ -7,25 +7,27 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\UI
  */
+
+namespace Nette\Application\UI;
+
+use Nette;
 
 
 
 /**
- * Lazy encapsulation of NPresenterComponent::link().
- * Do not instantiate directly, use NPresenterComponent::lazyLink()
+ * Lazy encapsulation of PresenterComponent::link().
+ * Do not instantiate directly, use PresenterComponent::lazyLink()
  *
  * @author     David Grudl
  * @internal
  *
  * @property-read string $destination
  * @property-read array $parameters
- * @package Nette\Application\UI
  */
-class NLink extends NObject
+class Link extends Nette\Object
 {
-	/** @var NPresenterComponent */
+	/** @var PresenterComponent */
 	private $component;
 
 	/** @var string */
@@ -38,7 +40,7 @@ class NLink extends NObject
 	/**
 	 * Link specification.
 	 */
-	public function __construct(NPresenterComponent $component, $destination, array $params)
+	public function __construct(PresenterComponent $component, $destination, array $params)
 	{
 		$this->component = $component;
 		$this->destination = $destination;
@@ -62,7 +64,7 @@ class NLink extends NObject
 	 * Changes link parameter.
 	 * @param  string
 	 * @param  mixed
-	 * @return NLink  provides a fluent interface
+	 * @return Link  provides a fluent interface
 	 */
 	public function setParameter($key, $value)
 	{
@@ -104,7 +106,7 @@ class NLink extends NObject
 		try {
 			return $this->component->link($this->destination, $this->params);
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,28 +19,27 @@
  * Templating engine Latte.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NLatteFilter extends NObject
+class Engine extends Nette\Object
 {
-	/** @var NParser */
+	/** @var Parser */
 	private $parser;
 
-	/** @var NLatteCompiler */
+	/** @var Compiler */
 	private $compiler;
 
 
 
 	public function __construct()
 	{
-		$this->parser = new NParser;
-		$this->compiler = new NLatteCompiler;
-		$this->compiler->defaultContentType = NLatteCompiler::CONTENT_XHTML;
+		$this->parser = new Parser;
+		$this->compiler = new Compiler;
+		$this->compiler->defaultContentType = Compiler::CONTENT_XHTML;
 
-		NCoreMacros::install($this->compiler);
-		$this->compiler->addMacro('cache', new NCacheMacro($this->compiler));
-		NUIMacros::install($this->compiler);
-		NFormMacros::install($this->compiler);
+		Macros\CoreMacros::install($this->compiler);
+		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
+		Macros\UIMacros::install($this->compiler);
+		Macros\FormMacros::install($this->compiler);
 	}
 
 
@@ -55,7 +57,7 @@ class NLatteFilter extends NObject
 
 
 	/**
-	 * @return NParser
+	 * @return Parser
 	 */
 	public function getParser()
 	{
@@ -65,7 +67,7 @@ class NLatteFilter extends NObject
 
 
 	/**
-	 * @return NLatteCompiler
+	 * @return Compiler
 	 */
 	public function getCompiler()
 	{

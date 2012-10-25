@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -47,9 +50,8 @@
  * @property-read string $basePath
  * @property-read string $baseUrl
  * @property-read string $relativeUrl
- * @package Nette\Http
  */
-class NUrl extends NFreezableObject
+class Url extends Nette\FreezableObject
 {
 	/** @var array */
 	public static $defaultPorts = array(
@@ -88,14 +90,14 @@ class NUrl extends NFreezableObject
 
 	/**
 	 * @param  string  URL
-	 * @throws InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public function __construct($url = NULL)
 	{
 		if (is_string($url)) {
 			$parts = @parse_url($url); // @ - is escalated to exception
 			if ($parts === FALSE) {
-				throw new InvalidArgumentException("Malformed or unsupported URI '$url'.");
+				throw new Nette\InvalidArgumentException("Malformed or unsupported URI '$url'.");
 			}
 
 			foreach ($parts as $key => $val) {
@@ -122,7 +124,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setScheme($value)
 	{
@@ -147,7 +149,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the user name part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setUser($value)
 	{
@@ -172,7 +174,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the password part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPassword($value)
 	{
@@ -197,7 +199,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the host part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setHost($value)
 	{
@@ -222,7 +224,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the port part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPort($value)
 	{
@@ -247,7 +249,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the path part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPath($value)
 	{
@@ -272,7 +274,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the query part of URI.
 	 * @param  string|array
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setQuery($value)
 	{
@@ -311,7 +313,7 @@ class NUrl extends NFreezableObject
 	/**
 	 * Sets the fragment part of URI.
 	 * @param  string
-	 * @return NUrl  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setFragment($value)
 	{

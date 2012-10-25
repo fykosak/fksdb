@@ -1,20 +1,22 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormLogin extends NAppForm {
+class FormLogin extends Form {
 
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('first_name', 'Jméno')->setDisabled();
-        $this->addText('last_name', 'Příjmení')->setDisabled();
+        $this->addText('display_name', 'Jméno')->setDisabled();
 
         $this->addText('email', 'E-mail')
-                ->addRule(NForm::FILLED, 'Vyplňte e-mail.')
-                ->addRule(NForm::EMAIL);
+                ->addRule(Form::FILLED, 'Vyplňte e-mail.')
+                ->addRule(Form::EMAIL);
     }
 
 }

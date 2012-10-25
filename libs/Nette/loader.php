@@ -14,15 +14,6 @@
 /**
  * Check and reset PHP configuration.
  */
-if (!defined('PHP_VERSION_ID')) {
-	$tmp = explode('.', PHP_VERSION);
-	define('PHP_VERSION_ID', ($tmp[0] * 10000 + $tmp[1] * 100 + $tmp[2]));
-}
-
-if (PHP_VERSION_ID < 50200) {
-	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
-}
-
 error_reporting(E_ALL | E_STRICT);
 @set_magic_quotes_runtime(FALSE); // @ - deprecated since PHP 5.3.0
 iconv_set_encoding('internal_encoding', 'UTF-8');
@@ -36,51 +27,38 @@ umask(0);
 /**
  * Load and configure Nette Framework.
  */
-
-/** @internal */
-class NCFix
-{
-	static $vars = array();
-
-	static function uses($args)
-	{
-		self::$vars[] = $args;
-		return count(self::$vars)-1;
-	}
-}
-
 define('NETTE', TRUE);
-define('NETTE_DIR', dirname(__FILE__));
+define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 20006); // v2.0.6
-define('NETTE_PACKAGE', 'PHP 5.2 prefixed');
+define('NETTE_PACKAGE', '5.3');
 
 
 
-require_once dirname(__FILE__) . '/common/exceptions.php';
-require_once dirname(__FILE__) . '/common/Object.php';
-require_once dirname(__FILE__) . '/Utils/LimitedScope.php';
-require_once dirname(__FILE__) . '/Loaders/AutoLoader.php';
-require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
+require_once __DIR__ . '/common/exceptions.php';
+require_once __DIR__ . '/common/Object.php';
+require_once __DIR__ . '/Utils/LimitedScope.php';
+require_once __DIR__ . '/Loaders/AutoLoader.php';
+require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 
-NNetteLoader::getInstance()->register();
+Nette\Loaders\NetteLoader::getInstance()->register();
 
-require_once dirname(__FILE__) . '/Diagnostics/Helpers.php';
-require_once dirname(__FILE__) . '/Diagnostics/shortcuts.php';
-require_once dirname(__FILE__) . '/Utils/Html.php';
-NDebugger::_init();
+require_once __DIR__ . '/Diagnostics/Helpers.php';
+require_once __DIR__ . '/Diagnostics/shortcuts.php';
+require_once __DIR__ . '/Utils/Html.php';
+Nette\Diagnostics\Debugger::_init();
 
-NSafeStream::register();
+Nette\Utils\SafeStream::register();
 
 
 
 /**
- * NCallback factory.
+ * Nette\Callback factory.
  * @param  mixed   class, object, callable
  * @param  string  method
- * @return NCallback
+ * @return Nette\Callback
  */
 function callback($callback, $m = NULL)
 {
-	return new NCallback($callback, $m);
+	return new Nette\Callback($callback, $m);
 }

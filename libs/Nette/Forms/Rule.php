@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms
  */
+
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Single validation rule or condition represented as value object.
  *
  * @author     David Grudl
- * @package Nette\Forms
  */
-final class NRule extends NObject
+final class Rule extends Nette\Object
 {
 	/** type */
 	const CONDITION = 1;
@@ -29,7 +31,7 @@ final class NRule extends NObject
 	/** type */
 	const FILTER = 3;
 
-	/** @var IFormControl */
+	/** @var IControl */
 	public $control;
 
 	/** @var mixed */
@@ -47,7 +49,7 @@ final class NRule extends NObject
 	/** @var string (only for VALIDATOR type) */
 	public $message;
 
-	/** @var NRules (only for CONDITION type)  */
+	/** @var Rules (only for CONDITION type)  */
 	public $subRules;
 
 }

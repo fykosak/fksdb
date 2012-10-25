@@ -1,16 +1,18 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormPersonInfo extends NAppForm {
+class FormPersonInfo extends Form {
 
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('first_name', 'Jméno')->setDisabled();
-        $this->addText('last_name', 'Příjmení')->setDisabled();
+        $this->addText('display_name', 'Jméno')->setDisabled();
 
         $this->addText('born', 'Datum narození'); //TODO date element
         $this->addText('id_number', 'Číslo OP');

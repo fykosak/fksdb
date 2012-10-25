@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * Object that has a modifiable and a read-only (frozen) state.
  *
  * @author     David Grudl
- * @package Nette
  */
 interface IFreezable
 {

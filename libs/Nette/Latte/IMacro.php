@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * Latte macro.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
 interface IMacro
 {
@@ -37,12 +39,12 @@ interface IMacro
 	 * New node is found. Returns FALSE to reject.
 	 * @return bool
 	 */
-	function nodeOpened(NMacroNode $node);
+	function nodeOpened(MacroNode $node);
 
 	/**
 	 * Node is closed.
 	 * @return void
 	 */
-	function nodeClosed(NMacroNode $node);
+	function nodeClosed(MacroNode $node);
 
 }

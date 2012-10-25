@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -16,7 +19,7 @@
  * Basic manipulation with images.
  *
  * <code>
- * $image = NImage::fromFile('nette.jpg');
+ * $image = Image::fromFile('nette.jpg');
  * $image->resize(150, 100);
  * $image->sharpen();
  * $image->send();
@@ -96,9 +99,8 @@
  * @property-read int $width
  * @property-read int $height
  * @property-read resource $imageResource
- * @package Nette
  */
-class NImage extends NObject
+class Image extends Object
 {
 	/** {@link resize()} only shrinks images */
 	const SHRINK_ONLY = 1;
@@ -154,7 +156,7 @@ class NImage extends NObject
 	 * Opens image from file.
 	 * @param  string
 	 * @param  mixed  detected image format
-	 * @return NImage
+	 * @return Image
 	 */
 	public static function fromFile($file, & $format = NULL)
 	{
@@ -166,16 +168,16 @@ class NImage extends NObject
 
 		switch ($format = $info[2]) {
 		case self::JPEG:
-			return new self(imagecreatefromjpeg($file));
+			return new static(imagecreatefromjpeg($file));
 
 		case self::PNG:
-			return new self(imagecreatefrompng($file));
+			return new static(imagecreatefrompng($file));
 
 		case self::GIF:
-			return new self(imagecreatefromgif($file));
+			return new static(imagecreatefromgif($file));
 
 		default:
-			throw new NUnknownImageFileException("Unknown image type or file '$file' not found.");
+			throw new UnknownImageFileException("Unknown image type or file '$file' not found.");
 		}
 	}
 
@@ -189,7 +191,7 @@ class NImage extends NObject
 	public static function getFormatFromString($s)
 	{
 		$types = array('image/jpeg' => self::JPEG, 'image/gif' => self::GIF, 'image/png' => self::PNG);
-		$type = NMimeTypeDetector::fromString($s);
+		$type = Utils\MimeTypeDetector::fromString($s);
 		return isset($types[$type]) ? $types[$type] : NULL;
 	}
 
@@ -199,7 +201,7 @@ class NImage extends NObject
 	 * Create a new image from the image stream in the string.
 	 * @param  string
 	 * @param  mixed  detected image format
-	 * @return NImage
+	 * @return Image
 	 */
 	public static function fromString($s, & $format = NULL)
 	{
@@ -207,9 +209,9 @@ class NImage extends NObject
 			throw new NotSupportedException("PHP extension GD is not loaded.");
 		}
 
-		$format = self::getFormatFromString($s);
+		$format = static::getFormatFromString($s);
 
-		return new self(imagecreatefromstring($s));
+		return new static(imagecreatefromstring($s));
 	}
 
 
@@ -219,7 +221,7 @@ class NImage extends NObject
 	 * @param  int
 	 * @param  int
 	 * @param  array
-	 * @return NImage
+	 * @return Image
 	 */
 	public static function fromBlank($width, $height, $color = NULL)
 	{
@@ -241,7 +243,7 @@ class NImage extends NObject
 			imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $color);
 			imagealphablending($image, TRUE);
 		}
-		return new self($image);
+		return new static($image);
 	}
 
 
@@ -283,7 +285,7 @@ class NImage extends NObject
 	/**
 	 * Sets image resource.
 	 * @param  resource
-	 * @return NImage  provides a fluent interface
+	 * @return Image  provides a fluent interface
 	 */
 	protected function setImageResource($image)
 	{
@@ -312,7 +314,7 @@ class NImage extends NObject
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
 	 * @param  int    flags
-	 * @return NImage  provides a fluent interface
+	 * @return Image  provides a fluent interface
 	 */
 	public function resize($width, $height, $flags = self::FIT)
 	{
@@ -320,10 +322,10 @@ class NImage extends NObject
 			return $this->resize($width, $height, self::FILL)->crop('50%', '50%', $width, $height);
 		}
 
-		list($newWidth, $newHeight) = self::calculateSize($this->getWidth(), $this->getHeight(), $width, $height, $flags);
+		list($newWidth, $newHeight) = static::calculateSize($this->getWidth(), $this->getHeight(), $width, $height, $flags);
 
 		if ($newWidth !== $this->getWidth() || $newHeight !== $this->getHeight()) { // resize
-			$newImage = self::fromBlank($newWidth, $newHeight, self::RGB(0, 0, 0, 127))->getImageResource();
+			$newImage = static::fromBlank($newWidth, $newHeight, self::RGB(0, 0, 0, 127))->getImageResource();
 			imagecopyresampled(
 				$newImage, $this->getImageResource(),
 				0, 0, 0, 0,
@@ -333,7 +335,7 @@ class NImage extends NObject
 		}
 
 		if ($width < 0 || $height < 0) { // flip is processed in two steps for better quality
-			$newImage = self::fromBlank($newWidth, $newHeight, self::RGB(0, 0, 0, 127))->getImageResource();
+			$newImage = static::fromBlank($newWidth, $newHeight, self::RGB(0, 0, 0, 127))->getImageResource();
 			imagecopyresampled(
 				$newImage, $this->getImageResource(),
 				0, 0, $width < 0 ? $newWidth - 1 : 0, $height < 0 ? $newHeight - 1 : 0,
@@ -419,12 +421,12 @@ class NImage extends NObject
 	 * @param  mixed  y-offset in pixels or percent
 	 * @param  mixed  width in pixels or percent
 	 * @param  mixed  height in pixels or percent
-	 * @return NImage  provides a fluent interface
+	 * @return Image  provides a fluent interface
 	 */
 	public function crop($left, $top, $width, $height)
 	{
-		list($left, $top, $width, $height) = self::calculateCutout($this->getWidth(), $this->getHeight(), $left, $top, $width, $height);
-		$newImage = self::fromBlank($width, $height, self::RGB(0, 0, 0, 127))->getImageResource();
+		list($left, $top, $width, $height) = static::calculateCutout($this->getWidth(), $this->getHeight(), $left, $top, $width, $height);
+		$newImage = static::fromBlank($width, $height, self::RGB(0, 0, 0, 127))->getImageResource();
 		imagecopy($newImage, $this->getImageResource(), 0, 0, $left, $top, $width, $height);
 		$this->image = $newImage;
 		return $this;
@@ -471,7 +473,7 @@ class NImage extends NObject
 
 	/**
 	 * Sharpen image.
-	 * @return NImage  provides a fluent interface
+	 * @return Image  provides a fluent interface
 	 */
 	public function sharpen()
 	{
@@ -487,13 +489,13 @@ class NImage extends NObject
 
 	/**
 	 * Puts another image into this image.
-	 * @param  NImage
+	 * @param  Image
 	 * @param  mixed  x-coordinate in pixels or percent
 	 * @param  mixed  y-coordinate in pixels or percent
 	 * @param  int  opacity 0..100
-	 * @return NImage  provides a fluent interface
+	 * @return Image  provides a fluent interface
 	 */
-	public function place(NImage $image, $left = 0, $top = 0, $opacity = 100)
+	public function place(Image $image, $left = 0, $top = 0, $opacity = 100)
 	{
 		$opacity = max(0, min(100, (int) $opacity));
 
@@ -589,7 +591,7 @@ class NImage extends NObject
 		try {
 			return $this->toString();
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
@@ -651,8 +653,7 @@ class NImage extends NObject
 
 /**
  * The exception that indicates invalid image file.
- * @package Nette
  */
-class NUnknownImageFileException extends Exception
+class UnknownImageFileException extends \Exception
 {
 }

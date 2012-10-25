@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
@@ -17,9 +20,8 @@
  *
  * @author     David Grudl
  * @deprecated
- * @package Nette
  */
-final class NEnvironment
+final class Environment
 {
 	/** environment name */
 	const DEVELOPMENT = 'development',
@@ -32,7 +34,7 @@ final class NEnvironment
 	/** @var string */
 	private static $createdAt;
 
-	/** @var NDIContainer */
+	/** @var Nette\DI\Container */
 	private static $context;
 
 
@@ -42,7 +44,7 @@ final class NEnvironment
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new StaticClassException;
 	}
 
 
@@ -69,7 +71,7 @@ final class NEnvironment
 	public static function isProduction()
 	{
 		if (self::$productionMode === NULL) {
-			self::$productionMode = !NConfigurator::detectDebugMode();
+			self::$productionMode = !Nette\Config\Configurator::detectDebugMode();
 		}
 		return self::$productionMode;
 	}
@@ -161,10 +163,10 @@ final class NEnvironment
 	 * Sets initial instance of context.
 	 * @return void
 	 */
-	public static function setContext(NDIContainer $context)
+	public static function setContext(DI\Container $context)
 	{
 		if (self::$createdAt) {
-			throw new InvalidStateException('Configurator & SystemContainer has already been created automatically by NEnvironment at ' . self::$createdAt);
+			throw new Nette\InvalidStateException('Configurator & SystemContainer has already been created automatically by Nette\Environment at ' . self::$createdAt);
 		}
 		self::$context = $context;
 	}
@@ -173,7 +175,7 @@ final class NEnvironment
 
 	/**
 	 * Get initial instance of context.
-	 * @return SystemContainer|NDIContainer
+	 * @return \SystemContainer|Nette\DI\Container
 	 */
 	public static function getContext()
 	{
@@ -208,68 +210,68 @@ final class NEnvironment
 		if (!$args && strncasecmp($name, 'get', 3) === 0) {
 			return self::getContext()->getService(lcfirst(substr($name, 3)));
 		} else {
-			throw new MemberAccessException("Call to undefined static method NEnvironment::$name().");
+			throw new MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
 	}
 
 
 
 	/**
-	 * @return NHttpRequest
+	 * @return Nette\Http\Request
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getContext()->getByType('IHttpRequest');
+		return self::getContext()->getByType('Nette\Http\IRequest');
 	}
 
 
 
 	/**
-	 * @return NHttpContext
+	 * @return Nette\Http\Context
 	 */
 	public static function getHttpContext()
 	{
-		return self::getContext()->getByType('NHttpContext');
+		return self::getContext()->getByType('Nette\Http\Context');
 	}
 
 
 
 	/**
-	 * @return NHttpResponse
+	 * @return Nette\Http\Response
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getContext()->getByType('IHttpResponse');
+		return self::getContext()->getByType('Nette\Http\IResponse');
 	}
 
 
 
 	/**
-	 * @return NApplication
+	 * @return Nette\Application\Application
 	 */
 	public static function getApplication()
 	{
-		return self::getContext()->getByType('NApplication');
+		return self::getContext()->getByType('Nette\Application\Application');
 	}
 
 
 
 	/**
-	 * @return NUser
+	 * @return Nette\Security\User
 	 */
 	public static function getUser()
 	{
-		return self::getContext()->getByType('NUser');
+		return self::getContext()->getByType('Nette\Security\User');
 	}
 
 
 
 	/**
-	 * @return NRobotLoader
+	 * @return Nette\Loaders\RobotLoader
 	 */
 	public static function getRobotLoader()
 	{
-		return self::getContext()->getByType('NRobotLoader');
+		return self::getContext()->getByType('Nette\Loaders\RobotLoader');
 	}
 
 
@@ -280,11 +282,11 @@ final class NEnvironment
 
 	/**
 	 * @param  string
-	 * @return NCache
+	 * @return Nette\Caching\Cache
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new NCache(self::getContext()->cacheStorage, $namespace);
+		return new Caching\Cache(self::getContext()->cacheStorage, $namespace);
 	}
 
 
@@ -292,7 +294,7 @@ final class NEnvironment
 	/**
 	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return NSession
+	 * @return Nette\Http\Session
 	 */
 	public static function getSession($namespace = NULL)
 	{
@@ -311,14 +313,14 @@ final class NEnvironment
 	 * Loads global configuration from file and process it.
 	 * @param  string
 	 * @param  string
-	 * @return NArrayHash
+	 * @return Nette\ArrayHash
 	 */
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
 		if (self::$createdAt) {
-			throw new InvalidStateException('NConfigurator has already been created automatically by NEnvironment at ' . self::$createdAt);
+			throw new Nette\InvalidStateException('Nette\Config\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
 		}
-		$configurator = new NConfigurator;
+		$configurator = new Nette\Config\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
 			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
@@ -328,7 +330,7 @@ final class NEnvironment
 		self::$context = $configurator->createContainer();
 
 		self::$createdAt = '?';
-		foreach (PHP_VERSION_ID < 50205 ? debug_backtrace() :debug_backtrace(FALSE) as $row) {
+		foreach (debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				self::$createdAt = "$row[file]:$row[line]";
 				break;
@@ -347,7 +349,7 @@ final class NEnvironment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
-		$params = NArrayHash::from(self::getContext()->parameters);
+		$params = Nette\ArrayHash::from(self::getContext()->parameters);
 		if (func_num_args()) {
 			return isset($params[$key]) ? $params[$key] : $default;
 		} else {

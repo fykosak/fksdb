@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Array tools library.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-final class NArrays
+final class Arrays
 {
 
 	/**
@@ -26,14 +28,14 @@ final class NArrays
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new Nette\StaticClassException;
 	}
 
 
 
 	/**
 	 * Returns array item or $default if item is not set.
-	 * Example: $val = NArrays::get($arr, 'i', 123);
+	 * Example: $val = Arrays::get($arr, 'i', 123);
 	 * @param  mixed  array
 	 * @param  mixed  key
 	 * @param  mixed  default value
@@ -46,7 +48,7 @@ final class NArrays
 				$arr = $arr[$k];
 			} else {
 				if (func_num_args() < 3) {
-					throw new InvalidArgumentException("Missing item '$k'.");
+					throw new Nette\InvalidArgumentException("Missing item '$k'.");
 				}
 				return $default;
 			}
@@ -68,7 +70,7 @@ final class NArrays
 			if (is_array($arr) || $arr === NULL) {
 				$arr = & $arr[$k];
 			} else {
-				throw new InvalidArgumentException('Traversed item is not an array.');
+				throw new Nette\InvalidArgumentException('Traversed item is not an array.');
 			}
 		}
 		return $arr;
@@ -168,10 +170,10 @@ final class NArrays
 	 */
 	public static function grep(array $arr, $pattern, $flags = 0)
 	{
-		NDebugger::tryError();
+		Nette\Diagnostics\Debugger::tryError();
 		$res = preg_grep($pattern, $arr, $flags);
-		if (NDebugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
-			throw new NRegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
+		if (Nette\Diagnostics\Debugger::catchError($e) || preg_last_error()) { // compile error XOR run-time error
+			throw new RegexpException($e ? $e->getMessage() : NULL, $e ? NULL : preg_last_error(), $pattern);
 		}
 		return $res;
 	}
@@ -186,7 +188,7 @@ final class NArrays
 	public static function flatten(array $arr)
 	{
 		$res = array();
-		array_walk_recursive($arr, create_function('$a', 'extract(NCFix::$vars['.NCFix::uses(array('res'=>& $res)).'], EXTR_REFS); $res[] = $a; '));
+		array_walk_recursive($arr, function($a) use (& $res) { $res[] = $a; });
 		return $res;
 	}
 

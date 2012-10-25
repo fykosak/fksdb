@@ -7,18 +7,20 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette
  */
+
+namespace Nette;
+
+use Nette;
 
 
 
 /**
- * NObject behaviour mixin.
+ * Nette\Object behaviour mixin.
  *
  * @author     David Grudl
- * @package Nette
  */
-final class NObjectMixin
+final class ObjectMixin
 {
 	/** @var array */
 	private static $methods;
@@ -32,7 +34,7 @@ final class NObjectMixin
 	 */
 	final public function __construct()
 	{
-		throw new NStaticClassException;
+		throw new StaticClassException;
 	}
 
 
@@ -54,15 +56,15 @@ final class NObjectMixin
 			throw new MemberAccessException("Call to class '$class' method without name.");
 
 		} elseif ($isProp === 'event') { // calling event handlers
-			if (is_array($_this->$name) || $_this->$name instanceof Traversable) {
+			if (is_array($_this->$name) || $_this->$name instanceof \Traversable) {
 				foreach ($_this->$name as $handler) {
-					NCallback::create($handler)->invokeArgs($args);
+					Nette\Callback::create($handler)->invokeArgs($args);
 				}
 			} elseif ($_this->$name !== NULL) {
 				throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");
 			}
 
-		} elseif ($cb = NClassReflection::from($_this)->getExtensionMethod($name)) { // extension methods
+		} elseif ($cb = Reflection\ClassType::from($_this)->getExtensionMethod($name)) { // extension methods
 			array_unshift($args, $_this);
 			return $cb->invokeArgs($args);
 
@@ -142,7 +144,7 @@ final class NObjectMixin
 			return $val;
 
 		} elseif (isset(self::$methods[$class][$name])) { // public method as closure getter
-			$val = NCallback::create($_this, $name);
+			$val = Callback::create($_this, $name);
 			return $val;
 
 		} else { // strict class
@@ -233,11 +235,11 @@ final class NObjectMixin
 		if ($prop === NULL) {
 			$prop = FALSE;
 			try {
-				$rp = new ReflectionProperty($class, $name);
+				$rp = new \ReflectionProperty($class, $name);
 				if ($name === $rp->getName() && $rp->isPublic() && !$rp->isStatic()) {
 					$prop = preg_match('#^on[A-Z]#', $name) ? 'event' : TRUE;
 				}
-			} catch (ReflectionException $e) {}
+			} catch (\ReflectionException $e) {}
 		}
 		return $prop;
 	}

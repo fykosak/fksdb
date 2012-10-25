@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Config
  */
+
+namespace Nette\Config;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Configuration helpers.
  *
  * @author     David Grudl
- * @package Nette\Config
  */
-class NConfigHelpers
+class Helpers
 {
 	const EXTENDS_KEY = '_extends',
 		OVERWRITE = TRUE;
@@ -40,7 +42,7 @@ class NConfigHelpers
 							unset($val[self::EXTENDS_KEY]);
 						}
 					} elseif (isset($right[$key])) {
-						$val = self::merge($val, $right[$key]);
+						$val = static::merge($val, $right[$key]);
 					}
 					$right[$key] = $val;
 				}

@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\Routers
  */
+
+namespace Nette\Application\Routers;
+
+use Nette,
+	Nette\Application;
 
 
 
@@ -18,9 +22,8 @@
  * @author     David Grudl
  *
  * @property-read array $defaults
- * @package Nette\Application\Routers
  */
-class NCliRouter extends NObject implements IRouter
+class CliRouter extends Nette\Object implements Application\IRouter
 {
 	const PRESENTER_KEY = 'action';
 
@@ -41,9 +44,9 @@ class NCliRouter extends NObject implements IRouter
 
 	/**
 	 * Maps command line arguments to a Request object.
-	 * @return NPresenterRequest|NULL
+	 * @return Nette\Application\Request|NULL
 	 */
-	public function match(IHttpRequest $httpRequest)
+	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		if (empty($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
 			return NULL;
@@ -83,7 +86,7 @@ class NCliRouter extends NObject implements IRouter
 		}
 
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new InvalidStateException('Missing presenter & action in route definition.');
+			throw new Nette\InvalidStateException('Missing presenter & action in route definition.');
 		}
 		$presenter = $params[self::PRESENTER_KEY];
 		if ($a = strrpos($presenter, ':')) {
@@ -91,7 +94,7 @@ class NCliRouter extends NObject implements IRouter
 			$presenter = substr($presenter, 0, $a);
 		}
 
-		return new NPresenterRequest(
+		return new Application\Request(
 			$presenter,
 			'CLI',
 			$params
@@ -104,7 +107,7 @@ class NCliRouter extends NObject implements IRouter
 	 * This router is only unidirectional.
 	 * @return NULL
 	 */
-	public function constructUrl(NPresenterRequest $appRequest, NUrl $refUrl)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		return NULL;
 	}

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Application\Responses
  */
+
+namespace Nette\Application\Responses;
+
+use Nette;
 
 
 
@@ -17,17 +20,16 @@
  *
  * @author     David Grudl
  *
- * @property-read NPresenterRequest $request
- * @package Nette\Application\Responses
+ * @property-read Nette\Application\Request $request
  */
-class NForwardResponse extends NObject implements IPresenterResponse
+class ForwardResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	/** @var NPresenterRequest */
+	/** @var Nette\Application\Request */
 	private $request;
 
 
 
-	public function __construct(NPresenterRequest $request)
+	public function __construct(Nette\Application\Request $request)
 	{
 		$this->request = $request;
 	}
@@ -35,7 +37,7 @@ class NForwardResponse extends NObject implements IPresenterResponse
 
 
 	/**
-	 * @return NPresenterRequest
+	 * @return Nette\Application\Request
 	 */
 	final public function getRequest()
 	{
@@ -48,7 +50,7 @@ class NForwardResponse extends NObject implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(IHttpRequest $httpRequest, IHttpResponse $httpResponse)
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 	}
 

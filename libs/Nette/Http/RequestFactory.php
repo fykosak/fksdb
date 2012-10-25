@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette,
+	Nette\Utils\Strings;
 
 
 
@@ -16,9 +20,8 @@
  * Current HTTP request factory.
  *
  * @author     David Grudl
- * @package Nette\Http
  */
-class NHttpRequestFactory extends NObject
+class RequestFactory extends Nette\Object
 {
 	/** @internal */
 	const NONCHARS = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
@@ -36,7 +39,7 @@ class NHttpRequestFactory extends NObject
 
 	/**
 	 * @param  string
-	 * @return NHttpRequestFactory  provides a fluent interface
+	 * @return RequestFactory  provides a fluent interface
 	 */
 	public function setEncoding($encoding)
 	{
@@ -48,12 +51,12 @@ class NHttpRequestFactory extends NObject
 
 	/**
 	 * Creates current HttpRequest object.
-	 * @return NHttpRequest
+	 * @return Request
 	 */
 	public function createHttpRequest()
 	{
 		// DETECTS URI, base path and script path of the request.
-		$url = new NUrlScript;
+		$url = new UrlScript;
 		$url->scheme = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https' : 'http';
 		$url->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 		$url->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
@@ -91,14 +94,14 @@ class NHttpRequestFactory extends NObject
 			$requestUrl = '';
 		}
 
-		$requestUrl = NStrings::replace($requestUrl, $this->urlFilters['url']);
+		$requestUrl = Strings::replace($requestUrl, $this->urlFilters['url']);
 		$tmp = explode('?', $requestUrl, 2);
-		$url->path = NStrings::replace($tmp[0], $this->urlFilters['path']);
+		$url->path = Strings::replace($tmp[0], $this->urlFilters['path']);
 		$url->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized url
 		$url->canonicalize();
-		$url->path = NStrings::fixEncoding($url->path);
+		$url->path = Strings::fixEncoding($url->path);
 
 		// detect script path
 		if (isset($_SERVER['SCRIPT_NAME'])) {
@@ -160,10 +163,10 @@ class NHttpRequestFactory extends NObject
 						}
 						if ($this->encoding) {
 							if ($utf) {
-								$v = NStrings::fixEncoding($v);
+								$v = Strings::fixEncoding($v);
 
 							} else {
-								if (!NStrings::checkEncoding($v)) {
+								if (!Strings::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -200,9 +203,9 @@ class NHttpRequestFactory extends NObject
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($this->encoding) {
-					$v['name'] = preg_replace(self::NONCHARS, '', NStrings::fixEncoding($v['name']));
+					$v['name'] = preg_replace(self::NONCHARS, '', Strings::fixEncoding($v['name']));
 				}
-				$v['@'] = new NHttpUploadedFile($v);
+				$v['@'] = new FileUpload($v);
 				continue;
 			}
 
@@ -239,7 +242,7 @@ class NHttpRequestFactory extends NObject
 			}
 		}
 
-		return new NHttpRequest($url, $query, $post, $files, $cookies, $headers,
+		return new Request($url, $query, $post, $files, $cookies, $headers,
 			isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
 			isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL,
 			isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL

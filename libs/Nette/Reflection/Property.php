@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Reflection
  */
+
+namespace Nette\Reflection;
+
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -16,7 +20,7 @@
  * Reports information about a classes variable.
  *
  * @author     David Grudl
- * @property-read NClassReflection $declaringClass
+ * @property-read ClassType $declaringClass
  * @property-read IAnnotation[][] $annotations
  * @property-read string $description
  * @property-read string $name
@@ -29,9 +33,8 @@
  * @property-read int $modifiers
  * @property-read string $docComment
  * @property-write bool $accessible
- * @package Nette\Reflection
  */
-class NPropertyReflection extends ReflectionProperty
+class Property extends \ReflectionProperty
 {
 
 	public function __toString()
@@ -46,16 +49,16 @@ class NPropertyReflection extends ReflectionProperty
 
 
 	/**
-	 * @return NClassReflection
+	 * @return ClassType
 	 */
 	public function getDeclaringClass()
 	{
-		return new NClassReflection(parent::getDeclaringClass()->getName());
+		return new ClassType(parent::getDeclaringClass()->getName());
 	}
 
 
 
-	/********************* NAnnotations support ****************d*g**/
+	/********************* Nette\Annotations support ****************d*g**/
 
 
 
@@ -66,7 +69,7 @@ class NPropertyReflection extends ReflectionProperty
 	 */
 	public function hasAnnotation($name)
 	{
-		$res = NAnnotationsParser::getAll($this);
+		$res = AnnotationsParser::getAll($this);
 		return !empty($res[$name]);
 	}
 
@@ -79,7 +82,7 @@ class NPropertyReflection extends ReflectionProperty
 	 */
 	public function getAnnotation($name)
 	{
-		$res = NAnnotationsParser::getAll($this);
+		$res = AnnotationsParser::getAll($this);
 		return isset($res[$name]) ? end($res[$name]) : NULL;
 	}
 
@@ -91,7 +94,7 @@ class NPropertyReflection extends ReflectionProperty
 	 */
 	public function getAnnotations()
 	{
-		return NAnnotationsParser::getAll($this);
+		return AnnotationsParser::getAll($this);
 	}
 
 
@@ -107,51 +110,51 @@ class NPropertyReflection extends ReflectionProperty
 
 
 
-	/********************* NObject behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return NClassReflection
+	 * @return ClassType
 	 */
-	public function getReflection()
+	public static function getReflection()
 	{
-		return new NClassReflection($this);
+		return new ClassType(get_called_class());
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return NObjectMixin::call($this, $name, $args);
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return NObjectMixin::get($this, $name);
+		return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return NObjectMixin::set($this, $name, $value);
+		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return NObjectMixin::has($this, $name);
+		return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		NObjectMixin::remove($this, $name);
+		ObjectMixin::remove($this, $name);
 	}
 
 }

@@ -7,8 +7,13 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte\Macros
  */
+
+namespace Nette\Latte\Macros;
+
+use Nette,
+	Nette\Latte,
+	Nette\Latte\MacroNode;
 
 
 
@@ -16,11 +21,10 @@
  * Base IMacro implementation. Allows add multiple macros.
  *
  * @author     David Grudl
- * @package Nette\Latte\Macros
  */
-class NMacroSet extends NObject implements IMacro
+class MacroSet extends Nette\Object implements Latte\IMacro
 {
-	/** @var NLatteCompiler */
+	/** @var Latte\Compiler */
 	private $compiler;
 
 	/** @var array */
@@ -28,7 +32,7 @@ class NMacroSet extends NObject implements IMacro
 
 
 
-	public function __construct(NLatteCompiler $compiler)
+	public function __construct(Latte\Compiler $compiler)
 	{
 		$this->compiler = $compiler;
 	}
@@ -44,9 +48,9 @@ class NMacroSet extends NObject implements IMacro
 
 
 
-	public static function install(NLatteCompiler $compiler)
+	public static function install(Latte\Compiler $compiler)
 	{
-		return new self($compiler);
+		return new static($compiler);
 	}
 
 
@@ -75,11 +79,11 @@ class NMacroSet extends NObject implements IMacro
 	 * New node is found.
 	 * @return bool
 	 */
-	public function nodeOpened(NMacroNode $node)
+	public function nodeOpened(MacroNode $node)
 	{
 		if ($this->macros[$node->name][2] && $node->htmlNode) {
 			$node->isEmpty = TRUE;
-			$this->compiler->setContext(NLatteCompiler::CONTEXT_DOUBLE_QUOTED);
+			$this->compiler->setContext(Latte\Compiler::CONTEXT_DOUBLE_QUOTED);
 			$res = $this->compile($node, $this->macros[$node->name][2]);
 			$this->compiler->setContext(NULL);
 			if (!$node->attrCode) {
@@ -101,7 +105,7 @@ class NMacroSet extends NObject implements IMacro
 	 * Node is closed.
 	 * @return void
 	 */
-	public function nodeClosed(NMacroNode $node)
+	public function nodeClosed(MacroNode $node)
 	{
 		$res = $this->compile($node, $this->macros[$node->name][1]);
 		if (!$node->closingCode) {
@@ -115,21 +119,21 @@ class NMacroSet extends NObject implements IMacro
 	 * Generates code.
 	 * @return string
 	 */
-	private function compile(NMacroNode $node, $def)
+	private function compile(MacroNode $node, $def)
 	{
 		$node->tokenizer->reset();
-		$writer = NPhpWriter::using($node, $this->compiler);
-		if (is_string($def)&& substr($def, 0, 1) !== "\0") {
+		$writer = Latte\PhpWriter::using($node, $this->compiler);
+		if (is_string($def)) {
 			return $writer->write($def);
 		} else {
-			return NCallback::create($def)->invoke($node, $writer);
+			return Nette\Callback::create($def)->invoke($node, $writer);
 		}
 	}
 
 
 
 	/**
-	 * @return NLatteCompiler
+	 * @return Latte\Compiler
 	 */
 	public function getCompiler()
 	{

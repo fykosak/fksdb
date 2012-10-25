@@ -7,8 +7,11 @@
  *
  * This source file is subject to the "Nette license", and/or
  * GPL license. For more information please see http://nette.org
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Macro element node.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NMacroNode extends NObject
+class MacroNode extends Nette\Object
 {
 	const PREFIX_INNER = 'inner',
 		PREFIX_TAG = 'tag';
@@ -41,10 +43,10 @@ class NMacroNode extends NObject
 	/** @var bool */
 	public $closing = FALSE;
 
-	/** @var NMacroTokenizer */
+	/** @var MacroTokenizer */
 	public $tokenizer;
 
-	/** @var NMacroNode */
+	/** @var MacroNode */
 	public $parentNode;
 
 	/** @var string */
@@ -62,7 +64,7 @@ class NMacroNode extends NObject
 	/** @var \stdClass  user data */
 	public $data;
 
-	/** @var NHtmlNode  for n:attr macros */
+	/** @var HtmlNode  for n:attr macros */
 	public $htmlNode;
 
 	/** @var string  for n:attr macros (NULL, PREFIX_INNER, PREFIX_TAG) */
@@ -72,7 +74,7 @@ class NMacroNode extends NObject
 
 
 
-	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, NMacroNode $parentNode = NULL, NHtmlNode $htmlNode = NULL, $prefix = NULL)
+	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL, HtmlNode $htmlNode = NULL, $prefix = NULL)
 	{
 		$this->macro = $macro;
 		$this->name = (string) $name;
@@ -80,8 +82,8 @@ class NMacroNode extends NObject
 		$this->parentNode = $parentNode;
 		$this->htmlNode = $htmlNode;
 		$this->prefix = $prefix;
-		$this->tokenizer = new NMacroTokenizer($this->args);
-		$this->data = new stdClass;
+		$this->tokenizer = new MacroTokenizer($this->args);
+		$this->data = new \stdClass;
 		$this->setArgs($args);
 	}
 

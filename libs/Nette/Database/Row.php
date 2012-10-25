@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
@@ -16,12 +19,11 @@
  * Represents a single table row.
  *
  * @author     David Grudl
- * @package Nette\Database
  */
-class NRow extends NArrayHash
+class Row extends Nette\ArrayHash
 {
 
-	public function __construct(NStatement $statement)
+	public function __construct(Statement $statement)
 	{
 		$statement->normalizeRow($this);
 	}

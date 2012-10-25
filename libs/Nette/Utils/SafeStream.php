@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -25,9 +28,8 @@
  *
  * @author     David Grudl
  * @internal
- * @package Nette\Utils
  */
-final class NSafeStream
+final class SafeStream
 {
 	/** Name of stream protocol - safe:// */
 	const PROTOCOL = 'safe';
@@ -188,8 +190,7 @@ final class NSafeStream
 		fclose($this->handle);
 		fclose($this->tempHandle);
 
-		if ($this->writeError || !(substr(PHP_OS, 0, 3) === 'WIN' ? unlink($this->file) : TRUE)
-			|| !rename($this->tempFile, $this->file) // try to rename temp file
+		if ($this->writeError || !rename($this->tempFile, $this->file) // try to rename temp file
 		) {
 			unlink($this->tempFile); // otherwise delete temp file
 			if ($this->deleteFile) {

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette;
 
 
 
@@ -21,9 +24,8 @@
  * @property   bool $prompt
  * @property   array $items
  * @property-read string $selectedItem
- * @package Nette\Forms\Controls
  */
-class NSelectBox extends NFormControl
+class SelectBox extends BaseControl
 {
 	/** @var array */
 	private $items = array();
@@ -93,7 +95,7 @@ class NSelectBox extends NFormControl
 	/**
 	 * Sets first prompt item in select box.
 	 * @param  string
-	 * @return NSelectBox  provides a fluent interface
+	 * @return SelectBox  provides a fluent interface
 	 */
 	public function setPrompt($prompt)
 	{
@@ -142,7 +144,7 @@ class NSelectBox extends NFormControl
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return NSelectBox  provides a fluent interface
+	 * @return SelectBox  provides a fluent interface
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -151,13 +153,13 @@ class NSelectBox extends NFormControl
 			foreach ((is_array($v) ? $v : array($k => $v)) as $key => $value) {
 				if (!$useKeys) {
 					if (!is_scalar($value)) {
-						throw new InvalidArgumentException("All items must be scalar.");
+						throw new Nette\InvalidArgumentException("All items must be scalar.");
 					}
 					$key = $value;
 				}
 
 				if (isset($allowed[$key])) {
-					throw new InvalidArgumentException("Items contain duplication for key '$key'.");
+					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key'.");
 				}
 
 				$allowed[$key] = $value;
@@ -197,17 +199,17 @@ class NSelectBox extends NFormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{
 		$selected = $this->getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
 		$control = parent::getControl();
-		$option = NHtml::el('option');
+		$option = Nette\Utils\Html::el('option');
 
 		if ($this->prompt !== FALSE) {
-			$control->add($this->prompt instanceof NHtml
+			$control->add($this->prompt instanceof Nette\Utils\Html
 				? $this->prompt->value('')
 				: (string) $option->value('')->setText($this->translate((string) $this->prompt))
 			);
@@ -222,7 +224,7 @@ class NSelectBox extends NFormControl
 			}
 
 			foreach ($value as $key2 => $value2) {
-				if ($value2 instanceof NHtml) {
+				if ($value2 instanceof Nette\Utils\Html) {
 					$dest->add((string) $value2->selected(isset($selected[$key2])));
 
 				} else {

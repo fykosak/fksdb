@@ -1,5 +1,8 @@
 <?php
 
+use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Connection;
+
 /**
  * Service class to high-level manipulation with ORM objects.
  * Use singleton descedants implemetations.
@@ -9,7 +12,7 @@
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends NTableSelection {
+abstract class AbstractServiceSingle extends TableSelection {
 
     /**
      * @var string
@@ -22,7 +25,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
     protected $tableName;
 
     /**
-     * @var NConnection
+     * @var Connection
      */
     protected $connection;
 
@@ -31,7 +34,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
      */
     protected static $instances = array();
 
-    public function __construct(NConnection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
@@ -46,6 +49,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
+        $data = $this->filterData($data);
         $result = new $className($data, $this->getTable());
         $result->setNew();
         return $result;
@@ -115,7 +119,7 @@ abstract class AbstractServiceSingle extends NTableSelection {
     }
 
     /**
-     * @return NTableSelection
+     * @return TableSelection
      */
     public function getTable() {
         return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);
@@ -136,6 +140,26 @@ abstract class AbstractServiceSingle extends NTableSelection {
             }
         }
         return $this->defaults;
+    }
+
+    /**
+     * Omits array elements whose keys aren't columns in the table.
+     * 
+     * @param array|null $data
+     * @return array|null
+     */
+    public function filterData($data) {
+        if ($data === null) {
+            return null;
+        }
+        $result = array();
+        foreach ($this->getConnection()->getSupplementalDriver()->getColumns($this->getTable()->getName()) as $column) {
+            $name = $column['name'];
+            if (array_key_exists($name, $data)) {
+                $result[$name] = $data[$name];
+            }
+        }
+        return $result;
     }
 
 }

@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database\Drivers
  */
+
+namespace Nette\Database\Drivers;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Supplemental SQLite2 database driver.
  *
  * @author     David Grudl
- * @package Nette\Database\Drivers
  */
-class NSqlite2Driver extends NSqliteDriver
+class Sqlite2Driver extends SqliteDriver
 {
 
 	/**
@@ -26,7 +28,7 @@ class NSqlite2Driver extends NSqliteDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new NotSupportedException;
+		throw new Nette\NotSupportedException;
 	}
 
 
@@ -38,7 +40,7 @@ class NSqlite2Driver extends NSqliteDriver
 	{
 		if (!is_object($row)) {
 			$iterator = $row;
-		} elseif ($row instanceof Traversable) {
+		} elseif ($row instanceof \Traversable) {
 			$iterator = iterator_to_array($row);
 		} else {
 			$iterator = (array) $row;
@@ -60,7 +62,7 @@ class NSqlite2Driver extends NSqliteDriver
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NNotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
+		throw new NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
 	}
 
 }

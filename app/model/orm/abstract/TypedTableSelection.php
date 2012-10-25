@@ -1,16 +1,19 @@
 <?php
 
+use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Connection;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class TypedTableSelection extends NTableSelection {
+class TypedTableSelection extends TableSelection {
 
     /**
      * @var string
      */
     protected $modelClassName;
 
-    public function __construct($modelClassName, $table, NConnection $connection) {
+    public function __construct($modelClassName, $table, Connection $connection) {
         parent::__construct($table, $connection);
         $this->modelClassName = $modelClassName;
     }

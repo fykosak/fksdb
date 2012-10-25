@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Latte
  */
+
+namespace Nette\Latte;
+
+use Nette;
 
 
 
@@ -16,29 +19,28 @@
  * PHP code generator helpers.
  *
  * @author     David Grudl
- * @package Nette\Latte
  */
-class NPhpWriter extends NObject
+class PhpWriter extends Nette\Object
 {
-	/** @var NMacroTokenizer */
+	/** @var MacroTokenizer */
 	private $argsTokenizer;
 
 	/** @var string */
 	private $modifiers;
 
-	/** @var NLatteCompiler */
+	/** @var Compiler */
 	private $compiler;
 
 
 
-	public static function using(NMacroNode $node, NLatteCompiler $compiler = NULL)
+	public static function using(MacroNode $node, Compiler $compiler = NULL)
 	{
-		return new self($node->tokenizer, $node->modifiers, $compiler);
+		return new static($node->tokenizer, $node->modifiers, $compiler);
 	}
 
 
 
-	public function __construct(NMacroTokenizer $argsTokenizer, $modifiers = NULL, NLatteCompiler $compiler = NULL)
+	public function __construct(MacroTokenizer $argsTokenizer, $modifiers = NULL, Compiler $compiler = NULL)
 	{
 		$this->argsTokenizer = $argsTokenizer;
 		$this->modifiers = $modifiers;
@@ -58,37 +60,37 @@ class NPhpWriter extends NObject
 		array_shift($args);
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
-		$mask = NStrings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', new NCallback(create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('me'=>$me)).'], EXTR_REFS);
+		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->escape(substr($m[1], 1, -1));
-		')));
-		$mask = NStrings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', new NCallback(create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('me'=>$me)).'], EXTR_REFS);
+		});
+		$mask = Nette\Utils\Strings::replace($mask, '#%modify(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->formatModifiers(substr($m[1], 1, -1));
-		')));
+		});
 
-		return NStrings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|var|raw)(\?)?(\s*\+\s*)?()#',
-			new NCallback(create_function('$m', 'extract(NCFix::$vars['.NCFix::uses(array('me'=>$me,'word'=> $word, 'args'=>& $args)).'], EXTR_REFS);
+		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|var|raw)(\?)?(\s*\+\s*)?()#',
+			function($m) use ($me, $word, & $args) {
 			list(, $l, $macro, $cond, $r) = $m;
 
 			switch ($macro) {
-			case \'node.word\':
+			case 'node.word':
 				$code = $me->formatWord($word); break;
-			case \'node.args\':
+			case 'node.args':
 				$code = $me->formatArgs(); break;
-			case \'node.array\':
+			case 'node.array':
 				$code = $me->formatArray();
-				$code = $cond && $code === \'array()\' ? \'\' : $code; break;
-			case \'var\':
+				$code = $cond && $code === 'array()' ? '' : $code; break;
+			case 'var':
 				$code = var_export(array_shift($args), TRUE); break;
-			case \'raw\':
+			case 'raw':
 				$code = (string) array_shift($args); break;
 			}
 
-			if ($cond && $code === \'\') {
+			if ($cond && $code === '') {
 				return $r ? $l : $r;
 			} else {
 				return $l . $code . $r;
 			}
-		')));
+		});
 	}
 
 
@@ -105,14 +107,14 @@ class NPhpWriter extends NObject
 			return $var;
 		}
 
-		$tokenizer = $this->preprocess(new NMacroTokenizer($modifiers));
+		$tokenizer = $this->preprocess(new MacroTokenizer($modifiers));
 		$inside = FALSE;
 		while ($token = $tokenizer->fetchToken()) {
-			if ($token['type'] === NMacroTokenizer::T_WHITESPACE) {
+			if ($token['type'] === MacroTokenizer::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
-				if ($token['type'] === NMacroTokenizer::T_SYMBOL) {
+				if ($token['type'] === MacroTokenizer::T_SYMBOL) {
 					if ($this->compiler && $token['value'] === 'escape') {
 						$var = $this->escape($var);
 						$tokenizer->fetch('|');
@@ -121,7 +123,7 @@ class NPhpWriter extends NObject
 						$inside = TRUE;
 					}
 				} else {
-					throw new NCompileException("Modifier name must be alphanumeric string, '$token[value]' given.");
+					throw new CompileException("Modifier name must be alphanumeric string, '$token[value]' given.");
 				}
 			} else {
 				if ($token['value'] === ':' || $token['value'] === ',') {
@@ -203,9 +205,9 @@ class NPhpWriter extends NObject
 	/**
 	 * @return bool
 	 */
-	public function canQuote(NMacroTokenizer $tokenizer)
+	public function canQuote(MacroTokenizer $tokenizer)
 	{
-		return $tokenizer->isCurrent(NMacroTokenizer::T_SYMBOL)
+		return $tokenizer->isCurrent(MacroTokenizer::T_SYMBOL)
 			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=', '=>', ':', '?'))
 			&& (!$tokenizer->hasNext() || $tokenizer->isNext(',', ')', ']', '=', '=>', ':', '|'));
 	}
@@ -214,9 +216,9 @@ class NPhpWriter extends NObject
 
 	/**
 	 * Preprocessor for tokens.
-	 * @return NMacroTokenizer
+	 * @return MacroTokenizer
 	 */
-	public function preprocess(NMacroTokenizer $tokenizer = NULL)
+	public function preprocess(MacroTokenizer $tokenizer = NULL)
 	{
 		$tokenizer = $tokenizer === NULL ? $this->argsTokenizer : $tokenizer;
 		$inTernary = $prev = NULL;
@@ -224,10 +226,10 @@ class NPhpWriter extends NObject
 		while ($token = $tokenizer->fetchToken()) {
 			$token['depth'] = $depth = count($arrays);
 
-			if ($token['type'] === NMacroTokenizer::T_COMMENT) {
+			if ($token['type'] === MacroTokenizer::T_COMMENT) {
 				continue; // remove comments
 
-			} elseif ($token['type'] === NMacroTokenizer::T_WHITESPACE) {
+			} elseif ($token['type'] === MacroTokenizer::T_WHITESPACE) {
 				$tokens[] = $token;
 				continue;
 			}
@@ -239,21 +241,21 @@ class NPhpWriter extends NObject
 				$inTernary = NULL;
 
 			} elseif ($inTernary === $depth && ($token['value'] === ',' || $token['value'] === ')' || $token['value'] === ']')) { // close ternary
-				$tokens[] = NMacroTokenizer::createToken(':') + array('depth' => $depth);
-				$tokens[] = NMacroTokenizer::createToken('null') + array('depth' => $depth);
+				$tokens[] = MacroTokenizer::createToken(':') + array('depth' => $depth);
+				$tokens[] = MacroTokenizer::createToken('null') + array('depth' => $depth);
 				$inTernary = NULL;
 			}
 
 			if ($token['value'] === '[') { // simplified array syntax [...]
-				if ($arrays[] = $prev['value'] !== ']' && $prev['value'] !== ')' && $prev['type'] !== NMacroTokenizer::T_SYMBOL
-					&& $prev['type'] !== NMacroTokenizer::T_VARIABLE && $prev['type'] !== NMacroTokenizer::T_KEYWORD
+				if ($arrays[] = $prev['value'] !== ']' && $prev['value'] !== ')' && $prev['type'] !== MacroTokenizer::T_SYMBOL
+					&& $prev['type'] !== MacroTokenizer::T_VARIABLE && $prev['type'] !== MacroTokenizer::T_KEYWORD
 				) {
-					$tokens[] = NMacroTokenizer::createToken('array') + array('depth' => $depth);
-					$token = NMacroTokenizer::createToken('(');
+					$tokens[] = MacroTokenizer::createToken('array') + array('depth' => $depth);
+					$token = MacroTokenizer::createToken('(');
 				}
 			} elseif ($token['value'] === ']') {
 				if (array_pop($arrays) === TRUE) {
-					$token = NMacroTokenizer::createToken(')');
+					$token = MacroTokenizer::createToken(')');
 				}
 			} elseif ($token['value'] === '(') { // only count
 				$arrays[] = '(';
@@ -266,8 +268,8 @@ class NPhpWriter extends NObject
 		}
 
 		if ($inTernary !== NULL) { // close ternary
-			$tokens[] = NMacroTokenizer::createToken(':') + array('depth' => count($arrays));
-			$tokens[] = NMacroTokenizer::createToken('null') + array('depth' => count($arrays));
+			$tokens[] = MacroTokenizer::createToken(':') + array('depth' => count($arrays));
+			$tokens[] = MacroTokenizer::createToken('null') + array('depth' => count($arrays));
 		}
 
 		$tokenizer = clone $tokenizer;
@@ -281,33 +283,33 @@ class NPhpWriter extends NObject
 	public function escape($s)
 	{
 		switch ($this->compiler->getContentType()) {
-		case NLatteCompiler::CONTENT_XHTML:
-		case NLatteCompiler::CONTENT_HTML:
+		case Compiler::CONTENT_XHTML:
+		case Compiler::CONTENT_HTML:
 			$context = $this->compiler->getContext();
 			switch ($context[0]) {
-			case NLatteCompiler::CONTEXT_SINGLE_QUOTED:
-			case NLatteCompiler::CONTEXT_DOUBLE_QUOTED:
-				if ($context[1] === NLatteCompiler::CONTENT_JS) {
-					$s = "NTemplateHelpers::escapeJs($s)";
-				} elseif ($context[1] === NLatteCompiler::CONTENT_CSS) {
-					$s = "NTemplateHelpers::escapeCss($s)";
+			case Compiler::CONTEXT_SINGLE_QUOTED:
+			case Compiler::CONTEXT_DOUBLE_QUOTED:
+				if ($context[1] === Compiler::CONTENT_JS) {
+					$s = "Nette\\Templating\\Helpers::escapeJs($s)";
+				} elseif ($context[1] === Compiler::CONTENT_CSS) {
+					$s = "Nette\\Templating\\Helpers::escapeCss($s)";
 				}
-				$quote = $context[0] === NLatteCompiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
+				$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
 				return "htmlSpecialChars($s$quote)";
-			case NLatteCompiler::CONTEXT_COMMENT:
-				return "NTemplateHelpers::escapeHtmlComment($s)";
-			case NLatteCompiler::CONTENT_JS:
-			case NLatteCompiler::CONTENT_CSS:
-				return 'NTemplateHelpers::escape' . ucfirst($context[0]) . "($s)";
+			case Compiler::CONTEXT_COMMENT:
+				return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
+			case Compiler::CONTENT_JS:
+			case Compiler::CONTENT_CSS:
+				return 'Nette\Templating\Helpers::escape' . ucfirst($context[0]) . "($s)";
 			default:
-				return "NTemplateHelpers::escapeHtml($s, ENT_NOQUOTES)";
+				return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
 			}
-		case NLatteCompiler::CONTENT_XML:
-		case NLatteCompiler::CONTENT_JS:
-		case NLatteCompiler::CONTENT_CSS:
-		case NLatteCompiler::CONTENT_ICAL:
-			return 'NTemplateHelpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
-		case NLatteCompiler::CONTENT_TEXT:
+		case Compiler::CONTENT_XML:
+		case Compiler::CONTENT_JS:
+		case Compiler::CONTENT_CSS:
+		case Compiler::CONTENT_ICAL:
+			return 'Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
+		case Compiler::CONTENT_TEXT:
 			return $s;
 		default:
 			return "\$template->escape($s)";

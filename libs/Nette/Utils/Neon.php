@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Utils
  */
+
+namespace Nette\Utils;
+
+use Nette;
 
 
 
@@ -16,9 +19,8 @@
  * Simple parser & generator for Nette Object Notation.
  *
  * @author     David Grudl
- * @package Nette\Utils
  */
-class NNeon extends NObject
+class Neon extends Nette\Object
 {
 	const BLOCK = 1;
 
@@ -32,7 +34,7 @@ class NNeon extends NObject
 		'?:[\t ]+', // whitespace
 	);
 
-	/** @var NTokenizer */
+	/** @var Tokenizer */
 	private static $tokenizer;
 
 	private static $brackets = array(
@@ -56,10 +58,10 @@ class NNeon extends NObject
 	 */
 	public static function encode($var, $options = NULL)
 	{
-		if ($var instanceof DateTime) {
+		if ($var instanceof \DateTime) {
 			return $var->format('Y-m-d H:i:s O');
 
-		} elseif ($var instanceof NNeonEntity) {
+		} elseif ($var instanceof NeonEntity) {
 			return self::encode($var->value) . '(' . substr(self::encode($var->attributes), 1, -1) . ')';
 		}
 
@@ -71,7 +73,7 @@ class NNeon extends NObject
 		}
 
 		if (is_array($var)) {
-			$isList = NValidators::isList($var);
+			$isList = Validators::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
 				if (count($var) === 0){
@@ -80,7 +82,7 @@ class NNeon extends NObject
 				foreach ($var as $k => $v) {
 					$v = self::encode($v, self::BLOCK);
 					$s .= ($isList ? '-' : self::encode($k) . ':')
-						. (NStrings::contains($v, "\n") ? "\n\t" . str_replace("\n", "\n\t", $v) : ' ' . $v)
+						. (Strings::contains($v, "\n") ? "\n\t" . str_replace("\n", "\n\t", $v) : ' ' . $v)
 						. "\n";
 					continue;
 				}
@@ -101,7 +103,7 @@ class NNeon extends NObject
 
 		} elseif (is_float($var)) {
 			$var = var_export($var, TRUE);
-			return NStrings::contains($var, '.') ? $var : $var . '.0';
+			return Strings::contains($var, '.') ? $var : $var . '.0';
 
 		} else {
 			return json_encode($var);
@@ -118,16 +120,16 @@ class NNeon extends NObject
 	public static function decode($input)
 	{
 		if (!is_string($input)) {
-			throw new InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
+			throw new Nette\InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
 		}
 		if (!self::$tokenizer) {
-			self::$tokenizer = new NTokenizer(self::$patterns, 'mi');
+			self::$tokenizer = new Tokenizer(self::$patterns, 'mi');
 		}
 
 		$input = str_replace("\r", '', $input);
 		self::$tokenizer->tokenize($input);
 
-		$parser = new self;
+		$parser = new static;
 		$res = $parser->parse(0);
 
 		while (isset(self::$tokenizer->tokens[$parser->n])) {
@@ -190,7 +192,7 @@ class NNeon extends NObject
 						$this->error();
 					}
 					$n++;
-					$entity = new NNeonEntity;
+					$entity = new NeonEntity;
 					$entity->value = $value;
 					$entity->attributes = $this->parse(NULL, array());
 					$value = $entity;
@@ -280,7 +282,7 @@ class NNeon extends NObject
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
 				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
-					$value = new NDateTime53($t);
+					$value = new Nette\DateTime($t);
 				} else { // literal
 					$value = $t;
 				}
@@ -329,7 +331,7 @@ class NNeon extends NObject
 		if (isset($mapping[$sq[1]])) {
 			return $mapping[$sq[1]];
 		} elseif ($sq[1] === 'u' && strlen($sq) === 6) {
-			return NStrings::chr(hexdec(substr($sq, 2)));
+			return Strings::chr(hexdec(substr($sq, 2)));
 		} elseif ($sq[1] === 'x' && strlen($sq) === 4) {
 			return chr(hexdec(substr($sq, 2)));
 		} else {
@@ -343,9 +345,9 @@ class NNeon extends NObject
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
 		$token = isset(self::$tokenizer->tokens[$this->n])
-			? str_replace("\n", '<new line>', NStrings::truncate(self::$tokenizer->tokens[$this->n], 40))
+			? str_replace("\n", '<new line>', Strings::truncate(self::$tokenizer->tokens[$this->n], 40))
 			: 'end';
-		throw new NNeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
+		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 
 }
@@ -354,9 +356,8 @@ class NNeon extends NObject
 
 /**
  * Representation of 'foo(bar=1)' literal
- * @package Nette\Utils
  */
-class NNeonEntity extends stdClass
+class NeonEntity extends \stdClass
 {
 	public $value;
 	public $attributes;
@@ -366,8 +367,7 @@ class NNeonEntity extends stdClass
 
 /**
  * The exception that indicates error of NEON decoding.
- * @package Nette\Utils
  */
-class NNeonException extends Exception
+class NeonException extends \Exception
 {
 }

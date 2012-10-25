@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Database
  */
+
+namespace Nette\Database;
+
+use Nette;
 
 
 
@@ -16,7 +19,6 @@
  * Supplemental PDO database driver.
  *
  * @author     David Grudl
- * @package Nette\Database
  */
 interface ISupplementalDriver
 {
@@ -33,10 +35,10 @@ interface ISupplementalDriver
 
 	/**
 	 * Formats date-time for use in a SQL statement.
-	 * @param  DateTime
+	 * @param  \DateTime
 	 * @return string
 	 */
-	function formatDateTime(DateTime $value);
+	function formatDateTime(\DateTime $value);
 
 	/**
 	 * Encodes string for use in a LIKE statement.
@@ -58,7 +60,7 @@ interface ISupplementalDriver
 	/**
 	 * Normalizes result row.
 	 * @param  array
-	 * @param  NStatement
+	 * @param  Statement
 	 * @return array
 	 */
 	function normalizeRow($row, $statement);

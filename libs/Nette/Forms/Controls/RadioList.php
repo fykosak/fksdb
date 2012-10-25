@@ -7,8 +7,12 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Forms\Controls
  */
+
+namespace Nette\Forms\Controls;
+
+use Nette,
+	Nette\Utils\Html;
 
 
 
@@ -18,16 +22,15 @@
  * @author     David Grudl
  *
  * @property   array $items
- * @property-read NHtml $separatorPrototype
- * @property-read NHtml $containerPrototype
- * @package Nette\Forms\Controls
+ * @property-read Nette\Utils\Html $separatorPrototype
+ * @property-read Nette\Utils\Html $containerPrototype
  */
-class NRadioList extends NFormControl
+class RadioList extends BaseControl
 {
-	/** @var NHtml  separator element template */
+	/** @var Nette\Utils\Html  separator element template */
 	protected $separator;
 
-	/** @var NHtml  container element template */
+	/** @var Nette\Utils\Html  container element template */
 	protected $container;
 
 	/** @var array */
@@ -43,8 +46,8 @@ class NRadioList extends NFormControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'radio';
-		$this->container = NHtml::el();
-		$this->separator = NHtml::el('br');
+		$this->container = Html::el();
+		$this->separator = Html::el('br');
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
@@ -78,7 +81,7 @@ class NRadioList extends NFormControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
-	 * @return NRadioList  provides a fluent interface
+	 * @return RadioList  provides a fluent interface
 	 */
 	public function setItems(array $items)
 	{
@@ -101,7 +104,7 @@ class NRadioList extends NFormControl
 
 	/**
 	 * Returns separator HTML element template.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	final public function getSeparatorPrototype()
 	{
@@ -112,7 +115,7 @@ class NRadioList extends NFormControl
 
 	/**
 	 * Returns container HTML element template.
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	final public function getContainerPrototype()
 	{
@@ -124,7 +127,7 @@ class NRadioList extends NFormControl
 	/**
 	 * Generates control's HTML element.
 	 * @param  mixed
-	 * @return NHtml
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl($key = NULL)
 	{
@@ -140,7 +143,7 @@ class NRadioList extends NFormControl
 		$id = $control->id;
 		$counter = -1;
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = NHtml::el('label');
+		$label = Html::el('label');
 
 		foreach ($this->items as $k => $val) {
 			$counter++;
@@ -152,14 +155,14 @@ class NRadioList extends NFormControl
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
 
-			if ($val instanceof NHtml) {
+			if ($val instanceof Html) {
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate((string) $val));
 			}
 
 			if ($key !== NULL) {
-				return NHtml::el()->add($control)->add($label);
+				return Html::el()->add($control)->add($label);
 			}
 
 			$container->add((string) $control . (string) $label . $separator);

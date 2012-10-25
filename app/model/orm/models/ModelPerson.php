@@ -1,14 +1,13 @@
 <?php
 
+use Nette\Security\IIdentity;
+use Nette\Database\Table\ActiveRow as TableRow;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelPerson extends AbstractModelSingle implements IIdentity {
-
-    public static function createFromTableRow(NTableRow $row) {
-        return new self($row->toArray(), $row->getTable());
-    }
 
     /**
      * @return AbstractModelSingle|null
@@ -40,7 +39,8 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
     }
 
     public function getFullname() {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->display_name;
+        //return $this->first_name . ' ' . $this->last_name;
     }
 
     public function getActiveOrgs(YearCalculator $yearCalculator) {
@@ -62,7 +62,7 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
     public static function parseFullname($fullname) {
         $names = explode(' ', $fullname);
         $firstName = implode(' ', array_slice($names, 0, count($names) - 1));
-        $lastName = $names[count($names)-1];
+        $lastName = $names[count($names) - 1];
         if (mb_substr($lastName, -1) == 'á') {
             $gender = 'F';
         } else {

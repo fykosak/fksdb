@@ -7,8 +7,11 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- * @package Nette\Http
  */
+
+namespace Nette\Http;
+
+use Nette;
 
 
 
@@ -20,9 +23,8 @@
  * @property   int $code
  * @property-read bool $sent
  * @property-read array $headers
- * @package Nette\Http
  */
-final class NHttpResponse extends NObject implements IHttpResponse
+final class Response extends Nette\Object implements IResponse
 {
 	/** @var bool  Send invisible garbage for IE 6? */
 	private static $fixIE = TRUE;
@@ -47,9 +49,9 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidArgumentException  if code is invalid
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidArgumentException  if code is invalid
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCode($code)
 	{
@@ -63,10 +65,10 @@ final class NHttpResponse extends NObject implements IHttpResponse
 		);
 
 		if (!isset($allowed[$code])) {
-			throw new InvalidArgumentException("Bad HTTP response '$code'.");
+			throw new Nette\InvalidArgumentException("Bad HTTP response '$code'.");
 
 		} elseif (headers_sent($file, $line)) {
-			throw new InvalidStateException("Cannot set HTTP code after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+			throw new Nette\InvalidStateException("Cannot set HTTP code after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 
 		} else {
 			$this->code = $code;
@@ -93,13 +95,13 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * Sends a HTTP header and replaces a previous one.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setHeader($name, $value)
 	{
 		if (headers_sent($file, $line)) {
-			throw new InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+			throw new Nette\InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
 		if ($value === NULL && function_exists('header_remove')) {
@@ -118,13 +120,13 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * Adds HTTP header.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function addHeader($name, $value)
 	{
 		if (headers_sent($file, $line)) {
-			throw new InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+			throw new Nette\InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
 		header($name . ': ' . $value, FALSE, $this->code);
@@ -137,8 +139,8 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * Sends a Content-type HTTP header.
 	 * @param  string  mime-type
 	 * @param  string  charset
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setContentType($type, $charset = NULL)
 	{
@@ -153,7 +155,7 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * @param  string  URL
 	 * @param  int     HTTP code
 	 * @return void
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
@@ -174,8 +176,8 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setExpiration($time)
 	{
@@ -185,7 +187,7 @@ final class NHttpResponse extends NObject implements IHttpResponse
 			return $this;
 		}
 
-		$time = NDateTime53::from($time);
+		$time = Nette\DateTime::from($time);
 		$this->setHeader('Cache-Control', 'max-age=' . ($time->format('U') - time()));
 		$this->setHeader('Expires', self::date($time));
 		return $this;
@@ -247,8 +249,8 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 */
 	public static function date($time = NULL)
 	{
-		$time = NDateTime53::from($time);
-		$time->setTimezone(new DateTimeZone('GMT'));
+		$time = Nette\DateTime::from($time);
+		$time->setTimezone(new \DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
 
@@ -263,7 +265,7 @@ final class NHttpResponse extends NObject implements IHttpResponse
 			&& in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)
 			&& $this->getHeader('Content-Type', 'text/html') === 'text/html'
 		) {
-			echo NStrings::random(2e3, " \t\r\n"); // sends invisible garbage for IE
+			echo Nette\Utils\Strings::random(2e3, " \t\r\n"); // sends invisible garbage for IE
 			self::$fixIE = FALSE;
 		}
 	}
@@ -279,19 +281,19 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * @param  string
 	 * @param  bool
 	 * @param  bool
-	 * @return NHttpResponse  provides a fluent interface
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL)
 	{
 		if (headers_sent($file, $line)) {
-			throw new InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+			throw new Nette\InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
 		setcookie(
 			$name,
 			$value,
-			$time ? NDateTime53::from($time)->format('U') : 0,
+			$time ? Nette\DateTime::from($time)->format('U') : 0,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain,
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
@@ -329,7 +331,7 @@ final class NHttpResponse extends NObject implements IHttpResponse
 	 * @param  string
 	 * @param  bool
 	 * @return void
-	 * @throws InvalidStateException  if HTTP headers have been sent
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
 	{

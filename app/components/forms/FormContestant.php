@@ -1,25 +1,27 @@
 <?php
 
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\IContainer as IComponentContainer;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class FormContestant extends NAppForm {
+class FormContestant extends Form {
 
     const SCHOOL = 'school_id';
 
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('first_name', 'Jméno')->setDisabled();
-        $this->addText('last_name', 'Příjmení')->setDisabled();
+        $this->addText('display_name', 'Jméno')->setDisabled();
 
         $this->addText('study_year', 'Ročník')
-                ->addRule(NForm::INTEGER, 'Ročník musí být číslo.')
-                ->addRule(NForm::FILLED, 'Ročník musí být vyplněn.');
+                ->addRule(Form::INTEGER, 'Ročník musí být číslo.')
+                ->addRule(Form::FILLED, 'Ročník musí být vyplněn.');
 
         $this->addText('class', 'Třída')
-                ->addRule(NForm::MAX_LENGTH, 'Příliš dlouhé označní třídy.', 8);
+                ->addRule(Form::MAX_LENGTH, 'Příliš dlouhé označní třídy.', 8);
 
         //TODO better element for school
         $this->addSelect(self::SCHOOL, 'Škola');
@@ -27,7 +29,7 @@ class FormContestant extends NAppForm {
 
     public function loadSchools() {
         $service = $this->getPresenter()->getService('ServiceSchool');
-        $this[FormContestant::SCHOOL]->setItems($service->getTable()->fetchPairs('school_id', 'name'));
+        $this[FormContestant::SCHOOL]->setItems($service->getTable()->order('name')->fetchPairs('school_id', 'name'));
     }
 
 }
