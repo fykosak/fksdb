@@ -17,6 +17,12 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
         return $wizard;
     }
+    
+    protected function createComponentGridContestants($name){
+        $grid = new GridContestants();
+        
+        return $grid;
+    }
 
     public function processWizard(WizardCreateContestant $wizard) {
         $servicePerson = $this->getService('ServicePerson');

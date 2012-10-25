@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Diagnostics\Debugger;
+
 class SchoolsPresenter extends AuthenticatedPresenter {
 
     /**
@@ -16,6 +18,12 @@ class SchoolsPresenter extends AuthenticatedPresenter {
         
 
         return $form;
+    }
+    
+    protected function createComponentGridSchools($name){
+        $grid = new GridSchools();
+        
+        return $grid;
     }
 
     public function formSchoolSubmitted(FormSchool $form) {
@@ -52,7 +60,7 @@ class SchoolsPresenter extends AuthenticatedPresenter {
             $this->redirect('Schools:default');
         } catch (ModelException $e) {
             $connection->rollBack();
-            NDebugger::log($e, NDebugger::ERROR);
+            Debugger::log($e, Debugger::ERROR);
             $this->flashMessage('Škola nebyla přidána, došlo k chybě.', 'error');
             $this->restoreRequest($this->backlink);
             $this->redirect('Schools:default');
