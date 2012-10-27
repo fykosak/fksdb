@@ -9,9 +9,13 @@ INSERT INTO country (country_iso, name_cs, name_en) VALUES
 ('RS', 'Srbsko', 'Serbia'),
 ('TR', 'Turecko', 'Turkey'),
 ('HU', 'Maďarsko', 'Hungary'),
-('LT', 'Litva', 'Lithuania');
+('LT', 'Litva', 'Lithuania'),
+('US', 'Americká říše', 'United States of America'),
+('EP', 'NEZNÁMÝ', 'UNKNOWN')
+;
 
 INSERT INTO region (country_iso, nuts, name) VALUES
+('EP', 'WTF', 'NEZNÁMÝ'), -- Kvůli nějakému expertu z DAKOSu
 ('SK', 'SK', 'Slovensko'),
 ('CZ', 'CZ', 'Česká republika'),
 ('DE', 'DE', 'Deutschland'),
@@ -21,6 +25,7 @@ INSERT INTO region (country_iso, nuts, name) VALUES
 ('TR', 'TR', 'Türkiye'),
 ('HU', 'HU', 'Magyarország'),
 ('LT', 'LT', 'Lietuva'),
+('US', 'US', 'United States of America'),
 ('SK', 'SK010', 'Bratislavský kraj'),
 ('SK', 'SK021', 'Trnavský kraj'),
 ('SK', 'SK022', 'Trenčiansky kraj'),

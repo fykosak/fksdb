@@ -213,7 +213,7 @@ CREATE TABLE task (
 -- TODO rozšířit pro ukládání textů úloh
 
 CREATE TABLE submit (
-	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- TODO K čemu je to dobré?
 	ct_id INT NOT NULL		COMMENT 'Contestant',
 	task_id INT NOT NULL		COMMENT 'Task',
 	submitted_on DATETIME NOT NULL,
@@ -223,7 +223,7 @@ CREATE TABLE submit (
 	calc_points DECIMAL(4,2)	COMMENT 'Po prepoctu (NULL pokud se v tomto rocniku neprepocitava)',
 	FOREIGN KEY (ct_id) REFERENCES contestant(ct_id),
 	FOREIGN KEY (task_id) REFERENCES task(task_id),
-	UNIQUE (ct_id,task_id)
+	PRIMARY KEY (ct_id,task_id)
 );
 
 
