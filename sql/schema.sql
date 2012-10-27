@@ -168,7 +168,7 @@ CREATE TABLE contestant (
 	person_id INT NOT NULL,
 	school_id INT,
 	class VARCHAR(16) COMMENT 'třída, do níž chodí, př. IV.B',
-	study_year TINYINT NOT NULL	COMMENT 'ročník, který studuje 6--9 nebo 1--4', 
+	study_year TINYINT COMMENT 'ročník, který studuje 6--9 nebo 1--4', 
 	FOREIGN KEY (person_id) REFERENCES person(person_id),
 	FOREIGN KEY (school_id) REFERENCES school(school_id),
 	FOREIGN KEY (contest_id) REFERENCES contest(contest_id),
