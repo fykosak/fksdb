@@ -13,7 +13,7 @@ CREATE TABLE person (
 	person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	family_name VARCHAR(255) NOT NULL COMMENT 'Příjmení (nebo více příjmení oddělených jednou mezerou)',
 	other_name VARCHAR(255) NOT NULL COMMENT 'Křestní jména, von, de atd., oddělená jednou mezerou',
-	display_name VARCHAR(511) NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>'
+	display_name VARCHAR(511) NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>',
 	gender ENUM('M', 'F') NOT NULL
 )
 	COMMENT = 'řazení: <family_name><other_name>, zobrazení <other_name> <family_name>';
@@ -34,6 +34,13 @@ CREATE TABLE region (
 )
 	COMMENT = 'Ciselnik regionu pro vyber skoly v registraci';
 
+CREATE TABLE psc_region (
+	psc CHAR(5) NOT NULL PRIMARY KEY,
+	region_id INT NOT NULL,
+	FOREIGN KEY (region_id) REFERENCES region(region_id)
+)
+	COMMENT = 'mapování český a slovenckých PSČ na evidovaný region';
+
 CREATE TABLE address (		
 	address_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	first_row VARCHAR(255) NULL COMMENT 'doplňkový řádek adresy (např. bytem u X Y)',
@@ -41,6 +48,7 @@ CREATE TABLE address (
 	target VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
 	city VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
 	postal_code CHAR(5) COMMENT 'PSČ (pro ČR a SR)',
+--  zdánlivě nenormální (PSČ->region), ale počítáme i s adresami s neCZ neSK PSČ
 	region_id INT NOT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
 	FOREIGN KEY (region_id) REFERENCES region(region_id)
 )
