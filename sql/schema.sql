@@ -36,14 +36,17 @@ CREATE TABLE region (
 
 CREATE TABLE address (		
 	address_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	street VARCHAR(255),
-	house_nr VARCHAR(255),
-	city VARCHAR(255) NOT NULL,
-	postal_code CHAR(5) COMMENT 'PSČ',
-	region_id INT, -- PSČ --> kraj není normální, ale pohodlné 
+	first_row VARCHAR(255) NULL COMMENT 'doplňkový řádek adresy (např. bytem u X Y)',
+	second_row VARCHAR(255) NULL COMMENT 'ještě doplňkovější řádek adresy (nikdo neví)',
+	target VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
+	city VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
+	postal_code CHAR(5) COMMENT 'PSČ (pro ČR a SR)',
+	region_id INT NOT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
 	FOREIGN KEY (region_id) REFERENCES region(region_id)
 )
-	COMMENT = 'Adresa jako hodnotový objekt'; -- i jako immutable? TODO rozmyslet změnu adresy/stěhování
+	COMMENT = 'adresa jako poštovní nikoli územní identifikátor, immutable.';
+	-- nerozlišujeme změnu adresy (např. přejmenování ulice) od stěhování,
+	-- jelikož stejně nevevidujeme historii
 
 CREATE TABLE check_address (
 	address_id INT NOT NULL PRIMARY KEY,
@@ -110,7 +113,7 @@ CREATE TABLE post_contact (
 	post_contact_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	person_id INT NOT NULL,
 	address_id INT NOT NULL,
-	type ENUM('P', 'D') NOT NULL	COMMENT 'doručovací (Delivery), trvalá (Permanent)', -- TODO a ještě školní?
+	type ENUM('P', 'D') NOT NULL	COMMENT 'doručovací (Delivery), trvalá (Permanent)', -- pokud trvalá == doručovací, uvede se jako trvalá
 	FOREIGN KEY (person_id) REFERENCES person(person_id), -- kvůli poštovnímu spamu odkaz na person, nikoli person_info
 	FOREIGN KEY (address_id) REFERENCES address(address_id)
 )
