@@ -126,7 +126,7 @@ CREATE TABLE login (
 	person_id INT NOT NULL PRIMARY KEY,
 	login VARCHAR(255) NULL	COMMENT 'Login name',
 	email VARCHAR(255) NOT NULL,
-	hash VARCHAR(255) NULL 		COMMENT 'SHA1 hash hesla', -- TODO
+	hash CHAR(40) NULL 		COMMENT 'sha1(person_id . md5(password)) as hexadecimal', -- kvůli přenosu starých MD5 hashů a rainbow tables
 	fb_id VARCHAR(255) NULL		COMMENT 'ID pro přihlášení přes FB',
 	created DATETIME NOT NULL,
 	last_login DATETIME NULL,
