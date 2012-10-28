@@ -37,9 +37,9 @@ CREATE TABLE region (
 CREATE TABLE psc_region (
 	psc CHAR(5) NOT NULL PRIMARY KEY,
 	region_id INT NOT NULL,
-	FOREIGN KEY (region_id) REFERENCES region(region_id)
+	FOREIGN KEY (region_id) REFERENCES region(region_id) ON DELETE CASCADE
 )
-	COMMENT = 'mapování český a slovenckých PSČ na evidovaný region';
+	COMMENT = 'mapování českých a slovenských PSČ na evidovaný region';
 
 CREATE TABLE address (		
 	address_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +99,7 @@ CREATE TABLE person_info (
 	uk_login VARCHAR(8) NULL	COMMENT 'CAS login, pro orgy',
 	account VARCHAR(32) NULL	COMMENT 'bankovní účet jako text',
 	agreed DATETIME NULL		COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 )
 	COMMENT = 'Podrobné informace o osobě, zde jsou všechny osobní údaje (tm)';
 
@@ -122,8 +122,8 @@ CREATE TABLE post_contact (
 	person_id INT NOT NULL,
 	address_id INT NOT NULL,
 	type ENUM('P', 'D') NOT NULL	COMMENT 'doručovací (Delivery), trvalá (Permanent)', -- pokud trvalá == doručovací, uvede se jako trvalá
-	FOREIGN KEY (person_id) REFERENCES person(person_id), -- kvůli poštovnímu spamu odkaz na person, nikoli person_info
-	FOREIGN KEY (address_id) REFERENCES address(address_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE, -- kvůli poštovnímu spamu odkaz na person, nikoli person_info
+	FOREIGN KEY (address_id) REFERENCES address(address_id) ON DELETE CASCADE
 )
 	COMMENT = 'Přiřazení adres lidem vztahem M:N';
 
@@ -141,7 +141,7 @@ CREATE TABLE login (
 	active BOOL NOT NULL,
 	UNIQUE (login),
 	UNIQUE (email),
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 );
 
 CREATE TABLE `right` (
@@ -152,8 +152,8 @@ CREATE TABLE `right` (
 CREATE TABLE permission (
 	person_id INT NOT NULL,
 	right_id INT NOT NULL,
-	FOREIGN KEY (person_id) REFERENCES login(person_id),
-	FOREIGN KEY (right_id) REFERENCES `right`(right_id),
+	FOREIGN KEY (person_id) REFERENCES login(person_id) ON DELETE CASCADE,
+	FOREIGN KEY (right_id) REFERENCES `right`(right_id) ON DELETE CASCADE,
 	UNIQUE (person_id, right_id)
 );
 
@@ -163,7 +163,7 @@ CREATE TABLE auth_token (
 	type VARCHAR(31),
 	since DATETIME NOT NULL,
 	until DATETIME,
-	FOREIGN KEY (person_id) REFERENCES login(person_id)
+	FOREIGN KEY (person_id) REFERENCES login(person_id) ON DELETE CASCADE
 );
 
 -- seminář: ucastnici, ulohy a orgové
@@ -204,7 +204,7 @@ CREATE TABLE org (
 	UNIQUE(contest_id, person_id),
 	UNIQUE(contest_id, tex_signature),
 	FOREIGN KEY (person_id) REFERENCES person(person_id),
-	FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
+	FOREIGN KEY (contest_id) REFERENCES contest(contest_id) ON DELETE CASCADE
 );
 
 CREATE TABLE task (
@@ -251,7 +251,7 @@ CREATE TABLE si_settings ( -- TODO podle vymyšlení
 	correction BOOL NOT NULL	COMMENT 'Odeslat upozornění o opravě řešení.',
 	sendPdf BOOL NOT NULL		COMMENT 'Přiložit k tomuto upozornění soubor s opravou.',
 	otherSpam BOOL NOT NULL	COMMENT 'Další upozornění – jarní, kalíšek…',
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 );
 
 CREATE TABLE si_log (
@@ -259,7 +259,7 @@ CREATE TABLE si_log (
 	type VARCHAR(64) NOT NULL	COMMENT '„tasks“, „timer3“, …',
 	note VARCHAR(64)		COMMENT '„24-1“… ',
 	`time` DATETIME NOT NULL,
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 )
 	COMMENT = 'Skript si podle logu dává pozor, aby někoho nespamoval dvakrát ohledně toho samého.';
 
@@ -279,7 +279,7 @@ CREATE TABLE si_spamee (
 	class VARCHAR(16) 		COMMENT 'třída, do níž chodí, př. IV.B',
 	study_year TINYINT		COMMENT 'ročník, který studuje 6--9 nebo 1--4 ', 
 	note VARCHAR(255)		COMMENT 'poznámka, např. počet bodů, které měl při sběru',
-	FOREIGN KEY (person_id) REFERENCES person(person_id),
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE,
 	FOREIGN KEY (school_id) REFERENCES school(school_id),
 	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id)	
 );
@@ -299,8 +299,8 @@ CREATE TABLE `action` (
 	collection_id INT NULL		COMMENT 'spamovací sběr z této akce, je-li webově přihlašovaná',
 	fb_album_id BIGINT NULL 	COMMENT 'id galerie na Facebooku',
 	report TEXT NULL 			COMMENT '(HTML) zápis z proběhlé akce',
-	FOREIGN KEY (contest_id) REFERENCES contest(contest_id),
-	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id)
+	FOREIGN KEY (contest_id) REFERENCES contest(contest_id) ON DELETE CASCADE,
+	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id) ON DELETE SET NULL
 );
 
 CREATE TABLE action_application (
