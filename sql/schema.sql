@@ -10,11 +10,13 @@ USE fksdb;
 -- kontakty
 
 CREATE TABLE person (
-person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-display_name VARCHAR(511) NOT NULL COMMENT 'Celé jméno vč. příjmení',
-sort_name VARCHAR(255) NOT NULL COMMENT '„Příjmení“ (prioritní při abecedním řazení)',
-gender ENUM('M', 'F') NOT NULL
-);
+	person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	family_name VARCHAR(255) NOT NULL COMMENT 'Příjmení (nebo více příjmení oddělených jednou mezerou)',
+	other_name VARCHAR(255) NOT NULL COMMENT 'Křestní jména, von, de atd., oddělená jednou mezerou',
+	display_name VARCHAR(511) NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>'
+	gender ENUM('M', 'F') NOT NULL
+)
+	COMMENT = 'řazení: <family_name><other_name>, zobrazení <other_name> <family_name>';
 
 CREATE TABLE country (		
 	country_iso CHAR(2) NOT NULL PRIMARY KEY COMMENT 'dvojznakový kód země dle ISO 3166-1',
