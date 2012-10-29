@@ -40,6 +40,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
         $grid = $values['grid'];
+        Nette\Diagnostics\Debugger::log(Nette\Diagnostics\Debugger::dump($grid, true));
         $submitsTable = $this->getSubmitsTable();
         $serviceSubmit = $this->context->getService('ServiceSubmit');
         $serviceSubmit->getConnection()->beginTransaction();
