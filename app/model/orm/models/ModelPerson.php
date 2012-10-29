@@ -39,7 +39,7 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
     }
 
     public function getFullname() {
-        return $this->display_name;
+        return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
         //return $this->first_name . ' ' . $this->last_name;
     }
 

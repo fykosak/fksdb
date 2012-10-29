@@ -15,7 +15,7 @@ abstract class TaskTimesContestantPresenter extends AuthenticatedPresenter {
         return $serviceContestant->getTable()->where(array(
                     'contest_id' => $this->getSelectedContest()->contest_id,
                     'year' => $this->getSelectedYear(),
-                ))->order('person.sort_name, person.display_name');
+                ))->order('person.family_name, person.other_name');
         //TODO series
     }
 

@@ -22,8 +22,9 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
             foreach ($tasks as $task) {
                 $subcontainer = $container->addContainer($task->task_id);
-                $text = $subcontainer->addText('submitted_on');
-                $note = $subcontainer->addText('note');
+                $text = $subcontainer->addText('submitted_on', null, 8);
+                $note = $subcontainer->addText('note', null, 4);
+                $note->getControlPrototype()->style('display:none');
                 if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
                     $submit = $submitsTable[$contestant->ct_id][$task->task_id];
                     $text->setDefaultValue($submit->submitted_on);
