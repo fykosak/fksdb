@@ -27,12 +27,20 @@ common:
 
     services:
         authenticator: Authenticator
+        yearCalculator: YearCalculator
         # ORM services
         ServiceAddress:         ServiceAddress
+        ServiceContestant:      ServiceContestant
+        ServiceContest:         ServiceContest
+        ServiceCountry:         ServiceCountry
         ServiceLogin:           ServiceLogin
         ServiceMPostContact:    ServiceMPostContact
         ServicePerson:          ServicePerson
+        ServicePersonInfo:      ServicePersonInfo
         ServicePostContact:     ServicePostContact
+        ServiceSubmit:          ServiceSubmit
+        ServiceSchool:          ServiceSchool
+        ServiceTask:            ServiceTask
             
         nette.userStorage: PersonUserStorage
             
@@ -43,3 +51,4 @@ common:
 production < common:
 
 development < common:
+
