@@ -226,7 +226,7 @@ CREATE TABLE task (
 -- TODO rozšířit pro ukládání textů úloh
 
 CREATE TABLE submit (
---	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- TODO K čemu je to dobré?
+	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- pro identifikaci v PHP skalárem
 	ct_id INT NOT NULL		COMMENT 'Contestant',
 	task_id INT NOT NULL		COMMENT 'Task',
 	submitted_on DATETIME NOT NULL,
