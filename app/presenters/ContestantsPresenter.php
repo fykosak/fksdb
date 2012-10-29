@@ -17,10 +17,10 @@ class ContestantsPresenter extends AuthenticatedPresenter {
 
         return $wizard;
     }
-    
-    protected function createComponentGridContestants($name){
+
+    protected function createComponentGridContestants($name) {
         $grid = new GridContestants();
-        
+
         return $grid;
     }
 
@@ -28,15 +28,14 @@ class ContestantsPresenter extends AuthenticatedPresenter {
         $servicePerson = $this->getService('ServicePerson');
         $connection = $servicePerson->getConnection();
 
+        // create person
+        $person = $wizard->getPerson();
+
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
 
-            // create person
-            $person = $wizard->getPerson();
-            
-            $person->sort_name = implode(' ', array_reverse(explode(' ', $person->display_name))); //TODO
 
             $servicePerson->save($person);
 
@@ -48,8 +47,10 @@ class ContestantsPresenter extends AuthenticatedPresenter {
             foreach ($dataPostContacts['post_contacts'] as $dataPostContact) {
                 $postContact = $servicePostContact->createNew(FormUtils::emptyStrToNull((array) $dataPostContact));
                 $postContact->getPostContact()->person_id = $person->person_id;
-                //TODO region from country and PSČ
-
+                if (!$postContact->getAddress()->inferRegion()) {
+                    $this->flashMessage(sprintf('Nezdařilo se přiřadit region dle PSČ %s.', $postContact->getAddress()->postal_code));
+                }
+                //TODO mazat staré adresy nebo je přímo upravovat
                 $servicePostContact->save($postContact);
             }
 

@@ -12,7 +12,10 @@ class FormPersonInfo extends Form {
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('display_name', 'Jméno')->setDisabled();
+        $this->addText('other_name', 'Jméno')
+                ->setDisabled();
+        $this->addText('family_name', 'Příjmení')
+                ->setDisabled();
 
         $this->addText('born', 'Datum narození'); //TODO date element
         $this->addText('id_number', 'Číslo OP');

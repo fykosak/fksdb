@@ -20,15 +20,37 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
      * @return AbstractModelSingle|null
      */
     public function getInfo() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
         return $this->ref(DbNames::TAB_PERSON_INFO, 'person_id');
     }
 
     public function getContestants() {
-        $this->person_id = null;
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
         return $this->related(DbNames::TAB_CONTESTANT, 'person_id');
     }
 
+    public function getSpamees() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        return $this->related(DbNames::TAB_SPAMEE, 'person_id');
+    }
+
+    public function getPostContacts() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
+    }
+
     public function getLastContestant(ModelContest $contest) {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
         $contestant = $this->getContestants()->where('contest_id = ?', $contest->contest_id)->order('year DESC')->fetch();
 
         if ($contestant) {
@@ -39,7 +61,7 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
     }
 
     public function getFullname() {
-        return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
+        return $this->display_name ? : $this->other_name . ' ' . $this->family_name;
         //return $this->first_name . ' ' . $this->last_name;
     }
 
@@ -61,16 +83,16 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
      */
     public static function parseFullname($fullname) {
         $names = explode(' ', $fullname);
-        $firstName = implode(' ', array_slice($names, 0, count($names) - 1));
-        $lastName = $names[count($names) - 1];
-        if (mb_substr($lastName, -1) == 'á') {
+        $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
+        $familyName = $names[count($names) - 1];
+        if (mb_substr($familyName, -1) == 'á') {
             $gender = 'F';
         } else {
             $gender = 'M';
         }
         return array(
-            'first_name' => $firstName,
-            'last_name' => $lastName,
+            'other_name' => $otherName,
+            'family_name' => $familyName,
             'gender' => $gender,
         );
     }

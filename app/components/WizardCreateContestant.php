@@ -15,7 +15,6 @@ class WizardCreateContestant extends WizardComponent {
     const STEP_CREATE_CONTESTANT = 'createContestant';
     const STEP_CREATE_LOGIN = 'createLogin';
     const STEP_PERSON_INFO = 'personInfo';
-    
     const SUBMIT_NEXT = 'next';
     const SUBMIT_FINISH = 'finish';
 
@@ -43,8 +42,7 @@ class WizardCreateContestant extends WizardComponent {
         $this->addStep($formContestant, self::STEP_CREATE_CONTESTANT, array($this, 'contestantSubmitted'));
         $this->registerStepSubmitter(self::STEP_CREATE_CONTESTANT, self::SUBMIT_NEXT);
         $this->registerStepSubmitter(self::STEP_CREATE_CONTESTANT, self::SUBMIT_FINISH);
-        $formContestant->loadSchools();     // must be called here (after attaching to a presenter)
-
+        
         $formLogin = new FormLogin();
         $formLogin->addSubmit(self::SUBMIT_NEXT, 'Pokračovat');
         $this->addStep($formLogin, self::STEP_CREATE_LOGIN, self::STEP_PERSON_INFO);
@@ -53,7 +51,7 @@ class WizardCreateContestant extends WizardComponent {
         $formPersonInfo = new FormPersonInfo();
         $formPersonInfo->addSubmit(self::SUBMIT_FINISH, 'Dokončit');
         $this->addStep($formPersonInfo, self::STEP_PERSON_INFO);
-        $this->registerStepSubmitter(self::STEP_PERSON_INFO, self::SUBMIT_NEXT);
+        $this->registerStepSubmitter(self::STEP_PERSON_INFO, self::SUBMIT_FINISH);
 
 
         $this->setFirstStep(self::STEP_FIND);
@@ -63,7 +61,7 @@ class WizardCreateContestant extends WizardComponent {
     //   --- submit handlers ----
     public function findSubmitted(Form $form) {
         $values = $form->getValues();
-        //TODO find results display again
+
         if ($values[FormPersonFind::ID_PERSON]) {
             return self::STEP_POST_CONTACTS;
         } else {
@@ -72,10 +70,10 @@ class WizardCreateContestant extends WizardComponent {
     }
 
     public function contestantSubmitted(Form $form) {
-        if($form[self::SUBMIT_FINISH]->isSubmittedBy()){
+        if ($form[self::SUBMIT_FINISH]->isSubmittedBy()) {
             return null;
         }
-        
+
         $values = $this->getData(self::STEP_FIND);
         if ($values[FormPersonFind::ID_PERSON]) {
             $loginService = $this->getPresenter()->getService('ServiceLogin');
@@ -114,22 +112,38 @@ class WizardCreateContestant extends WizardComponent {
     private function initCreatePerson(Form $form) {
         $values = $this->getData(self::STEP_FIND);
         $fullname = $values[FormPersonFind::FULLNAME];
-        $form->setDefaults(array('display_name' => $fullname));
+        $defaults = ModelPerson::parseFullname($fullname);
+        $form->setDefaults($defaults);
     }
 
     private function initPostContact(Form $form) {
         $form->setValues($this->getPerson()->toArray());
+
+        $postContacts = $this->getPerson()->getPostContacts();
+        $addresses = array();
+        while ($postContact = $postContacts->fetch()) {
+            $value = $postContact->address->toArray();
+            $value['type'] = $postContact->type;
+            $value['country_iso'] = $postContact->address->region->country_iso;
+            $addresses[] = $value;
+        }
+
+        $values = array(
+            FormPostContacts::POST_CONTACTS => $addresses,
+        );
+        $form->setDefaults($values);
         //TODO
     }
 
     private function initCreateContestant(Form $form) {
         $form->setValues($this->getPerson()->toArray());
-        //TODO update school year, class for current year
         //TODO predict from spamee
         $contestant = $this->getPerson()->getLastContestant($this->getPresenter()->getSelectedContest());
         if ($contestant !== null) {
             $form->setDefaults($contestant->toArray());
-        }        
+            //TODO nezobrazuje se to
+            $this->getPresenter()->flashMessage(sprintf('Formulář byl vyplněn hodnotami známými z %i. ročníku.', $contestant->year));
+        }
     }
 
     private function initCreateLogin(Form $form) {
