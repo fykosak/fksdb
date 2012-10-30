@@ -28,6 +28,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->loginRedirect();
         }
         $this->initOrgs();
+        //TODO zkontrolova, že je >= 1 org
     }
 
     protected function loginRedirect() {

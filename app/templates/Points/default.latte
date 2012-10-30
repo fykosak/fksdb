@@ -6,18 +6,26 @@
 {control pointsForm begin}
 {control pointsForm errors}
 
+<table>
+
+<tr n:block="tab_header">
+    <th>Jméno</th>
 {foreach $tasks as $task}
-    {$task->label} | 
-{/foreach}<br>
+    <th>{$task->label}</th>
+{/foreach}
+</tr>
 
 {foreach $control['pointsForm']['grid']->getComponents(false) as $contestantCont}
-    {$contestants[$contestantCont->name]->getPerson()->getFullname()}
+<tr>
+    <td>{$contestants[$contestantCont->name]->getPerson()->getFullname()}</td>
     {foreach $contestantCont->getComponents(false) as $cell}
-            {$cell['raw_points']->control},
+        <td>{$cell['raw_points']->control}</td>
     {/foreach}
-    <br>
+</tr>
+{if $iterator->getCounter() % 25 == 0}{include #tab_header}{/if}
 {/foreach}
     
+</table>
 {$control['pointsForm']['save']->control}
 {control pointsForm end}
 

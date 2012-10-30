@@ -10,7 +10,7 @@ class ServiceContestant extends AbstractServiceSingle {
 
     public function getCurrentContestants($contest_id, $year) {
         $contestants = $this->getTable()
-                ->select('person.display_name AS display_name')
+                ->select('person.family_name, person.other_name, person.display_name')
                 ->select('contestant.study_year')
                 ->select('school.name AS school_name');
 

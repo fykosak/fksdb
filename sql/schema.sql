@@ -10,11 +10,13 @@ USE fksdb;
 -- kontakty
 
 CREATE TABLE person (
-person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-display_name VARCHAR(511) NOT NULL COMMENT 'Celé jméno vč. příjmení',
-sort_name VARCHAR(255) NOT NULL COMMENT '„Příjmení“ (prioritní při abecedním řazení)',
-gender ENUM('M', 'F') NOT NULL
-);
+	person_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	family_name VARCHAR(255) NOT NULL COMMENT 'Příjmení (nebo více příjmení oddělených jednou mezerou)',
+	other_name VARCHAR(255) NOT NULL COMMENT 'Křestní jména, von, de atd., oddělená jednou mezerou',
+	display_name VARCHAR(511) NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>',
+	gender ENUM('M', 'F') NOT NULL
+)
+	COMMENT = 'řazení: <family_name><other_name>, zobrazení <other_name> <family_name>';
 
 CREATE TABLE country (		
 	country_iso CHAR(2) NOT NULL PRIMARY KEY COMMENT 'dvojznakový kód země dle ISO 3166-1',
@@ -32,16 +34,27 @@ CREATE TABLE region (
 )
 	COMMENT = 'Ciselnik regionu pro vyber skoly v registraci';
 
+CREATE TABLE psc_region (
+	psc CHAR(5) NOT NULL PRIMARY KEY,
+	region_id INT NOT NULL,
+	FOREIGN KEY (region_id) REFERENCES region(region_id) ON DELETE CASCADE
+)
+	COMMENT = 'mapování českých a slovenských PSČ na evidovaný region';
+
 CREATE TABLE address (		
 	address_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	street VARCHAR(255),
-	house_nr VARCHAR(255),
-	city VARCHAR(255) NOT NULL,
-	postal_code CHAR(5) COMMENT 'PSČ',
-	region_id INT, -- PSČ --> kraj není normální, ale pohodlné 
+	first_row VARCHAR(255) NULL COMMENT 'doplňkový řádek adresy (např. bytem u X Y)',
+	second_row VARCHAR(255) NULL COMMENT 'ještě doplňkovější řádek adresy (nikdo neví)',
+	target VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
+	city VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
+	postal_code CHAR(5) COMMENT 'PSČ (pro ČR a SR)',
+--  zdánlivě nenormální (PSČ->region), ale počítáme i s adresami s neCZ neSK PSČ
+	region_id INT NOT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
 	FOREIGN KEY (region_id) REFERENCES region(region_id)
 )
-	COMMENT = 'Adresa jako hodnotový objekt'; -- i jako immutable? TODO rozmyslet změnu adresy/stěhování
+	COMMENT = 'adresa jako poštovní nikoli územní identifikátor, immutable.';
+	-- nerozlišujeme změnu adresy (např. přejmenování ulice) od stěhování,
+	-- jelikož stejně nevevidujeme historii
 
 CREATE TABLE check_address (
 	address_id INT NOT NULL PRIMARY KEY,
@@ -86,7 +99,7 @@ CREATE TABLE person_info (
 	uk_login VARCHAR(8) NULL	COMMENT 'CAS login, pro orgy',
 	account VARCHAR(32) NULL	COMMENT 'bankovní účet jako text',
 	agreed DATETIME NULL		COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 )
 	COMMENT = 'Podrobné informace o osobě, zde jsou všechny osobní údaje (tm)';
 
@@ -108,9 +121,9 @@ CREATE TABLE post_contact (
 	post_contact_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	person_id INT NOT NULL,
 	address_id INT NOT NULL,
-	type ENUM('P', 'D') NOT NULL	COMMENT 'doručovací (Delivery), trvalá (Permanent)', -- TODO a ještě školní?
-	FOREIGN KEY (person_id) REFERENCES person(person_id), -- kvůli poštovnímu spamu odkaz na person, nikoli person_info
-	FOREIGN KEY (address_id) REFERENCES address(address_id)
+	type ENUM('P', 'D') NOT NULL	COMMENT 'doručovací (Delivery), trvalá (Permanent)', -- pokud trvalá == doručovací, uvede se jako trvalá
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE, -- kvůli poštovnímu spamu odkaz na person, nikoli person_info
+	FOREIGN KEY (address_id) REFERENCES address(address_id) ON DELETE CASCADE
 )
 	COMMENT = 'Přiřazení adres lidem vztahem M:N';
 
@@ -121,14 +134,14 @@ CREATE TABLE login (
 	person_id INT NOT NULL PRIMARY KEY,
 	login VARCHAR(255) NULL	COMMENT 'Login name',
 	email VARCHAR(255) NOT NULL,
-	hash VARCHAR(255) NULL 		COMMENT 'SHA1 hash hesla', -- TODO
+	hash CHAR(40) NULL 		COMMENT 'sha1(person_id . md5(password)) as hexadecimal', -- kvůli přenosu starých MD5 hashů a rainbow tables
 	fb_id VARCHAR(255) NULL		COMMENT 'ID pro přihlášení přes FB',
 	created DATETIME NOT NULL,
 	last_login DATETIME NULL,
 	active BOOL NOT NULL,
 	UNIQUE (login),
 	UNIQUE (email),
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 );
 
 CREATE TABLE `right` (
@@ -139,8 +152,8 @@ CREATE TABLE `right` (
 CREATE TABLE permission (
 	person_id INT NOT NULL,
 	right_id INT NOT NULL,
-	FOREIGN KEY (person_id) REFERENCES login(person_id),
-	FOREIGN KEY (right_id) REFERENCES `right`(right_id),
+	FOREIGN KEY (person_id) REFERENCES login(person_id) ON DELETE CASCADE,
+	FOREIGN KEY (right_id) REFERENCES `right`(right_id) ON DELETE CASCADE,
 	UNIQUE (person_id, right_id)
 );
 
@@ -150,7 +163,7 @@ CREATE TABLE auth_token (
 	type VARCHAR(31),
 	since DATETIME NOT NULL,
 	until DATETIME,
-	FOREIGN KEY (person_id) REFERENCES login(person_id)
+	FOREIGN KEY (person_id) REFERENCES login(person_id) ON DELETE CASCADE
 );
 
 -- seminář: ucastnici, ulohy a orgové
@@ -191,7 +204,7 @@ CREATE TABLE org (
 	UNIQUE(contest_id, person_id),
 	UNIQUE(contest_id, tex_signature),
 	FOREIGN KEY (person_id) REFERENCES person(person_id),
-	FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
+	FOREIGN KEY (contest_id) REFERENCES contest(contest_id) ON DELETE CASCADE
 );
 
 CREATE TABLE task (
@@ -213,7 +226,7 @@ CREATE TABLE task (
 -- TODO rozšířit pro ukládání textů úloh
 
 CREATE TABLE submit (
---	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- TODO K čemu je to dobré?
+	submit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, -- pro identifikaci v PHP skalárem
 	ct_id INT NOT NULL		COMMENT 'Contestant',
 	task_id INT NOT NULL		COMMENT 'Task',
 	submitted_on DATETIME NOT NULL,
@@ -238,7 +251,7 @@ CREATE TABLE si_settings ( -- TODO podle vymyšlení
 	correction BOOL NOT NULL	COMMENT 'Odeslat upozornění o opravě řešení.',
 	sendPdf BOOL NOT NULL		COMMENT 'Přiložit k tomuto upozornění soubor s opravou.',
 	otherSpam BOOL NOT NULL	COMMENT 'Další upozornění – jarní, kalíšek…',
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 );
 
 CREATE TABLE si_log (
@@ -246,7 +259,7 @@ CREATE TABLE si_log (
 	type VARCHAR(64) NOT NULL	COMMENT '„tasks“, „timer3“, …',
 	note VARCHAR(64)		COMMENT '„24-1“… ',
 	`time` DATETIME NOT NULL,
-	FOREIGN KEY (person_id) REFERENCES person(person_id)
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE
 )
 	COMMENT = 'Skript si podle logu dává pozor, aby někoho nespamoval dvakrát ohledně toho samého.';
 
@@ -266,7 +279,7 @@ CREATE TABLE si_spamee (
 	class VARCHAR(16) 		COMMENT 'třída, do níž chodí, př. IV.B',
 	study_year TINYINT		COMMENT 'ročník, který studuje 6--9 nebo 1--4 ', 
 	note VARCHAR(255)		COMMENT 'poznámka, např. počet bodů, které měl při sběru',
-	FOREIGN KEY (person_id) REFERENCES person(person_id),
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE CASCADE,
 	FOREIGN KEY (school_id) REFERENCES school(school_id),
 	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id)	
 );
@@ -286,8 +299,8 @@ CREATE TABLE `action` (
 	collection_id INT NULL		COMMENT 'spamovací sběr z této akce, je-li webově přihlašovaná',
 	fb_album_id BIGINT NULL 	COMMENT 'id galerie na Facebooku',
 	report TEXT NULL 			COMMENT '(HTML) zápis z proběhlé akce',
-	FOREIGN KEY (contest_id) REFERENCES contest(contest_id),
-	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id)
+	FOREIGN KEY (contest_id) REFERENCES contest(contest_id) ON DELETE CASCADE,
+	FOREIGN KEY (collection_id) REFERENCES si_collection(collection_id) ON DELETE SET NULL
 );
 
 CREATE TABLE action_application (

@@ -14,7 +14,10 @@ class FormContestant extends Form {
     public function __construct(IComponentContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $this->addText('display_name', 'Jméno')->setDisabled();
+        $this->addText('other_name', 'Jméno')
+                ->setDisabled();
+        $this->addText('family_name', 'Příjmení')
+                ->setDisabled();
 
         $this->addText('study_year', 'Ročník')
                 ->addRule(Form::INTEGER, 'Ročník musí být číslo.')
@@ -24,12 +27,11 @@ class FormContestant extends Form {
                 ->addRule(Form::MAX_LENGTH, 'Příliš dlouhé označní třídy.', 8);
 
         //TODO better element for school
-        $this->addSelect(self::SCHOOL, 'Škola');
+        //TODO remove dependency on evironment
+        $schoolElement = new SchoolElement('Škola', \Nette\Environment::getService('ServiceSchool'));
+        $this->addComponent($schoolElement, self::SCHOOL);
     }
 
-    public function loadSchools() {
-        $service = $this->getPresenter()->getService('ServiceSchool');
-        $this[FormContestant::SCHOOL]->setItems($service->getTable()->order('name')->fetchPairs('school_id', 'name'));
-    }
+    
 
 }

@@ -46,7 +46,7 @@ class Authenticator extends Object implements IAuthenticator {
      * @return string
      */
     public static function calculateHash($password, $login) {
-        return sha1($password); //TODO
+        return sha1($login->person_id . md5($password));
     }
 
 }
