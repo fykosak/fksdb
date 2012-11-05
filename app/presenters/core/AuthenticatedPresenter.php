@@ -99,7 +99,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $yc = $this->getService('yearCalculator');
         $currentYear = $yc->getCurrentYear($this->contestId);
 
-        $form->addSelect('year')
+        $form->addSelect('year', 'Ročník')
                 ->setItems(range(1, $currentYear + 1), false)
                 ->setDefaultValue($this->year);
 

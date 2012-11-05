@@ -28,6 +28,7 @@ common:
     services:
         authenticator: Authenticator
         yearCalculator: YearCalculator
+        seriesCalculator: SeriesCalculator
         # ORM services
         ServiceAddress:         ServiceAddress
         ServiceContestant:      ServiceContestant

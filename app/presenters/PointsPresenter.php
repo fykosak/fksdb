@@ -1,4 +1,5 @@
 <?php
+
 use Nette\Application\UI\Form;
 
 class PointsPresenter extends TaskTimesContestantPresenter {
@@ -31,7 +32,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
                 $points->addCondition(Form::FILLED)
                         ->addRule(Form::NUMERIC, 'Počet bodů má být přirozené číslo.');
                 $points->getControlPrototype()->tabindex($ct_i + $ct_cnt * $t_i + 1);
-                
+
 
                 if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
                     $submit = $submitsTable[$contestant->ct_id][$task->task_id];
@@ -47,8 +48,8 @@ class PointsPresenter extends TaskTimesContestantPresenter {
         }
 
         $submit = $form->addSubmit('save', 'Uložit');
-        $submit->getControlPrototype()->tabindex($t_cnt*$ct_cnt + 1);
-        
+        $submit->getControlPrototype()->tabindex($t_cnt * $ct_cnt + 1);
+
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
     }
 
