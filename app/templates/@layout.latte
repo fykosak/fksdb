@@ -19,14 +19,15 @@
     <h1>{include #title}</h1>
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 <div n:if="$user->isLoggedIn()" class="user-info">
-    Přihlášen {$user->getIdentity()->getFullname()}
-    <a n:href="authentication:logout">Odhlásit</a>
-    Rola orga:
+    <p>Přihlášen <em>{$user->getIdentity()->getFullname()}</em>
+    <a n:href="authentication:logout">Odhlásit</a></p>
+    <p>Rola orga:
         {foreach $control->getAvailableContests() as $contest}
-    <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId">{$contest->name}</a>
+    <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
         {/foreach}
 
             {control formSelectYear}
+    </p>
 </div>
     {include #content}
 </body>
