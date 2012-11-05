@@ -12,7 +12,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @var int
      * @persistent
      */
-    public $orgId;
+    public $contestId;
 
     /**
      *
@@ -20,15 +20,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @persistent
      */
     public $year;
-    protected $activeOrgs = array();
+    protected $availableContests = array();
 
     protected function startup() {
         parent::startup();
         if (!$this->getUser()->isLoggedIn()) {
             $this->loginRedirect();
         }
-        $this->initOrgs();
-        //TODO zkontrolova, že je >= 1 org
+        $this->initContests();
     }
 
     protected function loginRedirect() {
@@ -44,34 +43,51 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     //
     // ------ org choosing -----
     //
-    protected function initOrgs() {
+    protected function initContests() {
         $yc = $this->getService('yearCalculator');
-        $this->activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($yc);
+        $activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($yc);
 
-        $ordIds = array_keys($this->activeOrgs);
-        if ($this->orgId === null) {
-            $this->orgId = $ordIds[0]; //first org
+        if (count($activeOrgs) == 0) {
+            $this->flashMessage('Ještě (už) nemáš organizátorský přístup.');
+            $this->getUser()->logout();
         }
-        if (!isset($this->activeOrgs[$this->orgId])) {
-            $this->handleChangeOrg($this->orgId);
+
+        $contests = array();
+        foreach ($activeOrgs as $org) {
+            $this->availableContests[] = $org->contest;
+            $contests[$org->contest_id] = true; // to get unique contests
+        }
+        $contestIds = array_keys($contests);
+        
+        $session = $this->getSession()->getSection('presets');
+
+        $defaultContest = isset($session->defaultContest) ? $session->defaultContest : $contestIds[0]; // by default choose the first
+        $defaultYear = isset($session->defaultYear) ? $session->defaultYear : $yc->getCurrentYear($this->contestId);
+
+        if ($this->contestId === null) {
+            $this->contestId = $defaultContest;
+        }
+
+        if (!isset($contests[$this->contestId])) {
+            $this->handleChangeContest($defaultContest);
         }
         if ($this->year === null) {
-            $this->year = $yc->getCurrentYear($this->activeOrgs[$this->orgId]->contest_id);
+            $this->year = $defaultYear;
         }
+        
+        // remember
+        $session->defaultContest = $this->contestId;
+        $session->defaultYear = $this->year;
     }
 
-    public function getActiveOrgs() {
-        return $this->activeOrgs;
+    public function getAvailableContests() {
+        return $this->availableContests;
     }
 
-    public function handleChangeOrg($orgId) {
-        if (!isset($this->activeOrgs[$orgId])) {
-            $ordIds = array_keys($this->activeOrgs);
-            $orgId = $ordIds[0]; //first org
-        }
-        $this->orgId = $orgId;
+    public function handleChangeContest($contestId) {
+        $this->contestId = $contestId;
         $yc = $this->getService('yearCalculator');
-        $this->year = $yc->getCurrentYear($this->activeOrgs[$this->orgId]->contest_id);
+        $this->year = $yc->getCurrentYear($this->contestId);
         $this->redirect('this');
     }
 
@@ -81,7 +97,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     protected function createComponentFormSelectYear($name) {
         $form = new Form($this, $name);
         $yc = $this->getService('yearCalculator');
-        $currentYear = $yc->getCurrentYear($this->activeOrgs[$this->orgId]->contest_id);
+        $currentYear = $yc->getCurrentYear($this->contestId);
 
         $form->addSelect('year')
                 ->setItems(range(1, $currentYear + 1), false)
@@ -97,38 +113,12 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-//    public function getChosenYear() {
-//        $sess = $this->getSession('contest');
-//        $orgs = $this->getActiveOrgs();
-//        $org = $orgs[$this->getChosenOrgId()];
-//
-//        if (!isset($sess->chosenYears) || !isset($sess->chosenYears[$org->contest_id])) {
-//            $yc = $this->getService('yearCalculator');
-//            $this->setChosenYear($yc->getCurrentYear($org->contest_id)); // active year by default
-//        }
-//        return $sess->chosenYears[$org->contest_id];
-//    }
-//
-//    public function setChosenYear($year) {
-//        $sess = $this->getSession('contest');
-//        $orgs = $this->getActiveOrgs();
-//        $org = $orgs[$this->getChosenOrgId()];
-//        $yc = $this->getService('yearCalculator');
-//
-//        $year = $year;
-//
-//        if (!isset($sess->chosenYears)) {
-//            $sess->chosenYears = array();
-//        }
-//        $sess->chosenYears[$org->contest_id] = $year;
-//    }
-
     private $selectedContest;
 
     public function getSelectedContest() {
         if ($this->selectedContest === null) {
             $service = $this->context->getService('ServiceContest');
-            $this->selectedContest = $service->findByPrimary(1); //TODO
+            $this->selectedContest = $service->findByPrimary($this->contestId);
         }
         return $this->selectedContest;
     }

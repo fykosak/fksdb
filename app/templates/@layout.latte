@@ -19,8 +19,8 @@
     Přihlášen {$user->getIdentity()->getFullname()}
     <a n:href="authentication:logout">Odhlásit</a>
     Rola orga:
-        {foreach $control->getActiveOrgs() as $org}
-    <a n:href="changeOrg!, orgId => $org->org_id" n:tag-if="$org->org_id != $control->orgId">{$org->contest->name}</a>
+        {foreach $control->getAvailableContests() as $contest}
+    <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId">{$contest->name}</a>
         {/foreach}
 
             {control formSelectYear}

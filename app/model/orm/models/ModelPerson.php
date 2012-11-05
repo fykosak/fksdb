@@ -1,7 +1,6 @@
 <?php
 
 use Nette\Security\IIdentity;
-use Nette\Database\Table\ActiveRow as TableRow;
 
 /**
  *
@@ -47,6 +46,11 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
+    /**
+     * 
+     * @param ModelContest $contest
+     * @return null|ModelContestant the most recent contestant for the person and given contest (if any)
+     */
     public function getLastContestant(ModelContest $contest) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -62,9 +66,13 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
 
     public function getFullname() {
         return $this->display_name ? : $this->other_name . ' ' . $this->family_name;
-        //return $this->first_name . ' ' . $this->last_name;
     }
 
+    /**
+     * 
+     * @param YearCalculator $yearCalculator
+     * @return array of ModelOrg indexed by org_id
+     */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = array();
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {

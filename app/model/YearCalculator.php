@@ -10,7 +10,7 @@ class YearCalculator extends Object {
             case ModelContest::ID_FYKOS:
                 return ceil((time() - strtotime('1987-09-01')) / self::YEAR);
             case ModelContest::ID_VYFUK:
-                return ceil((time() - strtotime('2010-09-01')) / self::YEAR);
+                return ceil((time() - strtotime('2011-09-01')) / self::YEAR);
             default:
                 return null;
         }
