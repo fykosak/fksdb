@@ -6,7 +6,7 @@
 #
 common:
     parameters:
-
+        wdslUrl: file:///home/michal/fykos/web/fksweb/fksdb.wsdl
     php:
         date.timezone: Europe/Prague
         # zlib.output_compression: yes
@@ -26,9 +26,11 @@ common:
 
 
     services:
+        # data services
         authenticator: Authenticator
         yearCalculator: YearCalculator
         seriesCalculator: SeriesCalculator
+        resultsModelFactory: ResultsModelFactory
         # ORM services
         ServiceAddress:         ServiceAddress
         ServiceContestant:      ServiceContestant
@@ -39,9 +41,19 @@ common:
         ServicePerson:          ServicePerson
         ServicePersonInfo:      ServicePersonInfo
         ServicePostContact:     ServicePostContact
+        ServiceRegion:          ServiceRegion
         ServiceSubmit:          ServiceSubmit
         ServiceSchool:          ServiceSchool
         ServiceTask:            ServiceTask
+        # web services
+        soapServer:
+            class: SoapServer(%wdslUrl%)
+            setup:
+                - setObject(@webServiceModel)
+
+        webServiceModel:        WebServiceModel
+            
+            
             
         nette.userStorage: PersonUserStorage
             
