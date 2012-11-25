@@ -13,8 +13,12 @@ class Authenticator extends Object implements IAuthenticator {
     /** @var ServiceLogin */
     private $serviceLogin;
 
-    public function __construct(ServiceLogin $serviceLogin) {
+    /** @var YearCalculator */
+    private $yearCalculator;
+
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yc) {
         $this->serviceLogin = $serviceLogin;
+        $this->yearCalculator = $yc;
     }
 
     /**
@@ -33,6 +37,10 @@ class Authenticator extends Object implements IAuthenticator {
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
             throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+        }
+
+        if (count($login->getPerson()->getActiveOrgs($this->yearCalculator)) == 0) {
+            throw new AuthenticationException('Neorganizátorský účet.', self::INVALID_CREDENTIAL);
         }
 
         $login->last_login = DateTime::from(time());

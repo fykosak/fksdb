@@ -47,10 +47,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $yc = $this->getService('yearCalculator');
         $activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($yc);
 
-        if (count($activeOrgs) == 0) {
-            $this->flashMessage('Ještě (už) nemáš organizátorský přístup.');
-            $this->getUser()->logout();
-        }
 
         $contests = array();
         foreach ($activeOrgs as $org) {
