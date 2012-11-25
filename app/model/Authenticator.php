@@ -9,6 +9,7 @@ use Nette\DateTime;
  * Users authenticator.
  */
 class Authenticator extends Object implements IAuthenticator {
+    const HASHED_PASSWORD = 10;
 
     /** @var ServiceLogin */
     private $serviceLogin;
