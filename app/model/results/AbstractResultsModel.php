@@ -8,12 +8,45 @@
 abstract class AbstractResultsModel implements IResultsModel {
 
     /**
+     * @var int
+     */
+    protected $year;
+
+    /**
+     * @var ModelContest
+     */
+    protected $contest;
+
+    /**
+     * @var ServiceTask
+     */
+    protected $serviceTask;
+
+    /**
+     * @var \Nette\Database\Connection
+     */
+    protected $connection;
+
+    /**
+     * @var IEvaluationStrategy
+     */
+    protected $evaluationStrategy;
+
+    function __construct(ModelContest $contest, ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year, IEvaluationStrategy $evaluationStrategy) {
+        $this->contest = $contest;
+        $this->serviceTask = $serviceTask;
+        $this->connection = $connection;
+        $this->year = $year;
+        $this->evaluationStrategy = $evaluationStrategy;
+    }
+
+    /**
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
     public function getData($category) {
         $sql = $this->composeQuery($category);
-        echo $sql ."<br><br>";
+        
         $stmt = $this->connection->query($sql);
         $result = $stmt->fetchAll();
 
@@ -65,6 +98,21 @@ abstract class AbstractResultsModel implements IResultsModel {
             }
         }
         return "(" . implode(') and (', $where) . ")";
+    }
+
+    /**
+     * @return \Nette\Database\Table\Selection
+     * @throws \Nette\InvalidStateException
+     */
+    protected function getTasks($series) {
+        return $this->serviceTask->getTable()
+                        ->select('task_id, label, points')
+                        ->where(array(
+                            'contest_id' => $this->contest->contest_id,
+                            'year' => $this->year,
+                            'series' => $series,
+                        ))
+                        ->order('tasknr');
     }
 
 }

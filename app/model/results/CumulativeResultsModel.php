@@ -1,50 +1,16 @@
 <?php
 
 /**
- * Detailed results of a single series. Number of tasks is dynamic.
+ * Cumulative results (sums and precentage) for chosen series.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
     /**
-     * @var int
-     */
-    protected $year;
-
-    /**
-     * @var ModelContest
-     */
-    protected $contest;
-
-    /**
-     * @var ServiceTask
-     */
-    protected $serviceTask;
-
-    /**
-     * @var \Nette\Database\Connection
-     */
-    protected $connection;
-
-    /**
-     * @var int
+     * @var array of int
      */
     protected $series;
-
-    /**
-     *
-     * @var IEvaluationStrategy
-     */
-    protected $evaluationStrategy;
-
-    function __construct(ModelContest $contest, ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year, IEvaluationStrategy $evaluationStrategy) {
-        $this->contest = $contest;
-        $this->serviceTask = $serviceTask;
-        $this->connection = $connection;
-        $this->year = $year;
-        $this->evaluationStrategy = $evaluationStrategy;
-    }
 
     /**
      * Cache
@@ -146,7 +112,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         $query = "select " . implode(', ', $select);
         $query .= $from;
 
-        $where = $this->conditionsToWhere($conditions);        
+        $where = $this->conditionsToWhere($conditions);
         $query .= " where $where";
 
         $query .= " group by p.person_id"; //abuse MySQL misimplementation of GROUP BY

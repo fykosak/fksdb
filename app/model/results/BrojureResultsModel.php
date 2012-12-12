@@ -5,12 +5,20 @@
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DetailResultsModel extends AbstractResultsModel {
+class BrojureResultsModel extends AbstractResultsModel {
+
+    const COL_SERIES_PREFIX = 's';
 
     /**
-     * @var int
+     * @var array of int
      */
     protected $series;
+
+    /**
+     * Number of (single) series that is listed in detail
+     * @var int
+     */
+    protected $listedSeries;
 
     /**
      * Cache
@@ -24,17 +32,42 @@ class DetailResultsModel extends AbstractResultsModel {
      * @return array
      */
     public function getDataColumns() {
+        if ($this->series === null) {
+            throw new \Nette\InvalidStateException('Series not specified.');
+        }
+
         if ($this->dataColumns === null) {
-            $this->dataColumns = array();
-            $sum = 0;
-            foreach ($this->getTasks($this->series) as $task) {
+            foreach ($this->getTasks($this->listedSeries) as $task) {
                 $this->dataColumns[] = array(
                     self::COL_DEF_LABEL => $task->label,
                     self::COL_DEF_LIMIT => $task->points,
                     self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
                 );
-                $sum += $task->points;
             }
+
+            $stmt = $this->connection->query('select t.series, sum(t.points)
+            from task t
+            where t.contest_id = ? and t.year = ?
+            group by t.series', $this->contest->contest_id, $this->year);
+            $seriesPoints = $stmt->fetchPairs();
+
+
+
+            $sum = 0;
+            foreach ($this->getSeries() as $series) {
+                $points = isset($seriesPoints[$series]) ? $seriesPoints[$series] : null;
+                $this->dataColumns[] = array(
+                    self::COL_DEF_LABEL => self::COL_SERIES_PREFIX . $series,
+                    self::COL_DEF_LIMIT => $points,
+                    self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
+                );
+                $sum += $points;
+            }
+            $this->dataColumns[] = array(
+                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LIMIT => 100,
+                self::COL_ALIAS => self::ALIAS_PERCENTAGE,
+            );
             $this->dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
@@ -49,7 +82,16 @@ class DetailResultsModel extends AbstractResultsModel {
     }
 
     public function setSeries($series) {
+        $this->dataColumns = null;
         $this->series = $series;
+    }
+
+    public function getListedSeries() {
+        return $this->listedSeries;
+    }
+
+    public function setListedSeries($listedSeries) {
+        $this->listedSeries = $listedSeries;
     }
 
     public function getCategories() {
@@ -60,19 +102,29 @@ class DetailResultsModel extends AbstractResultsModel {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');
         }
+        if (array_search($this->listedSeries, $this->series) === false) {
+            throw new \Nette\InvalidStateException('Listed series is not among series.');
+        }
 
         $select = array();
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 
-        $tasks = $this->getTasks($this->series);
+        $tasks = $this->getTasks($this->listedSeries);
         $i = 0;
         foreach ($tasks as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = "round(MAX(IF(t.task_id = " . $task->task_id . ", " . $points . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;
         }
+
         $sum = $this->evaluationStrategy->getSumColumn();
+        foreach ($this->getSeries() as $series) {
+            $select[] = "round(SUM(IF(t.series = " . $series . ", " . $sum . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
+            $i += 1;
+        }
+
+        $select[] = "round(100 * SUM($sum) / SUM(IF(s.raw_points IS NOT NULL, t.points, NULL))) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
@@ -86,7 +138,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         $conditions = array(
             'ct.year' => $this->year,
             'ct.contest_id' => $this->contest->contest_id,
-            't.series' => $this->series,
+            't.series' => $this->getSeries(),
             'ct.study_year' => $study_years,
         );
 

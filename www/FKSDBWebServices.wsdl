@@ -29,6 +29,7 @@
 							</xsd:sequence>
 						</xsd:complexType>
 					</xsd:element>
+                                        <xsd:element name="brojure" type="fksres:series-list-type" minOccurs="0" maxOccures="1"/>
 				</xsd:sequence>
 			</xsd:complexType>							
 			<xsd:complexType name="AuthenticationCredentialsType">

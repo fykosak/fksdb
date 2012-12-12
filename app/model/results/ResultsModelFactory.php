@@ -50,6 +50,20 @@ class ResultsModelFactory {
         return new DetailResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
     }
 
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     * @return IResultsModel
+     */
+    public function createBrojureResultsModel(ModelContest $contest, $year) {
+        $evaluationStrategy = $this->findEvaluationStrategy($contest, $year);
+        if ($evaluationStrategy === null) {
+            throw new Nette\InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+        }
+        return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+    }
+
     private function findEvaluationStrategy(ModelContest $contest, $year) {
         if ($contest->contest_id == ModelContest::ID_FYKOS) {
             if ($year >= 25) {

@@ -76,7 +76,6 @@ class WebServiceModel {
         $doc->appendChild($resultsNode);
 
 
-
         if (isset($args->detail)) {
             $resultsModel = $this->resultsModelFactory->createDetailResultsModel($contest, $args->year);
 
@@ -99,6 +98,21 @@ class WebServiceModel {
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
+
+        if (isset($args->brojure)) {
+            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
+
+            $series = explode(' ', $args->brojure);
+            $this->log('in brojure' . var_export($series, true));
+            foreach ($series as $seriesSingle) {
+                $resultsModel->setListedSeries($seriesSingle);
+                $resultsModel->setSeries(range(1, $seriesSingle));
+                $this->log('will append child');
+                $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
+                $this->log('appended child');
+            }
+        }
+
         $doc->formatOutput = true;
 
         return new SoapVar($doc->saveXML($resultsNode), XSD_ANYXML);
@@ -133,51 +147,73 @@ class WebServiceModel {
         return $cumulativeNode;
     }
 
+    private function createBrojureNode(IResultsModel $resultsModel, DOMDocument $doc) {
+        $this->log('A');
+        $brojureNode = $doc->createElement('brojure');
+        $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $this->log('B');
+        $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
+        $this->log('C');
+
+        $this->fillNodeWithCategories($resultsModel, $brojureNode, $doc);
+        $this->log('D');
+        return $brojureNode;
+    }
+
     private function fillNodeWithCategories(IResultsModel $resultsModel, DOMElement $node, DOMDocument $doc) {
-        foreach ($resultsModel->getCategories() as $category) {
-            // category node
-            $categoryNode = $doc->createElement('category');
-            $node->appendChild($categoryNode);
-            $categoryNode->setAttribute('id', $category->id);
+        $this->log('filling with categories');
+        try {
+            foreach ($resultsModel->getCategories() as $category) {
+                // category node
+                $categoryNode = $doc->createElement('category');
+                $node->appendChild($categoryNode);
+                $categoryNode->setAttribute('id', $category->id);
+                $this->log($category->id . ' fitire');
 
-            $columnDefsNode = $doc->createElement('column-definitions');
-            $categoryNode->appendChild($columnDefsNode);
+                $columnDefsNode = $doc->createElement('column-definitions');
+                $categoryNode->appendChild($columnDefsNode);
 
-            // columns definitions
-            foreach ($resultsModel->getDataColumns() as $column) {
-                $columnDefNode = $doc->createElement('column-definition');
-                $columnDefsNode->appendChild($columnDefNode);
-
-                $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
-                $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
-            }
-
-            // data
-            $dataNode = $doc->createElement('data');
-            $categoryNode->appendChild($dataNode);
-
-            // data for each contestant
-            foreach ($resultsModel->getData($category) as $row) {
-                $contestantNode = $doc->createElement('contestant');
-                $dataNode->appendChild($contestantNode);
-
-                $contestantNode->setAttribute('name', $row[IResultsModel::DATA_NAME]);
-                $contestantNode->setAttribute('school', $row[IResultsModel::DATA_SCHOOL]);
-
-                // rank
-                $rankNode = $doc->createElement('rank');
-                $contestantNode->appendChild($rankNode);
-                $rankNode->setAttribute('from', $row[IResultsModel::DATA_RANK_FROM]);
-                if (isset($row[IResultsModel::DATA_RANK_TO]) && $row[IResultsModel::DATA_RANK_FROM] != $row[IResultsModel::DATA_RANK_TO]) {
-                    $rankNode->setAttribute('to', $row[IResultsModel::DATA_RANK_TO]);
-                }
-
-                // data columns
+                // columns definitions
                 foreach ($resultsModel->getDataColumns() as $column) {
-                    $columnNode = $doc->createElement('column', $row[$column[IResultsModel::COL_ALIAS]]);
-                    $contestantNode->appendChild($columnNode);
+                    $columnDefNode = $doc->createElement('column-definition');
+                    $columnDefsNode->appendChild($columnDefNode);
+
+                    $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
+                    $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
+
+                    $this->log($column[IResultsModel::COL_DEF_LABEL] . ' coldef');
+                }
+
+                // data
+                $dataNode = $doc->createElement('data');
+                $categoryNode->appendChild($dataNode);
+
+                // data for each contestant
+                foreach ($resultsModel->getData($category) as $row) {
+                    $contestantNode = $doc->createElement('contestant');
+                    $dataNode->appendChild($contestantNode);
+
+                    $contestantNode->setAttribute('name', $row[IResultsModel::DATA_NAME]);
+                    $contestantNode->setAttribute('school', $row[IResultsModel::DATA_SCHOOL]);
+                    $this->log($row[IResultsModel::DATA_NAME] . ' ctnst');
+                    // rank
+                    $rankNode = $doc->createElement('rank');
+                    $contestantNode->appendChild($rankNode);
+                    $rankNode->setAttribute('from', $row[IResultsModel::DATA_RANK_FROM]);
+                    if (isset($row[IResultsModel::DATA_RANK_TO]) && $row[IResultsModel::DATA_RANK_FROM] != $row[IResultsModel::DATA_RANK_TO]) {
+                        $rankNode->setAttribute('to', $row[IResultsModel::DATA_RANK_TO]);
+                    }
+
+                    // data columns
+                    foreach ($resultsModel->getDataColumns() as $column) {
+                        $columnNode = $doc->createElement('column', $row[$column[IResultsModel::COL_ALIAS]]);
+                        $contestantNode->appendChild($columnNode);
+                    }
                 }
             }
+        } catch (Exception $e) {
+            Nette\Diagnostics\Debugger::log($e);
+            throw new SoapFault('Receiver', 'Internal error.');
         }
     }
 
