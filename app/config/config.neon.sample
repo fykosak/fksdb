@@ -31,6 +31,7 @@ common:
         yearCalculator: YearCalculator
         seriesCalculator: SeriesCalculator
         resultsModelFactory: ResultsModelFactory
+        statsModelFactory: StatsModelFactory
         # ORM services
         ServiceAddress:         ServiceAddress
         ServiceContestant:      ServiceContestant

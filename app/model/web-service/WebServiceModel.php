@@ -22,6 +22,11 @@ class WebServiceModel {
     private $resultsModelFactory;
 
     /**
+     * @var StatsModelFactory
+     */
+    private $statsModelFactory;
+
+    /**
      * @var ModelPerson
      */
     private $authenticatedUser;
@@ -31,9 +36,10 @@ class WebServiceModel {
      */
     private $authenticator;
 
-    function __construct(Nette\Security\IAuthenticator $authenticator, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory) {
+    function __construct(Nette\Security\IAuthenticator $authenticator, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory) {
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
+        $this->statsModelFactory = $statsModelFactory;
         $this->authenticator = $authenticator;
     }
 
@@ -115,6 +121,54 @@ class WebServiceModel {
         return new SoapVar($doc->saveXML($resultsNode), XSD_ANYXML);
     }
 
+    public function GetStats($args) {
+        $this->checkAuthentication(__FUNCTION__);
+        if (!isset($this->contestMap[$args->contest])) {
+            throw new SoapFault('Sender', 'Unknown contest.');
+        }
+
+        $contest = $this->serviceContest->findByPrimary($this->contestMap[$args->contest]);
+        $year = (string) $args->year;
+
+        $doc = new DOMDocument();
+        $statsNode = $doc->createElement('stats');
+        $doc->appendChild($statsNode);
+
+        $model = $this->statsModelFactory->createTaskStatsModel($contest, $year);
+
+        if (isset($args->series)) {
+            if(!is_array($args->series)){
+                $args->series = array($args->series);
+            }
+            foreach ($args->series as $series) {
+                $seriesNo = $series->series;
+                $model->setSeries($seriesNo);
+                $tasks = $series->{'_'};
+                foreach ($model->getData(explode(' ', $tasks)) as $task) {
+                    $taskNode = $doc->createElement('task');
+                    $statsNode->appendChild($taskNode);
+
+                    $taskNode->setAttribute('series', $seriesNo);
+                    $taskNode->setAttribute('label', $task['label']);
+					
+					$node = $doc->createElement('points', $task['points']);
+                    $taskNode->appendChild($node);
+
+                    $node = $doc->createElement('solvers', $task['task_count']);
+                    $taskNode->appendChild($node);
+
+                    $node = $doc->createElement('average', $task['task_avg']);
+                    $taskNode->appendChild($node);
+                }
+            }
+        }
+        
+
+        $doc->formatOutput = true;
+
+        return new SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
+    }
+
     private function checkAuthentication($serviceName) {
         if (!$this->authenticatedUser) {
             $this->log("Unauthenticated access to $serviceName.");
@@ -171,7 +225,6 @@ class WebServiceModel {
 
                     $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
                     $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
-
                 }
 
                 // data

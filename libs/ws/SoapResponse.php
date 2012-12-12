@@ -12,12 +12,15 @@ class SoapResponse implements Nette\Application\IResponse {
     private $soapServer;
 
     public function __construct(SoapServer $server) {
-        $this->soapServer = $server;        
-        
+        $this->soapServer = $server;
     }
 
     public function send(\Nette\Http\IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
-        $this->soapServer->handle();
+        try {
+            $this->soapServer->handle();
+        } catch (Exception $e) {
+            Nette\Diagnostics\Debugger::log($e);
+        }
     }
 
 }
