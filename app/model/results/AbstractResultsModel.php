@@ -46,7 +46,7 @@ abstract class AbstractResultsModel implements IResultsModel {
      */
     public function getData($category) {
         $sql = $this->composeQuery($category);
-        
+
         $stmt = $this->connection->query($sql);
         $result = $stmt->fetchAll();
 

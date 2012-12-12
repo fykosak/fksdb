@@ -103,13 +103,10 @@ class WebServiceModel {
             $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
 
             $series = explode(' ', $args->brojure);
-            $this->log('in brojure' . var_export($series, true));
             foreach ($series as $seriesSingle) {
                 $resultsModel->setListedSeries($seriesSingle);
                 $resultsModel->setSeries(range(1, $seriesSingle));
-                $this->log('will append child');
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
-                $this->log('appended child');
             }
         }
 
@@ -148,27 +145,21 @@ class WebServiceModel {
     }
 
     private function createBrojureNode(IResultsModel $resultsModel, DOMDocument $doc) {
-        $this->log('A');
         $brojureNode = $doc->createElement('brojure');
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
-        $this->log('B');
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
-        $this->log('C');
 
         $this->fillNodeWithCategories($resultsModel, $brojureNode, $doc);
-        $this->log('D');
         return $brojureNode;
     }
 
     private function fillNodeWithCategories(IResultsModel $resultsModel, DOMElement $node, DOMDocument $doc) {
-        $this->log('filling with categories');
         try {
             foreach ($resultsModel->getCategories() as $category) {
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
                 $categoryNode->setAttribute('id', $category->id);
-                $this->log($category->id . ' fitire');
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);
@@ -181,7 +172,6 @@ class WebServiceModel {
                     $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
                     $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
 
-                    $this->log($column[IResultsModel::COL_DEF_LABEL] . ' coldef');
                 }
 
                 // data
@@ -195,7 +185,6 @@ class WebServiceModel {
 
                     $contestantNode->setAttribute('name', $row[IResultsModel::DATA_NAME]);
                     $contestantNode->setAttribute('school', $row[IResultsModel::DATA_SCHOOL]);
-                    $this->log($row[IResultsModel::DATA_NAME] . ' ctnst');
                     // rank
                     $rankNode = $doc->createElement('rank');
                     $contestantNode->appendChild($rankNode);
