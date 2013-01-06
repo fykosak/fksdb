@@ -16,19 +16,19 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = null;
+    private $dataColumns = array();
 
     /**
      * Definition of header.
      * 
      * @return array
      */
-    public function getDataColumns() {
+    public function getDataColumns($category) {
         if ($this->series === null) {
             throw new \Nette\InvalidStateException('Series not specified.');
         }
 
-        if ($this->dataColumns === null) {
+        if (!isset($this->dataColumns[$category->id])) {
             $stmt = $this->connection->query('select t.series, sum(t.points)
             from task t
             where t.contest_id = ? and t.year = ?
@@ -37,29 +37,30 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
 
 
-            $this->dataColumns = array();
+            $dataColumns = array();
             $sum = 0;
             foreach ($this->getSeries() as $series) {
                 $points = isset($seriesPoints[$series]) ? $seriesPoints[$series] : null;
-                $this->dataColumns[] = array(
+                $dataColumns[] = array(
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
-                    self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
+                    self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 );
                 $sum += $points;
             }
-            $this->dataColumns[] = array(
+            $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             );
-            $this->dataColumns[] = array(
+            $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             );
+            $this->dataColumns[$category->id] = $dataColumns;
         }
-        return $this->dataColumns;
+        return $this->dataColumns[$category->id];
     }
 
     public function getSeries() {
@@ -91,7 +92,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(IF(s.raw_points IS NOT NULL, t.points, NULL))) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);

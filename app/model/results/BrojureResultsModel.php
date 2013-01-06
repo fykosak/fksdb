@@ -24,24 +24,25 @@ class BrojureResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = null;
+    private $dataColumns = array();
 
     /**
      * Definition of header.
      * 
      * @return array
      */
-    public function getDataColumns() {
+    public function getDataColumns($category) {
         if ($this->series === null) {
             throw new \Nette\InvalidStateException('Series not specified.');
         }
 
-        if ($this->dataColumns === null) {
+        if (!isset($this->dataColumns[$category->id])) {
+            $dataColumns = array();
             foreach ($this->getTasks($this->listedSeries) as $task) {
-                $this->dataColumns[] = array(
+                $dataColumns[] = array(
                     self::COL_DEF_LABEL => $task->label,
-                    self::COL_DEF_LIMIT => $task->points,
-                    self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
+                    self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
+                    self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 );
             }
 
@@ -56,25 +57,26 @@ class BrojureResultsModel extends AbstractResultsModel {
             $sum = 0;
             foreach ($this->getSeries() as $series) {
                 $points = isset($seriesPoints[$series]) ? $seriesPoints[$series] : null;
-                $this->dataColumns[] = array(
+                $dataColumns[] = array(
                     self::COL_DEF_LABEL => self::COL_SERIES_PREFIX . $series,
                     self::COL_DEF_LIMIT => $points,
-                    self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
+                    self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 );
                 $sum += $points;
             }
-            $this->dataColumns[] = array(
+            $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             );
-            $this->dataColumns[] = array(
+            $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             );
+            $this->dataColumns[$category->id] = $dataColumns;
         }
-        return $this->dataColumns;
+        return $this->dataColumns[$category->id];
     }
 
     public function getSeries() {
@@ -124,7 +126,7 @@ class BrojureResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(IF(s.raw_points IS NOT NULL, t.points, NULL))) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);

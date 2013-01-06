@@ -137,7 +137,7 @@ class WebServiceModel {
         $model = $this->statsModelFactory->createTaskStatsModel($contest, $year);
 
         if (isset($args->series)) {
-            if(!is_array($args->series)){
+            if (!is_array($args->series)) {
                 $args->series = array($args->series);
             }
             foreach ($args->series as $series) {
@@ -150,8 +150,8 @@ class WebServiceModel {
 
                     $taskNode->setAttribute('series', $seriesNo);
                     $taskNode->setAttribute('label', $task['label']);
-					
-					$node = $doc->createElement('points', $task['points']);
+
+                    $node = $doc->createElement('points', $task['points']);
                     $taskNode->appendChild($node);
 
                     $node = $doc->createElement('solvers', $task['task_count']);
@@ -162,7 +162,7 @@ class WebServiceModel {
                 }
             }
         }
-        
+
 
         $doc->formatOutput = true;
 
@@ -219,7 +219,7 @@ class WebServiceModel {
                 $categoryNode->appendChild($columnDefsNode);
 
                 // columns definitions
-                foreach ($resultsModel->getDataColumns() as $column) {
+                foreach ($resultsModel->getDataColumns($category) as $column) {
                     $columnDefNode = $doc->createElement('column-definition');
                     $columnDefsNode->appendChild($columnDefNode);
 
@@ -247,7 +247,7 @@ class WebServiceModel {
                     }
 
                     // data columns
-                    foreach ($resultsModel->getDataColumns() as $column) {
+                    foreach ($resultsModel->getDataColumns($category) as $column) {
                         $columnNode = $doc->createElement('column', $row[$column[IResultsModel::COL_ALIAS]]);
                         $contestantNode->appendChild($columnNode);
                     }

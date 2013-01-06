@@ -16,32 +16,34 @@ class DetailResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = null;
+    private $dataColumns = array();
 
     /**
      * Definition of header.
      * 
+     * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns() {
-        if ($this->dataColumns === null) {
-            $this->dataColumns = array();
+    public function getDataColumns($category) {
+        if (!isset($this->dataColumns[$category->id])) {
+            $dataColumns = array();
             $sum = 0;
             foreach ($this->getTasks($this->series) as $task) {
-                $this->dataColumns[] = array(
+                $dataColumns[] = array(
                     self::COL_DEF_LABEL => $task->label,
-                    self::COL_DEF_LIMIT => $task->points,
-                    self::COL_ALIAS => self::DATA_PREFIX . count($this->dataColumns),
+                    self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
+                    self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 );
                 $sum += $task->points;
             }
-            $this->dataColumns[] = array(
+            $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             );
+            $this->dataColumns[$category->id] = $dataColumns;
         }
-        return $this->dataColumns;
+        return $this->dataColumns[$category->id];
     }
 
     public function getSeries() {

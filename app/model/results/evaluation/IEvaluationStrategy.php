@@ -36,6 +36,25 @@ interface IEvaluationStrategy {
      * @return array of ModelCategory
      */
     public function getCategories();
+    
+    /**
+     * Should return points for correctly solved task (aka Student Pilný) as part
+     * of SQL query.
+     * For columns available see getSumColumn.
+     * 
+     * @param ModelCategory $category
+     * @return int
+     */
+    public function getTaskPointsColumn(ModelCategory $category);
+    
+    /**
+     * Should return points for correctly solved task (aka Student Pilný).
+     * 
+     * @param Nette\Database\Row $task
+     * @param ModelCategory $category
+     * @return int
+     */
+    public function getTaskPoints($task, ModelCategory $category);
 }
 
 ?>

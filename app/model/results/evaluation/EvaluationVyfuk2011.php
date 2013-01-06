@@ -45,4 +45,11 @@ class EvaluationVyfuk2011 implements IEvaluationStrategy {
         return "s.raw_points";
     }
 
+    public function getTaskPoints($task, \ModelCategory $category) {
+        return $task->points;
+    }
+    
+    public function getTaskPointsColumn(\ModelCategory $category) {
+        return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+    }
 }

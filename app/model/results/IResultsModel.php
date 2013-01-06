@@ -34,12 +34,15 @@ interface IResultsModel {
      */
     public function getSeries();
 
-    public function getDataColumns();
+    /**
+     * @param ModelCategory $category
+     */
+    public function getDataColumns($category);
 
     public function getMetaColumns();
 
     /**
-     * @param enum $category self::CAT_*
+     * @param ModelCategory $category
      */
     public function getData($category);
 }

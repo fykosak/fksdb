@@ -50,4 +50,39 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
         return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
     }
 
+    public function getTaskPoints($task, \ModelCategory $category) {
+        switch ($category->id) {
+            case ModelCategory::CAT_ES_6:
+            case ModelCategory::CAT_ES_7:
+            case ModelCategory::CAT_ES_8:
+            case ModelCategory::CAT_ES_9:
+            case ModelCategory::CAT_HS_1:
+            case ModelCategory::CAT_HS_2:
+                if ($task->label == '1' || $task->label == '2') {
+                    return $task->points * 2;
+                } else {
+                    return $task->points;
+                }
+                break;
+            default:
+                return $task->points;
+        }
+    }
+
+    public function getTaskPointsColumn(\ModelCategory $category) {
+        switch ($category->id) {
+            case ModelCategory::CAT_ES_6:
+            case ModelCategory::CAT_ES_7:
+            case ModelCategory::CAT_ES_8:
+            case ModelCategory::CAT_ES_9:
+            case ModelCategory::CAT_HS_1:
+            case ModelCategory::CAT_HS_2:
+                return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1', '2'), 2 * t.points, t.points), NULL)";
+                break;
+            default:
+                return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+        }
+        
+    }
+
 }
