@@ -89,10 +89,22 @@ abstract class AbstractResultsModel implements IResultsModel {
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
                 $set = array();
+                $hasNull = false;
                 foreach ($value as $subvalue) {
-                    $set[] = $subvalue === null ? 'NULL' : $subvalue;
+                    if ($subvalue === null) {
+                        $hasNull = true;
+                    } else {
+                        $set[] = $subvalue;
+                    }
                 }
-                $where[] = "$col IN (" . implode(',', $set) . ")";
+                $inClause = "$col IN (" . implode(',', $set) . ")";
+                if ($hasNull) {
+                    $where[] = "$inClause OR $col IS NULL";
+                } else {
+                    $where[] = $inClause;
+                }
+            } else if ($value === null) {
+                $where[] = "$col IS NULL";
             } else {
                 $where[] = "$col = $value";
             }
