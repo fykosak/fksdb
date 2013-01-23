@@ -29,12 +29,13 @@ class DetailResultsModel extends AbstractResultsModel {
             $dataColumns = array();
             $sum = 0;
             foreach ($this->getTasks($this->series) as $task) {
+                $taskPoints = $this->evaluationStrategy->getTaskPoints($task, $category);
                 $dataColumns[] = array(
                     self::COL_DEF_LABEL => $task->label,
-                    self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
+                    self::COL_DEF_LIMIT => $taskPoints,
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 );
-                $sum += $task->points;
+                $sum += $taskPoints;
             }
             $dataColumns[] = array(
                 self::COL_DEF_LABEL => self::LABEL_SUM,

@@ -29,18 +29,15 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         if (!isset($this->dataColumns[$category->id])) {
-            $stmt = $this->connection->query('select t.series, sum(t.points)
-            from task t
-            where t.contest_id = ? and t.year = ?
-            group by t.series', $this->contest->contest_id, $this->year);
-            $seriesPoints = $stmt->fetchPairs();
-
-
-
             $dataColumns = array();
             $sum = 0;
             foreach ($this->getSeries() as $series) {
-                $points = isset($seriesPoints[$series]) ? $seriesPoints[$series] : null;
+                // sum points as sum of tasks
+                $points = null;
+                foreach ($this->getTasks($series) as $task) {
+                    $points += $this->evaluationStrategy->getTaskPoints($task, $category);
+                }
+            
                 $dataColumns[] = array(
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
