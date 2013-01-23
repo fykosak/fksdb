@@ -15,6 +15,7 @@ class ModelCategory {
     const CAT_ES_8 = '8';
     const CAT_ES_7 = '7';
     const CAT_ES_6 = '6';
+    const CAT_UNK  = 'UNK';
 
     public $id = null;
 

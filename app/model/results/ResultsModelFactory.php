@@ -72,7 +72,11 @@ class ResultsModelFactory {
                 return new EvaluationFykos2001();
             }
         } else if ($contest->contest_id == ModelContest::ID_VYFUK) {
-            return new EvaluationVyfuk2011();
+            if($year >= 2) {
+                return new EvaluationVyfuk2012();
+            } else {
+                return new EvaluationVyfuk2011();
+            }
         }
         return null;
     }
