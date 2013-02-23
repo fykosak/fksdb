@@ -4,8 +4,9 @@ use Nette\Http\UserStorage;
 use Nette\Application\UI\Form;
 
 /**
+ * Presenter keeps chosen contest and year in session.
  */
-abstract class AuthenticatedPresenter extends BasePresenter {
+abstract class AuthenticatedPresenter extends BasePresenter implements IContestPresenter {
 
     /**
      *

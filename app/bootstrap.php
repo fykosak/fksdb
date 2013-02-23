@@ -29,8 +29,17 @@ $container = $configurator->createContainer();
 $container->router[] = new Route('index.php', 'Dashboard:default', Route::ONE_WAY);
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Dashboard:default');
 
+//
 // Register addons
+//
 \Kdyby\Extension\Forms\Replicator\Replicator::register();
+
+
+\Nette\Forms\Container::extensionMethod('addDatePicker', function (\Nette\Forms\Container $container, $name, $label = NULL) {
+    return $container[$name] = new JanTvrdik\Components\DatePicker($label);
+});
+
+//
 
 // Configure and run the application!
 $container->application->run();
