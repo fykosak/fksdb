@@ -53,6 +53,8 @@ class DetailResultsModel extends AbstractResultsModel {
 
     public function setSeries($series) {
         $this->series = $series;
+        // invalidate cache of columns
+        $this->dataColumns = array();
     }
 
     public function getCategories() {

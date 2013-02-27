@@ -67,6 +67,8 @@ class CumulativeResultsModel extends AbstractResultsModel {
     public function setSeries($series) {
         $this->dataColumns = null;
         $this->series = $series;
+        // invalidate cache of columns
+        $this->dataColumns = array();
     }
 
     public function getCategories() {

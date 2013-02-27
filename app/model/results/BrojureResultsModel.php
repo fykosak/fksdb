@@ -82,6 +82,8 @@ class BrojureResultsModel extends AbstractResultsModel {
     public function setSeries($series) {
         $this->dataColumns = null;
         $this->series = $series;
+        // invalidate cache of columns
+        $this->dataColumns = array();
     }
 
     public function getListedSeries() {
@@ -90,6 +92,8 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     public function setListedSeries($listedSeries) {
         $this->listedSeries = $listedSeries;
+        // invalidate cache of columns
+        $this->dataColumns = array();
     }
 
     public function getCategories() {
