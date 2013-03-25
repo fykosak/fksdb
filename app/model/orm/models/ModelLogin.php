@@ -12,16 +12,27 @@ class ModelLogin extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-    
-    public function resetPassword(){
+
+    /**
+     * Sets hash of the instance with correct hashing function.
+     * 
+     * @note Must be called after setting person_id.
+     * 
+     * @param string $password password
+     */
+    public function setHash($password) {
+        $this->hash = sha1($this->person_id . md5($password));
+    }
+
+    public function resetPassword() {
         //TODO
     }
-    
-    public function sendResetNotification(){
+
+    public function sendResetNotification() {
         //TODO
     }
-    
-    public function sendCreateNotification(){
+
+    public function sendCreateNotification() {
         //TODO
     }
 

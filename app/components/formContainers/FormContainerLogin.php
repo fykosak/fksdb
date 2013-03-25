@@ -3,7 +3,7 @@
 use \Nette\Forms\Form;
 
 /**
- *
+ * TODO nefunguje kontrola shody hesel!!
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class FormContainerLogin extends FormContainerModel {
@@ -19,23 +19,28 @@ class FormContainerLogin extends FormContainerModel {
 
         $this->addText('login', 'Přihlašovací jméno');
 
-        $this->addText('email')
-                ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+        $this->addText('email', 'E-mail')
+                ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.')
+                ->addRule(Form::FILLED);
 
         switch ($pwdMode) {
             case self::PWD_CHANGE_VERIFIED:
                 $this->addPassword('old_password', 'Staré heslo');
 
-                $newPwd = $this->addPassword('password', 'Nové heslo');
+                $newPwd = $this->addPassword('password', 'Nové heslo')
+                        ->addConditionOn($this['old_password'], Form::FILLED)
+                        ->addRule(Form::FILLED, "Je třeba nastavit nové heslo.");
 
                 $this->addPassword('password_verify', 'Nové heslo ověření')
-                        ->addCondition(Form::FILLED)->addCondition(Form::EQUAL, $newPwd);
+                        ->addCondition(Form::EQUAL, 'Zadaná hesla se neshodují.', $this['password']);
                 break;
             case self::PWD_NEW_VERIFIED:
-                $newPwd = $this->addPassword('password', 'Heslo');
+                $newPwd = $this->addPassword('password', 'Heslo')
+                        ->addRule(Form::FILLED, 'Heslo je povinné.');
 
                 $this->addPassword('password_verify', 'Heslo ověření')
-                        ->addCondition(Form::FILLED)->addCondition(Form::EQUAL, $newPwd);
+                        ->addCondition(Form::EQUAL, 'Zadaná hesla se neshodují.', $this['password']);
+
                 break;
             case self::PWD_UNVERIFIED:
                 $this->addPassword('password', 'Heslo');

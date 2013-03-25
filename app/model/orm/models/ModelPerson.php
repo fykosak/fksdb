@@ -105,6 +105,17 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
         );
     }
 
+    /**
+     * Infers gender from name.
+     */
+    public function inferGender() {
+        if (mb_substr($this->family_name, -1) == 'á') {
+            $this->gender = 'F';
+        } else {
+            $this->gender = 'M';
+        }
+    }
+
     // ----- IIdentity implementation ----------
 
     public function getId() {
