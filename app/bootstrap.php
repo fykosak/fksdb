@@ -26,7 +26,7 @@ $container = $configurator->createContainer();
 
 // Setup router
 $container->router[] = new Route('index.php', 'Dashboard:default', Route::ONE_WAY);
-$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Dashboard:default', Route::SECURED);
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Dashboard:default');
 
 // Register addons
 \Kdyby\Extension\Forms\Replicator\Replicator::register();
