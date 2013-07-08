@@ -3,5 +3,4 @@ log/*
 !log/.htaccess
 temp/*
 !temp/.htaccess
-app/config/config.neon
-
+/app/config/config.local.neon

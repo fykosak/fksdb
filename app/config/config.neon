@@ -6,7 +6,7 @@
 #
 common:
     parameters:
-        wdslUrl: file:///home/michal/fykos/web/fksweb/fksdb.wsdl
+        wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
     php:
         date.timezone: Europe/Prague
         # zlib.output_compression: yes
@@ -14,11 +14,6 @@ common:
     nette:
         application:
             errorPresenter: Error
-
-        database:
-            dsn: 'mysql:host=localhost;dbname=fksdb'
-            user:
-            password:
 
         session:
             expiration: 14 days
@@ -32,6 +27,8 @@ common:
         seriesCalculator: SeriesCalculator
         resultsModelFactory: ResultsModelFactory
         statsModelFactory: StatsModelFactory
+        SQLResultsCache: SQLResultsCache
+
         # ORM services
         ServiceAddress:         ServiceAddress
         ServiceContestant:      ServiceContestant
@@ -65,4 +62,3 @@ common:
 production < common:
 
 development < common:
-
