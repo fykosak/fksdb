@@ -93,6 +93,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
         $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
+        $select[] = "ct.ct_id";
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
 

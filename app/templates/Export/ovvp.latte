@@ -1,0 +1,15 @@
+{block title}Export OVVP{/block}
+
+{block content}
+
+{foreach $data as $cat => $rows}
+<h2>Category: {$cat}</h2>
+<pre>
+{foreach $rows as $row}
+    {= implode(';', $row)}
+{/foreach}
+</pre>
+{/foreach}
+
+
+{/block}
