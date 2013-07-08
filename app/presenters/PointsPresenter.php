@@ -57,23 +57,78 @@ class PointsPresenter extends TaskTimesContestantPresenter {
         $values = $form->getValues();
         $grid = $values['grid'];
         $submitsTable = $this->getSubmitsTable();
-        $serviceSubmit = $this->context->getService('ServiceSubmit');
-        $serviceSubmit->getConnection()->beginTransaction();
 
-        foreach ($grid as $ct_id => $tasks) {
-            foreach ($tasks as $task_id => $elements) {
-                if (!isset($submitsTable[$ct_id][$task_id])) {
-                    continue;
+        try {
+            $serviceSubmit = $this->context->getService('ServiceSubmit');
+
+            $serviceSubmit->getConnection()->beginTransaction();
+
+            foreach ($grid as $ct_id => $tasks) {
+                foreach ($tasks as $task_id => $elements) {
+                    if (!isset($submitsTable[$ct_id][$task_id])) {
+                        continue;
+                    }
+                    $submit = $submitsTable[$ct_id][$task_id];
+
+                    $submit->raw_points = $elements['raw_points'] === '' ? null : $elements['raw_points'];
+
+                    $serviceSubmit->save($submit);
                 }
-                $submit = $submitsTable[$ct_id][$task_id];
-
-                $submit->raw_points = $elements['raw_points'] === '' ? null : $elements['raw_points'];
-
-                $serviceSubmit->save($submit);
             }
+            $serviceSubmit->getConnection()->commit();
+
+            // recalculate points (separate transaction)
+            $SQLcache = $this->getService('SQLResultsCache');
+            $SQLcache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
+
+
+            $this->flashMessage('Body úloh uloženy.');
+        } catch (Exception $e) {
+            $this->flashMessage('Chyba při ukládání bodů.', 'error');
+            Nette\Diagnostics\Debugger::log($e);
         }
-        $serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Body úloh uloženy.');
+        $this->redirect('this');
+    }
+
+    public function handleInvalidate() {
+        $SQLcache = $this->getService('SQLResultsCache');
+
+        try {
+            $SQLcache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
+            $this->flashMessage('Body invalidovány.');
+        } catch (Exception $e) {
+            $this->flashMessage('Chyba při invalidaci.', 'error');
+            Nette\Diagnostics\Debugger::log($e);
+        }
+
+        $this->redirect('this');
+    }
+
+    public function handleRecalculateAll() {
+        $SQLcache = $this->getService('SQLResultsCache');
+        $serviceTask = $this->context->getService('ServiceTask');
+        
+        try {
+            foreach ($this->getAvailableContests() as $contest) {
+                $contest = ModelContest::createFromTableRow($contest);
+
+                $years = $serviceTask->getTable()
+                                ->select('year')
+                                ->where(array(
+                                    'contest_id' => $contest->contest_id,
+                                ))->group('year');
+
+                foreach ($years as $year) {
+                    $SQLcache->recalculate($contest, $year->year);
+                }
+            }
+
+            $this->flashMessage('Body přepočítány.');
+        } catch (Exception $e) {
+            $this->flashMessage('Chyba při přepočtu.', 'error');
+            Nette\Diagnostics\Debugger::log($e);
+        }
+
         $this->redirect('this');
     }
 

@@ -12,8 +12,14 @@ class SQLResultsCache {
      */
     private $connection;
 
-    function __construct(\Nette\Database\Connection $connection) {
+    /**
+     * @var ServiceTask
+     */
+    private $serviceTask;
+
+    function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
+        $this->serviceTask = $serviceTask;
     }
 
     /**
@@ -21,36 +27,65 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      */
-    public function invalidateCache(ModelContest $contest = null, $year = null) {
+    public function invalidate(ModelContest $contest = null, $year = null) {
         $data = array(
             'calc_points' => null,
         );
         $conditions = array('1 = 1');
-        $params = array();
         if ($contest !== null) {
-            $conditions[] = 'contest = ?';
-            $params[] = $contest->contest_id;
+            $conditions[] = 'contest_id = ' . $contest->contest_id;
         }
         if ($year !== null) {
-            $conditions[] = 'year = ?';
-            $params[] = $year;
+            $conditions[] = 'year = ' . (int) $year;
         }
-        $this->connection->exec('update submit set ? where (' . implode(') and (', $conditions) . ')', $data, $params);
-    }
-    
-    public function f() {
-        /*
-         * update submit s
-left join task t on s.task_id = t.task_id
-set calc_points = (
-	select IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)
-	from contestant ct
-	where ct.ct_id = s.ct_id
-)
-where t.year = 26;
-         */
+
+        $sql = '
+            UPDATE submit s
+            LEFT JOIN task t ON t.task_id = s.task_id
+            SET ?
+            WHERE (' . implode(') and (', $conditions) . ')';
+
+        $this->connection->exec($sql, $data);
     }
 
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     */
+    public function recalculate(ModelContest $contest, $year) {
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
+        if ($evaluationStrategy === null) {
+            throw new Nette\InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
+        }
+
+        $tasks = $this->serviceTask->getTable()
+                ->where(array(
+            'contest_id' => $contest->contest_id,
+            'year' => $year,
+        ));
+
+
+        $this->connection->beginTransaction();
+        foreach ($tasks as $task) {
+            $conditions = array();
+            $conditions[] = 't.contest_id = ' . $contest->contest_id;
+            $conditions[] = 't.year = ' . (int) $year;
+            $conditions[] = 's.task_id = ' . $task->task_id;
+            $sql = '
+            UPDATE submit s
+            LEFT JOIN task t ON s.task_id = s.task_id
+            LEFT JOIN contestant ct ON ct.ct_id = s.ct_id
+            SET calc_points = (
+                SELECT ' . $evaluationStrategy->getPointsColumn($task) . '
+                FROM dual
+            )
+            WHERE (' . implode(') and (', $conditions) . ')';
+
+            $this->connection->exec($sql);
+        }
+        $this->connection->commit();
+    }
 
 }
 
