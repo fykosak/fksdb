@@ -30,8 +30,11 @@ class ExportPresenter extends AuthenticatedPresenter {
             }
 
             $datas = array();
-            foreach ($model->getData($category) as $data)
-                $datas[] = $data;
+            foreach ($model->getData($category) as $data) {
+                if ($data->sum !== null) {
+                    $datas[] = $data;
+                }
+            }
 
             foreach ($datas as $data) {
                 $ctid = $data->ct_id;
@@ -103,12 +106,10 @@ class ExportPresenter extends AuthenticatedPresenter {
                 }
 
                 // pořadí
-                $row[] = ($data->from == $data->to) ? $data->from : ($data->from . '-' . $data->to);
-                $row[] = count($datas);
+                $row[] = (($data->from == $data->to) ? $data->from : ($data->from . '-' . $data->to)) . '/' . count($datas);
 
                 // body
-                $row[] = $data->sum;
-                $row[] = $header[$sumCol][IResultsModel::COL_DEF_LIMIT];
+                $row[] = $data->sum . '/' . $header[$sumCol][IResultsModel::COL_DEF_LIMIT];
 
 
                 // append
