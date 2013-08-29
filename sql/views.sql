@@ -1,4 +1,3 @@
-use fksdb;
 set names 'utf8';
 
 CREATE OR REPLACE VIEW v_task_stats as
