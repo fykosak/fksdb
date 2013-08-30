@@ -22,12 +22,13 @@ $configurator->createRobotLoader()
 
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(dirname(__FILE__) . '/config/config.neon');
+$configurator->addConfig(dirname(__FILE__) . '/config/acl.neon');
 $configurator->addConfig(dirname(__FILE__) . '/config/config.local.neon');
 $container = $configurator->createContainer();
 
 // Setup router
-$container->router[] = new Route('index.php', 'Dashboard:default', Route::ONE_WAY);
-$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Dashboard:default');
+$container->router[] = new Route('index.php', 'Authentication:login', Route::ONE_WAY);
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Authentication:login');
 
 //
 // Register addons

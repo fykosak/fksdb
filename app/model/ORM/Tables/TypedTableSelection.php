@@ -1,5 +1,7 @@
 <?php
 
+namespace ORM\Tables;
+
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\Database\Connection;
 
@@ -31,4 +33,3 @@ class TypedTableSelection extends TableSelection {
 
 }
 
-?>

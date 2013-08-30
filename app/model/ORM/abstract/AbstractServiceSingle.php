@@ -1,7 +1,10 @@
 <?php
 
-use Nette\Database\Table\Selection as TableSelection;
 use Nette\Database\Connection;
+use Nette\Database\Table\Selection as TableSelection;
+use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
+use ORM\Tables\TypedTableSelection;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -53,6 +56,11 @@ abstract class AbstractServiceSingle extends TableSelection {
         $result = new $className($data, $this->getTable());
         $result->setNew();
         return $result;
+    }
+
+    public static function createFromTableRow(TableRow $row) {
+        $className = $this->modelClassName;
+        return new static($row->toArray(), $row->getTable());
     }
 
     /**
@@ -164,4 +172,3 @@ abstract class AbstractServiceSingle extends TableSelection {
 
 }
 
-?>

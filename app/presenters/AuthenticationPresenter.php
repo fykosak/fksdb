@@ -57,7 +57,13 @@ final class AuthenticationPresenter extends BasePresenter {
 //            }
             $this->user->login($form['id']->value, $form['password']->value);
             $this->application->restoreRequest($this->backlink);
-            $this->redirect('Dashboard:default');
+
+            $person = $this->user->getIdentity();
+            if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
+                $this->redirect('Dashboard:default');
+            } else {
+                $this->redirect(':Public:Dashboard:default');
+            }
         } catch (AuthenticationException $e) {
             $form->addError($e->getMessage());
         }

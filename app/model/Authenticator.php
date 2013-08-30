@@ -1,14 +1,16 @@
 <?php
 
-use Nette\Object;
-use Nette\Security\IAuthenticator;
-use Nette\Security\AuthenticationException;
 use Nette\DateTime;
+use Nette\Object;
+use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
+use Nette\Security\IIdentity;
 
 /**
  * Users authenticator.
  */
 class Authenticator extends Object implements IAuthenticator {
+
     const HASHED_PASSWORD = 10;
 
     /** @var ServiceLogin */
@@ -24,7 +26,7 @@ class Authenticator extends Object implements IAuthenticator {
 
     /**
      * Performs an authentication.
-     * @return \Nette\Security\IIdentity
+     * @return IIdentity
      * @throws AuthenticationException
      */
     public function authenticate(array $credentials) {
@@ -40,10 +42,6 @@ class Authenticator extends Object implements IAuthenticator {
             throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
         }
 
-        if (count($login->getPerson()->getActiveOrgs($this->yearCalculator)) == 0) {
-            throw new AuthenticationException('Neorganizátorský účet.', self::INVALID_CREDENTIAL);
-        }
-
         $login->last_login = DateTime::from(time());
         $this->serviceLogin->save($login);
 
@@ -55,7 +53,7 @@ class Authenticator extends Object implements IAuthenticator {
      * @return string
      */
     public static function calculateHash($password, $login) {
-        return sha1($login->person_id . md5($password));
+        return sha1($login->login_id . md5($password));
     }
 
 }

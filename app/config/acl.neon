@@ -1,0 +1,30 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+    services:
+        # data services
+        authorizator:
+            class: Nette\Security\Permission
+            setup:
+                - addRole(guest)                    # anonym
+                - addRole(registered, guest)        # registrant
+                - addRole(contestant, registered)   # řešitel
+                - addRole(org)                      # org
+                - addRole(webmaster, org)           # webař
+                - addRole(taskManager, org)         # úlohář
+                - addRole(dispatcher, org)          # koordinátor obálkování
+                - addRole(dataManager, org)         # správce DB
+                - addRole(eventManager, org)        # správce přihlášek
+                - addRole(inboxManager, org)        # příjemce řešení
+                - addRole(boss, org)                # šéf
+
+#                - addResource(songs)
+#                - allow(manager, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
+
+production < common:
+
+development < common:

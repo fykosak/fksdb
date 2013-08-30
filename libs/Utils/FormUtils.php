@@ -12,7 +12,7 @@ class FormUtils {
      * @param array $values
      * @return array
      */
-    public static function emptyStrToNull(array $values) {
+    public static function emptyStrToNull(\Traversable $values) {
         $result = array();
         foreach ($values as $key => $value) {
             $result[$key] = $value === '' ? null : $value;
