@@ -132,6 +132,42 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         return $this->yearCalculator->getCurrentYear($this->getSelectedContest()->contest_id);
     }
 
+    public function actionDefault() {
+        if ($this->user->isLoggedIn()) {
+            /** @var ModelPerson $person */
+            $person = $this->user->getIdentity();
+            $currentContestants = $person->getContestants()
+                    ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
+                    ->where('year = ?', $this->getSelectedYear());
+
+            if (count($currentContestants) > 0) {
+                // existing contestant 
+                $this->redirect(':Public:Dashboard:default');
+            } else {
+                // only registered person 
+                $this->redirect('contestant');
+            }
+        }
+    }
+
+    public function actionContestant() {
+        if ($this->user->isLoggedIn()) {
+            /** @var ModelPerson $person */
+            $person = $this->user->getIdentity();
+            $currentContestants = $person->getContestants()
+                    ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
+                    ->where('year = ?', $this->getSelectedYear());
+
+            if (count($currentContestants) > 0) {
+                // existing contestant 
+                $this->redirect(':Public:Dashboard:default');
+            }
+        } else {
+            // not logged in
+            $this->redirect('default');
+        }
+    }
+
     public function createComponentRegisterForm($name) {
         $form = new Form();
 
@@ -150,11 +186,40 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $contestant = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
 
+        
         $form->setCurrentGroup();
-
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'handleRegisterFormSuccess');
 
+
+        return $form;
+    }
+
+    public function createComponentContestantForm($name) {
+        $form = new Form();
+
+        // person
+        $person = $this->user->getIdentity();
+        $group = $form->addGroup('Osoba');
+        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
+        $personContainer->setDefaults($person->toArray());
+        $form->addComponent($personContainer, self::CONT_PERSON);
+
+        // contestant
+        $contestant = $person->getLastContestant($this->getSelectedContest());
+        $group = $form->addGroup('Řešitel');
+        $contestantContainer = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
+        if ($contestant) {
+            $contestantContainer->setDefaults($contestant->toArray()); //TODO auto-increase study_year + class
+        }
+        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+
+        
+        $form->setCurrentGroup();
+        $form->addSubmit('register', 'Registrovat');
+        $form->onSuccess[] = array($this, 'handleContestantFormSuccess');
+
+        $form->addProtection('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.');
 
         return $form;
     }
@@ -214,12 +279,45 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             }
 
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
-            $this->redirect(':Dashboard:default');
+            $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {
             $this->connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage('Při registraci došlo k chybě.', 'error');
-            $this->redirect('this');
+        }
+    }
+
+    public function handleContestantFormSuccess(Form $form) {
+        $values = $form->getValues();
+
+        try {
+            if (!$this->connection->beginTransaction()) {
+                throw new ModelException();
+            }
+            $person = $this->user->getIdentity();
+
+            // store contestant
+            $contestantData = $values[self::CONT_CONTESTANT];
+            $contestantData = FormUtils::emptyStrToNull($contestantData);
+            $contestant = $this->serviceContestant->createNew($contestantData);
+
+            $contestant->person_id = $person->person_id;
+            $contestant->year = $this->getSelectedYear();
+            $contestant->contest_id = $this->getSelectedContest()->contest_id;
+
+            $this->serviceContestant->save($contestant);
+
+
+            if (!$this->connection->commit()) {
+                throw new ModelException();
+            }
+
+            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
+            $this->redirect(':Public:Dashboard:default');
+        } catch (ModelException $e) {
+            $this->connection->rollBack();
+            Debugger::log($e, Debugger::ERROR);
+            $this->flashMessage('Při registraci došlo k chybě.', 'error');
         }
     }
 

@@ -28,7 +28,7 @@ $container = $configurator->createContainer();
 
 // Setup router
 $container->router[] = new Route('index.php', 'Authentication:login', Route::ONE_WAY);
-$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Authentication:login');
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Public:Dashboard:default');
 
 //
 // Register addons

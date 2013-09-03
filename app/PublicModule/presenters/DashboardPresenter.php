@@ -2,8 +2,6 @@
 
 namespace PublicModule;
 
-use BasePresenter;
-
 /**
  * Just proof of concept.
  * 

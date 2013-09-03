@@ -13,31 +13,36 @@ use Nette\Forms\Form;
  */
 class PersonFactory {
 
-    const SHOW_DISPLAY_NAME = 0x1;
-    const SHOW_ORG_INFO = 0x2;
-    const SHOW_AGREEMENT = 0x4;
-    const SHOW_EMAIL = 0x8;
+    const SHOW_DISPLAY_NAME = 0x1; // for person
+    const SHOW_ORG_INFO = 0x2; // for person info
+    const SHOW_AGREEMENT = 0x4; // for person info
+    const SHOW_EMAIL = 0x8; // for person info
+    const DISABLED = 0x10; // for person
 
     public function createPerson($options = 0, ControlGroup $group = null) {
+        $disabled = (bool) ($options & self::DISABLED);
+
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
-        
+
         $container->addText('other_name', 'Křestní jméno')
+                ->setDisabled($disabled)
                 ->setOption('description', 'Příp. další jména oddělaná mezerou.')
                 ->addRule(Form::FILLED, 'Křestní jméno je povinné.');
 
         $container->addText('family_name', 'Příjmení')
+                ->setDisabled($disabled)
                 ->setOption('description', 'Příp. další jména oddělaná mezerou.')
                 ->addRule(Form::FILLED, 'Příjmení je povinné.');
 
         if ($options & self::SHOW_DISPLAY_NAME) {
             $this->addText('display_name', 'Zobrazované jméno')
+                    ->setDisabled($disabled)
                     ->setOption('description', 'Pouze pokud je odlišené od "jméno příjmení".');
         }
-        
+
         return $container;
     }
-    
 
     public function createPersonInfo($options = 0) {
         $container = new ModelContainer();
