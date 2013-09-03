@@ -1,8 +1,14 @@
 <?php
 
+namespace OrgModule;
+
+use FormSchool;
+use FormUtils;
+use GridSchools;
+use ModelException;
 use Nette\Diagnostics\Debugger;
 
-class SchoolsPresenter extends AuthenticatedPresenter {
+class SchoolsPresenter extends BasePresenter {
 
     /**
      * @var str

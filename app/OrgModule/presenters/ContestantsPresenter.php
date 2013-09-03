@@ -1,9 +1,15 @@
 <?php
 
-use Nette\Diagnostics\Debugger;
-use Nette\DateTime;
+namespace OrgModule;
 
-class ContestantsPresenter extends AuthenticatedPresenter {
+use FormUtils;
+use GridContestants;
+use ModelException;
+use Nette\DateTime;
+use Nette\Diagnostics\Debugger;
+use WizardCreateContestant;
+
+class ContestantsPresenter extends BasePresenter {
 
     /**
      * @var str

@@ -60,7 +60,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
             $person = $this->user->getIdentity();
             if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
-                $this->redirect('Dashboard:default');
+                $this->redirect(':Org:Dashboard:default');
             } else {
                 $this->redirect(':Public:Dashboard:default');
             }

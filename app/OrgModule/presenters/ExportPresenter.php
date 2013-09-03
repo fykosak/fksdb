@@ -1,8 +1,13 @@
 <?php
 
-use Nette\Application\UI\Form;
+namespace OrgModule;
 
-class ExportPresenter extends AuthenticatedPresenter {
+use IResultsModel;
+use ModelContest;
+use ModelPerson;
+use ModelPostContact;
+
+class ExportPresenter extends BasePresenter {
 
     /**
      * Very ineffective solution that provides data in

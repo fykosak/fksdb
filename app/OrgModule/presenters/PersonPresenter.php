@@ -1,5 +1,7 @@
 <?php
 
+namespace OrgModule;
+
 use \Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 

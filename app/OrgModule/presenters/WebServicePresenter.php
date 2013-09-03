@@ -1,5 +1,12 @@
 <?php
 
+namespace OrgModule;
+
+use BasePresenter;
+use Nette\Application\AbortException;
+use Nette\Diagnostics\Debugger;
+use SoapResponse;
+
 /**
  * Description of WebServicePresenter
  *
@@ -12,10 +19,10 @@ class WebServicePresenter extends BasePresenter {
         try {
             $response = new SoapResponse($server);
             $this->sendResponse($response);
-        } catch (\Nette\Application\AbortException $e) {
+        } catch (AbortException $e) {
             throw $e;
         } catch (Exception $e) {
-            \Nette\Diagnostics\Debugger::log($e);
+            Debugger::log($e);
             $this->redirect('Dashboard:');
         }
     }

@@ -1,12 +1,17 @@
 <?php
 
+namespace OrgModule;
+
+use ModelSubmit;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\Selection;
+
 
 /**
  * Presenter "template" for presenters manipulating tasks x contestants tables.
  * 
  */
-abstract class TaskTimesContestantPresenter extends AuthenticatedPresenter {
+abstract class TaskTimesContestantPresenter extends BasePresenter {
 
     /**
      * @var int
@@ -16,7 +21,7 @@ abstract class TaskTimesContestantPresenter extends AuthenticatedPresenter {
 
     /**
      * @param int $series when not null return only contestants with submits in the series
-     * @return Nette\Database\Table\Selection
+     * @return Selection
      */
     protected function getContestants($series = null) {
         $serviceContestant = $this->context->getService('ServiceContestant');
