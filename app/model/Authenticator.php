@@ -44,8 +44,9 @@ class Authenticator extends Object implements IAuthenticator {
 
         $login->last_login = DateTime::from(time());
         $this->serviceLogin->save($login);
+        $login->injectYearCalculator($this->yearCalculator);
 
-        return $login->getPerson();
+        return $login;
     }
 
     /**

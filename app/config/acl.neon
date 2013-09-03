@@ -22,8 +22,10 @@ common:
                 - addRole(inboxManager, org)        # příjemce řešení
                 - addRole(boss, org)                # šéf
 
-#                - addResource(songs)
+                - addResource(submit)
 #                - allow(manager, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
+
+                - allow(contestant, submit, upload)
 
 production < common:
 

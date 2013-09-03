@@ -34,9 +34,6 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     const CONT_ADDRESS = 'address';
     const CONT_CONTESTANT = 'contestant';
 
-    /** @var ServiceContest */
-    private $serviceContest;
-
     /** @var ServicePerson */
     private $servicePerson;
 
@@ -69,10 +66,6 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
     /** @var Connection */
     private $connection;
-
-    public function injectServiceContest(ServiceContest $serviceContest) {
-        $this->serviceContest = $serviceContest;
-    }
 
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
@@ -186,7 +179,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $contestant = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
 
-        
+
         $form->setCurrentGroup();
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'handleRegisterFormSuccess');
@@ -214,7 +207,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         }
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
 
-        
+
         $form->setCurrentGroup();
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'handleContestantFormSuccess');

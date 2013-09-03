@@ -23,6 +23,7 @@ common:
     services:
         # data services
         authenticator: Authenticator
+        contestAuthorizator: Authorization\ContestAuthorizator
         yearCalculator: YearCalculator
         seriesCalculator: SeriesCalculator
         resultsModelFactory: ResultsModelFactory
@@ -61,7 +62,7 @@ common:
             
             
             
-        nette.userStorage: PersonUserStorage
+        nette.userStorage: LoginUserStorage
             
 
     factories:

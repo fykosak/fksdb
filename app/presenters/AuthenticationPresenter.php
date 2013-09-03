@@ -10,7 +10,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function actionLogout() {
         if ($this->getUser()->isLoggedIn()) {
-            $a = $this->getUser()->getIdentity()->gender == 'F' ? "a" : "";
+            $a = $this->getUser()->getIdentity()->getPerson()->gender == 'F' ? "a" : "";
             $this->getUser()->logout(true); //clear identity
 
             $this->flashMessage("Byl$a jste odhlášen$a.");
@@ -58,8 +58,10 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $this->application->restoreRequest($this->backlink);
 
-            $person = $this->user->getIdentity();
-            if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
+            $person = $this->user->getIdentity()->getPerson();
+            if (!$person) {
+                throw new AuthenticationException('Not assigned a person for login.');
+            } else if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
                 $this->redirect(':Org:Dashboard:default');
             } else {
                 $this->redirect(':Public:Dashboard:default');

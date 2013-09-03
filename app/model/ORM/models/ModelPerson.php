@@ -1,12 +1,10 @@
 <?php
 
-use Nette\Security\IIdentity;
-
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelPerson extends AbstractModelSingle implements IIdentity {
+class ModelPerson extends AbstractModelSingle {
 
     /**
      * @return AbstractModelSingle|null
@@ -86,6 +84,22 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
 
     /**
      * 
+     * @param YearCalculator $yearCalculator
+     * @return array of ModelContestant indexed by ct_id
+     */
+    public function getActiveContestants(YearCalculator $yearCalculator) {
+        $result = array();
+        foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
+            $year = $yearCalculator->getCurrentYear($contestant->contest_id);
+            if ($contestant->year == $year) {
+                $result[$contestant->ct_id] = ModelContestant::createFromTableRow($contestant);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 
      * @param str $fullname
      * @return array
      */
@@ -114,16 +128,6 @@ class ModelPerson extends AbstractModelSingle implements IIdentity {
         } else {
             $this->gender = 'M';
         }
-    }
-
-    // ----- IIdentity implementation ----------
-
-    public function getId() {
-        return $this->person_id;
-    }
-
-    public function getRoles() {
-        return array();
     }
 
 }

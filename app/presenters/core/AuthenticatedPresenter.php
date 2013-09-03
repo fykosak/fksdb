@@ -1,12 +1,25 @@
 <?php
 
+use Authorization\ContestAuthorizator;
 use Nette\Http\UserStorage;
-use Nette\Application\UI\Form;
 
 /**
  * Presenter allows authenticated user access only.
  */
-abstract class AuthenticatedPresenter extends BasePresenter implements IContestPresenter {
+abstract class AuthenticatedPresenter extends BasePresenter {
+
+    /**
+     * @var ContestAuthorizator
+     */
+    protected $contestAuthorizator;
+
+    public function getContestAuthorizator() {
+        return $this->contestAuthorizator;
+    }
+
+    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
+        $this->contestAuthorizator = $contestAuthorizator;
+    }
 
     protected function startup() {
         parent::startup();

@@ -36,7 +36,7 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     }
 
     protected function initContests() {
-        $activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($this->yearCalculator);
+        $activeOrgs = $this->getUser()->getIdentity()->getPerson()->getActiveOrgs($this->yearCalculator);
 
 
         $contests = array();
