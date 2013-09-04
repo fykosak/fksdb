@@ -7,6 +7,11 @@
 common:
     parameters:
         wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
+        upload:
+            root: %appDir%/../upload
+            directoryMask: '%%s/rocnik%02d/serie%%d/uloha-%%s'
+            filenameMask: '%%s-r%3$d-s%4$d-%5$s'
+            
     php:
         date.timezone: Europe/Prague
         # zlib.output_compression: yes
@@ -29,6 +34,7 @@ common:
         resultsModelFactory: ResultsModelFactory
         statsModelFactory: StatsModelFactory
         SQLResultsCache: SQLResultsCache
+        submitStorage: Tasks\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, {1: 'fykos', 2: 'vyfuk'})
 
         # ORM services
         ServiceAddress:         ServiceAddress

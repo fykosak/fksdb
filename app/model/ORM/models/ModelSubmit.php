@@ -16,4 +16,18 @@ class ModelSubmit extends AbstractModelSingle {
         return !($this->submitted_on || $this->note);
     }
 
+    /**
+     * @return ModelTask
+     */
+    public function getTask() {
+        return ModelTask::createFromTableRow($this->ref(DbNames::TAB_TASK, 'task_id'));
+    }
+
+    /**
+     * @return ModelContestant
+     */
+    public function getContestant() {
+        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT, 'ct_id'));
+    }
+
 }
