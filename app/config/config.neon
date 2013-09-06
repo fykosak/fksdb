@@ -11,6 +11,8 @@ common:
             root: %appDir%/../upload
             directoryMask: '%%s/rocnik%02d/serie%%d/uloha-%%s'
             filenameMask: '%%s-r%3$d-s%4$d-%5$s'
+        stamper:
+            fontSize: 10
             
     php:
         date.timezone: Europe/Prague
@@ -34,7 +36,12 @@ common:
         resultsModelFactory: ResultsModelFactory
         statsModelFactory: StatsModelFactory
         SQLResultsCache: SQLResultsCache
-        submitStorage: Tasks\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, {1: 'fykos', 2: 'vyfuk'})
+        submitStorage:
+            class: Submits\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, {1: 'fykos', 2: 'vyfuk'})
+            setup:
+                - addProcessing(@PDFStamper)
+        PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+        
 
         # ORM services
         ServiceAddress:         ServiceAddress

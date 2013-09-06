@@ -10,7 +10,8 @@ use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
 use ServiceSubmit;
 use ServiceTask;
-use Tasks\SubmitStorage;
+use Submits\ISubmitStorage;
+use Submits\SubmitStorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,7 +27,7 @@ class SubmitPresenter extends BasePresenter {
     private $submitService;
 
     /**
-     * @var SubmitStorage
+     * @var ISubmitStorage
      */
     private $submitStorage;
 
@@ -38,7 +39,7 @@ class SubmitPresenter extends BasePresenter {
         $this->submitService = $submitService;
     }
 
-    public function injectSubmitStorage(SubmitStorage $submitStorage) {
+    public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
 

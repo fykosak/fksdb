@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks;
+namespace Submits;
 
 use ModelSubmit;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
-use RuntimeException;
 use UnexpectedValueException;
 
 /**
@@ -15,9 +15,16 @@ use UnexpectedValueException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SubmitStorage {
+class SubmitStorage implements ISubmitStorage {
+    /** Characters delimiting name and metadata in filename. */
 
     const DELIMITER = '__';
+
+    /** File extension that marks original untouched file. */
+    const ORIGINAL_EXT = '.bak';
+
+    /** File extension that marks temporary working file. */
+    const TEMPORARY_EXT = '.tmp';
 
     private $todo = null;
 
@@ -45,11 +52,20 @@ class SubmitStorage {
      */
     private $contestMap;
 
+    /**
+     * @var array of IStorageProcessing
+     */
+    private $processings = array();
+
     function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
         $this->contestMap = $contestMap;
+    }
+
+    public function addProcessing(IStorageProcessing $processing) {
+        $this->processings[] = $processing;
     }
 
     public function beginTransaction() {
@@ -69,9 +85,8 @@ class SubmitStorage {
                 $submit = $todo['submit'];
 
                 // remove potential existing instance
-                $oldFilename = $this->retrieveFile($submit);
-                if (file_exists($oldFilename)) {
-                    unlink($oldFilename);
+                if ($this->existsFile($submit)) {
+                    $this->deleteFile($submit);
                 }
 
                 $file = $todo['file'];
@@ -79,10 +94,30 @@ class SubmitStorage {
                 $extension = trim(strrchr($name, '.'), '.');
 
                 $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit) . '.' . $extension;
-                $file->move($dest);
+                if (count($this->processings) > 0) {
+                    $original = $dest . self::ORIGINAL_EXT;
+                    $working = $dest . self::TEMPORARY_EXT;
+
+                    $file->move($original);
+                    copy($original, $working);
+                    foreach ($this->processings as $processing) {
+                        $processing->setInputFile($working);
+                        $processing->setOutputFile($dest);
+                        try {
+                            $processing->process($submit);
+                            rename($dest, $working);
+                        } catch (ProcessingException $e) {
+                            Debugger::log($e);
+                        }
+                    }
+
+                    rename($working, $dest);
+                } else {
+                    $file->move($dest);
+                }
             }
         } catch (InvalidStateException $e) {
-            throw new SubmitStorageException('Error while storing files.', null, $e);
+            throw new StorageException('Error while storing files.', null, $e);
         }
 
         $this->todo = null;
@@ -118,21 +153,18 @@ class SubmitStorage {
     }
 
     public function retrieveFile(ModelSubmit $submit) {
-        $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
-
-        try {
-            $it = Finder::findFiles('*' . self::DELIMITER . $submit . '*')->in($dir);
-            $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $e) {
+        $files = $this->retrieveFiles($submit);
+        $files = array_filter($files, function($file) {
+                    return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                            !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
+                });
+        if (count($files) == 0) {
             return null;
+        } else if (count($files) > 1) {
+            throw new InvalidStateException("Ambiguity in file database for submit #{$submit->submit_id}.");
+        } else {
+            return $files[0]->getRealPath();
         }
-
-        if (count($files) > 1) {
-            throw new InvalidStateException("Ambiguity in file database, submit #{$submit->id}.");
-        }
-        
-        
-        return count($files) ? $files[0]->getRealPath() : null;
     }
 
     /**
@@ -145,6 +177,26 @@ class SubmitStorage {
         $filename = $this->retrieveFile($submit);
 
         return (bool) $filename;
+    }
+
+    public function deleteFile(ModelSubmit $submit) {
+        $files = $this->retrieveFiles($submit);
+        foreach ($files as $file) {
+            unlink($file->getRealpath());
+        }
+    }
+
+    private function retrieveFiles(ModelSubmit $submit) {
+        $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
+
+        try {
+            $it = Finder::findFiles('*' . self::DELIMITER . $submit . '*')->in($dir);
+            $files = iterator_to_array($it, false);
+        } catch (UnexpectedValueException $e) {
+            return array();
+        }
+
+        return $files;
     }
 
     /**
@@ -187,8 +239,4 @@ class SubmitStorage {
         return $filename;
     }
 
-}
-
-class SubmitStorageException extends RuntimeException {
-    
 }

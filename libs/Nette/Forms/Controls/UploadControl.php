@@ -111,6 +111,8 @@ class UploadControl extends BaseControl
 		$file = $control->getValue();
 		if ($file instanceof Http\FileUpload) {
 			$type = strtolower($file->getContentType());
+                        dump($type);
+                        dump($mimeType);
 			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
 				return TRUE;
