@@ -30,3 +30,5 @@ Options -Indexes
 		SetOutputFilter INCLUDES
 	</FilesMatch>
 </IfModule>
+
+php_value max_input_vars 4000
