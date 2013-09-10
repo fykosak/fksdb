@@ -1,10 +1,14 @@
 <?php
 
+namespace FKSDB\Components\Grids;
+
+use NiftyGrid\DataSource\NDataSource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class GridSchools extends AbstractGrid {
+class SchoolsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -15,7 +19,7 @@ class GridSchools extends AbstractGrid {
         $serviceSchool = $presenter->context->getService('ServiceSchool');
         $schools = $serviceSchool->getSchools();
         
-        $this->setDataSource(new NiftyGrid\DataSource\NDataSource($schools));
+        $this->setDataSource(new NDataSource($schools));
 
         //
         // columns

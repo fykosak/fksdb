@@ -2,9 +2,9 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Grids\SchoolsGrid;
 use FormSchool;
 use FormUtils;
-use GridSchools;
 use ModelException;
 use Nette\Diagnostics\Debugger;
 
@@ -27,7 +27,7 @@ class SchoolsPresenter extends BasePresenter {
     }
     
     protected function createComponentGridSchools($name){
-        $grid = new GridSchools();
+        $grid = new SchoolsGrid();
         
         return $grid;
     }

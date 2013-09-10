@@ -37,10 +37,10 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         if ($this->contestant === false) {
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->getContestants()
-                    ->where(array(
-                'contest_id' => $this->getSelectedContest()->contest_id,
-                'year' => $this->getSelectedYear()
-            ))->fetch();
+                            ->where(array(
+                                'contest_id' => $this->getSelectedContest()->contest_id,
+                                'year' => $this->getSelectedYear()
+                            ))->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
         }

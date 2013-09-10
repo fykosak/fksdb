@@ -14,5 +14,13 @@ class ModelContestant extends AbstractModelSingle {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
+    
+    /**
+     * @return ModelContest
+     */
+    public function getContest() {
+        $data = $this->contest;
+        return ModelContest::createFromTableRow($data);
+    }
 
 }

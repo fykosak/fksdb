@@ -31,6 +31,7 @@ common:
         # data services
         authenticator: Authenticator
         contestAuthorizator: Authorization\ContestAuthorizator
+        ownerAssertion: Authorization\OwnerAssertion
         yearCalculator: YearCalculator
         seriesCalculator: SeriesCalculator
         resultsModelFactory: ResultsModelFactory

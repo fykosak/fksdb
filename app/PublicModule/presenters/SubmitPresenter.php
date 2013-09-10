@@ -2,9 +2,11 @@
 
 namespace PublicModule;
 
+use FKSDB\Components\Grids\SubmitsGrid;
 use ModelException;
 use ModelSubmit;
 use Nette\Application\BadRequestException;
+use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
@@ -49,6 +51,29 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    public function actionDownload($id) {
+        $submit = $this->submitService->findByPrimary($id);
+
+        if (!$submit) {
+            throw new BadRequestException('Neexistující submit.', 404);
+        }
+
+        $submit->task_id; // stupid touch
+        $contest = $submit->getContestant()->getContest();
+        if (!$this->contestAuthorizator->isAllowed($submit, 'download', $contest)) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+
+        $filename = $this->submitStorage->retrieveFile($submit);
+        if (!$filename) {
+            throw new BadRequestException('Poškozený soubor submitu', 500);
+        }
+
+        //TODO better construct user's filename and PDF type dependency
+        $response = new FileResponse($filename, $submit->getTask()->getFQName() . '.pdf', 'application/pdf');
+        $this->sendResponse($response);
+    }
+
     public function createComponentUploadForm($name) {
         $form = new Form();
 
@@ -61,8 +86,7 @@ class SubmitPresenter extends BasePresenter {
             }
 
             $container = $form->addContainer('task' . $task->task_id);
-            $upload = $container->addUpload('file', $task->label)
-                    ->setOption('description', $task->name_cs)//TODO i18n
+            $upload = $container->addUpload('file', $task->getFQName())
                     ->addCondition(Form::FILLED)
                     ->addRule(Form::MIME_TYPE, 'Lze nahrávat pouze PDF soubory.', 'application/pdf'); //TODO verify this check at server
 
@@ -86,6 +110,12 @@ class SubmitPresenter extends BasePresenter {
         $form->addProtection('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.');
 
         return $form;
+    }
+
+    public function createComponentSubmitsGrid($name) {
+        $grid = new SubmitsGrid($this->submitService, $this->getContestant());
+
+        return $grid;
     }
 
     public function handleUploadFormSuccess($form) {

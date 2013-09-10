@@ -19,12 +19,19 @@ class ServiceSubmit extends AbstractServiceSingle {
                     'ct_id' => $ctId,
                     'task_id' => $taskId,
                 ))->fetch();
-        
+
         if ($result !== false) {
             return $result;
         } else {
             return null;
         }
+    }
+
+    public function getSubmits() {
+        $submits = $this->getTable()
+                ->select(DbNames::TAB_SUBMIT . '.*')
+                ->select(DbNames::TAB_TASK . '.*');
+        return $submits;
     }
 
 }

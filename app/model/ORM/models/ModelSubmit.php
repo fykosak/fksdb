@@ -1,10 +1,12 @@
 <?php
 
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelSubmit extends AbstractModelSingle {
+class ModelSubmit extends AbstractModelSingle implements IResource {
 
     const SOURCE_UPLOAD = 'upload';
     const SOURCE_POST = 'post';
@@ -28,6 +30,10 @@ class ModelSubmit extends AbstractModelSingle {
      */
     public function getContestant() {
         return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT, 'ct_id'));
+    }
+
+    public function getResourceId() {
+        return 'submit';
     }
 
 }

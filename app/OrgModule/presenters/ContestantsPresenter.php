@@ -2,8 +2,8 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Grids\ContestantsGrid;
 use FormUtils;
-use GridContestants;
 use ModelException;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
@@ -25,7 +25,7 @@ class ContestantsPresenter extends BasePresenter {
     }
 
     protected function createComponentGridContestants($name) {
-        $grid = new GridContestants();
+        $grid = new ContestantsGrid();
 
         return $grid;
     }

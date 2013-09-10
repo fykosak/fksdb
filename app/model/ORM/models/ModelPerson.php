@@ -7,10 +7,18 @@
 class ModelPerson extends AbstractModelSingle {
 
     /**
-     * @return AbstractModelSingle|null
+     * Returns first of the person's logins.
+     * 
+     * @return ModelLogin|null
      */
     public function getLogin() {
-        return $this->ref(DbNames::TAB_LOGIN, 'person_id');
+        $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
+        $logins->rewind();
+        if (!$logins->valid()) {
+            return null;
+        }
+
+        return ModelLogin::createFromTableRow($logins->current());
     }
 
     /**

@@ -7,11 +7,11 @@ class ServiceSchool extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SCHOOL;
     protected $modelClassName = 'ModelSchool';
-    
-    public function getSchools(){
-        $schools = $this->getTable()            
-                ->select('school.*')
-                ->select('address.*');
+
+    public function getSchools() {
+        $schools = $this->getTable()
+                ->select(DbNames::TAB_SCHOOL . '.*')
+                ->select(DbNames::TAB_ADDRESS . '.*');
         return $schools;
     }
 

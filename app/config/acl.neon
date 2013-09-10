@@ -26,6 +26,7 @@ common:
 #                - allow(manager, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
                 - allow(contestant, submit, upload)
+                - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
 
 production < common:
 

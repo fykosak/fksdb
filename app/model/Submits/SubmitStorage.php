@@ -163,7 +163,8 @@ class SubmitStorage implements ISubmitStorage {
         } else if (count($files) > 1) {
             throw new InvalidStateException("Ambiguity in file database for submit #{$submit->submit_id}.");
         } else {
-            return $files[0]->getRealPath();
+            $file = array_pop($files);
+            return $file->getRealPath();
         }
     }
 
