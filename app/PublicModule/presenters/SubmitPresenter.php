@@ -113,7 +113,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid($name) {
-        $grid = new SubmitsGrid($this->submitService, $this->getContestant());
+        $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
 
         return $grid;
     }

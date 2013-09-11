@@ -181,9 +181,16 @@ class SubmitStorage implements ISubmitStorage {
     }
 
     public function deleteFile(ModelSubmit $submit) {
+        $fails = array();
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
-            unlink($file->getRealpath());
+            if (!unlink($file->getRealpath())) {
+                $fails[] = $file->getRealpath();
+            }
+        }
+
+        if (count($fails)) {
+            throw new StorageException("Error when deleting '" . implode("', '", $fails) . "'");
         }
     }
 

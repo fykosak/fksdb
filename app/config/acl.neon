@@ -27,6 +27,7 @@ common:
 
                 - allow(contestant, submit, upload)
                 - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
+                - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
 
 production < common:
 
