@@ -4,23 +4,15 @@
 # If you don't protect this directory from direct web access, anybody will be able to see your passwords.
 # http://nette.org/security-warning
 #
-common:
-    parameters:
-        astrid:
-            host: astrid.fykos.cz
-            user: 
-            password: 
 
-production < common:
-    nette:
-        database:
-            dsn: 'mysql:host=localhost;dbname=fksdb'
-            user: 
-            password: 
+parameters:
+    astrid:
+        host: astrid.fykos.cz
+        user: 
+        password: 
 
-development < common:
-    nette:
-        database:
-            dsn: 'mysql:host=localhost;dbname=newfks'
-            user: 
-            password: 
+nette:
+    database:
+        dsn: 'mysql:host=localhost;dbname=fksdb'
+        user: 
+        password: 

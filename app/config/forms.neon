@@ -1,0 +1,10 @@
+#
+# Forms related services (mostly factories)
+#
+services:
+    AddressFactory:     FKSDB\Components\Forms\Factories\AddressFactory
+    ContestantFactory:  FKSDB\Components\Forms\Factories\ContestantFactory
+    LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
+    OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory
+    PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
+    SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory

@@ -1,0 +1,19 @@
+#
+# ORM services definitions
+#
+services:
+    ServiceAddress:          ServiceAddress
+    ServiceContestant:       ServiceContestant
+    ServiceContest:          ServiceContest
+    ServiceCountry:          ServiceCountry
+    ServiceLogin:            ServiceLogin
+    ServiceMPostContact:     ServiceMPostContact
+    ServiceOrg:              ServiceOrg
+    ServicePerson:           ServicePerson
+    ServicePersonInfo:       ServicePersonInfo
+    ServicePostContact:      ServicePostContact
+    ServiceRegion:           ServiceRegion
+    ServiceSubmit:           ServiceSubmit
+    ServiceSchool:           ServiceSchool
+    ServiceTask:             ServiceTask
+    ServiceTaskContribution: ServiceTaskContribution

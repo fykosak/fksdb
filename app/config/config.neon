@@ -1,108 +1,70 @@
 #
-# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# Main configuration of FKSDB
 #
-# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
-# http://nette.org/security-warning
-#
-common:
-    parameters:
-        wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
-        upload:
-            root: %appDir%/../upload
-            directoryMask: '%%s/rocnik%02d/serie%%d/uloha-%%s'
-            filenameMask: '%%s-r%3$d-s%4$d-%5$s'
-        stamper:
-            fontSize: 10
-        tasks:
-            columnMapping:
-                cs:
-                    name: name_cs
-                    points: points
-                    label: label
-                en:
-                    name: name_en
-            contributionMapping:
-                author: authors
-                solution: solution-authors
 
-            paths:
-                cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
-                en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
-                   
-    php:
-        date.timezone: Europe/Prague
-        # zlib.output_compression: yes
+parameters:
+    # WDSL file defining provided services.
+    wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 
-    nette:
-        application:
-            errorPresenter: Error
+    # Map: contest_id => contest indentifier
+    contestMapping:
+        1: fykos
+        2: vyfuk
 
-        session:
-            expiration: 14 days
+    # Submits by contestats
+    upload:
+        # Path to storage directory
+        root: %appDir%/../upload
 
+        # Sprintf pattern of directory name with arguments: contestName, year, series, task label
+        directoryMask: '%%s/rocnik%02d/serie%%d/uloha-%%s'
 
+        # Sprintf pattern of stored file with arguments: contestantName, contestName, year, series, label
+        filenameMask: '%%s-r%3$d-s%4$d-%5$s'
 
-    services:
-        # data services
-        authenticator: Authenticator
-        contestAuthorizator: Authorization\ContestAuthorizator
-        ownerAssertion: Authorization\OwnerAssertion
-        yearCalculator: YearCalculator
-        seriesCalculator: SeriesCalculator
-        resultsModelFactory: ResultsModelFactory
-        statsModelFactory: StatsModelFactory
-        SQLResultsCache: SQLResultsCache
-        submitStorage:
-            class: Submits\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, {1: 'fykos', 2: 'vyfuk'})
-            setup:
-                - addProcessing(@PDFStamper)
-        PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
-        pipelineFactory:
-            class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
-        downloaderFactory:
-            class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %appDir%/../temp, {1: 'fykos', 2: 'vyfuk'})
+    # PDF stamper settings
+    stamper:
+        # Font size in points (pt).
+        fontSize: 10
+
+    # Transport XML (from Astrid)
+    tasks:
+        # Mapping of XML element names to tasks table columns (separate XML for each language).
+        columnMapping:
+            cs:
+                name: name_cs
+                points: points
+                label: label
+            en:
+                name: name_en
+
+        # Mapping of contribution types to comprising XML element (taken from Czech version only.)
+        # Contributions types must be ModelTaskContribution::TYPE_* constants.
+        contributionMapping:
+            author: authors
+            solution: solution-authors
         
+        # Paths for search of XML files, including trailing slash.
+        # Arguments: contestName, year, series
+        paths:
+            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
+            en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
 
-        # ORM services
-        ServiceAddress:          ServiceAddress
-        ServiceContestant:       ServiceContestant
-        ServiceContest:          ServiceContest
-        ServiceCountry:          ServiceCountry
-        ServiceLogin:            ServiceLogin
-        ServiceMPostContact:     ServiceMPostContact
-        ServiceOrg:              ServiceOrg
-        ServicePerson:           ServicePerson
-        ServicePersonInfo:       ServicePersonInfo
-        ServicePostContact:      ServicePostContact
-        ServiceRegion:           ServiceRegion
-        ServiceSubmit:           ServiceSubmit
-        ServiceSchool:           ServiceSchool
-        ServiceTask:             ServiceTask
-        ServiceTaskContribution: ServiceTaskContribution
-        # web services
-        soapServer:
-            class: SoapServer(%wdslUrl%)
-            setup:
-                - setObject(@webServiceModel)
+php:
+    date.timezone: Europe/Prague
+    # zlib.output_compression: yes
 
-        webServiceModel:        WebServiceModel
+nette:
+    application:
+        errorPresenter: Error
 
-        # form factories
-        AddressFactory:     FKSDB\Components\Forms\Factories\AddressFactory
-        ContestantFactory:  FKSDB\Components\Forms\Factories\ContestantFactory
-        LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
-        OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory
-        PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
-        SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
-            
-            
-            
-        nette.userStorage: LoginUserStorage
-            
-
-    factories:
+    session:
+        expiration: 14 days
 
 
-production < common:
-
-development < common:
+includes:
+    - acl.neon
+    - orm.neon
+    - forms.neon
+    - services.neon
+    - factories.neon
