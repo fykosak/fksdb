@@ -82,9 +82,10 @@ class ModelPerson extends AbstractModelSingle {
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = array();
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
-            $year = $yearCalculator->getCurrentYear($org->contest_id);
+            $org = ModelOrg::createFromTableRow($org);
+            $year = $yearCalculator->getCurrentYear($org->getContest());
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
-                $result[$org->org_id] = ModelOrg::createFromTableRow($org);
+                $result[$org->org_id] = $org;
             }
         }
         return $result;
@@ -98,9 +99,10 @@ class ModelPerson extends AbstractModelSingle {
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = array();
         foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
-            $year = $yearCalculator->getCurrentYear($contestant->contest_id);
+            $contestant = ModelContestant::createFromTableRow($contestant);
+            $year = $yearCalculator->getCurrentYear($contestant->getContest());
             if ($contestant->year == $year) {
-                $result[$contestant->ct_id] = ModelContestant::createFromTableRow($contestant);
+                $result[$contestant->ct_id] = $contestant;
             }
         }
         return $result;

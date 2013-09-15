@@ -25,5 +25,6 @@ class DbNames {
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';
+    const TAB_TASK_CONTRIBUTION = 'org_task_contribution';
 
 }

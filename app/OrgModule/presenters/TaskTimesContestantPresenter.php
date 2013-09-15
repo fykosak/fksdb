@@ -6,7 +6,6 @@ use ModelSubmit;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\Selection;
 
-
 /**
  * Presenter "template" for presenters manipulating tasks x contestants tables.
  * 
@@ -73,7 +72,7 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     protected function createComponentFormSelectSeries($name) {
         $form = new Form($this, $name);
         $sc = $this->getService('seriesCalculator');
-        $lastSeries = $sc->getLastSeries($this->contestId, $this->year);
+        $lastSeries = $sc->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
 
         $form->addSelect('series', 'Série')
                 ->setItems(range(1, $lastSeries), false)
@@ -94,8 +93,8 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
 
         $session = $this->getSession()->getSection('presets');
 
-        $defaultSeries = isset($session->defaultSeries) ? $session->defaultSeries : $sc->getCurrentSeries($this->contestId);
-        $lastSeries = $sc->getLastSeries($this->contestId, $this->year);
+        $defaultSeries = isset($session->defaultSeries) ? $session->defaultSeries : $sc->getCurrentSeries($this->getSelectedContest());
+        $lastSeries = $sc->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
         $defaultSeries = min($defaultSeries, $lastSeries);
 
         if ($this->series === null || $this->series > $lastSeries) {
@@ -106,16 +105,6 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
         // remember
         $session->defaultSeries = $this->series;
     }
-
-//    public function handleChangeContest($contestId) {
-//        parent::handleChangeContest($contestId);
-//        $this->series = null;
-//    }
-//
-//    public function handleChangeYear($form) {
-//        parent::handleChangeYear($form);
-//        $this->series = null;
-//    }
 
     protected function startup() {
         parent::startup();

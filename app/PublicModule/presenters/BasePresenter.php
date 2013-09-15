@@ -30,7 +30,7 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     }
 
     public function getSelectedYear() {
-        return $this->yearCalculator->getCurrentYear($this->getSelectedContest()->contest_id);
+        return $this->yearCalculator->getCurrentYear($this->getSelectedContest());
     }
 
     public function getContestant() {

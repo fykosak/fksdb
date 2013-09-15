@@ -11,7 +11,7 @@ use Nette\Security\IIdentity;
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
-     * @var YearCalculator
+     * @var YearCalculator|null
      */
     private $yearCalculator;
 
@@ -80,6 +80,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
                 throw new InvalidStateException('To obtain current roles, you have to inject YearCalculator to this Login instance.');
             }
             $this->roles = array();
+            /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
+             * that Identity is known, however user is not logged in.
+             */
+
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
                 $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);

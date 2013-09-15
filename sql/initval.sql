@@ -52,3 +52,14 @@ INSERT INTO region (country_iso, nuts, name) VALUES
 INSERT INTO contest (contest_id, name) VALUES 
 (1, 'FYKOS'),
 (2, 'VÝFUK');
+
+INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
+(1,'webmaster','webař'),
+(2,'taskManager','úlohář'),
+(3,'dispatcher','koordinátor obálkování'),
+(4,'dataManager','správce (dat) DB'),
+(5,'eventManager','správce přihlášek'),
+(6,'inboxManager','příjemce řešení'),
+(7,'boss','hlavní organizátor (šéf)');
+
+

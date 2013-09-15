@@ -13,7 +13,22 @@ common:
             filenameMask: '%%s-r%3$d-s%4$d-%5$s'
         stamper:
             fontSize: 10
-            
+        tasks:
+            columnMapping:
+                cs:
+                    name: name_cs
+                    points: points
+                    label: label
+                en:
+                    name: name_en
+            contributionMapping:
+                author: authors
+                solution: solution-authors
+
+            paths:
+                cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
+                en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
+                   
     php:
         date.timezone: Europe/Prague
         # zlib.output_compression: yes
@@ -42,22 +57,28 @@ common:
             setup:
                 - addProcessing(@PDFStamper)
         PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+        pipelineFactory:
+            class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
+        downloaderFactory:
+            class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %appDir%/../temp, {1: 'fykos', 2: 'vyfuk'})
         
 
         # ORM services
-        ServiceAddress:         ServiceAddress
-        ServiceContestant:      ServiceContestant
-        ServiceContest:         ServiceContest
-        ServiceCountry:         ServiceCountry
-        ServiceLogin:           ServiceLogin
-        ServiceMPostContact:    ServiceMPostContact
-        ServicePerson:          ServicePerson
-        ServicePersonInfo:      ServicePersonInfo
-        ServicePostContact:     ServicePostContact
-        ServiceRegion:          ServiceRegion
-        ServiceSubmit:          ServiceSubmit
-        ServiceSchool:          ServiceSchool
-        ServiceTask:            ServiceTask
+        ServiceAddress:          ServiceAddress
+        ServiceContestant:       ServiceContestant
+        ServiceContest:          ServiceContest
+        ServiceCountry:          ServiceCountry
+        ServiceLogin:            ServiceLogin
+        ServiceMPostContact:     ServiceMPostContact
+        ServiceOrg:              ServiceOrg
+        ServicePerson:           ServicePerson
+        ServicePersonInfo:       ServicePersonInfo
+        ServicePostContact:      ServicePostContact
+        ServiceRegion:           ServiceRegion
+        ServiceSubmit:           ServiceSubmit
+        ServiceSchool:           ServiceSchool
+        ServiceTask:             ServiceTask
+        ServiceTaskContribution: ServiceTaskContribution
         # web services
         soapServer:
             class: SoapServer(%wdslUrl%)

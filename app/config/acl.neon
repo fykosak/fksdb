@@ -10,10 +10,11 @@ common:
         authorizator:
             class: Nette\Security\Permission
             setup:
-                - addRole(guest)                    # anonym
-                - addRole(registered, guest)        # registrant
-                - addRole(contestant, registered)   # řešitel
-                - addRole(org)                      # org
+                # Roles
+                - addRole(guest)                    # anonym (automatická role)
+                - addRole(registered, guest)        # registrant (automatická role)
+                - addRole(contestant, registered)   # řešitel (automatická role)
+                - addRole(org)                      # org (automatická role)
                 - addRole(webmaster, org)           # webař
                 - addRole(taskManager, org)         # úlohář
                 - addRole(dispatcher, org)          # koordinátor obálkování
@@ -22,12 +23,16 @@ common:
                 - addRole(inboxManager, org)        # příjemce řešení
                 - addRole(boss, org)                # šéf
 
+                # Resources
                 - addResource(submit)
-#                - allow(manager, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
+                - addResource(task)
 
+                # ACL
                 - allow(contestant, submit, upload)
                 - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
                 - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
+                
+                - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
 production < common:
 

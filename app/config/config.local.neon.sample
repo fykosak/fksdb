@@ -5,17 +5,22 @@
 # http://nette.org/security-warning
 #
 common:
+    parameters:
+        astrid:
+            host: astrid.fykos.cz
+            user: 
+            password: 
 
 production < common:
     nette:
         database:
             dsn: 'mysql:host=localhost;dbname=fksdb'
-            user:
-            password:
+            user: 
+            password: 
 
 development < common:
     nette:
         database:
-            dsn: 'mysql:host=localhost;dbname=fksdb'
-            user: root
-            password: vyvoj
+            dsn: 'mysql:host=localhost;dbname=newfks'
+            user: 
+            password: 

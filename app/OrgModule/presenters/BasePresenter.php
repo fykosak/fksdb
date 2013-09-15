@@ -49,7 +49,8 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         $session = $this->getSession()->getSection('presets');
 
         $defaultContest = isset($session->defaultContest) ? $session->defaultContest : $contestIds[0]; // by default choose the first
-        $defaultYear = isset($session->defaultYear) ? $session->defaultYear : $this->yearCalculator->getCurrentYear($this->contestId);
+        $defaultYear = isset($session->defaultYear) ? $session->defaultYear :
+                (($this->getSelectedContest() !== null) ? $this->yearCalculator->getCurrentYear($this->getSelectedContest()) : null);
 
         if ($this->contestId === null) {
             $this->contestId = $defaultContest;
@@ -73,7 +74,8 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
 
     public function handleChangeContest($contestId) {
         $this->contestId = $contestId;
-        $this->year = $this->yearCalculator->getCurrentYear($this->contestId);
+        $this->selectedContest = null;
+        $this->year = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
         $this->redirect('this');
     }
 
@@ -82,7 +84,7 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     //
      protected function createComponentFormSelectYear($name) {
         $form = new Form($this, $name);
-        $currentYear = $this->yearCalculator->getCurrentYear($this->contestId);
+        $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
 
         $form->addSelect('year', 'Ročník')
                 ->setItems(range(1, $currentYear + 1), false)
