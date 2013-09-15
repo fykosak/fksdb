@@ -84,11 +84,7 @@ class FormPersonFind extends Form {
             };
 
             // --- spamees (from the most recent spam collection action ---
-            $spamees = $person->getSpamees()->order('collection_id DESC');
-            $spamee = $spamees->fetch();
-            if (!$location && $spamee && $spamee->school) {
-                $location = $spamee->school->name_abbrev;
-            }
+            // spamees are obsolete, later search in event_participant
 
             // --- try at least address ---
             $postContacts = $person->getPostContacts()->where('type = ?', 'P');
