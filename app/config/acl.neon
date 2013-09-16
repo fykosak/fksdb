@@ -34,3 +34,5 @@ services:
 
             - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
+            - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
+

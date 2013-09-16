@@ -2,9 +2,30 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Forms\Controls\ContestantSubmits;
+use ModelSubmit;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
+use Nette\Security\Permission;
+use ServiceSubmit;
 
 class InboxPresenter extends TaskTimesContestantPresenter {
+
+    /**
+     * @var ServiceSubmit
+     */
+    private $serviceSubmit;
+
+    public function injectSubmitService(ServiceSubmit $submitService) {
+        $this->serviceSubmit = $submitService;
+    }
+
+    public function actionDefault() {
+        if (!$this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
 
     public function renderDefault() {
         $this->template->contestants = $this->getContestants();
@@ -12,27 +33,20 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     }
 
     protected function createComponentInboxForm($name) {
-        $form = new Form($this, $name);
+        $form = new Form($this, $name); //TODO use OptimisticForm
 
         $contestants = $this->getContestants();
         $tasks = $this->getTasks();
         $submitsTable = $this->getSubmitsTable();
 
-        $grid = $form->addContainer('grid');
-        foreach ($contestants as $contestant) {
-            $container = $grid->addContainer($contestant->ct_id);
+        $container = $form->addContainer('contestants');
 
-            foreach ($tasks as $task) {
-                $subcontainer = $container->addContainer($task->task_id);
-                $text = $subcontainer->addText('submitted_on', null, 8);
-                $note = $subcontainer->addText('note', null, 4);
-                $note->getControlPrototype()->style('display:none');
-                if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
-                    $submit = $submitsTable[$contestant->ct_id][$task->task_id];
-                    $text->setDefaultValue($submit->submitted_on);
-                    $note->setDefaultValue($submit->note);
-                }
-            }
+        foreach ($contestants as $contestant) {
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
+            $control->setValue(isset($submitsTable[$contestant->ct_id]) ? $submitsTable[$contestant->ct_id] : null);
+
+            $namingContainer = $container->addContainer($contestant->ct_id);
+            $namingContainer->addComponent($control, 'submit');
         }
 
         $form->addSubmit('save', 'Uložit');
@@ -41,37 +55,22 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
-        $grid = $values['grid'];
-        Nette\Diagnostics\Debugger::log(Nette\Diagnostics\Debugger::dump($grid, true));
-        $submitsTable = $this->getSubmitsTable();
-        $serviceSubmit = $this->context->getService('ServiceSubmit');
-        $serviceSubmit->getConnection()->beginTransaction();
 
-        foreach ($grid as $ct_id => $tasks) {
-            foreach ($tasks as $task_id => $elements) {
-                if (isset($submitsTable[$ct_id][$task_id])) { // is in the table
-                    $submit = $submitsTable[$ct_id][$task_id];
+        $this->serviceSubmit->getConnection()->beginTransaction();
+
+        foreach ($values['contestants'] as $container) {
+            $submits = $container['submit'];
+
+            foreach ($submits as $submit) {
+                //TODO práva??
+                if ($submit->isEmpty()) {
+                    $this->serviceSubmit->dispose($submit);
                 } else {
-                    $submit = $serviceSubmit->createNew(array(
-                        'ct_id' => $ct_id,
-                        'task_id' => $task_id,
-                        'source' => ModelSubmit::SOURCE_POST,
-                            ));
-                }
-
-                $submit->note = $elements['note'];
-                if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-                    $submit->submitted_on = $elements['submitted_on'];
-                }
-
-                if ($submit->isEmpty() && $submit->source != ModelSubmit::SOURCE_UPLOAD) {
-                    $serviceSubmit->dispose($submit);
-                } else {
-                    $serviceSubmit->save($submit);
+                    $this->serviceSubmit->save($submit);
                 }
             }
         }
-        $serviceSubmit->getConnection()->commit();
+        $this->serviceSubmit->getConnection()->commit();
         $this->flashMessage('Informace o řešeních uložena.');
         $this->redirect('this');
     }

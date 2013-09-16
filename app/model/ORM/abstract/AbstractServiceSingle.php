@@ -58,6 +58,20 @@ abstract class AbstractServiceSingle extends TableSelection {
         return $result;
     }
 
+    /**
+     * Updates values in model from given data.
+     * 
+     * @param AbstractModelSingle $model
+     * @param array $data
+     */
+    public function updateModel(AbstractModelSingle $model, $data) {
+        $data = $this->filterData($data);
+        foreach($data as $key => $value) {
+            $model->{$key}  = $value;
+        }
+
+    }
+
     public static function createFromTableRow(TableRow $row) {
         $className = $this->modelClassName;
         return new static($row->toArray(), $row->getTable());
@@ -143,7 +157,7 @@ abstract class AbstractServiceSingle extends TableSelection {
     protected function getDefaultData() {
         if ($this->defaults == null) {
             $this->defaults = array();
-            foreach ($this->connection->getSupplementalDriver()->getColumns($this->name) as $column) {
+            foreach ($this->connection->getSupplementalDriver()->getColumns($this->tableName) as $column) {
                 $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
             }
         }

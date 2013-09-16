@@ -7,15 +7,20 @@ use FormUtils;
 use ModelException;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
+use ServiceContestant;
 use WizardCreateContestant;
 
 class ContestantsPresenter extends BasePresenter {
 
     /**
-     * @var str
-     * @persistent
+     *
+     * @var ServiceContestant
      */
-    public $backlink = '';
+    private $serviceContestant;
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
+    }
 
     protected function createComponentContestantWizard($name) {
         $wizard = new WizardCreateContestant($this, $name);
@@ -25,7 +30,7 @@ class ContestantsPresenter extends BasePresenter {
     }
 
     protected function createComponentGridContestants($name) {
-        $grid = new ContestantsGrid();
+        $grid = new ContestantsGrid($this->serviceContestant);
 
         return $grid;
     }
@@ -105,13 +110,11 @@ class ContestantsPresenter extends BasePresenter {
             }
 
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně založena.' : 'Řešitel úspěšně založen.');
-            $this->restoreRequest($this->backlink);
             $this->redirect('Contestants:default');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage($person->gender == 'F' ? 'Řešitel nebyl založen, došlo k chybě.' : 'Řešitelka nebyla založena, došlo k chybě.', 'error');
-            $this->restoreRequest($this->backlink);
             $this->redirect('Contestants:default');
         }
     }
