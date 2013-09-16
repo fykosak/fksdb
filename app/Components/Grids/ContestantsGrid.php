@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use ModelPerson;
 use NiftyGrid\DataSource\NDataSource;
+use ServiceContestant;
 
 /**
  *
@@ -12,12 +13,14 @@ use NiftyGrid\DataSource\NDataSource;
 class ContestantsGrid extends BaseGrid {
 
     /**
-     * @var ServiceSubmit
+     * @var ServiceContestant
      */
-    private $serviceSubmit;
+    private $serviceContestant;
 
-    function __construct(ServiceSubmit $serviceSubmit) {
-        $this->serviceSubmit = $serviceSubmit;
+    function __construct(ServiceContestant $serviceContestant) {
+        parent::__construct();
+
+        $this->serviceContestant = $serviceContestant;
     }
 
     protected function configure($presenter) {
@@ -26,8 +29,7 @@ class ContestantsGrid extends BaseGrid {
         //
         // data
         //
-        $serviceContestant = $presenter->context->getService('ServiceContestant');
-        $contestants = $serviceContestant->getCurrentContestants($presenter->getSelectedContest()->contest_id, $presenter->getSelectedYear());
+        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest()->contest_id, $presenter->getSelectedYear());
 
         $this->setDataSource(new NDataSource($contestants));
         $this->setDefaultOrder('family_name, other_name ASC');

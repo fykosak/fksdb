@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
@@ -11,7 +11,7 @@ use Nette\Application\UI\Form;
 class AddressContainer extends ModelContainer {
 
     public function setDefaults($values, $erase = FALSE) {
-        if ($values instanceof Nette\Database\Table\ActiveRow) { //assert its from address table
+        if ($values instanceof ActiveRow) { //assert its from address table
             $address = $values;
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\ModelContainer;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use ServiceSchool;
