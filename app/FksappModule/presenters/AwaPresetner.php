@@ -2,9 +2,11 @@
 
 namespace FksappModule;
 
-
-use \Nette\Application\UI\Form;
-use \Nette\Utils\Html;
+use ModelEventParticipant;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
+use Nette\FatalErrorException;
+use Nette\Utils\Html;
 
 
 /**
@@ -42,7 +44,7 @@ class AwaPresenter extends Action {
 	}
 
 	public function actionDefault() {
-		throw new \Nette\Application\BadRequestException();
+		throw new BadRequestException();
 	}
 
 	public function actionDela($id) {
@@ -54,7 +56,7 @@ class AwaPresenter extends Action {
 		$event_participant = $person->getEventParticipant()
 									->where('action_id = ?', $this->getEventId());
 		if($event_participant->count() === 0) {
-			throw new \Nette\Application\BadRequestException('Action Dela is not available now');
+			throw new BadRequestException('Action Dela is not available now');
 		}	
 
 		$template->event_name = $menu_action[0]['display'];
@@ -82,14 +84,10 @@ class AwaPresenter extends Action {
 		$presenter_name = $request->getPresenterName();
 		$this->saveBacklink($presenter_name . ':' . $params['action']);
 
-		$person_id  = $this->getUser()->getId();
-		$person     = $this->getService('ServicePerson')->getTable()
-			->where("person_id = $person_id")
-			->fetch();
-		$person_login = $this->getService('ServiceLogin')->getTable()
-			->where("person_id = $person_id")
-			->fetch();
-		$questions = array(
+		$person_login = $this->getUser()->getIdentity();
+                $person = $person_login->getPerson();
+
+                $questions = array(
 			0 => array('answer' => 'jablko', 'question' => 'Eva, Newton, červík Pepík', 'hint' => 'Kulaté ovoce'),
 			1 => array('answer' => 'kolo', 'question' => 'mlýn, bicykl, štěstí', 'hint' => 'Kulatá věc')
 		);
@@ -211,12 +209,11 @@ class AwaPresenter extends Action {
 
 	public function registrationFormOnSuccess($form) {
 		$this->getSession('regQuestion')->remove();
-		$backlink = $this->getBacklink();
 		$this->removeBacklink();
 
 		$values    = $form->getValues();
-		$person    = $this->getUser()->getIdentity();
-		$person_id = $this->getUser()->getId();
+		$person    = $this->getUser()->getIdentity()->getPerson();
+		$person_id = $person->person_id;
 
 		$service_ep        = $this->getService('ServiceEventParticipant');
 		$event_participant = $person->getEventParticipant()
@@ -240,10 +237,10 @@ class AwaPresenter extends Action {
 			$service_ep->save($model);
 		}
 		else {
-			throw new \Nette\FatalErrorException('Data in the database is INCONSISTENT! Pls check database!');
+			throw new FatalErrorException('Data in the database is INCONSISTENT! Pls check database!');
 		}
-
-		$this->redirect($backlink, $this->getEventId());
+                
+                $this->redirect('this');
 	}
 
 	public function deleteEventParticipantFormOnSuccess($form) {
@@ -258,7 +255,7 @@ class AwaPresenter extends Action {
 										->where('action_id = ?', $this->getEventId());
 			$number_of_rows    = $event_participant->count();
 			if($number_of_rows > 1) {
-				throw new \Nette\FatalErrorexception('Data in the database is INCONSISTENT! Pls check database!');
+				throw new FatalErrorException('Data in the database is INCONSISTENT! Pls check database!');
 			}
 
 			$event_participant_row = $event_participant->fetch();
@@ -266,7 +263,7 @@ class AwaPresenter extends Action {
 				$event_participant_row->delete();
 			}
 			else {
-				throw new \Nette\FatalErrorException('Really bad exception. Pls, contact admistrators quickly!!!');
+				throw new FatalErrorException('Really bad exception. Pls, contact admistrators quickly!!!');
 			}
 		}
 
