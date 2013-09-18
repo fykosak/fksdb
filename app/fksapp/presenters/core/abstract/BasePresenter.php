@@ -10,7 +10,6 @@ use \Nette\Application\Request;
 /**
  *
  * Each presenter in this app must inherits BasePresenter!
- * TODO - delete UrlControl
  *
  * @package presenters\core\abstract
  *
@@ -51,28 +50,6 @@ abstract class BasePresenter extends Presenter implements BaseInterface {
 
 		$backlink = $this->getSession('backlink');
 		$this->setBacklink($backlink->backlink);
-
-		// Setting the URL
-		$http_request = $this->getHttpRequest();
-		$parameters   = $this->context->getParameters();
-
-		$base_path = $parameters['base_path'];
-		if($base_path === NULL) {
-			$base_path = '';
-		}
-
-		$base_path = preg_replace('#^\(\/\)+\(.*\)#', '$1$2', $base_path);
-		if( ! preg_match('#^\/#', $base_path)) {
-			$base_path = "/" . $base_path;
-		}
-		else if($base_path === "/") {
-			$base_path = '';
-		}
-
-		$url_control = new UrlControl($http_request, $base_path);
-		$this->setUrlControl($url_control);
-
-		return true;
 	}
 
 	/**
@@ -96,7 +73,6 @@ abstract class BasePresenter extends Presenter implements BaseInterface {
 	*/
 	public function createComponentCss() {
 		$css = new CssControl();
-		$css->setBaseUrl($this->getUrlControl()->getUrl());
 
 		return $css;
 	}
@@ -151,17 +127,6 @@ abstract class BasePresenter extends Presenter implements BaseInterface {
 		return true;
 	}
 
-	/**
-	 * @param  UrlControl
-	 * @return boolean (true - OK)
-	 * @access private
-	*/
-	private function setUrlControl($url_control) {
-		$this->url_control = $url_control;
-
-		return true;
-	}
-
 	protected function setBacklink($backlink) {
 		$this->backlink = $backlink;
 	}
@@ -187,26 +152,11 @@ abstract class BasePresenter extends Presenter implements BaseInterface {
 		return $this->connection;
 	}
 
-	/**
-	 * @param  void
-	 * @return UrlControl
-	 * @access public
-	 * @see UrlControl
-	*/
-	public function getUrlControl() {
-		return $this->url_control;
-	}
-
 	public function getBacklink() {
 		return $this->backlink;
 	}
 
 
-
-	/**
-	 *
-	*/
-	private $url_control;
 
 	/**
 	 * @var string String in the format Nette\Application\UI\Presenter::storeRequest()
