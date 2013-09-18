@@ -17,7 +17,7 @@ class AwaPresenter extends Action {
 	protected function createResultArray() {
 		parent::createResultArray();
 		$id     = $this->getEventId();
-		$person = $this->getUser()->getIdentity();
+		$person = $this->getUser()->getIdentity()->getPerson();
 		$ep     = $person->getEventParticipant()
 						->where('action_id = ?', $id);
 		if($ep->count() === 0) {
@@ -49,7 +49,7 @@ class AwaPresenter extends Action {
 		$template    = $this->template;
 		$id          = $this->getEventId();
 		$menu_action = $this->findActionById($id);
-		$person      = $this->getUser()->getIdentity();
+		$person      = $this->getUser()->getIdentity()->getPerson();
 
 		$event_participant = $person->getEventParticipant()
 									->where('action_id = ?', $this->getEventId());
@@ -70,7 +70,7 @@ class AwaPresenter extends Action {
 		$template->event_name = $menu_action[0]['display'];
 		$template->year       = $this->getEventYear();
 
-		$person = $this->getUser()->getIdentity();
+		$person = $this->getUser()->getIdentity()->getPerson();
 		$ep     = $person->getEventParticipant()
 		->where('action_id = ?', $id);
 		$template->registred_user_message = $ep->count() > 0 ? 'Na tuto akci jsi jiz prihlasen.' : '';
@@ -253,7 +253,7 @@ class AwaPresenter extends Action {
 
 		$values = $form->getValues();
 		if($values->del_radio == 1) {
-			$person            = $this->getUser()->getIdentity();
+			$person            = $this->getUser()->getIdentity()->getPerson();
 			$event_participant = $person->getEventParticipant()
 										->where('action_id = ?', $this->getEventId());
 			$number_of_rows    = $event_participant->count();
