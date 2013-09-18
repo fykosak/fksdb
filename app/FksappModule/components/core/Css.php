@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Fksapp;
+namespace FksappModule;
 
 /**
  * Base class for CssControl

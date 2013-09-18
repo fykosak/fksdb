@@ -9,7 +9,7 @@
  * @see Js
 */ 
 
-namespace Fksapp;
+namespace FksappModule;
 
 
 

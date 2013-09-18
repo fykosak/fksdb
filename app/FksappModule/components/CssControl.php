@@ -9,7 +9,7 @@
  * @see \HomepageModule\Css
 */ 
 
-namespace Fksapp
+namespace FksappModule;
 
 
 

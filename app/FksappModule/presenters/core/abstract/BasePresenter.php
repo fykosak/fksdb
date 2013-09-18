@@ -1,6 +1,6 @@
 <?php
 
-namespace Fksapp;
+namespace FksappModule;
 use \Nette\Application\UI\Presenter;
 use \Nette\Application\UI\PresenterComponent;
 use \Nette\Application\Request;

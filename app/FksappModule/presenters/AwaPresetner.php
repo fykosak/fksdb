@@ -1,6 +1,6 @@
 <?php
 
-namespace Fksapp;
+namespace FksappModule;
 
 
 use \Nette\Application\UI\Form;

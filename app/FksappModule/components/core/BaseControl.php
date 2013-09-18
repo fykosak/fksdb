@@ -9,7 +9,7 @@
  * @see \Nette\Application\UI\Control
 */ 
 
-namespace Fksapp;
+namespace FksappModule;
 
 
 
