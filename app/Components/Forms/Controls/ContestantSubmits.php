@@ -39,19 +39,39 @@ class ContestantSubmits extends BaseControl {
     private $contestant;
 
     /**
+     * @var string
+     */
+    private $className;
+
+    /**
      * 
-     * @param type $tasks
+     * @param Traversable|array $tasks
      * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
      * @param string|null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $label = null) {
         parent::__construct($label);
 
-        $this->tasks = $tasks;
+        $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
 
-        $this->setValue(null);
+        //$this->setValue(null);
+    }
+
+    public function getClassName() {
+        return $this->className;
+    }
+
+    public function setClassName($className) {
+        $this->className = $className;
+    }
+
+    private function setTasks($tasks) {
+        $this->tasks = array();
+        foreach ($tasks as $task) {
+            $this->tasks[$task->tasknr] = $task;
+        }
     }
 
     /**
@@ -60,7 +80,9 @@ class ContestantSubmits extends BaseControl {
     public function getControl() {
         $control = parent::getControl();
 
+        $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
+        $control->addStyle('width:600px');
         return $control;
     }
 
@@ -71,7 +93,7 @@ class ContestantSubmits extends BaseControl {
      * @throws InvalidArgumentException
      */
     public function setValue($value) {
-        if (!$value) {
+        if (!$value) {            
             $this->rawValue = $this->serializeValue(array());
             $this->value = $this->deserializeValue($this->rawValue);
         } else if (is_string($value)) {
@@ -86,7 +108,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     private function serializeValue($value) {
-        $values = array_fill_keys(range(1, count($this->tasks)), null);
+        $result = array();
 
         foreach ($value as $submit) {
             if (!$submit) {
@@ -95,13 +117,25 @@ class ContestantSubmits extends BaseControl {
 
             $tasknr = $submit->getTask()->tasknr;
 
-            if (!array_key_exists($tasknr, $values) || $values[$tasknr] !== null) {
-                throw new InvalidArgumentException('Unexpected submits for element with such specified tasks.');
+            if (isset($result[$tasknr])) {
+                throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $values[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int) $tasknr] = $this->serializeSubmit($submit);
         }
 
-        return json_encode($values);
+        $dummySubmit = $this->submitService->createNew();
+        foreach ($this->tasks as $tasknr => $task) {
+            if (isset($result[$tasknr])) {
+                continue;
+            }
+
+            $dummySubmit->task_id = $task->task_id;
+            $result[$tasknr] = $this->serializeSubmit($dummySubmit);
+        }
+        
+        ksort($result);
+
+        return json_encode($result);
     }
 
     private function deserializeValue($value) {
@@ -148,75 +182,4 @@ class ContestantSubmits extends BaseControl {
         return $submit;
     }
 
-//    /**
-//     * Does user enter anything? (the value doesn't have to be valid)
-//     *
-//     * @author   Jan Tvrdík
-//     * @param    DatePicker
-//     * @return   bool
-//     */
-//    public static function validateFilled(IControl $control) {
-//        if (!$control instanceof self)
-//            throw new InvalidStateException('Unable to validate ' . get_class($control) . ' instance.');
-//        $rawValue = $control->rawValue;
-//        return !empty($rawValue);
-//    }
-//
-//    /**
-//     * Is entered value valid? (empty value is also valid!)
-//     *
-//     * @author   Jan Tvrdík
-//     * @param    DatePicker
-//     * @return   bool
-//     */
-//    public static function validateValid(IControl $control) {
-//        if (!$control instanceof self)
-//            throw new InvalidStateException('Unable to validate ' . get_class($control) . ' instance.');
-//        $value = $control->value;
-//        return (empty($control->rawValue) || $value instanceof DateTime2);
-//    }
-//
-//    /**
-//     * Is entered values within allowed range?
-//     *
-//     * @author   Jan Tvrdík, David Grudl
-//     * @param    DatePicker
-//     * @param    array             0 => minDate, 1 => maxDate
-//     * @return   bool
-//     */
-//    public static function validateRange(IControl $control, $range) {
-//        return Validators::isInRange($control->getValue(), $range);
-//    }
-//
-//    /**
-//     * Finds minimum and maximum allowed dates.
-//     *
-//     * @author   Jan Tvrdík
-//     * @param    Rules
-//     * @return   array             0 => DateTime|NULL $minDate, 1 => DateTime|NULL $maxDate
-//     */
-//    private function extractRangeRule(Rules $rules) {
-//        $controlMin = $controlMax = NULL;
-//        foreach ($rules as $rule) {
-//            if ($rule->type === Rule::VALIDATOR) {
-//                if ($rule->operation === Form::RANGE && !$rule->isNegative) {
-//                    $ruleMinMax = $rule->arg;
-//                }
-//            } elseif ($rule->type === Rule::CONDITION) {
-//                if ($rule->operation === Form::FILLED && !$rule->isNegative && $rule->control === $this) {
-//                    $ruleMinMax = $this->extractRangeRule($rule->subRules);
-//                }
-//            }
-//
-//            if (isset($ruleMinMax)) {
-//                list($ruleMin, $ruleMax) = $ruleMinMax;
-//                if ($ruleMin !== NULL && ($controlMin === NULL || $ruleMin > $controlMin))
-//                    $controlMin = $ruleMin;
-//                if ($ruleMax !== NULL && ($controlMax === NULL || $ruleMax < $controlMax))
-//                    $controlMax = $ruleMax;
-//                $ruleMinMax = NULL;
-//            }
-//        }
-//        return array($controlMin, $controlMax);
-//    }
 }

@@ -14,3 +14,14 @@ a.later {
     border: 1px solid #dda;
     padding: 10px;
 }
+
+.inboxField {
+    display: block;
+    width: 100px;
+    float: left;
+    margin: 2px;
+}
+
+a.inboxField {
+    width: 106px;
+}

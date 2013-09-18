@@ -7,6 +7,7 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SUBMIT;
     protected $modelClassName = 'ModelSubmit';
+    private $cache = array();
 
     /**
      * Syntactic sugar.
@@ -15,16 +16,22 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @return ModelSubmit|null
      */
     public function findByContestant($ctId, $taskId) {
-        $result = $this->getTable()->where(array(
-                    'ct_id' => $ctId,
-                    'task_id' => $taskId,
-                ))->fetch();
+        $key = $ctId . ':' . $taskId;
 
-        if ($result !== false) {
-            return $result;
-        } else {
-            return null;
+        
+        if (!array_key_exists($key, $this->cache)) {
+            $result = $this->getTable()->where(array(
+                        'ct_id' => $ctId,
+                        'task_id' => $taskId,
+                    ))->fetch();
+
+            if ($result !== false) {
+                $this->cache[$key] = $result;
+            } else {
+                $this->cache[$key] = null;
+            }
         }
+        return $this->cache[$key];
     }
 
     public function getSubmits() {

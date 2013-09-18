@@ -44,6 +44,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
             $control->setValue(isset($submitsTable[$contestant->ct_id]) ? $submitsTable[$contestant->ct_id] : null);
+            $control->setClassName('inbox');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, 'submit');
