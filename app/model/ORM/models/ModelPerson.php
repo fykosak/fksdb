@@ -52,6 +52,26 @@ class ModelPerson extends AbstractModelSingle {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
+	public function getEventParticipant() {
+		if(!isset($this->person_id)) {
+			$this->person_id = null;
+		}
+		return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+	}
+
+	public function isEventParticipant($event_id = null) {
+		$tmp = $this->getEventParticipant();
+		if($action_id) {
+			$tmp->where('action_id = ?', $event_id);
+		}
+
+		if($tmp->count() > 0) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
     /**
      * 
      * @param ModelContest $contest
