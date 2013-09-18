@@ -1,6 +1,10 @@
 #
 # General services (data processing, model factories, etc.)
 #
+
+includes:
+    - orm.neon
+
 services:
     authenticator: Authenticator
     contestAuthorizator: Authorization\ContestAuthorizator
