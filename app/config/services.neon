@@ -2,6 +2,23 @@
 # General services (data processing, model factories, etc.)
 #
 services:
+	# ORM services
+    ServiceEventParticipant: ServiceEventParticipant
+    ServiceEvent: ServiceEvent
+    ServiceAddress: ServiceAddress
+    ServiceContestant: ServiceContestant
+    ServiceContest: ServiceContest
+    ServiceCountry: ServiceCountry
+    ServiceLogin: ServiceLogin
+    ServiceMPostContact: ServiceMPostContact
+    ServicePerson: ServicePerson
+    ServicePersonInfo: ServicePersonInfo
+    ServicePostContact: ServicePostContact
+    ServiceRegion: ServiceRegion
+    ServiceSubmit: ServiceSubmit
+    ServiceSchool: ServiceSchool
+    ServiceTask: ServiceTask
+
     authenticator: Authenticator
     contestAuthorizator: Authorization\ContestAuthorizator
     ownerAssertion: Authorization\OwnerAssertion
