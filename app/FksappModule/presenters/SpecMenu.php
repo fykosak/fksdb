@@ -19,7 +19,7 @@ class SpecMenu {
 	static public function genereSpecMenu() {
 		$tmp = array();
 
-		array_push($tmp, array('action_type' => 'fyzifklani', 'presenter' => 'Fyziklani'));
+		array_push($tmp, array('action_type' => 'fyziklani online', 'presenter' => 'FyziklaniOnline'));
 
 		return $tmp;
 	}
