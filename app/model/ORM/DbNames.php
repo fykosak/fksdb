@@ -13,6 +13,7 @@ class DbNames {
     const TAB_CONTESTANT = 'contestant';
     const TAB_COUNTRY = 'country';
     const TAB_EVENT = 'event';
+    const TAB_EVENT_TYPE = 'event_type';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
