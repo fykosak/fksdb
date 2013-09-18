@@ -133,10 +133,6 @@ abstract class Homepage extends Auth {
 	 * @access protected
 	*/
 	protected function setLocalResultArray($local_result_array) {
-		if(DEBUG_MODE === 1) {
-			FormatMenu::checkValidity($local_result_array);
-		}
-
 		$this->local_result_array = $local_result_array;
 
 		return $this;
@@ -149,10 +145,6 @@ abstract class Homepage extends Auth {
 	 * @access protected
 	*/
 	protected function setLocalRootArray($local_root_array) {
-		if(DEBUG_MODE === 1) {
-			// TODO
-			//FormatMenu::checkValidity($local_result_array);
-		}
 
 		$this->local_root_array = $local_root_array;
 
