@@ -23,17 +23,38 @@ class SeriesCalculator extends Object {
         $this->yearCalculator = $yearCalculator;
     }
 
-    public function getCurrentSeries($contest_id) {
+    /**
+     * @param ModelContest $contest
+     * @return int
+     */
+    public function getCurrentSeries(ModelContest $contest) {
         //TODO consider using tasks.submit_deadline
-        return $this->getLastSeries($contest_id, $this->yearCalculator->getCurrentYear($contest_id));
+        return $this->getLastSeries($contest, $this->yearCalculator->getCurrentYear($contest));
     }
 
-    public function getLastSeries($contest_id, $year) {
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     * @return int
+     */
+    public function getLastSeries(ModelContest $contest, $year) {
         $row = $this->serviceTask->getTable()->where(array(
-                    'contest_id' => $contest_id,
+                    'contest_id' => $contest->contest_id,
                     'year' => $year
                 ))->max('series');
         return $row;
+    }
+
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     * @return int
+     */
+    public function getTotalSeries(ModelContest $contest, $year) {
+        //TODO allow variance?
+        return 6;
     }
 
 }

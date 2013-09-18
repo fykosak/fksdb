@@ -3,4 +3,6 @@ log/*
 !log/.htaccess
 temp/*
 !temp/.htaccess
+upload/*
+!upload/.htaccess
 /app/config/config.local.neon

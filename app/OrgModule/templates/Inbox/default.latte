@@ -1,0 +1,42 @@
+{block title}Příjem řešení{/block}
+
+{block content}
+{control formSelectSeries}
+
+
+{control inboxForm}
+
+{*
+{control inboxForm begin}
+{control inboxForm errors}
+
+<table>
+
+<tr n:block="tab_header">
+    <th>Jméno</th>
+{foreach $tasks as $task}
+    <th>{$task->label}</th>
+{/foreach}
+</tr>
+
+{foreach $control['inboxForm']['grid']->getComponents(false) as $contestantCont}
+<tr>
+    <td>{$contestants[$contestantCont->name]->getPerson()->getFullname()}</td>
+    {foreach $contestantCont->getComponents(false) as $cell}
+        <td>{$cell['submitted_on']->control}{$cell['note']->control}</td>
+    {/foreach}
+</tr>
+   
+{if $iterator->getCounter() % 25 == 0}{include #tab_header}{/if}
+{/foreach}
+    
+</table>
+    
+{$control['inboxForm']['save']->control}
+{control inboxForm end}
+
+*}
+
+
+
+{/block}
