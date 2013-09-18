@@ -28,6 +28,12 @@ $container = $configurator->createContainer();
 
 // Setup router
 $container->router[] = new Route('index.php', 'Authentication:login', Route::ONE_WAY);
+$container->router[] = new Route('fksapp/<presenter>/<action>[/<id>]', array
+	(
+		'presenter' => 'Homepage',
+		'action'    => 'default',
+		'module'    => 'Fksapp'
+	));
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Public:Dashboard:default');
 
 //

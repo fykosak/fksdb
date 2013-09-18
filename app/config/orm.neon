@@ -2,6 +2,8 @@
 # ORM services definitions
 #
 services:
+    ServiceEvent:            ServiceEvent
+    ServiceEventParticipant: ServiceEventParticipant
     ServiceAddress:          ServiceAddress
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest

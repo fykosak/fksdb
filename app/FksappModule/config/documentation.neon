@@ -1,0 +1,10 @@
+title: FykosInAction
+
+charset: utf8
+extensions: php
+tree: yes
+todo: yes
+colors: yes
+debug: yes
+deprecated: yes
+internal: yes

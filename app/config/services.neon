@@ -1,6 +1,7 @@
 #
 # General services (data processing, model factories, etc.)
 #
+
 services:
     authenticator: Authenticator
     contestAuthorizator: Authorization\ContestAuthorizator
