@@ -3,8 +3,10 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
-use Nette\Forms\Form;
+use Nette\Forms\Controls\RadioList;
 use ServiceCountry;
 
 /**
@@ -25,6 +27,18 @@ class AddressFactory {
 
     public function createAddress(ControlGroup $group = null) {
         $container = new ModelContainer();
+        $this->buildAddress($container);
+        return $container;
+    }
+
+    /**
+     * Appends elements to an existing container.
+     * (Created because of KdybyReplicator.)
+     * 
+     * @param \FKSDB\Components\Forms\Factories\Container $container
+     * @param ControlGroup $group
+     */
+    public function buildAddress(Container $container, ControlGroup $group = null) {
         $container->setCurrentGroup($group);
 
         $container->addText('first_row', 'První řádek')
@@ -50,10 +64,17 @@ class AddressFactory {
         $countries = $container->addSelect('country_iso', 'Stát');
 
         $countries->setItems($this->serviceCountry->getTable()->order('name_cs')->fetchPairs('country_iso', 'name_cs')); //TODO i18n
-
         //$container->addHidden('address_id');
-        
-        return $container;
+    }
+
+    public function createTypeElement() {
+        $element = new RadioList('Typ adresy');
+        $element->setItems(array(
+            'P' => 'trvalá',
+            'D' => 'doručovací (odlišná od trvalé)'
+        ));
+        $element->setDefaultValue('P');
+        return $element;
     }
 
 }

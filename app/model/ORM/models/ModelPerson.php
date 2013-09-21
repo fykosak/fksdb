@@ -22,13 +22,16 @@ class ModelPerson extends AbstractModelSingle {
     }
 
     /**
-     * @return AbstractModelSingle|null
+     * @return ModelPersonInfo|null
      */
     public function getInfo() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
+        $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
+        $infos->rewind();
+        if (!$infos->valid()) {
+            return null;
         }
-        return $this->ref(DbNames::TAB_PERSON_INFO, 'person_id');
+
+        return ModelPersonInfo::createFromTableRow($infos->current());
     }
 
     public function getContestants() {
@@ -38,13 +41,6 @@ class ModelPerson extends AbstractModelSingle {
         return $this->related(DbNames::TAB_CONTESTANT, 'person_id');
     }
 
-    public function getSpamees() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
-        return $this->related(DbNames::TAB_SPAMEE, 'person_id');
-    }
-
     public function getPostContacts() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -52,25 +48,49 @@ class ModelPerson extends AbstractModelSingle {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
-	public function getEventParticipant() {
-		if(!isset($this->person_id)) {
-			$this->person_id = null;
-		}
-		return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
-	}
+    /**
+     * @return array of MPostContact
+     */
+    public function getMPostContacts($type = null) {
+        $postContacts = $this->getPostContacts();
+        if ($postContacts && $type !== null) {
+            $postContacts->where(array('type' => $type));
+        }
 
-	public function isEventParticipant($event_id = null) {
-		$tmp = $this->getEventParticipant();
-		if($action_id) {
-			$tmp->where('action_id = ?', $event_id);
-		}
+        if (!$postContacts || count($postContacts) == 0) {
+            return array();
+        }
 
-		if($tmp->count() > 0) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+        $result = array();
+        foreach ($postContacts as $postContact) {
+            $postContact->address_id; // stupid touch
+            $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
+            $result[] = new ModelMPostContact(
+                    ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
+            );
+        }
+        return $result;
+    }
+
+    public function getEventParticipant() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+    }
+
+    public function isEventParticipant($event_id = null) {
+        $tmp = $this->getEventParticipant();
+        if ($action_id) {
+            $tmp->where('action_id = ?', $event_id);
+        }
+
+        if ($tmp->count() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * 

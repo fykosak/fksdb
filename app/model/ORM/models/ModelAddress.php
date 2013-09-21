@@ -12,6 +12,7 @@ class ModelAddress extends AbstractModelSingle {
      * Try to infer region from postal code.
      * Returns result of the inference (if unsuccessful sets the unknown region.
      * 
+     * @todo Refactor dependencies.
      * @return boolean
      */
     public function inferRegion() {

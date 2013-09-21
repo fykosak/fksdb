@@ -8,18 +8,12 @@ services:
     ownerAssertion: Authorization\OwnerAssertion
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
-    resultsModelFactory: ResultsModelFactory
-    statsModelFactory: StatsModelFactory
     SQLResultsCache: SQLResultsCache
     submitStorage:
         class: Submits\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
-    pipelineFactory:
-        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
-    downloaderFactory:
-        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %appDir%/../temp, %contestMapping%)
 
 
     # web services

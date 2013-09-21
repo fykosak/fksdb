@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Components;
+
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -12,7 +14,7 @@ class WizardComponent extends Control {
     const ID_ELEMENT = 'wizardId';
 
     /**
-     * @var array of callback(Form $formToInit)
+     * @var array of callback($stepName, WizardCompoent $wizard)
      */
     public $onStepInit;
 
@@ -121,7 +123,7 @@ class WizardComponent extends Control {
 
     /**
      * 
-     * @param str $name
+     * @param str $name name of the step
      * @return array|null
      */
     public function getData($name) {
@@ -156,7 +158,7 @@ class WizardComponent extends Control {
     public function render() {
         $name = $this->getCurrentStep();
         $currentForm = $this->getComponent($name);
-        $this->onStepInit($currentForm);
+        $this->onStepInit($name, $this);
         $currentForm[self::ID_ELEMENT]->setValue($this->getWizardId());
         $currentForm->render();
     }

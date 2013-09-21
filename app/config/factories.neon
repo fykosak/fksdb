@@ -1,6 +1,15 @@
 #
 # Factories definitions
 #
+services:
+    FKSDB\Components\Factories\ContestantWizardFactory: self
+    resultsModelFactory: ResultsModelFactory
+    statsModelFactory: StatsModelFactory
+    pipelineFactory:
+        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
+    downloaderFactory:
+        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %appDir%/../temp, %contestMapping%)
+
 
 factories:
 # (so far unused)

@@ -9,6 +9,7 @@ use Nette\Forms\Form;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
+ * @todo Validate uniqueness of email.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory {
@@ -17,35 +18,83 @@ class PersonFactory {
     const SHOW_ORG_INFO = 0x2; // for person info
     const SHOW_AGREEMENT = 0x4; // for person info
     const SHOW_EMAIL = 0x8; // for person info
-    const DISABLED = 0x10; // for person
+    const SHOW_GENDER = 0x10; // for person
+    const SHOW_LOGIN_CREATION = 0x20; // for person info
+    const DISABLED = 0x20; // for person
 
-    public function createPerson($options = 0, ControlGroup $group = null) {
+    /* Important elements */
+    const EL_CREATE_LOGIN = 'createLogin';
+
+    /* Encapsulation condition argument (workaround) */
+    const IDX_CONTROL = 'control';
+    const IDX_OPERATION = 'op';
+    const IDX_VALUE = 'val';
+
+    public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
         $disabled = (bool) ($options & self::DISABLED);
 
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $container->addText('other_name', 'Křestní jméno')
-                ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělaná mezerou.')
-                ->addRule(Form::FILLED, 'Křestní jméno je povinné.');
 
-        $container->addText('family_name', 'Příjmení')
+        $control = $container->addText('other_name', 'Křestní jméno')
                 ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělaná mezerou.')
-                ->addRule(Form::FILLED, 'Příjmení je povinné.');
+                ->setOption('description', 'Příp. další jména oddělaná mezerou.');
+
+        if ($requiredCondition) {
+            $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
+        } else {
+            $rules = $control;
+        }
+        $rules->addRule(Form::FILLED, 'Křestní jméno je povinné.');
+
+
+
+        $control = $container->addText('family_name', 'Příjmení')
+                ->setDisabled($disabled)
+                ->setOption('description', 'Příp. další jména oddělaná mezerou.');
+
+        if ($requiredCondition) {
+            $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
+        } else {
+            $rules = $control;
+        }
+        $rules->addRule(Form::FILLED, 'Příjmení je povinné.');
+
+
 
         if ($options & self::SHOW_DISPLAY_NAME) {
-            $this->addText('display_name', 'Zobrazované jméno')
+            $control = $container->addText('display_name', 'Zobrazované jméno')
                     ->setDisabled($disabled)
                     ->setOption('description', 'Pouze pokud je odlišené od "jméno příjmení".');
+        }
+
+
+
+        if ($options & self::SHOW_GENDER) {
+            $control = $container->addRadioList('gender', 'Pohlaví', array('M' => 'muž', 'F' => 'žena'))
+                    ->setDefaultValue('M')
+                    ->setDisabled($disabled);
         }
 
         return $container;
     }
 
-    public function createPersonInfo($options = 0) {
+    public function createPersonInfo($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
+        $container->setCurrentGroup($group);
+
+        if ($options & self::SHOW_EMAIL) {
+            $email = $container->addText('email', 'E-mail')
+                    ->addCondition(Form::FILLED)
+                    ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+            if ($options & self::SHOW_LOGIN_CREATION) {
+                $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
+                        ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
+                $email->addConditionOn($createLogin, Form::FILLED)
+                        ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
+            }
+        }
 
         $container->addDatePicker('born', 'Datum narození');
 
@@ -53,7 +102,7 @@ class PersonFactory {
                 ->setOption('description', 'U cizinců číslo pasu.')
                 ->addRule(Form::MAX_LENGTH, null, 32);
 
-        //TODO validace rodného čísla
+//TODO validace rodného čísla
         $container->addText('born_id', 'Rodné číslo')
                 ->setOption('description', 'U cizinců prázdné.')
                 ->addRule(Form::MAX_LENGTH, null, 32);
@@ -68,11 +117,7 @@ class PersonFactory {
                 ->setOption('description', 'Město a okres (kvůli diplomům).')
                 ->addRule(Form::MAX_LENGTH, null, 255);
 
-        if ($options & self::SHOW_EMAIL) {
-            $this->addText('email', 'E-mail')
-                    ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.')
-                    ->addRule(Form::FILLED);
-        }
+
 
         if ($options & self::SHOW_ORG_INFO) {
             $container->addText('uk_login', 'Login UK')
@@ -85,7 +130,7 @@ class PersonFactory {
         $container->addTextArea('note', 'Poznámka');
 
         if ($options & self::SHOW_AGREEMENT) {
-            //TODO odkaz na souhlas
+//TODO odkaz na souhlas
             $container->addCheckbox('agree', 'Souhlasím se zpracováním osobních údajů')
                     ->setOption('description', 'ODKAZ na souhlas.');
         }

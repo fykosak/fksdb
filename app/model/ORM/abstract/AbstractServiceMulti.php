@@ -97,7 +97,7 @@ abstract class AbstractServiceMulti extends Object {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        $this->getJoinedService()->delete($model->getJoinedModel());
+        $this->getJoinedService()->dispose($model->getJoinedModel());
     }
 
     protected function getMainService() {

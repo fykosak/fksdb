@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\SchoolSelect;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use ServiceSchool;
@@ -31,27 +32,27 @@ class ContestantFactory {
         $container->setCurrentGroup($group);
 
 
-        $schools = $this->serviceSchool->getSchools()->fetchPairs('school_id', 'name_full');
-        //TODO komponenta výběru školy + kooperace s validací
-        $school = $container->addSelect('school_id', 'Škola')
-                ->setItems($schools);
+        $school = new SchoolSelect($this->serviceSchool, 'Škola');
+        $school->setPrompt('Zvolit školu');
+        $container->addComponent($school, 'school_id');
 
         if ($options & self::REQUIRE_SCHOOL) {
             $school->addRule(Form::FILLED);
         }
 
-
+        // TODO extract this element and made it more robust (show graduation year)
         $studyYear = $container->addSelect('study_year', 'Ročník')
-                        ->setItems(array(
-                            1 => '1. ročník SŠ',
-                            2 => '2. ročník SŠ',
-                            3 => '3. ročník SŠ',
-                            4 => '4. ročník SŠ',
-                            6 => '6. ročník ZŠ',
-                            7 => '7. ročník ZŠ',
-                            8 => '8. ročník ZŠ',
-                            9 => '9. ročník ZŠ',
-                        ))->setOption('description', 'Kvůli zařazení do kategorie.');
+                ->setItems(array(
+                    1 => '1. ročník SŠ',
+                    2 => '2. ročník SŠ',
+                    3 => '3. ročník SŠ',
+                    4 => '4. ročník SŠ',
+                    6 => '6. ročník ZŠ',
+                    7 => '7. ročník ZŠ',
+                    8 => '8. ročník ZŠ',
+                    9 => '9. ročník ZŠ',
+                ))->setOption('description', 'Kvůli zařazení do kategorie.')
+                ->setPrompt('Zvolit ročník');
 
         if ($options & self::REQUIRE_STUDY_YEAR) {
             $studyYear->addRule(Form::FILLED);
@@ -60,7 +61,7 @@ class ContestantFactory {
 
         $container->addText('class', 'Třída')
                 ->setOption('description', 'Kvůli případné školní korespondenci.');
-        
+
         return $container;
     }
 
