@@ -49,7 +49,7 @@ class AddressFactory {
 
 
         $container->addText('target', 'Místo')
-                ->addRule(Form::FILLED, 'Adresa musí vyplněné místo.')
+                ->addRule(Form::FILLED, 'Adresa musí mít vyplněné místo.')
                 ->setOption('description', 'Nejčastěji ulice a číslo, ale třeba i P. O. Box.');
 
         $container->addText('city', 'Město')

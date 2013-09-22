@@ -152,6 +152,7 @@ class PersonPresenter extends EntityPresenter {
         $info = $person->getInfo();
         if ($info) {
             $defaults[self::CONT_PERSON_INFO] = $info->toArray();
+            //TODO load email value from login table
         }
 
         $form->setDefaults($defaults);

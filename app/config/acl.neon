@@ -28,6 +28,7 @@ services:
             - addResource(task)
             - addResource(person)
             - addResource(contestant)
+            - addResource(school)
 
             # ACL
             - allow(contestant, submit, upload)
@@ -43,4 +44,7 @@ services:
             - allow(inboxManager, contestant, create)
             - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
             - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
+            - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
+
+            - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
 

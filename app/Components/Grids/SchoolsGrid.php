@@ -18,7 +18,7 @@ class SchoolsGrid extends BaseGrid {
         //
         $serviceSchool = $presenter->context->getService('ServiceSchool');
         $schools = $serviceSchool->getSchools();
-        
+
         $this->setDataSource(new NDataSource($schools));
 
         //
@@ -26,6 +26,18 @@ class SchoolsGrid extends BaseGrid {
         //
         $this->addColumn('name', 'Název');
         $this->addColumn('city', 'Město');
+
+        //
+        // operations
+        //
+        $that = $this;
+        $this->addButton("edit", "Upravit")
+                ->setClass("edit")
+                ->setText('Upravit') //todo i18n
+                ->setLink(function($row) use ($that) {
+                            return $that->getPresenter()->link("edit", $row->school_id);
+                        });
+        // TODO add search/filtering schools
 
         //
         // appeareance
