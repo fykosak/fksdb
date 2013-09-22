@@ -26,13 +26,19 @@ services:
             # Resources
             - addResource(submit)
             - addResource(task)
+            - addResource(contestant)
 
             # ACL
             - allow(contestant, submit, upload)
             - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
             - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
 
+            - allow(org, contestant, list)
+
             - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
             - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
+            - allow(inboxManager, contestant, list)
+            - allow(inboxManager, contestant, create)
+            - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
 

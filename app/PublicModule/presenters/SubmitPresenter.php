@@ -118,6 +118,10 @@ class SubmitPresenter extends BasePresenter {
         return $grid;
     }
 
+    /**
+     * @internal
+     * @param type $form
+     */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
 

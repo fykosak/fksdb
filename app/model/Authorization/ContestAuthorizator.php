@@ -47,7 +47,7 @@ class ContestAuthorizator {
             if ($role->getContestId() != $contest->contest_id) {
                 continue;
             }
-            if ($this->acl->isAllowed($role->getRoleId(), $resource, $privilege)) {
+            if ($this->acl->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }

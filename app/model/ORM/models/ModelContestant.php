@@ -1,10 +1,12 @@
 <?php
 
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelContestant extends AbstractModelSingle {
+class ModelContestant extends AbstractModelSingle implements IResource {
 
     /**
      * @return ModelPerson
@@ -21,6 +23,10 @@ class ModelContestant extends AbstractModelSingle {
     public function getContest() {
         $data = $this->contest;
         return ModelContest::createFromTableRow($data);
+    }
+
+    public function getResourceId() {
+        return 'contestant';
     }
 
 }

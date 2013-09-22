@@ -45,6 +45,17 @@ class ContestantsGrid extends BaseGrid {
         $this->addColumn('school_name', 'Škola');
 
         //
+        // operations
+        //
+        $that = $this;
+        $this->addButton("edit", "Upravit")
+                ->setClass("edit")
+                ->setText('Upravit') //todo i18n
+                ->setLink(function($row) use ($that) {
+                            return $that->getPresenter()->link("edit", $row->ct_id);
+                        });
+
+        //
         // appeareance
         //
         $this->paginate = false;

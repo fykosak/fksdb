@@ -3,12 +3,16 @@
 namespace OrgModule;
 
 use FKSDB\Components\Factories\ContestantWizardFactory;
+use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use ModelContestant;
 use ModelException;
 use ModelPerson;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceContestant;
 use ServiceLogin;
@@ -17,6 +21,9 @@ use ServicePerson;
 use ServicePersonInfo;
 
 class ContestantPresenter extends BasePresenter {
+
+    const CONT_PERSON = 'person';
+    const CONT_CONTESTANT = 'contestant';
 
     /**
      * @var ServiceContestant
@@ -44,10 +51,24 @@ class ContestantPresenter extends BasePresenter {
     private $serviceMPostContact;
 
     /**
-     *
+     * @var ContestantFactory
+     */
+    private $contestantFactory;
+
+    /**
+     * @var PersonFactory
+     */
+    private $personFactory;
+
+    /**
      * @var ContestantWizardFactory
      */
     private $contestantWizardFactory;
+
+    /**
+     * @var ModelContestant
+     */
+    private $contestant;
 
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
@@ -73,11 +94,53 @@ class ContestantPresenter extends BasePresenter {
         $this->serviceMPostContact = $serviceMPostContact;
     }
 
-    public function actionCreate() {
-        //TODO check ACL
+    public function injectContestantFactory(ContestantFactory $contestantFactory) {
+        $this->contestantFactory = $contestantFactory;
     }
 
-    protected function createComponentContestantWizard($name) {
+    public function injectPersonFactory(PersonFactory $personFactory) {
+        $this->personFactory = $personFactory;
+    }
+
+    public function actionDefault() {
+        if (!$this->getContestAuthorizator()->isAllowed('contestant', 'list', $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
+
+    public function actionCreate() {
+        if (!$this->getContestAuthorizator()->isAllowed('contestant', 'create', $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
+
+    public function actionEdit($id) {
+        $this->contestant = $this->serviceContestant->findByPrimary($id);
+
+        if (!$this->contestant) {
+            throw new BadRequestException('Neexistující řešitel.', 404);
+        }
+        if (!$this->getContestAuthorizator()->isAllowed($this->contestant, 'edit', $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
+
+    public function renderEdit($id) {
+        if ($this->contestant->contest_id != $this->getSelectedContest()->contest_id) {
+            $this->flashMessage('Editace řešitele mimo zvolený seminář.');
+        }
+
+        if ($this->contestant->year != $this->getSelectedYear()) {
+            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.');
+        }
+
+        $form = $this->getComponent('contestantEditForm');
+
+        $form[self::CONT_PERSON]->setValues($this->contestant->getPerson()->toArray());
+        $form[self::CONT_CONTESTANT]->setDefaults($this->contestant->toArray());
+    }
+
+    protected function createComponentContestantWizard() {
         $wizard = $this->contestantWizardFactory->create();
 
         $wizard->onProcess[] = array($this, 'processWizard');
@@ -90,6 +153,22 @@ class ContestantPresenter extends BasePresenter {
         $grid = new ContestantsGrid($this->serviceContestant);
 
         return $grid;
+    }
+
+    protected function createComponentContestantEditForm($name) {
+        $form = new Form();
+
+        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
+        $form->addComponent($personContainer, self::CONT_PERSON);
+
+        $contestantContainer = $this->contestantFactory->createContestant();
+        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+
+        $form->addSubmit('send', 'Uložit');
+
+        $form->onSuccess[] = array($this, 'handleContestantEditFormSuccess');
+
+        return $form;
     }
 
     /**
@@ -106,7 +185,6 @@ class ContestantPresenter extends BasePresenter {
                 throw new ModelException();
             }
 
-            //TODO consider already existing person with addresses and login...
             /*
              * Person
              */
@@ -207,6 +285,25 @@ class ContestantPresenter extends BasePresenter {
             case ContestantWizardFactory::STEP_DATA:
                 $this->initStepData($wizard);
                 break;
+        }
+    }
+
+    /**
+     * @internal
+     * @param Form $form
+     */
+    public function handleContestantEditFormSuccess(Form $form) {
+        $values = $form->getValues();
+        $data = $values[self::CONT_CONTESTANT];
+
+        try {
+            $this->serviceContestant->updateModel($this->contestant, $data);
+            $this->serviceContestant->save($this->contestant);
+            $this->flashMessage(sprintf('Řešitel %s upraven.', $this->contestant->getPerson()->getFullname()));
+            $this->redirect('default');
+        } catch (ModelException $e) {
+            $this->flashMessage('Chyba při ukládání do databáze.');
+            Debugger::log($e);
         }
     }
 

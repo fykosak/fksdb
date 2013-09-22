@@ -41,4 +41,25 @@ class OwnerAssertion {
         return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getId();
     }
 
+    /**
+     * Checks whether contestant belongs to the same contest as the role was assigned.
+     * 
+     * @param \Authorization\Permission $acl
+     * @param string $role
+     * @param string $resourceId
+     * @param string $privilege
+     * @return boolean
+     * @throws InvalidStateException
+     */
+    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+
+        $contestant = $acl->getQueriedResource();
+        $grant = $acl->getQueriedRole();
+
+        return $contestant->contest_id == $grant->getContestId();
+    }
+
 }
