@@ -11,7 +11,7 @@ use Nette\Application\UI\Form;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
     /**
      * @var int

@@ -20,10 +20,12 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonInfo;
 
-class ContestantPresenter extends BasePresenter {
+class ContestantPresenter extends EntityPresenter {
 
     const CONT_PERSON = 'person';
     const CONT_CONTESTANT = 'contestant';
+
+    protected $modelResourceId = 'contestant';
 
     /**
      * @var ServiceContestant
@@ -102,45 +104,26 @@ class ContestantPresenter extends BasePresenter {
         $this->personFactory = $personFactory;
     }
 
-    public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('contestant', 'list', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-    }
-
-    public function actionCreate() {
-        if (!$this->getContestAuthorizator()->isAllowed('contestant', 'create', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-    }
-
-    public function actionEdit($id) {
-        $this->contestant = $this->serviceContestant->findByPrimary($id);
-
-        if (!$this->contestant) {
-            throw new BadRequestException('Neexistující řešitel.', 404);
-        }
-        if (!$this->getContestAuthorizator()->isAllowed($this->contestant, 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-    }
-
     public function renderEdit($id) {
-        if ($this->contestant->contest_id != $this->getSelectedContest()->contest_id) {
+        parent::renderEdit($id);
+
+        $contestant = $this->getModel();
+
+        if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
             $this->flashMessage('Editace řešitele mimo zvolený seminář.');
         }
 
-        if ($this->contestant->year != $this->getSelectedYear()) {
+        if ($contestant->year != $this->getSelectedYear()) {
             $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.');
         }
-
-        $form = $this->getComponent('contestantEditForm');
-
-        $form[self::CONT_PERSON]->setValues($this->contestant->getPerson()->toArray());
-        $form[self::CONT_CONTESTANT]->setDefaults($this->contestant->toArray());
     }
 
-    protected function createComponentContestantWizard() {
+    protected function setDefaults(\AbstractModelSingle $model, Form $form) {
+        $form[self::CONT_PERSON]->setValues($this->getModel()->getPerson()->toArray());
+        $form[self::CONT_CONTESTANT]->setDefaults($this->getModel()->toArray());
+    }
+
+    protected function createComponentCreateComponent($name) {
         $wizard = $this->contestantWizardFactory->create();
 
         $wizard->onProcess[] = array($this, 'processWizard');
@@ -149,13 +132,13 @@ class ContestantPresenter extends BasePresenter {
         return $wizard;
     }
 
-    protected function createComponentGridContestants($name) {
+    protected function createComponentGrid($name) {
         $grid = new ContestantsGrid($this->serviceContestant);
 
         return $grid;
     }
 
-    protected function createComponentContestantEditForm($name) {
+    protected function createComponentEditComponent($name) {
         $form = new Form();
 
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
@@ -266,7 +249,7 @@ class ContestantPresenter extends BasePresenter {
             }
 
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně založena.' : 'Řešitel úspěšně založen.');
-            $this->redirect('Contestant:default');
+            $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
@@ -295,12 +278,13 @@ class ContestantPresenter extends BasePresenter {
     public function handleContestantEditFormSuccess(Form $form) {
         $values = $form->getValues();
         $data = $values[self::CONT_CONTESTANT];
+        $model = $this->getModel();
 
         try {
-            $this->serviceContestant->updateModel($this->contestant, $data);
-            $this->serviceContestant->save($this->contestant);
-            $this->flashMessage(sprintf('Řešitel %s upraven.', $this->contestant->getPerson()->getFullname()));
-            $this->redirect('default');
+            $this->serviceContestant->updateModel($model, $data);
+            $this->serviceContestant->save($model);
+            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()));
+            $this->redirect('list');
         } catch (ModelException $e) {
             $this->flashMessage('Chyba při ukládání do databáze.');
             Debugger::log($e);
@@ -347,6 +331,10 @@ class ContestantPresenter extends BasePresenter {
             $person = $this->servicePerson->createNew($dataPerson);
         }
         return $person;
+    }
+
+    protected function createModel($id) {
+        return $this->serviceContestant->findByPrimary($id);
     }
 
 }
