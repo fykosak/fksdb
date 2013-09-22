@@ -63,7 +63,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
             $submits = $container['submit'];
 
             foreach ($submits as $submit) {
-                //TODO práva??
+                // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
                 } else {

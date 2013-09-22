@@ -30,15 +30,9 @@ class OrgFactory {
         $container->setCurrentGroup($group);
 
         if ($options & self::SHOW_PERSON) {
-            $persons = $this->servicePerson->getTable()->order('family_name, other_name');
-            $items = array();
-            while ($person = $persons->fetch()) {
-                $items[$person->person_id] = $person->getFullname();
-            }
-
-            //TODO komponenta výběru osoby
-            $container->addSelect('person_id', 'Osoba')
-                    ->setItems($items);
+            $control = new PersonSelect($this->servicePerson, 'Osoba');
+            //TODO validate non-existent org
+            $container->addComponent($control, 'person_id');
         }
 
 

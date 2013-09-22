@@ -86,6 +86,7 @@ class ContestantWizardFactory {
 
         $group = $form->addGroup('Existující osoba');
         $personElement = new PersonSelect($this->personService, 'Jméno');
+        // TODO validate non-existent contestant
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
 

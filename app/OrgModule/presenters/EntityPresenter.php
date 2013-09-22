@@ -8,6 +8,9 @@ use Nette\Application\UI\Form;
 
 /**
  * Abstract functionality for basic CRUD.
+ *   - check ACL
+ *   - fill default form values
+ *   - handling submitted data must be implemented in descendants
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -38,7 +41,7 @@ abstract class EntityPresenter extends BasePresenter {
         $model = $this->getModel();
 
         if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404); //TODO better label?
+            throw new BadRequestException('Neexistující model.', 404);
         }
         if (!$this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
@@ -55,7 +58,7 @@ abstract class EntityPresenter extends BasePresenter {
         $model = $this->getModel();
 
         if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404); //TODO better label?
+            throw new BadRequestException('Neexistující model.', 404);
         }
         if (!$this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);

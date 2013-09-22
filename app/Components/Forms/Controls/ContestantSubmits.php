@@ -161,10 +161,6 @@ class ContestantSubmits extends BaseControl {
     }
 
     private function deserializeSubmit($data, $tasknr) {
-        if (!$data) {
-            return null; //TODO consider this case
-        }
-
         unset($data['submit_id']); // security
         $data['ct_id'] = $this->contestant->ct_id; // security
         $data['submitted_on'] = $data['submitted_on'] ? DateTime::createFromFormat(DateTime::ISO8601, $data['submitted_on']) : null;

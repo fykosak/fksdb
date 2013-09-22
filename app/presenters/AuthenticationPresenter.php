@@ -19,10 +19,10 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function actionLogin() {
-        //TODO: udělat i restoreRequest, pokud je (je to bezpečné?)
-//        if ($this->getUser()->isLoggedIn()) {
-//            $this->redirect("Dashboard:default");
-//        }
+        if ($this->getUser()->isLoggedIn()) {
+            $person = $this->getUser()->getIdentity()->getPerson();
+            $this->initialRedirect($person);
+        }
     }
 
     /*     * ******************* components ****************************** */
@@ -59,16 +59,19 @@ final class AuthenticationPresenter extends BasePresenter {
             $person = $this->user->getIdentity()->getPerson();
 
             $this->restoreRequest($this->backlink);
-
-            if (!$person) {
-                throw new AuthenticationException('Not assigned a person for login.');
-            } else if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
-                $this->redirect(':Org:Dashboard:default');
-            } else {
-                $this->redirect(':Public:Dashboard:default');
-            }
+            $this->initialRedirect($person);
         } catch (AuthenticationException $e) {
             $form->addError($e->getMessage());
+        }
+    }
+
+    private function initialRedirect($person) {
+        if (!$person) {
+            throw new AuthenticationException('Impersonal logins not supported.'); //TODO implement logic for impersonal logins
+        } else if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
+            $this->redirect(':Org:Dashboard:default');
+        } else {
+            $this->redirect(':Public:Dashboard:default');
         }
     }
 

@@ -242,6 +242,7 @@ class ContestantPresenter extends EntityPresenter {
             if (!$connection->commit()) {
                 throw new ModelException();
             }
+            $wizard->disposeData();
 
             $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()));
             $this->redirect('list');

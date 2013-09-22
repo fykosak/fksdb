@@ -68,7 +68,7 @@ class PipelineFactory {
         $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->taskService);
         $pipeline->addStage($metadataStage);
 
-        //TODO data stage (content)
+        //TODO data stage (content of the tasks)
         // language customizations
         switch ($language) {
             case 'cs':

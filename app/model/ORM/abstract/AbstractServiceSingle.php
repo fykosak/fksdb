@@ -66,10 +66,9 @@ abstract class AbstractServiceSingle extends TableSelection {
      */
     public function updateModel(AbstractModelSingle $model, $data) {
         $data = $this->filterData($data);
-        foreach($data as $key => $value) {
-            $model->{$key}  = $value;
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
         }
-
     }
 
     public static function createFromTableRow(TableRow $row) {
@@ -119,7 +118,8 @@ abstract class AbstractServiceSingle extends TableSelection {
             throw new ModelException('Error when storing model.', null, $e);
         }
         if (!$result) {
-            throw new ModelException('Error when storing a model.'); //TODO expressive description
+            $code = $this->getConnection()->errorCode();
+            throw new ModelException("$code: Error when storing a model.");
         }
     }
 
@@ -136,7 +136,8 @@ abstract class AbstractServiceSingle extends TableSelection {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         if (!$model->isNew() && $model->delete() === false) {
-            throw new ModelException('Error when deleting a model.'); //TODO expressive description
+            $code = $this->getConnection()->errorCode();
+            throw new ModelException("$code: Error when deleting a model.");
         }
     }
 

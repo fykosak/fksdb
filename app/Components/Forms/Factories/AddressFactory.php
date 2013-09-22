@@ -26,7 +26,7 @@ class AddressFactory {
     }
 
     public function createAddress(ControlGroup $group = null) {
-        $container = new ModelContainer();
+        $container = new ModelContainer(); //TODO replace with better container, that detects country from region
         $this->buildAddress($container, $group);
         return $container;
     }

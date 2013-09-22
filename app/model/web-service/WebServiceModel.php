@@ -1,15 +1,10 @@
 <?php
 
 /**
- * Web service provider for fksdb.wdsl TODO
+ * Web service provider for fksdb.wdsl
  * @author michal
  */
 class WebServiceModel {
-
-    private $contestMap = array(
-        'fykos' => ModelContest::ID_FYKOS,
-        'vyfuk' => ModelContest::ID_VYFUK,
-    );
 
     /**
      * @var ServiceContest
@@ -36,11 +31,12 @@ class WebServiceModel {
      */
     private $authenticator;
 
-    function __construct(Nette\Security\IAuthenticator $authenticator, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory) {
+    function __construct(array $contestMap, Nette\Security\IAuthenticator $authenticator, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory) {
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
         $this->statsModelFactory = $statsModelFactory;
         $this->authenticator = $authenticator;
+        $this->contestMap = array_flip($contestMap);
     }
 
     /**

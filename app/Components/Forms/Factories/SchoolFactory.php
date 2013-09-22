@@ -14,7 +14,6 @@ use Nette\Forms\Form;
 class SchoolFactory {
 
     /**
-     * @todo  nefunguje kontrola shody hesel!!
      * @param type $options
      */
     public function createSchool($options = 0, ControlGroup $group = null) {

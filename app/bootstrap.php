@@ -34,7 +34,7 @@ $container->router[] = new Route('fksapp/<presenter>/<action>[/<id>]', array
 		'action'    => 'default',
 		'module'    => 'Fksapp'
 	));
-$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Public:Dashboard:default');
+$container->router[] = new Route('<presenter>/<action>[/<id>]', 'Authentication:login');
 
 //
 // Register addons
