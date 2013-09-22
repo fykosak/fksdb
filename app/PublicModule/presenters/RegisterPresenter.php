@@ -7,15 +7,18 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Rules\UniqueEmail;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
+use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
 use IContestPresenter;
 use ModelContest;
 use ModelException;
+use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use ServiceAddress;
-use ServiceContest;
 use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -64,6 +67,12 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     /** @var ContestantFactory */
     private $contestantFactory;
 
+    /** @var UniqueEmailFactory */
+    private $uniqueEmailFactory;
+
+    /** @var UniqueLoginFactory */
+    private $uniqueLoginFactory;
+
     /** @var Connection */
     private $connection;
 
@@ -105,6 +114,14 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
     public function injectServiceMPostContact(ServiceMPostContact $serviceMPostContact) {
         $this->serviceMPostContact = $serviceMPostContact;
+    }
+
+    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
+    }
+
+    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
+        $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
     public function injectConnection(Connection $connection) {
@@ -165,7 +182,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $form = new Form();
 
         $group = $form->addGroup('Přihlašování');
-        $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group);
+        $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
+        $loginRule = $this->uniqueLoginFactory->create();
+        $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
         $form->addComponent($login, self::CONT_LOGIN);
 
         $group = $form->addGroup('Osoba');

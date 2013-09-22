@@ -14,6 +14,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return ModelLogin|null
      */
     public function getLogin() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
         $logins->rewind();
         if (!$logins->valid()) {
@@ -27,6 +30,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return ModelPersonInfo|null
      */
     public function getInfo() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {

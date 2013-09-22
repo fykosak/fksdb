@@ -3,15 +3,17 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
-use FKSDB\Components\Factories\ContestantWizardFactory;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Rules\UniqueEmail;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -67,6 +69,11 @@ class PersonPresenter extends EntityPresenter {
      */
     private $personFactory;
 
+    /**
+     * @var UniqueEmailFactory
+     */
+    private $uniqueEmailFactory;
+
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -91,6 +98,10 @@ class PersonPresenter extends EntityPresenter {
         $this->personFactory = $personFactory;
     }
 
+    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
+    }
+
     protected function createComponentCreateComponent($name) {
         // So far, there's no use case that creates bare person.
         throw new NotImplementedException();
@@ -98,6 +109,7 @@ class PersonPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         $form = new Form();
+        $person = $this->getModel();
 
         /*
          * Person
@@ -128,7 +140,14 @@ class PersonPresenter extends EntityPresenter {
          * Personal information
          */
         $group = $form->addGroup('Osobní informace');
-        $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_EMAIL, $group);
+        $login = $this->getModel()->getLogin();
+        if ($login) {
+            $rule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
+        } else {
+            $rule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_PERSON, $this->getModel(), null);
+        }
+
+        $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_EMAIL, $group, $rule);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
 
         $form->setCurrentGroup();
@@ -152,7 +171,11 @@ class PersonPresenter extends EntityPresenter {
         $info = $person->getInfo();
         if ($info) {
             $defaults[self::CONT_PERSON_INFO] = $info->toArray();
-            //TODO load email value from login table
+        }
+
+        $login = $person->getLogin();
+        if ($login) {
+            $defaults[self::CONT_PERSON_INFO]['email'] = $login->email;
         }
 
         $form->setDefaults($defaults);
@@ -163,7 +186,8 @@ class PersonPresenter extends EntityPresenter {
      * @param WizardComponent $wizard
      * @throws ModelException
      */
-    public function handleEditFormSuccess(Form $form) {
+    public function handleEditFormSuccess(SubmitButton $button) {
+        $form = $button->getForm();
         $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();
         $person = $this->getModel();
@@ -244,7 +268,7 @@ class PersonPresenter extends EntityPresenter {
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání řešitele.', 'error');
+            $this->flashMessage('Chyba při úpravě řešitele.', 'error');
         }
     }
 

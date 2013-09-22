@@ -31,7 +31,7 @@ class OrgFactory {
 
         if ($options & self::SHOW_PERSON) {
             $control = new PersonSelect($this->servicePerson, 'Osoba');
-            //TODO validate non-existent org
+            //TODO validate non-existent org or restrict selection
             $container->addComponent($control, 'person_id');
         }
 

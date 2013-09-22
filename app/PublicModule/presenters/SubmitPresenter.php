@@ -88,7 +88,7 @@ class SubmitPresenter extends BasePresenter {
             $container = $form->addContainer('task' . $task->task_id);
             $upload = $container->addUpload('file', $task->getFQName())
                     ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, 'Lze nahrávat pouze PDF soubory.', 'application/pdf'); //TODO verify this check at server
+                    ->addRule(Form::MIME_TYPE, 'Lze nahrávat pouze PDF soubory.', 'application/pdf'); //TODO verify this check at production server
 
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
             if ($submit && $this->submitStorage->existsFile($submit)) {

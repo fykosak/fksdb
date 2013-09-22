@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
- * @todo Validate uniqueness of email.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory {
@@ -80,14 +80,17 @@ class PersonFactory {
         return $container;
     }
 
-    public function createPersonInfo($options = 0, ControlGroup $group = null) {
+    public function createPersonInfo($options = 0, ControlGroup $group = null, $emailRule = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
         if ($options & self::SHOW_EMAIL) {
-            $email = $container->addText('email', 'E-mail')
-                    ->addCondition(Form::FILLED)
+            $email = $container->addText('email', 'E-mail');
+            $conditioned = $email->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+            if ($emailRule) {
+                $conditioned->addRule($emailRule, 'Daný e-mail je již použit u někoho jiného.');
+            }
             if ($options & self::SHOW_LOGIN_CREATION) {
                 $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
                         ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
@@ -102,10 +105,11 @@ class PersonFactory {
                 ->setOption('description', 'U cizinců číslo pasu.')
                 ->addRule(Form::MAX_LENGTH, null, 32);
 
-//TODO validace rodného čísla
         $container->addText('born_id', 'Rodné číslo')
                 ->setOption('description', 'U cizinců prázdné.')
-                ->addRule(Form::MAX_LENGTH, null, 32);
+                ->addCondition(Form::FILLED)
+                ->addRule(new BornNumber(), 'Rodné číslo nemá platný formát.');
+
 
         $container->addText('phone', 'Telefonní číslo')
                 ->addRule(Form::MAX_LENGTH, null, 32);

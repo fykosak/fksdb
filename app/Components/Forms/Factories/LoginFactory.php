@@ -9,7 +9,6 @@ use Nette\Forms\ControlGroup;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
- * @todo Validate uniqueness of login/email.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class LoginFactory {
@@ -25,15 +24,23 @@ class LoginFactory {
     /**
      * @param type $options
      */
-    public function createLogin($options = 0, ControlGroup $group = null) {
+    public function createLogin($options = 0, ControlGroup $group = null, $emailRule = null, $loginRule = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $container->addText('login', 'Přihlašovací jméno');
+        $login = $container->addText('login', 'Přihlašovací jméno');
 
-        $container->addText('email', 'E-mail')
+        if ($loginRule) {
+            $login->addRule($loginRule, 'Daný login již někdo používá.');
+        }
+
+        $email = $container->addText('email', 'E-mail')
                 ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.')
-                ->addRule(Form::FILLED);
+                ->addRule(Form::FILLED, 'E-mail je třeba zadat.');
+
+        if ($emailRule) {
+            $email->addRule($emailRule, 'Daný email již někdo používá.');
+        }
 
         if ($options & self::SHOW_PASSWORD) {
             if ($options & self::VERIFY_OLD_PASSWORD) {

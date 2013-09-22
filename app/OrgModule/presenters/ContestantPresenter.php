@@ -2,16 +2,17 @@
 
 namespace OrgModule;
 
+use AbstractModelSingle;
 use FKSDB\Components\Factories\ContestantWizardFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Rules\UniqueEmail;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
-use ModelContestant;
 use ModelException;
 use ModelPerson;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceContestant;
@@ -67,6 +68,11 @@ class ContestantPresenter extends EntityPresenter {
      */
     private $contestantWizardFactory;
 
+    /**
+     * @var UniqueEmailFactory
+     */
+    private $uniqueEmailFactory;
+
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -99,6 +105,10 @@ class ContestantPresenter extends EntityPresenter {
         $this->personFactory = $personFactory;
     }
 
+    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
+    }
+
     public function renderEdit($id) {
         parent::renderEdit($id);
 
@@ -113,7 +123,7 @@ class ContestantPresenter extends EntityPresenter {
         }
     }
 
-    protected function setDefaults(\AbstractModelSingle $model, Form $form) {
+    protected function setDefaults(AbstractModelSingle $model, Form $form) {
         $form[self::CONT_PERSON]->setValues($this->getModel()->getPerson()->toArray());
         $form[self::CONT_CONTESTANT]->setDefaults($this->getModel()->toArray());
     }
@@ -156,8 +166,36 @@ class ContestantPresenter extends EntityPresenter {
      */
     public function processWizard(WizardComponent $wizard) {
         $connection = $this->servicePerson->getConnection();
+        $personData = $wizard->getData(ContestantWizardFactory::STEP_PERSON);
+        $person = $this->getPersonFromPersonStep($personData);
 
+        /*
+         * Finish validation
+         */
+        $dataForm = $wizard->getComponent(ContestantWizardFactory::STEP_DATA);
+        $dataFormValues = $dataForm->getValues();
+        $personInfoFormValues = $dataFormValues[ContestantWizardFactory::CONT_PERSON_INFO];
+        $login = $person->getLogin();
+        $emailRule = null;
+        if ($login) {
+            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
+        } else if ($personInfoFormValues['email']) {
+            if ($personInfoFormValues[PersonFactory::EL_CREATE_LOGIN]) {
+                $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
+            } else {
+                $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_PERSON, $person);
+            }
+        }
+        if ($emailRule) {
+            if (!$emailRule->__invoke($dataForm[ContestantWizardFactory::CONT_PERSON_INFO]['email'])) {
+                $dataForm->addError('Daný e-mail již někdo používá.');
+                return;
+            }
+        }
 
+        /*
+         * Process data
+         */
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
@@ -166,8 +204,6 @@ class ContestantPresenter extends EntityPresenter {
             /*
              * Person
              */
-            $data = $wizard->getData(ContestantWizardFactory::STEP_PERSON);
-            $person = $this->getPersonFromPersonStep($data);
             $this->servicePerson->save($person);
 
 
@@ -289,6 +325,7 @@ class ContestantPresenter extends EntityPresenter {
     private function initStepData(WizardComponent $wizard) {
         $data = $wizard->getData(ContestantWizardFactory::STEP_PERSON);
         $person = $this->getPersonFromPersonStep($data);
+        $form = $wizard->getComponent(ContestantWizardFactory::STEP_DATA);
 
         $defaults = array();
         $lastContestant = $person->getLastContestant($this->getSelectedContest());
@@ -307,8 +344,19 @@ class ContestantPresenter extends EntityPresenter {
             $defaults[ContestantWizardFactory::CONT_PERSON_INFO] = $info->toArray();
         }
 
+        // we know the person only right before initialization, so in this place the email rules are also set up
+        $login = $person->getLogin();
+        if ($login) {
+            $form[ContestantWizardFactory::CONT_PERSON_INFO][PersonFactory::EL_CREATE_LOGIN]->setDisabled();
+            $defaults[ContestantWizardFactory::CONT_PERSON_INFO]['email'] = $login->email;
+            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
+        } else {
+            // we are more restrictive, check both persons and logins because depending on the checkbox value, we store email either with login or with person
+            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_PERSON | UniqueEmail::CHECK_LOGIN, $person, null);
+        }
+        //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, 'Daný e-mail již někdo používá.');
+        $form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addRule($emailRule, 'Daný e-mail již někdo používá.');
 
-        $form = $wizard->getComponent(ContestantWizardFactory::STEP_DATA);
         $form->setDefaults($defaults);
     }
 
@@ -333,3 +381,4 @@ class ContestantPresenter extends EntityPresenter {
     }
 
 }
+
