@@ -56,9 +56,10 @@ final class AuthenticationPresenter extends BasePresenter {
 //                $this->user->setExpiration(0, true);
 //            }
             $this->user->login($form['id']->value, $form['password']->value);
-            $this->application->restoreRequest($this->backlink);
-
             $person = $this->user->getIdentity()->getPerson();
+
+            $this->restoreRequest($this->backlink);
+
             if (!$person) {
                 throw new AuthenticationException('Not assigned a person for login.');
             } else if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {

@@ -27,7 +27,7 @@ class AddressFactory {
 
     public function createAddress(ControlGroup $group = null) {
         $container = new ModelContainer();
-        $this->buildAddress($container);
+        $this->buildAddress($container, $group);
         return $container;
     }
 

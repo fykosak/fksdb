@@ -1,10 +1,12 @@
 <?php
 
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelPerson extends AbstractModelSingle {
+class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * Returns first of the person's logins.
@@ -178,6 +180,14 @@ class ModelPerson extends AbstractModelSingle {
         } else {
             $this->gender = 'M';
         }
+    }
+
+    /*
+     * IResource
+     */
+
+    public function getResourceId() {
+        return 'person';
     }
 
 }

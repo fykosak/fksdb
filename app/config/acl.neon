@@ -26,6 +26,7 @@ services:
             # Resources
             - addResource(submit)
             - addResource(task)
+            - addResource(person)
             - addResource(contestant)
 
             # ACL
@@ -41,4 +42,5 @@ services:
             - allow(inboxManager, contestant, list)
             - allow(inboxManager, contestant, create)
             - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
+            - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
 

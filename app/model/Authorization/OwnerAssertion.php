@@ -62,4 +62,27 @@ class OwnerAssertion {
         return $contestant->contest_id == $grant->getContestId();
     }
 
+    /**
+     * Checks whether person is contestant in any of the role-assigned contests.
+     * 
+     * @param \Authorization\Permission $acl
+     * @param string $role
+     * @param string $resourceId
+     * @param string $privilege
+     * @return boolean
+     * @throws InvalidStateException
+     */
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+
+        $person = $acl->getQueriedResource();
+        $grant = $acl->getQueriedRole();
+
+        //TODO restrict also to the current year?
+        $contestants = $person->getContestants()->where(array('contest_id' => $grant->getContestId()));
+        return count($contestants) > 0;
+    }
+
 }

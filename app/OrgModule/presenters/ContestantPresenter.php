@@ -67,11 +67,6 @@ class ContestantPresenter extends EntityPresenter {
      */
     private $contestantWizardFactory;
 
-    /**
-     * @var ModelContestant
-     */
-    private $contestant;
-
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -248,13 +243,12 @@ class ContestantPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně založena.' : 'Řešitel úspěšně založen.');
+            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()));
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage('Chyba při zakládání řešitele.', 'error');
-            $this->redirect('Contestant:default');
         }
     }
 

@@ -54,6 +54,16 @@ class ContestantsGrid extends BaseGrid {
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->ct_id);
                         });
+        $backlink = $presenter->storeRequest();
+        $this->addButton("editPerson", "Upravit osobu")
+                ->setClass("edit")
+                ->setText('Upravit osobu') //todo i18n
+                ->setLink(function($row) use ($presenter, $backlink) {
+                            return $presenter->link("Person:edit", array(
+                                        'id' => $row->person_id,
+                                        'backlink' => $backlink,
+                            ));
+                        });
 
         //
         // appeareance

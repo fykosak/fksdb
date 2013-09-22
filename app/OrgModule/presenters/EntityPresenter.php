@@ -15,7 +15,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     const COMP_EDIT_FORM = 'editComponent';
     const COMP_CREATE_FORM = 'createComponent';
-    const COMP_GRIF = 'grid';
+    const COMP_GRID = 'grid';
 
     /**
      * @var AbstractModelSingle
