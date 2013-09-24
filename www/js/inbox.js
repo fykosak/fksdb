@@ -3,7 +3,7 @@ $(document).ready(function() {
     function createDownloadLink(taskData, opts) {
         var el = $('<a>');
         el.attr('class', 'inboxField')
-        
+
         el.attr('href', linkFormat.replace('%d', taskData.submit_id));
         el.text('Download');
         return el;
@@ -13,7 +13,7 @@ $(document).ready(function() {
         var el = $('<input>');
         el.attr('type', 'text');
         el.attr('class', 'inboxField')
-        
+
         var alt = $('<input>');
         alt.attr('type', 'hidden');
         if (taskData) {
@@ -29,13 +29,16 @@ $(document).ready(function() {
             dataEl.val(JSON.stringify(data));
         });
 
+
+        var internalFormat = 'yy-mm-dd'; //TODO parametrize this time, now it works because it's only for post submits
         el.datepicker({
             altField: alt,
-            altFormat: $.datepicker.ISO_8601 + 'T20:00:00+0200' //TODO parametrize this time
+            altFormat: internalFormat
         });
 
         if (taskData.submitted_on) {
-            el.datepicker('setDate', taskData.submitted_on);
+            var submitted_on = $.datepicker.parseDate(internalFormat, taskData.submitted_on);
+            el.datepicker('setDate', submitted_on);
         }
 
         return [el, alt];

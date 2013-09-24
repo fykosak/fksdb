@@ -3,10 +3,9 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
-use ModelSubmit;
+use FKSDB\Components\Forms\OptimisticForm;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 use Nette\Security\Permission;
 use ServiceSubmit;
 
@@ -30,20 +29,23 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     public function renderDefault() {
         $this->template->contestants = $this->getContestants();
         $this->template->tasks = $this->getTasks()->fetchPairs('task_id');
+
+        $this['inboxForm']->setDefaults();
     }
 
     protected function createComponentInboxForm($name) {
-        $form = new Form($this, $name); //TODO use OptimisticForm
+        $form = new OptimisticForm(
+                array($this, 'inboxFormDataFingerprint'), array($this, 'inboxFormDefaultValues')
+        );
 
         $contestants = $this->getContestants();
         $tasks = $this->getTasks();
-        $submitsTable = $this->getSubmitsTable();
+
 
         $container = $form->addContainer('contestants');
 
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
-            $control->setValue(isset($submitsTable[$contestant->ct_id]) ? $submitsTable[$contestant->ct_id] : null);
             $control->setClassName('inbox');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
@@ -52,6 +54,8 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         $form->addSubmit('save', 'Uložit');
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
+
+        return $form;
     }
 
     public function inboxFormSuccess(Form $form) {
@@ -74,6 +78,41 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $this->serviceSubmit->getConnection()->commit();
         $this->flashMessage('Informace o řešeních uložena.');
         $this->redirect('this');
+    }
+
+    /**
+     * @internal
+     * @return array
+     */
+    public function inboxFormDefaultValues() {
+        $submitsTable = $this->getSubmitsTable();
+        $contestants = $this->getContestants();
+        $result = array();
+        foreach ($contestants as $contestant) {
+            $ctId = $contestant->ct_id;
+            if (isset($submitsTable[$ctId])) {
+                $result[$ctId] = array('submit' => $submitsTable[$ctId]);
+            } else {
+                $result[$ctId] = array('submit' => null);
+            }
+        }
+        return array(
+            'contestants' => $result
+        );
+    }
+
+    /**
+     * @internal
+     * @return array
+     */
+    public function inboxFormDataFingerprint() {
+        $fingerprint = '';
+        foreach ($this->getSubmitsTable() as $submits) {
+            foreach ($submits as $submit) {
+                $fingerprint .= $submit->getFingerprint();
+            }
+        }
+        return md5($fingerprint);
     }
 
 }

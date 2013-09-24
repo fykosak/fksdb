@@ -93,7 +93,7 @@ class ContestantSubmits extends BaseControl {
      * @throws InvalidArgumentException
      */
     public function setValue($value) {
-        if (!$value) {            
+        if (!$value) {
             $this->rawValue = $this->serializeValue(array());
             $this->value = $this->deserializeValue($this->rawValue);
         } else if (is_string($value)) {
@@ -132,7 +132,7 @@ class ContestantSubmits extends BaseControl {
             $dummySubmit->task_id = $task->task_id;
             $result[$tasknr] = $this->serializeSubmit($dummySubmit);
         }
-        
+
         ksort($result);
 
         return json_encode($result);
@@ -156,14 +156,16 @@ class ContestantSubmits extends BaseControl {
 
     private function serializeSubmit(ModelSubmit $submit) {
         $data = $submit->toArray();
-        $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format(DateTime::ISO8601) : null;
+        $format = $this->sourceToFormat($submit->source);
+        $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
         return $data;
     }
 
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security
         $data['ct_id'] = $this->contestant->ct_id; // security
-        $data['submitted_on'] = $data['submitted_on'] ? DateTime::createFromFormat(DateTime::ISO8601, $data['submitted_on']) : null;
+        $format = $this->sourceToFormat($data['source'], true);
+        $data['submitted_on'] = $data['submitted_on'] ? DateTime::createFromFormat($format, $data['submitted_on']) : null;
         $data['tasknr'] = $tasknr;
 
         $ctId = $data['ct_id'];
@@ -176,6 +178,24 @@ class ContestantSubmits extends BaseControl {
 
         $this->submitService->updateModel($submit, $data);
         return $submit;
+    }
+
+    /**
+     * Workaround to perform server-side conversion of dates.
+     * 
+     * @todo Improve client side so that this is not needed anymore.
+     * @param string $source
+     * @return string
+     */
+    private function sourceToFormat($source, $parse = false) {
+        switch ($source) {
+            case ModelSubmit::SOURCE_POST:
+                return  ($parse ? '!' : '') . 'Y-m-d';
+                break;
+            default:
+                return DateTime::ISO8601;
+                break;
+        }
     }
 
 }
