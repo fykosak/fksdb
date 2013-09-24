@@ -59,10 +59,14 @@ class SubmitsGrid extends BaseGrid {
                             $task = $row->getTask();
                             $FQname = $task->getFQName();
 
-                            $el = Html::el('a');
-                            $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
-                            $el->setText($FQname);
-                            return $el;
+                            if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
+                                $el = Html::el('a');
+                                $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
+                                $el->setText($FQname);
+                                return $el;
+                            } else {
+                                return $FQname;
+                            }
                         });
         $this->addColumn('submitted_on', 'Čas odevzdání');
         $this->addColumn('source', 'Způsob odevzdání');

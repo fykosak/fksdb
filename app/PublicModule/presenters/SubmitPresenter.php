@@ -64,6 +64,10 @@ class SubmitPresenter extends BasePresenter {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
         }
 
+        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
+            throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);
+        }
+
         $filename = $this->submitStorage->retrieveFile($submit);
         if (!$filename) {
             throw new BadRequestException('Poškozený soubor submitu', 500);
@@ -84,13 +88,16 @@ class SubmitPresenter extends BasePresenter {
             if ($task->submit_deadline != $prevDeadline) {
                 $form->addGroup(sprintf('Termín %s', $task->submit_deadline));
             }
+            $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
+            if($submit && $submit->source == ModelSubmit::SOURCE_POST) {
+                continue; // prevDeadline will work though
+            }
 
             $container = $form->addContainer('task' . $task->task_id);
             $upload = $container->addUpload('file', $task->getFQName())
                     ->addCondition(Form::FILLED)
                     ->addRule(Form::MIME_TYPE, 'Lze nahrávat pouze PDF soubory.', 'application/pdf'); //TODO verify this check at production server
 
-            $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
             if ($submit && $this->submitStorage->existsFile($submit)) {
                 $overwrite = $container->addCheckbox('overwrite', 'Přepsat odeslané řešení.');
                 $upload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, 'Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.');
