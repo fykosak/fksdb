@@ -2,13 +2,14 @@
 # ORM services definitions
 #
 services:
-    ServiceEvent:            ServiceEvent
-    ServiceEventParticipant: ServiceEventParticipant
+    ServiceAuthToken:        ServiceAuthToken
     ServiceAddress:          ServiceAddress
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
     ServiceCountry:          ServiceCountry
-    ServiceLogin:            ServiceLogin
+    ServiceEvent:            ServiceEvent
+    ServiceEventParticipant: ServiceEventParticipant
+    ServiceLogin:            ServiceLogin(%invitation.expiration%, ...)
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson

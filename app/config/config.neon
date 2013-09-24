@@ -10,6 +10,9 @@ parameters:
     contestMapping:
         1: fykos
         2: vyfuk
+    # Configuration of sent emails.
+    email:
+        templatesDir: %appDir%/templates/emails
 
     # Submits by contestats
     upload:
@@ -49,6 +52,12 @@ parameters:
         paths:
             cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
             en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
+    
+    # Various e-mail invitations
+    invitation:
+        # How long (relatively) is authentication token valid after invitation.
+        expiration: '+1 month'
+
 
 php:
     date.timezone: Europe/Prague

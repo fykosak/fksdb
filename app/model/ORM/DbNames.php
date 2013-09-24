@@ -7,6 +7,7 @@
 class DbNames {
 
     const TAB_ADDRESS = 'address';
+    const TAB_AUTH_TOKEN = 'auth_token';
     const TAB_CONTEST = 'contest';
     const TAB_CONTESTANT = 'contestant';
     const TAB_COUNTRY = 'country';

@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use MailTemplateFactory;
 use ModelException;
 use ModelPerson;
 use Nette\Application\UI\Form;
@@ -73,6 +74,11 @@ class ContestantPresenter extends EntityPresenter {
      */
     private $uniqueEmailFactory;
 
+    /**
+     * @var MailTemplateFactory
+     */
+    private $mailTemplateFactory;
+
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -107,6 +113,10 @@ class ContestantPresenter extends EntityPresenter {
 
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
+    }
+
+    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     public function renderEdit($id) {
@@ -206,7 +216,6 @@ class ContestantPresenter extends EntityPresenter {
              */
             $this->servicePerson->save($person);
 
-
             /*
              * Contestant
              */
@@ -254,7 +263,13 @@ class ContestantPresenter extends EntityPresenter {
                     $login->email = $email;
                     $this->serviceLogin->save($login);
                 } else if ($dataInfo[PersonFactory::EL_CREATE_LOGIN]) {
-                    $login = $this->serviceLogin->createLoginWithInvitation($email);
+                    $template = $this->mailTemplateFactory->createLoginInvitation($this, 'cs'); //TODO i18n of created logins
+                    try {
+                        $login = $this->serviceLogin->createLoginWithInvitation($template, $person, $email);
+                        $this->flashMessage('Zvací e-mail odeslán.');
+                    } catch (MailNotSendException $e) {
+                        $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', 'error');
+                    }
                 } else {
                     $dataInfo['email'] = $email; // we'll store it as personal info
                 }
@@ -297,7 +312,8 @@ class ContestantPresenter extends EntityPresenter {
     public function initWizard($stepName, WizardComponent $wizard) {
         switch ($stepName) {
             case ContestantWizardFactory::STEP_DATA:
-                $this->initStepData($wizard);
+                $this->initStepData(
+                        $wizard);
                 break;
         }
     }
@@ -317,6 +333,7 @@ class ContestantPresenter extends EntityPresenter {
             $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()));
             $this->redirect('list');
         } catch (ModelException $e) {
+
             $this->flashMessage('Chyba při ukládání do databáze.');
             Debugger::log($e);
         }
@@ -357,7 +374,8 @@ class ContestantPresenter extends EntityPresenter {
         //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, 'Daný e-mail již někdo používá.');
         $form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addRule($emailRule, 'Daný e-mail již někdo používá.');
 
-        $form->setDefaults($defaults);
+        $form->
+                setDefaults($defaults);
     }
 
     /**
@@ -371,6 +389,7 @@ class ContestantPresenter extends EntityPresenter {
         } else {
             $dataPerson = $data[ContestantWizardFactory::CONT_PERSON];
             $dataPerson = FormUtils::emptyStrToNull($dataPerson);
+
             $person = $this->servicePerson->createNew($dataPerson);
         }
         return $person;

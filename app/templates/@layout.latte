@@ -22,8 +22,12 @@
         <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
         <div n:if="$user->isLoggedIn()" class="user-info">
             <p>Přihlášen <em>{$user->getIdentity()->getPerson()->getFullname()}</em>
-                <a n:href=":Authentication:logout">Odhlásit</a></p>
-            <p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator())">Rola orga:
+                <a n:href=":Authentication:logout">Odhlásit</a>
+            </p>
+            <p>
+                <a n:href=":Public:Personal:edit">Osobní nastavení</a>
+            </p>
+            <p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator()) and false">Rola orga:
                 {foreach $control->getAvailableContests() as $contest}
                 <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
                 {/foreach}

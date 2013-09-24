@@ -68,6 +68,11 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         $session->defaultYear = $this->year;
     }
 
+    /**
+     * @todo Move to ModelLogin class.
+     * @deprecated
+     * @return type
+     */
     public function getAvailableContests() {
         return $this->availableContests;
     }

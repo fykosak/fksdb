@@ -2,6 +2,7 @@
 # Factories definitions
 #
 services:
+    MailTemplateFactory: self(%email.templatesDir%)
     FKSDB\Components\Factories\ContestantWizardFactory: self
     resultsModelFactory: ResultsModelFactory
     statsModelFactory: StatsModelFactory
