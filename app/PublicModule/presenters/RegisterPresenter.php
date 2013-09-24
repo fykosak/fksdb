@@ -145,7 +145,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     public function actionDefault() {
         if ($this->user->isLoggedIn()) {
             /** @var ModelPerson $person */
-            $person = $this->user->getIdentity();
+            $person = $this->user->getIdentity()->getPerson();
             $currentContestants = $person->getContestants()
                     ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
                     ->where('year = ?', $this->getSelectedYear());
@@ -163,7 +163,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     public function actionContestant() {
         if ($this->user->isLoggedIn()) {
             /** @var ModelPerson $person */
-            $person = $this->user->getIdentity();
+            $person = $this->user->getIdentity()->getPerson();
             $currentContestants = $person->getContestants()
                     ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
                     ->where('year = ?', $this->getSelectedYear());
@@ -211,7 +211,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $form = new Form();
 
         // person
-        $person = $this->user->getIdentity();
+        $person = $this->user->getIdentity()->getPerson();
         $group = $form->addGroup('Osoba');
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
         $personContainer->setDefaults($person->toArray());
@@ -225,6 +225,8 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $contestantContainer->setDefaults($contestant->toArray()); //TODO auto-increase study_year + class
         }
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+        
+        //TODO address
 
 
         $form->setCurrentGroup();
@@ -307,7 +309,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             if (!$this->connection->beginTransaction()) {
                 throw new ModelException();
             }
-            $person = $this->user->getIdentity();
+            $person = $this->user->getIdentity()->getPerson();
 
             // store contestant
             $contestantData = $values[self::CONT_CONTESTANT];

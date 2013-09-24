@@ -1,7 +1,9 @@
 <?php
 
+use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Nette\Http\UserStorage;
+use Nette\Security\AuthenticationException;
 
 /**
  * Presenter allows authenticated user access only.
@@ -13,12 +15,11 @@ use Nette\Http\UserStorage;
 abstract class AuthenticatedPresenter extends BasePresenter {
 
     const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
 
     /**
-     * @var ServiceAuthToken
+     * @var TokenAuthenticator
      */
-    private $authTokenService;
+    private $tokenAuthenticator;
 
     /**
      * @var ContestAuthorizator
@@ -29,12 +30,16 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    public function injectAuthTokenService(ServiceAuthToken $authTokenService) {
-        $this->authTokenService = $authTokenService;
+    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+        $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
     public function getContestAuthorizator() {
         return $this->contestAuthorizator;
+    }
+
+    public function getTokenAuthenticator() {
+        return $this->tokenAuthenticator;
     }
 
     protected function startup() {
@@ -60,43 +65,15 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         if (!$tokenData) {
             return;
         }
-        $token = $this->authTokenService->verifyToken($tokenData);
-        if (!$token) {
-            $this->flashMessage('Autentizační token je neplatný.', 'error');
-            return;
+
+        try {
+            $login = $this->tokenAuthenticator->authenticate($tokenData);
+            $this->getUser()->login($login);
+            $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
+            $this->redirect('this'); //TODO verify: strip auth token from URL
+        } catch (AuthenticationException $e) {
+            $this->flashMessage($e->getMessage(), 'error');
         }
-        // login by the identity
-        $login = $token->getLogin();
-        if (!$login->active) {
-            $this->flashMessage('Neaktivní účet.', 'error'); //TODO keep occurence of this message at one place only
-            return;
-        }
-        $this->getUser()->login($login);
-
-        $this->storeAuthToken($token);
-        $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
-        $this->redirect('this'); //TODO verify: strip auth token from URL
-    }
-
-    protected function disposeAuthToken() {
-        $section = $this->getSession(self::SESSION_NS);
-        if (isset($section->token)) {
-            $this->authTokenService->disposeToken($section->token);
-            unset($section->token);
-        }
-    }
-
-    /**
-     * @return bool true iff user has been authenticated by the authentication token
-     */
-    protected function isAuthenticatedByToken() {
-        $section = $this->getSession(self::SESSION_NS);
-        return isset($section->token);
-    }
-
-    private function storeAuthToken(ModelAuthToken $token) {
-        $section = $this->getSession(self::SESSION_NS);
-        $section->token = $token->token;
     }
 
 }

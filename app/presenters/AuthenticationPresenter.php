@@ -1,5 +1,6 @@
 <?php
 
+use Authentication\FacebookAuthenticator;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 
@@ -7,6 +8,20 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /** @persistent */
     public $backlink = '';
+
+    /**
+     * @var Facebook
+     */
+    private $facebook;
+
+    /**
+     * @var FacebookAuthenticator
+     */
+    private $facebookAuthenticator;
+
+    public function injectFacebook(Facebook $facebook) {
+        $this->facebook = $facebook;
+    }
 
     public function actionLogout() {
         if ($this->getUser()->isLoggedIn()) {
@@ -23,6 +38,28 @@ final class AuthenticationPresenter extends BasePresenter {
             $person = $this->getUser()->getIdentity()->getPerson();
             $this->initialRedirect($person);
         }
+    }
+
+    public function actionFbLogin() {
+        try {
+            $me = $this->facebook->api('/me');
+            $identity = $this->facebookAuthenticator->authenticate($me);
+
+            $this->getUser()->login($identity);
+            $person = $this->getUser()->getIdentity()->getPerson();
+            $this->initialRedirect($person);
+        } catch (AuthenticationException $e) {
+            $this->flashMessage($e->getMessage(), 'error');
+        }
+    }
+
+    public function renderLogin() {
+        $fbUrl = $this->facebook->getLoginUrl(array(
+            'scope' => 'email',
+            'redirect_uri' => $this->link('//fbLogin'), // absolute
+        ));
+
+        $this->template->fbUrl = $fbUrl;
     }
 
     /*     * ******************* components ****************************** */

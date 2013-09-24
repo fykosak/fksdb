@@ -2,11 +2,12 @@
 
 namespace PublicModule;
 
-use Authenticator;
+use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use FormUtils;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use ServiceLogin;
@@ -68,7 +69,7 @@ class PersonalPresenter extends BasePresenter {
     protected function createComponentPersonalForm($name) {
         $form = new Form();
         $login = $this->getUser()->getIdentity();
-        $tokenAuthentication = $this->isAuthenticatedByToken();
+        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
 
         $group = $form->addGroup('Osobní nastavení');
         $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
@@ -86,7 +87,7 @@ class PersonalPresenter extends BasePresenter {
             $loginContainer['old_password']
                     ->addCondition(Form::FILLED)
                     ->addRule(function(BaseControl $control) use($login) {
-                                $hash = Authenticator::calculateHash($control->getValue(), $login);
+                                $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                                 return $hash == $login->hash;
                             }, 'Špatně zadané staré heslo.');
         }
@@ -101,14 +102,14 @@ class PersonalPresenter extends BasePresenter {
 
     /**
      * @internal
-     * @param \Nette\Application\UI\Form $form
+     * @param Form $form
      */
     public function handlePersonalFormSuccess(Form $form) {
         $values = $form->getValues();
-        $tokenAuthentication = $this->isAuthenticatedByToken();
+        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
         $login = $this->getUser()->getIdentity();
 
-        $loginData = $values[self::CONT_LOGIN];
+        $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
             $login->setHash($loginData['password']);
         }
@@ -116,10 +117,10 @@ class PersonalPresenter extends BasePresenter {
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
         $this->flashMessage('Osobní informace upraveny.');
-        $this->redirect($this);
+        $this->redirect('this');
         if ($tokenAuthentication) {
             $this->flashMessage('Heslo nastaveno.'); //TODO here may be Facebook ID            
-            $this->disposeAuthToken(); // from now on same like password authentication
+            $this->getTokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
     }
 

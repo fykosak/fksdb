@@ -3,9 +3,12 @@
 #
 
 services:
-    authenticator: Authenticator
+    Authentication\FacebookAuthenticator: self
+    Authentication\PasswordAuthenticator: self
+    Authentication\TokenAuthenticator: self
     contestAuthorizator: Authorization\ContestAuthorizator
     ownerAssertion: Authorization\OwnerAssertion
+    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
     SQLResultsCache: SQLResultsCache

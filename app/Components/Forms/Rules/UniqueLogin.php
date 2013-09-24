@@ -40,6 +40,10 @@ class UniqueLogin {
     public function __invoke(BaseControl $control) {
         $login = $control->getValue();
 
+        if (!$login) {
+            return true;
+        }
+
         $conflicts = $this->serviceLogin->getTable()->where(array('login' => $login));
         if ($this->ignoredLogin) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);

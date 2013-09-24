@@ -1,5 +1,6 @@
 <?php
 
+use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
@@ -48,7 +49,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      * @param string $password password
      */
     public function setHash($password) {
-        $this->hash = Authenticator::calculateHash($password, $this);
+        $this->hash = PasswordAuthenticator::calculateHash($password, $this);
     }
 
     public function resetPassword() {
