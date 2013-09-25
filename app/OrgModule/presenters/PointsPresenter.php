@@ -2,7 +2,10 @@
 
 namespace OrgModule;
 
+use Exception;
+use ModelContest;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 
 class PointsPresenter extends TaskTimesContestantPresenter {
 
@@ -87,7 +90,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
             $this->flashMessage('Body úloh uloženy.');
         } catch (Exception $e) {
             $this->flashMessage('Chyba při ukládání bodů.', 'error');
-            Nette\Diagnostics\Debugger::log($e);
+            Debugger::log($e);
         }
         $this->redirect('this');
     }
@@ -100,7 +103,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
             $this->flashMessage('Body invalidovány.');
         } catch (Exception $e) {
             $this->flashMessage('Chyba při invalidaci.', 'error');
-            Nette\Diagnostics\Debugger::log($e);
+            Debugger::log($e);
         }
 
         $this->redirect('this');
@@ -128,7 +131,7 @@ class PointsPresenter extends TaskTimesContestantPresenter {
             $this->flashMessage('Body přepočítány.');
         } catch (Exception $e) {
             $this->flashMessage('Chyba při přepočtu.', 'error');
-            Nette\Diagnostics\Debugger::log($e);
+            Debugger::log($e);
         }
 
         $this->redirect('this');
