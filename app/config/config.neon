@@ -64,6 +64,8 @@ php:
     # zlib.output_compression: yes
 
 nette:
+    database:
+        reflection: discovered
     application:
         errorPresenter: Error
 
