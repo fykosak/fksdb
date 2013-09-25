@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Mime type detector.
  *
@@ -32,7 +31,6 @@ final class MimeTypeDetector
 	}
 
 
-
 	/**
 	 * Returns the MIME content type of file.
 	 * @param  string
@@ -46,21 +44,17 @@ final class MimeTypeDetector
 
 		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error
 		if (isset($info['mime'])) {
-                    echo "img";
 			return $info['mime'];
 
 		} elseif (extension_loaded('fileinfo')) {
-                    echo "fileinfo";
-			$type = preg_replace('#[\s;].*$#', '', finfo_file(finfo_open(FILEINFO_MIME), $file));
+			$type = preg_replace('#[\s;].*\z#', '', finfo_file(finfo_open(FILEINFO_MIME), $file));
 
 		} elseif (function_exists('mime_content_type')) {
-                    echo "mime";
 			$type = mime_content_type($file);
 		}
 
-		return isset($type) && preg_match('#^\S+/\S+$#', $type) ? $type : 'application/octet-stream';
+		return isset($type) && preg_match('#^\S+/\S+\z#', $type) ? $type : 'application/octet-stream';
 	}
-
 
 
 	/**

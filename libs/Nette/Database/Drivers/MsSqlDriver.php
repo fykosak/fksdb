@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental MS SQL database driver.
  *
@@ -26,16 +25,13 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	private $connection;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -48,7 +44,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -58,7 +53,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
@@ -66,7 +60,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return $value->format("'Y-m-d H:i:s'");
 	}
-
 
 
 	/**
@@ -79,13 +72,11 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
-		// offset support is missing
 		if ($limit >= 0) {
 			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ') t';
 		}
@@ -94,7 +85,6 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			throw new Nette\NotImplementedException('Offset is not implemented.');
 		}
 	}
-
 
 
 	/**
@@ -106,9 +96,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -116,9 +104,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getTables()
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -126,9 +113,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getColumns($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -136,9 +122,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getIndexes($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -146,9 +131,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**

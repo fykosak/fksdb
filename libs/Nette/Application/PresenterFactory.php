@@ -14,13 +14,12 @@ namespace Nette\Application;
 use Nette;
 
 
-
 /**
  * Default presenter loader.
  *
  * @author     David Grudl
  */
-class PresenterFactory implements IPresenterFactory
+class PresenterFactory extends Nette\Object implements IPresenterFactory
 {
 	/** @var bool */
 	public $caseSensitive = FALSE;
@@ -35,7 +34,6 @@ class PresenterFactory implements IPresenterFactory
 	private $container;
 
 
-
 	/**
 	 * @param  string
 	 */
@@ -46,9 +44,8 @@ class PresenterFactory implements IPresenterFactory
 	}
 
 
-
 	/**
-	 * Create new presenter instance.
+	 * Creates new presenter instance.
 	 * @param  string  presenter name
 	 * @return IPresenter
 	 */
@@ -71,8 +68,8 @@ class PresenterFactory implements IPresenterFactory
 	}
 
 
-
 	/**
+	 * Generates and checks presenter class name.
 	 * @param  string  presenter name
 	 * @return string  class name
 	 * @throws InvalidPresenterException
@@ -84,7 +81,7 @@ class PresenterFactory implements IPresenterFactory
 			return $class;
 		}
 
-		if (!is_string($name) || !Nette\Utils\Strings::match($name, "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#")) {
+		if (!is_string($name) || !Nette\Utils\Strings::match($name, '#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*\z#')) {
 			throw new InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
 		}
 
@@ -130,7 +127,6 @@ class PresenterFactory implements IPresenterFactory
 	}
 
 
-
 	/**
 	 * Formats presenter class name from its name.
 	 * @param  string
@@ -142,7 +138,6 @@ class PresenterFactory implements IPresenterFactory
 	}
 
 
-
 	/**
 	 * Formats presenter name from class name.
 	 * @param  string
@@ -152,7 +147,6 @@ class PresenterFactory implements IPresenterFactory
 	{
 		return str_replace('Module\\', ':', substr($class, 0, -9));
 	}
-
 
 
 	/**

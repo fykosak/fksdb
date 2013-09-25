@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental SQLite3 database driver.
  *
@@ -29,18 +28,15 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	private $fmtDateTime;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 		$this->fmtDateTime = isset($options['formatDateTime']) ? $options['formatDateTime'] : 'U';
-		//$connection->exec('PRAGMA foreign_keys = ON');
+		//$connection->query('PRAGMA foreign_keys = ON');
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -52,7 +48,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -62,7 +57,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
@@ -70,7 +64,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	{
 		return $value->format($this->fmtDateTime);
 	}
-
 
 
 	/**
@@ -83,11 +76,10 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit >= 0 || $offset > 0) {
 			$sql .= ' LIMIT ' . $limit . ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
@@ -95,19 +87,23 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
 	public function normalizeRow($row, $statement)
 	{
+		foreach ($row as $key => $value) {
+			unset($row[$key]);
+			if ($key[0] === '[' || $key[0] === '"') {
+				$key = substr($key, 1, -1);
+			}
+			$row[$key] = $value;
+		}
 		return $row;
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -116,13 +112,12 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	public function getTables()
 	{
 		return $this->connection->query("
-			SELECT name, type = 'view' as view FROM sqlite_master WHERE type IN ('table', 'view')
+			SELECT name, type = 'view' as view FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%'
 			UNION ALL
-			SELECT name, type = 'view' as view FROM sqlite_temp_master WHERE type IN ('table', 'view')
+			SELECT name, type = 'view' as view FROM sqlite_temp_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%'
 			ORDER BY name
 		")->fetchAll();
 	}
-
 
 
 	/**
@@ -139,7 +134,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$columns = array();
 		foreach ($this->connection->query("PRAGMA table_info({$this->delimite($table)})") as $row) {
 			$column = $row['name'];
-			$pattern = "/(\"$column\"|\[$column\]|$column)\s+[^,]+\s+PRIMARY\s+KEY\s+AUTOINCREMENT/Ui";
+			$pattern = "/(\"$column\"|\[$column\]|$column)\\s+[^,]+\\s+PRIMARY\\s+KEY\\s+AUTOINCREMENT/Ui";
 			$type = explode('(', $row['type']);
 			$columns[] = array(
 				'name' => $column,
@@ -156,7 +151,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return $columns;
 	}
-
 
 
 	/**
@@ -207,7 +201,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -216,9 +209,9 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$keys = array();
 		foreach ($this->connection->query("PRAGMA foreign_key_list({$this->delimite($table)})") as $row) {
 			$keys[$row['id']]['name'] = $row['id']; // foreign key name
-			$keys[$row['id']]['local'][$row['seq']] = $row['from']; // local columns
+			$keys[$row['id']]['local'] = $row['from']; // local columns
 			$keys[$row['id']]['table'] = $row['table']; // referenced table
-			$keys[$row['id']]['foreign'][$row['seq']] = $row['to']; // referenced columns
+			$keys[$row['id']]['foreign'] = $row['to']; // referenced columns
 			$keys[$row['id']]['onDelete'] = $row['on_delete'];
 			$keys[$row['id']]['onUpdate'] = $row['on_update'];
 
@@ -228,7 +221,6 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 		return array_values($keys);
 	}
-
 
 
 	/**

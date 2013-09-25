@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Simple lexical analyser.
  *
@@ -44,7 +43,6 @@ class Tokenizer extends Nette\Object
 	public $current;
 
 
-
 	/**
 	 * @param  array of [(int) symbol type => pattern]
 	 * @param  string  regular expression flag
@@ -55,7 +53,6 @@ class Tokenizer extends Nette\Object
 		$keys = array_keys($patterns);
 		$this->types = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
 	}
-
 
 
 	/**
@@ -106,12 +103,10 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	public static function createToken($value, $type = NULL, $line = NULL)
 	{
 		return array('value' => $value, 'type' => $type, 'line' => $line);
 	}
-
 
 
 	/**
@@ -131,7 +126,6 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns next token as string.
 	 * @param  desired token
@@ -139,10 +133,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function fetch()
 	{
-		$args = func_get_args();
-		return $this->scan($args, TRUE);
+		return $this->scan(func_get_args(), TRUE);
 	}
-
 
 
 	/**
@@ -152,10 +144,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function fetchToken()
 	{
-		$args = func_get_args();
-		return $this->scan($args, TRUE) === FALSE ? FALSE : $this->current;
+		return $this->scan(func_get_args(), TRUE) === FALSE ? FALSE : $this->current;
 	}
-
 
 
 	/**
@@ -165,10 +155,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function fetchAll()
 	{
-		$args = func_get_args();
-		return $this->scan($args, FALSE);
+		return $this->scan(func_get_args(), FALSE);
 	}
-
 
 
 	/**
@@ -178,10 +166,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function fetchUntil($arg)
 	{
-		$args = func_get_args();
-		return $this->scan($args, FALSE, TRUE, TRUE);
+		return $this->scan(func_get_args(), FALSE, TRUE, TRUE);
 	}
-
 
 
 	/**
@@ -191,10 +177,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function isNext($arg)
 	{
-		$args = func_get_args();
-		return (bool) $this->scan($args, TRUE, FALSE);
+		return (bool) $this->scan(func_get_args(), TRUE, FALSE);
 	}
-
 
 
 	/**
@@ -204,10 +188,8 @@ class Tokenizer extends Nette\Object
 	 */
 	public function isPrev($arg)
 	{
-		$args = func_get_args();
-		return (bool) $this->scan($args, TRUE, FALSE, FALSE, TRUE);
+		return (bool) $this->scan(func_get_args(), TRUE, FALSE, FALSE, TRUE);
 	}
-
 
 
 	/**
@@ -220,7 +202,6 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	/**
 	 * Checks existence of previous token.
 	 * @return bool
@@ -229,7 +210,6 @@ class Tokenizer extends Nette\Object
 	{
 		return $this->position > 1;
 	}
-
 
 
 	/**
@@ -249,13 +229,11 @@ class Tokenizer extends Nette\Object
 	}
 
 
-
 	public function reset()
 	{
 		$this->position = 0;
 		$this->current = NULL;
 	}
-
 
 
 	/**
@@ -290,7 +268,6 @@ class Tokenizer extends Nette\Object
 	}
 
 }
-
 
 
 /**

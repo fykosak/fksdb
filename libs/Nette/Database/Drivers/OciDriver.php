@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental Oracle database driver.
  *
@@ -29,7 +28,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	private $fmtDateTime;
 
 
-
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
@@ -37,9 +35,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -52,7 +48,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -60,7 +55,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		return $value ? '1' : '0';
 	}
-
 
 
 	/**
@@ -72,7 +66,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
@@ -82,11 +75,10 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($offset > 0) {
 			// see http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
@@ -100,7 +92,6 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Normalizes result row.
 	 */
@@ -110,9 +101,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -133,15 +122,13 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	}
 
 
-
 	/**
 	 * Returns metadata for all columns in a table.
 	 */
 	public function getColumns($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -149,9 +136,8 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getIndexes($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**
@@ -159,9 +145,8 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
-
 
 
 	/**

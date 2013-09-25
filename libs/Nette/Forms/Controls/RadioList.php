@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Html;
 
 
-
 /**
  * Set of radio button controls.
  *
@@ -37,7 +36,6 @@ class RadioList extends BaseControl
 	protected $items = array();
 
 
-
 	/**
 	 * @param  string  label
 	 * @param  array   options from which to choose
@@ -54,7 +52,6 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns selected radio value.
 	 * @param  bool
@@ -64,7 +61,6 @@ class RadioList extends BaseControl
 	{
 		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
 	}
-
 
 
 	/**
@@ -77,18 +73,16 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
-	 * @return RadioList  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items)
 	{
 		$this->items = $items;
 		return $this;
 	}
-
 
 
 	/**
@@ -101,7 +95,6 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns separator HTML element template.
 	 * @return Nette\Utils\Html
@@ -112,7 +105,6 @@ class RadioList extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns container HTML element template.
 	 * @return Nette\Utils\Html
@@ -121,7 +113,6 @@ class RadioList extends BaseControl
 	{
 		return $this->container;
 	}
-
 
 
 	/**
@@ -172,7 +163,6 @@ class RadioList extends BaseControl
 
 		return $container;
 	}
-
 
 
 	/**

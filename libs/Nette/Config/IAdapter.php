@@ -14,7 +14,6 @@ namespace Nette\Config;
 use Nette;
 
 
-
 /**
  * Adapter for reading and writing configuration files.
  *
@@ -32,7 +31,6 @@ interface IAdapter
 
 	/**
 	 * Generates configuration string.
-	 * @param  array
 	 * @return string
 	 */
 	function dump(array $data);

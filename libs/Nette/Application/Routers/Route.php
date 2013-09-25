@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * The bidirectional route is responsible for mapping
  * HTTP request to a Request object for dispatch and vice-versa.
@@ -111,7 +110,6 @@ class Route extends Nette\Object implements Application\IRouter
 	private $flags;
 
 
-
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param  array|string   default values or metadata
@@ -138,7 +136,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$this->flags = $flags | static::$defaultFlags;
 		$this->setMask($mask, $metadata);
 	}
-
 
 
 	/**
@@ -230,6 +227,8 @@ class Route extends Nette\Object implements Application\IRouter
 		// 5) BUILD Request
 		if (!isset($params[self::PRESENTER_KEY])) {
 			throw new Nette\InvalidStateException('Missing presenter in route definition.');
+		} elseif (!is_string($params[self::PRESENTER_KEY])) {
+			return NULL;
 		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
 			if (!isset($params[self::MODULE_KEY])) {
@@ -252,7 +251,6 @@ class Route extends Nette\Object implements Application\IRouter
 			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
-
 
 
 	/**
@@ -306,9 +304,7 @@ class Route extends Nette\Object implements Application\IRouter
 				}
 			}
 
-			if (!is_scalar($params[$name])) {
-
-			} elseif (isset($meta['filterTable2'][$params[$name]])) {
+			if (is_scalar($params[$name]) && isset($meta['filterTable2'][$params[$name]])) {
 				$params[$name] = $meta['filterTable2'][$params[$name]];
 
 			} elseif (isset($meta['filterTable2']) && !empty($meta[self::FILTER_STRICT])) {
@@ -399,7 +395,6 @@ class Route extends Nette\Object implements Application\IRouter
 
 		return $url;
 	}
-
 
 
 	/**
@@ -560,7 +555,7 @@ class Route extends Nette\Object implements Application\IRouter
 					$meta['defOut'] = $meta[self::VALUE];
 				}
 			}
-			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
+			$meta[self::PATTERN] = "#(?:$pattern)\\z#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
 
 			// include in expression
 			$re = '(?P<' . str_replace('-', '___', $name) . '>(?U)' . $pattern . ')' . $re; // str_replace is dirty trick to enable '-' in parameter name
@@ -588,11 +583,10 @@ class Route extends Nette\Object implements Application\IRouter
 			throw new Nette\InvalidArgumentException("Missing closing ']' in mask '$mask'.");
 		}
 
-		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
+		$this->re = '#' . $re . '/?\z#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
 		$this->metadata = $metadata;
 		$this->sequence = $sequence;
 	}
-
 
 
 	/**
@@ -603,7 +597,6 @@ class Route extends Nette\Object implements Application\IRouter
 	{
 		return $this->mask;
 	}
-
 
 
 	/**
@@ -622,7 +615,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Returns flags.
 	 * @return int
@@ -633,9 +625,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Utilities ****************d*g**/
-
 
 
 	/**
@@ -666,7 +656,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Rename keys in array.
 	 * @param  array
@@ -693,9 +682,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Inflectors ****************d*g**/
-
 
 
 	/**
@@ -710,7 +697,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$s = rawurlencode($s);
 		return $s;
 	}
-
 
 
 	/**
@@ -729,7 +715,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * PascalCase:Presenter name -> dash-and-dot-separated.
 	 * @param  string
@@ -743,7 +728,6 @@ class Route extends Nette\Object implements Application\IRouter
 		$s = rawurlencode($s);
 		return $s;
 	}
-
 
 
 	/**
@@ -762,7 +746,6 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/**
 	 * Url encode.
 	 * @param  string
@@ -774,9 +757,7 @@ class Route extends Nette\Object implements Application\IRouter
 	}
 
 
-
 	/********************* Route::$styles manipulator ****************d*g**/
-
 
 
 	/**
@@ -801,7 +782,6 @@ class Route extends Nette\Object implements Application\IRouter
 			static::$styles[$style] = array();
 		}
 	}
-
 
 
 	/**

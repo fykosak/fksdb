@@ -1,18 +1,17 @@
 <?php
 
 /**
- * This file is part of the Nette Framework.
+ * This file is part of the Nette Framework (http://nette.org)
  *
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  *
- * This source file is subject to the "Nette license", and/or
- * GPL license. For more information please see http://nette.org
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
  */
 
 namespace Nette\Latte;
 
 use Nette;
-
 
 
 /**
@@ -73,7 +72,6 @@ class MacroNode extends Nette\Object
 	public $saved;
 
 
-
 	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL, HtmlNode $htmlNode = NULL, $prefix = NULL)
 	{
 		$this->macro = $macro;
@@ -86,7 +84,6 @@ class MacroNode extends Nette\Object
 		$this->data = new \stdClass;
 		$this->setArgs($args);
 	}
-
 
 
 	public function setArgs($args)

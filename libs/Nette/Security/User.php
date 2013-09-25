@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * User authentication and authorization.
  *
@@ -60,13 +59,11 @@ class User extends Nette\Object
 	private $context;
 
 
-
 	public function __construct(IUserStorage $storage, Nette\DI\Container $context)
 	{
 		$this->storage = $storage;
 		$this->context = $context; // with IAuthenticator, IAuthorizator
 	}
-
 
 
 	/**
@@ -78,9 +75,7 @@ class User extends Nette\Object
 	}
 
 
-
 	/********************* Authentication ****************d*g**/
-
 
 
 	/**
@@ -94,14 +89,12 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		if (!$id instanceof IIdentity) {
-			$credentials = func_get_args();
-			$id = $this->getAuthenticator()->authenticate($credentials);
+			$id = $this->getAuthenticator()->authenticate(func_get_args());
 		}
 		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);
 		$this->onLoggedIn($this);
 	}
-
 
 
 	/**
@@ -121,7 +114,6 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is this user authenticated?
 	 * @return bool
@@ -132,7 +124,6 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns current user identity, if any.
 	 * @return IIdentity|NULL
@@ -141,7 +132,6 @@ class User extends Nette\Object
 	{
 		return $this->storage->getIdentity();
 	}
-
 
 
 	/**
@@ -155,17 +145,15 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets authentication handler.
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
 	{
 		$this->authenticator = $handler;
 		return $this;
 	}
-
 
 
 	/**
@@ -178,13 +166,12 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|DateTime number of seconds or timestamp
 	 * @param  bool  log out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
@@ -192,7 +179,6 @@ class User extends Nette\Object
 		$this->storage->setExpiration($time, $flags);
 		return $this;
 	}
-
 
 
 	/**
@@ -205,9 +191,7 @@ class User extends Nette\Object
 	}
 
 
-
 	/********************* Authorization ****************d*g**/
-
 
 
 	/**
@@ -225,7 +209,6 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is a user in the specified effective role?
 	 * @param  string
@@ -235,7 +218,6 @@ class User extends Nette\Object
 	{
 		return in_array($role, $this->getRoles(), TRUE);
 	}
-
 
 
 	/**
@@ -258,17 +240,15 @@ class User extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets authorization handler.
-	 * @return User  provides a fluent interface
+	 * @return self
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
 	{
 		$this->authorizator = $handler;
 		return $this;
 	}
-
 
 
 	/**
@@ -279,7 +259,6 @@ class User extends Nette\Object
 	{
 		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
 	}
-
 
 
 	/********************* deprecated ****************d*g**/

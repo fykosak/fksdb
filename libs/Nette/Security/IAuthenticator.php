@@ -14,7 +14,6 @@ namespace Nette\Security;
 use Nette;
 
 
-
 /**
  * Performs authentication.
  *
@@ -35,7 +34,6 @@ interface IAuthenticator
 	/**
 	 * Performs an authentication against e.g. database.
 	 * and returns IIdentity on success or throws AuthenticationException
-	 * @param  array
 	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */

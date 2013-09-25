@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * PHP callback encapsulation.
  *
@@ -29,7 +28,6 @@ final class Callback extends Object
 	private $cb;
 
 
-
 	/**
 	 * Factory. Workaround for missing (new Callback)->invoke() in PHP 5.3.
 	 * @param  mixed   class, object, callable
@@ -40,7 +38,6 @@ final class Callback extends Object
 	{
 		return new self($callback, $m);
 	}
-
 
 
 	/**
@@ -64,7 +61,6 @@ final class Callback extends Object
 	}
 
 
-
 	/**
 	 * Invokes callback. Do not call directly.
 	 * @return mixed
@@ -74,10 +70,8 @@ final class Callback extends Object
 		if (!is_callable($this->cb)) {
 			throw new InvalidStateException("Callback '$this' is not callable.");
 		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+		return call_user_func_array($this->cb, func_get_args());
 	}
-
 
 
 	/**
@@ -89,10 +83,8 @@ final class Callback extends Object
 		if (!is_callable($this->cb)) {
 			throw new InvalidStateException("Callback '$this' is not callable.");
 		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+		return call_user_func_array($this->cb, func_get_args());
 	}
-
 
 
 	/**
@@ -109,7 +101,6 @@ final class Callback extends Object
 	}
 
 
-
 	/**
 	 * Verifies that callback can be called.
 	 * @return bool
@@ -120,7 +111,6 @@ final class Callback extends Object
 	}
 
 
-
 	/**
 	 * Returns PHP callback pseudotype.
 	 * @return string|array|\Closure
@@ -129,7 +119,6 @@ final class Callback extends Object
 	{
 		return $this->cb;
 	}
-
 
 
 	/**
@@ -150,7 +139,6 @@ final class Callback extends Object
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -158,7 +146,6 @@ final class Callback extends Object
 	{
 		return is_array($this->cb) ? is_string($this->cb[0]) : is_string($this->cb);
 	}
-
 
 
 	/**

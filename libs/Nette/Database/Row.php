@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Represents a single table row.
  *
@@ -25,9 +24,15 @@ class Row extends Nette\ArrayHash
 
 	public function __construct(Statement $statement)
 	{
-		$statement->normalizeRow($this);
+		$data = array();
+		foreach ((array) $this as $key => $value) {
+			$data[$key] = $value;
+			unset($this->$key);
+		}
+		foreach ($statement->normalizeRow($data) as $key => $value) {
+			$this->$key = $value;
+		}
 	}
-
 
 
 	/**
@@ -38,19 +43,20 @@ class Row extends Nette\ArrayHash
 	public function offsetGet($key)
 	{
 		if (is_int($key)) {
-			$arr = array_values((array) $this);
-			return $arr[$key];
+			$arr = array_slice((array) $this, $key, 1);
+			if (!$arr) {
+				trigger_error('Undefined offset: ' . __CLASS__ . "[$key]", E_USER_NOTICE);
+			}
+			return current($arr);
 		}
 		return $this->$key;
 	}
 
 
-
 	public function offsetExists($key)
 	{
 		if (is_int($key)) {
-			$arr = array_values((array) $this);
-			return isset($arr[$key]);
+			return (bool) array_slice((array) $this, $key, 1);
 		}
 		return parent::offsetExists($key);
 	}

@@ -18,7 +18,6 @@ use Nette,
 	Nette\Latte\PhpWriter;
 
 
-
 /**
  * Basic macros for Latte.
  *
@@ -88,7 +87,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * Finishes template parsing.
 	 * @return array(prolog, epilog)
@@ -100,9 +98,7 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -118,7 +114,6 @@ class CoreMacros extends MacroSet
 		}
 		return $writer->write('if (%node.args):');
 	}
-
 
 
 	/**
@@ -140,7 +135,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {else}
 	 */
@@ -156,7 +150,6 @@ class CoreMacros extends MacroSet
 		}
 		return 'else:';
 	}
-
 
 
 	/**
@@ -176,7 +169,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {include "file" [,] [params]}
 	 */
@@ -193,7 +185,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {use class MacroSet}
 	 */
@@ -203,7 +194,6 @@ class CoreMacros extends MacroSet
 			->invoke($this->getCompiler())
 			->initialize();
 	}
-
 
 
 	/**
@@ -220,7 +210,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {/capture}
 	 */
@@ -228,7 +217,6 @@ class CoreMacros extends MacroSet
 	{
 		return $node->data->variable . $writer->write(" = %modify(ob_get_clean())");
 	}
-
 
 
 	/**
@@ -247,7 +235,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * n:class="..."
 	 */
@@ -255,7 +242,6 @@ class CoreMacros extends MacroSet
 	{
 		return $writer->write('if ($_l->tmp = array_filter(%node.array)) echo \' class="\' . %escape(implode(" ", array_unique($_l->tmp))) . \'"\'');
 	}
-
 
 
 	/**
@@ -267,7 +253,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {attr ...}
 	 * @deprecated
@@ -276,7 +261,6 @@ class CoreMacros extends MacroSet
 	{
 		return Nette\Utils\Strings::replace($node->args . ' ', '#\)\s+#', ')->');
 	}
-
 
 
 	/**
@@ -290,7 +274,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {debugbreak ...}
 	 */
@@ -299,7 +282,6 @@ class CoreMacros extends MacroSet
 		return $writer->write(($node->args == NULL ? '' : 'if (!(%node.args)); else')
 			. 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()');
 	}
-
 
 
 	/**
@@ -339,7 +321,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {= ...}
 	 * {? ...}
@@ -350,9 +331,7 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/********************* run-time helpers ****************d*g**/
-
 
 
 	/**
@@ -386,7 +365,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * Initializes local & global storage in template.
 	 * @return \stdClass
@@ -398,13 +376,13 @@ class CoreMacros extends MacroSet
 			$local = $template->_l;
 			unset($template->_l);
 		} else {
-			$local = (object) NULL;
+			$local = new \stdClass;
 		}
 		$local->templates[$templateId] = $template;
 
 		// global storage
 		if (!isset($template->_g)) {
-			$template->_g = (object) NULL;
+			$template->_g = new \stdClass;
 		}
 
 		return array($local, $template->_g);

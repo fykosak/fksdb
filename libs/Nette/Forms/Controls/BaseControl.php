@@ -18,7 +18,6 @@ use Nette,
 	Nette\Forms\Rule;
 
 
-
 /**
  * Base class that implements the basic functionality common to form controls.
  *
@@ -80,7 +79,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	private $options = array();
 
 
-
 	/**
 	 * @param  string  caption
 	 */
@@ -95,10 +93,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * This method will be called when the component becomes attached to Form.
-	 * @param  Nette\Forms\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
@@ -110,7 +107,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns form.
 	 * @param  bool   throw exception if form doesn't exist?
@@ -120,7 +116,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->lookup('Nette\Forms\Form', $need);
 	}
-
 
 
 	/**
@@ -143,18 +138,16 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Changes control's HTML id.
 	 * @param  string new ID, or FALSE or NULL
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setHtmlId($id)
 	{
 		$this->htmlId = $id;
 		return $this;
 	}
-
 
 
 	/**
@@ -173,19 +166,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Changes control's HTML attribute.
 	 * @param  string name
 	 * @param  mixed  value
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setAttribute($name, $value = TRUE)
 	{
 		$this->control->$name = $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -195,7 +186,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setOption($key, $value)
 	{
@@ -207,7 +198,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 		return $this;
 	}
-
 
 
 	/**
@@ -222,7 +212,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns user-specific options.
 	 * @return array
@@ -233,21 +222,18 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* translator ****************d*g**/
-
 
 
 	/**
 	 * Sets translate adapter.
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 		return $this;
 	}
-
 
 
 	/**
@@ -263,7 +249,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns translated string.
 	 * @param  string
@@ -277,22 +262,18 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* interface IFormControl ****************d*g**/
-
 
 
 	/**
 	 * Sets control's value.
-	 * @param  mixed
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
 		$this->value = $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -305,7 +286,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Is control filled?
 	 * @return bool
@@ -316,11 +296,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Sets control's default value.
-	 * @param  mixed
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setDefaultValue($value)
 	{
@@ -330,7 +308,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 		return $this;
 	}
-
 
 
 	/**
@@ -344,18 +321,16 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Disables or enables control.
 	 * @param  bool
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function setDisabled($value = TRUE)
 	{
 		$this->disabled = (bool) $value;
 		return $this;
 	}
-
 
 
 	/**
@@ -368,9 +343,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -397,7 +370,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
@@ -420,7 +392,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns control's HTML element template.
 	 * @return Nette\Utils\Html
@@ -429,7 +400,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $this->control;
 	}
-
 
 
 	/**
@@ -442,9 +412,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* rules ****************d*g**/
-
 
 
 	/**
@@ -452,7 +420,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * @param  mixed      rule type
 	 * @param  string     message to display for invalid data
 	 * @param  mixed      optional rule arguments
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
@@ -461,18 +429,16 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed     condition type
-	 * @param  mixed      optional condition arguments
+	 * @param  mixed     optional condition arguments
 	 * @return Nette\Forms\Rules      new branch
 	 */
 	public function addCondition($operation, $value = NULL)
 	{
 		return $this->rules->addCondition($operation, $value);
 	}
-
 
 
 	/**
@@ -488,7 +454,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * @return Nette\Forms\Rules
 	 */
@@ -498,17 +463,15 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Makes control mandatory.
 	 * @param  string  error message
-	 * @return BaseControl  provides a fluent interface
+	 * @return self
 	 */
 	final public function setRequired($message = NULL)
 	{
 		return $this->addRule(Form::FILLED, $message);
 	}
-
 
 
 	/**
@@ -524,7 +487,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 		return FALSE;
 	}
-
 
 
 	/**
@@ -568,15 +530,11 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/********************* validation ****************d*g**/
-
 
 
 	/**
 	 * Equal validator: are control's value and second parameter equal?
-	 * @param  Nette\Forms\IControl
-	 * @param  mixed
 	 * @return bool
 	 */
 	public static function validateEqual(IControl $control, $arg)
@@ -593,17 +551,14 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Filled validator: is control filled?
-	 * @param  Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
 	{
 		return $control->isFilled();
 	}
-
 
 
 	/**
@@ -614,7 +569,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return $control->rules->validate(TRUE);
 	}
-
 
 
 	/**
@@ -631,7 +585,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * Returns errors corresponding to control.
 	 * @return array
@@ -642,7 +595,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
@@ -650,7 +602,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	{
 		return (bool) $this->errors;
 	}
-
 
 
 	/**

@@ -16,7 +16,6 @@ use Nette,
 	Nette\ObjectMixin;
 
 
-
 /**
  * Represents a prepared statement / result set.
  *
@@ -37,13 +36,11 @@ class Statement extends \PDOStatement
 	private $types;
 
 
-
 	protected function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 		$this->setFetchMode(PDO::FETCH_CLASS, 'Nette\Database\Row', array($this));
 	}
-
 
 
 	/**
@@ -55,11 +52,37 @@ class Statement extends \PDOStatement
 	}
 
 
+	/**
+	 * @return string
+	 */
+	public function getQueryString()
+	{
+		return $this->queryString;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getColumnCount()
+	{
+		return $this->columnCount();
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getRowCount()
+	{
+		return $this->rowCount();
+	}
+
 
 	/**
 	 * Executes statement.
 	 * @param  array
-	 * @return Statement  provides a fluent interface
+	 * @return self
 	 */
 	public function execute($params = array())
 	{
@@ -85,7 +108,6 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	/**
 	 * Fetches into an array where the 1st column is a key and all subsequent columns are values.
 	 * @return array
@@ -95,6 +117,16 @@ class Statement extends \PDOStatement
 		return $this->fetchAll(PDO::FETCH_KEY_PAIR); // since PHP 5.2.3
 	}
 
+
+	/**
+	 * Fetches single field.
+	 * @return mixed|FALSE
+	 */
+	public function fetchField($column = 0)
+	{
+		$row = $this->fetch();
+		return $row ? $row[$column] : FALSE;
+	}
 
 
 	/**
@@ -112,7 +144,9 @@ class Statement extends \PDOStatement
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IReflection::FIELD_FLOAT) {
-				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
+				$value = strpos($value, '.') === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
+				$float = (float) $value;
+				$row[$key] = (string) $float === $value ? $float : $value;
 
 			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
@@ -127,14 +161,14 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	private function detectColumnTypes()
 	{
 		if ($this->types === NULL) {
 			$this->types = array();
 			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
-				$col = 0;
-				while ($meta = $this->getColumnMeta($col++)) {
+				$count = $this->columnCount();
+				for ($col = 0; $col < $count; $col++) {
+					$meta = $this->getColumnMeta($col);
 					if (isset($meta['native_type'])) {
 						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
@@ -143,7 +177,6 @@ class Statement extends \PDOStatement
 		}
 		return $this->types;
 	}
-
 
 
 	/**
@@ -155,9 +188,7 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	/********************* misc tools ****************d*g**/
-
 
 
 	/**
@@ -170,9 +201,7 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	/********************* Nette\Object behaviour ****************d*g**/
-
 
 
 	/**
@@ -184,12 +213,10 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
-
 
 
 	public function &__get($name)
@@ -198,19 +225,16 @@ class Statement extends \PDOStatement
 	}
 
 
-
 	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
-
 	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
-
 
 
 	public function __unset($name)

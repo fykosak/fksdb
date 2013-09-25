@@ -9,16 +9,22 @@
  * the file license.txt that was distributed with this source code.
  */
 
-use Nette\Diagnostics\Debugger;
+namespace Nette\Database\Reflection;
+
+use PDOException;
 
 
 /**
- * Nette\Diagnostics\Debugger::dump shortcut.
+ * Reference not found exception.
  */
-function dump($var)
+class MissingReferenceException extends PDOException
 {
-	foreach (func_get_args() as $arg) {
-		Debugger::dump($arg);
-	}
-	return $var;
+}
+
+
+/**
+ * Ambiguous reference key exception.
+ */
+class AmbiguousReferenceKeyException extends PDOException
+{
 }

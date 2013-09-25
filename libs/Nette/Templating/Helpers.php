@@ -17,7 +17,6 @@ use Nette,
 	Nette\Utils\Html;
 
 
-
 /**
  * Template helpers.
  *
@@ -41,7 +40,6 @@ final class Helpers
 		'replacere' => 'Nette\Utils\Strings::replace',
 		'url' => 'rawurlencode',
 		'striptags' => 'strip_tags',
-		'nl2br' => 'nl2br',
 		'substr' => 'Nette\Utils\Strings::substring',
 		'repeat' => 'str_repeat',
 		'implode' => 'implode',
@@ -50,7 +48,6 @@ final class Helpers
 
 	/** @var string default date format */
 	public static $dateFormat = '%x';
-
 
 
 	/**
@@ -68,7 +65,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside HTML template.
 	 * @param  mixed  UTF-8 encoding
@@ -84,7 +80,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside HTML comments.
 	 * @param  string  UTF-8 encoding
@@ -92,10 +87,8 @@ final class Helpers
 	 */
 	public static function escapeHtmlComment($s)
 	{
-		// -- has special meaning in different browsers
-		return str_replace('--', '--><!-- ', $s); // HTML tags have no meaning inside comments
+		return ' ' . str_replace('-', '- ', $s); // dash is very problematic character in comments
 	}
-
 
 
 	/**
@@ -112,7 +105,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside CSS template.
 	 * @param  string UTF-8 encoding
@@ -123,7 +115,6 @@ final class Helpers
 		// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
 		return addcslashes($s, "\x00..\x1F!\"#$%&'()*+,./:;<=>?@[\\]^`{|}~");
 	}
-
 
 
 	/**
@@ -140,7 +131,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Escapes string for use inside iCal template.
 	 * @param  mixed  UTF-8 encoding
@@ -153,7 +143,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Replaces all repeated white spaces with a single space.
 	 * @param  string UTF-8 encoding or 8-bit
@@ -163,12 +152,11 @@ final class Helpers
 	{
 		return Strings::replace(
 			$s,
-			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
+			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|\z)#si',
 			function($m) {
-				return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));
+				return trim(preg_replace('#[ \t\r\n]+#', " ", $m[0]));
 			});
 	}
-
 
 
 	/**
@@ -189,7 +177,6 @@ final class Helpers
 		}
 		return $s;
 	}
-
 
 
 	/**
@@ -215,7 +202,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Converts to human readable file size.
 	 * @param  int
@@ -236,7 +222,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * Returns array of string length.
 	 * @param  mixed
@@ -246,7 +231,6 @@ final class Helpers
 	{
 		return is_string($var) ? Strings::length($var) : count($var);
 	}
-
 
 
 	/**
@@ -260,7 +244,6 @@ final class Helpers
 	{
 		return str_replace($search, $replacement, $subject);
 	}
-
 
 
 	/**
@@ -278,7 +261,6 @@ final class Helpers
 	}
 
 
-
 	/**
 	 * /dev/null.
 	 * @param  mixed
@@ -290,9 +272,17 @@ final class Helpers
 	}
 
 
+	/**
+	 * @param  string
+	 * @return string
+	 */
+	public static function nl2br($value)
+	{
+		return nl2br($value, Html::$xhtml);
+	}
+
 
 	/********************* Template tools ****************d*g**/
-
 
 
 	/**
@@ -313,7 +303,7 @@ final class Helpers
 
 				} elseif ($token[0] === T_CLOSE_TAG) {
 					$next = isset($tokens[$key + 1]) ? $tokens[$key + 1] : NULL;
-					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*$#', $php)) {
+					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*\z#', $php)) {
 						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
 					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
@@ -326,7 +316,7 @@ final class Helpers
 						$tokens->next();
 
 					} elseif ($next) {
-						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1]; // remove last semicolon before ?)
+						$res .= preg_replace('#;?(\s)*\z#', '$1', $php) . $token[1]; // remove last semicolon before ?)
 						if (strlen($res) - strrpos($res, "\n") > $lineLength
 							&& (!is_array($next) || strpos($next[1], "\n") === FALSE)
 						) {

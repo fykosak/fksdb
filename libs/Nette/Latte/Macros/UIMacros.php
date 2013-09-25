@@ -19,7 +19,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Macros for Nette\Application\UI.
  *
@@ -38,7 +37,6 @@ class UIMacros extends MacroSet
 
 	/** @var bool */
 	private $extends;
-
 
 
 	public static function install(Latte\Compiler $compiler)
@@ -68,7 +66,6 @@ class UIMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * Initializes before template parsing.
 	 * @return void
@@ -78,7 +75,6 @@ class UIMacros extends MacroSet
 		$this->namedBlocks = array();
 		$this->extends = NULL;
 	}
-
 
 
 	/**
@@ -135,9 +131,7 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -175,7 +169,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {includeblock "file"}
 	 */
@@ -186,20 +179,19 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {extends auto | none | $var | "file"}
 	 */
 	public function macroExtends(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->args) {
-			throw new CompileException("Missing destination in {extends}");
+			throw new CompileException('Missing destination in {' . $node->name . '}');
 		}
 		if (!empty($node->parentNode)) {
-			throw new CompileException("{extends} must be placed outside any macro.");
+			throw new CompileException('{' . $node->name . '} must be placed outside any macro.');
 		}
 		if ($this->extends !== NULL) {
-			throw new CompileException("Multiple {extends} declarations are not allowed.");
+			throw new CompileException('Multiple {' . $node->name . '} declarations are not allowed.');
 		}
 		if ($node->args === 'none') {
 			$this->extends = 'FALSE';
@@ -210,7 +202,6 @@ if (!empty($_control->snippetMode)) {
 		}
 		return;
 	}
-
 
 
 	/**
@@ -301,7 +292,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {/block}
 	 * {/snippet}
@@ -311,7 +301,7 @@ if (!empty($_control->snippetMode)) {
 	{
 		if (isset($node->data->name)) { // block, snippet, define
 			if ($node->name === 'snippet' && $node->htmlNode && !$node->prefix // n:snippet -> n:inner-snippet
-				&& preg_match("#^.*? n:\w+>\n?#s", $node->content, $m1) && preg_match("#[ \t]*<[^<]+$#sD", $node->content, $m2))
+				&& preg_match('#^.*? n:\w+>\n?#s', $node->content, $m1) && preg_match('#[ \t]*<[^<]+\z#s', $node->content, $m2))
 			{
 				$node->openingCode = $m1[0] . $node->openingCode;
 				$node->content = substr($node->content, strlen($m1[0]), -strlen($m2[0]));
@@ -333,7 +323,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {ifset #block}
 	 */
@@ -350,7 +339,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {control name[:method] [params]}
 	 */
@@ -363,7 +351,7 @@ if (!empty($_control->snippetMode)) {
 		$pair = explode(':', $pair, 2);
 		$name = $writer->formatWord($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = Strings::match($method, '#^\w*$#') ? "render$method" : "{\"render$method\"}";
+		$method = Strings::match($method, '#^\w*\z#') ? "render$method" : "{\"render$method\"}";
 		$param = $writer->formatArray();
 		if (!Strings::contains($node->args, '=>')) {
 			$param = substr($param, 6, -1); // removes array()
@@ -373,7 +361,6 @@ if (!empty($_control->snippetMode)) {
 			. 'if ($_ctrl instanceof Nette\Application\UI\IRenderable) $_ctrl->validateControl(); '
 			. "\$_ctrl->$method($param)";
 	}
-
 
 
 	/**
@@ -387,7 +374,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {ifCurrent destination [,] [params]}
 	 */
@@ -396,7 +382,6 @@ if (!empty($_control->snippetMode)) {
 		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($_presenter->getLastCreatedRequestFlag("current")):');
 	}
-
 
 
 	/**
@@ -433,7 +418,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * {status ...}
 	 */
@@ -445,9 +429,7 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/********************* run-time writers ****************d*g**/
-
 
 
 	/**
@@ -464,7 +446,6 @@ if (!empty($_control->snippetMode)) {
 	}
 
 
-
 	/**
 	 * Calls parent block.
 	 * @return void
@@ -476,7 +457,6 @@ if (!empty($_control->snippetMode)) {
 		}
 		$block($context, $params);
 	}
-
 
 
 	public static function renderSnippets(Nette\Application\UI\Control $control, \stdClass $local, array $params)

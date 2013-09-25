@@ -14,7 +14,6 @@ namespace Nette\Database\Drivers;
 use Nette;
 
 
-
 /**
  * Supplemental MySQL database driver.
  *
@@ -30,7 +29,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	private $connection;
 
 
-
 	/**
 	 * Driver options:
 	 *   - charset => character encoding to set (default is utf8)
@@ -41,18 +39,16 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$this->connection = $connection;
 		$charset = isset($options['charset']) ? $options['charset'] : 'utf8';
 		if ($charset) {
-			$connection->exec("SET NAMES '$charset'");
+			$connection->query("SET NAMES '$charset'");
 		}
 		if (isset($options['sqlmode'])) {
-			$connection->exec("SET sql_mode='$options[sqlmode]'");
+			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->exec("SET time_zone='" . date('P') . "'");
+		$connection->query("SET time_zone='" . date('P') . "'");
 	}
 
 
-
 	/********************* SQL ****************d*g**/
-
 
 
 	/**
@@ -65,7 +61,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats boolean for use in a SQL statement.
 	 */
@@ -75,7 +70,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
@@ -83,7 +77,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		return $value->format("'Y-m-d H:i:s'");
 	}
-
 
 
 	/**
@@ -96,11 +89,10 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(&$sql, $limit, $offset)
+	public function applyLimit(& $sql, $limit, $offset)
 	{
 		if ($limit >= 0 || $offset > 0) {
 			// see http://dev.mysql.com/doc/refman/5.0/en/select.html
@@ -108,7 +100,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				. ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
 		}
 	}
-
 
 
 	/**
@@ -120,9 +111,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/********************* reflection ****************d*g**/
-
 
 
 	/**
@@ -144,7 +133,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		}
 		return $tables;
 	}
-
 
 
 	/**
@@ -177,7 +165,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all indexes in a table.
 	 */
@@ -200,7 +187,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * Returns metadata for all foreign keys in a table.
 	 */
@@ -221,13 +207,12 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	}
 
 
-
 	/**
 	 * @return bool
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META || $item == self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
+		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
 	}
 
 }

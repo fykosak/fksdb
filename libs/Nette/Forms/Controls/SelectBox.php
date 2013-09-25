@@ -14,7 +14,6 @@ namespace Nette\Forms\Controls;
 use Nette;
 
 
-
 /**
  * Select box control that allows single item selection.
  *
@@ -40,7 +39,6 @@ class SelectBox extends BaseControl
 	private $useKeys = TRUE;
 
 
-
 	/**
 	 * @param  string  label
 	 * @param  array   items from which to choose
@@ -57,7 +55,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns selected item key.
 	 * @return mixed
@@ -68,7 +65,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns selected item key (not checked).
 	 * @return mixed
@@ -77,7 +73,6 @@ class SelectBox extends BaseControl
 	{
 		return is_scalar($this->value) ? $this->value : NULL;
 	}
-
 
 
 	/**
@@ -91,11 +86,10 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets first prompt item in select box.
 	 * @param  string
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setPrompt($prompt)
 	{
@@ -108,14 +102,12 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/** @deprecated */
 	function skipFirst($v = NULL)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use setPrompt() instead.', E_USER_WARNING);
 		return $this->setPrompt($v);
 	}
-
 
 
 	/**
@@ -128,7 +120,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Are the keys used?
 	 * @return bool
@@ -139,12 +130,11 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
-	 * @return SelectBox  provides a fluent interface
+	 * @return self
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
@@ -173,7 +163,6 @@ class SelectBox extends BaseControl
 	}
 
 
-
 	/**
 	 * Returns items from which to choose.
 	 * @return array
@@ -182,7 +171,6 @@ class SelectBox extends BaseControl
 	{
 		return $this->items;
 	}
-
 
 
 	/**
@@ -194,7 +182,6 @@ class SelectBox extends BaseControl
 		$value = $this->getValue();
 		return ($this->useKeys && $value !== NULL) ? $this->allowed[$value] : $value;
 	}
-
 
 
 	/**
@@ -225,14 +212,14 @@ class SelectBox extends BaseControl
 
 			foreach ($value as $key2 => $value2) {
 				if ($value2 instanceof Nette\Utils\Html) {
-					$dest->add((string) $value2->selected(isset($selected[$key2])));
+					$dest->add((string) $value2->value($key2)
+						->selected(isset($selected[$key2])));
 
 				} else {
 					$key2 = $this->useKeys ? $key2 : $value2;
-					$value2 = $this->translate((string) $value2);
 					$dest->add((string) $option->value($key2)
 						->selected(isset($selected[$key2]))
-						->setText($value2));
+						->setText($this->translate((string) $value2)));
 				}
 			}
 		}
