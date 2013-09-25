@@ -3,7 +3,7 @@
 #
 services:
     MailTemplateFactory: self(%email.templatesDir%)
-    FKSDB\Components\Factories\ContestantWizardFactory: self
+    - FKSDB\Components\Factories\ContestantWizardFactory
     resultsModelFactory: ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:

@@ -3,9 +3,9 @@
 #
 
 services:
-    Authentication\FacebookAuthenticator: self
-    Authentication\PasswordAuthenticator: self
-    Authentication\TokenAuthenticator: self
+    - Authentication\FacebookAuthenticator
+    - Authentication\PasswordAuthenticator
+    - Authentication\TokenAuthenticator
     contestAuthorizator: Authorization\ContestAuthorizator
     ownerAssertion: Authorization\OwnerAssertion
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
