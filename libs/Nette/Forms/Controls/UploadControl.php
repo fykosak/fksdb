@@ -15,7 +15,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Text box and browse button that allow users to select a file to upload to the server.
  *
@@ -34,11 +33,10 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  Nette\Forms\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
@@ -53,11 +51,10 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Sets control's value.
 	 * @param  array|Nette\Http\FileUpload
-	 * @return Nette\Http\FileUpload  provides a fluent interface
+	 * @return self
 	 */
 	public function setValue($value)
 	{
@@ -74,7 +71,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * Has been any file uploaded?
 	 * @return bool
@@ -83,7 +79,6 @@ class UploadControl extends BaseControl
 	{
 		return $this->value instanceof Http\FileUpload && $this->value->isOK();
 	}
-
 
 
 	/**
@@ -99,7 +94,6 @@ class UploadControl extends BaseControl
 	}
 
 
-
 	/**
 	 * MimeType validator: has file specified mime type?
 	 * @param  UploadControl
@@ -111,8 +105,6 @@ class UploadControl extends BaseControl
 		$file = $control->getValue();
 		if ($file instanceof Http\FileUpload) {
 			$type = strtolower($file->getContentType());
-                        dump($type);
-                        dump($mimeType);
 			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
 				return TRUE;
@@ -123,7 +115,6 @@ class UploadControl extends BaseControl
 		}
 		return FALSE;
 	}
-
 
 
 	/**

@@ -16,7 +16,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * Core Nette Framework services.
  *
@@ -76,7 +75,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'explain' => TRUE,
 		'reflection' => 'Nette\Database\Reflection\DiscoveredReflection',
 	);
-
 
 
 	public function loadConfiguration()
@@ -249,8 +247,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$autowired = FALSE;
 
 			foreach ((array) $info['options'] as $key => $value) {
-				unset($info['options'][$key]);
-				$info['options'][constant($key)] = $value;
+				if (preg_match('#^PDO::\w+\z#', $key)) {
+					unset($info['options'][$key]);
+					$info['options'][constant($key)] = $value;
+				}
 			}
 
 			$connection = $container->addDefinition($this->prefix("database.$name"))
@@ -263,7 +263,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 			if ($info['reflection']) {
 				$connection->addSetup('setDatabaseReflection', is_string($info['reflection'])
-					? array(new Nette\DI\Statement(preg_match('#^[a-z]+$#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
+					? array(new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
 					: Nette\Config\Compiler::filterArguments(array($info['reflection']))
 				);
 			}
@@ -273,13 +273,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
 					->addSetup('$explain', !empty($info['explain']))
+					->addSetup('$name', $name)
 					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 
 				$connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
 			}
 		}
 	}
-
 
 
 	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
@@ -324,9 +324,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
-			$initialize->addBody('$this->session->exists() && $this->session->start();');
+			$initialize->addBody('$this->getService("session")->exists() && $this->getService("session")->start();');
 		} elseif ($config['session']['autoStart']) {
-			$initialize->addBody('$this->session->start();');
+			$initialize->addBody('$this->getService("session")->start();');
 		}
 
 		if (empty($config['xhtml'])) {
@@ -349,7 +349,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			}
 		}
 	}
-
 
 
 	private function checkTempDir($dir)

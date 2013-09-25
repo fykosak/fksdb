@@ -15,7 +15,6 @@ use Nette,
 	Nette\Application\BadRequestException;
 
 
-
 /**
  * Helpers for Presenter & PresenterComponent.
  *
@@ -34,7 +33,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	private static $mcCache = array();
 
 
-
 	/**
 	 * @param  string|NULL
 	 * @return array of persistent parameters.
@@ -49,7 +47,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		$params = array();
 		if (is_subclass_of($class, 'Nette\Application\UI\PresenterComponent')) {
 			$defaults = get_class_vars($class);
-			foreach ($class::getPersistentParams()as $name => $meta) {
+			foreach ($class::getPersistentParams() as $name => $meta) {
 				if (is_string($meta)) {
 					$name = $meta;
 				}
@@ -71,7 +69,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	}
 
 
-
 	/**
 	 * @param  string|NULL
 	 * @return array of persistent components.
@@ -85,7 +82,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		}
 		$components = array();
 		if (is_subclass_of($class, 'Nette\Application\UI\Presenter')) {
-			foreach ($class::getPersistentComponents()as $name => $meta) {
+			foreach ($class::getPersistentComponents() as $name => $meta) {
 				if (is_string($meta)) {
 					$name = $meta;
 				}
@@ -95,7 +92,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		}
 		return $components;
 	}
-
 
 
 	/**
@@ -118,7 +114,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -132,7 +127,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 				$res[$i++] = $args[$name];
 				$type = $param->isArray() ? 'array' : ($param->isDefaultValueAvailable() && $param->isOptional() ? gettype($param->getDefaultValue()) : 'NULL');
 				if (!self::convertType($res[$i-1], $type)) {
-				    $mName = $method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
+					$mName = $method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
 					throw new BadRequestException("Invalid value for parameter '$name' in method $mName(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
 			} else {
@@ -141,7 +136,6 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		}
 		return $res;
 	}
-
 
 
 	/**

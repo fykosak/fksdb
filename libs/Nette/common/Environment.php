@@ -14,7 +14,6 @@ namespace Nette;
 use Nette;
 
 
-
 /**
  * Nette environment and configuration.
  *
@@ -38,7 +37,6 @@ final class Environment
 	private static $context;
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -48,9 +46,7 @@ final class Environment
 	}
 
 
-
 	/********************* environment modes ****************d*g**/
-
 
 
 	/**
@@ -61,7 +57,6 @@ final class Environment
 	{
 		return PHP_SAPI === 'cli';
 	}
-
 
 
 	/**
@@ -77,7 +72,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Enables or disables production mode.
 	 * @param  bool
@@ -89,9 +83,7 @@ final class Environment
 	}
 
 
-
 	/********************* environment variables ****************d*g**/
-
 
 
 	/**
@@ -108,7 +100,6 @@ final class Environment
 		}
 		self::getContext()->parameters[$name] = $value;
 	}
-
 
 
 	/**
@@ -130,7 +121,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Returns the all environment variables.
 	 * @return array
@@ -139,7 +129,6 @@ final class Environment
 	{
 		return self::getContext()->parameters;
 	}
-
 
 
 	/**
@@ -154,9 +143,7 @@ final class Environment
 	}
 
 
-
 	/********************* context ****************d*g**/
-
 
 
 	/**
@@ -172,7 +159,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Get initial instance of context.
 	 * @return \SystemContainer|Nette\DI\Container
@@ -186,7 +172,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
@@ -198,7 +183,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * Calling to undefined static method.
 	 * @param  string  method name
@@ -208,12 +192,11 @@ final class Environment
 	public static function __callStatic($name, $args)
 	{
 		if (!$args && strncasecmp($name, 'get', 3) === 0) {
-			return self::getContext()->getService(lcfirst(substr($name, 3)));
+			return self::getService(lcfirst(substr($name, 3)));
 		} else {
 			throw new MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
 	}
-
 
 
 	/**
@@ -225,7 +208,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Http\Context
 	 */
@@ -233,7 +215,6 @@ final class Environment
 	{
 		return self::getContext()->getByType('Nette\Http\Context');
 	}
-
 
 
 	/**
@@ -245,7 +226,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Application\Application
 	 */
@@ -253,7 +233,6 @@ final class Environment
 	{
 		return self::getContext()->getByType('Nette\Application\Application');
 	}
-
 
 
 	/**
@@ -265,7 +244,6 @@ final class Environment
 	}
 
 
-
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
@@ -275,9 +253,7 @@ final class Environment
 	}
 
 
-
 	/********************* service factories ****************d*g**/
-
 
 
 	/**
@@ -286,9 +262,8 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Caching\Cache(self::getContext()->cacheStorage, $namespace);
+		return new Caching\Cache(self::getService('cacheStorage'), $namespace);
 	}
-
 
 
 	/**
@@ -299,14 +274,12 @@ final class Environment
 	public static function getSession($namespace = NULL)
 	{
 		return $namespace === NULL
-			? self::getContext()->session
-			: self::getContext()->session->getSection($namespace);
+			? self::getService('session')
+			: self::getService('session')->getSection($namespace);
 	}
 
 
-
 	/********************* global configuration ****************d*g**/
-
 
 
 	/**
@@ -323,7 +296,8 @@ final class Environment
 		$configurator = new Nette\Config\Configurator;
 		$configurator
 			->setDebugMode(!self::isProduction())
-			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
+			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '')
+			->addParameters(array('container' => array('class' => 'EnvironmentContainer')));
 		if ($file) {
 			$configurator->addConfig($file, $section);
 		}
@@ -338,7 +312,6 @@ final class Environment
 		}
 		return self::getConfig();
 	}
-
 
 
 	/**

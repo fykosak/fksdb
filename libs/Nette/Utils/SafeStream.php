@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Provides atomicity and isolation for thread safe file manipulation using stream safe://
  *
@@ -53,7 +52,6 @@ final class SafeStream
 	private $writeError = FALSE;
 
 
-
 	/**
 	 * Registers protocol 'safe://'.
 	 * @return bool
@@ -64,7 +62,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Opens file.
 	 * @param  string    file name with stream protocol
@@ -73,7 +70,7 @@ final class SafeStream
 	 * @param  string    full path
 	 * @return bool      TRUE on success or FALSE on failure
 	 */
-	public function stream_open($path, $mode, $options, &$opened_path)
+	public function stream_open($path, $mode, $options, & $opened_path)
 	{
 		$path = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
 
@@ -136,7 +133,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Checks handle and locks file.
 	 * @return bool
@@ -155,7 +151,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Error destructor.
 	 */
@@ -171,7 +166,6 @@ final class SafeStream
 			unlink($this->tempFile);
 		}
 	}
-
 
 
 	/**
@@ -200,7 +194,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Reads up to length bytes from the file.
 	 * @param  int    length
@@ -210,7 +203,6 @@ final class SafeStream
 	{
 		return fread($this->tempHandle, $length);
 	}
-
 
 
 	/**
@@ -231,7 +223,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Returns the position of the file.
 	 * @return int
@@ -242,7 +233,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Returns TRUE if the file pointer is at end-of-file.
 	 * @return bool
@@ -251,7 +241,6 @@ final class SafeStream
 	{
 		return feof($this->tempHandle);
 	}
-
 
 
 	/**
@@ -266,7 +255,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Gets information about a file referenced by $this->tempHandle.
 	 * @return array
@@ -275,7 +263,6 @@ final class SafeStream
 	{
 		return fstat($this->tempHandle);
 	}
-
 
 
 	/**
@@ -290,7 +277,6 @@ final class SafeStream
 		$path = substr($path, strlen(self::PROTOCOL)+3);
 		return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
 	}
-
 
 
 	/**

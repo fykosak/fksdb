@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Component with ability to save and load its state.
  *
@@ -25,14 +24,12 @@ interface IStatePersistent
 
 	/**
 	 * Loads state informations.
-	 * @param  array
 	 * @return void
 	 */
 	function loadState(array $params);
 
 	/**
 	 * Saves state informations for next request.
-	 * @param  array
 	 * @return void
 	 */
 	function saveState(array & $params);

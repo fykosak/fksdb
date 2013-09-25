@@ -14,7 +14,6 @@ namespace Nette\Diagnostics;
 use Nette;
 
 
-
 /**
  * Debugger: displays and logs errors.
  *
@@ -138,7 +137,6 @@ final class Debugger
 		CRITICAL = 'critical';
 
 
-
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -146,7 +144,6 @@ final class Debugger
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -210,9 +207,7 @@ final class Debugger
 	}
 
 
-
 	/********************* errors and exceptions reporting ****************d*g**/
-
 
 
 	/**
@@ -243,7 +238,8 @@ final class Debugger
 		if (is_string($logDirectory)) {
 			self::$logDirectory = realpath($logDirectory);
 			if (self::$logDirectory === FALSE) {
-				die(__METHOD__ . "() error: Log directory is not found or is not directory.");
+				echo __METHOD__ . "() error: Log directory is not found or is not directory.\n";
+				exit(254);
 			}
 		} elseif ($logDirectory === FALSE) {
 			self::$logDirectory = FALSE;
@@ -262,12 +258,14 @@ final class Debugger
 			ini_set('log_errors', FALSE);
 
 		} elseif (ini_get('display_errors') != !self::$productionMode && ini_get('display_errors') !== (self::$productionMode ? 'stderr' : 'stdout')) { // intentionally ==
-			die(__METHOD__ . "() error: Unable to set 'display_errors' because function ini_set() is disabled.");
+			echo __METHOD__ . "() error: Unable to set 'display_errors' because function ini_set() is disabled.\n";
+			exit(254);
 		}
 
 		if ($email) {
 			if (!is_string($email)) {
-				die(__METHOD__ . '() error: Email address must be a string.');
+				echo __METHOD__ . "() error: Email address must be a string.\n";
+				exit(254);
 			}
 			self::$email = $email;
 		}
@@ -289,7 +287,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Is Debug enabled?
 	 * @return bool
@@ -298,7 +295,6 @@ final class Debugger
 	{
 		return self::$enabled;
 	}
-
 
 
 	/**
@@ -323,7 +319,7 @@ final class Debugger
 				: get_class($exception) . ": " . $exception->getMessage())
 				. " in " . $exception->getFile() . ":" . $exception->getLine();
 
-			$hash = md5($exception );
+			$hash = md5(preg_replace('~(Resource id #)\d+~', '$1', $exception ));
 			$exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
 			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
 				if (strpos($entry, $hash)) {
@@ -356,7 +352,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Shutdown handler to catch fatal errors and execute of the planned activities.
 	 * @return void
@@ -387,7 +382,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Handler to catch uncaught exception.
 	 * @param  \Exception
@@ -398,7 +392,8 @@ final class Debugger
 	{
 		if (!headers_sent()) { // for PHP < 5.2.4
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
-			header($protocol . ' 500', TRUE, 500);
+			$code = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== FALSE ? 503 : 500;
+			header("$protocol $code", TRUE, $code);
 		}
 
 		try {
@@ -432,8 +427,8 @@ final class Debugger
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
-					$file = self::log($exception);
+				} elseif (!self::fireLog($exception)) { // AJAX or non-HTML mode
+					$file = self::log($exception, self::ERROR);
 					if (!headers_sent()) {
 						header("X-Nette-Error-Log: $file");
 					}
@@ -454,9 +449,8 @@ final class Debugger
 		}
 
 		self::$enabled = FALSE; // un-register shutdown function
-		exit(255);
+		exit(254);
 	}
-
 
 
 	/**
@@ -517,13 +511,12 @@ final class Debugger
 			return NULL;
 
 		} else {
-			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line), self::WARNING);
+			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
 			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
 
 		return FALSE; // call normal error handler
 	}
-
 
 
 	/**
@@ -541,7 +534,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts catching potential errors/warnings.
 	 * @return void
@@ -553,7 +545,6 @@ final class Debugger
 		}
 		self::$lastError = NULL;
 	}
-
 
 
 	/**
@@ -572,9 +563,7 @@ final class Debugger
 	}
 
 
-
 	/********************* useful tools ****************d*g**/
-
 
 
 	/**
@@ -630,7 +619,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Starts/stops stopwatch.
 	 * @param  string  name
@@ -644,7 +632,6 @@ final class Debugger
 		$time[$name] = $now;
 		return $delta;
 	}
-
 
 
 	/**
@@ -666,7 +653,6 @@ final class Debugger
 	}
 
 
-
 	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
@@ -680,13 +666,11 @@ final class Debugger
 	}
 
 
-
 	private static function isHtmlMode()
 	{
 		return !self::$ajaxDetected && !self::$consoleMode
 			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
 	}
-
 
 
 	/** @deprecated */

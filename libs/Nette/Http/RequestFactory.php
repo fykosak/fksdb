@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Current HTTP request factory.
  *
@@ -29,24 +28,22 @@ class RequestFactory extends Nette\Object
 	/** @var array */
 	public $urlFilters = array(
 		'path' => array('#/{2,}#' => '/'), // '%20' => ''
-		'url' => array(), // '#[.,)]$#' => ''
+		'url' => array(), // '#[.,)]\z#' => ''
 	);
 
 	/** @var string */
 	private $encoding;
 
 
-
 	/**
 	 * @param  string
-	 * @return RequestFactory  provides a fluent interface
+	 * @return self
 	 */
 	public function setEncoding($encoding)
 	{
 		$this->encoding = $encoding;
 		return $this;
 	}
-
 
 
 	/**
@@ -62,23 +59,15 @@ class RequestFactory extends Nette\Object
 		$url->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
 		// host & port
-		if (isset($_SERVER['HTTP_HOST'])) {
-			$pair = explode(':', $_SERVER['HTTP_HOST']);
-
-		} elseif (isset($_SERVER['SERVER_NAME'])) {
-			$pair = explode(':', $_SERVER['SERVER_NAME']);
-
-		} else {
-			$pair = array('');
-		}
-
-		$url->host = preg_match('#^[-._a-z0-9]+$#', $pair[0]) ? $pair[0] : '';
-
-		if (isset($pair[1])) {
-			$url->port = (int) $pair[1];
-
-		} elseif (isset($_SERVER['SERVER_PORT'])) {
-			$url->port = (int) $_SERVER['SERVER_PORT'];
+		if ((isset($_SERVER[$tmp = 'HTTP_HOST']) || isset($_SERVER[$tmp = 'SERVER_NAME']))
+			&& preg_match('#^([a-z0-9_.-]+|\[[a-fA-F0-9:]+\])(:\d+)?\z#', $_SERVER[$tmp], $pair)
+		) {
+			$url->host = strtolower($pair[1]);
+			if (isset($pair[2])) {
+				$url->port = (int) substr($pair[2], 1);
+			} elseif (isset($_SERVER['SERVER_PORT'])) {
+				$url->port = (int) $_SERVER['SERVER_PORT'];
+			}
 		}
 
 		// path & query

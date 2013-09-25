@@ -14,7 +14,6 @@ namespace Nette\DI;
 use Nette;
 
 
-
 /**
  * The dependency injection container default implementation.
  *
@@ -46,13 +45,11 @@ class Container extends Nette\FreezableObject implements IContainer
 	private $creating;
 
 
-
 	public function __construct(array $params = array())
 	{
 		$this->parameters = $params + $this->parameters;
 		$this->params = &$this->parameters;
 	}
-
 
 
 	/**
@@ -64,18 +61,17 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Adds the service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callable
 	 * @param  array   service meta information
-	 * @return Container  provides a fluent interface
+	 * @return self
 	 */
 	public function addService($name, $service, array $meta = NULL)
 	{
 		$this->updating();
-		if (!is_string($name) || $name === '') {
+		if (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
@@ -99,7 +95,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Removes the service from the container.
 	 * @param  string
@@ -110,7 +105,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		$this->updating();
 		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
 	}
-
 
 
 	/**
@@ -172,7 +166,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Does the service exist?
 	 * @param  string service name
@@ -184,7 +177,6 @@ class Container extends Nette\FreezableObject implements IContainer
 			|| isset($this->factories[$name])
 			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
-
 
 
 	/**
@@ -199,7 +191,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 		return isset($this->registry[$name]);
 	}
-
 
 
 	/**
@@ -224,7 +215,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Gets the service names of the specified tag.
 	 * @param  string
@@ -242,9 +232,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/********************* autowiring ****************d*g**/
-
 
 
 	/**
@@ -270,7 +258,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Calls method using autowiring.
 	 * @param  mixed   class, object, function, callable
@@ -284,9 +271,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/********************* shortcuts ****************d*g**/
-
 
 
 	/**
@@ -298,7 +283,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		return Helpers::expand($s, $this->parameters);
 	}
-
 
 
 	/**
@@ -313,7 +297,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 		return $this->registry[$name];
 	}
-
 
 
 	/**
@@ -338,7 +321,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	/**
 	 * Does the service exist?
 	 * @param  string
@@ -348,7 +330,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		return $this->hasService($name);
 	}
-
 
 
 	/**
@@ -361,11 +342,10 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-
 	public static function getMethodName($name, $isService = TRUE)
 	{
 		$uname = ucfirst($name);
-		return ($isService ? 'createService' : 'create') . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+		return ($isService ? 'createService' : 'create') . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
 }

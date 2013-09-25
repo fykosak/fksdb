@@ -14,7 +14,6 @@ namespace Nette\Caching;
 use Nette;
 
 
-
 /**
  * Cache storage.
  *
@@ -58,6 +57,6 @@ interface IStorage
 	 * @param  array  conditions
 	 * @return void
 	 */
-	function clean(array $conds);
+	function clean(array $conditions);
 
 }

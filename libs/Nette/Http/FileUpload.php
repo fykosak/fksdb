@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * Provides access to individual files that have been uploaded by a client.
  *
@@ -49,7 +48,6 @@ class FileUpload extends Nette\Object
 	private $error;
 
 
-
 	public function __construct($value)
 	{
 		foreach (array('name', 'type', 'size', 'tmp_name', 'error') as $key) {
@@ -65,7 +63,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the file name.
 	 * @return string
@@ -76,7 +73,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the sanitized file name.
 	 * @return string
@@ -85,7 +81,6 @@ class FileUpload extends Nette\Object
 	{
 		return trim(Nette\Utils\Strings::webalize($this->name, '.', FALSE), '.-');
 	}
-
 
 
 	/**
@@ -101,7 +96,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the size of an uploaded file.
 	 * @return int
@@ -110,7 +104,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->size;
 	}
-
 
 
 	/**
@@ -123,7 +116,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the path to an uploaded file.
 	 * @return string
@@ -132,7 +124,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->tmpName;
 	}
-
 
 
 	/**
@@ -145,7 +136,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Is there any error?
 	 * @return bool
@@ -156,15 +146,15 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return FileUpload  provides a fluent interface
+	 * @return self
 	 */
 	public function move($dest)
 	{
 		@mkdir(dirname($dest), 0777, TRUE); // @ - dir may already exist
+		@unlink($dest); // @ - file may not exists
 		if (!call_user_func(is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename', $this->tmpName, $dest)) {
 			throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
@@ -172,7 +162,6 @@ class FileUpload extends Nette\Object
 		$this->tmpName = $dest;
 		return $this;
 	}
-
 
 
 	/**
@@ -185,7 +174,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the image.
 	 * @return Nette\Image
@@ -196,7 +184,6 @@ class FileUpload extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns the dimensions of an uploaded image as array.
 	 * @return array
@@ -205,7 +192,6 @@ class FileUpload extends Nette\Object
 	{
 		return $this->isOk() ? @getimagesize($this->tmpName) : NULL; // @ - files smaller than 12 bytes causes read error
 	}
-
 
 
 	/**

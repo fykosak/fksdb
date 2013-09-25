@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * SQL preprocessor.
  *
@@ -41,13 +40,11 @@ class SqlPreprocessor extends Nette\Object
 	private $arrayMode;
 
 
-
 	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 		$this->driver = $connection->getSupplementalDriver();
 	}
-
 
 
 	/**
@@ -72,7 +69,6 @@ class SqlPreprocessor extends Nette\Object
 	}
 
 
-
 	/** @internal */
 	public function callback($m)
 	{
@@ -81,6 +77,9 @@ class SqlPreprocessor extends Nette\Object
 			return $m;
 
 		} elseif ($m === '?') { // placeholder
+			if ($this->counter >= count($this->params)) {
+				throw new Nette\InvalidArgumentException('There are more placeholders than passed parameters.');
+			}
 			return $this->formatValue($this->params[$this->counter++]);
 
 		} else { // INSERT, REPLACE, UPDATE
@@ -88,7 +87,6 @@ class SqlPreprocessor extends Nette\Object
 			return $m;
 		}
 	}
-
 
 
 	private function formatValue($value)
@@ -119,6 +117,10 @@ class SqlPreprocessor extends Nette\Object
 
 		} elseif (is_array($value) || $value instanceof \Traversable) {
 			$vx = $kx = array();
+
+			if ($value instanceof \Traversable) {
+				$value = iterator_to_array($value);
+			}
 
 			if (isset($value[0])) { // non-associative; value, value, value
 				foreach ($value as $v) {

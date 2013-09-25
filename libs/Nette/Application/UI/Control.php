@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Control is renderable Presenter component.
  *
@@ -35,9 +34,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	public $snippetMode;
 
 
-
 	/********************* template factory ****************d*g**/
-
 
 
 	/**
@@ -57,7 +54,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 	}
 
 
-
 	/**
 	 * @param  string|NULL
 	 * @return Nette\Templating\ITemplate
@@ -73,7 +69,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 		$template->control = $template->_control = $this;
 		$template->presenter = $template->_presenter = $presenter;
 		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->nette->templateCacheStorage);
+			$template->setCacheStorage($presenter->getContext()->getService('nette.templateCacheStorage'));
 			$template->user = $presenter->getUser();
 			$template->netteHttpResponse = $presenter->getHttpResponse();
 			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
@@ -94,7 +90,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 	}
 
 
-
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
 	 * @param  Nette\Templating\Template
@@ -104,7 +99,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 	{
 		$template->registerFilter($this->getPresenter()->getContext()->nette->createLatte());
 	}
-
 
 
 	/**
@@ -117,7 +111,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 		trigger_error(__METHOD__ . '() is deprecated, use getComponent() instead.', E_USER_WARNING);
 		return $this->getComponent($name);
 	}
-
 
 
 	/**
@@ -140,9 +133,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	}
 
 
-
 	/********************* rendering ****************d*g**/
-
 
 
 	/**
@@ -154,7 +145,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 	{
 		$this->invalidSnippets[$snippet] = TRUE;
 	}
-
 
 
 	/**
@@ -171,7 +161,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 			unset($this->invalidSnippets[$snippet]);
 		}
 	}
-
 
 
 	/**
@@ -208,7 +197,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 			return isset($this->invalidSnippets[NULL]) || isset($this->invalidSnippets[$snippet]);
 		}
 	}
-
 
 
 	/**
