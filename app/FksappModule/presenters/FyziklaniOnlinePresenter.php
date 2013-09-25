@@ -26,7 +26,7 @@ class FyziklaniOnlinePresenter extends AwaPresenter {
 	public function createComponentRegistrationForm() {
 		$form = new FyziklaniOnlineForm();
 
-		$form->onSuccess[] = ($this, 'registrationFormOnSuccess');
+		$form->onSuccess[] = array($this, 'registrationFormOnSuccess');
 	}														
 
 	public function registrationFormOnSuccess($form) {
