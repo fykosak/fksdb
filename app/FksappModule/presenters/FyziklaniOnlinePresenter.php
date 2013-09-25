@@ -24,10 +24,11 @@ class FyziklaniOnlinePresenter extends AwaPresenter {
 	}
 
 	public function createComponentRegistrationForm() {
-		return parent::createComponentRegistrationForm();
+		$form = new FyziklaniOnlineForm();
+
+		$form->onSuccess[] = ($this, 'registrationFormOnSuccess');
 	}														
 
 	public function registrationFormOnSuccess($form) {
-		parent::registrationFormOnSuccess($form);
 	}
 }

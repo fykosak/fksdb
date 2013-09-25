@@ -76,5 +76,4 @@ class TokenAuthenticator {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;
     }
-
 }
