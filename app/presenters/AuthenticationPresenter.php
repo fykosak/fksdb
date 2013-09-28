@@ -23,6 +23,10 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->facebook = $facebook;
     }
 
+    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
+        $this->facebookAuthenticator = $facebookAuthenticator;
+    }
+
     public function actionLogout() {
         if ($this->getUser()->isLoggedIn()) {
             $a = $this->getUser()->getIdentity()->getPerson()->gender == 'F' ? "a" : "";
