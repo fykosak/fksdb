@@ -94,7 +94,7 @@ class FacebookAuthenticator {
         $person = $login->getPerson();
 
         $this->serviceLogin->updateModel($login, $loginData);
-        $this->servicePerson->updateModel($login, $personData);
+        $this->servicePerson->updateModel($person, $personData);
 
         $this->servicePerson->getConnection()->beginTransaction();
         $this->serviceLogin->save($login);
