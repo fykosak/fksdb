@@ -57,7 +57,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return array of MPostContact
+     * @return MPostContact[]
      */
     public function getMPostContacts($type = null) {
         $postContacts = $this->getPostContacts();
@@ -80,6 +80,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
+    /**
+     * Main delivery address of the contestant.
+     * 
+     * @return MPostContact|null
+     */
+    public function getDeliveryAddress() {
+        $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
+        if (count($dAddresses)) {
+            return $dAddresses[0];
+        } else {
+            $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
+            if (count($pAddresses)) {
+                return $pAddresses[0];
+            } else {
+                return null;
+            }
+        }
+    }
+
     public function getEventParticipant() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -89,7 +108,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     public function isEventParticipant($event_id = null) {
         $tmp = $this->getEventParticipant();
-        if ($action_id) {
+        if ($event_id) {
             $tmp->where('action_id = ?', $event_id);
         }
 

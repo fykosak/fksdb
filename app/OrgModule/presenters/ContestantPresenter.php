@@ -11,10 +11,12 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use MailNotSendException;
 use MailTemplateFactory;
 use ModelException;
 use ModelPerson;
 use Nette\Application\UI\Form;
+use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
 use ServiceContestant;
 use ServiceLogin;
@@ -280,9 +282,11 @@ class ContestantPresenter extends EntityPresenter {
              */
             $personInfo = $person->getInfo();
             if (!$personInfo) {
-                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
+                $dataInfo['agreed'] = $dataInfo['agreed'] ? new DateTime() : null;
+                $personInfo = $this->servicePersonInfo->createNew($dataInfo);                
                 $personInfo->person_id = $person->person_id;
             } else {
+                unset($dataInfo['agreed']); // do not overwrite in existing person_info
                 $this->servicePersonInfo->updateModel($personInfo, $dataInfo);
             }
             $this->servicePersonInfo->save($personInfo);
@@ -345,6 +349,9 @@ class ContestantPresenter extends EntityPresenter {
         $form = $wizard->getComponent(ContestantWizardFactory::STEP_DATA);
 
         $defaults = array();
+
+        $defaults[ContestantWizardFactory::CONT_PERSON] = $person->toArray();
+
         $lastContestant = $person->getLastContestant($this->getSelectedContest());
         if ($lastContestant) {
             $defaults[ContestantWizardFactory::CONT_CONTESTANT] = $lastContestant->toArray();

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
+use AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Container;
 
@@ -12,11 +13,11 @@ use Nette\Forms\Container;
  */ 
 class ModelContainer extends Container {
 
-    public function setDefaults($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow) {
+    public function setValues($values, $erase = FALSE) {
+        if ($values instanceof ActiveRow|| $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
         }
-        parent::setDefaults($values, $erase);
+        parent::setValues($values, $erase);
     }
 
 }

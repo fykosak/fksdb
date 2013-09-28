@@ -160,17 +160,17 @@ class PersonPresenter extends EntityPresenter {
     protected function setDefaults(AbstractModelSingle $person, Form $form) {
         $defaults = array();
 
-        $defaults[self::CONT_PERSON] = $person->toArray();
+        $defaults[self::CONT_PERSON] = $person;
 
         $addresses = array();
         foreach ($person->getMPostContacts() as $mPostContact) {
-            $addresses[] = $mPostContact->toArray();
+            $addresses[] = $mPostContact;
         }
         $defaults[self::CONT_ADDRESSES] = $addresses;
 
         $info = $person->getInfo();
         if ($info) {
-            $defaults[self::CONT_PERSON_INFO] = $info->toArray();
+            $defaults[self::CONT_PERSON_INFO] = $info;
         }
 
         $login = $person->getLogin();
@@ -250,8 +250,10 @@ class PersonPresenter extends EntityPresenter {
                 $personInfo = $this->servicePersonInfo->createNew($dataInfo);
                 $personInfo->person_id = $person->person_id;
             } else {
+                unset($dataInfo['agreed']); // not to overwrite existing confirmation
                 $this->servicePersonInfo->updateModel($personInfo, $dataInfo);
             }
+            
             $this->servicePersonInfo->save($personInfo);
 
             /*

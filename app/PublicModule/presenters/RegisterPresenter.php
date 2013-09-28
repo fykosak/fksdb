@@ -15,14 +15,17 @@ use IContestPresenter;
 use ModelContest;
 use ModelException;
 use ModelPerson;
+use ModelPostContact;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
+use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
 use ServiceAddress;
 use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
 use ServicePerson;
+use ServicePersonInfo;
 use ServicePostContact;
 
 /**
@@ -33,12 +36,16 @@ use ServicePostContact;
 class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
     const CONT_PERSON = 'person';
+    const CONT_PERSON_INFO = 'person_info';
     const CONT_LOGIN = 'login';
     const CONT_ADDRESS = 'address';
     const CONT_CONTESTANT = 'contestant';
 
     /** @var ServicePerson */
     private $servicePerson;
+
+    /** @var ServicePersonInfo */
+    private $servicePersonInfo;
 
     /** @var ServiceLogin */
     private $serviceLogin;
@@ -94,6 +101,10 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+    }
+
+    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
+        $this->servicePersonInfo = $servicePersonInfo;
     }
 
     public function injectServiceLogin(ServiceLogin $serviceLogin) {
@@ -194,6 +205,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $address = $this->addressFactory->createAddress($group);
         $form->addComponent($address, self::CONT_ADDRESS);
 
+        $personInfo = $this->personFactory->createPersonInfo(PersonFactory::SHOW_LIKE_SUPPLEMENT | PersonFactory::REQUIRE_AGREEMENT, $group);
+        $form->addComponent($personInfo, self::CONT_PERSON_INFO);
+
         $group = $form->addGroup('Řešitel');
         $contestant = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
@@ -222,11 +236,29 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $group = $form->addGroup('Řešitel');
         $contestantContainer = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
         if ($contestant) {
-            $contestantContainer->setDefaults($contestant->toArray()); //TODO auto-increase study_year + class
+            $contestantContainer->setDefaults($contestant); //TODO auto-increase study_year + class
         }
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
-        
-        //TODO address
+
+        // address
+        $address = $person->getDeliveryAddress();
+        $group = $form->addGroup('Adresa');
+        $addressContainer = $this->addressFactory->createAddress($group);
+        if ($address) {
+            $addressContainer->setDefaults($address);
+        }
+        $form->addComponent($addressContainer, self::CONT_ADDRESS);
+
+        // person info
+        $personInfo = $person->getInfo();
+        if (!$personInfo || (!$personInfo->agreed || !$personInfo->origin)) {
+            $group = $form->addGroup('Informace');
+            $personInfoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_LIKE_SUPPLEMENT | PersonFactory::REQUIRE_AGREEMENT, $group);
+            if ($personInfo) {
+                $personInfoContainer->setDefaults($personInfo);
+            }
+            $form->addComponent($personInfoContainer, self::CONT_PERSON_INFO);
+        }
 
 
         $form->setCurrentGroup();
@@ -287,6 +319,16 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
             $this->serviceContestant->save($contestant);
 
+            // store person info
+            $personInfoData = $values[self::CONT_PERSON_INFO];
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
+            $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
+            $personInfo = $this->servicePersonInfo->createNew($personInfoData);
+
+            $personInfo->person_id = $person->person_id;
+
+            $this->servicePersonInfo->save($personInfo);
+
 
             if (!$this->connection->commit()) {
                 throw new ModelException();
@@ -311,7 +353,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             }
             $person = $this->user->getIdentity()->getPerson();
 
-            // store contestant
+            /*
+             * Contestant
+             */
             $contestantData = $values[self::CONT_CONTESTANT];
             $contestantData = FormUtils::emptyStrToNull($contestantData);
             $contestant = $this->serviceContestant->createNew($contestantData);
@@ -321,6 +365,38 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $contestant->contest_id = $this->getSelectedContest()->contest_id;
 
             $this->serviceContestant->save($contestant);
+
+            /*
+             * Address
+             * TODO allow multiple addresses, not hardcode type of the post contact
+             */
+            foreach ($person->getMPostContacts() as $mPostContact) {
+                $this->serviceMPostContact->dispose($mPostContact);
+            }
+
+            $dataPostContact = $values[self::CONT_ADDRESS];
+            $dataPostContact = FormUtils::emptyStrToNull((array) $dataPostContact);
+            $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
+            $mPostContact->getPostContact()->person_id = $person->person_id;
+            $mPostContact->getPostContact()->type = ModelPostContact::TYPE_PERMANENT;
+
+            $this->serviceMPostContact->save($mPostContact);
+
+            /*
+             * Person info
+             */
+            $dataInfo = $values[self::CONT_PERSON_INFO];
+            $dataInfo = FormUtils::emptyStrToNull($dataInfo);
+            $dataInfo['agreed'] = $dataInfo['agreed'] ? new DateTime() : null;
+            $personInfo = $person->getInfo();
+            if (!$personInfo) {
+                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
+                $personInfo->person_id = $person->person_id;
+            } else {
+                $this->servicePersonInfo->updateModel($personInfo, $dataInfo); // here we update date of the confirmation
+            }
+
+            $this->servicePersonInfo->save($personInfo);
 
 
             if (!$this->connection->commit()) {

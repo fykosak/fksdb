@@ -109,6 +109,13 @@ class ContestantWizardFactory {
         $form = new Form();
 
         /*
+         * Person
+         */
+        $group = $form->addGroup('Osoba');
+        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
+        $form->addComponent($personContainer, self::CONT_PERSON);
+        
+        /*
          * Contestant
          */
         $group = $form->addGroup('Řešitel');

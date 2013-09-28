@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
+use AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -10,14 +11,14 @@ use Nette\Database\Table\ActiveRow;
  */
 class AddressContainer extends ModelContainer {
 
-    public function setDefaults($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow) { //assert its from address table
+    public function setValues($values, $erase = FALSE) {
+        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             $address = $values;
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         }
 
-        parent::setDefaults($values, $erase);
+        parent::setValues($values, $erase);
     }
 
 }

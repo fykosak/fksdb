@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,14 +15,22 @@ use Nette\Forms\Form;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory {
+    // For person
 
-    const SHOW_DISPLAY_NAME = 0x1; // for person
-    const SHOW_ORG_INFO = 0x2; // for person info
-    const SHOW_AGREEMENT = 0x4; // for person info
-    const SHOW_EMAIL = 0x8; // for person info
-    const SHOW_GENDER = 0x10; // for person
-    const SHOW_LOGIN_CREATION = 0x20; // for person info
-    const DISABLED = 0x20; // for person
+    const SHOW_DISPLAY_NAME = 0x1;
+    const SHOW_GENDER = 0x2;
+    const DISABLED = 0x4;
+
+    // For person_info
+    /** @const Show iformation important for organizers. */
+    const SHOW_ORG_INFO = 0x8;
+    const SHOW_EMAIL = 0x10;
+    const REQUIRE_AGREEMENT = 0x20;
+    const SHOW_LOGIN_CREATION = 0x40;
+    /**
+     * @const Display origin and agreement only (supplement to other form containers).
+     */
+    const SHOW_LIKE_SUPPLEMENT = 0x100;
 
     /* Important elements */
     const EL_CREATE_LOGIN = 'createLogin';
@@ -39,7 +49,7 @@ class PersonFactory {
 
         $control = $container->addText('other_name', 'Křestní jméno')
                 ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělaná mezerou.');
+                ->setOption('description', 'Příp. další jména oddělená mezerou.');
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
@@ -52,7 +62,7 @@ class PersonFactory {
 
         $control = $container->addText('family_name', 'Příjmení')
                 ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělaná mezerou.');
+                ->setOption('description', 'Příp. další jména oddělená mezerou.');
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
@@ -81,63 +91,73 @@ class PersonFactory {
     }
 
     public function createPersonInfo($options = 0, ControlGroup $group = null, $emailRule = null) {
-        $container = new ModelContainer();
+        $container = new PersonInfoContainer();
         $container->setCurrentGroup($group);
 
-        if ($options & self::SHOW_EMAIL) {
-            $email = $container->addText('email', 'E-mail');
-            $conditioned = $email->addCondition(Form::FILLED)
-                    ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
-            if ($emailRule) {
-                $conditioned->addRule($emailRule, 'Daný e-mail je již použit u někoho jiného.');
+        if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {            
+            if ($options & self::SHOW_EMAIL) {
+                $email = $container->addText('email', 'E-mail');
+                $conditioned = $email->addCondition(Form::FILLED)
+                        ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+                if ($emailRule) {
+                    $conditioned->addRule($emailRule, 'Daný e-mail je již použit u někoho jiného.');
+                }
+                if ($options & self::SHOW_LOGIN_CREATION) {
+                    $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
+                            ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
+                    $email->addConditionOn($createLogin, Form::FILLED)
+                            ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
+                }
             }
-            if ($options & self::SHOW_LOGIN_CREATION) {
-                $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
-                        ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
-                $email->addConditionOn($createLogin, Form::FILLED)
-                        ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
-            }
-        }
 
-        $container->addDatePicker('born', 'Datum narození');
+            $container->addDatePicker('born', 'Datum narození');
 
-        $container->addText('id_number', 'Číslo OP')
-                ->setOption('description', 'U cizinců číslo pasu.')
-                ->addRule(Form::MAX_LENGTH, null, 32);
-
-        $container->addText('born_id', 'Rodné číslo')
-                ->setOption('description', 'U cizinců prázdné.')
-                ->addCondition(Form::FILLED)
-                ->addRule(new BornNumber(), 'Rodné číslo nemá platný formát.');
-
-
-        $container->addText('phone', 'Telefonní číslo')
-                ->addRule(Form::MAX_LENGTH, null, 32);
-
-        $container->addText('im', 'ICQ, Jabber, apod.')
-                ->addRule(Form::MAX_LENGTH, null, 32);
-
-        $container->addText('birthplace', 'Místo narození')
-                ->setOption('description', 'Město a okres (kvůli diplomům).')
-                ->addRule(Form::MAX_LENGTH, null, 255);
-
-
-
-        if ($options & self::SHOW_ORG_INFO) {
-            $container->addText('uk_login', 'Login UK')
-                    ->addRule(Form::MAX_LENGTH, null, 8);
-
-            $container->addText('account', 'Číslo bankovního účtu')
+            $container->addText('id_number', 'Číslo OP')
+                    ->setOption('description', 'U cizinců číslo pasu.')
                     ->addRule(Form::MAX_LENGTH, null, 32);
+
+            $container->addText('born_id', 'Rodné číslo')
+                    ->setOption('description', 'U cizinců prázdné.')
+                    ->addCondition(Form::FILLED)
+                    ->addRule(new BornNumber(), 'Rodné číslo nemá platný formát.');
+
+
+            $container->addText('phone', 'Telefonní číslo')
+                    ->addRule(Form::MAX_LENGTH, null, 32);
+
+            $container->addText('im', 'ICQ, Jabber, apod.')
+                    ->addRule(Form::MAX_LENGTH, null, 32);
+
+            $container->addText('birthplace', 'Místo narození')
+                    ->setOption('description', 'Město a okres (kvůli diplomům).')
+                    ->addRule(Form::MAX_LENGTH, null, 255);
+
+
+
+            if ($options & self::SHOW_ORG_INFO) {
+                $container->addText('uk_login', 'Login UK')
+                        ->addRule(Form::MAX_LENGTH, null, 8);
+
+                $container->addText('account', 'Číslo bankovního účtu')
+                        ->addRule(Form::MAX_LENGTH, null, 32);
+            }
+
+            $container->addTextArea('note', 'Poznámka');
+        }
+        $container->addTextArea('origin', 'Jak jsi se o nás dozvěděl(a)?');
+
+
+        $link = Html::el('a');
+        $link->setText('Text souhlasu');
+        $link->href = "http://fykos.cz/doc/souhlas.pdf";
+
+        $agreement = $container->addCheckbox('agreed', 'Souhlasím se zpracováním osobních údajů')
+                ->setOption('description', $link);
+
+        if ($options & self::REQUIRE_AGREEMENT) {
+            $agreement->addRule(Form::FILLED, 'Bez souhlasu nelze bohužel pokračovat.');
         }
 
-        $container->addTextArea('note', 'Poznámka');
-
-        if ($options & self::SHOW_AGREEMENT) {
-//TODO odkaz na souhlas
-            $container->addCheckbox('agree', 'Souhlasím se zpracováním osobních údajů')
-                    ->setOption('description', 'ODKAZ na souhlas.');
-        }
 
         return $container;
     }
