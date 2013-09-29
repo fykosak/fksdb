@@ -19,8 +19,8 @@ abstract class AbstractModelMulti extends Object {
     protected $joiningColumn;
 
     public function __construct($mainModel, $joinedModel) {
-        $this->setMainModel($mainModel);
         $this->setJoinedModel($joinedModel);
+        $this->setMainModel($mainModel);
     }
 
     public function toArray() {
