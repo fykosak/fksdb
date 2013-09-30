@@ -83,6 +83,7 @@ class ContestantSubmits extends BaseControl {
         $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
         $control->addStyle('width:600px');
+        $control->data['contestant'] = $this->contestant->ct_id;
         return $control;
     }
 
@@ -166,7 +167,6 @@ class ContestantSubmits extends BaseControl {
         $data['ct_id'] = $this->contestant->ct_id; // security
         $format = $this->sourceToFormat($data['source'], true);
         $data['submitted_on'] = $data['submitted_on'] ? DateTime::createFromFormat($format, $data['submitted_on']) : null;
-        $data['tasknr'] = $tasknr;
 
         $ctId = $data['ct_id'];
         $taskId = $data['task_id'];
@@ -190,7 +190,7 @@ class ContestantSubmits extends BaseControl {
     private function sourceToFormat($source, $parse = false) {
         switch ($source) {
             case ModelSubmit::SOURCE_POST:
-                return  ($parse ? '!' : '') . 'Y-m-d';
+                return ($parse ? '!' : '') . 'Y-m-d';
                 break;
             default:
                 return DateTime::ISO8601;

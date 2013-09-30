@@ -15,13 +15,22 @@ a.later {
     padding: 10px;
 }
 
-.inboxField {
+.inbox-field {
     display: block;
     width: 100px;
     float: left;
     margin: 2px;
+    background: #dda; /* debug*/
 }
 
-a.inboxField {
+.inbox-field input {    
+    width: 90px;
+}
+
+/*a.inboxField {
     width: 106px;
+}*/
+
+ul.inbox-swappable {
+    list-style-type: none;
 }

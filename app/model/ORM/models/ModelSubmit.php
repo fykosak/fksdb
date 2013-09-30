@@ -45,4 +45,26 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
         )));
     }
 
+    /*
+     * Detection of task change.
+     * (Consider implementic this mechanism in general into AbstractModelSingle.)
+     */
+
+    private $originalTaskId = null;
+
+    public function getOriginalTaskId() {
+        return $this->originalTaskId;
+    }
+
+    public function __set($key, $value) {
+        if ($key == 'task_id') {
+            if ($value != $this->task_id) {
+                $this->originalTaskId = $this->task_id;
+            } else {
+                $this->originalTaskId = $value;
+            }
+        }
+        parent::__set($key, $value);
+    }
+
 }

@@ -12,7 +12,8 @@ class ServiceSubmit extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * 
-     * @param int $key
+     * @param int $ctId
+     * @param int $taskId
      * @return ModelSubmit|null
      */
     public function findByContestant($ctId, $taskId) {

@@ -83,7 +83,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         $form->addSubmit('login', 'Přihlásit');
 
-        $form->addProtection('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnput).');
+        $form->addProtection('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnout).');
 
         $form->onSuccess[] = callback($this, 'loginFormSubmitted');
         return $form;

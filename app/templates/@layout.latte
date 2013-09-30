@@ -27,7 +27,7 @@
             <p>
                 <a n:href=":Public:Personal:edit">Osobní nastavení</a>
             </p>
-            <p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator()) and false">Rola orga:
+            <p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator())">Rola orga:
                 {foreach $control->getAvailableContests() as $contest}
                 <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
                 {/foreach}

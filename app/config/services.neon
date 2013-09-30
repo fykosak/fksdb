@@ -12,8 +12,8 @@ services:
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
     SQLResultsCache: SQLResultsCache
-    submitStorage:
-        class: Submits\SubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+    submitStorage: 
+        class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     PDFStamper: Submits\PDFStamper(%stamper.fontSize%)

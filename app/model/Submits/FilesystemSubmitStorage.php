@@ -15,7 +15,7 @@ use UnexpectedValueException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SubmitStorage implements ISubmitStorage {
+class FilesystemSubmitStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
 
     const DELIMITER = '__';
@@ -152,7 +152,7 @@ class SubmitStorage implements ISubmitStorage {
         );
     }
 
-    public function retrieveFile(ModelSubmit $submit) {
+    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         $files = array_filter($files, function($file) {
                     return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&

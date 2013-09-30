@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use ServiceSubmit;
 use Submits\StorageException;
-use Submits\SubmitStorage;
+use Submits\FilesystemSubmitStorage;
 
 /**
  *
@@ -22,7 +22,7 @@ class SubmitsGrid extends BaseGrid {
     /** @var ServiceSubmit */
     private $submitService;
 
-    /** @var SubmitStorage */
+    /** @var FilesystemSubmitStorage */
     private $submitStorage;
 
     /**
@@ -30,7 +30,7 @@ class SubmitsGrid extends BaseGrid {
      */
     private $contestant;
 
-    function __construct(ServiceSubmit $submitService, SubmitStorage $submitStorage, ModelContestant $contestant) {
+    function __construct(ServiceSubmit $submitService, FilesystemSubmitStorage $submitStorage, ModelContestant $contestant) {
         parent::__construct();
 
         $this->submitService = $submitService;

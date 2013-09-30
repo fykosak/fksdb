@@ -6,23 +6,62 @@ use ModelSubmit;
 use Nette\Http\FileUpload;
 
 /**
- *
+ * Storage for signle file for each submit. Storage must keep original file
+ * which can be modified by processings for later use.
+ * 
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface ISubmitStorage {
 
+    const TYPE_ORIGINAL = 0;
+    const TYPE_PROCESSED = 1;
+
+    /**
+     * @return void
+     */
     public function beginTransaction();
 
+    /**
+     * @throws SubmitStorageException for unsuccessful commit
+     * @return void
+     */
     public function commit();
 
+    /**
+     * @return void
+     */
     public function rollback();
 
+    /**
+     * @param \Submits\IStorageProcessing $processing
+     * @return void
+     */
+    public function addProcessing(IStorageProcessing $processing);
+
+    /**
+     * @param FileUpload $file
+     * @param ModelSubmit $submit
+     * @return void
+     */
     public function storeFile(FileUpload $file, ModelSubmit $submit);
 
-    public function retrieveFile(ModelSubmit $submit);
+    /**
+     * 
+     * @param ModelSubmit $submit
+     * @param enum $type
+     * @return string filename with absolute path
+     */
+    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
 
+    /**
+     * @param ModelSubmit $submit
+     * @return bool
+     */
     public function existsFile(ModelSubmit $submit);
-    
+
+    /**
+     * @param ModelSubmit $submit
+     */
     public function deleteFile(ModelSubmit $submit);
 }
 

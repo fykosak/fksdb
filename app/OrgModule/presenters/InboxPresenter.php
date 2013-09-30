@@ -65,13 +65,17 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         foreach ($values['contestants'] as $container) {
             $submits = $container['submit'];
-
+            //dump($submits);
             foreach ($submits as $submit) {
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
                 } else {
-                    $this->serviceSubmit->save($submit);
+                    if ($submit->submit_id && $submit->getOriginalTaskId() != $submit->task_id) {
+                        $this->flashMessage($submit->submit_id . ": changed task from {$submit->getOriginalTaskId()} to {$submit->task_id}.");
+                    } else { // to prevent doing it uncontrollable
+                        $this->serviceSubmit->save($submit);
+                    }
                 }
             }
         }
@@ -113,6 +117,21 @@ class InboxPresenter extends TaskTimesContestantPresenter {
             }
         }
         return md5($fingerprint);
+    }
+
+    public function handleSwapSubmits() {
+        if (!$this->isAjax()) {
+            throw new BadRequestException('AJAX only.', 405);
+        }
+        
+        $post = $this->getHttpRequest()->getPost();
+        $this->payload->result = 'indie';
+        $this->payload->data = $post;
+        $this->sendPayload();
+    }
+
+    private function reorderSubmits($permutation) {
+        // submitId => tasknr
     }
 
 }
