@@ -108,6 +108,7 @@ abstract class AbstractServiceSingle extends TableSelection {
                 $result = $this->getTable()->insert($model->toArray());
                 if ($result !== false) {
                     $model = $result;
+                    $model->setNew(false);
                 } else {
                     $result = false;
                 }

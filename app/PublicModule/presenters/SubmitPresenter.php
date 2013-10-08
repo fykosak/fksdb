@@ -13,7 +13,7 @@ use Nette\Diagnostics\Debugger;
 use ServiceSubmit;
 use ServiceTask;
 use Submits\ISubmitStorage;
-use Submits\SubmitStorageException;
+use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -170,7 +170,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->submitService->save($submit);
 
                 // store file
-                $this->submitStorage->storeFile($taskValues['file'], $submit);
+                $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
 
                 $this->flashMessage(sprintf('Úloha %s odevzdána.', $task->label));
             }
@@ -184,7 +184,7 @@ class SubmitPresenter extends BasePresenter {
 
             Debugger::log($e);
             $this->flashMessage('Došlo k chybě při ukládání úloh.', 'error');
-        } catch (SubmitStorageException $e) {
+        } catch (ProcessingException $e) {
             $this->submitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 

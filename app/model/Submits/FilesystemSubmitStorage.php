@@ -89,16 +89,16 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                     $this->deleteFile($submit);
                 }
 
-                $file = $todo['file'];
-                $name = $file->getName();
-                $extension = trim(strrchr($name, '.'), '.');
+                $filename = $todo['file'];
 
-                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit) . '.' . $extension;
+                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
+                @mkdir(dirname($dest), 0777, TRUE); // @ - dir may already exist
+
                 if (count($this->processings) > 0) {
                     $original = $dest . self::ORIGINAL_EXT;
                     $working = $dest . self::TEMPORARY_EXT;
 
-                    $file->move($original);
+                    rename($filename, $original);
                     copy($original, $working);
                     foreach ($this->processings as $processing) {
                         $processing->setInputFile($working);
@@ -113,7 +113,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
                     rename($working, $dest);
                 } else {
-                    $file->move($dest);
+                    rename($filename, $dest);
                 }
             }
         } catch (InvalidStateException $e) {
@@ -136,28 +136,34 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * 
-     * @param FileUpload $file
-     * @param \Tasks\ModelSubmit $submit Must be a stored submit.
-     * @throws InvalidStateException
+     * @param string $filename
+     * @param ModelSubmit $submit
+     * @return void
      */
-    public function storeFile(FileUpload $file, ModelSubmit $submit) {
+    public function storeFile($filename, ModelSubmit $submit) {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
 
         $this->todo[] = array(
-            'file' => $file,
+            'file' => $filename,
             'submit' => $submit,
         );
     }
 
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
-        $files = array_filter($files, function($file) {
-                    return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
-                            !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
-                });
+        if ($type == self::TYPE_ORIGINAL) {
+            $files = array_filter($files, function($file) {
+                        return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
+                    });
+        } else {
+            $files = array_filter($files, function($file) {
+                        return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                                !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
+                    });
+        }
+
         if (count($files) == 0) {
             return null;
         } else if (count($files) > 1) {
@@ -198,7 +204,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
-            $it = Finder::findFiles('*' . self::DELIMITER . $submit . '*')->in($dir);
+            $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             $files = iterator_to_array($it, false);
         } catch (UnexpectedValueException $e) {
             return array();
@@ -248,3 +254,4 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
 }
+

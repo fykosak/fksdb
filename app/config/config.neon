@@ -3,6 +3,9 @@
 #
 
 parameters:
+    # Temporary directory for various purposes.
+    tempDir: %appDir%/../temp
+
     # WDSL file defining provided services.
     wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 

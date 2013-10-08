@@ -18,7 +18,11 @@ abstract class AbstractModelSingle extends TableRow {
     }
 
     public static function createFromTableRow(TableRow $row) {
-        return new static($row->toArray(), $row->getTable());
+        $model = new static($row->toArray(), $row->getTable());
+        if ($model->getPrimary(false)) {
+            $model->setNew(false);
+        }
+        return $model;
     }
 
 }

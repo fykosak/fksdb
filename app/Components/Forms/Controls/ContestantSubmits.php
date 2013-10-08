@@ -74,6 +74,15 @@ class ContestantSubmits extends BaseControl {
         }
     }
 
+    private function getTask($taskId) {
+        foreach ($this->tasks as $task) {
+            if ($task->task_id == $taskId) {
+                return $task;
+            }
+        }
+        return null;
+    }
+
     /**
      * @return   Html
      */
@@ -159,6 +168,7 @@ class ContestantSubmits extends BaseControl {
         $data = $submit->toArray();
         $format = $this->sourceToFormat($submit->source);
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
+        $data['task'] = array('label' => $this->getTask($submit->task_id)->label); // ORM workaround
         return $data;
     }
 

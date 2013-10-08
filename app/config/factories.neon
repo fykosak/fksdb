@@ -9,7 +9,7 @@ services:
     pipelineFactory:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
     downloaderFactory:
-        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %appDir%/../temp, %contestMapping%)
+        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
 
 
 factories:

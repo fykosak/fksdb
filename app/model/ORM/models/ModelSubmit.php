@@ -22,7 +22,8 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      * @return ModelTask
      */
     public function getTask() {
-        return ModelTask::createFromTableRow($this->ref(DbNames::TAB_TASK, 'task_id'));
+        $data = $this->ref(DbNames::TAB_TASK, 'task_id');
+        return ModelTask::createFromTableRow($data);
     }
 
     /**
@@ -43,28 +44,6 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
             $this->note,
             $this->raw_points,
         )));
-    }
-
-    /*
-     * Detection of task change.
-     * (Consider implementic this mechanism in general into AbstractModelSingle.)
-     */
-
-    private $originalTaskId = null;
-
-    public function getOriginalTaskId() {
-        return $this->originalTaskId;
-    }
-
-    public function __set($key, $value) {
-        if ($key == 'task_id') {
-            if ($value != $this->task_id) {
-                $this->originalTaskId = $this->task_id;
-            } else {
-                $this->originalTaskId = $value;
-            }
-        }
-        parent::__set($key, $value);
     }
 
 }

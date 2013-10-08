@@ -4,7 +4,7 @@ $(document).ready(function() {
         var el = $('<a>');
         //el.attr('class', 'inboxField');
         el.attr('href', linkFormat.replace('%d', taskData.submit_id));
-        el.text('Download ' + taskData.submit_id);
+        el.text('Download ' + taskData.task.label);
         return el;
     }
 

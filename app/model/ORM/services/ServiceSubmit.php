@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Database\Table\Selection;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
@@ -34,6 +36,10 @@ class ServiceSubmit extends AbstractServiceSingle {
         return $this->submit_cache[$key];
     }
 
+    /**
+     * 
+     * @return Selection
+     */
     public function getSubmits() {
         $submits = $this->getTable()
                 ->select(DbNames::TAB_SUBMIT . '.*')

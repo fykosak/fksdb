@@ -39,11 +39,13 @@ interface ISubmitStorage {
     public function addProcessing(IStorageProcessing $processing);
 
     /**
-     * @param FileUpload $file
+     * File is renamed/moved to own purposes.
+     * 
+     * @param string $filename
      * @param ModelSubmit $submit
      * @return void
      */
-    public function storeFile(FileUpload $file, ModelSubmit $submit);
+    public function storeFile($filename, ModelSubmit $submit);
 
     /**
      * 
