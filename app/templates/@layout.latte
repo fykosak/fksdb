@@ -37,12 +37,14 @@
         </div>
         {include #content}
 
+        <div id="spinner"></div>
         {block scripts}
         <script src="{$basePath}/js/netteForms.js"></script>
         <!-- jQuery and UI from Google CDN -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
         
+        <script src="{$basePath}/js/main.js"></script>
         <script src="{$basePath}/js/datePicker.js"></script>
         <script src="{$basePath}/js/submitFields.js"></script>
         {/block}

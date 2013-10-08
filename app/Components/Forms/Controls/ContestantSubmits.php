@@ -96,6 +96,10 @@ class ContestantSubmits extends BaseControl {
         return $control;
     }
 
+    public function getRawValue() {
+        return $this->rawValue;
+    }
+
     /**
      * 
      * @param array|Traversable|string $value of ModelTask

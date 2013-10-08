@@ -9,6 +9,7 @@ use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
+use ServiceContestant;
 use ServiceSubmit;
 use ServiceTask;
 use Submits\ISubmitStorage;
@@ -24,10 +25,14 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     private $serviceSubmit;
 
     /**
-     *
      * @var ServiceTask
      */
     private $serviceTask;
+
+    /**
+     * @var ServiceContestant
+     */
+    private $serviceContestant;
 
     /**
      * @var ISubmitStorage
@@ -40,6 +45,10 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
+    }
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
     }
 
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
@@ -97,11 +106,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
                 } else {
-                    if ($submit->submit_id && $submit->getOriginalTaskId() != $submit->task_id) {
-                        $this->flashMessage($submit->submit_id . ": changed task from {$submit->getOriginalTaskId()} to {$submit->task_id}.");
-                    } else { // to prevent doing it uncontrollable
-                        $this->serviceSubmit->save($submit);
-                    }
+                    $this->serviceSubmit->save($submit);
                 }
             }
         }
@@ -238,7 +243,17 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $this->submitStorage->commit();
         $connection->commit();
 
+        /**
+         * Prepare AJAX response
+         */
+        $contestant = $this->serviceContestant->findByPrimary($ctId);
+        $submitsTable = $this->getSubmitsTable();
+        $value = $submitsTable[$ctId];
+        $dummyElement = new ContestantSubmits($this->getTasks(), $contestant, $this->serviceSubmit);
+        $dummyElement->setValue($value);
 
+        $this->payload->data = json_decode($dummyElement->getRawValue()); // sorry, back and forth
+        $this->payload->fingerprint = $this->inboxFormDataFingerprint();
         $this->sendPayload();
     }
 

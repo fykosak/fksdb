@@ -39,17 +39,21 @@ $(document).ready(function() {
         return [el, alt];
     }
 
+    function createElement(taskData, dataEl, allData) {
+        if (taskData && taskData.source === 'upload') {
+            // add download link
+            return createDownloadLink(taskData);
+        } else {
+            // create datetime element
+            taskData.source = 'post';
+            return createDatetime(taskData, dataEl, allData);
+        }
+    }
+
     $("input.inbox").submitFields({
-        createElements: function(taskData, allData, el, containerEl) {
-            var substEl = null;
-            if (taskData && taskData.source === 'upload') {
-                // add download link
-                substEl = createDownloadLink(taskData);
-            } else {
-                // create datetime element
-                taskData.source = 'post';
-                substEl = createDatetime(taskData, el, allData);
-            }
+        createElements: function(taskData, allData, dataEl, containerEl) {
+            var substEl = createElement(taskData, dataEl, allData);
+
             var li = $('<li>');
             li.addClass('inbox-field');
             if (!taskData || !taskData.submit_id || taskData.source === 'upload') {
@@ -75,13 +79,28 @@ $(document).ready(function() {
         update: function(event, ui) {
             var item = ui.item;
             var container = item.parent();
+            var dataEl = container.parent().children('input.inbox');
+            var fingerprintEl = $('input[name="__fp"]');
             var ctId = container.data('contestant');
 
             var order = $(this).swappable('toArray');
 
             var data = {order: order, ctId: ctId};
-            $.post('?do=swapSubmits', data, function() {
+            $.post('?do=swapSubmits', data, function(response) {
+                for (var tasknr in response.data) {
+                    // refresh content of li-s one by one
+                    var taskData = response.data[tasknr];
+                    var li = container.children('li:nth-child(' + tasknr + ')');
+                    li.empty();
+                    var innerElement = createElement(taskData, dataEl, response.data);
+                    li.append(innerElement);
+                    // update fingerprint
+                    fingerprintEl.val(response.fingerprint);
+                }
                 console.log('DONE');
+            }).fail(function() {
+                alert('Error :-(');
+                window.location.reload();
             });
         }
     });
