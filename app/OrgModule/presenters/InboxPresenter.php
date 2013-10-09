@@ -6,53 +6,48 @@ use DbNames;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use ModelSubmit;
+use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
-use ServiceContestant;
-use ServiceSubmit;
-use ServiceTask;
+use OOB\MultipleTextSelect;
+use Persons\OrgsCompletionModel;
+use ServiceOrg;
+use ServiceTaskContribution;
 use Submits\ISubmitStorage;
 
 class InboxPresenter extends TaskTimesContestantPresenter {
 
     const POST_CT_ID = 'ctId';
     const POST_ORDER = 'order';
-
-    /**
-     * @var ServiceSubmit
-     */
-    private $serviceSubmit;
-
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
-
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
+    const TASK_PREFIX = 'task';
 
     /**
      * @var ISubmitStorage
      */
     private $submitStorage;
 
-    public function injectSubmitService(ServiceSubmit $submitService) {
-        $this->serviceSubmit = $submitService;
-    }
+    /**
+     * @var ServiceTaskContribution
+     */
+    private $serviceTaskContribution;
 
-    public function injectServiceTask(ServiceTask $serviceTask) {
-        $this->serviceTask = $serviceTask;
-    }
-
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
-    }
+    /**
+     *
+     * @var ServiceOrg
+     */
+    private $serviceOrg;
 
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
+    }
+
+    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
+        $this->serviceTaskContribution = $serviceTaskContribution;
+    }
+
+    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+        $this->serviceOrg = $serviceOrg;
     }
 
     public function actionDefault() {
@@ -61,11 +56,37 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         }
     }
 
-    public function renderDefault() {
-        $this->template->contestants = $this->getContestants();
-        $this->template->tasks = $this->getTasks()->fetchPairs('task_id');
+    public function actionHandout() {
+        if (!$this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
 
+    public function renderDefault() {
         $this['inboxForm']->setDefaults();
+    }
+
+    public function renderHandout() {
+        $taskIds = array();
+        foreach ($this->getTasks() as $task) {
+            $taskIds[] = $task->task_id;
+        }
+        $contributions = $this->serviceTaskContribution->getTable()->where(array(
+            'type' => ModelTaskContribution::TYPE_GRADE,
+            'task_id' => $taskIds,
+        ));
+
+        $values = array();
+        foreach ($contributions as $contribution) {
+            $taskId = $contribution->task_id;
+            $orgId = $contribution->org_id;
+            $key = self::TASK_PREFIX . $taskId;
+            if (!isset($values[$key])) {
+                $values[$key] = array();
+            }
+            $values[$key][] = $orgId;
+        }
+        $this['handoutForm']->setDefaults($values);
     }
 
     protected function createComponentInboxForm($name) {
@@ -93,6 +114,24 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         return $form;
     }
 
+    protected function createComponentHandoutForm() {
+        $form = new Form();
+
+        $model = $this->getOrgsModel();
+        foreach ($this->getTasks() as $task) {
+            $control = new MultipleTextSelect($model, $task->getFQName());
+            $control->setUnknownMode(MultipleTextSelect::N_INVALID);
+            $control->addRule(Form::VALID, 'Neznámý organizátor u úlohy %label.');
+            $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
+        }
+
+        $form->addSubmit('save', 'Uložit');
+
+        $form->onSuccess[] = callback($this, 'handoutFormSuccess');
+
+        return $form;
+    }
+
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -112,6 +151,37 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         }
         $this->serviceSubmit->getConnection()->commit();
         $this->flashMessage('Informace o řešeních uložena.');
+        $this->redirect('this');
+    }
+
+    public function handoutFormSuccess(Form $form) {
+        $values = $form->getValues();
+
+        $ORMservice = $this->serviceTaskContribution;
+        $connection = $ORMservice->getConnection();
+
+        $connection->beginTransaction();
+
+        foreach ($this->getTasks() as $task) {
+            $ORMservice->getTable()->where(array(
+                'task_id' => $task->task_id,
+                'type' => ModelTaskContribution::TYPE_GRADE
+            ))->delete();
+            $key = self::TASK_PREFIX . $task->task_id;
+            foreach ($values[$key] as $orgId) {
+                $data = array(
+                    'task_id' => $task->task_id,
+                    'org_id' => $orgId,
+                    'type' => ModelTaskContribution::TYPE_GRADE,
+                );
+                $contribution = $ORMservice->createNew($data);
+                $ORMservice->save($contribution);
+            }
+        }
+
+        $connection->commit();
+
+        $this->flashMessage('Přiřazení opravovatelů uloženo.');
         $this->redirect('this');
     }
 
@@ -277,6 +347,15 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         $this->submitStorage->storeFile($backup, $newSubmit);
         // backup file is renamed in file storage
+    }
+
+    private $orgsModel;
+
+    private function getOrgsModel() {
+        if (!$this->orgsModel) {
+            $this->orgsModel = new OrgsCompletionModel($this->getSelectedContest(), $this->serviceOrg, $this->yearCalculator);
+        }
+        return $this->orgsModel;
     }
 
 }

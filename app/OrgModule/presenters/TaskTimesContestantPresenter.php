@@ -5,6 +5,10 @@ namespace OrgModule;
 use ModelSubmit;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\Selection;
+use SeriesCalculator;
+use ServiceContestant;
+use ServiceSubmit;
+use ServiceTask;
 
 /**
  * Presenter "template" for presenters manipulating tasks x contestants tables.
@@ -19,12 +23,47 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     public $series;
 
     /**
+     * @var ServiceContestant
+     */
+    protected $serviceContestant;
+
+    /**
+     * @var ServiceTask
+     */
+    protected $serviceTask;
+
+    /**
+     * @var ServiceSubmit
+     */
+    protected $serviceSubmit;
+
+    /**
+     * @var SeriesCalculator
+     */
+    protected $seriesCalculator;
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
+    }
+
+    public function injectServiceTask(ServiceTask $serviceTask) {
+        $this->serviceTask = $serviceTask;
+    }
+
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+        $this->seriesCalculator = $seriesCalculator;
+    }
+
+    /**
      * @param int $series when not null return only contestants with submits in the series
      * @return Selection
      */
     protected function getContestants($series = null) {
-        $serviceContestant = $this->context->getService('ServiceContestant');
-        return $serviceContestant->getTable()->where(array(
+        return $this->serviceContestant->getTable()->where(array(
                     'contest_id' => $this->getSelectedContest()->contest_id,
                     'year' => $this->getSelectedYear(),
                 ))->order('person.family_name, person.other_name');
@@ -32,8 +71,7 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     }
 
     protected function getTasks() {
-        $serviceTask = $this->context->getService('ServiceTask');
-        return $serviceTask->getTable()->where(array(
+        return $this->serviceTask->getTable()->where(array(
                     'contest_id' => $this->getSelectedContest()->contest_id,
                     'year' => $this->getSelectedYear(),
                     'series' => $this->getSeries(),
@@ -49,9 +87,7 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     }
 
     protected function getSubmitsTable() {
-        $serviceSubmit = $this->context->getService('ServiceSubmit');
-
-        $submits = $serviceSubmit->getTable()
+        $submits = $this->serviceSubmit->getTable()
                 ->where('ct_id', $this->getContestants())
                 ->where('task_id', $this->getTasks());
 
@@ -71,8 +107,7 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     //
     protected function createComponentFormSelectSeries($name) {
         $form = new Form($this, $name);
-        $sc = $this->getService('seriesCalculator');
-        $lastSeries = $sc->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
+        $lastSeries = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
 
         $form->addSelect('series', 'Série')
                 ->setItems(range(1, $lastSeries), false)
@@ -89,18 +124,15 @@ abstract class TaskTimesContestantPresenter extends BasePresenter {
     }
 
     protected function initSeries() {
-        $sc = $this->getService('seriesCalculator');
-
         $session = $this->getSession()->getSection('presets');
 
-        $defaultSeries = isset($session->defaultSeries) ? $session->defaultSeries : $sc->getCurrentSeries($this->getSelectedContest());
-        $lastSeries = $sc->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
+        $defaultSeries = isset($session->defaultSeries) ? $session->defaultSeries : $this->seriesCalculator->getCurrentSeries($this->getSelectedContest());
+        $lastSeries = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
         $defaultSeries = min($defaultSeries, $lastSeries);
 
         if ($this->series === null || $this->series > $lastSeries) {
             $this->series = $defaultSeries;
         }
-
 
         // remember
         $session->defaultSeries = $this->series;

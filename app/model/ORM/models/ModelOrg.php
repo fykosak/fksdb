@@ -13,6 +13,14 @@ class ModelOrg extends AbstractModelSingle {
         $data = $this->contest;
         return ModelContest::createFromTableRow($data);
     }
+    
+    /**
+     * @return ModelPerson
+     */
+    public function getPerson() {
+        $data = $this->person;
+        return ModelPerson::createFromTableRow($data);
+    }
 
 }
 
