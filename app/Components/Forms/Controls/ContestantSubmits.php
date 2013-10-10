@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FormUtils;
 use InvalidArgumentException;
 use ModelContestant;
 use ModelSubmit;
@@ -181,6 +182,7 @@ class ContestantSubmits extends BaseControl {
         $data['ct_id'] = $this->contestant->ct_id; // security
         $format = $this->sourceToFormat($data['source'], true);
         $data['submitted_on'] = $data['submitted_on'] ? DateTime::createFromFormat($format, $data['submitted_on']) : null;
+        $data = FormUtils::emptyStrToNull($data);
 
         $ctId = $data['ct_id'];
         $taskId = $data['task_id'];

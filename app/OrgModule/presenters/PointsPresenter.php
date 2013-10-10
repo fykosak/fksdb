@@ -3,88 +3,116 @@
 namespace OrgModule;
 
 use Exception;
+use FKSDB\Components\Forms\Controls\ContestantSubmits;
+use FKSDB\Components\Forms\OptimisticForm;
 use ModelContest;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use ServiceSubmit;
+use ServiceTask;
+use SQLResultsCache;
+use Submits\SeriesTable;
 
-class PointsPresenter extends TaskTimesContestantPresenter {
+class PointsPresenter extends SeriesPresenter {
+
+    /**
+     * @var SQLResultsCache
+     */
+    private $SQLResultsCache;
+
+    /**
+     * @var SeriesTable
+     */
+    private $seriesTable;
+
+    /**
+     * @var ServiceSubmit
+     */
+    private $serviceSubmit;
+
+    /**
+     * @var ServiceTask
+     */
+    private $serviceTask;
+
+    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
+        $this->SQLResultsCache = $SQLResultsCache;
+    }
+
+    public function injectSeriesTable(SeriesTable $seriesTable) {
+        $this->seriesTable = $seriesTable;
+    }
+
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
+    public function injectServiceTask(ServiceTask $serviceTask) {
+        $this->serviceTask = $serviceTask;
+    }
+
+    protected function startup() {
+        parent::startup();
+        $this->seriesTable->setContest($this->getSelectedContest());
+        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
+    }
+
+    public function actionDefault() {
+        if (!$this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest())) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+    }
 
     public function renderDefault() {
-        $this->template->contestants = $this->getContestants($this->getSeries());
-        $this->template->tasks = $this->getTasks()->fetchPairs('task_id');
+        $this['pointsForm']->setDefaults();
     }
 
     protected function createComponentPointsForm($name) {
-        $form = new Form($this, $name);
+        $form = new OptimisticForm(
+                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+        );
 
-        $contestants = $this->getContestants($this->getSeries());
-        $tasks = $this->getTasks();
-        $submitsTable = $this->getSubmitsTable();
+        $contestants = $this->seriesTable->getContestants();
+        $tasks = $this->seriesTable->getTasks();
 
-        $grid = $form->addContainer('grid');
-        $ct_i = 0;
-        $ct_cnt = count($contestants);
-        $t_cnt = count($tasks);
+
+        $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
+
         foreach ($contestants as $contestant) {
-            $container = $grid->addContainer($contestant->ct_id);
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
+            $control->setClassName('points');
 
-            $t_i = 0;
-            foreach ($tasks as $task) {
-                $subcontainer = $container->addContainer($task->task_id);
-                $text = $subcontainer->addHidden('submitted_on');
-                $note = $subcontainer->addHidden('note');
-                $points = $subcontainer->addText('raw_points', null, 1);
-                $points->addCondition(Form::FILLED)
-                        ->addRule(Form::NUMERIC, 'Počet bodů má být přirozené číslo.');
-                $points->getControlPrototype()->tabindex($ct_i + $ct_cnt * $t_i + 1);
-
-
-                if (isset($submitsTable[$contestant->ct_id][$task->task_id])) {
-                    $submit = $submitsTable[$contestant->ct_id][$task->task_id];
-                    $text->setDefaultValue($submit->submitted_on);
-                    $note->setDefaultValue($submit->note);
-                    $points->setDefaultValue(($submit->raw_points !== null) ? (int) $submit->raw_points : '');
-                } else {
-                    $points->setDisabled(true);
-                }
-                $t_i += 1;
-            }
-            $ct_i += 1;
+            $namingContainer = $container->addContainer($contestant->ct_id);
+            $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $submit = $form->addSubmit('save', 'Uložit');
-        $submit->getControlPrototype()->tabindex($t_cnt * $ct_cnt + 1);
-
+        $form->addSubmit('save', 'Uložit');
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
+
+        return $form;
     }
 
     public function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
-        $grid = $values['grid'];
-        $submitsTable = $this->getSubmitsTable();
 
         try {
-            $serviceSubmit = $this->context->getService('ServiceSubmit');
+            $this->serviceSubmit->getConnection()->beginTransaction();
 
-            $serviceSubmit->getConnection()->beginTransaction();
-
-            foreach ($grid as $ct_id => $tasks) {
-                foreach ($tasks as $task_id => $elements) {
-                    if (!isset($submitsTable[$ct_id][$task_id])) {
-                        continue;
+            foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
+                $submits = $container[SeriesTable::FORM_SUBMIT];
+                foreach ($submits as $submit) {
+                    if (!$submit->isEmpty()) {
+                        $this->serviceSubmit->save($submit);
                     }
-                    $submit = $submitsTable[$ct_id][$task_id];
-
-                    $submit->raw_points = $elements['raw_points'] === '' ? null : $elements['raw_points'];
-
-                    $serviceSubmit->save($submit);
                 }
             }
-            $serviceSubmit->getConnection()->commit();
+            $this->serviceSubmit->getConnection()->commit();
+
 
             // recalculate points (separate transaction)
-            $SQLcache = $this->getService('SQLResultsCache');
-            $SQLcache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
+            $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
 
 
             $this->flashMessage('Body úloh uloženy.');
@@ -96,10 +124,8 @@ class PointsPresenter extends TaskTimesContestantPresenter {
     }
 
     public function handleInvalidate() {
-        $SQLcache = $this->getService('SQLResultsCache');
-
         try {
-            $SQLcache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
+            $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
             $this->flashMessage('Body invalidovány.');
         } catch (Exception $e) {
             $this->flashMessage('Chyba při invalidaci.', 'error');
@@ -110,21 +136,18 @@ class PointsPresenter extends TaskTimesContestantPresenter {
     }
 
     public function handleRecalculateAll() {
-        $SQLcache = $this->getService('SQLResultsCache');
-        $serviceTask = $this->context->getService('ServiceTask');
-        
         try {
             foreach ($this->getAvailableContests() as $contest) {
                 $contest = ModelContest::createFromTableRow($contest);
 
-                $years = $serviceTask->getTable()
+                $years = $this->serviceTask->getTable()
                                 ->select('year')
                                 ->where(array(
                                     'contest_id' => $contest->contest_id,
                                 ))->group('year');
 
                 foreach ($years as $year) {
-                    $SQLcache->recalculate($contest, $year->year);
+                    $this->SQLResultsCache->recalculate($contest, $year->year);
                 }
             }
 

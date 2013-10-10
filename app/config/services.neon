@@ -11,7 +11,7 @@ services:
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
-    SQLResultsCache: SQLResultsCache
+    - SQLResultsCache
     - Submits\SeriesTable
     submitStorage: 
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
