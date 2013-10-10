@@ -1,7 +1,7 @@
 <?php
 
 /*
- * For presenters that provide current contest and year information.
+ * For presenters that provide contest and year context.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
@@ -14,4 +14,3 @@ interface IContestPresenter {
     public function getSelectedYear();
 }
 
-?>

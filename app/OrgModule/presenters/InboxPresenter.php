@@ -8,15 +8,19 @@ use FKSDB\Components\Forms\OptimisticForm;
 use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\Security\Permission;
 use OOB\MultipleTextSelect;
+use OrgModule\SeriesPresenter;
 use Persons\OrgsCompletionModel;
+use ServiceContestant;
 use ServiceOrg;
+use ServiceSubmit;
 use ServiceTaskContribution;
 use Submits\ISubmitStorage;
+use Submits\SeriesTable;
 
-class InboxPresenter extends TaskTimesContestantPresenter {
+class InboxPresenter extends SeriesPresenter {
 
     const POST_CT_ID = 'ctId';
     const POST_ORDER = 'order';
@@ -33,10 +37,24 @@ class InboxPresenter extends TaskTimesContestantPresenter {
     private $serviceTaskContribution;
 
     /**
-     *
      * @var ServiceOrg
      */
     private $serviceOrg;
+
+    /**
+     * @var ServiceSubmit
+     */
+    private $serviceSubmit;
+
+    /**
+     * @var ServiceContestant
+     */
+    private $serviceContestant;
+
+    /**
+     * @var SeriesTable
+     */
+    private $seriesTable;
 
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
@@ -48,6 +66,25 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function injectServiceOrg(ServiceOrg $serviceOrg) {
         $this->serviceOrg = $serviceOrg;
+    }
+
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
+    }
+
+    public function injectSeriesTable(SeriesTable $seriesTable) {
+        $this->seriesTable = $seriesTable;
+    }
+
+    protected function startup() {
+        parent::startup();
+        $this->seriesTable->setContest($this->getSelectedContest());
+        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
     public function actionDefault() {
@@ -68,7 +105,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
     public function renderHandout() {
         $taskIds = array();
-        foreach ($this->getTasks() as $task) {
+        foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->serviceTaskContribution->getTable()->where(array(
@@ -91,21 +128,21 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this, 'inboxFormDataFingerprint'), array($this, 'inboxFormDefaultValues')
+                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
 
-        $contestants = $this->getContestants();
-        $tasks = $this->getTasks();
+        $contestants = $this->seriesTable->getContestants();
+        $tasks = $this->seriesTable->getTasks();
 
 
-        $container = $form->addContainer('contestants');
+        $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
             $control->setClassName('inbox');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
-            $namingContainer->addComponent($control, 'submit');
+            $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
         $form->addSubmit('save', 'Uložit');
@@ -118,7 +155,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $form = new Form();
 
         $model = $this->getOrgsModel();
-        foreach ($this->getTasks() as $task) {
+        foreach ($this->seriesTable->getTasks() as $task) {
             $control = new MultipleTextSelect($model, $task->getFQName());
             $control->setUnknownMode(MultipleTextSelect::N_INVALID);
             $control->addRule(Form::VALID, 'Neznámý organizátor u úlohy %label.');
@@ -137,8 +174,8 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         $this->serviceSubmit->getConnection()->beginTransaction();
 
-        foreach ($values['contestants'] as $container) {
-            $submits = $container['submit'];
+        foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
+            $submits = $container[SeriesTable::FORM_SUBMIT];
             //dump($submits);
             foreach ($submits as $submit) {
                 // ACL granularity is very rough, we just check it in action* method
@@ -162,7 +199,7 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         $connection->beginTransaction();
 
-        foreach ($this->getTasks() as $task) {
+        foreach ($this->seriesTable->getTasks() as $task) {
             $ORMservice->getTable()->where(array(
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
@@ -185,41 +222,6 @@ class InboxPresenter extends TaskTimesContestantPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @internal
-     * @return array
-     */
-    public function inboxFormDefaultValues() {
-        $submitsTable = $this->getSubmitsTable();
-        $contestants = $this->getContestants();
-        $result = array();
-        foreach ($contestants as $contestant) {
-            $ctId = $contestant->ct_id;
-            if (isset($submitsTable[$ctId])) {
-                $result[$ctId] = array('submit' => $submitsTable[$ctId]);
-            } else {
-                $result[$ctId] = array('submit' => null);
-            }
-        }
-        return array(
-            'contestants' => $result
-        );
-    }
-
-    /**
-     * @internal
-     * @return array
-     */
-    public function inboxFormDataFingerprint() {
-        $fingerprint = '';
-        foreach ($this->getSubmitsTable() as $submits) {
-            foreach ($submits as $submit) {
-                $fingerprint .= $submit->getFingerprint();
-            }
-        }
-        return md5($fingerprint);
-    }
-
     public function handleSwapSubmits() {
         if (!$this->isAjax()) {
             throw new BadRequestException('AJAX only.', 405);
@@ -229,10 +231,10 @@ class InboxPresenter extends TaskTimesContestantPresenter {
 
         $ctId = $post[self::POST_CT_ID];
         $order = $post[self::POST_ORDER];
-        $series = $this->getSeries();
+        $series = $this->getSelectedSeries();
 
         $tasks = array();
-        foreach ($this->getTasks() as $task) {
+        foreach ($this->seriesTable->getTasks() as $task) {
             $task->task_id; // stupid touch
             $tasks[$task->tasknr] = $task;
         }
@@ -317,13 +319,12 @@ class InboxPresenter extends TaskTimesContestantPresenter {
          * Prepare AJAX response
          */
         $contestant = $this->serviceContestant->findByPrimary($ctId);
-        $submitsTable = $this->getSubmitsTable();
-        $value = $submitsTable[$ctId];
-        $dummyElement = new ContestantSubmits($this->getTasks(), $contestant, $this->serviceSubmit);
-        $dummyElement->setValue($value);
+        $submits = $this->seriesTable->getSubmitsTable($ctId);
+        $dummyElement = new ContestantSubmits($this->seriesTable->getTasks(), $contestant, $this->serviceSubmit);
+        $dummyElement->setValue($submits);
 
         $this->payload->data = json_decode($dummyElement->getRawValue()); // sorry, back and forth
-        $this->payload->fingerprint = $this->inboxFormDataFingerprint();
+        $this->payload->fingerprint = $this->seriesTable->getFingerprint();
         $this->sendPayload();
     }
 

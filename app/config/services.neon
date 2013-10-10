@@ -12,6 +12,7 @@ services:
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
     SQLResultsCache: SQLResultsCache
+    - Submits\SeriesTable
     submitStorage: 
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
