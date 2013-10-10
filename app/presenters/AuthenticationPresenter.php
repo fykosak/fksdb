@@ -54,16 +54,22 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->initialRedirect($person);
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), 'error');
+        } catch (FacebookApiException $e) {
+            $fbUrl = $this->getFbLoginUrl();
+            $this->redirectUri($fbUrl);
         }
     }
 
     public function renderLogin() {
+        $this->template->fbUrl = $this->getFbLoginUrl();
+    }
+
+    private function getFbLoginUrl() {
         $fbUrl = $this->facebook->getLoginUrl(array(
             'scope' => 'email',
             'redirect_uri' => $this->link('//fbLogin'), // absolute
         ));
-
-        $this->template->fbUrl = $fbUrl;
+        return $fbUrl;
     }
 
     /*     * ******************* components ****************************** */
