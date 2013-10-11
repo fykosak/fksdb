@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKSDB\Components\ClientDataTrait;
 use FormUtils;
 use InvalidArgumentException;
 use ModelContestant;
@@ -18,6 +19,8 @@ use Traversable;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestantSubmits extends BaseControl {
+
+    use ClientDataTrait;
 
     /**
      * @var Traversable|array of ModelTask
@@ -57,7 +60,7 @@ class ContestantSubmits extends BaseControl {
         $this->submitService = $submitService;
         $this->contestant = $contestant;
 
-        //$this->setValue(null);
+//$this->setValue(null);
     }
 
     public function getClassName() {
@@ -93,7 +96,12 @@ class ContestantSubmits extends BaseControl {
         $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
         $control->addStyle('width:600px');
+        
         $control->data['contestant'] = $this->contestant->ct_id;
+        foreach ($this->getClientData() as $key => $value) {
+            $control->data[$key] = $value;
+        }
+        
         return $control;
     }
 

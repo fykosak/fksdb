@@ -6,15 +6,20 @@ use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use ModelContest;
+use ModelOrg;
+use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceSubmit;
 use ServiceTask;
+use ServiceTaskContribution;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
 class PointsPresenter extends SeriesPresenter {
+
+    const HTML_GRADED = 'graded';
 
     /**
      * @var SQLResultsCache
@@ -36,6 +41,11 @@ class PointsPresenter extends SeriesPresenter {
      */
     private $serviceTask;
 
+    /**
+     * @var ServiceTaskContribution
+     */
+    private $serviceTaskContribution;
+
     public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
         $this->SQLResultsCache = $SQLResultsCache;
     }
@@ -50,6 +60,10 @@ class PointsPresenter extends SeriesPresenter {
 
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
+    }
+
+    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
+        $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
     protected function startup() {
@@ -76,13 +90,14 @@ class PointsPresenter extends SeriesPresenter {
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-
+        $gradedTasks = $this->getGradedTasks();
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
             $control->setClassName('points');
+            $control->setClientData(self::HTML_GRADED, $gradedTasks);
 
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
@@ -158,6 +173,27 @@ class PointsPresenter extends SeriesPresenter {
         }
 
         $this->redirect('this');
+    }
+
+    private function getGradedTasks() {
+        $person = $this->getUser()->getIdentity()->getPerson();
+        if (!$person) {
+            return array();
+        }
+        $orgIds = array_map(function (ModelOrg $org) {
+                    return $org->org_id;
+                }, $person->getActiveOrgs($this->yearCalculator));
+        $taskIds = array();
+        foreach ($this->seriesTable->getTasks() as $task) {
+            $taskIds[] = $task->task_id;
+        }
+        $gradedTasks = $this->serviceTaskContribution->getTable()
+                        ->where(array(
+                            'org_id' => $orgIds,
+                            'task_id' => $taskIds,
+                            'type' => ModelTaskContribution::TYPE_GRADE
+                        ))->fetchPairs('task_id', 'task_id');
+        return array_values($gradedTasks);
     }
 
 }

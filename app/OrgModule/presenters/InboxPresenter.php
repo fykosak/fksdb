@@ -8,10 +8,9 @@ use FKSDB\Components\Forms\OptimisticForm;
 use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Nette\Security\Permission;
 use OOB\MultipleTextSelect;
-use OrgModule\SeriesPresenter;
 use Persons\OrgsCompletionModel;
 use ServiceContestant;
 use ServiceOrg;
@@ -19,6 +18,8 @@ use ServiceSubmit;
 use ServiceTaskContribution;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
+
+
 
 class InboxPresenter extends SeriesPresenter {
 
@@ -163,7 +164,6 @@ class InboxPresenter extends SeriesPresenter {
         }
 
         $form->addSubmit('save', 'Uložit');
-
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
         return $form;
@@ -176,7 +176,7 @@ class InboxPresenter extends SeriesPresenter {
 
         foreach ($values[SeriesTable::FORM_CONTESTANT] as $container) {
             $submits = $container[SeriesTable::FORM_SUBMIT];
-            //dump($submits);
+
             foreach ($submits as $submit) {
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
@@ -192,6 +192,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function handoutFormSuccess(Form $form) {
+        echo "ASAAS";
         $values = $form->getValues();
 
         $ORMservice = $this->serviceTaskContribution;

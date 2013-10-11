@@ -31,7 +31,18 @@ $(document).ready(function() {
             var substEl = createElement(taskData, dataEl, allData);
             substEl.addClass('inbox-field');
             containerEl.append(substEl);
+
+            if (dataEl.data('graded').indexOf(taskData.task_id) >= 0) {
+                substEl.show();
+            } else {
+                substEl.hide();
+                substEl.addClass('ungraded');
+            }
         }
+    });
+
+    $('.graded-toggler').click(function() {
+        $('.ungraded').toggle();
     });
 });
 
