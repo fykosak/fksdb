@@ -4,6 +4,8 @@
 services:
     MailTemplateFactory: self(%email.templatesDir%)
     - FKSDB\Components\Factories\ContestantWizardFactory
+    - FKSDB\Components\Forms\Factories\StoredQueryFactory
+    - SQL\StoredQueryFactory
     resultsModelFactory: ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:

@@ -29,6 +29,8 @@ services:
             - addResource(person)
             - addResource(contestant)
             - addResource(school)
+            - addResource(query.adhoc)
+            - addResource(query.stored)
 
             # ACL
             - allow(contestant, submit, upload)
@@ -47,4 +49,6 @@ services:
             - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
 
             - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL)) # TODO revise
+            - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL)) # TODO revise
 

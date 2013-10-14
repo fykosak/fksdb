@@ -1,0 +1,11 @@
+{block title}Vytvoření exportu{/block}
+
+{block content}
+
+{control composeForm}
+
+{if $control->getStoredQuery()}
+    {control resultsComponent}
+{/if}
+
+{/block}

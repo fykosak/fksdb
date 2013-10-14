@@ -23,6 +23,8 @@ class DbNames {
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
     const TAB_SPAMEE = 'si_spamee'; // obsolete
+    const TAB_STORED_QUERY = 'stored_query';
+    const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'org_task_contribution';

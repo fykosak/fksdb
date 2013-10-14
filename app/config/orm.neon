@@ -18,5 +18,7 @@ services:
     ServiceRegion:           ServiceRegion
     ServiceSubmit:           ServiceSubmit
     ServiceSchool:           ServiceSchool
+    ServiceStoredQuery:      ServiceStoredQuery
+    ServiceStoredQueryParameter: ServiceStoredQueryParameter
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution

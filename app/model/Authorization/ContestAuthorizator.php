@@ -36,6 +36,15 @@ class ContestAuthorizator {
         return $this->acl;
     }
 
+    /**
+     * User must posses the role (for the resource:privilege) in the context
+     * of the queried contest.
+     * 
+     * @param mixed $resource
+     * @param enum $privilege
+     * @param ModelContest $contest queried contest
+     * @return boolean
+     */
     public function isAllowed($resource, $privilege, ModelContest $contest) {
         if (!$this->getUser()->isLoggedIn()) {
             return false;

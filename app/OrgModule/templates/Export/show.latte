@@ -1,0 +1,27 @@
+{block title}{$storedQuery->name}{if $storedQuery->qid} ({$storedQuery->qid}){/if} &ndash; definice{/block}
+
+{block content}
+
+<p>{$storedQuery->description}</p>
+
+{if count($storedQuery->getParameters())}
+<h3>Parametry</h3>
+<table>
+    <tr><th>Název</th><th>Popis</th><th>Výchozí hodnota</th></tr>
+    {foreach $storedQuery->getParameters() as $param}
+    <tr>
+        <td>{$param->name}</td>
+        <td>{$param->description}</td>
+        <td>{$param->getDefaultValue()}</td>
+    </tr>
+    {/foreach}
+</table>
+{/if}
+
+<h3>SQL</h3>
+<pre>{* todo syntax highlight *}
+{$storedQuery->sql}
+</pre>
+
+
+{/block}
