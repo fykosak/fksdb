@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use PDOException;
 use SQL\StoredQuery;
 
 /**
@@ -30,18 +31,22 @@ class StoredQueryGrid extends BaseGrid {
         //
         // columns
         //
-        $c = 0;
-        foreach ($this->storedQuery->getColumnNames() as $name) {
-            $this->addColumn($c+1, $name)->setRenderer(function($row) use($c) {
-                        echo $row[$c];
-                    });
-            ++$c;
+        try {
+            $c = 0;
+            foreach ($this->storedQuery->getColumnNames() as $name) {
+                $this->addColumn($c + 1, $name)->setRenderer(function($row) use($c) {
+                            echo $row[$c];
+                        });
+                ++$c;
+            }
+        } catch (PDOException $e) {
+            // pass, exception should be handled inn parent components
         }
 
         //
         // operations
-    //
-
+        //
+        $this->paginate = false;
     }
 
 }

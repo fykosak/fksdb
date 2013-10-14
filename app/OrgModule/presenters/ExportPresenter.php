@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\Components\View\StoredQueryResult;
+use FKSDB\Components\View\StoredQueryComponent;
 use FormUtils;
 use IResultsModel;
 use ModelContest;
@@ -25,9 +25,9 @@ class ExportPresenter extends SeriesPresenter {
 
     const CONT_CONSOLE = 'console';
     const CONT_PARAMS_META = 'paramsMeta';
-    const CONT_PARAMS = 'params';
     const CONT_META = 'meta';
     const SESSION_NS = 'sql';
+    const PARAM_PREFIX = 'p-';
 
     /**
      * @var ServiceStoredQuery
@@ -76,19 +76,47 @@ class ExportPresenter extends SeriesPresenter {
      * @return StoredQuery
      */
     public function getStoredQuery() {
-        return $this->storedQuery; //TODO
-//        $section = $this->session->getSection(self::SESSION_NS);
-//        if (isset($section->storedQuery)) {
-//            return $section->storedQuery;
-//        } else {
-//            return null;
-//        }
+        if ($this->storedQuery) {
+            return $this->storedQuery;
+        } else {
+            return $this->getStoredQueryFromSession();
+        }
     }
 
     public function setStoredQuery(StoredQuery $storedQuery) {
         $this->storedQuery = $storedQuery; //TODO
-//        $section = $this->session->getSection(self::SESSION_NS);
-//        $section->storedQuery = $storedQuery;
+    }
+
+    private function storeDesignFormToSession($values) {
+        $section = $this->session->getSection(self::SESSION_NS);
+        $section->data = $values;
+    }
+
+    private function getDesignFormFromSession() {
+        $section = $this->session->getSection(self::SESSION_NS);
+        return isset($section->data) ? $section->data : null;
+    }
+
+    private function clearSession() {
+        $section = $this->session->getSection(self::SESSION_NS);
+        unset($section->data);
+    }
+
+    protected function getStoredQueryFromSession() {
+        $data = $this->getDesignFormFromSession();
+        if (!$data) {
+            return null;
+        }
+
+        $sql = $data[self::CONT_CONSOLE]['sql'];
+        $parameters = array();
+        foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
+            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
+            $parameter->setDefaultValue($paramMetaData['default']);
+            $parameters[] = $parameter;
+        }
+
+        return $this->storedQueryFactory->createQueryFromSQL($sql, $parameters);
     }
 
     public function getPatternQuery() {
@@ -102,11 +130,6 @@ class ExportPresenter extends SeriesPresenter {
             }
         }
         return $this->patternQuery;
-    }
-
-    public function canParametrize() {
-        $query = $this->getPatternQuery();
-        return count($query->getParameters()) && $this->getContestAuthorizator()->isAllowed($query, 'parametrize', $this->getSelectedContest());
     }
 
     public function actionList() {
@@ -124,6 +147,9 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionEdit($id) {
         $query = $this->getPatternQuery();
+        if (!$query) {
+            throw new BadRequestException('Neexistující dotaz.', 404);
+        }
         if (!$this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
         }
@@ -131,6 +157,9 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionShow($id) {
         $query = $this->getPatternQuery();
+        if (!$query) {
+            throw new BadRequestException('Neexistující dotaz.', 404);
+        }
         if (!$this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
         }
@@ -138,6 +167,9 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
+        if (!$query) {
+            throw new BadRequestException('Neexistující dotaz.', 404);
+        }
         if (!$this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
         }
@@ -149,17 +181,29 @@ class ExportPresenter extends SeriesPresenter {
     public function renderEdit($id) {
         $query = $this->getPatternQuery();
 
-        $values = array();
-        $values[self::CONT_CONSOLE] = $this->getPatternQuery();
-        $values[self::CONT_META] = $this->getPatternQuery();
-        $values[self::CONT_PARAMS_META] = array();
-        foreach ($query->getParameters() as $parameter) {
-            $paramData = $parameter->toArray();
-            $paramData['default'] = $parameter->getDefaultValue();
-            $values[self::CONT_PARAMS_META][] = $paramData;
+        $values = $this->getDesignFormFromSession();
+        if (!$values) {
+            $values = array();
+            $values[self::CONT_CONSOLE] = $this->getPatternQuery();
+            $values[self::CONT_META] = $this->getPatternQuery();
+            $values[self::CONT_PARAMS_META] = array();
+            foreach ($query->getParameters() as $parameter) {
+                $paramData = $parameter->toArray();
+                $paramData['default'] = $parameter->getDefaultValue();
+                $values[self::CONT_PARAMS_META][] = $paramData;
+            }
         }
 
         $this['editForm']->setDefaults($values);
+    }
+
+    public function renderCompose() {
+        $query = $this->getPatternQuery();
+
+        $values = $this->getDesignFormFromSession();
+        if ($values) {
+            $this['composeForm']->setDefaults($values);
+        }
     }
 
     public function renderShow($id) {
@@ -175,9 +219,16 @@ class ExportPresenter extends SeriesPresenter {
         return $grid;
     }
 
+    protected function createComponentAdhocResultsComponent($name) {
+        $storedQuery = $this->getStoredQuery();
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory);
+        $grid->setShowParametrize(false);
+        return $grid;
+    }
+
     protected function createComponentResultsComponent($name) {
         $storedQuery = $this->getStoredQuery();
-        $grid = new StoredQueryResult($storedQuery);
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory);
         return $grid;
     }
 
@@ -221,39 +272,22 @@ class ExportPresenter extends SeriesPresenter {
         return $form;
     }
 
-    protected function createComponentParametrizeForm($name) {
-        $form = new Form();
-
-        $queryPattern = $this->getPatternQuery();
-        $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
-        $form->addComponent($parameters, self::CONT_PARAMS);
-
-        $form->addSubmit('execute', 'Spustit');
-        $form->onSuccess[] = array($this, 'handleParametrize');
-
-        return $form;
-    }
-
     public function handleComposeExecute(SubmitButton $button) {
         if (!$this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest())) {
             $this->flashMessage('Nedostatečné oprávnění ke spuštění dotazu.', 'error');
             return;
         }
 
+
         $form = $button->getForm();
-
         $values = $form->getValues();
+        $this->storeDesignFormToSession($values);
 
-        $sql = $values[self::CONT_CONSOLE]['sql'];
-        $parameters = array();
-        foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
-            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
-            $parameter->setDefaultValue($paramMetaData['default']);
-            $parameters[] = $parameter;
+        if ($this->isAjax()) {
+            $this->invalidateControl('adhocResultsComponent');
+        } else {
+            $this->redirect('this');
         }
-
-        $storedQuery = $this->storedQueryFactory->createQueryFromSQL($sql, $parameters);
-        $this->setStoredQuery($storedQuery);
     }
 
     public function handleEditSuccess(SubmitButton $button) {
@@ -323,25 +357,8 @@ class ExportPresenter extends SeriesPresenter {
             $this->serviceStoredQueryParameter->save($parameter);
         }
 
+        $this->clearSession();
         $connection->commit();
-    }
-
-    public function handleParametrize(Form $form) {
-        try {
-            if (!$this->canParametrize()) {
-                throw new BadRequestException('Nedostatečné oprávnění k parametrizování dotazu.', 403);
-            }
-
-            $storedQuery = $this->getStoredQuery();
-            $parameters = array();
-            $values = $form->getValues();
-            foreach ($values[self::CONT_PARAMS] as $key => $values) {
-                $parameters[$key] = $values['value'];
-            }
-            $storedQuery->setParameters($parameters);
-        } catch (BadRequestException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
-        }
     }
 
     /**
