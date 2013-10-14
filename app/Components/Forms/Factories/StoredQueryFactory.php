@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\SQLConsole;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelStoredQuery;
 use ModelStoredQueryParameter;
@@ -21,7 +22,8 @@ class StoredQueryFactory {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $container->addTextArea('sql', 'SQL'); //TODO JS syntax editor
+        $control = new SQLConsole('SQL');
+        $container->addComponent($control, 'sql');
 
         return $container;
     }
@@ -64,7 +66,7 @@ class StoredQueryFactory {
 
     /**
      * @internal
-     * @param \Nette\Forms\Container $container
+     * @param Container $container
      * @param type $group
      */
     public function buildParameterMetadata(Container $container, $group) {
