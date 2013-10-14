@@ -218,7 +218,7 @@ class StoredQuery implements IDataSource {
             $statement->execute();
             $this->data = $statement;
         }
-        return $statement; // lazy load during iteration?
+        return $this->data; // lazy load during iteration?
     }
 
     public function getPrimaryKey() {

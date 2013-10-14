@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\StoredQueryGrid;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use PDOException;
+use PePa\CSVResponse;
 use SQL\StoredQuery;
 
 /**
@@ -107,7 +108,7 @@ class StoredQueryComponent extends Control {
     }
 
     public function render() {
-        if ($this->parameters) {
+        if ($this->parameters && $this->canParametrize()) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = array();
             foreach ($this->parameters as $key => $value) {
@@ -122,6 +123,27 @@ class StoredQueryComponent extends Control {
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryComponent.latte');
         $this->template->render();
+    }
+
+    public function handleCSV($header = true) {
+        if ($this->parameters && $this->canParametrize()) {
+            $this->storedQuery->setParameters($this->parameters);
+        }
+
+        $data = array();
+        foreach ($this->storedQuery->getData() as $row) {
+            $data[] = $row;
+        }
+
+        $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
+        $name .= '.csv';
+        //TODO move to configuration
+        $response = new CSVResponse($data, $name);
+        $response->setAddHeading($header);
+        $response->setQuotes(false);
+        $response->setGlue(';');
+
+        $this->presenter->sendResponse($response);
     }
 
 }

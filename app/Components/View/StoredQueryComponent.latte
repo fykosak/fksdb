@@ -5,5 +5,10 @@
 {if $error}
     {$error}
 {else}
+<p>
+    <a n:href="csv!">Uložit CSV</a>,
+    <a n:href="csv! header => false">Uložit CSV (bez hlavičky)</a>
+</p>
+    
     {control grid}
 {/if}
