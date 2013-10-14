@@ -18,6 +18,10 @@ services:
         setup:
             - addProcessing(@PDFStamper)
     PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+    readOnlyConnection:
+        class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
+        autowired: false
+        
 
 
     # web services

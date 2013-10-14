@@ -13,9 +13,12 @@ parameters:
     facebook:
         appId:
         secret:
-
+    ro-database:
+        dsn: 'mysql:host=localhost;dbname=newfks'
+        user: 
+        password: 
 nette:
     database:
-        dsn: 'mysql:host=localhost;dbname=fksdb'
+        dsn: 'mysql:host=localhost;dbname=newfks'
         user: 
         password: 
