@@ -45,7 +45,7 @@ class UniqueLogin {
         }
 
         $conflicts = $this->serviceLogin->getTable()->where(array('login' => $login));
-        if ($this->ignoredLogin) {
+        if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }
         if (count($conflicts) > 0) {

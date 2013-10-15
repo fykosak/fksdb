@@ -70,7 +70,7 @@ class UniqueEmail {
 
         if ($this->mode & self::CHECK_LOGIN) {
             $conflicts = $this->serviceLogin->getTable()->where(array('email' => $email));
-            if ($this->ignoredLogin) {
+            if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
                 $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
             }
             if (count($conflicts) > 0) {
@@ -80,7 +80,7 @@ class UniqueEmail {
 
         if ($this->mode & self::CHECK_PERSON) {
             $conflicts = $this->servicePersonInfo->getTable()->where(array('email' => $email));
-            if ($this->ignoredPerson) {
+            if ($this->ignoredPerson && $this->ignoredPerson->person_id) {
                 $conflicts->where('NOT person_id = ?', $this->ignoredPerson->person_id);
             }
             if (count($conflicts) > 0) {
