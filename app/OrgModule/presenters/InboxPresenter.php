@@ -192,7 +192,6 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function handoutFormSuccess(Form $form) {
-        echo "ASAAS";
         $values = $form->getValues();
 
         $ORMservice = $this->serviceTaskContribution;
