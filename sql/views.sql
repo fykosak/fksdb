@@ -23,3 +23,43 @@ left join address scha on scha.address_id = sch.address_id
 left join region reg on scha.region_id = reg.region_id
 left join contest cst on cst.contest_id = ct.contest_id
 );
+
+CREATE OR REPLACE VIEW v_person as (
+	select person_id, concat(family_name, other_name) AS name_lex, IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name, gender
+	from person
+);
+
+CREATE OR REPLACE VIEW v_post_contact as (
+	select p.person_id, IF(ad.address_id is null, ap.address_id, ad.address_id) AS address_id
+	from person p
+	left join post_contact ap on ap.person_id = p.person_id and ap.type = 'P'
+	left join post_contact ad on ad.person_id = p.person_id and ad.type = 'D'
+	where not (ap.address_id is null and ad.address_id is null)
+);
+
+CREATE OR REPLACE VIEW v_person_envelope as (
+	SELECT `pc`.`person_id` AS `person_id`,
+			p.name AS `CeleJmeno`,
+	       `a`.`first_row` AS `PrvniRadek`,
+	       `a`.`second_row` AS `DruhyRadek`,
+	       `a`.`target` AS `TretiRadek`,
+	       `a`.`city` AS `Mesto`,
+	       `a`.`postal_code` AS `PSC`,
+	       if((`r`.`country_iso` = 'SK'),'Slovakia',NULL) AS `Stat`
+	FROM v_post_contact pc
+	inner join v_person p on p.person_id = pc.person_id
+	inner join address a on pc.address_id = a.address_id
+	inner join region r on a.region_id = r.region_id and r.country_iso in ('CZ', 'SK')
+);
+
+create or replace view v_school as (
+	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic
+	from school s
+);
+
+create or replace view v_contestant as (
+	select p.name, p.name_lex, p.gender, ct.*, s.name as `school_name`
+	from contestant ct
+	inner join v_person p on p.person_id = ct.person_id
+	left join v_school s on s.school_id = ct.school_id
+);
