@@ -40,7 +40,7 @@ class StoredQueryFactory {
                 ->setOption('description', 'Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.')
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::MAX_LENGTH, 'Název dotazu je moc dlouhý.', 16)
-                ->addRule(Form::REGEXP, 'QID může být jen z písmen anglické abecedy a číslic.', '/^[a-z][a-z0-9]*$/');
+                ->addRule(Form::REGEXP, 'QID může být jen z písmen anglické abecedy a číslic a tečky.', '/^[a-z][a-z0-9.]*$/i');
 
 
         $container->addTextArea('description', 'Popis dotazu');
