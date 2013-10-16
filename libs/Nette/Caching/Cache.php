@@ -14,7 +14,6 @@ namespace Nette\Caching;
 use Nette;
 
 
-
 /**
  * Implements the cache for a application.
  *
@@ -53,13 +52,11 @@ class Cache extends Nette\Object implements \ArrayAccess
 	private $data;
 
 
-
 	public function __construct(IStorage $storage, $namespace = NULL)
 	{
 		$this->storage = $storage;
 		$this->namespace = $namespace . self::NAMESPACE_SEPARATOR;
 	}
-
 
 
 	/**
@@ -72,7 +69,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Returns cache namespace.
 	 * @return string
@@ -81,7 +77,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		return (string) substr($this->namespace, 0, -1);
 	}
-
 
 
 	/**
@@ -94,7 +89,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$derived = new static($this->storage, $this->namespace . $namespace);
 		return $derived;
 	}
-
 
 
 	/**
@@ -111,7 +105,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 		}
 		return $data;
 	}
-
 
 
 	/**
@@ -131,24 +124,23 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @return mixed  value itself
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function save($key, $data, array $dp = NULL)
+	public function save($key, $data, array $dependencies = NULL)
 	{
 		$this->release();
 		$key = $this->generateKey($key);
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = Nette\Callback::create($data)->invokeArgs(array(&$dp));
+			$data = Nette\Callback::create($data)->invokeArgs(array(& $dependencies));
 		}
 
 		if ($data === NULL) {
 			$this->storage->remove($key);
 		} else {
-			$this->storage->write($key, $data, $this->completeDependencies($dp, $data));
+			$this->storage->write($key, $data, $this->completeDependencies($dependencies, $data));
 			return $data;
 		}
 	}
-
 
 
 	private function completeDependencies($dp, $data)
@@ -174,10 +166,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		// add namespaces to items
 		if (isset($dp[self::ITEMS])) {
-			$dp[self::ITEMS] = array_unique((array) $dp[self::ITEMS]);
-			foreach ($dp[self::ITEMS] as $k => $item) {
-				$dp[self::ITEMS][$k] = $this->generateKey($item);
-			}
+			$dp[self::ITEMS] = array_unique(array_map(array($this, 'generateKey'), (array) $dp[self::ITEMS]));
 		}
 
 		// convert CONSTS into CALLBACKS
@@ -195,7 +184,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Removes item from the cache.
 	 * @param  mixed  key
@@ -207,23 +195,19 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Removes items from the cache by conditions.
 	 * Conditions are:
 	 * - Cache::PRIORITY => (int) priority
 	 * - Cache::TAGS => (array) tags
 	 * - Cache::ALL => TRUE
-	 *
-	 * @param  array
 	 * @return void
 	 */
-	public function clean(array $conds = NULL)
+	public function clean(array $conditions = NULL)
 	{
 		$this->release();
-		$this->storage->clean((array) $conds);
+		$this->storage->clean((array) $conditions);
 	}
-
 
 
 	/**
@@ -235,11 +219,9 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$key = func_get_args();
 		return $this->load($key, function() use ($function, $key) {
-			array_shift($key);
-			return Nette\Callback::create($function)->invokeArgs($key);
+			return Nette\Callback::create($function)->invokeArgs(array_slice($key, 1));
 		});
 	}
-
 
 
 	/**
@@ -248,19 +230,18 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  array  dependencies
 	 * @return Closure
 	 */
-	public function wrap($function, array $dp = NULL)
+	public function wrap($function, array $dependencies = NULL)
 	{
 		$cache = $this;
-		return function() use ($cache, $function, $dp) {
+		return function() use ($cache, $function, $dependencies) {
 			$key = array($function, func_get_args());
 			$data = $cache->load($key);
 			if ($data === NULL) {
-				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dp);
+				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dependencies);
 			}
 			return $data;
 		};
 	}
-
 
 
 	/**
@@ -278,7 +259,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Generates internal cache key.
 	 *
@@ -291,9 +271,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/********************* interface ArrayAccess ****************d*g**/
-
 
 
 	/**
@@ -307,7 +285,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$this->save($key, $data);
 	}
-
 
 
 	/**
@@ -327,7 +304,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Exists item in cache? (\ArrayAccess implementation).
 	 * @param  mixed key
@@ -339,7 +315,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$this->release();
 		return $this->offsetGet($key) !== NULL;
 	}
-
 
 
 	/**
@@ -354,7 +329,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Discards the internal cache used by ArrayAccess.
 	 * @return void
@@ -365,9 +339,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/********************* dependency checkers ****************d*g**/
-
 
 
 	/**
@@ -378,14 +350,12 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public static function checkCallbacks($callbacks)
 	{
 		foreach ($callbacks as $callback) {
-			$func = array_shift($callback);
-			if (!call_user_func_array($func, $callback)) {
+			if (!call_user_func_array(array_shift($callback), $callback)) {
 				return FALSE;
 			}
 		}
 		return TRUE;
 	}
-
 
 
 	/**
@@ -400,7 +370,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	}
 
 
-
 	/**
 	 * Checks FILES dependency.
 	 * @param  string
@@ -411,7 +380,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		return @filemtime($file) == $time; // @ - stat may fail
 	}
-
 
 
 	/**

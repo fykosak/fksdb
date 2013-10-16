@@ -14,7 +14,6 @@ namespace Nette\Database;
 use Nette;
 
 
-
 /**
  * Information about tables and columns structure.
  */
@@ -40,11 +39,13 @@ interface IReflection
 	/**
 	 * Gets referenced table & referenced column.
 	 * Example:
-	 * 	  author, book returns array(book, author_id)
+	 *   author, book returns array(book, author_id)
 	 *
 	 * @param  string  source table
 	 * @param  string  referencing key
 	 * @return array   array(referenced table, referenced column)
+	 * @throws Reflection\MissingReferenceException
+	 * @throws Reflection\AmbiguousReferenceKeyException
 	 */
 	function getHasManyReference($table, $key);
 
@@ -57,6 +58,7 @@ interface IReflection
 	 * @param  string  source table
 	 * @param  string  referencing key
 	 * @return array   array(referenced table, referencing column)
+	 * @throws Reflection\MissingReferenceException
 	 */
 	function getBelongsToReference($table, $key);
 

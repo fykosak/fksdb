@@ -1,0 +1,35 @@
+#
+# General services (data processing, model factories, etc.)
+#
+
+services:
+    - Authentication\FacebookAuthenticator
+    - Authentication\PasswordAuthenticator
+    - Authentication\TokenAuthenticator
+    contestAuthorizator: Authorization\ContestAuthorizator
+    ownerAssertion: Authorization\OwnerAssertion
+    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
+    yearCalculator: YearCalculator
+    seriesCalculator: SeriesCalculator
+    - SQLResultsCache
+    - Submits\SeriesTable
+    submitStorage: 
+        class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        setup:
+            - addProcessing(@PDFStamper)
+    PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+    readOnlyConnection:
+        class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
+        autowired: false
+        
+
+
+    # web services
+    soapServer:
+        class: SoapServer(%wdslUrl%)
+        setup:
+            - setObject(@webServiceModel)
+
+    webServiceModel:        WebServiceModel(%contestMapping%, ...)
+
+    nette.userStorage: LoginUserStorage

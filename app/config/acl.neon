@@ -1,0 +1,54 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+
+services:
+    # data services
+    authorizator:
+        class: Nette\Security\Permission
+        setup:
+            # Roles
+            - addRole(guest)                    # anonym (automatická role)
+            - addRole(registered, guest)        # registrant (automatická role)
+            - addRole(contestant, registered)   # řešitel (automatická role)
+            - addRole(org)                      # org (automatická role)
+            - addRole(webmaster, org)           # webař
+            - addRole(taskManager, org)         # úlohář
+            - addRole(dispatcher, org)          # koordinátor obálkování
+            - addRole(dataManager, org)         # správce DB
+            - addRole(eventManager, org)        # správce přihlášek
+            - addRole(inboxManager, org)        # příjemce řešení
+            - addRole(boss, org)                # šéf
+
+            # Resources
+            - addResource(submit)
+            - addResource(task)
+            - addResource(person)
+            - addResource(contestant)
+            - addResource(school)
+            - addResource(query.adhoc)
+            - addResource(query.stored)
+
+            # ACL
+            - allow(contestant, submit, upload)
+            - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
+            - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
+
+            - allow(org, contestant, list)
+
+            - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
+
+            - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
+            - allow(inboxManager, contestant, list)
+            - allow(inboxManager, contestant, create)
+            - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
+            - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
+            - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
+
+            - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL)) # TODO revise
+            - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL)) # TODO revise
+

@@ -1,0 +1,19 @@
+#
+# Factories definitions
+#
+services:
+    MailTemplateFactory: self(%email.templatesDir%)
+    - FKSDB\Components\Factories\ContestantWizardFactory
+    - FKSDB\Components\Forms\Factories\StoredQueryFactory
+    storedQueryFactory:
+        class: SQL\StoredQueryFactory(@readOnlyConnection,...)
+    resultsModelFactory: ResultsModelFactory
+    statsModelFactory: StatsModelFactory
+    pipelineFactory:
+        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
+    downloaderFactory:
+        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
+
+
+factories:
+# (so far unused)

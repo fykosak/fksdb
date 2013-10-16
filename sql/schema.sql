@@ -374,24 +374,34 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `login_has_role`
+-- Table `grant`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `login_has_role` ;
+DROP TABLE IF EXISTS `grant` ;
 
-CREATE  TABLE IF NOT EXISTS `login_has_role` (
-  `person_id` INT(11) NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `grant` (
+  `grant_id` INT(11) NULL AUTO_INCREMENT ,
+  `login_id` INT(11) NOT NULL ,
   `role_id` INT(11) NOT NULL ,
-  UNIQUE INDEX `person_id` (`person_id` ASC, `role_id` ASC) ,
+  `contest_id` INT NOT NULL ,
   INDEX `right_id` (`role_id` ASC) ,
-  PRIMARY KEY (`person_id`, `role_id`) ,
-  CONSTRAINT `permission_ibfk_1`
-    FOREIGN KEY (`person_id` )
-    REFERENCES `login` (`person_id` )
-    ON DELETE CASCADE,
+  PRIMARY KEY (`grant_id`) ,
+  UNIQUE INDEX `grant_UNIQUE` (`role_id` ASC, `contest_id` ASC, `login_id` ASC) ,
+  INDEX `fk_grant_contest1` (`contest_id` ASC) ,
+  INDEX `fk_grant_login1` (`login_id` ASC) ,
   CONSTRAINT `permission_ibfk_2`
     FOREIGN KEY (`role_id` )
     REFERENCES `role` (`role_id` )
-    ON DELETE CASCADE)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_grant_contest1`
+    FOREIGN KEY (`contest_id` )
+    REFERENCES `contest` (`contest_id` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_grant_login1`
+    FOREIGN KEY (`login_id` )
+    REFERENCES `login` (`login_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

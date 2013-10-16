@@ -15,7 +15,6 @@ use Nette,
 	Nette\Caching\Cache;
 
 
-
 /**
  * Initial system DI container generator.
  *
@@ -27,10 +26,12 @@ use Nette,
 class Configurator extends Nette\Object
 {
 	/** config file sections */
-	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		AUTO = NULL,
+	const AUTO = NULL,
 		NONE = FALSE;
+
+	/** @deprecated */
+	const DEVELOPMENT = 'development',
+		PRODUCTION = 'production';
 
 	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
@@ -42,26 +43,23 @@ class Configurator extends Nette\Object
 	protected $files = array();
 
 
-
 	public function __construct()
 	{
 		$this->parameters = $this->getDefaultParameters();
 	}
 
 
-
 	/**
 	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setDebugMode($value = TRUE)
 	{
-		$this->parameters['debugMode'] = is_bool($value) ? $value : self::detectDebugMode($value);
+		$this->parameters['debugMode'] = is_string($value) || is_array($value) ? static::detectDebugMode($value) : (bool) $value;
 		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
 		return $this;
 	}
-
 
 
 	/**
@@ -73,32 +71,29 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Sets path to temporary directory.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function setTempDirectory($path)
 	{
 		$this->parameters['tempDir'] = $path;
 		if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
-			mkdir($cacheDir, 0777);
+			mkdir($cacheDir);
 		}
 		return $this;
 	}
 
 
-
 	/**
 	 * Adds new parameters. The %params% will be expanded.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
 	public function addParameters(array $params)
 	{
 		$this->parameters = Helpers::merge($params, $this->parameters);
 		return $this;
 	}
-
 
 
 	/**
@@ -113,7 +108,7 @@ class Configurator extends Nette\Object
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
 			'debugMode' => $debugMode,
 			'productionMode' => !$debugMode,
-			'environment' => $debugMode ? self::DEVELOPMENT : self::PRODUCTION,
+			'environment' => $debugMode ? 'development' : 'production',
 			'consoleMode' => PHP_SAPI === 'cli',
 			'container' => array(
 				'class' => 'SystemContainer',
@@ -121,7 +116,6 @@ class Configurator extends Nette\Object
 			)
 		);
 	}
-
 
 
 	/**
@@ -134,7 +128,6 @@ class Configurator extends Nette\Object
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
 		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
 	}
-
 
 
 	/**
@@ -152,17 +145,15 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * Adds configuration file.
-	 * @return Configurator  provides a fluent interface
+	 * @return self
 	 */
-	public function addConfig($file, $section = self::AUTO)
+	public function addConfig($file, $section = NULL)
 	{
-		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
+		$this->files[] = array($file, $section === NULL ? $this->parameters['environment'] : $section);
 		return $this;
 	}
-
 
 
 	/** @deprecated */
@@ -171,7 +162,6 @@ class Configurator extends Nette\Object
 		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_WARNING);
 		return $this->addConfig($file, $section)->createContainer();
 	}
-
 
 
 	/**
@@ -205,7 +195,6 @@ class Configurator extends Nette\Object
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
 	}
-
 
 
 	/**
@@ -244,7 +233,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	protected function checkCompatibility(array $config)
 	{
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
@@ -264,7 +252,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Compiler
 	 */
@@ -278,7 +265,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return Loader
 	 */
@@ -288,16 +274,13 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	protected function getCacheDirectory()
 	{
 		return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**
@@ -316,7 +299,6 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{
@@ -324,13 +306,11 @@ class Configurator extends Nette\Object
 	}
 
 
-
 	/** @deprecated */
 	public function isProductionMode()
 	{
 		return !$this->isDebugMode();
 	}
-
 
 
 	/** @deprecated */

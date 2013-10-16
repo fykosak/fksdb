@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Validators;
 
 
-
 /**
  * DI container compiler.
  *
@@ -40,10 +39,9 @@ class Compiler extends Nette\Object
 	private static $reserved = array('services' => 1, 'factories' => 1, 'parameters' => 1);
 
 
-
 	/**
 	 * Add custom configurator extension.
-	 * @return Compiler  provides a fluent interface
+	 * @return self
 	 */
 	public function addExtension($name, CompilerExtension $extension)
 	{
@@ -55,7 +53,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -63,7 +60,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->extensions;
 	}
-
 
 
 	/**
@@ -75,7 +71,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/**
 	 * Returns configuration without expanded parameters.
 	 * @return array
@@ -84,7 +79,6 @@ class Compiler extends Nette\Object
 	{
 		return $this->config;
 	}
-
 
 
 	/**
@@ -101,14 +95,12 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	public function processParameters()
 	{
 		if (isset($this->config['parameters'])) {
 			$this->container->parameters = $this->config['parameters'];
 		}
 	}
-
 
 
 	public function processExtensions()
@@ -122,7 +114,6 @@ class Compiler extends Nette\Object
 			throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
 		}
 	}
-
 
 
 	public function processServices()
@@ -151,7 +142,6 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	public function generateCode($className, $parentName)
 	{
 		foreach ($this->extensions as $extension) {
@@ -174,7 +164,7 @@ class Compiler extends Nette\Object
 			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'\.#i', $list))) {
 				$list = array_diff($list, $found);
 				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
-				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
+				$class->documents = preg_replace("#\\S+(?= \\$$name\\z)#", $def->class, $class->documents);
 				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
 				foreach ($found as $item) {
 					if ($defs[$item]->internal) {
@@ -192,9 +182,7 @@ class Compiler extends Nette\Object
 	}
 
 
-
 	/********************* tools ****************d*g**/
-
 
 
 	/**
@@ -205,19 +193,21 @@ class Compiler extends Nette\Object
 	{
 		$services = isset($config['services']) ? $config['services'] : array();
 		$factories = isset($config['factories']) ? $config['factories'] : array();
-		if ($tmp = array_intersect_key($services, $factories)) {
-			$tmp = implode("', '", array_keys($tmp));
-			throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same names: '$tmp'.");
-		}
+		$all = array_merge($services, $factories);
 
-		$all = $services + $factories;
 		uasort($all, function($a, $b) {
 			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
 		});
 
-		foreach ($all as $name => $def) {
-			$shared = array_key_exists($name, $services);
-			$name = ($namespace ? $namespace . '.' : '') . $name;
+		foreach ($all as $origName => $def) {
+			$shared = array_key_exists($origName, $services);
+			if ((string) (int) $origName === (string) $origName) {
+				$name = (string) (count($container->getDefinitions()) + 1);
+			} elseif ($shared && array_key_exists($origName, $factories)) {
+				throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
+			} else {
+				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
+			}
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
@@ -242,7 +232,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	/**
@@ -345,7 +334,6 @@ class Compiler extends Nette\Object
 			}
 		}
 	}
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * Web form adapted for Presenter.
  *
@@ -38,7 +37,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/**
 	 * Returns the presenter where this component belongs to.
 	 * @param  bool   throw exception if presenter doesn't exist?
@@ -48,7 +46,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	{
 		return $this->lookup('Nette\Application\UI\Presenter', $need);
 	}
-
 
 
 	/**
@@ -72,8 +69,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 				array()
 			));
 
-			// fill-in the form with HTTP data
-			if ($this->isSubmitted()) {
+			if (iterator_count($this->getControls()) && $this->isSubmitted()) {
 				foreach ($this->getControls() as $control) {
 					if (!$control->isDisabled()) {
 						$control->loadHttpData();
@@ -83,7 +79,6 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 		}
 		parent::attached($presenter);
 	}
-
 
 
 	/**
@@ -96,10 +91,9 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/**
-	 * Internal: receives submitted HTTP data.
-	 * @return array
+	 * Internal: returns submitted HTTP data or NULL when form was not submitted.
+	 * @return array|NULL
 	 */
 	protected function receiveHttpData()
 	{
@@ -122,9 +116,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	}
 
 
-
 	/********************* interface ISignalReceiver ****************d*g**/
-
 
 
 	/**

@@ -14,7 +14,6 @@ namespace Nette\Application\UI;
 use Nette;
 
 
-
 /**
  * PresenterComponent is the base class for all Presenter components.
  *
@@ -33,17 +32,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	protected $params = array();
 
 
-
-	/**
-	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
-	{
-		$this->monitor('Nette\Application\UI\Presenter');
-		parent::__construct($parent, $name);
-	}
-
-
-
 	/**
 	 * Returns the presenter where this component belongs to.
 	 * @param  bool   throw exception if presenter doesn't exist?
@@ -55,7 +43,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Returns a fully-qualified name that uniquely identifies the component
 	 * within the presenter hierarchy.
@@ -65,7 +52,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	{
 		return $this->lookupPath('Nette\Application\UI\Presenter', TRUE);
 	}
-
 
 
 	/**
@@ -81,6 +67,15 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		}
 	}
 
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('Nette\Application\UI\Presenter');
+	}
 
 
 	/**
@@ -104,7 +99,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Checks for requirements such as authorization.
 	 * @return void
@@ -112,7 +106,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function checkRequirements($element)
 	{
 	}
-
 
 
 	/**
@@ -125,9 +118,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/********************* interface IStatePersistent ****************d*g**/
-
 
 
 	/**
@@ -151,7 +142,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		}
 		$this->params = $params;
 	}
-
 
 
 	/**
@@ -190,7 +180,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Returns component param.
 	 * If no key is passed, returns the entire array.
@@ -212,7 +201,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Returns a fully-qualified name that uniquely identifies the parameter.
 	 * @param  string
@@ -225,7 +213,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/** @deprecated */
 	function getParam($name = NULL, $default = NULL)
 	{
@@ -234,14 +221,12 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/** @deprecated */
 	function getParamId($name)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getParameterId() instead.', E_USER_WARNING);
 		return $this->getParameterId($name);
 	}
-
 
 
 	/**
@@ -262,9 +247,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/********************* interface ISignalReceiver ****************d*g**/
-
 
 
 	/**
@@ -282,7 +265,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Formats signal handler method name -> case sensitivity doesn't matter.
 	 * @param  string
@@ -294,9 +276,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/********************* navigation ****************d*g**/
-
 
 
 	/**
@@ -308,19 +288,13 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function link($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
 		try {
-			return $this->getPresenter()->createRequest($this, $destination, $args, 'link');
+			return $this->getPresenter()->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'link');
 
 		} catch (InvalidLinkException $e) {
 			return $this->getPresenter()->handleInvalidLink($e);
 		}
 	}
-
 
 
 	/**
@@ -331,14 +305,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function lazyLink($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
-		return new Link($this, $destination, $args);
+		return new Link($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1));
 	}
-
 
 
 	/**
@@ -351,15 +319,10 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function isLinkCurrent($destination = NULL, $args = array())
 	{
 		if ($destination !== NULL) {
-			if (!is_array($args)) {
-				$args = func_get_args();
-				array_shift($args);
-			}
-			$this->link($destination, $args);
+			$this->getPresenter()->createRequest($this, $destination, is_array($args) ? $args : array_slice(func_get_args(), 1), 'test');
 		}
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
 	}
-
 
 
 	/**
@@ -379,10 +342,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		}
 
 		if (!is_array($args)) {
-			$args = func_get_args();
-			if (is_numeric(array_shift($args))) {
-				array_shift($args);
-			}
+			$args = array_slice(func_get_args(), is_numeric($code) ? 2 : 1);
 		}
 
 		$presenter = $this->getPresenter();
@@ -390,9 +350,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/********************* interface \ArrayAccess ****************d*g**/
-
 
 
 	/**
@@ -407,7 +365,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
@@ -420,7 +377,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	}
 
 
-
 	/**
 	 * Does component specified by name exists?
 	 * @param  string  component name
@@ -430,7 +386,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	{
 		return $this->getComponent($name, FALSE) !== NULL;
 	}
-
 
 
 	/**

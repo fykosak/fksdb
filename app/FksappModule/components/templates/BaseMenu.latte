@@ -1,0 +1,28 @@
+{block #baseMenu}
+	{? 
+		$array_length = count($result);
+		if( ! $header) {
+			$header = '<header>';
+		}
+		if( ! $menu_id) {
+			$menu_id = '';
+		}
+	}
+	{if $array_length > 0}
+	
+	<div {if $menu_id}id="{$menu_id}"{/if}>
+		<h2 class="menu-header">{$header}</h1>
+		<ul>
+			{for $i = 0; $i < count($result); $i++}
+			{?
+				$args = '';
+				if(isset($result[$i]['args'])) {
+				$args = join(', ', $result[$i]['args']);
+				}
+			}
+			<li><a class="active" href="{plink $result[$i]['presenter'].':'.$result[$i]['action'] $args}">{$result[$i]['display']}</a></li>
+			{/for}
+		</ul>
+	</div>
+	{/if}
+{/block}

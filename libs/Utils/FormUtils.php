@@ -9,10 +9,10 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      * 
-     * @param array $values
+     * @param array|Traversable $values
      * @return array
      */
-    public static function emptyStrToNull(array $values) {
+    public static function emptyStrToNull($values) {
         $result = array();
         foreach ($values as $key => $value) {
             $result[$key] = $value === '' ? null : $value;

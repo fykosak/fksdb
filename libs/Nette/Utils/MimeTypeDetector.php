@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Mime type detector.
  *
@@ -30,7 +29,6 @@ final class MimeTypeDetector
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -49,15 +47,14 @@ final class MimeTypeDetector
 			return $info['mime'];
 
 		} elseif (extension_loaded('fileinfo')) {
-			$type = preg_replace('#[\s;].*$#', '', finfo_file(finfo_open(FILEINFO_MIME), $file));
+			$type = preg_replace('#[\s;].*\z#', '', finfo_file(finfo_open(FILEINFO_MIME), $file));
 
 		} elseif (function_exists('mime_content_type')) {
 			$type = mime_content_type($file);
 		}
 
-		return isset($type) && preg_match('#^\S+/\S+$#', $type) ? $type : 'application/octet-stream';
+		return isset($type) && preg_match('#^\S+/\S+\z#', $type) ? $type : 'application/octet-stream';
 	}
-
 
 
 	/**

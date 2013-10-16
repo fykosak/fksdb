@@ -1,64 +1,84 @@
 #
-# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# Main configuration of FKSDB
 #
-# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
-# http://nette.org/security-warning
-#
-common:
-    parameters:
-        wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
-    php:
-        date.timezone: Europe/Prague
-        # zlib.output_compression: yes
 
-    nette:
-        application:
-            errorPresenter: Error
+parameters:
+    # Temporary directory for various purposes.
+    tempDir: %appDir%/../temp
 
-        session:
-            expiration: 14 days
+    # WDSL file defining provided services.
+    wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
+
+    # Map: contest_id => contest indentifier
+    contestMapping:
+        1: fykos
+        2: vyfuk
+    # Configuration of sent emails.
+    email:
+        templatesDir: %appDir%/templates/emails
+
+    # Submits by contestats
+    upload:
+        # Path to storage directory
+        root: %appDir%/../upload
+
+        # Sprintf pattern of directory name with arguments: contestName, year, series, task label
+        directoryMask: '%%s/rocnik%02d/serie%%d/uloha-%%s'
+
+        # Sprintf pattern of stored file with arguments: contestantName, contestName, year, series, label
+        filenameMask: '%%s-r%3$d-s%4$d-%5$s'
+
+    # PDF stamper settings
+    stamper:
+        # Font size in points (pt).
+        fontSize: 10
+
+    # Transport XML (from Astrid)
+    tasks:
+        # Mapping of XML element names to tasks table columns (separate XML for each language).
+        columnMapping:
+            cs:
+                name: name_cs
+                points: points
+                label: label
+            en:
+                name: name_en
+
+        # Mapping of contribution types to comprising XML element (taken from Czech version only.)
+        # Contributions types must be ModelTaskContribution::TYPE_* constants.
+        contributionMapping:
+            author: authors
+            solution: solution-authors
+        
+        # Paths for search of XML files, including trailing slash.
+        # Arguments: contestName, year, series
+        paths:
+            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
+            en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
+    
+    # Various e-mail invitations
+    invitation:
+        # How long (relatively) is authentication token valid after invitation.
+        expiration: '+1 month'
 
 
+php:
+    date.timezone: Europe/Prague
+    # zlib.output_compression: yes
 
-    services:
-        # data services
-        authenticator: Authenticator
-        yearCalculator: YearCalculator
-        seriesCalculator: SeriesCalculator
-        resultsModelFactory: ResultsModelFactory
-        statsModelFactory: StatsModelFactory
-        SQLResultsCache: SQLResultsCache
+nette:
+    database:
+        reflection: discovered
+    application:
+        errorPresenter: Error
 
-        # ORM services
-        ServiceAddress:         ServiceAddress
-        ServiceContestant:      ServiceContestant
-        ServiceContest:         ServiceContest
-        ServiceCountry:         ServiceCountry
-        ServiceLogin:           ServiceLogin
-        ServiceMPostContact:    ServiceMPostContact
-        ServicePerson:          ServicePerson
-        ServicePersonInfo:      ServicePersonInfo
-        ServicePostContact:     ServicePostContact
-        ServiceRegion:          ServiceRegion
-        ServiceSubmit:          ServiceSubmit
-        ServiceSchool:          ServiceSchool
-        ServiceTask:            ServiceTask
-        # web services
-        soapServer:
-            class: SoapServer(%wdslUrl%)
-            setup:
-                - setObject(@webServiceModel)
-
-        webServiceModel:        WebServiceModel
-            
-            
-            
-        nette.userStorage: PersonUserStorage
-            
-
-    factories:
+    session:
+        expiration: 14 days
 
 
-production < common:
-
-development < common:
+includes:
+    - acl.neon
+    - orm.neon
+    - forms.neon
+    - services.neon
+    - factories.neon

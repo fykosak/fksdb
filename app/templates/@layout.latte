@@ -6,29 +6,47 @@
 
         <title>FKSDB {include #title}</title>
 
-
-        <script src="{$basePath}/js/netteForms.js"></script>
         <link rel="stylesheet" href="{$basePath}/css/screen.css" />
-	{block head}{/block}
+
+
+        <link rel="stylesheet" media="screen,projection,tv" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css">
+        
+        {block head}{/block}
     </head>
 
     <body>
         <div class="navigation">
-            <a n:href="Dashboard:">Pultík</a>
+            <a n:href=":Org:Dashboard:">Pultík</a>
         </div>
-    <h1>{include #title}</h1>
-<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-<div n:if="$user->isLoggedIn()" class="user-info">
-    <p>Přihlášen <em>{$user->getIdentity()->getFullname()}</em>
-    <a n:href="authentication:logout">Odhlásit</a></p>
-    <p>Rola orga:
-        {foreach $control->getAvailableContests() as $contest}
-    <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
-        {/foreach}
+        <h1>{include #title}</h1>
+        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        <div n:if="$user->isLoggedIn()" class="user-info">
+            <p>Přihlášen <em>{$user->getIdentity()->getPerson()->getFullname()}</em>
+                <a n:href=":Authentication:logout">Odhlásit</a>
+            </p>
+            <p>
+                <a n:href=":Public:Personal:edit">Osobní nastavení</a>
+            </p>
+            <p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator())">Rola orga:
+                {foreach $control->getAvailableContests() as $contest}
+                <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
+                {/foreach}
 
-            {control formSelectYear}
-    </p>
-</div>
-    {include #content}
-</body>
+                {control formSelectYear}
+            </p>
+        </div>
+        {include #content}
+
+        <div id="spinner"></div>
+        {block scripts}
+        <script src="{$basePath}/js/netteForms.js"></script>
+        <!-- jQuery and UI from Google CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+        
+        <script src="{$basePath}/js/main.js"></script>
+        <script src="{$basePath}/js/datePicker.js"></script>
+        <script src="{$basePath}/js/submitFields.js"></script>
+        {/block}
+    </body>
 </html>

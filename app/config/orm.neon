@@ -1,0 +1,24 @@
+#
+# ORM services definitions
+#
+services:
+    ServiceAuthToken:        ServiceAuthToken
+    ServiceAddress:          ServiceAddress
+    ServiceContestant:       ServiceContestant
+    ServiceContest:          ServiceContest
+    ServiceCountry:          ServiceCountry
+    ServiceEvent:            ServiceEvent
+    ServiceEventParticipant: ServiceEventParticipant
+    ServiceLogin:            ServiceLogin(%invitation.expiration%, ...)
+    ServiceMPostContact:     ServiceMPostContact
+    ServiceOrg:              ServiceOrg
+    ServicePerson:           ServicePerson
+    ServicePersonInfo:       ServicePersonInfo
+    ServicePostContact:      ServicePostContact
+    ServiceRegion:           ServiceRegion
+    ServiceSubmit:           ServiceSubmit
+    ServiceSchool:           ServiceSchool
+    ServiceStoredQuery:      ServiceStoredQuery
+    ServiceStoredQueryParameter: ServiceStoredQueryParameter
+    ServiceTask:             ServiceTask
+    ServiceTaskContribution: ServiceTaskContribution

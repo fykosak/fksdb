@@ -17,7 +17,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Micro presenter.
  *
@@ -34,12 +33,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	private $request;
 
 
-
 	public function __construct(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 	}
-
 
 
 	/**
@@ -52,7 +49,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * @return Nette\Application\IResponse
 	 */
@@ -63,7 +59,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$httpRequest = $this->context->getByType('Nette\Http\IRequest');
 		if (!$httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
 			$refUrl = clone $httpRequest->getUrl();
-			$url = $this->context->router->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
+			$url = $this->context->getService('router')->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
 			if ($url !== NULL && !$httpRequest->getUrl()->isEqual($url)) {
 				return new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY);
 			}
@@ -71,7 +67,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 		$params = $request->getParameters();
 		if (!isset($params['callback'])) {
-			return;
+			throw new Application\BadRequestException("Parameter callback is missing.");
 		}
 		$params['presenter'] = $this;
 		$callback = new Nette\Callback($params['callback']);
@@ -97,7 +93,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Template factory.
 	 * @param  string
@@ -116,13 +111,12 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$template->basePath = rtrim($url->getBasePath(), '/');
 
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-		$template->setCacheStorage($context->nette->templateCacheStorage);
-		$template->onPrepareFilters[] = function($template) use ($latteFactory, $context) {
+		$template->setCacheStorage($context->getService('nette.templateCacheStorage'));
+		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
 			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
 		};
 		return $template;
 	}
-
 
 
 	/**
@@ -137,7 +131,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Throws HTTP error.
 	 * @param  string
@@ -149,7 +142,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		throw new Application\BadRequestException($message, $code);
 	}
-
 
 
 	/**

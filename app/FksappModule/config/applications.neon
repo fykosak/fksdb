@@ -1,0 +1,19 @@
+0:
+        action_name: AkceA
+        action:
+        display: AkceA
+        awa:
+            0:
+                action: info
+                display: info
+            1:
+                action: codale
+                display: codale
+1:
+        action_name: AkceB
+        action:
+        display: AkceB
+        awa:
+            0:
+                action: info
+                display: info

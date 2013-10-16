@@ -1,33 +1,53 @@
 <?php
 
+use Authentication\TokenAuthenticator;
+use Authorization\ContestAuthorizator;
 use Nette\Http\UserStorage;
-use Nette\Application\UI\Form;
+use Nette\Security\AuthenticationException;
 
 /**
+ * Presenter allows authenticated user access only.
+ * 
+ * User can be authenticated in the session (after successful login)
+ * or via an authentication token. It's responsibility of the particular
+ * operation to dispose the token after use (if it should be so).
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
-    /**
-     *
-     * @var int
-     * @persistent
-     */
-    public $contestId;
+    const PARAM_AUTH_TOKEN = 'at';
 
     /**
-     *
-     * @var int
-     * @persistent
+     * @var TokenAuthenticator
      */
-    public $year;
-    protected $availableContests = array();
+    private $tokenAuthenticator;
+
+    /**
+     * @var ContestAuthorizator
+     */
+    protected $contestAuthorizator;
+
+    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
+        $this->contestAuthorizator = $contestAuthorizator;
+    }
+
+    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+        $this->tokenAuthenticator = $tokenAuthenticator;
+    }
+
+    public function getContestAuthorizator() {
+        return $this->contestAuthorizator;
+    }
+
+    public function getTokenAuthenticator() {
+        return $this->tokenAuthenticator;
+    }
 
     protected function startup() {
         parent::startup();
         if (!$this->getUser()->isLoggedIn()) {
+            $this->tryAuthToken();
             $this->loginRedirect();
-        }
-        $this->initContests();
+        } // TODO else explicitly ignore token?
     }
 
     protected function loginRedirect() {
@@ -37,90 +57,23 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.');
         }
         $backlink = $this->application->storeRequest();
-        $this->redirect('Authentication:login', array('backlink' => $backlink));
+        $this->redirect(':Authentication:login', array('backlink' => $backlink));
     }
 
-    //
-    // ------ org choosing -----
-    //
-    protected function initContests() {
-        $yc = $this->getService('yearCalculator');
-        $activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($yc);
-
-
-        $contests = array();
-        foreach ($activeOrgs as $org) {
-            $this->availableContests[] = $org->contest;
-            $contests[$org->contest_id] = true; // to get unique contests
-        }
-        $contestIds = array_keys($contests);
-        
-        $session = $this->getSession()->getSection('presets');
-
-        $defaultContest = isset($session->defaultContest) ? $session->defaultContest : $contestIds[0]; // by default choose the first
-        $defaultYear = isset($session->defaultYear) ? $session->defaultYear : $yc->getCurrentYear($this->contestId);
-
-        if ($this->contestId === null) {
-            $this->contestId = $defaultContest;
+    private function tryAuthToken() {
+        $tokenData = $this->getParam(self::PARAM_AUTH_TOKEN);
+        if (!$tokenData) {
+            return;
         }
 
-        if (!isset($contests[$this->contestId])) {
-            $this->handleChangeContest($defaultContest);
+        try {
+            $login = $this->tokenAuthenticator->authenticate($tokenData);
+            $this->getUser()->login($login);
+            $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
+            $this->redirect('this'); //TODO verify: strip auth token from URL
+        } catch (AuthenticationException $e) {
+            $this->flashMessage($e->getMessage(), 'error');
         }
-        if ($this->year === null) {
-            $this->year = $defaultYear;
-        }
-        
-        // remember
-        $session->defaultContest = $this->contestId;
-        $session->defaultYear = $this->year;
-    }
-
-    public function getAvailableContests() {
-        return $this->availableContests;
-    }
-
-    public function handleChangeContest($contestId) {
-        $this->contestId = $contestId;
-        $yc = $this->getService('yearCalculator');
-        $this->year = $yc->getCurrentYear($this->contestId);
-        $this->redirect('this');
-    }
-
-    //
-    // ----- year choosing ----
-    //
-    protected function createComponentFormSelectYear($name) {
-        $form = new Form($this, $name);
-        $yc = $this->getService('yearCalculator');
-        $currentYear = $yc->getCurrentYear($this->contestId);
-
-        $form->addSelect('year', 'Ročník')
-                ->setItems(range(1, $currentYear + 1), false)
-                ->setDefaultValue($this->year);
-
-        $form->addSubmit('change', 'Změnit');
-        $form->onSuccess[] = array($this, 'handleChangeYear');
-    }
-
-    public function handleChangeYear($form) {
-        $values = $form->getValues();
-        $this->year = $values['year'];
-        $this->redirect('this');
-    }
-
-    private $selectedContest;
-
-    public function getSelectedContest() {
-        if ($this->selectedContest === null) {
-            $service = $this->context->getService('ServiceContest');
-            $this->selectedContest = $service->findByPrimary($this->contestId);
-        }
-        return $this->selectedContest;
-    }
-
-    public function getSelectedYear() {
-        return $this->year;
     }
 
 }
