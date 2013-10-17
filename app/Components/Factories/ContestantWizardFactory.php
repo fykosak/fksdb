@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Forms\Controls\PersonSelect;
+use FKSDB\Components\Forms\Controls\Autocomplete\ArrayProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -53,11 +55,18 @@ class ContestantWizardFactory {
      */
     private $personService;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService) {
+    /**
+     *
+     * @var PersonProvider
+     */
+    private $personProvider;
+
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->addressFactory = $addressFactory;
         $this->personService = $personService;
+        $this->personProvider = $personProvider;
     }
 
     /**
@@ -85,7 +94,10 @@ class ContestantWizardFactory {
         $form = new Form();
 
         $group = $form->addGroup('Existující osoba');
-        $personElement = new PersonSelect($this->personService, 'Jméno');
+
+        $personElement = new AutocompleteSelectBox(true, 'Jméno');
+        $personElement->setDataProvider($this->personProvider);
+
         // TODO validate non-existent contestant or restrict selection
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
@@ -114,7 +126,7 @@ class ContestantWizardFactory {
         $group = $form->addGroup('Osoba');
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
         $form->addComponent($personContainer, self::CONT_PERSON);
-        
+
         /*
          * Contestant
          */

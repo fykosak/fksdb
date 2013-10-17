@@ -3,6 +3,19 @@
 {block scripts}
 {include #parent}
 <script src="{$basePath}/js/autocompleteSelect.js"></script>
+<script>
+    $(function() {
+        var autocomplete = $('input.autocompleteSelect').autocompleteSelect();
+        if (autocomplete.length) {
+            autocomplete.data('autocomplete').data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $("<li>")
+                        .append("<a>" + item.label + "<br>" + item.place + ', ID: ' + item.value + "</a>")
+                        .appendTo(ul);
+            };
+        }
+        ;
+    });
+</script>
 {/block}
 
 {block content}
