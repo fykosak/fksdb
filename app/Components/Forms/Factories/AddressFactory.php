@@ -58,6 +58,7 @@ class AddressFactory {
 
         $container->addText('postal_code', 'PSČ')
                 ->addRule(Form::MAX_LENGTH, null, 5)
+                ->addRule(Form::FILLED, 'Adresa musí mít vyplněné PSČ.')
                 ->setOption('description', 'Bez mezer');
 
 
