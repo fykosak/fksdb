@@ -23,10 +23,10 @@ $(function() {
             elVal.parent().append(el);
             elVal.data('autocomplete', el);
             if (defaultText) {
-                if (defaultText.length) {
-                    el.val(defaultText.join(', '));
-                } else {
+                if (typeof defaultText === 'string') {
                     el.val(defaultText);
+                } else {
+                    el.val(defaultText.join(', '));
                 }
             }
 
@@ -42,8 +42,8 @@ $(function() {
                 termFunction = extractLast;
             }
 
-            var options = {};            
-            
+            var options = {};
+
             if (ajax) {
                 options.source = function(request, response) {
                     var term = termFunction(request.term);

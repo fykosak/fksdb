@@ -23,8 +23,14 @@ class ContestantFactory {
      */
     private $serviceSchool;
 
-    function __construct(ServiceSchool $serviceSchool) {
+    /**
+     * @var SchoolFactory
+     */
+    private $factorySchool;
+
+    function __construct(ServiceSchool $serviceSchool, SchoolFactory $factorySchool) {
         $this->serviceSchool = $serviceSchool;
+        $this->factorySchool = $factorySchool;
     }
 
     public function createContestant($options = 0, ControlGroup $group = null) {
@@ -32,8 +38,7 @@ class ContestantFactory {
         $container->setCurrentGroup($group);
 
 
-        $school = new SchoolSelect($this->serviceSchool, 'Škola');
-        $school->setPrompt('Zvolit školu');
+        $school = $this->factorySchool->createSchoolSelect();
         $container->addComponent($school, 'school_id');
 
         if ($options & self::REQUIRE_SCHOOL) {

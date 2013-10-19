@@ -1,5 +1,15 @@
 {block title}Úprava řešitele{/block}
 
+{block scripts}
+{include #parent}
+<script src="{$basePath}/js/autocompleteSelect.js"></script>
+<script>
+    $(function() {
+        $('input.autocompleteSelect').autocompleteSelect();
+    });
+</script>
+{/block}
+
 {block content}
 
 {control editComponent}
