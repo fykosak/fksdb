@@ -23,10 +23,10 @@ $(function() {
             elVal.parent().append(el);
             elVal.data('autocomplete', el);
             if (defaultText) {
-                if (defaultText.length) {
-                    el.val(defaultText.join(', '));
-                } else {
+                if (typeof defaultText === 'string') {
                     el.val(defaultText);
+                } else {
+                    el.val(defaultText.join(', '));
                 }
             }
 
@@ -34,6 +34,7 @@ $(function() {
 
             var select = null, focus = null, source = null;
             var cache = {}; //TODO move in better scope
+            var labelCache = {};
             var termFunction = function(arg) {
                 return arg;
             };
@@ -41,8 +42,10 @@ $(function() {
                 termFunction = extractLast;
             }
 
+            var options = {};
+
             if (ajax) {
-                source = function(request, response) {
+                options.source = function(request, response) {
                     var term = termFunction(request.term);
                     if (term in cache) {
                         response(cache[ term ]);
@@ -53,9 +56,10 @@ $(function() {
                         response(data);
                     });
                 };
+                options.minLength = 3;
             } else {
                 var items = elVal.data('ac-items');
-                source = function(request, response) {
+                options.source = function(request, response) {
                     var s = termFunction(request.term);
                     response($.ui.autocomplete.filter(
                             items, s));
@@ -64,39 +68,35 @@ $(function() {
 
 
             if (multiselect) {
-                select = function(event, ui) {
-                    var terms = split(el.val());
-                    // remove the current input
-                    terms.pop();
-                    // add the selected item
-                    terms.push(ui.item.label);
-                    // add placeholder to get the comma-and-space at the end
-                    terms.push('');
-                    el.val(terms.join(', '));
-                    elVal.val(elVal.val() + ',' + ui.item.value); //TODO
+                options.select = function(event, ui) {
+                    labelCache[ui.item.value] = ui.item.label;
+                    if (elVal.val()) {
+                        elVal.val(elVal.val() + ',' + ui.item.value);
+                    } else {
+                        elVal.val(ui.item.value);
+                    }
+                    el.val(Array.concat($.map(elVal.val().split(','), function(arg) {
+                        return labelCache[arg];
+                    }), ['']).join(', '));
                     return false;
                 };
-                focus = function(e, ui) {
+                options.focus = function(e, ui) {
                     return false;
                 };
             } else {
-                select = function(e, ui) {
+                options.select = function(e, ui) {
                     elVal.val(ui.item.value);
                     el.val(ui.item.label);
                     return false;
                 };
-                focus = function(e, ui) {
+                options.focus = function(e, ui) {
                     elVal.val(ui.item.value);
                     el.val(ui.item.label);
 
                     return false;
                 };
             }
-            el.autocomplete({
-                source: source,
-                select: select,
-                focus: focus
-            });
+            el.autocomplete(options);
 
 
         }

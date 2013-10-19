@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 
@@ -12,6 +14,15 @@ use Nette\Forms\Form;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolFactory {
+
+    /**
+     * @var SchoolProvider
+     */
+    private $schoolProvider;
+
+    function __construct(SchoolProvider $schoolProvider) {
+        $this->schoolProvider = $schoolProvider;
+    }
 
     /**
      * @param type $options
@@ -49,6 +60,12 @@ class SchoolFactory {
         //$container->addHidden('school_id');
 
         return $container;
+    }
+
+    public function createSchoolSelect() {
+        $schoolElement = new AutocompleteSelectBox(true, 'Škola');
+        $schoolElement->setDataProvider($this->schoolProvider);
+        return $schoolElement;
     }
 
 }
