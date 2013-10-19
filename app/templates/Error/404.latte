@@ -1,10 +1,11 @@
 {var $robots = noindex}
-{block #content}
 
-<h1 n:block=title>Page Not Found</h1>
+{block title}
+{_'Stránka nenalezena'}
+{/block}
 
-<p>The page you requested could not be found. It is possible that the address is
-incorrect, or that the page no longer exists. Please use a search engine to find
-what you are looking for.</p>
+{block content}
 
-<p><small>error 404</small></p>
+<p>{_'Požadovaná stránka neexistuje.'}</p>
+
+<p><small>{_'chyba'} 404</small></p>

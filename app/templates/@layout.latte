@@ -1,16 +1,55 @@
-{layout ./@base.latte}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-{block navigation}
-    <a n:href=":Org:Dashboard:">Pultík</a>
-{/block}
+        <title>{block titleHeader}FKSDB {include #title}{/block}</title>
 
-{block user-info}
-{include #parent}
-<p n:if="$user->getIdentity()->getPerson()->getActiveOrgs($control->getYearCalculator())">Rola orga:
-    {foreach $control->getAvailableContests() as $contest}
-    <a n:href="changeContest!, contestId => $contest->contest_id" n:tag-if="$contest->contest_id != $control->contestId"><b n:tag-if="$contest->contest_id == $control->contestId">{$contest->name}</b></a>
-    {/foreach}
+        {control cssLoader
+            'css/screen.css' => [screen] ,
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
+        }
+        
+        {block head}{/block}
+    </head>
 
-    {control formSelectYear}
-</p>
-{/block}
+    <body>
+        <div class="navigation" n:block="navigation-wrap">
+            {block #navigation}{/block}
+        </div>
+        {block titleBody}<h1>{include #title}</h1>{/block}
+        
+        {block flashes}
+        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        {/block}
+        
+        <div n:if="$user->isLoggedIn()" class="user-info" block="user-info-wrap">
+            {block user-info}
+            <p>Přihlášen <em>{$user->getIdentity()->getPerson()->getFullname()}</em>
+                <a n:href=":Authentication:logout">Odhlásit</a>
+            </p>
+            <p>
+                <a n:href=":Public:Personal:edit">Osobní nastavení</a>
+            </p>
+            {/block}
+        </div>
+        {include #content}
+
+        <div id="spinner"></div>
+        {block scripts}
+        {control jsLoader 
+            'js/netteForms.js',
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'js/main.js'
+        }
+
+        {* CSS files are only collected at the end of rendering, so we use this
+          invalid workaround and link some CSS files at the end of the page
+        *}
+        {control jsLoader:inline}
+        {/block}
+        {control cssLoader}
+    </body>
+</html>

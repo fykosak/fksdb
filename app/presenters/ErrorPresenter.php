@@ -21,8 +21,8 @@ class ErrorPresenter extends BasePresenter
 
 		} elseif ($exception instanceof BadRequestException) {
 			$code = $exception->getCode();
-			// load template 403.latte or 404.latte or ... 4xx.latte
-			$this->setView(in_array($code, array(403, 404, 405, 410, 500)) ? $code : '4xx');
+			// known exception or general 500
+			$this->setView(in_array($code, array(403, 404, 405)) ? $code : '500');
 			// log to access.log
 			Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
 

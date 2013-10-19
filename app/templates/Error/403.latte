@@ -1,9 +1,16 @@
 {var $robots = noindex}
-{block #content}
 
-<h1 n:block=title>Access Denied</h1>
+{block title}
+{_'Přístup odepřen'}
+{/block}
 
-<p>You do not have permission to view this page. Please try contact the web
-site administrator if you believe you should be able to view this page.</p>
+{block content}
 
-<p><small>error 403</small></p>
+<p>{_'K zobrazení stránky nemáte dostatečné oprávnění. Možná řešení:'}</p>
+<ul>
+    <li><a n:href=":Public:Register:">{_'Zaregistrovat se jako řešitel'}</a>,</li>
+    <li>{_'stát se organizátorem'},</li>
+    <li>{_'požádat o přidělení role'}.</li>
+</ul>
+
+<p><small>{_'chyba'} 403</small></p>

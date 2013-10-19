@@ -35,19 +35,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->serviceContest = $serviceContest;
     }
 
-    public function handleAutocomplete($acName, $acQ) {
-        if (!$this->isAjax()) {
-            throw new BadRequestException('Can be called only by AJAX.');
-        }
-        $component = $this->getComponent($acName);
-        if (!($component instanceof AutocompleteSelectBox)) {
-            throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
-        } else {
-            $data = $component->getDataProvider()->getFilteredItems($acQ);
-            $response = new JsonResponse($data);
-            $this->sendResponse($response);
-        }
+    protected function createTemplate($class = NULL) {
+        $template = parent::createTemplate($class);
+        $template->setTranslator(new DummyTranslator());
+        return $template;
     }
+
+    /*     * ******************************
+     * Loading assets
+     * ****************************** */
 
     protected function createComponentJsLoader($name) {
         $component = new JavaScriptLoader();
@@ -77,6 +73,24 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function registerStylesheetFile($file, $media = array()) {
         $this['cssLoader']->addFile($file, $media);
+    }
+
+    /*     * ******************************
+     * IJSONProvider
+     * ****************************** */
+
+    public function handleAutocomplete($acName, $acQ) {
+        if (!$this->isAjax()) {
+            throw new BadRequestException('Can be called only by AJAX.');
+        }
+        $component = $this->getComponent($acName);
+        if (!($component instanceof AutocompleteSelectBox)) {
+            throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
+        } else {
+            $data = $component->getDataProvider()->getFilteredItems($acQ);
+            $response = new JsonResponse($data);
+            $this->sendResponse($response);
+        }
     }
 
 }
