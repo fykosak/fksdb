@@ -4,6 +4,7 @@ namespace OrgModule;
 
 use AuthenticatedPresenter;
 use IContestPresenter;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -32,6 +33,11 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
+
+        if (!$this->getUser()->isInRole('org')) {
+            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        }
+
         $this->initContests();
     }
 
