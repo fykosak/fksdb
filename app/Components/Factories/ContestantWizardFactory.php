@@ -2,9 +2,8 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKS\Components\Forms\Controls\Autocomplete\ArrayProvider;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKS\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;

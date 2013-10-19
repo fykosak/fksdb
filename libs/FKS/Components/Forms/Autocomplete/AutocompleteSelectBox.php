@@ -151,7 +151,13 @@ class AutocompleteSelectBox extends TextBase {
 
     public function setValue($value) {
         if ($this->isMultiselect()) {
-            $this->value = explode(self::INTERNAL_DELIMITER , $value);
+            if (is_array($value)) {
+                $this->value = $value;
+            } else if ($value === '') {
+                $this->value = array();
+            } else {
+                $this->value = explode(self::INTERNAL_DELIMITER , $value);
+            }
         } else {
             $this->value = $value;
         }

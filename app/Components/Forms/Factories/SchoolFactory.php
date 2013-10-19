@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKS\Components\Forms\Controls\Autocomplete\SchoolProvider;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 

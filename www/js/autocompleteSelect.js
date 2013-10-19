@@ -63,7 +63,8 @@ $(function() {
                     var s = termFunction(request.term);
                     response($.ui.autocomplete.filter(
                             items, s));
-                }
+                };
+                options.minLength = 1;
             }
 
 

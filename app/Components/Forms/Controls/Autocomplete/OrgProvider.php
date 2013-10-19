@@ -1,10 +1,10 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
 use ModelContest;
 use ModelOrg;
-use OOB\Forms\IItemsModel;
 use ServiceOrg;
 use YearCalculator;
 
@@ -13,7 +13,7 @@ use YearCalculator;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class OrgsCompletionModel implements IItemsModel {
+class OrgProvider implements IDataProvider {
 
     /**
      * @var ModelContest
@@ -37,7 +37,7 @@ class OrgsCompletionModel implements IItemsModel {
         $this->yearCalculator = $yearCalculator;
     }
 
-    public function GetAllItems() {
+    public function GetItems() {
         $orgs = $this->serviceOrg->getTable()->where(array(
             'contest_id' => $this->contest->contest_id
         ));
@@ -48,39 +48,29 @@ class OrgsCompletionModel implements IItemsModel {
 
         $result = array();
         foreach ($orgs as $org) {
-            $name = $this->formatLabel($org);
-            $result[$org->org_id] = $name;
+            $result[] = array(
+                self::LABEL => $this->formatLabel($org),
+                self::VALUE => $org->org_id,
+            );
         }
 
         // TODO would be better use collation on the database
         setlocale(LC_COLLATE, 'cs_CZ.utf8');
 
-        uasort($result, function($a, $b) {
-                    return strcoll($a, $b);
+        usort($result, function($a, $b) {
+                    return strcoll($a[self::LABEL], $b[self::LABEL]);
                 });
 
         return $result;
     }
 
-    public function IdToName($id) {
+    private function formatLabel(ModelOrg $org) {
+        return $org->getPerson()->getFullname();
+    }
+
+    public function getItemLabel($id) {
         $org = $this->serviceOrg->findByPrimary($id);
         return $this->formatLabel($org);
-    }
-
-    public function NameToId($name, $insert = false) {
-        $matches = array();
-        if (preg_match('/.* \(([0-9]+)\)/', $name, $matches)) {
-            $orgId = $matches[1];
-            if ($this->serviceOrg->findByPrimary($orgId)) {
-                return $orgId;
-            }
-        }
-
-        return null;
-    }
-
-    private function formatLabel(ModelOrg $org) {
-        return $org->getPerson()->getFullname() . ' (' . $org->org_id . ')';
     }
 
 }

@@ -3,6 +3,8 @@
 namespace OrgModule;
 
 use DbNames;
+use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\OrgProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use ModelSubmit;
@@ -10,7 +12,6 @@ use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
-use OOB\MultipleTextSelect;
 use Persons\OrgsCompletionModel;
 use ServiceContestant;
 use ServiceOrg;
@@ -158,11 +159,10 @@ class InboxPresenter extends SeriesPresenter {
     protected function createComponentHandoutForm() {
         $form = new Form();
 
-        $model = $this->getOrgsModel();
         foreach ($this->seriesTable->getTasks() as $task) {
-            $control = new MultipleTextSelect($model, $task->getFQName());
-            $control->setUnknownMode(MultipleTextSelect::N_INVALID);
-            $control->addRule(Form::VALID, 'Neznámý organizátor u úlohy %label.');
+            $control = new AutocompleteSelectBox(false, $task->getFQName());
+            $control->setDataProvider($this->getOrgProvider());
+            $control->setMultiselect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
@@ -353,13 +353,13 @@ class InboxPresenter extends SeriesPresenter {
         // backup file is renamed in file storage
     }
 
-    private $orgsModel;
+    private $orgProvider;
 
-    private function getOrgsModel() {
-        if (!$this->orgsModel) {
-            $this->orgsModel = new OrgsCompletionModel($this->getSelectedContest(), $this->serviceOrg, $this->yearCalculator);
+    private function getOrgProvider() {
+        if (!$this->orgProvider) {
+            $this->orgProvider = new OrgProvider($this->getSelectedContest(), $this->serviceOrg, $this->yearCalculator);
         }
-        return $this->orgsModel;
+        return $this->orgProvider;
     }
 
 }

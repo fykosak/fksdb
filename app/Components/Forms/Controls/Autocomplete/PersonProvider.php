@@ -1,7 +1,8 @@
 <?php
 
-namespace FKS\Components\Forms\Controls\Autocomplete;
+namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use ModelPerson;
 use Nette\NotImplementedException;
 use ServicePerson;
