@@ -1,6 +1,9 @@
 <?php
 
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Components\Controls\JavaScriptLoader;
+use FKS\Components\Controls\StylesheetLoader;
+use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Components\Forms\Controls\Autocomplete\IJSONProvider;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Presenter;
@@ -8,7 +11,7 @@ use Nette\Application\UI\Presenter;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter {
+abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IJSONProvider {
 
     /** @var YearCalculator  */
     protected $yearCalculator;
@@ -44,6 +47,36 @@ abstract class BasePresenter extends Presenter {
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }
+    }
+
+    protected function createComponentJsLoader($name) {
+        $component = new JavaScriptLoader();
+        return $component;
+    }
+
+    protected function createComponentCssLoader($name) {
+        $component = new StylesheetLoader();
+        return $component;
+    }
+
+    /*     * ******************************
+     * IJavaScriptCollector
+     * ****************************** */
+
+    public function registerJSFile($file) {
+        $this['jsLoader']->addFile($file);
+    }
+
+    public function registerJSCode($code) {
+        $this['jsLoader']->addInline($code);
+    }
+
+    /*     * ******************************
+     * IStylesheetCollector
+     * ****************************** */
+
+    public function registerStylesheetFile($file, $media = array()) {
+        $this['cssLoader']->addFile($file, $media);
     }
 
 }

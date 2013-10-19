@@ -97,11 +97,7 @@ $(function() {
                 };
             }
             el.autocomplete(options);
-
-
         }
-
     });
-    $('input.autocompleteSelect').autocompleteSelect();
-    ;
+
 });

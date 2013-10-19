@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\Autocomplete;
+namespace FKS\Components\Forms\Controls\Autocomplete;
 
-use Nette\Application\UI\Presenter;
+use IJavaScriptCollector;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
@@ -42,10 +43,41 @@ class AutocompleteSelectBox extends TextBase {
      */
     private $ajaxUrl;
 
-    function __construct($ajax, $label = null) {
+    /**
+     * Body of JS function(ul, item) returning jQuery element.
+     * 
+     * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
+     * @var string  
+     */
+    private $renderMethod;
+
+    function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
-        $this->monitor('Nette\Application\UI\Presenter');
+
+        $this->monitor('FKS\Components\Forms\Controls\Autocomplete\IJSONProvider');
+        $this->monitor('\IJavaScriptCollector');
         $this->ajax = $ajax;
+        $this->renderMethod = $renderMethod;
+    }
+
+    private $attachedJSON = false;
+    private $attachedJS = false;
+
+    protected function attached($presenter) {
+        parent::attached($presenter);
+        if (!$this->attachedJSON && $presenter instanceof IJSONProvider) {
+            $this->attachedJSON = true;
+            $name = $this->lookupPath('Nette\Application\UI\Presenter');
+
+            $this->ajaxUrl = $presenter->link('autocomplete!', array(
+                self::PARAM_NAME => $name,
+            ));
+        }
+        if (!$this->attachedJS && $presenter instanceof IJavaScriptCollector) {
+            $this->attachedJS = true;
+            $presenter->registerJSFile('js/autocompleteSelect.js');
+            $presenter->registerJSCode($this->getJSCode());
+        }
     }
 
     /**
@@ -53,6 +85,10 @@ class AutocompleteSelectBox extends TextBase {
      */
     public function getDataProvider() {
         return $this->dataProvider;
+    }
+
+    public function getRenderMethod() {
+        return $this->renderMethod;
     }
 
     public function isAjax() {
@@ -102,6 +138,17 @@ class AutocompleteSelectBox extends TextBase {
         return $control;
     }
 
+    private function getJSCode() {
+        $id = $this->getHtmlId();
+        $code = "jQuery(function() { var el = jQuery('#$id').autocompleteSelect();";
+        if ($this->renderMethod) {
+            $code .= "el.data('autocomplete').data('ui-autocomplete')._renderItem = function(ul, item) { {$this->renderMethod} };";
+        }
+        $code .= "});";
+
+        return $code;
+    }
+
     public function setValue($value) {
         if ($this->isMultiselect()) {
             $this->value = explode(self::INTERNAL_DELIMITER , $value);
@@ -112,21 +159,6 @@ class AutocompleteSelectBox extends TextBase {
 
     public function getValue() {
         return $this->value;
-    }
-
-    public function monitor($type) {
-        parent::monitor($type);
-    }
-
-    protected function attached($presenter) {
-        if ($presenter instanceof Presenter) {
-            $name = $this->lookupPath('Nette\Application\UI\Presenter');
-
-            $this->ajaxUrl = $presenter->link('autocomplete!', array(
-                self::PARAM_NAME => $name,
-            ));
-        }
-        parent::attached($presenter);
     }
 
     public function setMultiselect($multiselect) {

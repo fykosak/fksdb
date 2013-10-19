@@ -106,6 +106,9 @@ class PointsPresenter extends SeriesPresenter {
         $form->addSubmit('save', 'Uložit');
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
 
+        // JS dependencies        
+        $this->registerJSFile('js/points.js');
+
         return $form;
     }
 

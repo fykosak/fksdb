@@ -19,8 +19,6 @@ use ServiceTaskContribution;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
-
-
 class InboxPresenter extends SeriesPresenter {
 
     const POST_CT_ID = 'ctId';
@@ -148,6 +146,11 @@ class InboxPresenter extends SeriesPresenter {
 
         $form->addSubmit('save', 'Uložit');
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
+
+        // JS dependencies        
+        $this->registerJSFile('js/datePicker.js');
+        $this->registerJSFile('js/jquery.ui.swappable.js');
+        $this->registerJSFile('js/inbox.js');
 
         return $form;
     }

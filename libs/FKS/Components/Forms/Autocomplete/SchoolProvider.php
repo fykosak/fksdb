@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\Autocomplete;
+namespace FKS\Components\Forms\Controls\Autocomplete;
 
 use ModelSchool;
 use Nette\NotImplementedException;

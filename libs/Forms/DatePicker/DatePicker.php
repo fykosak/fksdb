@@ -8,9 +8,12 @@
 
 namespace JanTvrdik\Components;
 
+use DateTime;
+use Exception;
+use IJavaScriptCollector;
+use InvalidArgumentException;
 use Nette;
 use Nette\Forms;
-use DateTime;
 
 /**
  * Form control for selecting date.
@@ -47,8 +50,17 @@ class DatePicker extends Forms\Controls\BaseControl
 	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
+                $this->monitor('IJavaScriptCollector');
 		$this->control->type = 'date';
 	}
+        
+	protected function attached($component)
+        {
+		parent::attached($component);
+                if($component instanceof IJavaScriptCollector) {
+                    $component->registerJSFile('js/datePicker.js');
+                }                	
+        }
 
 
 
@@ -132,14 +144,14 @@ class DatePicker extends Forms\Controls\BaseControl
 			}
 
 		} else {
-			throw new \InvalidArgumentException();
+			throw new InvalidArgumentException();
 		}
 
 		if ($value !== NULL) {
 			// DateTime constructor throws Exception when invalid input given
 			try {
 				$value = Nette\DateTime::from($value); // clone DateTime when given
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				$value = NULL;
 			}
 		}

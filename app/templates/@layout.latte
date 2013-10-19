@@ -6,10 +6,11 @@
 
         <title>FKSDB {include #title}</title>
 
-        <link rel="stylesheet" href="{$basePath}/css/screen.css" />
 
-
-        <link rel="stylesheet" media="screen,projection,tv" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css">
+        {control cssLoader
+            'css/screen.css' => [screen] ,
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
+        }
         
         {block head}{/block}
     </head>
@@ -39,14 +40,18 @@
 
         <div id="spinner"></div>
         {block scripts}
-        <script src="{$basePath}/js/netteForms.js"></script>
-        <!-- jQuery and UI from Google CDN -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-        
-        <script src="{$basePath}/js/main.js"></script>
-        <script src="{$basePath}/js/datePicker.js"></script>
-        <script src="{$basePath}/js/submitFields.js"></script>
+        {control jsLoader 
+            'js/netteForms.js',
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'js/main.js'
+        }
+
+        {* CSS files are only collected at the end of rendering, so we use this
+          invalid workaround and link some CSS files at the end of the page
+        *}
+        {control jsLoader:inline}
         {/block}
+        {control cssLoader}
     </body>
 </html>

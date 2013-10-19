@@ -340,7 +340,6 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $this->connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage('Při registraci došlo k chybě.', 'error');
-            $this->link($destination);
         }
     }
 

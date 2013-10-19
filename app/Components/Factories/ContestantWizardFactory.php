@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKSDB\Components\Forms\Controls\Autocomplete\ArrayProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKS\Components\Forms\Controls\Autocomplete\ArrayProvider;
+use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -95,8 +95,12 @@ class ContestantWizardFactory {
 
         $group = $form->addGroup('Existující osoba');
 
-        $personElement = new AutocompleteSelectBox(true, 'Jméno');
+        $renderMethod = 'return $("<li>")
+                        .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
+                        .appendTo(ul);';
+        $personElement = new AutocompleteSelectBox(true, 'Jméno', $renderMethod);
         $personElement->setDataProvider($this->personProvider);
+        
 
         // TODO validate non-existent contestant or restrict selection
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);

@@ -13,8 +13,8 @@ services:
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
     - Submits\SeriesTable
-    - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
-    - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    - FKS\Components\Forms\Controls\Autocomplete\PersonProvider
+    - FKS\Components\Forms\Controls\Autocomplete\SchoolProvider
     submitStorage: 
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:

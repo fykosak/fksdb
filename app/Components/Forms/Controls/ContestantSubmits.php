@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\ClientDataTrait;
 use FormUtils;
+use IJavaScriptCollector;
 use InvalidArgumentException;
 use ModelContestant;
 use ModelSubmit;
@@ -55,12 +56,18 @@ class ContestantSubmits extends BaseControl {
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $label = null) {
         parent::__construct($label);
+        $this->monitor('IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
+    }
 
-//$this->setValue(null);
+    protected function attached($component) {
+        parent::attached($component);
+        if ($component instanceof IJavaScriptCollector) {
+            $component->registerJSFile('js/submitFields.js');
+        }
     }
 
     public function getClassName() {
@@ -96,12 +103,12 @@ class ContestantSubmits extends BaseControl {
         $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
         $control->addStyle('width:600px');
-        
+
         $control->data['contestant'] = $this->contestant->ct_id;
         foreach ($this->getClientData() as $key => $value) {
             $control->data[$key] = $value;
         }
-        
+
         return $control;
     }
 

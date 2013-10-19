@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\Autocomplete;
+namespace FKS\Components\Forms\Controls\Autocomplete;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
