@@ -29,10 +29,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function actionLogout() {
         if ($this->getUser()->isLoggedIn()) {
-            $a = $this->getUser()->getIdentity()->getPerson()->gender == 'F' ? "a" : "";
             $this->getUser()->logout(true); //clear identity
 
-            $this->flashMessage("Byl$a jste odhlášen$a.");
+            $this->flashMessage("Byl jste odhlášen.");
         }
         $this->redirect("login");
     }

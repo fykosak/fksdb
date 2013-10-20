@@ -15,8 +15,11 @@
     </head>
 
     <body>
-        <div class="navigation" n:block="navigation-wrap">
-            {block #navigation}{/block}
+        <div n:if="$user->isLoggedIn()" class="navigation" n:block="navigation-wrap">
+            {block #navigation}
+            <a n:if="$user->getIdentity()->isOrg($control->getYearCalculator())" n:href=":Org:Dashboard:">Organizátorský pultík</a>
+            <a n:if="$user->getIdentity()->isContestant($control->getYearCalculator())" n:href=":Public:Dashboard:">Pultík</a> {* TODO this may be visible in future as there'll be use cases for registered only persons *}
+            {/block}
         </div>
         {block titleBody}<h1>{include #title}</h1>{/block}
         
@@ -35,7 +38,7 @@
                 <a n:href=":Authentication:logout">Odhlásit</a>
             </p>
             <p>
-                <a n:href=":Public:Personal:edit">Nastavení účtu</a>
+                <a n:href=":Settings:">Nastavení účtu</a>
             </p>
             {/block}
         </div>

@@ -1,23 +1,19 @@
 <?php
 
-namespace PublicModule;
-
 use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
-use FormUtils;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
-use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonalPresenter extends BasePresenter {
+class SettingsPresenter extends AuthenticatedPresenter {
 
     const CONT_LOGIN = 'login';
 
@@ -57,16 +53,16 @@ class PersonalPresenter extends BasePresenter {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
-    public function renderEdit() {
+    public function renderDefault() {
         $login = $this->getUser()->getIdentity();
 
         $defaults = array(
             self::CONT_LOGIN => $login->toArray(),
         );
-        $this->getComponent('personalForm')->setDefaults($defaults);
+        $this->getComponent('settingsForm')->setDefaults($defaults);
     }
 
-    protected function createComponentPersonalForm($name) {
+    protected function createComponentSettingsForm($name) {
         $form = new Form();
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
@@ -96,7 +92,7 @@ class PersonalPresenter extends BasePresenter {
 
         $form->addSubmit('send', 'Uložit');
 
-        $form->onSuccess[] = array($this, 'handlePersonalFormSuccess');
+        $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
         return $form;
     }
 
@@ -104,7 +100,7 @@ class PersonalPresenter extends BasePresenter {
      * @internal
      * @param Form $form
      */
-    public function handlePersonalFormSuccess(Form $form) {
+    public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
         $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
         $login = $this->getUser()->getIdentity();
@@ -116,7 +112,7 @@ class PersonalPresenter extends BasePresenter {
 
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
-        $this->flashMessage('Osobní informace upraveny.');
+        $this->flashMessage('Uživatelské informace upraveny.');
         $this->redirect('this');
         if ($tokenAuthentication) {
             $this->flashMessage('Heslo nastaveno.'); //TODO here may be Facebook ID            

@@ -59,6 +59,19 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
+    public function isOrg($yearCalculator) {
+        return count($this->getActiveOrgs($yearCalculator)) > 0;
+    }
+
+    public function isContestant($yearCalculator) {
+        $person = $this->getPerson();
+        if ($person && count($person->getActiveContestants($yearCalculator)) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets hash of the instance with correct hashing function.
      * 
