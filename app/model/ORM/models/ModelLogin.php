@@ -42,6 +42,23 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
+     * Syntactic sugar.
+     * 
+     * @return string Human readable identification of the login.
+     */
+    public function getName() {
+        $person = $this->getPerson();
+        if ($person) {
+            return $person->getFullname();
+        }
+        if ($this->login) {
+            return $login;
+        } else {
+            return $login->email;
+        }
+    }
+
+    /**
      * Sets hash of the instance with correct hashing function.
      * 
      * @note Must be called after setting login_id.
