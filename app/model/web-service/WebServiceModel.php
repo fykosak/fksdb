@@ -22,9 +22,9 @@ class WebServiceModel {
     private $statsModelFactory;
 
     /**
-     * @var ModelPerson
+     * @var ModelLogin
      */
-    private $authenticatedUser;
+    private $authenticatedLogin;
 
     /**
      * @var Nette\Security\IAuthenticator
@@ -57,8 +57,8 @@ class WebServiceModel {
         );
 
         try {
-            $this->authenticatedUser = $this->authenticator->authenticate($credentials);
-            $this->log("User " . $this->authenticatedUser->getFullname() . "(" . $this->authenticatedUser->person_id . ") authenticated for web service request.");
+            $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
+            $this->log(" Successfully authenticated for web service request.");
         } catch (Nette\Security\AuthenticationException $e) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
@@ -166,16 +166,22 @@ class WebServiceModel {
     }
 
     private function checkAuthentication($serviceName) {
-        if (!$this->authenticatedUser) {
+        if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
         } else {
-            $this->log("User " . $this->authenticatedUser->getFullname() . "(" . $this->authenticatedUser->person_id . ") called $serviceName.");
+            $this->log("Called $serviceName.");
         }
     }
 
     private function log($msg) {
-        Nette\Diagnostics\Debugger::log($_SERVER['REMOTE_ADDR'] . ': ' . $msg);
+        if (!$this->authenticatedLogin) {
+            $message = "unauthenticated@";
+        } else {
+            $message = $this->authenticatedLogin->getName() . "\t\t(" . $this->authenticatedLogin->login_id . ")@";
+        }
+        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $message;
+        Nette\Diagnostics\Debugger::log($message);
     }
 
     private function createDetailNode(IResultsModel $resultsModel, DOMDocument $doc) {
