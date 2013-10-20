@@ -33,24 +33,22 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
-
-        if (!$this->getUser()->isInRole('org')) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-
         $this->initContests();
     }
 
     protected function initContests() {
-        $activeOrgs = $this->getUser()->getIdentity()->getPerson()->getActiveOrgs($this->yearCalculator);
+        $activeOrgs = $this->getUser()->getIdentity()->getActiveOrgs($this->yearCalculator);
 
-
-        $contests = array();
-        foreach ($activeOrgs as $org) {
-            $this->availableContests[] = $org->contest;
-            $contests[$org->contest_id] = true; // to get unique contests
+        if (count($activeOrgs) == 0) {
+            throw new BadRequestException('Není organizátorský účet.', 403);
         }
-        $contestIds = array_keys($contests);
+
+        $this->availableContests = array();
+        foreach ($activeOrgs as $contestId => $orgId) {
+            $this->availableContests[] = $this->serviceContest->findByPrimary($contestId);
+        }
+
+        $contestIds = array_keys($activeOrgs);
 
         $session = $this->getSession()->getSection('presets');
 
@@ -62,8 +60,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
             $this->contestId = $defaultContest;
         }
 
-        if (!isset($contests[$this->contestId])) {
-            $this->handleChangeContest($defaultContest);
+        if (!in_array($this->contestId, $contestIds)) {
+            $this->handleChangeContest($defaultContest); //change from the URL
         }
         if ($this->year === null) {
             $this->year = $defaultYear;

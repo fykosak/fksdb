@@ -26,11 +26,16 @@
         
         <div n:if="$user->isLoggedIn()" class="user-info" block="user-info-wrap">
             {block user-info}
-            <p>Přihlášen <em>{$user->getIdentity()->getPerson()->getFullname()}</em>
+            {var $login => $user->getIdentity()}
+            {if $login->getPerson()}            
+                <p>Přihlášen <em>{$login->getPerson()->getFullname()}</em>
+            {else}
+                <p>Přihlášen uživatel <em>{$login->login}</em>
+            {/if}
                 <a n:href=":Authentication:logout">Odhlásit</a>
             </p>
             <p>
-                <a n:href=":Public:Personal:edit">Osobní nastavení</a>
+                <a n:href=":Public:Personal:edit">Nastavení účtu</a>
             </p>
             {/block}
         </div>

@@ -60,6 +60,7 @@ INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 (4,'dataManager','správce (dat) DB'),
 (5,'eventManager','správce přihlášek'),
 (6,'inboxManager','příjemce řešení'),
-(7,'boss','hlavní organizátor (šéf)');
+(7,'boss','hlavní organizátor (šéf)'),
+(8,'org','základní role organizátora');
 
 

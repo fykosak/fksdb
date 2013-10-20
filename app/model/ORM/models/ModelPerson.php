@@ -142,9 +142,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * 
+     * @internal To get active orgs call ModelLogin::getActiveOrgs
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg indexed by org_id
+     * @return array of ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = array();
@@ -152,7 +152,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $org = ModelOrg::createFromTableRow($org);
             $year = $yearCalculator->getCurrentYear($org->getContest());
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
-                $result[$org->org_id] = $org;
+                $result[$org->contest_id] = $org;
             }
         }
         return $result;

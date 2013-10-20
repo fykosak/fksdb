@@ -63,5 +63,5 @@ class ContestAuthorizator {
 
         return false;
     }
-
+    
 }

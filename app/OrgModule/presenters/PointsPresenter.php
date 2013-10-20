@@ -179,13 +179,13 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     private function getGradedTasks() {
-        $person = $this->getUser()->getIdentity()->getPerson();
-        if (!$person) {
-            return array();
+        $login = $this->getUser()->getIdentity();
+        $orgIds = array();
+        foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $orgId) {
+            if ($orgId) {
+                $orgIds[] = $orgId;
+            }
         }
-        $orgIds = array_map(function (ModelOrg $org) {
-                    return $org->org_id;
-                }, $person->getActiveOrgs($this->yearCalculator));
         $taskIds = array();
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;

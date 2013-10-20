@@ -42,6 +42,24 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
+     * @param YearCalculator $yearCalculator
+     * @return array of ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     */
+    public function getActiveOrgs(YearCalculator $yearCalculator) {
+        if ($this->getPerson()) {
+            return $this->getPerson()->getActiveOrgs($yearCalculator);
+        } else {
+            $result = array();
+            foreach ($this->getRoles() as $grant) {
+                if ($grant->getRoleId() == ModelRole::ORG) {
+                    $result[$grant->getContestId()] = null;
+                }
+            }
+            return $result;
+        }
+    }
+
+    /**
      * Sets hash of the instance with correct hashing function.
      * 
      * @note Must be called after setting login_id.

@@ -39,8 +39,8 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function actionLogin() {
         if ($this->getUser()->isLoggedIn()) {
-            $person = $this->getUser()->getIdentity()->getPerson();
-            $this->initialRedirect($person);
+            $login = $this->getUser()->getIdentity();
+            $this->initialRedirect($login);
         }
     }
 
@@ -50,8 +50,8 @@ final class AuthenticationPresenter extends BasePresenter {
             $identity = $this->facebookAuthenticator->authenticate($me);
 
             $this->getUser()->login($identity);
-            $person = $this->getUser()->getIdentity()->getPerson();
-            $this->initialRedirect($person);
+            $login = $this->getUser()->getIdentity();
+            $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), 'error');
         } catch (FacebookApiException $e) {
@@ -103,19 +103,19 @@ final class AuthenticationPresenter extends BasePresenter {
 //                $this->user->setExpiration(0, true);
 //            }
             $this->user->login($form['id']->value, $form['password']->value);
-            $person = $this->user->getIdentity()->getPerson();
+            $login = $this->user->getIdentity();
 
             $this->restoreRequest($this->backlink);
-            $this->initialRedirect($person);
+            $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
             $form->addError($e->getMessage());
         }
     }
 
-    private function initialRedirect($person) {
-        if (!$person) {
+    private function initialRedirect($login) {
+        if (!$login) {
             throw new AuthenticationException('Impersonal logins not supported.'); //TODO implement logic for impersonal logins
-        } else if (count($person->getActiveOrgs($this->yearCalculator)) > 0) {
+        } else if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
             $this->redirect(':Org:Dashboard:default');
         } else {
             $this->redirect(':Public:Dashboard:default');
