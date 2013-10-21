@@ -13,9 +13,35 @@ parameters:
     contestMapping:
         1: fykos
         2: vyfuk
+    
+    # Map: contest identifier => contest_id
+    inverseContestMapping:
+        fykos: 1
+        vyfuk: 2
+
     # Configuration of sent emails.
     email:
         templatesDir: %appDir%/templates/emails
+
+    # Authentication settings
+    authentication:
+        # List of allowed hosts to which backlinking after successful authentization is possible.
+        backlinkHosts:
+            - %domain.cz%
+            - db.%domain.cz%
+            - vyfuk.%domain.cz%
+            - %domain.org%
+            - db.%domain.org%
+            - vyfuk.%domain.org%
+    
+    # Settings for global session used for SSO (single sign on)
+    globalSession:
+        # How long inactivity is allowed until globalSession expires.
+        expiration: '+20 minutes'
+
+        # How ling is valid auth token when redirecting from authenticated domain
+        # to unauthenticated one.
+        tokenExpiration: '+1 minute'
 
     # Submits by contestats
     upload:
@@ -77,6 +103,7 @@ nette:
 
 
 includes:
+    - router.neon
     - acl.neon
     - orm.neon
     - forms.neon

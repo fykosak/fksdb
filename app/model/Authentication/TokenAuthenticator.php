@@ -13,6 +13,7 @@ use ServiceAuthToken;
  */
 class TokenAuthenticator {
 
+    const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
 
     /**
@@ -65,15 +66,21 @@ class TokenAuthenticator {
     }
 
     /**
+     * @param enum|null $tokenType  require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
-    public function isAuthenticatedByToken() {
+    public function isAuthenticatedByToken($tokenType = null) {
         $section = $this->session->getSection(self::SESSION_NS);
-        return isset($section->token);
+        if (isset($section->token)) {
+            return ($section->type === null) ? true : ($section->type == $tokenType);
+        }
+        return false;
     }
 
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;
+        $section->type = $token->type;
     }
+
 }

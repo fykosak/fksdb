@@ -294,6 +294,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $login->setHash($loginData['password']);
             $login->active = 1; // created accounts are active
             $this->serviceLogin->save($login);
+            $this->getUser()->login($login);
 
             // store address
             $addressData = $values[self::CONT_ADDRESS];
@@ -338,6 +339,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {
             $this->connection->rollBack();
+            $this->getUser()->logout(true);
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage('Při registraci došlo k chybě.', 'error');
         }

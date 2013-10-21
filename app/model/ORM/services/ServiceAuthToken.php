@@ -8,7 +8,7 @@ use Nette\Utils\Strings;
  */
 class ServiceAuthToken extends AbstractServiceSingle {
 
-    const TOKEN_LENGTH = 20; // for 62 characters ~ 128 bit
+    const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     protected $tableName = DbNames::TAB_AUTH_TOKEN;
     protected $modelClassName = 'ModelAuthToken';
@@ -20,12 +20,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param \Nette\DateTime $since
      * @return ModelAuthToken
      */
-    public function createToken(ModelLogin $login, $type, DateTime $until = null, DateTime $since = null) {
+    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
 
-        // Is this thread-safe? The method may fail on unique constraint...
+        $this->getConnection()->beginTransaction();
         do {
             $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
         } while ($this->verifyToken($tokenData));
@@ -33,24 +33,31 @@ class ServiceAuthToken extends AbstractServiceSingle {
         $token = $this->createNew(array(
             'login_id' => $login->login_id,
             'token' => $tokenData,
+            'data' => $data,
             'since' => $since,
             'until' => $until,
             'type' => $type
         ));
         $this->save($token);
+        $this->getConnection()->commit();
+
         return $token;
     }
 
     /**
      * 
      * @param string $token
+     * @partm bool $strict
      * @return ModelAuthToken|null
      */
-    public function verifyToken($tokenData) {
+    public function verifyToken($tokenData, $strict = true) {
         $tokens = $this->getTable()
-                ->where('token = ?', $tokenData)
-                ->where('since <= NOW()')
-                ->where('until IS NULL OR until >= NOW()');
+                ->where('token', $tokenData);
+        if ($strict) {
+            $tokens->where('since <= NOW()')
+                    ->where('until IS NULL OR until >= NOW()');
+        }
+
 
         $token = $tokens->fetch();
         if (!$token) {
@@ -72,6 +79,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->dispose($token);
         }
     }
+    
+    
+    //TODO garbage collection
 
 }
 

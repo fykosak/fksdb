@@ -65,7 +65,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     protected function createComponentSettingsForm($name) {
         $form = new Form();
         $login = $this->getUser()->getIdentity();
-        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
+        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
 
         $group = $form->addGroup('Osobní nastavení');
         $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
@@ -102,7 +102,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      */
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
-        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken();
+        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);

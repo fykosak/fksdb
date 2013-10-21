@@ -1,0 +1,52 @@
+
+parameters:
+    # Available domain names
+    domain:
+        # (Language) domains
+        cz: fykos.cz
+        org: fykos.org
+        
+        # Default top level domain
+        tld: cz
+
+        # Main domain
+        host: fykos
+    
+    # Available subdomains
+    subdomain:
+        # Central authentication domain for SSO.
+        auth: login
+
+        # Main domain for the application.
+        db: db
+
+    # Pipe-separated list of presenters w/out module
+    rootPresenters: settings
+
+    # Pipe-separated list of modules
+    modules: org|public
+
+    # Pipe-separated list of contest names
+    contests: fykos|vyfuk
+
+nette:
+    routing:
+        routes:
+            'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
+                module: Fksapp
+            '//%subdomain.auth%.%domain.cz%/<action=login>':
+                presenter: Authentication
+                subdomain: %subdomain.auth%
+                tld: %domain.tld%
+            '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/<presenter %rootPresenters%>/<action=default>[/<id>]':
+                subdomain: %subdomain.db%
+                tld: %domain.tld%
+                contestId: [filterTable: %inverseContestMapping%]
+            '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/[<module %modules%>/]<presenter>/<action=default>[/<id>]':
+                module: Public
+                presenter: Dashboard
+                subdomain: %subdomain.db%
+                tld: %domain.tld%
+                contestId: [filterTable: %inverseContestMapping%]
+
+

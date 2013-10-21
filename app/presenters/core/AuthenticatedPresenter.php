@@ -2,6 +2,7 @@
 
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
 
@@ -13,8 +14,6 @@ use Nette\Security\AuthenticationException;
  * operation to dispose the token after use (if it should be so).
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
-
-    const PARAM_AUTH_TOKEN = 'at';
 
     /**
      * @var TokenAuthenticator
@@ -61,16 +60,23 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     private function tryAuthToken() {
-        $tokenData = $this->getParam(self::PARAM_AUTH_TOKEN);
+        $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
+
         if (!$tokenData) {
             return;
         }
 
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
+            Debugger::log("$login signed in using token $tokenData.");
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
+                $this->tokenAuthenticator->disposeAuthToken();
+            } else {
+                $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
+            }
+
             $this->getUser()->login($login);
-            $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
-            $this->redirect('this'); //TODO verify: strip auth token from URL
+            $this->redirect('this');
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), 'error');
         }

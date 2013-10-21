@@ -6,6 +6,9 @@
 #
 
 services:
+    # assetions
+    ownerAssertion: Authorization\OwnerAssertion
+    
     # data services
     authorizator:
         class: Nette\Security\Permission

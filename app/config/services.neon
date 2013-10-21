@@ -7,7 +7,6 @@ services:
     - Authentication\PasswordAuthenticator
     - Authentication\TokenAuthenticator
     contestAuthorizator: Authorization\ContestAuthorizator
-    ownerAssertion: Authorization\OwnerAssertion
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
@@ -15,6 +14,11 @@ services:
     - Submits\SeriesTable
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    globalSession:
+        class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
+        setup:
+            - start()
+    - Authentication\SSO\TokenGSIDHolder
     submitStorage: 
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:

@@ -206,6 +206,7 @@ class Session extends Nette\Object
 		}
 
 		session_destroy();
+                
 		$_SESSION = NULL;
 		self::$started = FALSE;
 		if (!$this->response->isSent()) {

@@ -9,6 +9,7 @@ services:
     ServiceCountry:          ServiceCountry
     ServiceEvent:            ServiceEvent
     ServiceEventParticipant: ServiceEventParticipant
+    ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin(%invitation.expiration%, ...)
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg

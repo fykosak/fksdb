@@ -1,13 +1,22 @@
 <?php
 
 use Authentication\FacebookAuthenticator;
+use Authentication\TokenAuthenticator;
+use FKS\Authentication\SSO\IGlobalSession;
 use Nette\Application\UI\Form;
+use Nette\DateTime;
+use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
 
+    const FLAG_SSO = 'sso';
+
     /** @persistent */
     public $backlink = '';
+
+    /** @persistent */
+    public $flag;
 
     /**
      * @var Facebook
@@ -19,6 +28,16 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $facebookAuthenticator;
 
+    /**
+     * @var ServiceAuthToken
+     */
+    private $serviceAuthToken;
+
+    /**
+     * @var IGlobalSession
+     */
+    private $globalSession;
+
     public function injectFacebook(Facebook $facebook) {
         $this->facebook = $facebook;
     }
@@ -27,18 +46,28 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->facebookAuthenticator = $facebookAuthenticator;
     }
 
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
+    }
+
+    public function injectGlobalSession(IGlobalSession $globalSession) {
+        $this->globalSession = $globalSession;
+    }
+
     public function actionLogout() {
         if ($this->getUser()->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
 
             $this->flashMessage("Byl jste odhlášen.");
         }
+        $this->backlinkRedirect();
         $this->redirect("login");
     }
 
     public function actionLogin() {
         if ($this->getUser()->isLoggedIn()) {
             $login = $this->getUser()->getIdentity();
+            $this->backlinkRedirect($login);
             $this->initialRedirect($login);
         }
     }
@@ -104,20 +133,44 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $login = $this->user->getIdentity();
 
-            $this->restoreRequest($this->backlink);
+            $this->backlinkRedirect($login);
             $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
             $form->addError($e->getMessage());
         }
     }
 
+    private function backlinkRedirect($login = null) {
+        if (!$this->backlink) {
+            return;
+        }
+        $this->restoreRequest($this->backlink);
+
+        $url = new Url($this->backlink);
+        $this->backlink = null;
+
+        if ($this->flag == self::FLAG_SSO && $login) {
+            $gsid = $this->globalSession->getId();
+            $expiration = $this->context->parameters['globalSession']['tokenExpiration'];
+            $until = DateTime::from($expiration);
+            $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $gsid);
+            $url->appendQuery(array(TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token));
+        }
+
+        if ($url->getHost()) { // this would indicate absolute URL
+            if (in_array($url->getHost(), $this->context->parameters['authentication']['backlinkHosts'])) {
+                $this->redirectUrl((string) $url, 303);
+            } else {
+                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), 'error');
+            }
+        }
+    }
+
     private function initialRedirect($login) {
-        if (!$login) {
-            throw new AuthenticationException('Impersonal logins not supported.'); //TODO implement logic for impersonal logins
-        } else if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:default');
+        if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
+            $this->redirect(':Org:Dashboard:');
         } else {
-            $this->redirect(':Public:Dashboard:default');
+            $this->redirect(':Public:Dashboard:');
         }
     }
 
