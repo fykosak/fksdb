@@ -34,7 +34,7 @@ nette:
         routes:
             'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
                 module: Fksapp
-            '//%subdomain.auth%.%domain.cz%/<action=login>':
+            '//%subdomain.auth%.%domain.host%.[!<tld>]/<action=login>':
                 presenter: Authentication
                 subdomain: %subdomain.auth%
                 tld: %domain.tld%
