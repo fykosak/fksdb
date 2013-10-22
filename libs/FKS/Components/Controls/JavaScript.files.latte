@@ -1,8 +1,0 @@
-{foreach $files as $file}
-    {var $url => $file[$control::FILENAME]}
-    {if $control::isRelative($url)}
-    <script src="{$basePath}/{$url}"></script>
-    {else}
-    <script src="{$url}"></script>
-    {/if}
-{/foreach}
