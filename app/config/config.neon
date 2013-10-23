@@ -98,6 +98,7 @@ parameters:
 
 php:
     date.timezone: Europe/Prague
+    session.gc_maxlifetime: 1213200
     # zlib.output_compression: yes
 
 nette:
