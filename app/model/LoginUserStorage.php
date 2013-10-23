@@ -2,6 +2,7 @@
 
 use Authentication\SSO\GlobalSession;
 use Nette\Application\Application;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
@@ -60,12 +61,14 @@ class LoginUserStorage extends UserStorage {
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
 
         if ($global) {
-
             // update identity
             $identity = new Identity($global);
             parent::setIdentity($identity);
 
-            // if we're not locally logged, AuthenticatedPresetner would catch this
+            /* As we return true, we must ensure local login will be properly set,
+             * hence AuthenticatedPresenter sets up login status neglecting actual login status (i.e. overwrites).
+             * In AuthenticationPresenter, we must manually check global session whether UID is set.
+             */
             return $local;
         } else {
             $presenter = $this->application->getPresenter();
@@ -73,13 +76,18 @@ class LoginUserStorage extends UserStorage {
                 'backlink' => (string) $this->request->getUrl(),
                 'flag' => AuthenticationPresenter::FLAG_SSO,
             );
+            if (Debugger::isEnabled()) {
+                $params['debug-storage'] = 1;
+                $params['debug-presenter'] = get_class($presenter);
+            }
+            //Debugger::dump($var);
 
             parent::setAuthenticated(false); // somehow session contains authenticated flag
 
             if ($presenter instanceof AuthenticatedPresenter) {
                 $presenter->redirect(':Authentication:login', $params);
             }
-
+            //echo "ret false\n";
             return false;
         }
     }

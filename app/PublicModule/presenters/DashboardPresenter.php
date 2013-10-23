@@ -15,4 +15,12 @@ class DashboardPresenter extends BasePresenter {
         }
     }
 
+    public function renderDefault() {
+        $contestId = $this->getContestant()->getContest()->contest_id;
+        $key = $this->context->parameters['contestMapping'][$contestId];
+        $url = $this->context->parameters['website'][$key];
+
+        $this->template->website = $url;
+    }
+
 }

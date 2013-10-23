@@ -29,24 +29,43 @@ parameters:
     # Pipe-separated list of contest names
     contests: fykos|vyfuk
 
-nette:
-    routing:
-        routes:
-            'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
-                module: Fksapp
-            '//%subdomain.auth%.%domain.cz%/<action=login>':
-                presenter: Authentication
-                subdomain: %subdomain.auth%
-                tld: %domain.tld%
-            '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/<presenter %rootPresenters%>/<action=default>[/<id>]':
-                subdomain: %subdomain.db%
-                tld: %domain.tld%
-                contestId: [filterTable: %inverseContestMapping%]
-            '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/[<module %modules%>/]<presenter>/<action=default>[/<id>]':
-                module: Public
-                presenter: Dashboard
-                subdomain: %subdomain.db%
-                tld: %domain.tld%
-                contestId: [filterTable: %inverseContestMapping%]
+fksrouter:
+    routes:
+        # FKSAPP
+        'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
+            module: Fksapp
+
+        # Central authentication domain
+        '//[!<subdomain>].%domain.host%.[!<tld>]/<action logout>':
+            presenter: Authentication
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+        '//%subdomain.auth%.%domain.cz%/':
+            presenter: Authentication
+            action: login
+            subdomain: %subdomain.auth%
+            tld: %domain.tld%
+            flags: ONE_WAY
+        '//%subdomain.auth%.%domain.cz%/<action login|logout|fb-login>':
+            presenter: Authentication
+            subdomain: %subdomain.auth%
+            tld: %domain.tld%
+        # Registration must be at the same domain as central authentication.
+        '//%subdomain.auth%.%domain.cz%/<presenter register>/<action=default>':
+            module: Public
+            subdomain: %subdomain.auth%
+            tld: %domain.tld%
+
+        # Application itself (note the presenters w/out module are handled specially)
+        '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/<presenter %rootPresenters%>/<action=default>[/<id>]':
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+        '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/[<module %modules%>/]<presenter>/<action=default>[/<id>]':
+            module: Public
+            presenter: Dashboard
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
 
 

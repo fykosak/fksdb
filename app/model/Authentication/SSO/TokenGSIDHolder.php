@@ -5,7 +5,6 @@ namespace Authentication\SSO;
 use Authentication\TokenAuthenticator;
 use FKS\Authentication\SSO\IGSIDHolder;
 use ModelAuthToken;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use ServiceAuthToken;
@@ -45,7 +44,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     public function getGSID() {
         // try obtain GSID from auth token in URL
         $tokenData = $this->request->getQuery(TokenAuthenticator::PARAM_AUTH_TOKEN);
-        $token = $this->serviceAuthToken->verifyToken($tokenData);
+        $token = $tokenData ? $this->serviceAuthToken->verifyToken($tokenData) : null;
         if ($token && $token->type == ModelAuthToken::TYPE_SSO) {
             $gsid = $token->data;
             $this->setGSID($gsid); // so later we know our GSID

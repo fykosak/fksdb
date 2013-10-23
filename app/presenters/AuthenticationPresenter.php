@@ -10,6 +10,7 @@ use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
 
+    const PARAM_GSID = 'gsid';
     const FLAG_SSO = 'sso';
 
     /** @persistent */
@@ -55,17 +56,43 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function actionLogout() {
-        if ($this->getUser()->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity
+        $subdomainAuth = $this->context->parameters['subdomain']['auth'];
+        $subdomain = $this->getParam('subdomain');
 
+        if ($subdomain != $subdomainAuth) {
+            // local logout
+            $this->getUser()->logout(true);
+
+            // redirect to global logout
+            $params = array(
+                'subdomain' => $subdomainAuth,
+                self::PARAM_GSID => $this->globalSession->getId(),
+            );
+            $url = $this->link('//this', $params);
+            $this->redirectUrl($url);
+            return;
+        }
+        // else: $subdomain == $subdomainAuth
+        // -> check for the GSID parameter
+
+        if ($this->isLoggedIn()) {
+            $this->getUser()->logout(true); //clear identity
             $this->flashMessage("Byl jste odhlášen.");
+        } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+            // We restart the global session with provided parameter.
+            // This is secure as only harm an attacker can make to the user is to log him out.
+            $this->globalSession->destroy();
+
+            // If the GSID is valid, we'll obtain user's identity and log him out promptly.
+            $this->globalSession->start($this->getParam(self::PARAM_GSID));
+            $this->getUser()->logout(true);
         }
         $this->backlinkRedirect();
         $this->redirect("login");
     }
 
     public function actionLogin() {
-        if ($this->getUser()->isLoggedIn()) {
+        if ($this->isLoggedIn()) {
             $login = $this->getUser()->getIdentity();
             $this->backlinkRedirect($login);
             $this->initialRedirect($login);
@@ -98,6 +125,17 @@ final class AuthenticationPresenter extends BasePresenter {
             'redirect_uri' => $this->link('//fbLogin'), // absolute
         ));
         return $fbUrl;
+    }
+
+    /**
+     * This workaround is here because LoginUser storage
+     * returns false when only global login exists.
+     * False is return in order to AuthenticatedPresenter to correctly login the user.
+     * 
+     * @return bool
+     */
+    private function isLoggedIn() {
+        return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);
     }
 
     /*     * ******************* components ****************************** */
@@ -151,7 +189,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->flag == self::FLAG_SSO && $login) {
             $gsid = $this->globalSession->getId();
-            $expiration = $this->context->parameters['globalSession']['tokenExpiration'];
+            $expiration = $this->context->parameters['authentication']['sso']['tokenExpiration'];
             $until = DateTime::from($expiration);
             $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $gsid);
             $url->appendQuery(array(TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token));

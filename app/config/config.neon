@@ -9,6 +9,11 @@ parameters:
     # WDSL file defining provided services.
     wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 
+    # URL to the public website of the contests. (Keys are from contestMapping)
+    website:
+        fykos: http://fykos.cz/
+        vyfuk: http://vyfuk.fykos.cz/
+
     # Map: contest_id => contest indentifier
     contestMapping:
         1: fykos
@@ -33,15 +38,18 @@ parameters:
             - %domain.org%
             - db.%domain.org%
             - vyfuk.%domain.org%
+        
+        sso:
+            # How ling is valid auth token when redirecting from authenticated domain
+            # to unauthenticated one.
+            tokenExpiration: '+1 minute'
+
     
     # Settings for global session used for SSO (single sign on)
     globalSession:
         # How long inactivity is allowed until globalSession expires.
         expiration: '+20 minutes'
 
-        # How ling is valid auth token when redirecting from authenticated domain
-        # to unauthenticated one.
-        tokenExpiration: '+1 minute'
 
     # Submits by contestats
     upload:

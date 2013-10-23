@@ -13,8 +13,6 @@ use Nette\Application\UI\Presenter;
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IJSONProvider {
 
-    public $subdomain;
-
     /** @persistent     */
     public $tld;
 

@@ -6,7 +6,6 @@ use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\IGSIDHolder;
 use ModelGlobalSession;
 use Nette\DateTime;
-use Nette\Http\Session;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
@@ -50,8 +49,8 @@ class GlobalSession implements IGlobalSession {
         $this->gsidHolder = $gsidHolder;
     }
 
-    public function start() {
-        $sessionId = $this->gsidHolder->getGSID();
+    public function start($sessionId = null) {
+        $sessionId = $sessionId ? : $this->gsidHolder->getGSID();
         if ($sessionId) {
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($sessionId);
 
@@ -76,7 +75,10 @@ class GlobalSession implements IGlobalSession {
              * where it shouldn't be), that's why we cannot implement session
              * without any data.
              */
-            throw new NotImplementedException("Cannot get session ID of session without data.");
+            // This must pass silently...
+            // throw new NotImplementedException();
+            // user_error("Cannot get session ID of session without data. Return null.", E_USER_NOTICE);            
+            return null;
         }
     }
 

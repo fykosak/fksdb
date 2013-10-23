@@ -1,7 +1,10 @@
 <?php
 
-use Nette\Application\Routers\Route;
+use FKS\Config\Extensions\RouterExtension;
+use JanTvrdik\Components\DatePicker;
+use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
+use Nette\Forms\Container;
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
@@ -9,6 +12,9 @@ require LIBS_DIR . '/autoload.php';
 
 // Configure application
 $configurator = new Configurator();
+$configurator->onCompile[] = function ($configurator, $compiler) {
+    $compiler->addExtension('fksrouter', new RouterExtension());
+};
 
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setDebugMode(Configurator::AUTO);
@@ -30,11 +36,11 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
-\Kdyby\Extension\Forms\Replicator\Replicator::register();
+Replicator::register();
 
 
-\Nette\Forms\Container::extensionMethod('addDatePicker', function (\Nette\Forms\Container $container, $name, $label = NULL) {
-            return $container[$name] = new JanTvrdik\Components\DatePicker($label);
+Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
+            return $container[$name] = new DatePicker($label);
         });
 
 //

@@ -294,7 +294,6 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $login->setHash($loginData['password']);
             $login->active = 1; // created accounts are active
             $this->serviceLogin->save($login);
-            $this->getUser()->login($login);
 
             // store address
             $addressData = $values[self::CONT_ADDRESS];
@@ -334,7 +333,8 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             if (!$this->connection->commit()) {
                 throw new ModelException();
             }
-
+            
+            $this->getUser()->login($login);
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
             $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {

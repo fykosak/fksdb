@@ -43,10 +43,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     protected function startup() {
         parent::startup();
+
+        // successfull token authentication overwrites the user identity (if any)
+        $this->tryAuthToken();
+
+        // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
-            $this->tryAuthToken();
             $this->loginRedirect();
-        } // TODO else explicitly ignore token?
+        }
     }
 
     protected function loginRedirect() {
