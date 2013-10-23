@@ -157,6 +157,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
+            if(!$person) { // impersonal login
+                $this->redirect(':Authentication:login'); // would dispatch properly
+            }
             $currentContestants = $person->getContestants()
                     ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
                     ->where('year = ?', $this->getSelectedYear());
