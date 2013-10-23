@@ -1,6 +1,6 @@
 <?php
 
-namespace FKS\Authentication\SSO\MySQL;
+namespace FKS\Authentication\SSO\ServiceSide;
 
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\IGSIDHolder;

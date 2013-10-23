@@ -1,6 +1,6 @@
 <?php
 
-namespace FKS\Authentication\SSO\MySQL;
+namespace FKS\Authentication\SSO\ServiceSide;
 
 use FKS\Authentication\SSO\IGSIDHolder;
 use PDO;
@@ -16,7 +16,7 @@ use PDO;
 class TokenGSIDHolder implements IGSIDHolder {
 
     const TABLE = 'auth_token';
-    const URL_PARAM = '_sso';
+    const URL_PARAM = 'at';
     const SESSION_KEY = '_sso';
 
     /**
