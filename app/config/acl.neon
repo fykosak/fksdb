@@ -25,33 +25,47 @@ services:
             - addRole(eventManager, org)        # správce přihlášek
             - addRole(inboxManager, org)        # příjemce řešení
             - addRole(boss, org)                # šéf
+            - addRole(superuser, [org, webmaster, taskManager, dispatcher, dataManager, eventManager, inboxManager, boss])
+            - addRole(cartesian)
 
             # Resources
-            - addResource(submit)
-            - addResource(task)
-            - addResource(person)
-            - addResource(contestant)
-            - addResource(school)
-            - addResource(query.adhoc)
-            - addResource(query.stored)
+            - addResource(submit)        # revoke, upload, download, edit, ALL
+            - addResource(task)          # insert, edit
+            - addResource(person)        # create, edit, list, delete
+            - addResource(contestant)    # create, edit, list, delete
+            - addResource(school)        # create, edit, list, delete
+            - addResource(query.adhoc)   # parametrize, edit, show, execute
+            - addResource(query.stored)  # parametrize, edit, show, execute, create
 
             # ACL
             - allow(contestant, submit, upload)
             - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
             - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
 
+            - allow(org, submit, edit)      # zadávání bodů
             - allow(org, contestant, list)
+            - allow(org, school, list)
+            - allow(org, query.stored, search) # je to k něčemu?
+
+            - allow(webmaster, task, insert) # stahování úloh
+
+            - allow(dispatcher, query.stored, search)
+            - allow(dispatcher, query.stored, execute)
 
             - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
             - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
+            - allow(inboxManager, task, edit)  # zadání opravovačů
+            - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
             - allow(inboxManager, contestant, list)
             - allow(inboxManager, contestant, create)
             - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
-            - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
             - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
 
+            - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
             - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL)) # TODO revise
-            - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL)) # TODO revise
+            - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL))
+
+            - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
