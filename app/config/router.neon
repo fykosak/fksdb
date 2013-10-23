@@ -15,7 +15,7 @@ parameters:
     # Available subdomains
     subdomain:
         # Central authentication domain for SSO.
-        auth: login
+        auth: auth
 
         # Main domain for the application.
         db: db
