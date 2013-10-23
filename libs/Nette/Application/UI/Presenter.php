@@ -641,12 +641,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 				? Http\IResponse::S303_POST_GET
 				: Http\IResponse::S302_FOUND;
 		}
-                echo "would redirect to $url\n";
-                if(strlen($url) < 10) {
-                    //throw new \Exception();
-                    return;
-                }
-                
 		$this->sendResponse(new Responses\RedirectResponse($url, $code));
 	}
 
