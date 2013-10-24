@@ -61,7 +61,7 @@ fksrouter:
             subdomain: %subdomain.auth%
             tld: %domain.tld%
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%<presenter register>/<action=default>':
+        '//%subdomain.auth%.%domain.cz%%path%[!<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%

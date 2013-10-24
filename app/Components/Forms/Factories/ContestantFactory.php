@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\SchoolSelect;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
+use ServiceContest;
 use ServiceSchool;
 
 /**
@@ -17,6 +17,7 @@ class ContestantFactory {
 
     const REQUIRE_SCHOOL = 0x1;
     const REQUIRE_STUDY_YEAR = 0x2;
+    const SHOW_CONTEST = 0x4;
 
     /**
      * @var ServiceSchool
@@ -28,21 +29,33 @@ class ContestantFactory {
      */
     private $factorySchool;
 
-    function __construct(ServiceSchool $serviceSchool, SchoolFactory $factorySchool) {
+    /**
+     * @var ServiceContest
+     */
+    private $serviceContest;
+
+    function __construct(ServiceSchool $serviceSchool, SchoolFactory $factorySchool, ServiceContest $serviceContest) {
         $this->serviceSchool = $serviceSchool;
         $this->factorySchool = $factorySchool;
+        $this->serviceContest = $serviceContest;
     }
 
     public function createContestant($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
+        if ($options & self::SHOW_CONTEST) {
+            $container->addSelect('contest_id', 'Seminář')
+                    ->setItems($this->serviceContest->getTable()->fetchPairs('contest_id', 'name'))
+                    ->setPrompt('Zvolit seminář')
+                    ->addRule(Form::FILLED, 'Je třeba zvoli seminář.');
+        }
 
         $school = $this->factorySchool->createSchoolSelect();
         $container->addComponent($school, 'school_id');
 
         if ($options & self::REQUIRE_SCHOOL) {
-            $school->addRule(Form::FILLED);
+            $school->addRule(Form::FILLED, 'Je třeba zadat školu.');
         }
 
         // TODO extract this element and made it more robust (show graduation year)
@@ -60,7 +73,7 @@ class ContestantFactory {
                 ->setPrompt('Zvolit ročník');
 
         if ($options & self::REQUIRE_STUDY_YEAR) {
-            $studyYear->addRule(Form::FILLED);
+            $studyYear->addRule(Form::FILLED, 'Je třeba zadat ročník.');
         }
 
 

@@ -113,6 +113,10 @@ class ContestChooser extends Control {
         if (!in_array($contestId, $contestIds)) {
             $contestId = $contestIds[0]; // by default choose the first
         }
+        if (isset($presenter->contestId) && $contestId != $presenter->contestId) {
+            $presenter->redirect('this', array('contestId' => $contestId));
+        }
+
         $this->contest = $this->serviceContest->findByPrimary($contestId);
 
 
@@ -168,16 +172,25 @@ class ContestChooser extends Control {
 
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
-        $backupYear = $presenter->year;
-        $presenter->year = null;
+        $backupYear = null;
+        if (isset($presenter->year)) {
+            $backupYear = $presenter->year;
+            $presenter->year = null;
+        }
         $contest = $this->serviceContest->findByPrimary($contestId);
 
         $year = $this->calculateYear($this->session, $contest);
 
-        if ($presenter->contestId != $contestId || $backupYear != $year) {
-            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
+        if ($presenter->contestId != $contestId) {
+            if ($backupYear && $backupYear != $year) {
+                $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
+            } else {
+                $presenter->redirect('this', array('contestId' => $contestId));
+            }
         }
-        $presenter->year = $backupYear;
+        if (isset($presenter->year)) {
+            $presenter->year = $backupYear;
+        }
     }
 
     protected function createComponentFormSelectYear($name) {

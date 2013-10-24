@@ -41,6 +41,12 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     const CONT_ADDRESS = 'address';
     const CONT_CONTESTANT = 'contestant';
 
+    /**
+     * @var int
+     * @persistent
+     */
+    public $contestId;
+
     /** @var ServicePerson */
     private $servicePerson;
 
@@ -139,12 +145,12 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $this->connection = $connection;
     }
 
-    /** @var ModelContest */
+    /** @var ModelContest|null */
     private $selectedContest;
 
     public function getSelectedContest() {
         if ($this->selectedContest === null) {
-            $this->selectedContest = $this->serviceContest->findByPrimary(ModelContest::ID_FYKOS);
+            $this->selectedContest = $this->serviceContest->findByPrimary($this->contestId);
         }
         return $this->selectedContest;
     }
@@ -157,18 +163,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
-            if(!$person) { // impersonal login
+            if (!$person) { // impersonal login
                 $this->redirect(':Authentication:login'); // would dispatch properly
-            }
-            $currentContestants = $person->getContestants()
-                    ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
-                    ->where('year = ?', $this->getSelectedYear());
-
-            if (count($currentContestants) > 0) {
-                // existing contestant 
-                $this->redirect(':Public:Dashboard:default');
             } else {
-                // only registered person 
                 $this->redirect('contestant');
             }
         }
@@ -178,11 +175,17 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
-            $currentContestants = $person->getContestants()
-                    ->where('contest_id = ?', $this->getSelectedContest()->contest_id)
-                    ->where('year = ?', $this->getSelectedYear());
+            if (!$person) { // impersonal login
+                $this->redirect(':Authentication:login'); // would dispatch properly
+            }
+            $currentContestants = $person->getActiveContestants($this->yearCalculator);
 
-            if (count($currentContestants) > 0) {
+            /**
+             * If the user is contestant in select contest, redirect him to dashboard,
+             * otherwise allow him to register.
+             */
+            $contest = $this->getSelectedContest();
+            if ($contest && isset($currentContestants[$contest->contest_id])) {
                 // existing contestant 
                 $this->redirect(':Public:Dashboard:default');
             }
@@ -212,7 +215,11 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $form->addComponent($personInfo, self::CONT_PERSON_INFO);
 
         $group = $form->addGroup('Řešitel');
-        $contestant = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
+        $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
+        if (!$this->getSelectedContest()) {
+            $options |= ContestantFactory::SHOW_CONTEST;
+        }
+        $contestant = $this->contestantFactory->createContestant($options, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
 
 
@@ -235,9 +242,18 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $form->addComponent($personContainer, self::CONT_PERSON);
 
         // contestant
-        $contestant = $person->getLastContestant($this->getSelectedContest());
+        if ($this->getSelectedContest()) {
+            $contestant = $person->getLastContestant($this->getSelectedContest());
+        } else {
+            $contestant = array();
+        }
+
         $group = $form->addGroup('Řešitel');
-        $contestantContainer = $this->contestantFactory->createContestant(ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR, $group);
+        $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
+        if (!$this->getSelectedContest()) {
+            $options |= ContestantFactory::SHOW_CONTEST;
+        }
+        $contestantContainer = $this->contestantFactory->createContestant($options, $group);
         if ($contestant) {
             $contestantContainer->setDefaults($contestant); //TODO auto-increase study_year + class
         }
@@ -317,8 +333,13 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $contestant = $this->serviceContestant->createNew($contestantData);
 
             $contestant->person_id = $person->person_id;
-            $contestant->year = $this->getSelectedYear();
-            $contestant->contest_id = $this->getSelectedContest()->contest_id;
+            if ($this->getSelectedContest()) {
+                $contestant->year = $this->getSelectedYear();
+                $contestant->contest_id = $this->getSelectedContest()->contest_id;
+            } else {
+                $contestant->year = $this->yearCalculator->getCurrentYear($this->serviceContest->findByPrimary($contestant->contest_id));
+            }
+
 
             $this->serviceContestant->save($contestant);
 
@@ -336,7 +357,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             if (!$this->connection->commit()) {
                 throw new ModelException();
             }
-            
+
             $this->getUser()->login($login);
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
             $this->redirect(':Public:Dashboard:default');
@@ -365,8 +386,13 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $contestant = $this->serviceContestant->createNew($contestantData);
 
             $contestant->person_id = $person->person_id;
-            $contestant->year = $this->getSelectedYear();
-            $contestant->contest_id = $this->getSelectedContest()->contest_id;
+            if ($this->getSelectedContest()) {
+                $contestant->year = $this->getSelectedYear();
+                $contestant->contest_id = $this->getSelectedContest()->contest_id;
+            } else {
+                $contestant->year = $this->yearCalculator->getCurrentYear($this->serviceContest->findByPrimary($contestant->contest_id));
+            }
+
 
             $this->serviceContestant->save($contestant);
 
