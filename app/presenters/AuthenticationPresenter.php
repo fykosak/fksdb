@@ -11,6 +11,8 @@ use Nette\Security\AuthenticationException;
 final class AuthenticationPresenter extends BasePresenter {
 
     const PARAM_GSID = 'gsid';
+    /** @const Indicates that page is accessed via dispatch from the login page. */
+    const PARAM_DISPATCH = 'dispatch';
     const FLAG_SSO = 'sso';
 
     /** @persistent */
@@ -206,10 +208,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     private function initialRedirect($login) {
         if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:');
+            $this->redirect(':Org:Dashboard:', array(self::PARAM_DISPATCH => 1));
         } else {
-            $this->redirect(':Public:Dashboard:');
+            $this->redirect(':Public:Dashboard:', array(self::PARAM_DISPATCH => 1));
         }
+        // or else redirect to page suggesting registration
     }
 
 }

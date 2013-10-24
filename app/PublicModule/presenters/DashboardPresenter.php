@@ -11,7 +11,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function actionDefault() {
         if (!$this->user->getIdentity()->isContestant($this->yearCalculator)) {
-            $this->redirect(':Authentication:login');
+            throw new BadRequestException('Osoba není řešitel.', 403);
         }
     }
 

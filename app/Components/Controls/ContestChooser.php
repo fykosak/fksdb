@@ -135,6 +135,9 @@ class ContestChooser extends Control {
         $session->{$this->getRole() . 'year'} = $this->year;
     }
 
+    /**
+     * @return array of contests where user is either ORG or CONTESTANT
+     */
     private function getContests() {
         $ids = array();
         if ($this->role == ModelRole::ORG) {

@@ -3,10 +3,12 @@
 namespace PublicModule;
 
 use AuthenticatedPresenter;
+use AuthenticationPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
 use ModelContestant;
 use ModelRole;
+use Nette\Application\BadRequestException;
 
 /**
  * Current year of FYKOS.
@@ -28,7 +30,11 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         parent::startup();
 
         if (!$this['contestChooser']->isValid()) {
-            $this->redirect(':Authentication:login');
+            if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
+                throw new BadRequestException('Neautoriziván pro žádný seminář.', 403);
+            } else {
+                $this->redirect(':Authentication:login');
+            }
         }
     }
 

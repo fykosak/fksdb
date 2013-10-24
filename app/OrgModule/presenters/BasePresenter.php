@@ -3,9 +3,11 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
+use AuthenticationPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
 use ModelRole;
+use Nette\Application\BadRequestException;
 
 /**
  * Presenter keeps chosen contest and year in session.
@@ -32,7 +34,11 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         parent::startup();
 
         if (!$this['contestChooser']->isValid()) {
-            $this->redirect(':Authentication:login');
+            if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
+                throw new BadRequestException('Neautoriziván pro žádný seminář.', 403);
+            } else {
+                $this->redirect(':Authentication:login');
+            }
         }
     }
 
