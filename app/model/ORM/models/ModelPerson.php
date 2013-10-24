@@ -10,6 +10,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * Returns first of the person's logins.
+     * (so far, there's not support for multiple login in DB schema)
      * 
      * @return ModelLogin|null
      */
@@ -42,11 +43,18 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelPersonInfo::createFromTableRow($infos->current());
     }
 
-    public function getContestants() {
+    /**
+     * @return TableSelection untyped
+     */
+    public function getContestants($contestId = null) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
-        return $this->related(DbNames::TAB_CONTESTANT, 'person_id');
+        $related = $this->related(DbNames::TAB_CONTESTANT, 'person_id');
+        if ($contestId) {
+            $related->where('contest_id', $contestId);
+        }
+        return $related;
     }
 
     public function getPostContacts() {
@@ -128,7 +136,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
-        $contestant = $this->getContestants()->where('contest_id = ?', $contest->contest_id)->order('year DESC')->fetch();
+        $contestant = $this->getContestants($contest->contest_id)->order('year DESC')->fetch();
 
         if ($contestant) {
             return ModelContestant::createFromTableRow($contestant);

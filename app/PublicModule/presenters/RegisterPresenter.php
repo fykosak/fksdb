@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
 use IContestPresenter;
 use ModelContest;
+use ModelContestant;
 use ModelException;
 use ModelPerson;
 use ModelPostContact;
@@ -33,6 +34,7 @@ use ServicePostContact;
  *   contest (nullable)
  *   logged user (nullable)
  *   condition: the logged user is not contestant of the contest
+ *   condition: the logged user is a person
  * 
  * OUTPUT:
  *   registered contestant for the current year
@@ -178,60 +180,96 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
     }
 
     public function actionDefault() {
-        if ($this->user->isLoggedIn()) {
-            /** @var ModelPerson $person */
-            $person = $this->user->getIdentity()->getPerson();
-            if (!$person) { // impersonal login
-                $this->redirect(':Authentication:login'); // would dispatch properly
-            } else {
-                $this->redirect('contestant');
-            }
-        }
+        // so far we do not implement registration of person only
+        $this->redirect('contestant');
     }
 
     public function actionContestant() {
         if ($this->user->isLoggedIn()) {
-            /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
-            if (!$person) { // impersonal login
-                $this->redirect(':Authentication:login'); // would dispatch properly
+            if (!$person) {
+                $this->flashMessage('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.');
+                $this->redirect(':Authentication:login');
             }
-            $currentContestants = $person->getActiveContestants($this->yearCalculator);
 
-            /**
-             * If the user is contestant in select contest, redirect him to dashboard,
-             * otherwise allow him to register.
-             */
-            $contest = $this->getSelectedContest();
-            if ($contest && isset($currentContestants[$contest->contest_id])) {
-                // existing contestant 
-                $this->redirect(':Public:Dashboard:default');
+            if ($this->getSelectedContest()) {
+                $contestnats = $person->getActiveContestants($this->yearCalculator);
+                $contest = $this->getSelectedContest();
+                if (isset($contestnats[$contest->contest_id])) {
+                    $this->flashMessage(sprintf('%s již řeší %s.', $person->getFullname(), $contest->name));
+                    $this->redirect(':Public:Dashboard:default');
+                }
             }
-        } else {
-            // not logged in
-            $this->redirect('default');
         }
     }
 
-    public function createComponentRegisterForm($name) {
+    public function renderContestant() {
+        $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
+        if (!$person) {
+            return; // we have now default values for anonymous user
+        }
+
+        $defaults = array();
+
+
+        $defaults[self::CONT_PERSON] = $person;
+
+        $address = $person->getDeliveryAddress();
+        $defaults[self::CONT_ADDRESS] = $address ? : array();
+
+        $contestant = $this->getBaseContestant($person);
+        $defaults[self::CONT_CONTESTANT] = $contestant ? : array();
+
+        $personInfo = $person->getInfo();
+        $defaults[self::CONT_PERSON_INFO] = $personInfo ? : array();
+
+        $this['contestantForm']->setDefaults($defaults);
+    }
+
+    public function createComponentContestantForm($name) {
         $form = new Form();
 
-        $group = $form->addGroup('Přihlašování');
-        $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
-        $loginRule = $this->uniqueLoginFactory->create();
-        $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
-        $form->addComponent($login, self::CONT_LOGIN);
+        $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
 
+        /*
+         * Login
+         */
+        if (!$person) {
+            $group = $form->addGroup('Přihlašování');
+            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
+            $loginRule = $this->uniqueLoginFactory->create();
+            $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
+            $form->addComponent($login, self::CONT_LOGIN);
+        }
+
+        /*
+         * Person
+         */
+        if ($person) {
+            $personFlags = PersonFactory::DISABLED;
+        } else {
+            $personFlags = 0;
+        }
         $group = $form->addGroup('Osoba');
-        $person = $this->personFactory->createPerson(0, $group);
-        $form->addComponent($person, self::CONT_PERSON);
+        $personCont = $this->personFactory->createPerson($personFlags, $group);
+        $form->addComponent($personCont, self::CONT_PERSON);
 
         $address = $this->addressFactory->createAddress($group);
         $form->addComponent($address, self::CONT_ADDRESS);
 
-        $personInfo = $this->personFactory->createPersonInfo(PersonFactory::SHOW_LIKE_SUPPLEMENT | PersonFactory::REQUIRE_AGREEMENT, $group);
-        $form->addComponent($personInfo, self::CONT_PERSON_INFO);
+        if ($person) {
+            $needInfo = !$person->getInfo() || !$person->getInfo()->agreed || !$person->getInfo()->origin;
+        } else {
+            $needInfo = true;
+        }
+        if ($needInfo) {
+            $personInfo = $this->personFactory->createPersonInfo(PersonFactory::SHOW_LIKE_SUPPLEMENT | PersonFactory::REQUIRE_AGREEMENT, $group);
+            $form->addComponent($personInfo, self::CONT_PERSON_INFO);
+        }
 
+        /*
+         * Contestant
+         */
         $group = $form->addGroup('Řešitel');
         $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
         if (!$this->getSelectedContest()) {
@@ -240,64 +278,9 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         $contestant = $this->contestantFactory->createContestant($options, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
 
-
-        $form->setCurrentGroup();
-        $form->addSubmit('register', 'Registrovat');
-        $form->onSuccess[] = array($this, 'handleRegisterFormSuccess');
-
-
-        return $form;
-    }
-
-    public function createComponentContestantForm($name) {
-        $form = new Form();
-
-        // person
-        $person = $this->user->getIdentity()->getPerson();
-        $group = $form->addGroup('Osoba');
-        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
-        $personContainer->setDefaults($person->toArray());
-        $form->addComponent($personContainer, self::CONT_PERSON);
-
-        // contestant
-        if ($this->getSelectedContest()) {
-            $contestant = $person->getLastContestant($this->getSelectedContest());
-        } else {
-            $contestant = array();
-        }
-
-        $group = $form->addGroup('Řešitel');
-        $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
-        if (!$this->getSelectedContest()) {
-            $options |= ContestantFactory::SHOW_CONTEST;
-        }
-        $contestantContainer = $this->contestantFactory->createContestant($options, $group);
-        if ($contestant) {
-            $contestantContainer->setDefaults($contestant); //TODO auto-increase study_year + class
-        }
-        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
-
-        // address
-        $address = $person->getDeliveryAddress();
-        $group = $form->addGroup('Adresa');
-        $addressContainer = $this->addressFactory->createAddress($group);
-        if ($address) {
-            $addressContainer->setDefaults($address);
-        }
-        $form->addComponent($addressContainer, self::CONT_ADDRESS);
-
-        // person info
-        $personInfo = $person->getInfo();
-        if (!$personInfo || (!$personInfo->agreed || !$personInfo->origin)) {
-            $group = $form->addGroup('Informace');
-            $personInfoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_LIKE_SUPPLEMENT | PersonFactory::REQUIRE_AGREEMENT, $group);
-            if ($personInfo) {
-                $personInfoContainer->setDefaults($personInfo);
-            }
-            $form->addComponent($personInfoContainer, self::CONT_PERSON_INFO);
-        }
-
-
+        /*
+         * Buttons
+         */
         $form->setCurrentGroup();
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'handleContestantFormSuccess');
@@ -307,71 +290,100 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         return $form;
     }
 
-    public function handleRegisterFormSuccess(Form $form) {
+    public function handleContestantFormSuccess(Form $form) {
         $values = $form->getValues();
+        $loggedPerson = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
 
         try {
             if (!$this->connection->beginTransaction()) {
                 throw new ModelException();
             }
-            // store person
-            $personData = $values[self::CONT_PERSON];
-            $person = $this->servicePerson->createNew($personData);
-            $person->inferGender();
-            $this->servicePerson->save($person);
 
-            // store login
-            $loginData = $values[self::CONT_LOGIN];
-            $loginData = FormUtils::emptyStrToNull($loginData);
-            $login = $this->serviceLogin->createNew($loginData);
-            $login->person_id = $person->person_id;
+            /*
+             * Person and login
+             */
+            if (!$loggedPerson) {
+                // store person
+                $personData = $values[self::CONT_PERSON];
+                $person = $this->servicePerson->createNew($personData);
+                $person->inferGender();
+                $this->servicePerson->save($person);
 
-            $this->serviceLogin->save($login); // save to retrieve login_id for hash salting
+                // store login
+                $loginData = $values[self::CONT_LOGIN];
+                $loginData = FormUtils::emptyStrToNull($loginData);
+                $login = $this->serviceLogin->createNew($loginData);
+                $login->person_id = $person->person_id;
 
-            $login->setHash($loginData['password']);
-            $login->active = 1; // created accounts are active
-            $this->serviceLogin->save($login);
+                $this->serviceLogin->save($login); // save to retrieve login_id for hash salting
+
+                $login->setHash($loginData['password']);
+                $login->active = 1; // created accounts are active
+                $this->serviceLogin->save($login);
+            } else {
+                $person = $loggedPerson;
+            }
+
+            /*
+             * Address
+             */
+            foreach ($person->getMPostContacts() as $mPostContact) {
+                $this->serviceMPostContact->dispose($mPostContact);
+            }
 
             // store address
-            $addressData = $values[self::CONT_ADDRESS];
-            $addressData = FormUtils::emptyStrToNull($addressData);
-            $mPostContact = $this->serviceMPostContact->createNew($addressData);
-            $mPostContact->getJoinedModel()->person_id = $person->person_id;
+            $dataPostContact = $values[self::CONT_ADDRESS];
+            $dataPostContact = FormUtils::emptyStrToNull((array) $dataPostContact);
+            $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
+            $mPostContact->getPostContact()->person_id = $person->person_id;
+            $mPostContact->getPostContact()->type = ModelPostContact::TYPE_PERMANENT;
 
             $this->serviceMPostContact->save($mPostContact);
 
-            // store contestant
+            /*
+             * Contestant
+             */
             $contestantData = $values[self::CONT_CONTESTANT];
             $contestantData = FormUtils::emptyStrToNull($contestantData);
             $contestant = $this->serviceContestant->createNew($contestantData);
 
             $contestant->person_id = $person->person_id;
-            if ($this->getSelectedContest()) {
+            if (isset($contestant->contest_id)) {
+                $contest = $this->serviceContest->findByPrimary($contestant->contest_id); //TODO try calling ORMs ref
+                $contestant->year = $this->yearCalculator->getCurrentYear($contest);
+            } else {
                 $contestant->year = $this->getSelectedYear();
                 $contestant->contest_id = $this->getSelectedContest()->contest_id;
-            } else {
-                $contestant->year = $this->yearCalculator->getCurrentYear($this->serviceContest->findByPrimary($contestant->contest_id));
             }
-
 
             $this->serviceContestant->save($contestant);
 
-            // store person info
-            $personInfoData = $values[self::CONT_PERSON_INFO];
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
-            $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
-            $personInfo = $this->servicePersonInfo->createNew($personInfoData);
+            /*
+             * Person info
+             */
+            if (isset($values[self::CONT_PERSON_INFO])) { // depends on needInfo
+                $personInfoData = $values[self::CONT_PERSON_INFO];
+                $personInfoData = FormUtils::emptyStrToNull($personInfoData);
+                $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
+                $personInfo = $person->getInfo();
+                if (!$personInfo) {
+                    $personInfo = $this->servicePersonInfo->createNew($personInfoData);
+                    $personInfo->person_id = $person->person_id;
+                } else {
+                    $this->servicePersonInfo->updateModel($personInfo, $personInfoData); // here we update date of the confirmation
+                }
 
-            $personInfo->person_id = $person->person_id;
-
-            $this->servicePersonInfo->save($personInfo);
-
+                $this->servicePersonInfo->save($personInfo);
+            }
 
             if (!$this->connection->commit()) {
                 throw new ModelException();
             }
 
-            $this->getUser()->login($login);
+            if (!$loggedPerson) {
+                $this->getUser()->login($login);
+            }
+
             $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
             $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {
@@ -382,77 +394,18 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         }
     }
 
-    public function handleContestantFormSuccess(Form $form) {
-        $values = $form->getValues();
-
-        try {
-            if (!$this->connection->beginTransaction()) {
-                throw new ModelException();
-            }
-            $person = $this->user->getIdentity()->getPerson();
-
-            /*
-             * Contestant
-             */
-            $contestantData = $values[self::CONT_CONTESTANT];
-            $contestantData = FormUtils::emptyStrToNull($contestantData);
-            $contestant = $this->serviceContestant->createNew($contestantData);
-
-            $contestant->person_id = $person->person_id;
-            if ($this->getSelectedContest()) {
-                $contestant->year = $this->getSelectedYear();
-                $contestant->contest_id = $this->getSelectedContest()->contest_id;
-            } else {
-                $contestant->year = $this->yearCalculator->getCurrentYear($this->serviceContest->findByPrimary($contestant->contest_id));
-            }
-
-
-            $this->serviceContestant->save($contestant);
-
-            /*
-             * Address
-             * TODO allow multiple addresses, not hardcode type of the post contact
-             */
-            foreach ($person->getMPostContacts() as $mPostContact) {
-                $this->serviceMPostContact->dispose($mPostContact);
-            }
-
-            $dataPostContact = $values[self::CONT_ADDRESS];
-            $dataPostContact = FormUtils::emptyStrToNull((array) $dataPostContact);
-            $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
-            $mPostContact->getPostContact()->person_id = $person->person_id;
-            $mPostContact->getPostContact()->type = ModelPostContact::TYPE_PERMANENT;
-
-            $this->serviceMPostContact->save($mPostContact);
-
-            /*
-             * Person info
-             */
-            $dataInfo = $values[self::CONT_PERSON_INFO];
-            $dataInfo = FormUtils::emptyStrToNull($dataInfo);
-            $dataInfo['agreed'] = $dataInfo['agreed'] ? new DateTime() : null;
-            $personInfo = $person->getInfo();
-            if (!$personInfo) {
-                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
-                $personInfo->person_id = $person->person_id;
-            } else {
-                $this->servicePersonInfo->updateModel($personInfo, $dataInfo); // here we update date of the confirmation
-            }
-
-            $this->servicePersonInfo->save($personInfo);
-
-
-            if (!$this->connection->commit()) {
-                throw new ModelException();
-            }
-
-            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
-            $this->redirect(':Public:Dashboard:default');
-        } catch (ModelException $e) {
-            $this->connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Při registraci došlo k chybě.', 'error');
+    private function getBaseContestant(ModelPerson $person) {
+        $contestant = null;
+        if ($this->getSelectedContest()) {
+            $contestant = $person->getLastContestant($this->getSelectedContest());
         }
+
+        if (!$contestant) {
+            $contestant = $person->getContestants()->order('contest_id DESC')->fetch();
+            $contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
+        }
+
+        return $contestant;
     }
 
 }
