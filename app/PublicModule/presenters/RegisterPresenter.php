@@ -29,6 +29,24 @@ use ServicePersonInfo;
 use ServicePostContact;
 
 /**
+ * INPUT:
+ *   contest (nullable)
+ *   logged user (nullable)
+ *   condition: the logged user is not contestant of the contest
+ * 
+ * OUTPUT:
+ *   registered contestant for the current year
+ *      - if contest was provided in that contest
+ *      - if user was provided for that user
+ * 
+ * OPERATION
+ *   - show/process person/login info iff logged user is null
+ *   - show contest selector iff contest is null
+ *   - contestant for filling default values
+ *     - user must be logged in
+ *     - if exists use last contestant from the provided contest
+ *     - otherwise use last contestant from any contest (Vyfuk <= FYKOS)
+ * 
  * Just proof of concept.
  * 
  * @author Michal Koutný <michal@fykos.cz>
@@ -319,11 +337,6 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
             $addressData = FormUtils::emptyStrToNull($addressData);
             $mPostContact = $this->serviceMPostContact->createNew($addressData);
             $mPostContact->getJoinedModel()->person_id = $person->person_id;
-
-            if (!$mPostContact->getMainModel()->inferRegion()) {
-                //TODO nebo do logu?
-                $this->flashMessage(sprintf('Nezdařilo se přiřadit region dle PSČ %s.', $mPostContact->getMainModel()->postal_code));
-            }
 
             $this->serviceMPostContact->save($mPostContact);
 

@@ -21,6 +21,7 @@ class DbNames {
     const TAB_PERSON = 'person';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
     const TAB_SPAMEE = 'si_spamee'; // obsolete

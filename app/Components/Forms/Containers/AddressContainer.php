@@ -13,7 +13,12 @@ class AddressContainer extends ModelContainer {
 
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
-            $address = $values;
+            if ($values instanceof AbstractModelMulti) {
+                $address = $values->getMainModel();
+            } else {
+                $address = $values;
+            }
+
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         }

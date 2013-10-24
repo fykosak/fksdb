@@ -2,12 +2,15 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
+use ServiceAddress;
 use ServiceCountry;
+use ServiceRegion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,12 +24,24 @@ class AddressFactory {
      */
     private $serviceCountry;
 
-    public function __construct(ServiceCountry $serviceCountry) {
+    /**
+     * @var ServiceAddress
+     */
+    private $serviceAddress;
+
+    /**
+     * @var ServiceRegion
+     */
+    private $serviceRegion;
+
+    function __construct(ServiceCountry $serviceCountry, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceCountry = $serviceCountry;
+        $this->serviceAddress = $serviceAddress;
+        $this->serviceRegion = $serviceRegion;
     }
 
     public function createAddress(ControlGroup $group = null) {
-        $container = new ModelContainer(); //TODO replace with better container, that detects country from region
+        $container = new AddressContainer();
         $this->buildAddress($container, $group);
         return $container;
     }
@@ -56,15 +71,39 @@ class AddressFactory {
                 ->addRule(Form::FILLED, 'Adresa musí mít vyplněné město.');
 
 
-        $container->addText('postal_code', 'PSČ')
+        $postalCode = $container->addText('postal_code', 'PSČ')
                 ->addRule(Form::MAX_LENGTH, null, 5)
-                ->addRule(Form::FILLED, 'Adresa musí mít vyplněné PSČ.')
                 ->setOption('description', 'Bez mezer');
 
 
-        $countries = $container->addSelect('country_iso', 'Stát');
 
-        $countries->setItems($this->serviceCountry->getTable()->order('name_cs')->fetchPairs('country_iso', 'name_cs')); //TODO i18n
+        $country = $container->addSelect('country_iso', 'Stát');
+        $country->setItems($this->serviceCountry->getTable()->order('name_cs')->fetchPairs('country_iso', 'name_cs')); //TODO i18n
+        $country->setPrompt('(Stát dle PSČ)');
+
+        /* Country + postal code validation */
+        $addressService = $this->serviceAddress;
+        $regionService = $this->serviceRegion;
+        $validPostalCode = function(BaseControl $control) use($addressService) {
+                    return $addressService->tryInferRegion($control->getValue());
+                };
+        $postalCode->addConditionOn($country, function(BaseControl $control) {
+                    $value = $control->getValue();
+                    return in_array($value, array('CZ', 'SK'));
+                })->addRule(Form::FILLED, 'Adresa musí mít vyplněné PSČ.');
+        $postalCode->addCondition(Form::FILLED)
+                ->addRule($validPostalCode, 'Neplatný formát PSČ.');
+
+        $country->addConditionOn($postalCode, function(BaseControl $control) use($addressService) {
+                    return !$addressService->tryInferRegion($control->getValue());
+                })->addRule(Form::FILLED, 'Stát musí být vyplněn.');
+        $country->addCondition(Form::FILLED)
+                ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use($regionService, $addressService, $postalCode) {
+                    $regionId = $addressService->inferRegion($postalCode->getValue());
+                    $region = $regionService->findByPrimary($regionId);
+                    return $region->country_iso == $control->getValue();
+                }, 'Zvolený stát neodpovídá zadanému PSČ.');
+
         //$container->addHidden('address_id');
     }
 

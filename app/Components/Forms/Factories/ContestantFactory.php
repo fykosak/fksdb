@@ -48,7 +48,7 @@ class ContestantFactory {
             $container->addSelect('contest_id', 'Seminář')
                     ->setItems($this->serviceContest->getTable()->fetchPairs('contest_id', 'name'))
                     ->setPrompt('Zvolit seminář')
-                    ->addRule(Form::FILLED, 'Je třeba zvoli seminář.');
+                    ->addRule(Form::FILLED, 'Je třeba zvolit seminář.');
         }
 
         $school = $this->factorySchool->createSchoolSelect();

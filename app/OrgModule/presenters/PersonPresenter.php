@@ -129,7 +129,7 @@ class PersonPresenter extends EntityPresenter {
 
                     $replContainer->addSubmit('remove', 'Odebrat')->addRemoveOnClick();
                 }, 1, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
+        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);
 
