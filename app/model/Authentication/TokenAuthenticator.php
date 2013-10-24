@@ -44,7 +44,7 @@ class TokenAuthenticator {
         // login by the identity
         $login = $token->getLogin();
         if (!$login->active) {
-            throw new AuthenticationException('Neaktivní účet.');
+            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
         }
 
         $this->storeAuthToken($token);

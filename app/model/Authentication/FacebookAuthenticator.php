@@ -58,7 +58,7 @@ class FacebookAuthenticator {
         }
 
         if ($login->active == 0) {
-            throw new AuthenticationException('Neaktivní účet.');
+            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
         }
 
         return $login;

@@ -36,10 +36,14 @@ class PasswordAuthenticator extends Object implements IAuthenticator {
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
 
-        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->where('active = 1')->fetch();
+        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->fetch();
 
         if (!$login) {
             throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+        }
+        
+        if (!$login->active) {
+            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
         }
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
