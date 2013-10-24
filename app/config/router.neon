@@ -1,5 +1,8 @@
 
 parameters:
+    # Path on the website (if not in webroot)
+    path: /
+
     # Available domain names
     domain:
         # (Language) domains
@@ -36,32 +39,32 @@ fksrouter:
             module: Fksapp
 
         # Central authentication domain
-        '//[!<subdomain>].%domain.host%.[!<tld>]/<action logout>':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
-        '//%subdomain.auth%.%domain.cz%/':
+        '//%subdomain.auth%.%domain.cz%%path%':
             presenter: Authentication
             action: login
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             flags: ONE_WAY
-        '//%subdomain.auth%.%domain.cz%/<action login|logout|fb-login>':
+        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login>':
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%/<presenter register>/<action=default>':
+        '//%subdomain.auth%.%domain.cz%%path%<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
 
         # Application itself (note the presenters w/out module are handled specially)
-        '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/<presenter %rootPresenters%>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-        '//[!<subdomain>].%domain.host%.[!<tld>][/<contestId %contests%>[<year [0-9]+>]]/[<module %modules%>/]<presenter>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][<module %modules%>/]<presenter>/<action=default>[/<id>]':
             module: Public
             presenter: Dashboard
             subdomain: %subdomain.db%
