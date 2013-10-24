@@ -17,4 +17,8 @@ class YearCalculator extends Object {
         }
     }
 
+    public function isValidYear(ModelContest $contest, $year) {
+        return $year > 0 && $year <= $this->getCurrentYear($contest);
+    }
+
 }

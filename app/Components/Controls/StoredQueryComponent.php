@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\View;
+namespace FKSDB\Components\Controls;
 
 use Authorization\ContestAuthorizator;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;

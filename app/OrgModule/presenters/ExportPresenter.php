@@ -2,9 +2,9 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\Components\View\StoredQueryComponent;
 use FormUtils;
 use IResultsModel;
 use ModelContest;

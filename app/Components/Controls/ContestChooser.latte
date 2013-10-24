@@ -1,0 +1,10 @@
+<p n:if="$contests">
+    {foreach $contests as $contestId => $contest}
+    <a href="{link change! $contestId}" n:tag-if="$contestId != $currentContest"><b n:tag-if="$contestId == $currentContest">{$contest->name}</b></a>
+    {/foreach}
+
+    {if $isAllowedYear}
+    {control formSelectYear}
+    {/if}
+</p>
+

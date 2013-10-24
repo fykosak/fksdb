@@ -161,7 +161,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * 
      * @param YearCalculator $yearCalculator
-     * @return array of ModelContestant indexed by ct_id
+     * @return array of ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = array();
@@ -169,7 +169,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $contestant = ModelContestant::createFromTableRow($contestant);
             $year = $yearCalculator->getCurrentYear($contestant->getContest());
             if ($contestant->year == $year) {
-                $result[$contestant->ct_id] = $contestant;
+                $result[$contestant->contest_id] = $contestant;
             }
         }
         return $result;
