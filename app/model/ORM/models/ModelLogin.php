@@ -69,8 +69,8 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             return true;
         } else {
             return false;
-		}
-	}
+        }
+    }
 
     /**
      * Syntactic sugar.
@@ -83,10 +83,14 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             return $person->getFullname();
         }
         if ($this->login) {
-            return $login;
+            return $this->login;
         } else {
-            return $login->email;
+            return $this->email;
         }
+    }
+
+    public function __toString() {
+        return $this->getName();
     }
 
     /**

@@ -34,9 +34,16 @@ parameters:
 
 fksrouter:
     routes:
+        # Backward compatibility
+        'web-service/<action>':
+            module: Org
+            presenter: WebService
+            action: default
+            flags: ONE_WAY
+
         # FKSAPP
         'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
-            module: Fksapp
+            module: Fksapp          
 
         # Central authentication domain
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
