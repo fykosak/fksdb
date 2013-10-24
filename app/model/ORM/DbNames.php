@@ -10,7 +10,6 @@ class DbNames {
     const TAB_AUTH_TOKEN = 'auth_token';
     const TAB_CONTEST = 'contest';
     const TAB_CONTESTANT = 'contestant';
-    const TAB_COUNTRY = 'country';
     const TAB_EVENT = 'event';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_EVENT_PARTICIPANT = 'event_participant';

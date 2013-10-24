@@ -6,7 +6,6 @@ services:
     ServiceAddress:          ServiceAddress
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
-    ServiceCountry:          ServiceCountry
     ServiceEvent:            ServiceEvent
     ServiceEventParticipant: ServiceEventParticipant
     ServiceGlobalSession:    ServiceGlobalSession

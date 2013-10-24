@@ -9,7 +9,6 @@ use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
 use ServiceAddress;
-use ServiceCountry;
 use ServiceRegion;
 
 /**
@@ -18,11 +17,6 @@ use ServiceRegion;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AddressFactory {
-
-    /**
-     * @var ServiceCountry
-     */
-    private $serviceCountry;
 
     /**
      * @var ServiceAddress
@@ -34,8 +28,7 @@ class AddressFactory {
      */
     private $serviceRegion;
 
-    function __construct(ServiceCountry $serviceCountry, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
-        $this->serviceCountry = $serviceCountry;
+    function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
     }
@@ -53,7 +46,8 @@ class AddressFactory {
      * @param \FKSDB\Components\Forms\Factories\Container $container
      * @param ControlGroup $group
      */
-    public function buildAddress(Container $container, ControlGroup $group = null) {
+    public function buildAddress(AddressContainer $container, ControlGroup $group = null) {
+        $container->setServiceRegion($this->serviceRegion);
         $container->setCurrentGroup($group);
 
         $container->addText('first_row', 'První řádek')
@@ -73,12 +67,12 @@ class AddressFactory {
 
         $postalCode = $container->addText('postal_code', 'PSČ')
                 ->addRule(Form::MAX_LENGTH, null, 5)
-                ->setOption('description', 'Bez mezer');
+                ->setOption('description', 'Bez mezer. Pro Českou republiku nebo Slovensko.');
 
 
 
         $country = $container->addSelect('country_iso', 'Stát');
-        $country->setItems($this->serviceCountry->getTable()->order('name_cs')->fetchPairs('country_iso', 'name_cs')); //TODO i18n
+        $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
         $country->setPrompt('(Stát dle PSČ)');
 
         /* Country + postal code validation */
