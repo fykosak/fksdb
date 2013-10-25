@@ -1,9 +1,32 @@
+{block head}
+{include #parent}
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" media="screen" href="{$basePath}/css/social-buttons.css"/>
+<link rel="stylesheet" media="screen" href="{$basePath}/css/login.css"/>
+{/block}
+{block titleBody}{/block}
 {block title}Přihlášení{/block}
 
-{block content}
-{control loginForm}
+{block body}
 
-<ul>
-    <a n:href=":Public:Register:default">Registrace</a>
-    <a href="{$fbUrl}">Přihlášení přes Facebook</a>
-</ul>
+<div class="container">
+    {form loginForm class => form-signin}
+
+
+    <h2 class="form-signin-heading">FKSDB</h2>
+    {block flashes}
+    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+    {/block}
+    <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+    {input id class => form-control, autofocus => true, placeholder => $_input->translate($_input->caption)}
+    {input password class => form-control, placeholder => $_input->translate($_input->caption)}
+
+    {input login class => 'btn btn-lg btn-primary btn-block'}
+    <a n:href=":Public:Register:default" class="btn btn btn-default btn-block">Registrace</a>
+    <a class="btn btn-facebook btn-block" href="{$fbUrl}"><i class="fa fa-facebook"></i> | Log in</a>
+    {*<a class="btn btn-link btn-sm btn-block" href="#">{_'Zapomenuté heslo'}</a>*}
+    {/form loginForm}
+
+</div> <!-- /container -->
+{/block}
+

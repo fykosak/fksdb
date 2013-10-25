@@ -54,6 +54,7 @@ class ContestChooser extends Control {
      */
     private $valid;
     private $initialized = false;
+    private $forceRedirect = false;
 
     function __construct($role, Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
         $this->role = $role;
@@ -65,6 +66,14 @@ class ContestChooser extends Control {
     public function isValid() {
         $this->init();
         return $this->valid;
+    }
+
+    public function getForceRedirect() {
+        return $this->forceRedirect;
+    }
+
+    public function setForceRedirect($forceRedirect) {
+        $this->forceRedirect = $forceRedirect;
     }
 
     public function getRole() {
@@ -113,18 +122,19 @@ class ContestChooser extends Control {
         if (!in_array($contestId, $contestIds)) {
             $contestId = $contestIds[0]; // by default choose the first
         }
-        if (isset($presenter->contestId) && $contestId != $presenter->contestId) {
-            $presenter->redirect('this', array('contestId' => $contestId));
-        }
-
         $this->contest = $this->serviceContest->findByPrimary($contestId);
-
 
 
         /* YEAR */
         $year = $this->calculateYear($session, $this->contest);
-        if (isset($presenter->year) && $year != $presenter->year) {
-            $presenter->redirect('this', array('year' => $year));
+
+        if ($this->forceRedirect || isset($presenter->year) || isset($presenter->year)) {
+            if ($year != $presenter->year || $contestId != $presenter->contestId) {
+                $presenter->redirect('this', array(
+                    'contestId' => $contestId,
+                    'year' => $year
+                ));
+            }
         }
 
         $this->year = $year;
@@ -150,7 +160,12 @@ class ContestChooser extends Control {
         }
         $result = array();
         foreach ($ids as $id) {
-            $result[$id] = $this->serviceContest->findByPrimary($id);
+            $contest = $this->serviceContest->findByPrimary($id);
+            $min = $this->yearCalculator->getFirstYear($contest);
+            $max = $this->yearCalculator->getCurrentYear($contest);
+            $contest->years = array_reverse(range($min, $max));
+            $contest->currentYear = $max;
+            $result[$id] = $contest;
         }
         return $result;
     }
@@ -167,7 +182,7 @@ class ContestChooser extends Control {
         $this->template->contests = $this->getContests();
         $this->template->isAllowedYear = $this->isAllowedYear();
         $this->template->currentContest = $this->getContest()->contest_id;
-
+        $this->template->currentYear = $this->getYear();
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
         $this->template->render();
@@ -183,37 +198,25 @@ class ContestChooser extends Control {
         $contest = $this->serviceContest->findByPrimary($contestId);
 
         $year = $this->calculateYear($this->session, $contest);
-
-        if ($presenter->contestId != $contestId) {
-            if ($backupYear && $backupYear != $year) {
-                $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
-            } else {
-                $presenter->redirect('this', array('contestId' => $contestId));
-            }
-        }
         if (isset($presenter->year)) {
             $presenter->year = $backupYear;
         }
+
+        if ($backupYear && $backupYear != $year) {
+            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
+        } else {
+            $presenter->redirect('this', array('contestId' => $contestId));
+        }
     }
 
-    protected function createComponentFormSelectYear($name) {
-        $form = new Form($this, $name);
-        $currentYear = $this->yearCalculator->getCurrentYear($this->getContest());
-
-        $form->addSelect('year', 'Ročník')
-                ->setItems(range(1, $currentYear), false)
-                ->setDefaultValue($this->year);
-
-        $form->addSubmit('change', 'Změnit');
-
+    public function handleChangeYear($contest, $year) {
         $presenter = $this->getPresenter();
-        $form->onSuccess[] = function(Form $form) use($presenter) {
-                    $values = $form->getValues();
-                    $presenter->redirect('this', array('year' => $values['year']));
-                };
+        $presenter->redirect('this', array(
+            'contestId' => $contest, //WHY? contestId should be persistent
+            'year' => $year));
     }
 
-    private function calculateYear($session, $contest) {
+    private function calculateYear($session, $contest, $override = null) {
         $presenter = $this->getPresenter();
         $year = null;
         if ($this->isAllowedYear()) {
@@ -224,6 +227,10 @@ class ContestChooser extends Control {
             // URL
             if ($presenter->year) {
                 $year = $presenter->year;
+            }
+            // override
+            if ($override) {
+                $year = $override;
             }
         }
 

@@ -17,6 +17,17 @@ class YearCalculator extends Object {
         }
     }
 
+    public function getFirstYear(ModelContest $contest) {
+        switch ($contest->contest_id) {
+            case ModelContest::ID_FYKOS:
+                return 15;
+            case ModelContest::ID_VYFUK:
+                return 1;
+            default:
+                return null;
+        }
+    }
+
     public function isValidYear(ModelContest $contest, $year) {
         return $year > 0 && $year <= $this->getCurrentYear($contest);
     }

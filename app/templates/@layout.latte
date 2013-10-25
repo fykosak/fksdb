@@ -5,56 +5,81 @@
         <meta name="robots" content="{$robots}" n:ifset="$robots">
 
         <title>{block titleHeader}FKSDB {include #title}{/block}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {control cssLoader
-            'css/screen.css' => [screen] ,
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
+        'css/bootstrap.min.css' => [screen],
+        'css/bootstrap-theme.min.css' => [screen],
+        'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
         }
-        
+
         {block head}{/block}
     </head>
 
     <body>
-        <div n:if="$user->isLoggedIn()" class="navigation" n:block="navigation-wrap">
-            {block #navigation}
-            <a n:if="$user->getIdentity()->isOrg($control->getYearCalculator())" n:href=":Org:Dashboard:">Organizátorský pultík</a>
-            <a n:if="$user->getIdentity()->isContestant($control->getYearCalculator())" n:href=":Public:Dashboard:">Pultík</a> {* TODO this may be visible in future as there'll be use cases for registered only persons *}
-            {/block}
-        </div>
+        {block body}
+        <nav class="navbar navbar-default" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{$basePath}/">FKSDB</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav" n:if="$user->isLoggedIn()">
+                    <li{ifCurrent :Org:Dashboard:} class="active"{/ifCurrent}><a n:if="$user->getIdentity()->isOrg($control->getYearCalculator())" n:href=":Org:Dashboard:">Organizátorský pultík</a></li>
+                    <li{ifCurrent :Public:Dashboard:} class="active"{/ifCurrent}><a n:if="$user->getIdentity()->isContestant($control->getYearCalculator())" n:href=":Public:Dashboard:">Pultík</a></li> {* TODO this may be visible in future as there'll be use cases for registered only persons *}
+                </ul>
+
+                {block user-info}
+                <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                    {var $login => $user->getIdentity()}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span>
+                            {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
+                            {else}
+                            {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                            <li class="divider"></li>
+                            <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                        </ul>
+                    </li>
+                </ul>                
+                {/block}
+
+            </div><!-- /.navbar-collapse -->
+        </nav>
+
+
         {block titleBody}<h1>{include #title}</h1>{/block}
-        
+
         {block flashes}
         <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
         {/block}
-        
-        <div n:if="$user->isLoggedIn()" class="user-info" block="user-info-wrap">
-            {block user-info}
-            {var $login => $user->getIdentity()}
-            {if $login->getPerson()}            
-                <p>Přihlášen <em>{$login->getPerson()->getFullname()}</em>
-            {else}
-                <p>Přihlášen uživatel <em>{$login->login}</em>
-            {/if}
-                <a n:href=":Authentication:logout">Odhlásit</a>
-            </p>
-            <p>
-                <a n:href=":Settings:">Nastavení účtu</a>
-            </p>
-            {/block}
-        </div>
+
         {include #content}
 
+        {/block}
         <div id="spinner"></div>
         {block scripts}
         {control jsLoader 
-            'js/netteForms.js',
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'js/main.js'
+        'js/netteForms.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/bootstrap.min.js',
+        'js/main.js'
         }
 
         {* CSS files are only collected at the end of rendering, so we use this
-          invalid workaround and link some CSS files at the end of the page
+        invalid workaround and link some CSS files at the end of the page
         *}
         {control jsLoader:inline}
         {/block}

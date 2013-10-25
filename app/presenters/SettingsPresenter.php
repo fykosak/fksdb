@@ -5,6 +5,7 @@ use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -64,6 +65,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     protected function createComponentSettingsForm($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
 

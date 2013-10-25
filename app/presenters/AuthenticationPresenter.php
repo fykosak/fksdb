@@ -3,6 +3,7 @@
 use Authentication\FacebookAuthenticator;
 use Authentication\TokenAuthenticator;
 use FKS\Authentication\SSO\IGlobalSession;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Http\Url;
@@ -78,8 +79,7 @@ final class AuthenticationPresenter extends BasePresenter {
         // -> check for the GSID parameter
 
         if ($this->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity
-            $this->flashMessage("Byl jste odhlášen.");
+            $this->getUser()->logout(true); //clear identity            
         } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
@@ -89,6 +89,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParam(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
+        $this->flashMessage("Byl jste odhlášen.");
         $this->backlinkRedirect();
         $this->redirect("login");
     }
