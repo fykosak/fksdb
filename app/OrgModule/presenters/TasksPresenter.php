@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -54,6 +55,7 @@ class TasksPresenter extends BasePresenter {
 
     protected function createComponentSeriesForm() {
         $seriesForm = new Form();
+        $seriesForm->setRenderer(new BootstrapRenderer());
 
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $seriesForm->addSelect('series', 'Série')

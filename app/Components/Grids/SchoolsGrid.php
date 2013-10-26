@@ -46,6 +46,7 @@ class SchoolsGrid extends BaseGrid {
                             return $that->getPresenter()->link("edit", $row->school_id);
                         });
         $this->addGlobalButton('add')
+                ->setLink($this->getPresenter()->link('create'))
                 ->setLabel('Vložit školu')
                 ->setClass('btn btn-sm btn-primary');
 

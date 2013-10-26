@@ -7,12 +7,12 @@ use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\OrgProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
-use Persons\OrgsCompletionModel;
 use ServiceContestant;
 use ServiceOrg;
 use ServiceSubmit;
@@ -158,6 +158,7 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentHandoutForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = new AutocompleteSelectBox(false, $task->getFQName());

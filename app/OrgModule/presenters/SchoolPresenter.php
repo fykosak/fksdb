@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FormUtils;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -101,6 +102,7 @@ class SchoolPresenter extends EntityPresenter {
 
     private function createForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $schoolContainer = $this->schoolFactory->createSchool();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);

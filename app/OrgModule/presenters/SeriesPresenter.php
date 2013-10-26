@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use ISeriesPresenter;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use SeriesCalculator;
 
