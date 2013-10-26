@@ -1,0 +1,11 @@
+{block #menu}
+<ul>
+    {foreach $menu as $item}
+    <li>{if is_array($item)}
+        {include #menu, menu => $item}
+    {else}
+        {$item}
+    {/if}</li>
+    {/foreach}
+</ul>
+{/block}
