@@ -118,3 +118,4 @@ includes:
     - forms.neon
     - services.neon
     - factories.neon
+    - navigation.neon

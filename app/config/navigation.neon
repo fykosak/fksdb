@@ -1,0 +1,30 @@
+navigation:
+    nodes:
+        org.dashboard:
+            caption: Organizátorský pultík
+            visibility: [@ownerAssertion, isOrg]
+            # params:
+            # link:
+        org.inbox:
+            caption: Příjem řešení
+            visibility:
+                resource: submit
+                permission: ALL
+        fykos:
+            caption: Web semináře
+            visibility: true # default?
+            link: http://vyfuk.fykos.cz/
+
+    structure:
+        org.dashboard:
+            - org.inbox
+            - org.inbox.handout
+            - org.points
+            - org.tasks.pull
+            - org.contestant.pull
+            - org.school.list
+            - org.export.list
+        public.dashboard:
+            - public.submit
+            - fykos
+        
