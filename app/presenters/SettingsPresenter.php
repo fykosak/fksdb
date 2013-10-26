@@ -66,7 +66,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     protected function createComponentSettingsForm($name) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        
+
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
 
@@ -115,12 +115,12 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
-        $this->flashMessage('Uživatelské informace upraveny.');
-        $this->redirect('this');
+        $this->flashMessage('Uživatelské informace upraveny.', self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage('Heslo nastaveno.'); //TODO here may be Facebook ID            
+            $this->flashMessage('Heslo nastaveno.', self::FLASH_SUCCESS); //TODO here may be Facebook ID            
             $this->getTokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
+        $this->redirect('this');
     }
 
 }

@@ -146,7 +146,7 @@ class SubmitPresenter extends BasePresenter {
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
-                    $this->flashMessage(sprintf('Úlohu %s již není možno odevzdávat.', $task->label), 'error');
+                    $this->flashMessage(sprintf('Úlohu %s již není možno odevzdávat.', $task->label), self::FLASH_ERROR);
                     continue;
                 }
 
@@ -174,7 +174,7 @@ class SubmitPresenter extends BasePresenter {
                 // store file
                 $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
 
-                $this->flashMessage(sprintf('Úloha %s odevzdána.', $task->label));
+                $this->flashMessage(sprintf('Úloha %s odevzdána.', $task->label), self::FLASH_SUCCESS);
             }
 
             $this->submitStorage->commit();
@@ -185,13 +185,13 @@ class SubmitPresenter extends BasePresenter {
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($e);
-            $this->flashMessage('Došlo k chybě při ukládání úloh.', 'error');
+            $this->flashMessage('Došlo k chybě při ukládání úloh.', self::FLASH_ERROR);
         } catch (ProcessingException $e) {
             $this->submitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($e);
-            $this->flashMessage('Došlo k chybě při ukládání úloh.', 'error');
+            $this->flashMessage('Došlo k chybě při ukládání úloh.', self::FLASH_ERROR);
         }
     }
 

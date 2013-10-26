@@ -89,7 +89,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParam(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage("Byl jste odhlášen.");
+        $this->flashMessage("Byl jste odhlášen.", self::FLASH_SUCCESS);
         $this->backlinkRedirect();
         $this->redirect("login");
     }
@@ -111,7 +111,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->getUser()->getIdentity();
             $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
+            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (FacebookApiException $e) {
             $fbUrl = $this->getFbLoginUrl();
             $this->redirectUri($fbUrl);
@@ -202,7 +202,7 @@ final class AuthenticationPresenter extends BasePresenter {
             if (in_array($url->getHost(), $this->context->parameters['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string) $url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), 'error');
+                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), self::FLASH_ERROR);
             }
         }
     }

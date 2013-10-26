@@ -36,22 +36,20 @@
     </div>
 </div>
 
+<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+    {$flash->message}
+</div>
+
 {if !$control->isSubGrid}
 {$control['gridForm']->render('begin')}
 {/if}
 
 <table n:attr="style => $control->width ? 'width: '.$control->width.';'" class="table table-condensed table-hover">
-    <thead>
-        <tr n:foreach="$flashes as $flash" class="grid-flash {$flash->type}">
+    <thead>        
+        <tr class="grid-flash grid-error" n:foreach="$control['gridForm']->errors as $error">
             <th colspan="{$colsCount}">
-                <span>{$flash->message}</span>
+                <span>{$error}</span>
     <div class="grid-flash-hide"></div>
-</th>
-</tr>
-<tr class="grid-flash grid-error" n:foreach="$control['gridForm']->errors as $error">
-    <th colspan="{$colsCount}">
-        <span>{$error}</span>
-<div class="grid-flash-hide"></div>
 </th>
 </tr>
 <tr>
@@ -148,7 +146,7 @@
 </tfoot>
 </table>
 {if $paginate}
-    {control paginator}
+{control paginator}
 {/if}
 
 {if !$control->isSubGrid}

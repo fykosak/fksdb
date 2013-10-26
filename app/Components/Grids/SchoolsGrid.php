@@ -47,7 +47,7 @@ class SchoolsGrid extends BaseGrid {
                         });
         $this->addGlobalButton('add')
                 ->setLabel('Vložit školu')
-                ->setClass('btn btn-sm btn-primary')
+                ->setClass('btn btn-sm btn-primary');
 
         //
         // appeareance

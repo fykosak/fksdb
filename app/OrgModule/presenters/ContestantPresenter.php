@@ -128,11 +128,11 @@ class ContestantPresenter extends EntityPresenter {
         $contestant = $this->getModel();
 
         if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage('Editace řešitele mimo zvolený seminář.');
+            $this->flashMessage('Editace řešitele mimo zvolený seminář.', self::FLASH_WARNING);
         }
 
         if ($contestant->year != $this->getSelectedYear()) {
-            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.');
+            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.', self::FLASH_WARNING);
         }
     }
 
@@ -270,9 +270,9 @@ class ContestantPresenter extends EntityPresenter {
                     $template = $this->mailTemplateFactory->createLoginInvitation($this, 'cs'); //TODO i18n of created logins
                     try {
                         $login = $this->serviceLogin->createLoginWithInvitation($template, $person, $email);
-                        $this->flashMessage('Zvací e-mail odeslán.');
+                        $this->flashMessage('Zvací e-mail odeslán.', self::FLASH_INFO);
                     } catch (MailNotSendException $e) {
-                        $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', 'error');
+                        $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', self::FLASH_ERROR);
                     }
                 } else {
                     $dataInfo['email'] = $email; // we'll store it as personal info
@@ -301,12 +301,12 @@ class ContestantPresenter extends EntityPresenter {
             }
             $wizard->disposeData();
 
-            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()));
+            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání řešitele.', 'error');
+            $this->flashMessage('Chyba při zakládání řešitele.', self::FLASH_ERROR);
         }
     }
 
@@ -336,11 +336,11 @@ class ContestantPresenter extends EntityPresenter {
         try {
             $this->serviceContestant->updateModel($model, $data);
             $this->serviceContestant->save($model);
-            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()));
+            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
 
-            $this->flashMessage('Chyba při ukládání do databáze.');
+            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
             Debugger::log($e);
         }
     }

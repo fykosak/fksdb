@@ -13,6 +13,11 @@ use Nette\Application\UI\Presenter;
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IJSONProvider {
 
+    const FLASH_SUCCESS = 'success';
+    const FLASH_INFO = 'info';
+    const FLASH_WARNING = 'warning';
+    const FLASH_ERROR = 'danger';
+
     /** @persistent     */
     public $tld;
 

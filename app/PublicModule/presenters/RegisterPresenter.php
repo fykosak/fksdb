@@ -189,7 +189,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             $person = $this->user->getIdentity()->getPerson();
             if (!$person) {
-                $this->flashMessage('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.');
+                $this->flashMessage('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.', self::FLASH_INFO);
                 $this->redirect(':Authentication:login');
             }
 
@@ -197,7 +197,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
                 $contestnats = $person->getActiveContestants($this->yearCalculator);
                 $contest = $this->getSelectedContest();
                 if (isset($contestnats[$contest->contest_id])) {
-                    $this->flashMessage(sprintf('%s již řeší %s.', $person->getFullname(), $contest->name));
+                    $this->flashMessage(sprintf('%s již řeší %s.', $person->getFullname(), $contest->name), self::FLASH_INFO);
                     $this->redirect(':Public:Dashboard:default');
                 }
             }
@@ -386,13 +386,13 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
                 $this->getUser()->login($login);
             }
 
-            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.');
+            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.', self::FLASH_SUCCESS);
             $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {
             $this->connection->rollBack();
             $this->getUser()->logout(true);
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Při registraci došlo k chybě.', 'error');
+            $this->flashMessage('Při registraci došlo k chybě.', self::FLASH_ERROR);
         }
     }
 

@@ -55,9 +55,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     protected function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
-            $this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.');
+            $this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.', self::FLASH_INFO);
         } else {
-            $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.');
+            $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.', self::FLASH_ERROR);
         }
         $backlink = $this->application->storeRequest();
         $this->redirect(':Authentication:login', array('backlink' => $backlink));
@@ -76,13 +76,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
+                $this->flashMessage('Úspešné přihlášení pomocí tokenu.', self::FLASH_INFO);
             }
 
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
+            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         }
     }
 

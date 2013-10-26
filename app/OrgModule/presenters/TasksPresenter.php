@@ -89,13 +89,13 @@ class TasksPresenter extends BasePresenter {
                 unlink($XMLfilename);
 
                 foreach ($pipeline->getLog() as $message) {
-                    $this->flashMessage($message);
+                    $this->flashMessage($message, self::FLASH_INFO);
                 }
-                $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně staženy.', $language));
+                $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně staženy.', $language), self::FLASH_SUCCESS);
             } catch (DownloadException $e) {
-                $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), 'error');
+                $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), self::FLASH_WARNING);
             } catch (ModelException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), 'error');
+                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), self::FLASH_ERROR);
                 Debugger::log($e);
             }
         }

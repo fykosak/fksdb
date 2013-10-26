@@ -63,7 +63,7 @@
         {block titleBody}<h1>{include #title}</h1>{/block}
 
         {block flashes}
-        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
         {/block}
 
         {include #content}

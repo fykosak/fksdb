@@ -266,14 +266,14 @@ class PersonPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()));
+            $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()), self::FLASH_SUCCESS);
 
             $this->restoreRequest($this->backlink);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě řešitele.', 'error');
+            $this->flashMessage('Chyba při úpravě řešitele.', self::FLASH_ERROR);
         }
     }
 

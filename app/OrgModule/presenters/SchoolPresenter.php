@@ -107,7 +107,7 @@ class SchoolPresenter extends EntityPresenter {
 
         $addressContainer = $this->addressFactory->createAddress();
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
-        
+
         return $form;
     }
 
@@ -151,12 +151,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola založena');
+            $this->flashMessage('Škola založena', self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání školy.', 'error');
+            $this->flashMessage('Chyba při zakládání školy.', self::FLASH_ERROR);
         }
     }
 
@@ -196,12 +196,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola upravena');
+            $this->flashMessage('Škola upravena', self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě školy.', 'error');
+            $this->flashMessage('Chyba při úpravě školy.', self::FLASH_ERROR);
         }
     }
 
