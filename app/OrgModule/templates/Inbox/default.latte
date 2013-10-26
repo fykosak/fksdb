@@ -1,8 +1,11 @@
 {block title}Příjem řešení{/block}
 
-{block content}
-{control formSelectSeries}
+{block user-info}
+{include #parent}
+{control seriesChooser}
+{/block}
 
+{block content}
 
 {control inboxForm}
 

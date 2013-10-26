@@ -2,9 +2,9 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Controls\SeriesChooser;
 use ISeriesPresenter;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Nette\Application\UI\Form;
+use Nette\Application\BadRequestException;
 use SeriesCalculator;
 
 /**
@@ -32,48 +32,16 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @return int
      */
     public function getSelectedSeries() {
-        return $this->series;
-    }
-
-    //
-    // ----- series choosing ----
-    //
-    protected function createComponentFormSelectSeries($name) {
-        $form = new Form($this, $name);
-        $lastSeries = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
-
-        $form->addSelect('series', 'Série')
-                ->setItems(range(1, $lastSeries), false)
-                ->setDefaultValue($this->series);
-
-        $form->addSubmit('change', 'Změnit');
-        $form->onSuccess[] = array($this, 'handleChangeSeries');
-    }
-
-    public function handleChangeSeries($form) {
-        $values = $form->getValues();
-        $this->series = $values['series'];
-        $this->redirect('this');
-    }
-
-    protected function initSeries() {
-        $session = $this->getSession()->getSection('presets');
-
-        $defaultSeries = isset($session->defaultSeries) ? $session->defaultSeries : $this->seriesCalculator->getCurrentSeries($this->getSelectedContest());
-        $lastSeries = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
-        $defaultSeries = min($defaultSeries, $lastSeries);
-
-        if ($this->series === null || $this->series > $lastSeries) {
-            $this->series = $defaultSeries;
+        if (!$this['seriesChooser']->isValid()) {
+            throw new BadRequestException('Nejsou dostupné žádné série.', 500);
         }
 
-        // remember
-        $session->defaultSeries = $this->series;
+        return $this['seriesChooser']->getSeries();
     }
 
-    protected function startup() {
-        parent::startup();
-        $this->initSeries();
+    public function createComponentSeriesChooser($name) {
+        $component = new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest);
+        return $component;
     }
 
 }
