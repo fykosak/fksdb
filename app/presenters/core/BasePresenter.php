@@ -3,7 +3,7 @@
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKS\Components\Forms\Controls\Autocomplete\IJSONProvider;
+use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Presenter;
@@ -11,7 +11,7 @@ use Nette\Application\UI\Presenter;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IJSONProvider {
+abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider {
 
     /** @persistent     */
     public $tld;
