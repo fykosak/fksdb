@@ -58,7 +58,8 @@
             </div><!-- /.navbar-collapse -->
         </nav>
 
-
+        <div class="container">
+            
         {block titleBody}<h1>{include #title}</h1>{/block}
 
         {block flashes}
@@ -66,7 +67,8 @@
         {/block}
 
         {include #content}
-
+        
+        </div> {* body block *}
         {/block}
         <div id="spinner"></div>
         {block scripts}

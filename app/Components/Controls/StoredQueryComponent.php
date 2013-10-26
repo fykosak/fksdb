@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls;
 use Authorization\ContestAuthorizator;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use PDOException;
@@ -72,6 +73,7 @@ class StoredQueryComponent extends Control {
 
     protected function createComponentParametrizeForm($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());                
 
         $queryPattern = $this->storedQuery->getQueryPattern();
         $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);

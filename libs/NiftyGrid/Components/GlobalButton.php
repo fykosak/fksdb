@@ -88,7 +88,8 @@ class GlobalButton extends \Nette\Application\UI\PresenterComponent
 			->setClass($this->class)
 			->addClass("grid-button")
 			->addClass("grid-global-button")
-			->setTitle($this->label);
+			->setTitle($this->label)
+                        ->setText($this->label);
 
 		if($this->getName() == Grid::ADD_ROW) {
 			$el->addClass("grid-add-row");

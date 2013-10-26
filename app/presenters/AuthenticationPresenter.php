@@ -149,7 +149,7 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
-        $form->addText('id', 'Přihlašovací jméno/email')
+        $form->addText('id', 'Přihlašovací jméno nebo email')
                 ->addRule(Form::FILLED, 'Zadejte přihlašovací jméno nebo emailovou adresu.');
 
         $form->addPassword('password', 'Heslo')

@@ -73,7 +73,7 @@ class AddressFactory {
 
         $country = $container->addSelect('country_iso', 'Stát');
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
-        $country->setPrompt('(Stát dle PSČ)');
+        $country->setPrompt('Určit stát dle PSČ');
 
         /* Country + postal code validation */
         $addressService = $this->serviceAddress;
