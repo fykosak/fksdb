@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use MailNotSendException;
 use MailTemplateFactory;
 use ModelException;
@@ -157,7 +158,8 @@ class ContestantPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         $form = new Form();
-
+        $form->setRenderer(new BootstrapRenderer());
+        
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
         $form->addComponent($personContainer, self::CONT_PERSON);
 

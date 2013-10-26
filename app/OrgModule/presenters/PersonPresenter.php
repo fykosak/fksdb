@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelException;
 use Nette\Application\UI\Form;
@@ -109,6 +110,8 @@ class PersonPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        
         $person = $this->getModel();
 
         /*
@@ -127,7 +130,7 @@ class PersonPresenter extends EntityPresenter {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
-                    $replContainer->addSubmit('remove', 'Odebrat')->addRemoveOnClick();
+                    $replContainer->addSubmit('remove', 'Odebrat adresu')->addRemoveOnClick();
                 }, 1, true);
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
@@ -253,7 +256,7 @@ class PersonPresenter extends EntityPresenter {
                 unset($dataInfo['agreed']); // not to overwrite existing confirmation
                 $this->servicePersonInfo->updateModel($personInfo, $dataInfo);
             }
-            
+
             $this->servicePersonInfo->save($personInfo);
 
             /*

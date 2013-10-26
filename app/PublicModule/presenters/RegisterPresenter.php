@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
 use IContestPresenter;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelContestant;
 use ModelException;
@@ -228,6 +229,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
 
     public function createComponentContestantForm($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
 
@@ -277,7 +279,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         }
         $contestant = $this->contestantFactory->createContestant($options, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
-
+        
         /*
          * Buttons
          */

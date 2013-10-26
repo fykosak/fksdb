@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\WizardComponent;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;
@@ -91,6 +92,7 @@ class ContestantWizardFactory {
 
     private function createPersonForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $group = $form->addGroup('Existující osoba');
 
@@ -122,6 +124,7 @@ class ContestantWizardFactory {
 
     private function createDataForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         /*
          * Person
@@ -147,9 +150,9 @@ class ContestantWizardFactory {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
-                    $replContainer->addSubmit('remove', 'Odebrat')->addRemoveOnClick();
+                    $replContainer->addSubmit('remove', 'Odebrat adresu')->addRemoveOnClick();
                 }, 1, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
+        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);
 

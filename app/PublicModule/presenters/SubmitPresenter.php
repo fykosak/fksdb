@@ -3,6 +3,7 @@
 namespace PublicModule;
 
 use FKSDB\Components\Grids\SubmitsGrid;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use ModelSubmit;
 use Nette\Application\BadRequestException;
@@ -80,6 +81,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentUploadForm($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $prevDeadline = null;
         $taskIds = array();
