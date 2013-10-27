@@ -16,6 +16,7 @@ $(document).ready(function() {
         alt.attr('type', 'hidden');
         if (taskData) {
             alt.val(taskData.submitted_on);
+            el.attr('placeholder', taskData.label);
         }
         el.change(function() {
             if (!el.val()) {

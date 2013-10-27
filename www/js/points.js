@@ -8,6 +8,7 @@ $(document).ready(function() {
         } else {
             var el = $('<input>');
             el.attr('type', 'text');
+            el.attr('placeholder', taskData.label);
 
             el.change(function() {
                 if (!el.val()) {
@@ -31,18 +32,7 @@ $(document).ready(function() {
             var substEl = createElement(taskData, dataEl, allData);
             substEl.addClass('inbox-field');
             containerEl.append(substEl);
-
-            if (dataEl.data('graded').indexOf(taskData.task_id) >= 0) {
-                substEl.show();
-            } else {
-                substEl.hide();
-                substEl.addClass('ungraded');
-            }
         }
-    });
-
-    $('.graded-toggler').click(function() {
-        $('.ungraded').toggle();
     });
 });
 

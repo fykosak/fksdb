@@ -1,18 +1,26 @@
 {block title}Zadávání bodů{/block}
 
 {block user-info}
-    {include #parent}
-    {control seriesChooser}
+{include #parent}
+{control seriesChooser}
 {/block}
 
 {block content}
-<p>
-    <a n:href="invalidate!">Invalidovat cache bodů</a> |
-    <a n:href="recalculateAll!">Přepočítat všechny body</a>
-</p>
 
 
-<div class="graded-toggler">Zobrazit i neopravované úlohy</div>
+
+<div class="btn-toolbar">
+    {if !$showAll}
+    <a n:href="this, all => true" class="btn btn-sm btn-warning">Zobrazit všechny úlohy</a>
+
+    {else}
+    <a n:href="this, all => false" class="btn btn-sm btn-success">Zobrazit jenom moje úlohy</a>
+
+    {/if}
+    <a n:href="invalidate!" class="btn btn-sm btn-danger">Invalidovat cache bodů</a> 
+    <a n:href="recalculateAll!" class="btn btn-sm btn-default">Přepočítat všechny body</a>
+</div>
+
 
 {control pointsForm}
 

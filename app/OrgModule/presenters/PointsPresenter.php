@@ -5,8 +5,8 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
-use ModelOrg;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -19,7 +19,12 @@ use Submits\SeriesTable;
 
 class PointsPresenter extends SeriesPresenter {
 
-    const HTML_GRADED = 'graded';
+    /**
+     * Show all tasks?
+     * 
+     * @persistent
+     */
+    public $all;
 
     /**
      * @var SQLResultsCache
@@ -77,16 +82,24 @@ class PointsPresenter extends SeriesPresenter {
         if (!$this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest())) {
             throw new BadRequestException('Nedostatečné oprávnění.', 403);
         }
+        if ($this->all) {
+            $this->seriesTable->setTaskFilter(null);
+        } else {
+            $gradedTasks = $this->getGradedTasks();
+            $this->seriesTable->setTaskFilter($gradedTasks);
+        }
     }
 
     public function renderDefault() {
         $this['pointsForm']->setDefaults();
+        $this->template->showAll = (bool) $this->all;
     }
 
     protected function createComponentPointsForm($name) {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
+        $form->setRenderer(new BootstrapRenderer());
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
@@ -97,7 +110,6 @@ class PointsPresenter extends SeriesPresenter {
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
             $control->setClassName('points');
-            $control->setClientData(self::HTML_GRADED, $gradedTasks);
 
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
