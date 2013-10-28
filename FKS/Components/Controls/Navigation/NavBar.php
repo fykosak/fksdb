@@ -2,11 +2,9 @@
 
 namespace FKS\Components\Controls\Navigation;
 
-use Nette\Application\ForbiddenRequestException;
-use Nette\Application\PresenterFactory;
+use FKS\Components\Controls\PresenterBuilder;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
@@ -22,18 +20,13 @@ class NavBar extends Control {
     private $nodeChildren = array();
 
     /**
-     * @var PresenterFactory
+     * @var PresenterBuilder
      */
-    private $presenterFactory;
-
-    /**
-     * @var array of Presenter
-     */
-    private $presenters = array();
+    private $presenterBuilder;
     private $structure;
 
-    function __construct(PresenterFactory $presenterFactory) {
-        $this->presenterFactory = $presenterFactory;
+    function __construct(PresenterBuilder $presenterBuilder) {
+        $this->presenterBuilder = $presenterBuilder;
     }
 
     public function getNode($nodeId) {
@@ -57,7 +50,7 @@ class NavBar extends Control {
         if ($result) {
             return true;
         }
-        // try children
+// try children
         if (!isset($this->nodeChildren[$node->nodeId])) {
             return false;
         }
@@ -75,13 +68,7 @@ class NavBar extends Control {
         }
 
         if (isset($node->linkPresenter)) {
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            try {
-                $presenter->checkRequirements($presenter->getReflection());
-                return true;
-            } catch (ForbiddenRequestException $e) {
-                return false;
-            }
+            return $this->isAllowed($this->getPresenter(), $node);
         }
 
         return true;
@@ -133,49 +120,40 @@ class NavBar extends Control {
 
     private function createLink($presenter, $node) {
         $linkedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-        $method = $linkedPresenter->publicFormatActionMethod($node->linkAction);
-
-        $linkParams = array();
-        $rc = new ReflectionClass($linkedPresenter);
-        if ($rc->hasMethod($method)) {
-            $rm = new ReflectionMethod($linkedPresenter, $method);
-            foreach ($rm->getParameters() as $param) {
-                $name = $param->getName();
-                $linkParams[$name] = $node->linkParams[$name];
-            }
-        }
+        $linkParams = $this->actionParams($linkedPresenter, $node->linkAction, $node->linkParams);
 
         return $presenter->link(':' . $node->linkPresenter . ':' . $node->linkAction, $linkParams);
     }
 
-    /**
-     * 
-     * @param string $presenterName
-     * @return Presenter
-     */
-    private function getOuterPresener($presenterName) {
-        if (!isset($this->presenters[$presenterName])) {
-            $this->presenters[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
-        }
-        return $this->presenters[$presenterName];
+    private function isAllowed($presenter, $node) {
+        $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+        $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
+
+        return $presenter->authorized(':' . $node->linkPresenter . ':' . $node->linkAction, $allowedParams);
     }
 
-    private function preparePresenter($presenter, $action, $providedParams) {
-        $providedParams = $providedParams ? : array();
-        $presenter = $this->getOuterPresener($presenter);
+    private function actionParams($presenter, $actionParams, $params) {
+        $method = $presenter->publicFormatActionMethod($actionParams);
+
+        $actionParams = array();
+        $rc = new ReflectionClass($presenter);
+        if ($rc->hasMethod($method)) {
+            $rm = new ReflectionMethod($presenter, $method);
+            foreach ($rm->getParameters() as $param) {
+                $name = $param->getName();
+                $actionParams[$name] = $params[$name];
+            }
+        }
+        return $actionParams;
+    }
+
+    public function preparePresenter($presenterName, $action, $providedParams) {
+        $ownPresenter = $this->getPresenter();
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
         if (!$presenter instanceof INavigablePresenter) {
-            throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter.");
+            $class = get_class($presenter);
+            throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter, $class given.");
         }
-
-        $params = $this->getPresenter()->getParameter(); // by default inherit parameters of the calling presenter -- is this alright?
-        unset($params[Presenter::ACTION_KEY]);
-        foreach ($providedParams as $key => $value) {
-            $params[$key] = $value;
-        }
-        $presenter->loadState($params);
-        $presenter->changeAction($action);
-        $presenter->setView($presenter->getView()); // to force update the title    
-
         return $presenter;
     }
 
