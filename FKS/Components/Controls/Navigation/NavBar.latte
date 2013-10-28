@@ -1,11 +1,21 @@
+{define #link}
+<a href="{$control->getLink($node)}" n:class="($level == 0) ? dropdown-toggle" n:attr="data-toggle => ($level == 0) ? 'dropdown' : null">
+    {$control->getTitle($node)}
+</a>
+
+{/define}
+
+{var level => 0}    
 {block #menu}
-<ul>
-    {foreach $menu as $item}
-    <li>{if is_array($item)}
-        {include #menu, menu => $item}
-    {else}
-        {$item}
-    {/if}</li>
+<ul n:class="($level == 0) ? 'nav navbar-nav', ($level == 1) ? dropdown-menu">
+    {foreach $nodes as $nodeId => $item}
+    {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
+    <li n:class="($level == 0) ? dropdown, $control->isActive($node) ? active" n:if="$control->isVisible($node)">{if is_array($item)}
+        {include #link, node => $node, level => $level}
+            {include #menu, nodes => $item, level => $level + 1}
+        {else}
+            {include #link, node => $node, level => $level}
+        {/if}</li>
     {/foreach}
 </ul>
 {/block}
