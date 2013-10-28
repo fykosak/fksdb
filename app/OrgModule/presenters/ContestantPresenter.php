@@ -19,6 +19,7 @@ use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
+use OrgModule\EntityPresenter;
 use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -122,6 +123,10 @@ class ContestantPresenter extends EntityPresenter {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
+    public function titleEdit($id) {
+        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
+    }
+
     public function renderEdit($id) {
         parent::renderEdit($id);
 
@@ -134,6 +139,14 @@ class ContestantPresenter extends EntityPresenter {
         if ($contestant->year != $this->getSelectedYear()) {
             $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.', self::FLASH_WARNING);
         }
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit řešitele'));
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Řešitelé'));
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {
@@ -159,7 +172,7 @@ class ContestantPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        
+
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
         $form->addComponent($personContainer, self::CONT_PERSON);
 
@@ -285,7 +298,7 @@ class ContestantPresenter extends EntityPresenter {
             $personInfo = $person->getInfo();
             if (!$personInfo) {
                 $dataInfo['agreed'] = $dataInfo['agreed'] ? new DateTime() : null;
-                $personInfo = $this->servicePersonInfo->createNew($dataInfo);                
+                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
                 $personInfo->person_id = $person->person_id;
             } else {
                 unset($dataInfo['agreed']); // do not overwrite in existing person_info

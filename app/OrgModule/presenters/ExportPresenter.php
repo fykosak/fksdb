@@ -179,6 +179,10 @@ class ExportPresenter extends SeriesPresenter {
         $this->setStoredQuery($storedQuery);
     }
 
+    public function titleEdit($id) {
+        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
+    }
+
     public function renderEdit($id) {
         $query = $this->getPatternQuery();
 
@@ -198,6 +202,10 @@ class ExportPresenter extends SeriesPresenter {
         $this['editForm']->setDefaults($values);
     }
 
+    public function titleCompose() {
+        $this->setTitle(sprintf(_('Napsat dotaz')));
+    }
+
     public function renderCompose() {
         $query = $this->getPatternQuery();
 
@@ -207,8 +215,20 @@ class ExportPresenter extends SeriesPresenter {
         }
     }
 
+    public function titleList() {
+        $this->setTitle(_('Exporty'));
+    }
+
+    public function titleShow($id) {
+        $this->setTitle(sprintf(_('Editace dotazu %s'), $this->getPatternQuery()->name));
+    }
+
     public function renderShow($id) {
         $this->template->storedQuery = $this->getPatternQuery();
+    }
+
+    public function titleExecute($id) {
+        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
     }
 
     public function renderExecute($id) {
