@@ -1,20 +1,3 @@
-a.later {
-    color:#ccc;
-}
-.user-info {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    padding: 10px;
-    background-color: #fff;
-}
-
-.flash {
-    background-color: #ffc;
-    border: 1px solid #dda;
-    padding: 10px;
-}
-
 .inbox-field {
     display: block;
     width: 100px;

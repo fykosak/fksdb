@@ -201,6 +201,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->template->title = $this->getTitle();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
+        $this->putIntoBreadcrumbs();
+    }
+
+    protected function putIntoBreadcrumbs() {
         $this['breadcrumbs']->setBacklink($this->getRequest());
     }
 
