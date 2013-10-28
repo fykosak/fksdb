@@ -63,6 +63,19 @@ class SchoolPresenter extends EntityPresenter {
         $this->addressFactory = $addressFactory;
     }
 
+    public function titleList() {
+        $this->setTitle(_('Školy'));
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit školu'));
+    }
+
+    public function titleEdit($id) {
+        $school = $this->getModel();
+        $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
+    }
+
     public function actionDelete($id) {
         // This should set active flag to false.
         throw new NotImplementedException();

@@ -3,7 +3,6 @@
 use Authentication\FacebookAuthenticator;
 use Authentication\TokenAuthenticator;
 use FKS\Authentication\SSO\IGlobalSession;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Http\Url;
@@ -116,6 +115,10 @@ final class AuthenticationPresenter extends BasePresenter {
             $fbUrl = $this->getFbLoginUrl();
             $this->redirectUri($fbUrl);
         }
+    }
+
+    public function titleLogin() {
+        $this->setTitle(_('Login'));
     }
 
     public function renderLogin() {

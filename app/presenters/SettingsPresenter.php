@@ -54,6 +54,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Nastavení'));
+    }
+
     public function renderDefault() {
         $login = $this->getUser()->getIdentity();
 
@@ -70,7 +74,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
 
-        $group = $form->addGroup('Osobní nastavení');
+        $group = $form->addGroup('Autentizace');
         $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
         $loginRule = $this->uniqueLoginFactory->create($login);
 

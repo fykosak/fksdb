@@ -103,6 +103,19 @@ class PersonPresenter extends EntityPresenter {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
+    public function titleList() {
+        $this->setTitle(_('Osoby'));
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit osobu'));
+    }
+
+    public function titleEdit($id) {
+        $person = $this->getModel();
+        $this->setTitle(sprintf(_('Úprava osoby %s'), $person->getFullname()));
+    }
+
     protected function createComponentCreateComponent($name) {
         // So far, there's no use case that creates bare person.
         throw new NotImplementedException();
@@ -111,7 +124,7 @@ class PersonPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        
+
         $person = $this->getModel();
 
         /*

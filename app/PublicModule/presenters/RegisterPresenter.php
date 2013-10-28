@@ -204,6 +204,10 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         }
     }
 
+    public function titleContestant() {
+        $this->setTitle(_('Registrace řešitele'));
+    }
+
     public function renderContestant() {
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
         if (!$person) {
@@ -279,7 +283,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
         }
         $contestant = $this->contestantFactory->createContestant($options, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
-        
+
         /*
          * Buttons
          */

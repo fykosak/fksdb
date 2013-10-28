@@ -53,6 +53,10 @@ class TasksPresenter extends BasePresenter {
         }
     }
 
+    public function titlePull() {
+        $this->setTitle(_('Stažení úloh'));
+    }
+
     protected function createComponentSeriesForm() {
         $seriesForm = new Form();
         $seriesForm->setRenderer(new BootstrapRenderer());
