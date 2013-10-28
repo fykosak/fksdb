@@ -1,0 +1,3 @@
+<ol n:if="$path" class="breadcrumb">
+    <li n:foreach="$path as $request" n:class="$iterator->isLast() ? active"><a href="{$request->url}" n:tag-if="!$iterator->isLast()">{$request->title}</a></li>
+</ol>

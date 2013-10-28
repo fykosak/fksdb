@@ -1,6 +1,6 @@
 <?php
 
-namespace FKS\Components\Controls;
+namespace FKS\Components\Controls\Navigation;
 
 use Nette\Application\UI\Control;
 

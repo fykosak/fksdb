@@ -20,7 +20,7 @@ class NavigationExtension extends CompilerExtension {
             'structure' => array(),
         ));
         $navbar = $builder->addDefinition($this->prefix('navbar'))
-                        ->setClass('FKS\Components\Controls\Navbar')
+                        ->setClass('FKS\Components\Controls\Navigation\Navbar')
                         ->setShared(FALSE)->setAutowired(FALSE);
         foreach ($config['nodes'] as $nodeId => $arguments) {
             $navbar->addSetup('$service->createNode(?, ?);', array($nodeId, $arguments));
