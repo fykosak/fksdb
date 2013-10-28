@@ -4,12 +4,13 @@ use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
 use FKS\Components\Controls\Navigation\INavigablePresenter;
 use FKS\Components\Controls\Navigation\NavBar;
+use FKS\Components\Controls\PresenterBuilder;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -41,10 +42,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var BreadcrumbsFactory */
     private $breadcrumbsFactory;
 
-    /**
-     * @var NavBar
-     */
+    /** @var NavBar */
     private $navigationControl;
+
+    /** @var PresenterBuilder */
+    private $presenterBuilder;
 
     /**
      * @var string|null
@@ -55,6 +57,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var boolean
      */
     private $access = true;
+
+    /**
+     * @var array[string] => bool
+     */
+    private $allowedCache = array();
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -78,6 +85,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function injectNavigationControl(NavBar $navigationControl) {
         $this->navigationControl = $navigationControl;
+    }
+
+    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
+        $this->presenterBuilder = $presenterBuilder;
     }
 
     protected function createTemplate($class = NULL) {
@@ -215,7 +226,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * TODO remove?
      * Formats action method name.
      * @param  string
      * @return string
@@ -232,6 +242,53 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
                 $this->access = true;
             }
         }
+    }
+
+    public function allowed($destination, $args = null) {
+        if (substr($destination, -1) === '!' || $destination === 'this') {
+            $destination = $this->getAction(true);
+        }
+
+        $key = $destination . Utils::getFingerprint($args);
+        if (!isset($this->allowedCache[$key])) {
+            /*
+             * This part is extracted from Presenter::createRequest
+             */
+            $a = strrpos($destination, ':');
+            if ($a === false) {
+                $action = $destination;
+                $presenter = $this->getName();
+            } else {
+                $action = (string) substr($destination, $a + 1);
+                if ($destination[0] === ':') { // absolute
+                    if ($a < 2) {
+                        throw new InvalidLinkException("Missing presenter name in '$destination'.");
+                    }
+                    $presenter = substr($destination, 1, $a - 1);
+                } else { // relative
+                    $presenter = $this->getName();
+                    $b = strrpos($presenter, ':');
+                    if ($b === FALSE) { // no module
+                        $presenter = substr($destination, 0, $a);
+                    } else { // with module
+                        $presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
+                    }
+                }
+            }
+
+            /*
+             * Now create a mock presenter and evaluate accessibility.
+             */
+            $baseParams = $this->getParameter();
+            $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+            try {
+                $testedPresenter->checkRequirements($testedPresenter->getReflection());
+                $this->allowedCache[$key] = $testedPresenter->getAccess();
+            } catch (BadRequestException $e) {
+                $this->allowedCache[$key] = false;
+            }
+        }
+        return $this->allowedCache[$key];
     }
 
 }

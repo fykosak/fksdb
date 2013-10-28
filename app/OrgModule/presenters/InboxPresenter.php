@@ -87,16 +87,12 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessDefault() {
+        $this->setAccess($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    public function actionHandout() {
-        if (!$this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessHandout() {
+        $this->setAccess($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     public function titleDefault() {

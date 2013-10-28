@@ -2,6 +2,8 @@
 
 namespace PublicModule;
 
+use AuthenticationPresenter;
+
 /**
  * Just proof of concept.
  * 

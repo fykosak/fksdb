@@ -47,10 +47,8 @@ class TasksPresenter extends BasePresenter {
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    public function actionPull() {
-        if (!$this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessPull() {
+        $this->setAccess($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
     public function titlePull() {

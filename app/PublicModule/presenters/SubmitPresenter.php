@@ -46,17 +46,15 @@ class SubmitPresenter extends BasePresenter {
         $this->submitStorage = $submitStorage;
     }
 
-    public function actionDefault() {
-        if (!$this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessDefault() {
+        $this->setAccess($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
     }
 
-    public function actionDownload($id) {
+    public function accessDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
         if (!$submit) {
@@ -65,13 +63,15 @@ class SubmitPresenter extends BasePresenter {
 
         $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();
-        if (!$this->contestAuthorizator->isAllowed($submit, 'download', $contest)) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+        $this->setAccess($this->contestAuthorizator->isAllowed($submit, 'download', $contest));
 
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
             throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);
         }
+    }
+
+    public function actionDownload($id) {
+        $submit = $this->submitService->findByPrimary($id);
 
         $filename = $this->submitStorage->retrieveFile($submit);
         if (!$filename) {

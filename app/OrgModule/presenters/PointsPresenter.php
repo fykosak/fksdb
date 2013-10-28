@@ -78,10 +78,11 @@ class PointsPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
+    public function accessDefault() {
+        $this->setAccess($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
+    }
+
     public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
         if ($this->all) {
             $this->seriesTable->setTaskFilter(null);
         } else {

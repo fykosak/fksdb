@@ -14,6 +14,7 @@ services:
     - Submits\SeriesTable
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    - FKS\Components\Controls\PresenterBuilder
     globalSession:
         class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:

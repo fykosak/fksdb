@@ -133,48 +133,42 @@ class ExportPresenter extends SeriesPresenter {
         return $this->patternQuery;
     }
 
-    public function actionList() {
-        if (!$this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessList() {
+        $this->setAccess($this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest()));
     }
 
-    public function actionCompose() {
-        if (!($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) ||
-                $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function accessCompose() {
+        $this->setAccess(
+                ($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) &&
+                $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))
+        );
     }
 
-    public function actionEdit($id) {
+    public function accessEdit($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
 
-    public function actionShow($id) {
+    public function accessShow($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest()));
+    }
+
+    public function accessExecute($id) {
+        $query = $this->getPatternQuery();
+        if (!$query) {
+            throw new BadRequestException('Neexistující dotaz.', 404);
         }
+        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
     }
 
     public function actionExecute($id) {
-        $query = $this->getPatternQuery();
-        if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
-        }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
     }
