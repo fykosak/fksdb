@@ -28,14 +28,17 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    protected function startup() {
+        parent::startup();
+        if (!$this['seriesChooser']->isValid()) {
+            throw new BadRequestException('Nejsou dostupné žádné série.', 500);
+        }
+    }
+
     /**
      * @return int
      */
     public function getSelectedSeries() {
-        if (!$this['seriesChooser']->isValid()) {
-            throw new BadRequestException('Nejsou dostupné žádné série.', 500);
-        }
-
         return $this['seriesChooser']->getSeries();
     }
 

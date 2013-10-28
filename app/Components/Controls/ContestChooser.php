@@ -54,7 +54,6 @@ class ContestChooser extends Control {
      */
     private $valid;
     private $initialized = false;
-    private $forceRedirect = false;
 
     function __construct($role, Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
         $this->role = $role;
@@ -68,12 +67,20 @@ class ContestChooser extends Control {
         return $this->valid;
     }
 
-    public function getForceRedirect() {
-        return $this->forceRedirect;
-    }
-
-    public function setForceRedirect($forceRedirect) {
-        $this->forceRedirect = $forceRedirect;
+    /**
+     * Redirect to corrrect address accorging to the resolved values.
+     */
+    public function syncRedirect() {
+        $presenter = $this->getPresenter();
+        if (isset($presenter->year)) {
+            $contestId = $this->contest->contest_id;
+            if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
+                $presenter->redirect('this', array(
+                    'contestId' => $contestId,
+                    'year' => $this->year
+                ));
+            }
+        }
     }
 
     public function getRole() {
@@ -127,16 +134,6 @@ class ContestChooser extends Control {
 
         /* YEAR */
         $year = $this->calculateYear($session, $this->contest);
-
-        if ($this->forceRedirect || isset($presenter->year) || isset($presenter->year)) {
-            if ($year != $presenter->year || $contestId != $presenter->contestId) {
-                $presenter->redirect('this', array(
-                    'contestId' => $contestId,
-                    'year' => $year
-                ));
-            }
-        }
-
         $this->year = $year;
 
 

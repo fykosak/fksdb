@@ -38,11 +38,11 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
                 $this->redirect(':Authentication:login');
             }
         }
+        $this['contestChooser']->syncRedirect();
     }
 
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser(ModelRole::ORG, $this->session, $this->yearCalculator, $this->serviceContest);
-        $control->setForceRedirect(true);
         return $control;
     }
 
