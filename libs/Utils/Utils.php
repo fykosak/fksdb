@@ -97,4 +97,23 @@ class Utils {
         return $rim;
     }
 
+    /**
+     * Returns fingerprint of an object.
+     * Uses __toString conversion.
+     * 
+     * @param mixed $object
+     * @return string
+     */
+    public static function getFingerprint($object) {
+        if ($object instanceof Traversable || is_array($object)) {
+            $raw = '';
+            foreach ($object as $item) {
+                $raw .= (string) $item;
+            }
+            return md5($raw);
+        } else {
+            return (string) $object;
+        }
+    }
+
 }

@@ -28,6 +28,11 @@ parameters:
     email:
         templatesDir: %appDir%/templates/emails
 
+    # Navigation settings
+    navigation:
+        # How long data for navigation tree is held in the session
+        expiration: '+30 minutes'
+
     # Authentication settings
     authentication:
         # List of allowed hosts to which backlinking after successful authentization is possible.

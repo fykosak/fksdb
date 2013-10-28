@@ -1,6 +1,8 @@
 <?php
 
 use FKS\Components\Controls\JavaScriptLoader;
+use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
+use FKS\Components\Controls\Navigation\INavigablePresenter;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
@@ -11,7 +13,7 @@ use Nette\Application\UI\Presenter;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider {
+abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
     const FLASH_SUCCESS = 'success';
     const FLASH_INFO = 'info';
@@ -21,11 +23,26 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @persistent     */
     public $tld;
 
+    /**
+     * Backlink for tree construction for breadcrumbs.
+     * 
+     * @persistent
+     */
+    public $bc;
+
     /** @var YearCalculator  */
     protected $yearCalculator;
 
     /** @var ServiceContest */
     protected $serviceContest;
+
+    /** @var BreadcrumbsFactory */
+    private $breadcrumbsFactory;
+
+    /**
+     * @var string|null
+     */
+    private $title;
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -41,6 +58,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function injectServiceContest(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
+    }
+
+    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
+        $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
     protected function createTemplate($class = NULL) {
@@ -99,6 +120,73 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }
+    }
+
+    /*     * *******************************
+     * Nette extension for navigation 
+     * ****************************** */
+
+    /**
+     * Formats title method name.
+     * Method should set the title of the page using setTitle method.
+     * 
+     * @param  string
+     * @return string
+     */
+    protected static function formatTitleMethod($view) {
+        return 'title' . $view;
+    }
+
+    public function getTitle() {
+        return $this->backlink();
+        return $this->title;
+    }
+
+    protected function setTitle($title) {
+        $this->title = $title;
+    }
+
+    public function setBacklink($backlink) {
+        $old = $this->bc;
+        $this->bc = $backlink;
+        return $old;
+    }
+
+    public static function publicFormatActionMethod($action) {
+        return static::formatActionMethod($action);
+    }
+
+    public static function getBacklinkParamName() {
+        return 'bc';
+    }
+
+    protected function beforeRender() {
+        parent::beforeRender();
+
+        $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
+        $this->template->title = $this->getTitle();
+
+        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
+        $this['breadcrumbs']->setBacklink($this->getRequest());
+    }
+
+    protected function createComponentBreadcrumbs($name) {
+        $component = $this->breadcrumbsFactory->create();
+        return $component;
+    }
+
+    /*     * *******************************
+     * Nette extension for ACL
+     *      * ****************************** */
+
+    /**
+     * TODO remove?
+     * Formats action method name.
+     * @param  string
+     * @return string
+     */
+    protected static function formatAccessMethod($action) {
+        return 'access' . $action;
     }
 
 }

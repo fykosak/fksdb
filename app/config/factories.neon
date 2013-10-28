@@ -5,6 +5,8 @@ services:
     MailTemplateFactory: self(%email.templatesDir%)
     - FKSDB\Components\Factories\ContestantWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
+    breadcrumbFactory:
+        class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
         class: SQL\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: ResultsModelFactory
