@@ -52,6 +52,10 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Odevzdat řešení'));
+    }
+
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -91,7 +95,7 @@ class SubmitPresenter extends BasePresenter {
                 $form->addGroup(sprintf('Termín %s', $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
-            if($submit && $submit->source == ModelSubmit::SOURCE_POST) {
+            if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
 

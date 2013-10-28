@@ -15,6 +15,10 @@ class DashboardPresenter extends BasePresenter {
         }
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Řešitelský pultík'));
+    }
+
     public function renderDefault() {
         $contestId = $this->getContestant()->getContest()->contest_id;
         $key = $this->context->parameters['contestMapping'][$contestId];

@@ -147,15 +147,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return 'title' . $view;
     }
 
-    public function getTitle() {
-        if ($this->title === false) {
-            $method = $this->formatTitleMethod($this->getView());
-            if (!$this->tryCall($method, $this->getParameter())) {
-                return $this->backlink(); //TODO remove
-
-                $this->title = null;
-            }
+    public function setView($view) {
+        parent::setView($view);
+        $method = $this->formatTitleMethod($this->getView());
+        if (!$this->tryCall($method, $this->getParameter())) {
+            $this->title = null;
         }
+    }
+
+    public function getTitle() {
         return $this->title;
     }
 

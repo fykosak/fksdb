@@ -90,6 +90,10 @@ class PointsPresenter extends SeriesPresenter {
         }
     }
 
+    public function titleDefault() {
+        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()));
+    }
+
     public function renderDefault() {
         $this['pointsForm']->setDefaults();
         $this->template->showAll = (bool) $this->all;

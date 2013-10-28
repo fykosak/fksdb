@@ -18,7 +18,12 @@ class DashboardPresenter extends BasePresenter {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Organizátorský pultík'));
+    }
+
     public function renderDefault() {
+        
     }
 
 }

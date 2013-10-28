@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-        <title>{block titleHeader}FKSDB {include #title}{/block}</title>
+        <title>{block titleHeader}{$title} | FKSDB{/block}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {control cssLoader
@@ -58,7 +58,7 @@
         <div class="container">
         {control breadcrumbs}
         
-        {block titleBody}<h1>{include #title}</h1>{/block}
+        {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
 
         {block flashes}
         <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>

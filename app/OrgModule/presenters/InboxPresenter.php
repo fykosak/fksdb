@@ -99,8 +99,16 @@ class InboxPresenter extends SeriesPresenter {
         }
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Příjem řešení'));
+    }
+
     public function renderDefault() {
         $this['inboxForm']->setDefaults();
+    }
+
+    public function titleHandout() {
+        $this->setTitle(_('Rozdělení úloh opravovatelům'));
     }
 
     public function renderHandout() {
