@@ -6,4 +6,4 @@
 	url = git@fykos.cz:libfks.git
 [submodule "libs/BootstrapFormRenderer"]
 	path = libs/BootstrapFormRenderer
-	url = https://github.com/Kdyby/BootstrapFormRenderer.git
+	url = https://github.com/Werkov/BootstrapFormRenderer.git
