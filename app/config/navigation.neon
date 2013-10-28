@@ -1,30 +1,25 @@
 navigation:
     nodes:
-        org.dashboard:
-            caption: Organizátorský pultík
-            visibility: [@ownerAssertion, isOrg]
+        org.dashboard.default:
+            # title: Organizátorský pultík
             # params:
             # link:
-        org.inbox:
-            caption: Příjem řešení
-            visibility:
-                resource: submit
-                permission: ALL
-        fykos:
-            caption: Web semináře
-            visibility: true # default?
+            # visible:
+
+        vyfuk:
+            title: Web Výfuku
             link: http://vyfuk.fykos.cz/
 
     structure:
-        org.dashboard:
-            - org.inbox
+        org.dashboard.default:
+            - org.inbox.default
             - org.inbox.handout
-            - org.points
+            - org.points.default
             - org.tasks.pull
-            - org.contestant.pull
+            - org.contestant.list
             - org.school.list
             - org.export.list
-        public.dashboard:
-            - public.submit
-            - fykos
+        public.dashboard.default:
+            - public.submit.default
+            - vyfuk
         

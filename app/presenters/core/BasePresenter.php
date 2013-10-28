@@ -3,6 +3,7 @@
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
 use FKS\Components\Controls\Navigation\INavigablePresenter;
+use FKS\Components\Controls\Navigation\NavBar;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
@@ -40,9 +41,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $breadcrumbsFactory;
 
     /**
+     * @var NavBar
+     */
+    private $navigationControl;
+
+    /**
      * @var string|null
      */
-    private $title;
+    private $title = false;
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -62,6 +68,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
+    }
+
+    public function injectNavigationControl(NavBar $navigationControl) {
+        $this->navigationControl = $navigationControl;
     }
 
     protected function createTemplate($class = NULL) {
@@ -138,7 +148,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     public function getTitle() {
-        return $this->backlink();
+        if ($this->title === false) {
+            $method = $this->formatTitleMethod($this->getView());
+            if (!$this->tryCall($method, $this->getParameter())) {
+                return $this->backlink(); //TODO remove
+
+                $this->title = null;
+            }
+        }
         return $this->title;
     }
 
@@ -173,6 +190,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected function createComponentBreadcrumbs($name) {
         $component = $this->breadcrumbsFactory->create();
         return $component;
+    }
+
+    protected function createComponentNavigation($name) {
+        return $this->navigationControl;
     }
 
     /*     * *******************************

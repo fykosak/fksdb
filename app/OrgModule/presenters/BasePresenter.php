@@ -16,8 +16,6 @@ use Nette\Application\BadRequestException;
  */
 abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
-    const PRESETS_KEY = 'orgPresets';
-
     /**
      * @var int
      * @persistent

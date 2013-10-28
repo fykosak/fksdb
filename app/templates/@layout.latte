@@ -31,11 +31,8 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav" n:if="$user->isLoggedIn()">
-                    <li{ifCurrent :Org:Dashboard:} class="active"{/ifCurrent}><a n:if="$user->getIdentity()->isOrg($control->getYearCalculator())" n:href=":Org:Dashboard:">Organizátorský pultík</a></li>
-                    <li{ifCurrent :Public:Dashboard:} class="active"{/ifCurrent}><a n:if="$user->getIdentity()->isContestant($control->getYearCalculator())" n:href=":Public:Dashboard:">Pultík</a></li> {* TODO this may be visible in future as there'll be use cases for registered only persons *}
-                </ul>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">                
+                {control navigation}
 
                 {block user-info}
                 <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
