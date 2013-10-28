@@ -13,7 +13,11 @@ final class AuthenticationPresenter extends BasePresenter {
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
+    /** @const Reason why the user has been logged out. */
+    const PARAM_REASON = 'reason';
     const FLAG_SSO = 'sso';
+    const REASON_TIMEOUT = '1';
+    const REASON_AUTH = '2';
 
     /** @persistent */
     public $backlink = '';
@@ -98,6 +102,15 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->getUser()->getIdentity();
             $this->backlinkRedirect($login);
             $this->initialRedirect($login);
+        } else if ($this->getParam(self::PARAM_REASON)) {
+            switch ($this->getParam(self::PARAM_REASON)) {
+                case self::REASON_TIMEOUT:
+                    $this->flashMessage(_('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.'), self::FLASH_INFO);
+                    break;
+                case self::REASON_AUTH:
+                    $this->flashMessage(_('Stránka požaduje přihlášení.'), self::FLASH_ERROR);
+                    break;
+            }
         }
     }
 

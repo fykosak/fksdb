@@ -2,6 +2,7 @@
 
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
@@ -50,17 +51,23 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
             $this->loginRedirect();
+        } else if (!$this->getAccess()) {
+            $this->unauthorizedAccess();
         }
     }
 
-    protected function loginRedirect() {
+    private function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
-            $this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.', self::FLASH_INFO);
+            $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
-            $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.', self::FLASH_ERROR);
+            $reason = AuthenticationPresenter::REASON_AUTH;
         }
         $backlink = $this->application->storeRequest();
-        $this->redirect(':Authentication:login', array('backlink' => $backlink));
+        $this->redirect(':Authentication:login', array('backlink' => $backlink, AuthenticationPresenter::PARAM_REASON => $reason));
+    }
+
+    protected function unauthorizedAccess() {
+        throw new ForbiddenRequestException();
     }
 
     private function tryAuthToken() {

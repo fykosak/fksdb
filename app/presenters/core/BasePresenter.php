@@ -8,6 +8,7 @@ use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Presenter;
 
@@ -49,6 +50,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var string|null
      */
     private $title = false;
+
+    /**
+     * @var boolean
+     */
+    private $access = true;
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -200,6 +206,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Nette extension for ACL
      *      * ****************************** */
 
+    public function getAccess() {
+        return $this->access;
+    }
+
+    public function setAccess($access) {
+        $this->access = $access;
+    }
+
     /**
      * TODO remove?
      * Formats action method name.
@@ -208,6 +222,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected static function formatAccessMethod($action) {
         return 'access' . $action;
+    }
+
+    public function checkRequirements($element) {
+        parent::checkRequirements($element);
+        if ($element instanceof ReflectionClass) {
+            $method = $this->formatAccessMethod($this->getAction());
+            if (!$this->tryCall($method, $this->getParameter())) {
+                $this->access = true;
+            }
+        }
     }
 
 }

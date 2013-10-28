@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls;
 use ModelContest;
 use ModelRole;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Nette\Http\Session;
+use Nette\InvalidStateException;
 use ServiceContest;
 use YearCalculator;
 
@@ -71,15 +71,16 @@ class ContestChooser extends Control {
      * Redirect to corrrect address accorging to the resolved values.
      */
     public function syncRedirect() {
+        $this->init();
+
         $presenter = $this->getPresenter();
-        if (isset($presenter->year)) {
-            $contestId = $this->contest->contest_id;
-            if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
-                $presenter->redirect('this', array(
-                    'contestId' => $contestId,
-                    'year' => $this->year
-                ));
-            }
+
+        $contestId = $this->contest->contest_id;
+        if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
+            $presenter->redirect('this', array(
+                'contestId' => $contestId,
+                'year' => $this->year
+            ));
         }
     }
 
@@ -146,6 +147,10 @@ class ContestChooser extends Control {
      * @return array of contests where user is either ORG or CONTESTANT
      */
     private function getContests() {
+        if (!$this->getLogin()) {
+            return array();
+        }
+
         $ids = array();
         if ($this->role == ModelRole::ORG) {
             $ids = array_keys($this->getLogin()->getActiveOrgs($this->yearCalculator));

@@ -26,18 +26,6 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
      */
     public $contestId;
 
-    protected function startup() {
-        parent::startup();
-
-        if (!$this['contestChooser']->isValid()) {
-            if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
-                throw new BadRequestException('Neautoriziván pro žádný seminář.', 403);
-            } else {
-                $this->redirect(':Authentication:login');
-            }
-        }
-    }
-
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser(ModelRole::CONTESTANT, $this->session, $this->yearCalculator, $this->serviceContest);
         return $control;

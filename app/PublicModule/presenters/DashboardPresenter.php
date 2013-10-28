@@ -9,10 +9,18 @@ namespace PublicModule;
  */
 class DashboardPresenter extends BasePresenter {
 
-    public function actionDefault() {
-        if (!$this->user->getIdentity()->isContestant($this->yearCalculator)) {
-            throw new BadRequestException('Osoba není řešitel.', 403);
+    protected function unauthorizedAccess() {
+        if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
+            parent::unauthorizedAccess();
+        } else {
+            $this->redirect(':Authentication:login'); // ask for a central dispatch
         }
+    }
+
+    public function accessDefault() {
+        $login = $this->getUser()->getIdentity();
+        $access = $login ? $login->isContestant($this->yearCalculator) : false;
+        $this->setAccess($access);
     }
 
     public function titleDefault() {

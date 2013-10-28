@@ -75,19 +75,14 @@ class LoginUserStorage extends UserStorage {
             $params = array(
                 'backlink' => (string) $this->request->getUrl(),
                 'flag' => AuthenticationPresenter::FLAG_SSO,
+                AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
             );
-            if (Debugger::isEnabled()) {
-                $params['debug-storage'] = 1;
-                $params['debug-presenter'] = get_class($presenter);
-            }
-            //Debugger::dump($var);
 
             parent::setAuthenticated(false); // somehow session contains authenticated flag
 
             if ($presenter instanceof AuthenticatedPresenter) {
                 $presenter->redirect(':Authentication:login', $params);
             }
-            //echo "ret false\n";
             return false;
         }
     }
