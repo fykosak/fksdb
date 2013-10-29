@@ -14,7 +14,7 @@ class Authentication {
     const PARAM_BACKLINK = 'backlink';
     const PARAM_FLAG = 'flag';
     const PARAM_GSID = 'gsid';
-    const SSO_FLAG = 'sso';
+    const FLAG_SSO_LOGIN = 'sso';
 
     /**
      * @var IGlobalSession
