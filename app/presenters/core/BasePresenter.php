@@ -94,6 +94,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator(new DummyTranslator());
+        $template->beta = $this->context->parameters['beta'];
         return $template;
     }
 

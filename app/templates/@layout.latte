@@ -10,6 +10,7 @@
         {control cssLoader
         'css/bootstrap.min.css' => [screen],
         'css/bootstrap-theme.min.css' => [screen],
+        'css/style.css' => [screen],
         'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
         }
 
@@ -17,57 +18,67 @@
     </head>
 
     <body>
-        {block body}
-        <nav class="navbar navbar-default" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{$basePath}/">FKSDB</a>
-            </div>
+        <div id="wrap">
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">                
-                {control navigation}
+            {block body}
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
+                </div>
 
-                {block user-info}
-                <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
-                    {var $login => $user->getIdentity()}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-user"></span>
-                            {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
-                            {else}
-                            {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
-                            <li class="divider"></li>
-                            <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
-                        </ul>
-                    </li>
-                </ul>                
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">                
+                    {control navigation}
+
+                    {block user-info}
+                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                        {var $login => $user->getIdentity()}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span>
+                                {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
+                                {else}
+                                {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                                <li class="divider"></li>
+                                <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                            </ul>
+                        </li>
+                    </ul>                
+                    {/block}
+
+                </div><!-- /.navbar-collapse -->
+            </nav>
+
+            <div class="container">
+                {control breadcrumbs}
+                {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+
+
+                {block flashes}
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
 
-            </div><!-- /.navbar-collapse -->
-        </nav>
-        
-        <div class="container">
-        {control breadcrumbs}
-        
-        {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+                {include #content}
 
-        {block flashes}
-        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-        {/block}
+            </div>
+            {/block body}
+        </div> <!-- wrap -->
+        <div id="footer" n:block="footer">
+            <div class="container text-center text-muted">
+                <ul class="list-piped">
+                    <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
+                    <li><a href="http://vyfuk.fykos.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
+                    <li>Správce systému: <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a></li>
+                </ul>
+            </div>
+        </div>
 
-        {include #content}
-        
-        </div> {* body block *}
-        {/block}
         <div id="spinner"></div>
         {block scripts}
         {control jsLoader 
