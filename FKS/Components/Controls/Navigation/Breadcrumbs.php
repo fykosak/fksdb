@@ -5,7 +5,7 @@ namespace FKS\Components\Controls\Navigation;
 use FKS\Components\Controls\Navigation\Request as NaviRequest;
 use Nette\Application\IRouter;
 use Nette\Application\PresenterFactory;
-use Nette\Application\Request;
+use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\PresenterComponentReflection;
@@ -79,7 +79,7 @@ class Breadcrumbs extends Control {
      * Public API
      * ********************** */
 
-    public function setBacklink(Request $request) {
+    public function setBacklink(AppRequest $request) {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
             $class = get_class($presenter);
@@ -130,7 +130,7 @@ class Breadcrumbs extends Control {
      * Path traversal
      * ********************** */
 
-    private function getTraversePath(Request $request) {
+    private function getTraversePath(AppRequest $request) {
         $requests = $this->getRequests();
         $backlinkMap = $this->getBacklinkMap();
 
@@ -166,11 +166,11 @@ class Breadcrumbs extends Control {
 
     /**
      * 
-     * @param Request|string $request
+     * @param AppRequest|string $request
      * @return string
      */
     private function getPathKey($request) {
-        if ($request instanceof Request) {
+        if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
@@ -242,12 +242,12 @@ class Breadcrumbs extends Control {
         $requests[$requestKey] = $naviRequest;
     }
 
-    protected function createNaviRequest(INavigablePresenter $presenter, Request $request, $backlink) {
+    protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backlink) {
         $pathKey = $this->getPathKey($request);
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backlink, $pathKey);
     }
 
-    protected function getRequestKey(Request $request) {
+    protected function getRequestKey(AppRequest $request) {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
