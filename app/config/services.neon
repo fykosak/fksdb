@@ -3,9 +3,10 @@
 #
 
 services:
+    - Authentication\AccountManager
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator
+    - Authentication\TokenAuthenticator    
     contestAuthorizator: Authorization\ContestAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator

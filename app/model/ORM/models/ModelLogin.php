@@ -126,18 +126,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         $this->hash = PasswordAuthenticator::calculateHash($password, $this);
     }
 
-    public function resetPassword() {
-        //TODO
-    }
-
-    public function sendResetNotification() {
-        //TODO
-    }
-
-    public function sendCreateNotification() {
-        //TODO
-    }
-
     // ----- IIdentity implementation ----------
 
     public function getId() {

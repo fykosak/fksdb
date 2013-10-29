@@ -281,4 +281,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorizedCache[$key];
     }
 
+    /*     * *******************************
+     * Stuff common to all presenters
+     *      * ****************************** */
+
+    /**
+     * 
+     * @return string ISO 639-1
+     */
+    public function getLang() {
+        return 'cs';
+    }
+
 }

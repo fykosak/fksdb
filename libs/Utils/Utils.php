@@ -116,4 +116,21 @@ class Utils {
         }
     }
 
+    /**
+     * Tranform an address in order only the owner could recongize it.
+     * 
+     * @param string $email
+     * @return string
+     */
+    public static function cryptEmail($email) {
+        list($user, $host) = preg_split('/@/', $email);
+        if (strlen($user) < 3) {
+            return "@$host";
+        } else {
+            $b = substr($user, 0, 1);
+            $e = substr($user, -1);
+            return "{$b}…{$e}@$host";
+        }
+    }
+
 }

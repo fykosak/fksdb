@@ -56,7 +56,7 @@ fksrouter:
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             flags: ONE_WAY
-        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login>':
+        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%

@@ -2,7 +2,9 @@
 # Factories definitions
 #
 services:
-    MailTemplateFactory: self(%email.templatesDir%)
+    mailTemplateFactory:
+        class: Mail\MailTemplateFactory(%email.templatesDir%)
+
     - FKSDB\Components\Factories\ContestantWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     breadcrumbFactory:

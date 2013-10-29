@@ -12,6 +12,9 @@ class ModelAuthToken extends AbstractModelSingle {
     /** @const Single sign-on inter-domain ticket */
     const TYPE_SSO = 'sso';
 
+    /** @const Password recovery login */
+    const TYPE_RECOVERY = 'recovery';
+
     /**
      * @return ModelLogin
      */

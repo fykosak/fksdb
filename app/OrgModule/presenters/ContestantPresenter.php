@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use Authentication\AccountManager;
 use FKSDB\Components\Factories\ContestantWizardFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -12,8 +13,8 @@ use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use MailNotSendException;
-use MailTemplateFactory;
+use Mail\MailTemplateFactory;
+use Mail\SendFailedException;
 use ModelException;
 use ModelPerson;
 use Nette\Application\UI\Form;
@@ -83,6 +84,11 @@ class ContestantPresenter extends EntityPresenter {
      */
     private $mailTemplateFactory;
 
+    /**
+     * @var AccountManager
+     */
+    private $accountManager;
+
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -121,6 +127,10 @@ class ContestantPresenter extends EntityPresenter {
 
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
+    }
+
+    public function injectAccountManager(AccountManager $accountManager) {
+        $this->accountManager = $accountManager;
     }
 
     public function titleEdit($id) {
@@ -282,9 +292,9 @@ class ContestantPresenter extends EntityPresenter {
                 } else if ($dataInfo[PersonFactory::EL_CREATE_LOGIN]) {
                     $template = $this->mailTemplateFactory->createLoginInvitation($this, 'cs'); //TODO i18n of created logins
                     try {
-                        $login = $this->serviceLogin->createLoginWithInvitation($template, $person, $email);
+                        $login = $this->accountManager->createLoginWithInvitation($template, $person, $email);
                         $this->flashMessage('Zvací e-mail odeslán.', self::FLASH_INFO);
-                    } catch (MailNotSendException $e) {
+                    } catch (SendFailedException $e) {
                         $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', self::FLASH_ERROR);
                     }
                 } else {

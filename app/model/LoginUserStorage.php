@@ -15,6 +15,13 @@ use Nette\Security\IIdentity;
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
  */
 class LoginUserStorage extends UserStorage {
+    /** @const HTTP GET parameter holding control information for the SSO */
+
+    const PARAM_SSO = 'sso';
+    /** @const Value meaning the user is not centally authneticated. */
+    const SSO_AUTHENTICATED = 'a';
+    /** @const Value meaning the user is not centally authneticated. */
+    const SSO_UNAUTHENTICATED = 'ua';
 
     /** @var ServiceLogin */
     private $loginService;
@@ -71,17 +78,25 @@ class LoginUserStorage extends UserStorage {
              */
             return $local;
         } else {
-            $presenter = $this->application->getPresenter();
-            $params = array(
-                'backlink' => (string) $this->request->getUrl(),
-                'flag' => AuthenticationPresenter::FLAG_SSO,
-                AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-            );
-
             parent::setAuthenticated(false); // somehow session contains authenticated flag
 
-            if ($presenter instanceof AuthenticatedPresenter) {
-                $presenter->redirect(':Authentication:login', $params);
+            $presenter = $this->application->getPresenter();
+            $ssoData = $presenter->getParameter(self::PARAM_SSO);
+
+            /* If this is the first try, we redirect to the central login page,
+             * otherwise we avoid redirection loop by checking PARAM_SSO and
+             * redirection to the login page will be done in the startup method.
+             */
+            if (!$ssoData) {
+                $params = array(
+                    'backlink' => (string) $this->request->getUrl(),
+                    'flag' => AuthenticationPresenter::FLAG_SSO_LOGIN,
+                    AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
+                );
+
+                if ($presenter instanceof AuthenticatedPresenter) {
+                    $presenter->redirect(':Authentication:login', $params);
+                }
             }
             return false;
         }
