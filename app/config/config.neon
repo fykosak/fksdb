@@ -30,6 +30,7 @@ parameters:
     # Configuration of sent emails.
     email:
         templatesDir: %appDir%/templates/emails
+        from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
     navigation:
@@ -102,6 +103,10 @@ parameters:
     invitation:
         # How long (relatively) is authentication token valid after invitation.
         expiration: '+1 month'
+
+    recovery:
+        # Forgotten password recovery
+        expiration: '+1 day'
 
 
 php:

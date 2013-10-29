@@ -33,6 +33,7 @@ class AccountManager {
     private $serviceAuthToken;
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
+    private $emailFrom;
 
     function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken) {
         $this->serviceLogin = $serviceLogin;
@@ -53,6 +54,14 @@ class AccountManager {
 
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
+    }
+
+    public function getEmailFrom() {
+        return $this->emailFrom;
+    }
+
+    public function setEmailFrom($emailFrom) {
+        $this->emailFrom = $emailFrom;
     }
 
     /**
@@ -118,10 +127,14 @@ class AccountManager {
         $template->until = $until;
 
         $message = new Message();
-        $message->setBody($template);
+        //$message->setBody($template);
+        $message->setHtmlBody($template);
+        $message->setSubject(_('Obnova hesla'));
+        $message->setFrom($this->getEmailFrom());
+
         $message->addTo($login->email, $login->__toString());
 
-        Debugger::log($message->getBody()->__toString(true));
+        Debugger::log((string) $message->getHtmlBody());
 
         try {
             $message->send();

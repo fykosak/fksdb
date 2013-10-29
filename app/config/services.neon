@@ -3,7 +3,12 @@
 #
 
 services:
-    - Authentication\AccountManager
+    accountManager:
+        class: Authentication\AccountManager
+        setup:
+            - setInvitationExpiration(%invitation.expiration%)
+            - setRecoveryExpiration(%recovery.expiration%)
+            - setEmailFrom(%email.from%)
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
     - Authentication\TokenAuthenticator    
