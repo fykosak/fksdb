@@ -6,7 +6,6 @@ use ModelContest;
 use ModelRole;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
-use Nette\InvalidStateException;
 use ServiceContest;
 use YearCalculator;
 

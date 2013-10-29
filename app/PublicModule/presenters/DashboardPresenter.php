@@ -19,10 +19,10 @@ class DashboardPresenter extends BasePresenter {
         }
     }
 
-    public function accessDefault() {
+    public function authorizedDefault() {
         $login = $this->getUser()->getIdentity();
         $access = $login ? $login->isContestant($this->yearCalculator) : false;
-        $this->setAccess($access);
+        $this->setAuthorized($access);
     }
 
     public function titleDefault() {

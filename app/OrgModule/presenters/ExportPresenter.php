@@ -133,39 +133,39 @@ class ExportPresenter extends SeriesPresenter {
         return $this->patternQuery;
     }
 
-    public function accessList() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest()));
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest()));
     }
 
-    public function accessCompose() {
-        $this->setAccess(
+    public function authorizedCompose() {
+        $this->setAuthorized(
                 ($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) &&
                 $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))
         );
     }
 
-    public function accessEdit($id) {
+    public function authorizedEdit($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
 
-    public function accessShow($id) {
+    public function authorizedShow($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest()));
     }
 
-    public function accessExecute($id) {
+    public function authorizedExecute($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
     }
 
     public function actionExecute($id) {

@@ -3,11 +3,9 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
-use AuthenticationPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
 use ModelRole;
-use Nette\Application\BadRequestException;
 
 /**
  * Presenter keeps chosen contest and year in session.

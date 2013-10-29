@@ -47,8 +47,8 @@ class TasksPresenter extends BasePresenter {
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    public function accessPull() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
+    public function authorizedPull() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
     public function titlePull() {

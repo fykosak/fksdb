@@ -42,6 +42,26 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return $this->tokenAuthenticator;
     }
 
+    /**
+     * Formats action method name.
+     * @param  string
+     * @return string
+     */
+    protected static function formatAuthorizedMethod($action) {
+        return 'authorized' . $action;
+    }
+
+    public function checkRequirements($element) {
+        parent::checkRequirements($element);
+        if ($element instanceof ReflectionClass) {
+            $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
+            if ($this->isAuthorized()) { // check authorization
+                $method = $this->formatAuthorizedMethod($this->getAction());
+                $this->tryCall($method, $this->getParameter());
+            }
+        }
+    }
+
     protected function startup() {
         parent::startup();
 
@@ -51,7 +71,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
             $this->loginRedirect();
-        } else if (!$this->getAccess()) {
+        } else if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }

@@ -56,12 +56,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @var boolean
      */
-    private $access = true;
+    private $authorized = true;
 
     /**
      * @var array[string] => bool
      */
-    private $allowedCache = array();
+    private $authorizedCache = array();
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -218,43 +218,29 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /*     * *******************************
-     * Nette extension for ACL
+     * Extension of Nette ACL
      *      * ****************************** */
 
-    public function getAccess() {
-        return $this->access;
+    public function isAuthorized() {
+        return $this->authorized;
     }
 
-    public function setAccess($access) {
-        $this->access = $access;
-    }
-
-    /**
-     * Formats action method name.
-     * @param  string
-     * @return string
-     */
-    protected static function formatAccessMethod($action) {
-        return 'access' . $action;
+    public function setAuthorized($access) {
+        $this->authorized = $access;
     }
 
     public function checkRequirements($element) {
         parent::checkRequirements($element);
-        if ($element instanceof ReflectionClass) {
-            $method = $this->formatAccessMethod($this->getAction());
-            if (!$this->tryCall($method, $this->getParameter())) {
-                $this->access = true;
-            }
-        }
+        $this->setAuthorized(true);
     }
 
-    public function allowed($destination, $args = null) {
+    public function authorized($destination, $args = null) {
         if (substr($destination, -1) === '!' || $destination === 'this') {
             $destination = $this->getAction(true);
         }
 
         $key = $destination . Utils::getFingerprint($args);
-        if (!isset($this->allowedCache[$key])) {
+        if (!isset($this->authorizedCache[$key])) {
             /*
              * This part is extracted from Presenter::createRequest
              */
@@ -287,12 +273,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
-                $this->allowedCache[$key] = $testedPresenter->getAccess();
+                $this->authorizedCache[$key] = $testedPresenter->isAuthorized();
             } catch (BadRequestException $e) {
-                $this->allowedCache[$key] = false;
+                $this->authorizedCache[$key] = false;
             }
         }
-        return $this->allowedCache[$key];
+        return $this->authorizedCache[$key];
     }
 
 }

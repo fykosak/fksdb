@@ -46,15 +46,15 @@ class SubmitPresenter extends BasePresenter {
         $this->submitStorage = $submitStorage;
     }
 
-    public function accessDefault() {
-        $this->setAccess($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
+    public function authorizedDefault() {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
     }
 
-    public function accessDownload($id) {
+    public function authorizedDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
         if (!$submit) {
@@ -63,7 +63,7 @@ class SubmitPresenter extends BasePresenter {
 
         $submit->task_id; // stupid touch
         $contest = $submit->getContestant()->getContest();
-        $this->setAccess($this->contestAuthorizator->isAllowed($submit, 'download', $contest));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($submit, 'download', $contest));
 
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
             throw new BadRequestException('Lze stahovat jen uploadovaná řešení.', 501);

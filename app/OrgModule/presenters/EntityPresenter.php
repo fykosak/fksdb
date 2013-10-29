@@ -31,28 +31,28 @@ abstract class EntityPresenter extends BasePresenter {
      */
     protected $modelResourceId;
 
-    public function accessCreate() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
+    public function authorizedCreate() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
     }
 
-    public function accessEdit($id) {
+    public function authorizedEdit($id) {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
         }
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
     }
 
-    public function accessList() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
     }
 
-    public function accessDelete($id) {
+    public function authorizedDelete($id) {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
         }
-        $this->setAccess($this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest()));
     }
 
     public function renderEdit($id) {

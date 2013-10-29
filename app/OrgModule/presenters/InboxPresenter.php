@@ -87,12 +87,12 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function accessDefault() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    public function accessHandout() {
-        $this->setAccess($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
+    public function authorizedHandout() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     public function titleDefault() {
@@ -134,6 +134,7 @@ class InboxPresenter extends SeriesPresenter {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
+        $form->setRenderer(new BootstrapRenderer());
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
