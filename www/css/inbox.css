@@ -3,9 +3,11 @@
     width: 100px;
     float: left;
     margin: 2px;
-    background: #dda; /* debug*/
 }
 
+.inbox-field input {    
+    width: 90px;
+}
 .inbox-field input {    
     width: 90px;
 }
@@ -13,8 +15,10 @@
 
 ul.inbox-swappable {
     list-style-type: none;
+    cursor: move;
 }
 
+/* TODO should be moved somewhere more global */
 #spinner {
     background-image: url('../images/spinner.gif');
     position:fixed;

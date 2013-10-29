@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\OptimisticForm;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelTaskContribution;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceSubmit;
@@ -104,7 +103,10 @@ class PointsPresenter extends SeriesPresenter {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
-        $form->setRenderer(new BootstrapRenderer());
+        $renderer = new BootstrapRenderer();
+        $renderer->setColRight(10);
+        $form->setRenderer($renderer);
+
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
