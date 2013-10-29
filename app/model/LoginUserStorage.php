@@ -90,7 +90,7 @@ class LoginUserStorage extends UserStorage {
             if (!$ssoData) {
                 $params = array(
                     'backlink' => (string) $this->request->getUrl(),
-                    'flag' => AuthenticationPresenter::FLAG_SSO_LOGIN,
+                    'flag' => AuthenticationPresenter::FLAG_SSO_PROBE,
                     AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                 );
 
