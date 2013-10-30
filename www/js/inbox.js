@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var linkFormat = '/public.submit/download/%d';
+    var linkFormat = '/submit/download/%d';
     function createDownloadLink(taskData) {
         var el = $('<a>');
         el.attr('class', 'btn btn-xs btn-default');
