@@ -92,10 +92,12 @@ class AccountManager {
         $template->until = $until;
 
         $message = new Message();
-        $message->setBody($template);
+        $message->setHtmlBody($template);
+        $message->setSubject(_('Založení účtu'));
+        $message->setFrom($this->getEmailFrom());
         $message->addTo($email, $person->getFullname());
 
-        Debugger::log($message->getBody()->__toString(true));
+        Debugger::log((string) $message->getHtmlBody());
 
         try {
             $message->send();
@@ -127,11 +129,9 @@ class AccountManager {
         $template->until = $until;
 
         $message = new Message();
-        //$message->setBody($template);
         $message->setHtmlBody($template);
         $message->setSubject(_('Obnova hesla'));
         $message->setFrom($this->getEmailFrom());
-
         $message->addTo($login->email, $login->__toString());
 
         Debugger::log((string) $message->getHtmlBody());
