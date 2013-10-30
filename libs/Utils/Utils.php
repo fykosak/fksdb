@@ -108,7 +108,7 @@ class Utils {
         if ($object instanceof Traversable || is_array($object)) {
             $raw = '';
             foreach ($object as $item) {
-                $raw .= (string) $item;
+                $raw .= self::getFingerprint($item);
             }
             return md5($raw);
         } else {
