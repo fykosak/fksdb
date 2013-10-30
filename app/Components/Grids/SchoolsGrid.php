@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use NiftyGrid\DataSource\NDataSource;
+use FKSDB\Components\Grids\BaseGrid;
+use Nette\Database\Table\Selection;
+use SQL\SearchableDataSource;
 
 /**
  *
@@ -19,7 +21,14 @@ class SchoolsGrid extends BaseGrid {
         $serviceSchool = $presenter->context->getService('ServiceSchool');
         $schools = $serviceSchool->getSchools();
 
-        $this->setDataSource(new NDataSource($schools));
+        $dataSource = new SearchableDataSource($schools);
+        $dataSource->setFilterCallback(function(Selection $table, $value) {
+                    $tokens = preg_split('/\s+/', $value);
+                    foreach ($tokens as $token) {
+                        $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                    }
+                });
+        $this->setDataSource($dataSource);
 
         //
         // columns
@@ -32,16 +41,18 @@ class SchoolsGrid extends BaseGrid {
         //
         $that = $this;
         $this->addButton("edit", "Upravit")
-                ->setClass("edit")
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->school_id);
                         });
-        // TODO add search/filtering schools
+        $this->addGlobalButton('add')
+                ->setLink($this->getPresenter()->link('create'))
+                ->setLabel('Vložit školu')
+                ->setClass('btn btn-sm btn-primary');
 
         //
         // appeareance
-        //
+    //
 
     }
 

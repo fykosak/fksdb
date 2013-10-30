@@ -49,7 +49,6 @@ class StoredQueriesGrid extends BaseGrid {
         $that = $this;
         $contest = $presenter->getSelectedContest();
         $this->addButton("edit", "Upravit")
-                ->setClass("edit")
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->query_id);
@@ -58,7 +57,6 @@ class StoredQueriesGrid extends BaseGrid {
                             return $that->contestAuthorizator->isAllowed($row, 'edit', $contest);
                         });
         $this->addButton("show", "Zobrazit")
-                ->setClass("show")
                 ->setText('Zobrazit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("show", $row->query_id);
@@ -68,7 +66,7 @@ class StoredQueriesGrid extends BaseGrid {
                         });
 
         $this->addButton("execute", "Spustit")
-                ->setClass("execute")
+                ->setClass("btn btn-xs btn-primary")
                 ->setText('Spustit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("execute", $row->query_id);
@@ -76,6 +74,9 @@ class StoredQueriesGrid extends BaseGrid {
                 ->setShow(function($row) use ($that, $contest) {
                             return $that->contestAuthorizator->isAllowed($row, 'execute', $contest);
                         });
+
+        $this->addGlobalButton('compose', 'Napsat dotaz')
+                ->setLink($this->getPresenter()->link('compose'));
     }
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+use FKS\Config\Extensions\NavigationExtension;
 use FKS\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
@@ -13,8 +14,9 @@ require LIBS_DIR . '/autoload.php';
 // Configure application
 $configurator = new Configurator();
 $configurator->onCompile[] = function ($configurator, $compiler) {
-    $compiler->addExtension('fksrouter', new RouterExtension());
-};
+            $compiler->addExtension('fksrouter', new RouterExtension());
+            $compiler->addExtension('navigation', new NavigationExtension());
+        };
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');

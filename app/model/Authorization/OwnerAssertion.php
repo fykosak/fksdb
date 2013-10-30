@@ -80,8 +80,8 @@ class OwnerAssertion {
         $person = $acl->getQueriedResource();
         $grant = $acl->getQueriedRole();
 
-        //TODO restrict also to the current year?
-        $contestants = $person->getContestants()->where(array('contest_id' => $grant->getContestId()));
+        //TODO restrict also to the current year? Probably another assertion.
+        $contestants = $person->getContestants($grant->getContestId());
         return count($contestants) > 0;
     }
 

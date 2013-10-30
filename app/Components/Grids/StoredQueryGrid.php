@@ -47,6 +47,14 @@ class StoredQueryGrid extends BaseGrid {
         // operations
         //
         $this->paginate = false;
+
+        $this->addGlobalButton('csv')
+                ->setLabel('Uložit CSV')
+                ->setLink($this->getParent()->link('csv!'));
+
+        $this->addGlobalButton('csvh')
+                ->setLabel('Uložit CSV (bez hlavičky)')
+                ->setLink($this->getParent()->link('csv!', array('header' => false)));
     }
 
 }

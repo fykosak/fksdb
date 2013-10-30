@@ -1,28 +1,13 @@
-a.later {
-    color:#ccc;
-}
-.user-info {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    padding: 10px;
-    background-color: #fff;
-}
-
-.flash {
-    background-color: #ffc;
-    border: 1px solid #dda;
-    padding: 10px;
-}
-
 .inbox-field {
     display: block;
     width: 100px;
     float: left;
     margin: 2px;
-    background: #dda; /* debug*/
 }
 
+.inbox-field input {    
+    width: 90px;
+}
 .inbox-field input {    
     width: 90px;
 }
@@ -30,8 +15,10 @@ a.later {
 
 ul.inbox-swappable {
     list-style-type: none;
+    cursor: move;
 }
 
+/* TODO should be moved somewhere more global */
 #spinner {
     background-image: url('../images/spinner.gif');
     position:fixed;

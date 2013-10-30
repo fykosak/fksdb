@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -46,14 +47,17 @@ class TasksPresenter extends BasePresenter {
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    public function actionPull() {
-        if (!$this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedPull() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
+    }
+
+    public function titlePull() {
+        $this->setTitle(_('Stažení úloh'));
     }
 
     protected function createComponentSeriesForm() {
         $seriesForm = new Form();
+        $seriesForm->setRenderer(new BootstrapRenderer());
 
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $seriesForm->addSelect('series', 'Série')
@@ -89,13 +93,13 @@ class TasksPresenter extends BasePresenter {
                 unlink($XMLfilename);
 
                 foreach ($pipeline->getLog() as $message) {
-                    $this->flashMessage($message);
+                    $this->flashMessage($message, self::FLASH_INFO);
                 }
-                $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně staženy.', $language));
+                $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně staženy.', $language), self::FLASH_SUCCESS);
             } catch (DownloadException $e) {
-                $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), 'error');
+                $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), self::FLASH_WARNING);
             } catch (ModelException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), 'error');
+                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), self::FLASH_ERROR);
                 Debugger::log($e);
             }
         }

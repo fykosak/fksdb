@@ -1,0 +1,25 @@
+navigation:
+    nodes:
+        org.dashboard.default:
+            # title: Organizátorský pultík
+            # params:
+            # link:
+            # visible:
+
+        vyfuk:
+            title: Web Výfuku
+            link: http://vyfuk.fykos.cz/
+
+    structure:
+        org.dashboard.default:
+            - org.inbox.default
+            - org.inbox.handout
+            - org.points.default
+            - org.tasks.pull
+            - org.contestant.list
+            - org.school.list
+            - org.export.list
+        public.dashboard.default:
+            - public.submit.default
+
+        

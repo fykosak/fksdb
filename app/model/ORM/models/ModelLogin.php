@@ -21,6 +21,11 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     private $person = false;
 
+    /**
+     * @var array
+     */
+    private $availableContests = array();
+
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
@@ -57,6 +62,23 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             }
             return $result;
         }
+    }
+
+    public function getAvailableContests($role, $serviceContest) {
+        if (!array_key_exists($role, $this->availableContests)) {
+            $this->availableContests[$role] = array();
+            $result = & $this->availableContests[$role];
+            if ($role == ModelRole::ORG) {
+                foreach ($this->getActiveOrgs($this->yearCalculator) as $contestId => $_) {
+                    $result[] = $serviceContest->findByPrimary($contestId);
+                }
+            } else if ($role == ModelRole::CONTESTANT && $this->getPerson()) {
+                foreach ($this->getPerson()->getActiveContestants($this->yearCalculator) as $contestId => $_) {
+                    $result[] = $serviceContest->findByPrimary($contestId);
+                }
+            }
+        }
+        return $this->availableContests[$role];
     }
 
     public function isOrg($yearCalculator) {
@@ -102,18 +124,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     public function setHash($password) {
         $this->hash = PasswordAuthenticator::calculateHash($password, $this);
-    }
-
-    public function resetPassword() {
-        //TODO
-    }
-
-    public function sendResetNotification() {
-        //TODO
-    }
-
-    public function sendCreateNotification() {
-        //TODO
     }
 
     // ----- IIdentity implementation ----------

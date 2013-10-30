@@ -2,11 +2,12 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\Components\View\StoredQueryComponent;
 use FormUtils;
 use IResultsModel;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelException;
 use ModelPerson;
@@ -132,50 +133,49 @@ class ExportPresenter extends SeriesPresenter {
         return $this->patternQuery;
     }
 
-    public function actionList() {
-        if (!$this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest()));
     }
 
-    public function actionCompose() {
-        if (!($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) ||
-                $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedCompose() {
+        $this->setAuthorized(
+                ($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) &&
+                $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))
+        );
     }
 
-    public function actionEdit($id) {
+    public function authorizedEdit($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
 
-    public function actionShow($id) {
+    public function authorizedShow($id) {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest()));
+    }
+
+    public function authorizedExecute($id) {
+        $query = $this->getPatternQuery();
+        if (!$query) {
+            throw new BadRequestException('Neexistující dotaz.', 404);
         }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
     }
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        if (!$query) {
-            throw new BadRequestException('Neexistující dotaz.', 404);
-        }
-        if (!$this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
-
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
+    }
+
+    public function titleEdit($id) {
+        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
     }
 
     public function renderEdit($id) {
@@ -197,6 +197,10 @@ class ExportPresenter extends SeriesPresenter {
         $this['editForm']->setDefaults($values);
     }
 
+    public function titleCompose() {
+        $this->setTitle(sprintf(_('Napsat dotaz')));
+    }
+
     public function renderCompose() {
         $query = $this->getPatternQuery();
 
@@ -206,8 +210,20 @@ class ExportPresenter extends SeriesPresenter {
         }
     }
 
+    public function titleList() {
+        $this->setTitle(_('Exporty'));
+    }
+
+    public function titleShow($id) {
+        $this->setTitle(sprintf(_('Editace dotazu %s'), $this->getPatternQuery()->name));
+    }
+
     public function renderShow($id) {
         $this->template->storedQuery = $this->getPatternQuery();
+    }
+
+    public function titleExecute($id) {
+        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
     }
 
     public function renderExecute($id) {
@@ -248,6 +264,7 @@ class ExportPresenter extends SeriesPresenter {
 
     private function createDesignForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $group = $form->addGroup('SQL');
 
@@ -265,16 +282,17 @@ class ExportPresenter extends SeriesPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('execute', 'Spustit')
-                        ->setValidationScope(false)
-                ->onClick[] = array($this, 'handleComposeExecute');
+        $submit = $form->addSubmit('execute', 'Spustit')
+                ->setValidationScope(false);
+        $submit->getControlPrototype()->addClass('btn-success');
+        $submit->onClick[] = array($this, 'handleComposeExecute');
 
         return $form;
     }
 
     public function handleComposeExecute(SubmitButton $button) {
         if (!$this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest())) {
-            $this->flashMessage('Nedostatečné oprávnění ke spuštění dotazu.', 'error');
+            $this->flashMessage('Nedostatečné oprávnění ke spuštění dotazu.', self::FLASH_ERROR);
             return;
         }
 
@@ -301,12 +319,12 @@ class ExportPresenter extends SeriesPresenter {
             $values = $form->getValues();
             $this->handleSave($values, $storedQuery);
 
-            $this->flashMessage('Dotaz upraven.');
+            $this->flashMessage('Dotaz upraven.', self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (BadRequestException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
+            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (ModelException $e) {
-            $this->flashMessage('Chyba při ukládání do databáze.', 'error');
+            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
             Debugger::log($e);
         }
     }
@@ -323,12 +341,12 @@ class ExportPresenter extends SeriesPresenter {
             $this->handleSave($values, $storedQuery);
 
 
-            $this->flashMessage('Dotaz vytvořen.');
+            $this->flashMessage('Dotaz vytvořen.', self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (BadRequestException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
+            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (ModelException $e) {
-            $this->flashMessage('Chyba při ukládání do databáze.', 'error');
+            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
             Debugger::log($e);
         }
     }

@@ -5,10 +5,9 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
-use ModelOrg;
 use ModelTaskContribution;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceSubmit;
@@ -19,7 +18,12 @@ use Submits\SeriesTable;
 
 class PointsPresenter extends SeriesPresenter {
 
-    const HTML_GRADED = 'graded';
+    /**
+     * Show all tasks?
+     * 
+     * @persistent
+     */
+    public $all;
 
     /**
      * @var SQLResultsCache
@@ -73,20 +77,36 @@ class PointsPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
+    }
+
     public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
+        if ($this->all) {
+            $this->seriesTable->setTaskFilter(null);
+        } else {
+            $gradedTasks = $this->getGradedTasks();
+            $this->seriesTable->setTaskFilter($gradedTasks);
         }
+    }
+
+    public function titleDefault() {
+        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()));
     }
 
     public function renderDefault() {
         $this['pointsForm']->setDefaults();
+        $this->template->showAll = (bool) $this->all;
     }
 
     protected function createComponentPointsForm($name) {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
+        $renderer = new BootstrapRenderer();
+        $renderer->setColRight(10);
+        $form->setRenderer($renderer);
+
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
@@ -97,7 +117,6 @@ class PointsPresenter extends SeriesPresenter {
         foreach ($contestants as $contestant) {
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
             $control->setClassName('points');
-            $control->setClientData(self::HTML_GRADED, $gradedTasks);
 
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
@@ -133,9 +152,9 @@ class PointsPresenter extends SeriesPresenter {
             $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
 
 
-            $this->flashMessage('Body úloh uloženy.');
+            $this->flashMessage('Body úloh uloženy.', self::FLASH_SUCCESS);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při ukládání bodů.', 'error');
+            $this->flashMessage('Chyba při ukládání bodů.', self::FLASH_ERROR);
             Debugger::log($e);
         }
         $this->redirect('this');
@@ -144,9 +163,9 @@ class PointsPresenter extends SeriesPresenter {
     public function handleInvalidate() {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
-            $this->flashMessage('Body invalidovány.');
+            $this->flashMessage('Body invalidovány.', self::FLASH_INFO);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při invalidaci.', 'error');
+            $this->flashMessage('Chyba při invalidaci.', self::FLASH_ERROR);
             Debugger::log($e);
         }
 
@@ -169,9 +188,9 @@ class PointsPresenter extends SeriesPresenter {
                 }
             }
 
-            $this->flashMessage('Body přepočítány.');
+            $this->flashMessage('Body přepočítány.', self::FLASH_INFO);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při přepočtu.', 'error');
+            $this->flashMessage('Chyba při přepočtu.', self::FLASH_ERROR);
             Debugger::log($e);
         }
 

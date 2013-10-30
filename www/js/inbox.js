@@ -2,15 +2,16 @@ $(document).ready(function() {
     var linkFormat = '/public.submit/download/%d';
     function createDownloadLink(taskData) {
         var el = $('<a>');
-        //el.attr('class', 'inboxField');
+        el.attr('class', 'btn btn-xs btn-default');
         el.attr('href', linkFormat.replace('%d', taskData.submit_id));
         el.text('Download ' + taskData.task.label);
         return el;
     }
 
     function createDatetime(taskData, dataEl, data) {
-        var el = $('<input>');
-        el.attr('type', 'text');
+        var el = $('<input type="text">');
+        el.attr('placeholder', 'Úloha ' + taskData.task.label);
+
         //el.attr('class', 'inboxField');
         var alt = $('<input>');
         alt.attr('type', 'hidden');

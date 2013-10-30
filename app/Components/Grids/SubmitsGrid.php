@@ -9,9 +9,10 @@ use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use PublicModule\BasePresenter;
 use ServiceSubmit;
-use Submits\StorageException;
 use Submits\FilesystemSubmitStorage;
+use Submits\StorageException;
 
 /**
  *
@@ -76,7 +77,7 @@ class SubmitsGrid extends BaseGrid {
         //
         $that = $this;
         $this->addButton("revoke", "Zrušit")
-                ->setClass("delete")
+                ->setClass("btn btn-xs btn-warning")
                 ->setText('Zrušit') //todo i18n
                 ->setShow(function($row) use($that) {
                             return $that->canRevoke($row);
@@ -87,6 +88,8 @@ class SubmitsGrid extends BaseGrid {
                 ->setConfirmationDialog(function($row) {
                             return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
                         });
+
+
 
         //
         // appeareance
@@ -116,13 +119,13 @@ class SubmitsGrid extends BaseGrid {
         try {
             $this->submitStorage->deleteFile($submit);
             $this->submitService->dispose($submit);
-            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), BasePresenter::FLASH_SUCCESS);
             $this->redirect('this');
         } catch (StorageException $e) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
             Debugger::log($e);
         } catch (ModelException $e) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
             Debugger::log($e);
         }
     }

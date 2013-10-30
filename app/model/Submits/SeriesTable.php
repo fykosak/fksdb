@@ -51,6 +51,12 @@ class SeriesTable {
      */
     private $series;
 
+    /**
+     *
+     * @var null|array of int IDs of allowed tasks or null for unrestricted
+     */
+    private $taskFilter;
+
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
@@ -81,6 +87,14 @@ class SeriesTable {
         $this->series = $series;
     }
 
+    public function getTaskFilter() {
+        return $this->taskFilter;
+    }
+
+    public function setTaskFilter($taskFilter) {
+        $this->taskFilter = $taskFilter;
+    }
+
     /**
      * @param int $series when not null return only contestants with submits in the series
      * @return Selection
@@ -94,11 +108,16 @@ class SeriesTable {
     }
 
     public function getTasks() {
-        return $this->serviceTask->getTable()->where(array(
-                    'contest_id' => $this->getContest()->contest_id,
-                    'year' => $this->getYear(),
-                    'series' => $this->getSeries(),
-                ))->order('tasknr');
+        $tasks = $this->serviceTask->getTable()->where(array(
+            'contest_id' => $this->getContest()->contest_id,
+            'year' => $this->getYear(),
+            'series' => $this->getSeries(),
+        ));
+
+        if ($this->getTaskFilter() !== null) {
+            $tasks->where('task_id', $this->getTaskFilter());
+        }
+        return $tasks->order('tasknr');
     }
 
     public function getSubmitsTable($ctId = null, $task = null) {

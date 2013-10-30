@@ -7,12 +7,12 @@ use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\OrgProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
-use Persons\OrgsCompletionModel;
 use ServiceContestant;
 use ServiceOrg;
 use ServiceSubmit;
@@ -87,20 +87,24 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    public function actionHandout() {
-        if (!$this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedHandout() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Příjem řešení'));
     }
 
     public function renderDefault() {
         $this['inboxForm']->setDefaults();
+    }
+
+    public function titleHandout() {
+        $this->setTitle(_('Rozdělení úloh opravovatelům'));
     }
 
     public function renderHandout() {
@@ -130,6 +134,9 @@ class InboxPresenter extends SeriesPresenter {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
+        $renderer = new BootstrapRenderer();
+        $renderer->setColRight(10);
+        $form->setRenderer($renderer);
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
@@ -158,6 +165,7 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentHandoutForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = new AutocompleteSelectBox(false, $task->getFQName());
@@ -190,7 +198,7 @@ class InboxPresenter extends SeriesPresenter {
             }
         }
         $this->serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Informace o řešeních uložena.');
+        $this->flashMessage('Informace o řešeních uložena.', self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
@@ -221,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
 
         $connection->commit();
 
-        $this->flashMessage('Přiřazení opravovatelů uloženo.');
+        $this->flashMessage('Přiřazení opravovatelů uloženo.', self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 

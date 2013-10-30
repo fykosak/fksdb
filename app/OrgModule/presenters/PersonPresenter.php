@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelException;
 use Nette\Application\UI\Form;
@@ -102,6 +103,19 @@ class PersonPresenter extends EntityPresenter {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
+    public function titleList() {
+        $this->setTitle(_('Osoby'));
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit osobu'));
+    }
+
+    public function titleEdit($id) {
+        $person = $this->getModel();
+        $this->setTitle(sprintf(_('Úprava osoby %s'), $person->getFullname()));
+    }
+
     protected function createComponentCreateComponent($name) {
         // So far, there's no use case that creates bare person.
         throw new NotImplementedException();
@@ -109,6 +123,8 @@ class PersonPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+
         $person = $this->getModel();
 
         /*
@@ -127,9 +143,9 @@ class PersonPresenter extends EntityPresenter {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
-                    $replContainer->addSubmit('remove', 'Odebrat')->addRemoveOnClick();
+                    $replContainer->addSubmit('remove', 'Odebrat adresu')->addRemoveOnClick();
                 }, 1, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
+        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);
 
@@ -253,7 +269,7 @@ class PersonPresenter extends EntityPresenter {
                 unset($dataInfo['agreed']); // not to overwrite existing confirmation
                 $this->servicePersonInfo->updateModel($personInfo, $dataInfo);
             }
-            
+
             $this->servicePersonInfo->save($personInfo);
 
             /*
@@ -263,14 +279,14 @@ class PersonPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()));
+            $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()), self::FLASH_SUCCESS);
 
             $this->restoreRequest($this->backlink);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě řešitele.', 'error');
+            $this->flashMessage('Chyba při úpravě řešitele.', self::FLASH_ERROR);
         }
     }
 

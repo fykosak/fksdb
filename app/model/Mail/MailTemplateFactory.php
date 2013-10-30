@@ -1,5 +1,7 @@
 <?php
 
+namespace Mail;
+
 use Nette\Application\UI\Control;
 use Nette\Latte\Engine;
 use Nette\Templating\FileTemplate;
@@ -10,8 +12,6 @@ use Nette\Templating\FileTemplate;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailTemplateFactory {
-
-    const LOGIN_INVITATION = 'loginInvitation';
 
     /**
      * @var string without trailing slash
@@ -26,7 +26,18 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      */
     public function createLoginInvitation(Control $control, $lang) {
-        $file = $this->templateDir . DIRECTORY_SEPARATOR . self::LOGIN_INVITATION . ".$lang.latte";
+        return $this->createFromFile('loginInvitation', $lang, $control);
+    }
+
+    /**
+     * @param string $lang ISO 639-1
+     */
+    public function createPasswordRecovery(Control $control, $lang) {
+        return $this->createFromFile('passwordRecovery', $lang, $control);
+    }
+
+    private function createFromFile($filename, $lang, Control $control) {
+        $file = $this->templateDir . DIRECTORY_SEPARATOR . "$filename.$lang.latte";
         $template = new FileTemplate($file);
         $template->registerHelperLoader('Nette\Templating\Helpers::loader');
         $template->registerFilter(new Engine());

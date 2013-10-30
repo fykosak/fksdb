@@ -1,6 +1,8 @@
 <?php
 
+use Nette\Database\Connection;
 use Nette\DateTime;
+use Nette\Http\Request;
 use Nette\Utils\Strings;
 
 /**
@@ -12,6 +14,16 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_GLOBAL_SESSION;
     protected $modelClassName = 'ModelGlobalSession';
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    function __construct(Request $request, Connection $connection) {
+        parent::__construct($connection);
+        $this->request = $request;
+    }
 
     /**
      * 
@@ -36,14 +48,14 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
+            'remote_ip' => $this->request->getRemoteAddress(),
         ));
         $this->save($session);
         $this->getConnection()->commit();
 
         return $session;
     }
-    
-    //TODO garbage collection
 
+    //TODO garbage collection
 }
 

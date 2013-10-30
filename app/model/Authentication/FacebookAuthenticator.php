@@ -7,27 +7,23 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use ServiceLogin;
 use ServicePerson;
+use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FacebookAuthenticator {
+class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @var ServicePerson
      */
     private $servicePerson;
 
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
-
-    function __construct(ServicePerson $servicePerson, ServiceLogin $serviceLogin) {
+    function __construct(ServicePerson $servicePerson, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+        parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
-        $this->serviceLogin = $serviceLogin;
     }
 
     /**
@@ -36,7 +32,7 @@ class FacebookAuthenticator {
      */
     public function authenticate(array $fbUser) {
         if (!$fbUser['email']) {
-            throw new AuthenticationException('V profilu Facebooku nebyl nalezen e-mail.');
+            throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
         }
 
         // try by e-mail
@@ -58,8 +54,10 @@ class FacebookAuthenticator {
         }
 
         if ($login->active == 0) {
-            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
+            throw new InactiveLoginException();
         }
+
+        $this->logAuthentication($login);
 
         return $login;
     }

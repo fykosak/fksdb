@@ -2,6 +2,8 @@
 
 namespace PublicModule;
 
+use AuthenticationPresenter;
+
 /**
  * Just proof of concept.
  * 
@@ -9,10 +11,22 @@ namespace PublicModule;
  */
 class DashboardPresenter extends BasePresenter {
 
-    public function actionDefault() {
-        if (!$this->user->getIdentity()->isContestant($this->yearCalculator)) {
-            $this->redirect(':Authentication:login');
+    protected function unauthorizedAccess() {
+        if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
+            parent::unauthorizedAccess();
+        } else {
+            $this->redirect(':Authentication:login'); // ask for a central dispatch
         }
+    }
+
+    public function authorizedDefault() {
+        $login = $this->getUser()->getIdentity();
+        $access = $login ? $login->isContestant($this->yearCalculator) : false;
+        $this->setAuthorized($access);
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Řešitelský pultík'));
     }
 
     public function renderDefault() {

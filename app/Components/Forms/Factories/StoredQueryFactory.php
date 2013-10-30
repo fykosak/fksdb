@@ -53,12 +53,18 @@ class StoredQueryFactory {
         $replicator = new Replicator(function($replContainer) use($that, $group) {
                     $that->buildParameterMetadata($replContainer, $group);
 
-                    $replContainer->addSubmit('remove', 'Odebrat')->addRemoveOnClick();
+                    $submit = $replContainer->addSubmit('remove', 'Odebrat parametr');
+                    $submit->getControlPrototype()->addClass('btn-danger');
+                    $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+                    $submit->addRemoveOnClick();
                 }, 0, true);
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
         $replicator->setCurrentGroup($group);
-        $replicator->addSubmit('addParam', 'Přidat parametr')
-                ->setValidationScope(false)
+        $submit = $replicator->addSubmit('addParam', 'Přidat parametr');
+        //$submit->getControlPrototype()->addClass('btn-default'); //TODO doesn't work
+        $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+
+        $submit->setValidationScope(false)
                 ->addCreateOnClick();
 
         return $replicator;

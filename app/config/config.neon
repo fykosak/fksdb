@@ -3,6 +3,9 @@
 #
 
 parameters:
+    # Flag marking the beta version
+    beta: true
+
     # Temporary directory for various purposes.
     tempDir: %appDir%/../temp
 
@@ -27,6 +30,12 @@ parameters:
     # Configuration of sent emails.
     email:
         templatesDir: %appDir%/templates/emails
+        from: FKSDB <noreply@%domain.cz%>
+
+    # Navigation settings
+    navigation:
+        # How long data for navigation tree is held in the session
+        expiration: '+30 minutes'
 
     # Authentication settings
     authentication:
@@ -95,6 +104,10 @@ parameters:
         # How long (relatively) is authentication token valid after invitation.
         expiration: '+1 month'
 
+    recovery:
+        # Forgotten password recovery
+        expiration: '+1 day'
+
 
 php:
     date.timezone: Europe/Prague
@@ -118,3 +131,4 @@ includes:
     - forms.neon
     - services.neon
     - factories.neon
+    - navigation.neon

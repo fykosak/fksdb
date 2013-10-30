@@ -4,7 +4,7 @@ $(function() {
         options: {
         },
         _create: function() {
-            function split(val, delimiter) {
+            function split(val) {
                 return val.split(/,\s*/);
             }
             function extractLast(term) {
@@ -13,14 +13,17 @@ $(function() {
             }
 
             var elVal = this.element;
-            elVal.hide();
 
             var ajax = elVal.data('ac-ajax');
             var multiselect = elVal.data('ac-multiselect');
             var defaultText = elVal.data('ac-default-value');
 
-            var el = $('<input type="text"/>')
-            elVal.parent().append(el);
+            var el = $('<input type="text"/>');  
+            el.attr('class', elVal.attr('class'));
+            elVal.replaceWith(el);
+            elVal.hide();
+            elVal.insertAfter(el);
+
             elVal.data('autocomplete', el);
             if (defaultText) {
                 if (typeof defaultText === 'string') {

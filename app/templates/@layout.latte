@@ -4,57 +4,93 @@
         <meta charset="UTF-8">
         <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-        <title>{block titleHeader}FKSDB {include #title}{/block}</title>
+        <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {control cssLoader
-            'css/screen.css' => [screen] ,
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
+        'css/bootstrap.min.css' => [screen],
+        'css/bootstrap-theme.min.css' => [screen],
+        'css/style.css' => [screen],
+        'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
         }
-        
+
         {block head}{/block}
     </head>
 
     <body>
-        <div n:if="$user->isLoggedIn()" class="navigation" n:block="navigation-wrap">
-            {block #navigation}
-            <a n:if="$user->getIdentity()->isOrg($control->getYearCalculator())" n:href=":Org:Dashboard:">Organizátorský pultík</a>
-            <a n:if="$user->getIdentity()->isContestant($control->getYearCalculator())" n:href=":Public:Dashboard:">Pultík</a> {* TODO this may be visible in future as there'll be use cases for registered only persons *}
-            {/block}
+        <div id="wrap">
+
+            {block body}
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">                
+                    {control navigation}
+
+                    {block user-info}
+                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                        {var $login => $user->getIdentity()}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span>
+                                {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
+                                {else}
+                                {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                                <li class="divider"></li>
+                                <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                            </ul>
+                        </li>
+                    </ul>                
+                    {/block}
+
+                </div><!-- /.navbar-collapse -->
+            </nav>
+
+            <div class="container">
+                {control breadcrumbs}
+                {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+
+
+                {block flashes}
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+                {/block}
+
+                {include #content}
+
+            </div>
+            {/block body}
+        </div> <!-- wrap -->
+        <div id="footer" n:block="footer">
+            <div class="container text-center text-muted">
+                <ul class="list-piped">
+                    <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
+                    <li><a href="http://vyfuk.fykos.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
+                    <li>Správce systému: <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a></li>
+                </ul>
+            </div>
         </div>
-        {block titleBody}<h1>{include #title}</h1>{/block}
-        
-        {block flashes}
-        <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-        {/block}
-        
-        <div n:if="$user->isLoggedIn()" class="user-info" block="user-info-wrap">
-            {block user-info}
-            {var $login => $user->getIdentity()}
-            {if $login->getPerson()}            
-                <p>Přihlášen <em>{$login->getPerson()->getFullname()}</em>
-            {else}
-                <p>Přihlášen uživatel <em>{$login->login}</em>
-            {/if}
-                <a n:href=":Authentication:logout">Odhlásit</a>
-            </p>
-            <p>
-                <a n:href=":Settings:">Nastavení účtu</a>
-            </p>
-            {/block}
-        </div>
-        {include #content}
 
         <div id="spinner"></div>
         {block scripts}
         {control jsLoader 
-            'js/netteForms.js',
-            'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'js/main.js'
+        'js/netteForms.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/bootstrap.min.js',
+        'js/main.js'
         }
 
         {* CSS files are only collected at the end of rendering, so we use this
-          invalid workaround and link some CSS files at the end of the page
+        invalid workaround and link some CSS files at the end of the page
         *}
         {control jsLoader:inline}
         {/block}

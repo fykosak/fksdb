@@ -2,31 +2,14 @@
 
 namespace Authentication;
 
-use Nette\DateTime;
-use Nette\Object;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
-use ServiceLogin;
-use YearCalculator;
 
 /**
  * Users authenticator.
  */
-class PasswordAuthenticator extends Object implements IAuthenticator {
-
-    const HASHED_PASSWORD = 10;
-
-    /** @var ServiceLogin */
-    private $serviceLogin;
-
-    /** @var YearCalculator */
-    private $yearCalculator;
-
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yc) {
-        $this->serviceLogin = $serviceLogin;
-        $this->yearCalculator = $yc;
-    }
+class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
     /**
      * Performs an authentication.
@@ -36,25 +19,29 @@ class PasswordAuthenticator extends Object implements IAuthenticator {
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
 
-        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->fetch();
+        $login = $this->findLogin($id);
 
         if (!$login) {
-            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+            throw new UnknownLoginException();
         }
-        
+
         if (!$login->active) {
-            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
+            throw new InactiveLoginException();
         }
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
-            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+            throw new InvalidCredentialsException();
         }
 
-        $login->last_login = DateTime::from(time());
-        $this->serviceLogin->save($login);
+        $this->logAuthentication($login);
+
         $login->injectYearCalculator($this->yearCalculator);
 
         return $login;
+    }
+
+    public function findLogin($id) {
+        return $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->fetch();
     }
 
     /**

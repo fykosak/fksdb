@@ -2,6 +2,7 @@
 
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
@@ -41,6 +42,26 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return $this->tokenAuthenticator;
     }
 
+    /**
+     * Formats action method name.
+     * @param  string
+     * @return string
+     */
+    protected static function formatAuthorizedMethod($action) {
+        return 'authorized' . $action;
+    }
+
+    public function checkRequirements($element) {
+        parent::checkRequirements($element);
+        if ($element instanceof ReflectionClass) {
+            $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
+            if ($this->isAuthorized()) { // check authorization
+                $method = $this->formatAuthorizedMethod($this->getAction());
+                $this->tryCall($method, $this->getParameter());
+            }
+        }
+    }
+
     protected function startup() {
         parent::startup();
 
@@ -50,17 +71,23 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
             $this->loginRedirect();
+        } else if (!$this->isAuthorized()) {
+            $this->unauthorizedAccess();
         }
     }
 
-    protected function loginRedirect() {
+    private function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
-            $this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.');
+            $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
-            $this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.');
+            $reason = AuthenticationPresenter::REASON_AUTH;
         }
-        $backlink = $this->application->storeRequest();
-        $this->redirect(':Authentication:login', array('backlink' => $backlink));
+        $backlink = $this->application->storeRequest(); //TODO this doesn't work in cross domain environment
+        $this->redirect(':Authentication:login', array('backlink' => $backlink, AuthenticationPresenter::PARAM_REASON => $reason));
+    }
+
+    protected function unauthorizedAccess() {
+        throw new ForbiddenRequestException();
     }
 
     private function tryAuthToken() {
@@ -76,13 +103,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage('Úspešné přihlášení pomocí tokenu.');
+                $this->flashMessage('Úspešné přihlášení pomocí tokenu.', self::FLASH_INFO);
             }
 
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), 'error');
+            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         }
     }
 

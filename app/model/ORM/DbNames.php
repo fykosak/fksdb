@@ -10,7 +10,6 @@ class DbNames {
     const TAB_AUTH_TOKEN = 'auth_token';
     const TAB_CONTEST = 'contest';
     const TAB_CONTESTANT = 'contestant';
-    const TAB_COUNTRY = 'country';
     const TAB_EVENT = 'event';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
@@ -21,6 +20,7 @@ class DbNames {
     const TAB_PERSON = 'person';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
+    const TAB_REGION = 'region';
     const TAB_ROLE = 'role';
     const TAB_SCHOOL = 'school';
     const TAB_SPAMEE = 'si_spamee'; // obsolete

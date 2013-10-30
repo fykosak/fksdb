@@ -2,8 +2,10 @@
 
 namespace SQL;
 
+use BasePresenter;
 use ISeriesPresenter;
 use ModelStoredQuery;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
@@ -73,10 +75,20 @@ class StoredQueryFactory {
         }
 
         $presenter = $this->getPresenter();
+        $series = null;
+        try {
+            $series = $presenter->getSelectedSeries();
+        } catch (BadRequestException $e) {
+            if ($e->getCode() == 500) {
+                $presenter->flashMessage('Kontext série pro dotazy není dostupný', BasePresenter::FLASH_WARNING);
+            } else {
+                throw $e;
+            }
+        }
         $storedQuery->setImplicitParameters(array(
             self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
             self::PARAM_YEAR => $presenter->getSelectedYear(),
-            self::PARAM_SERIES => $presenter->getSelectedSeries(),
+            self::PARAM_SERIES => $series,
         ));
     }
 

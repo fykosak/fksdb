@@ -28,7 +28,8 @@ class SeriesCalculator extends Object {
      * @return int
      */
     public function getCurrentSeries(ModelContest $contest) {
-        //TODO consider using tasks.submit_deadline
+        // TODO consider using tasks.submit_deadline
+        // TODO and define what current series actually is (it may differ depending on the contest)
         return $this->getLastSeries($contest, $this->yearCalculator->getCurrentYear($contest));
     }
 

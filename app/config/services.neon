@@ -3,9 +3,15 @@
 #
 
 services:
+    accountManager:
+        class: Authentication\AccountManager
+        setup:
+            - setInvitationExpiration(%invitation.expiration%)
+            - setRecoveryExpiration(%recovery.expiration%)
+            - setEmailFrom(%email.from%)
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator
+    - Authentication\TokenAuthenticator    
     contestAuthorizator: Authorization\ContestAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
@@ -14,6 +20,7 @@ services:
     - Submits\SeriesTable
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    - FKS\Components\Controls\PresenterBuilder
     globalSession:
         class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:

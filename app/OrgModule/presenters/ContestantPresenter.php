@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use Authentication\AccountManager;
 use FKSDB\Components\Factories\ContestantWizardFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -11,13 +12,15 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
-use MailNotSendException;
-use MailTemplateFactory;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Mail\MailTemplateFactory;
+use Mail\SendFailedException;
 use ModelException;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
+use OrgModule\EntityPresenter;
 use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -81,6 +84,11 @@ class ContestantPresenter extends EntityPresenter {
      */
     private $mailTemplateFactory;
 
+    /**
+     * @var AccountManager
+     */
+    private $accountManager;
+
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -121,18 +129,34 @@ class ContestantPresenter extends EntityPresenter {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
+    public function injectAccountManager(AccountManager $accountManager) {
+        $this->accountManager = $accountManager;
+    }
+
+    public function titleEdit($id) {
+        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
+    }
+
     public function renderEdit($id) {
         parent::renderEdit($id);
 
         $contestant = $this->getModel();
 
         if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage('Editace řešitele mimo zvolený seminář.');
+            $this->flashMessage('Editace řešitele mimo zvolený seminář.', self::FLASH_WARNING);
         }
 
         if ($contestant->year != $this->getSelectedYear()) {
-            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.');
+            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.', self::FLASH_WARNING);
         }
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit řešitele'));
+    }
+
+    public function titleList() {
+        $this->setTitle(_('Řešitelé'));
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {
@@ -157,6 +181,7 @@ class ContestantPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
         $form->addComponent($personContainer, self::CONT_PERSON);
@@ -267,10 +292,10 @@ class ContestantPresenter extends EntityPresenter {
                 } else if ($dataInfo[PersonFactory::EL_CREATE_LOGIN]) {
                     $template = $this->mailTemplateFactory->createLoginInvitation($this, 'cs'); //TODO i18n of created logins
                     try {
-                        $login = $this->serviceLogin->createLoginWithInvitation($template, $person, $email);
-                        $this->flashMessage('Zvací e-mail odeslán.');
-                    } catch (MailNotSendException $e) {
-                        $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', 'error');
+                        $login = $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                        $this->flashMessage('Zvací e-mail odeslán.', self::FLASH_INFO);
+                    } catch (SendFailedException $e) {
+                        $this->flashMessage('Zvací e-mail se nepodařilo odeslat.', self::FLASH_ERROR);
                     }
                 } else {
                     $dataInfo['email'] = $email; // we'll store it as personal info
@@ -283,7 +308,7 @@ class ContestantPresenter extends EntityPresenter {
             $personInfo = $person->getInfo();
             if (!$personInfo) {
                 $dataInfo['agreed'] = $dataInfo['agreed'] ? new DateTime() : null;
-                $personInfo = $this->servicePersonInfo->createNew($dataInfo);                
+                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
                 $personInfo->person_id = $person->person_id;
             } else {
                 unset($dataInfo['agreed']); // do not overwrite in existing person_info
@@ -299,12 +324,12 @@ class ContestantPresenter extends EntityPresenter {
             }
             $wizard->disposeData();
 
-            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()));
+            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání řešitele.', 'error');
+            $this->flashMessage('Chyba při zakládání řešitele.', self::FLASH_ERROR);
         }
     }
 
@@ -334,11 +359,11 @@ class ContestantPresenter extends EntityPresenter {
         try {
             $this->serviceContestant->updateModel($model, $data);
             $this->serviceContestant->save($model);
-            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()));
+            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
 
-            $this->flashMessage('Chyba při ukládání do databáze.');
+            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
             Debugger::log($e);
         }
     }
