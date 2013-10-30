@@ -13,7 +13,20 @@ interface IJavaScriptCollector {
     public function registerJSFile($file);
 
     /**
-     * @param string $code JS code taht should be inserted into the page
+     * 
+     * @param sting $code JS code taht should be inserted into the page
+     * @param string $tag tag of the code for later reference
      */
-    public function registerJSCode($code);
+    public function registerJSCode($code, $tag = null);
+
+    /**
+     * @param string $file path relative to webroot
+     */
+    public function unregisterJSFile($file);
+
+    /**
+     * 
+     * @param string $tag code tag to be removed
+     */
+    public function unregisterJSCode($tag);
 }

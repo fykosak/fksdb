@@ -4,6 +4,8 @@ namespace FKSDB\Components;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Http\Session;
+use Nette\InvalidStateException;
 
 /**
  *
@@ -12,6 +14,7 @@ use Nette\Application\UI\Form;
 class WizardComponent extends Control {
 
     const ID_ELEMENT = 'wizardId';
+    const CURRENT_STEP = '_current';
 
     /**
      * @var array of callback($stepName, WizardCompoent $wizard)
@@ -48,6 +51,15 @@ class WizardComponent extends Control {
      * @var str  id that allows running more instances of wizard in different tabs
      */
     private $wizardId;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    function __construct(Session $session) {
+        $this->session = $session;
+    }
 
     /**
      * @param Form $form                form displayed in the step
@@ -118,6 +130,16 @@ class WizardComponent extends Control {
      * @param str $name
      */
     private function setCurrentStep($name) {
+        $oldStep = $this->getCurrentStep();
+        if ($name == $oldStep || $name == null) {
+            return;
+        }
+        if ($oldStep) {
+            $oldForm = $this->getComponent($oldStep, false);
+            if ($oldForm) {
+                $this->removeComponent($oldForm);
+            }
+        }
         $this->currentStepName = $name;
     }
 
@@ -190,23 +212,27 @@ class WizardComponent extends Control {
         // find the next step or finish
         if (isset($this->nextCallbacks[$name])) {
             $next = $this->nextCallbacks[$name];
-            if (is_string($next) && $this->getComponent($next, false)) {
+            if (is_string($next) && $this->getComponent($name, false)) {
                 $newName = $next;
-            } else {
+            } else if (is_callable($this->nextCallbacks[$name])) {
                 $newName = call_user_func($this->nextCallbacks[$name], $form);
+            } else {
+                $newName = null;
             }
             if ($newName === null) {
+                $this->setCurrentStep(null);
                 $this->onProcess($this);
             } else {
                 $this->setCurrentStep($newName);
             }
         } else {// process data
+            $this->setCurrentStep(null);
             $this->onProcess($this);
         }
     }
 
     private function getSession() {
-        return $this->getPresenter()->getSession($this->getWizardId());
+        return $this->session->getSection($this->getWizardId());
     }
 
 }

@@ -147,7 +147,7 @@ abstract class AbstractServiceSingle extends TableSelection {
      */
     public function getTable() {
         return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);
-    }
+        }
 
     protected $defaults = null;
 

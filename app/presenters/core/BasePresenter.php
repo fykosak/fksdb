@@ -120,8 +120,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this['jsLoader']->addFile($file);
     }
 
-    public function registerJSCode($code) {
-        $this['jsLoader']->addInline($code);
+    public function registerJSCode($code, $tag = null) {
+        $this['jsLoader']->addInline($code, $tag);
+    }
+
+    public function unregisterJSCode($tag) {
+        $this['jsLoader']->removeInline($tag);
+    }
+
+    public function unregisterJSFile($file) {
+        $this['jsLoader']->removeFile($file);
     }
 
     /*     * ******************************
@@ -130,6 +138,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function registerStylesheetFile($file, $media = array()) {
         $this['cssLoader']->addFile($file, $media);
+    }
+
+    public function unregisterStylesheetFile($file, $media = array()) {
+        $this['cssLoader']->removeFile($file, $media);
     }
 
     /*     * ******************************
