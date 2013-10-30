@@ -210,7 +210,7 @@ class ContestantPresenter extends EntityPresenter {
          * Finish validation
          */
         $dataForm = $wizard->getComponent(ContestantWizardFactory::STEP_DATA);
-        $dataFormValues = $dataForm->getValues();
+        $dataFormValues = $wizard->getData(ContestantWizardFactory::STEP_DATA);
         $personInfoFormValues = $dataFormValues[ContestantWizardFactory::CONT_PERSON_INFO];
         $login = $person->getLogin();
         $emailRule = null;

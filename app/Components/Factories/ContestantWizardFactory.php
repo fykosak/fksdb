@@ -11,6 +11,7 @@ use FKSDB\Components\WizardComponent;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
+use Nette\Http\Session;
 use Nette\Utils\Html;
 use ServicePerson;
 
@@ -60,21 +61,27 @@ class ContestantWizardFactory {
      * @var PersonProvider
      */
     private $personProvider;
+    
+    /**
+     * @var Session
+     */
+    private $session;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider) {
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->addressFactory = $addressFactory;
         $this->personService = $personService;
         $this->personProvider = $personProvider;
+        $this->session = $session;
     }
 
-    /**
+        /**
      * 
      * @return WizardComponent
      */
     public function create() {
-        $wizard = new WizardComponent();
+        $wizard = new WizardComponent($this->session);
 
         $wizard->setFirstStep(self::STEP_PERSON);
 
