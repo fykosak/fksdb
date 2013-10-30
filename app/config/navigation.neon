@@ -8,7 +8,10 @@ navigation:
 
         vyfuk:
             title: Web Výfuku
-            link: http://vyfuk.fykos.cz/
+            link: http://vyfuk.%domain.cz%/
+        fykos:
+            title: Web FYKOSu
+            link: http://%domain.cz%/
 
     structure:
         org.dashboard.default:
@@ -22,5 +25,7 @@ navigation:
             - org.org.list
         public.dashboard.default:
             - public.submit.default
+            - fykos
+            - vyfuk
 
         
