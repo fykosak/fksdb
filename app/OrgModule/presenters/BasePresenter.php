@@ -6,6 +6,7 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
 use ModelRole;
+use Nette\Application\BadRequestException;
 
 /**
  * Presenter keeps chosen contest and year in session.
@@ -37,11 +38,19 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     public function getSelectedContest() {
-        return $this['contestChooser']->getContest();
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
+        return $contestChooser->getContest();
     }
 
     public function getSelectedYear() {
-        return $this['contestChooser']->getYear();
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
+        return $contestChooser->getYear();
     }
 
 }

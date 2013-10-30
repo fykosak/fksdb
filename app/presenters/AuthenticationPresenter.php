@@ -170,7 +170,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (FacebookApiException $e) {
             $fbUrl = $this->getFbLoginUrl();
-            $this->redirectUri($fbUrl);
+            $this->redirectUrl($fbUrl);
         }
     }
 

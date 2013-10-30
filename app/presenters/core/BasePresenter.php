@@ -3,7 +3,7 @@
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
 use FKS\Components\Controls\Navigation\INavigablePresenter;
-use FKS\Components\Controls\Navigation\NavBar;
+use FKS\Components\Controls\Navigation\Navigation;
 use FKS\Components\Controls\PresenterBuilder;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
@@ -42,7 +42,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var BreadcrumbsFactory */
     private $breadcrumbsFactory;
 
-    /** @var NavBar */
+    /** @var Navigation */
     private $navigationControl;
 
     /** @var PresenterBuilder */
@@ -83,7 +83,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    public function injectNavigationControl(NavBar $navigationControl) {
+    public function injectNavigationControl(Navigation $navigationControl) {
         $this->navigationControl = $navigationControl;
     }
 

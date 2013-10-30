@@ -2,7 +2,7 @@
 
 namespace PublicModule;
 
-use BasePresenter;
+use BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\LoginFactory;
@@ -54,7 +54,7 @@ use ServicePostContact;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends BasePresenter implements IContestPresenter {
+class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
     const CONT_PERSON = 'person';
     const CONT_PERSON_INFO = 'person_info';
@@ -242,7 +242,7 @@ class RegisterPresenter extends BasePresenter implements IContestPresenter {
          */
         if (!$person) {
             $group = $form->addGroup('Přihlašování');
-            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
+            $emailRule = $this->uniqueEmailFactory->create();
             $loginRule = $this->uniqueLoginFactory->create();
             $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
             $form->addComponent($login, self::CONT_LOGIN);

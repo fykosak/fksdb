@@ -122,6 +122,7 @@ nette:
 
     session:
         expiration: 14 days
+        autoStart: true
 
 
 includes:

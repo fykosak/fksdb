@@ -3,7 +3,6 @@
 namespace PublicModule;
 
 use AuthenticatedPresenter;
-use AuthenticationPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
 use ModelContestant;
@@ -35,11 +34,19 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     private $contestant = false;
 
     public function getSelectedContest() {
-        return $this['contestChooser']->getContest();
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
+        return $contestChooser->getContest();
     }
 
     public function getSelectedYear() {
-        return $this['contestChooser']->getYear();
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
+        return $contestChooser->getYear();
     }
 
     public function getContestant() {

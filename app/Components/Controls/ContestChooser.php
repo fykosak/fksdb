@@ -164,9 +164,11 @@ class ContestChooser extends Control {
             $contest = $this->serviceContest->findByPrimary($id);
             $min = $this->yearCalculator->getFirstYear($contest);
             $max = $this->yearCalculator->getCurrentYear($contest);
-            $contest->years = array_reverse(range($min, $max));
-            $contest->currentYear = $max;
-            $result[$id] = $contest;
+            $result[$id] = (object) array(
+                        'contest' => $contest,
+                        'years' => array_reverse(range($min, $max)),
+                        'currentYear' => $max,
+            );
         }
         return $result;
     }
