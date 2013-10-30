@@ -1,0 +1,20 @@
+{define #link}
+<a href="{$control->getLink($node)}">
+    {$control->getTitle($node)}
+</a>
+{/define}
+
+{var level => 0}    
+{block #menu}
+<ul>
+    {foreach $nodes as $nodeId => $item}
+    {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
+    <li n:if="$control->isVisible($node)">{if is_array($item)}
+        {include #link, node => $node, level => $level}
+            {include #menu, nodes => $item, level => $level + 1}
+        {else}
+            {include #link, node => $node, level => $level}
+        {/if}</li>
+    {/foreach}
+</ul>
+{/block}

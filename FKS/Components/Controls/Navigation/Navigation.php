@@ -14,7 +14,7 @@ use ReflectionMethod;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class NavBar extends Control {
+class Navigation extends Control {
 
     private $nodes = array();
     private $nodeChildren = array();
@@ -109,12 +109,27 @@ class NavBar extends Control {
         $this->nodeChildren[$idParent][] = $idChild;
     }
 
-    public function render() {
+    public function renderNavbar($root = null) {
         $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'NavBar.latte');
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
+        $this->renderFromRoot($template, $root);
+    }
 
-        $template->nodes = $this->structure;
+    public function render($root = null) {
+        $template = $this->getTemplate();
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
+        $this->renderFromRoot($template, $root);
+    }
 
+    private function renderFromRoot($template, $root) {
+        if ($root != null) {
+            if (!isset($this->structure[$root])) {
+                throw new InvalidArgumentException("No such node $root.");
+            }
+            $template->nodes = $this->structure[$root];
+        } else {
+            $template->nodes = $this->structure;
+        }
         $template->render();
     }
 
