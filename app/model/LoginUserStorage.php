@@ -78,7 +78,10 @@ class LoginUserStorage extends UserStorage {
              */
             return $local;
         } else {
-            parent::setAuthenticated(false); // somehow session contains authenticated flag
+            /* Commenting this line out fixes bug #9,
+             * probably is not needed anymore.
+             */
+            //parent::setAuthenticated(false);
 
             $presenter = $this->application->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
