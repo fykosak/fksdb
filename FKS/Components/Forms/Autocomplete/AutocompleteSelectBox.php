@@ -75,7 +75,15 @@ class AutocompleteSelectBox extends TextBase {
         if (!$this->attachedJS && $presenter instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
             $presenter->registerJSFile('js/autocompleteSelect.js');
-            $presenter->registerJSCode($this->getJSCode());
+            $presenter->registerJSCode($this->getJSCode(), $this->getHtmlId());
+        }
+    }
+
+    protected function detached($obj) {
+        parent::detached($obj);
+        if ($obj instanceof IJavaScriptCollector) {
+            $this->attachedJS = false;
+            $obj->unregisterJSCode($this->getHtmlId());
         }
     }
 

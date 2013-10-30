@@ -13,6 +13,7 @@ abstract class Webloader extends Control {
 
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
+    const UNTAGGED = '__untagged';
 
     private $files = array();
     private $inlines = array();
@@ -25,8 +26,19 @@ abstract class Webloader extends Control {
         );
     }
 
-    public function addInline($inline) {
-        $this->inlines[] = $inline;
+    public function removeFile($file, $attributes = array()) {
+        $hash = $file . implode(':', $attributes);
+        unset($this->files[$hash]);
+    }
+
+    public function addInline($inline, $tag = self::UNTAGGED) {
+        $this->inlines[$tag] = $inline;
+    }
+
+    public function removeInline($tag) {
+        if ($tag != self::UNTAGGED) {
+            unset($this->inlines[$tag]);
+        }
     }
 
     public function render() {
