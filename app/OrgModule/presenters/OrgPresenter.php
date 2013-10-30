@@ -3,36 +3,35 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
-use Authentication\AccountManager;
 use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
-use FKSDB\Components\Forms\Factories\ContestantFactory;
+use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Components\WizardComponent;
+use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Mail\MailTemplateFactory;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use OrgModule\EntityPresenter;
-use Persons\ContestantHandler;
+use Persons\OrgHandler;
 use Persons\PersonHandlerException;
-use ServiceContestant;
 use ServiceLogin;
+use ServiceOrg;
 use ServicePerson;
 use ServicePersonInfo;
 
-class ContestantPresenter extends EntityPresenter {
+class OrgPresenter extends EntityPresenter {
 
     const CONT_PERSON = 'person';
-    const CONT_CONTESTANT = 'contestant';
+    const CONT_ORG = 'contestant';
 
-    protected $modelResourceId = 'contestant';
+    protected $modelResourceId = 'org';
 
     /**
-     * @var ServiceContestant
+     * @var ServiceOrg
      */
-    private $serviceContestant;
+    private $serviceOrg;
 
     /**
      * @var ServicePerson
@@ -50,9 +49,9 @@ class ContestantPresenter extends EntityPresenter {
     private $serviceLogin;
 
     /**
-     * @var ContestantFactory
+     * @var OrgFactory
      */
-    private $contestantFactory;
+    private $orgFactory;
 
     /**
      * @var PersonFactory
@@ -62,20 +61,20 @@ class ContestantPresenter extends EntityPresenter {
     /**
      * @var ExtendedPersonWizardFactory
      */
-    private $contestantWizardFactory;
+    private $orgWizardFactory;
 
     /**
      *
-     * @var ContestantHandler
+     * @var OrgHandler
      */
-    private $contestantHandler;
+    private $orgHandler;
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
+    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+        $this->serviceOrg = $serviceOrg;
     }
 
-    public function injectContestantWizardFactory(ExtendedPersonWizardFactory $contestantWizardFactory) {
-        $this->contestantWizardFactory = $contestantWizardFactory;
+    public function injectOrgWizardFactory(ExtendedPersonWizardFactory $contestantWizardFactory) {
+        $this->orgWizardFactory = $contestantWizardFactory;
     }
 
     public function injectServicePerson(ServicePerson $servicePerson) {
@@ -90,51 +89,47 @@ class ContestantPresenter extends EntityPresenter {
         $this->serviceLogin = $serviceLogin;
     }
 
-    public function injectContestantFactory(ContestantFactory $contestantFactory) {
-        $this->contestantFactory = $contestantFactory;
+    public function injectOrgFactory(OrgFactory $orgFactory) {
+        $this->orgFactory = $orgFactory;
     }
 
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
     }
 
-    public function injectContestantHandler(ContestantHandler $contestantHandler) {
-        $this->contestantHandler = $contestantHandler;
+    public function injectOrgHandler(OrgHandler $orgHandler) {
+        $this->orgHandler = $orgHandler;
     }
 
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
+        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
     }
 
     public function renderEdit($id) {
         parent::renderEdit($id);
 
-        $contestant = $this->getModel();
+        $org = $this->getModel();
 
-        if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage('Editace řešitele mimo zvolený seminář.', self::FLASH_WARNING);
-        }
-
-        if ($contestant->year != $this->getSelectedYear()) {
-            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.', self::FLASH_WARNING);
+        if ($org->contest_id != $this->getSelectedContest()->contest_id) {
+            $this->flashMessage('Editace organizátora mimo zvolený seminář.', self::FLASH_WARNING);
         }
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit řešitele'));
+        $this->setTitle(_('Založit organizátora'));
     }
 
     public function titleList() {
-        $this->setTitle(_('Řešitelé'));
+        $this->setTitle(_('Organizátoři'));
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {
-        $form[self::CONT_PERSON]->setValues($this->getModel()->getPerson()->toArray());
-        $form[self::CONT_CONTESTANT]->setDefaults($this->getModel()->toArray());
+        $form[self::CONT_PERSON]->setValues($model->getPerson());
+        $form[self::CONT_ORG]->setDefaults($model);
     }
 
     protected function createComponentCreateComponent($name) {
-        $wizard = $this->contestantWizardFactory->createContestant();
+        $wizard = $this->orgWizardFactory->createOrg($this->getSelectedContest());
 
         $wizard->onProcess[] = array($this, 'processWizard');
         $wizard->onStepInit[] = array($this, 'initWizard');
@@ -143,7 +138,7 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     protected function createComponentGrid($name) {
-        $grid = new ContestantsGrid($this->serviceContestant);
+        $grid = new OrgsGrid($this->serviceOrg);
 
         return $grid;
     }
@@ -155,12 +150,12 @@ class ContestantPresenter extends EntityPresenter {
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
         $form->addComponent($personContainer, self::CONT_PERSON);
 
-        $contestantContainer = $this->contestantFactory->createContestant();
-        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+        $orgContainer = $this->orgFactory->createOrg(0, null, $this->getSelectedContest());
+        $form->addComponent($orgContainer, self::CONT_ORG);
 
         $form->addSubmit('send', 'Uložit');
 
-        $form->onSuccess[] = array($this, 'handleContestantEditFormSuccess');
+        $form->onSuccess[] = array($this, 'handleOrgEditFormSuccess');
 
         return $form;
     }
@@ -172,13 +167,13 @@ class ContestantPresenter extends EntityPresenter {
      */
     public function processWizard(WizardComponent $wizard) {
         try {
-            $this->contestantHandler->store($wizard, $this);
-            $person = $this->contestantHandler->getPerson();
-            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
+            $this->orgHandler->store($wizard, $this);
+            $person = $this->orgHandler->getPerson();
+            $this->flashMessage(sprintf('Organizátor %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (PersonHandlerException $e) {
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání řešitele.', self::FLASH_ERROR);
+            $this->flashMessage('Chyba při zakládání organizátora.', self::FLASH_ERROR);
         }
     }
 
@@ -190,8 +185,7 @@ class ContestantPresenter extends EntityPresenter {
     public function initWizard($stepName, WizardComponent $wizard) {
         switch ($stepName) {
             case ExtendedPersonWizardFactory::STEP_DATA:
-                $this->initStepData(
-                        $wizard);
+                $this->initStepData($wizard);
                 break;
         }
     }
@@ -200,15 +194,16 @@ class ContestantPresenter extends EntityPresenter {
      * @internal
      * @param Form $form
      */
-    public function handleContestantEditFormSuccess(Form $form) {
+    public function handleOrgEditFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = $values[self::CONT_CONTESTANT];
+        $data = $values[self::CONT_ORG];
+        $data = FormUtils::emptyStrToNull($data);
         $model = $this->getModel();
 
         try {
-            $this->serviceContestant->updateModel($model, $data);
-            $this->serviceContestant->save($model);
-            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
+            $this->serviceOrg->updateModel($model, $data);
+            $this->serviceOrg->save($model);
+            $this->flashMessage(sprintf('Organizátor %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
 
@@ -218,36 +213,32 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     private function initStepData(WizardComponent $wizard) {
-        $person = $this->contestantHandler->loadPerson($wizard);
+        $person = $this->orgHandler->loadPerson($wizard);
         $form = $wizard->getComponent(ExtendedPersonWizardFactory::STEP_DATA);
 
         $defaults = array(
             ExtendedPersonWizardFactory::CONT_PERSON => $person,
         );
 
-        $lastContestant = $person->getLastContestant($this->getSelectedContest());
-        if ($lastContestant) {
-            $defaults[ExtendedPersonWizardFactory::CONT_CONTESTANT] = $lastContestant;
+        $org = $person->getOrgs($this->getSelectedContest()->contest_id)->fetch();
+        if ($org) {
+            $defaults[ExtendedPersonWizardFactory::CONT_ORG] = $org;
+        } else {
+            $defaults[ExtendedPersonWizardFactory::CONT_ORG]['since'] = $this->getSelectedYear();
         }
-
-        $addresses = array();
-        foreach ($person->getMPostContacts() as $mPostContact) {
-            $addresses[] = $mPostContact->toArray();
-        }
-        $defaults[ExtendedPersonWizardFactory::CONT_ADDRESSES] = $addresses;
 
         $info = $person->getInfo();
         if ($info) {
             $defaults[ExtendedPersonWizardFactory::CONT_PERSON_INFO] = $info;
         }
 
-        $this->contestantWizardFactory->modifyLoginContainer($form, $person);
+        $this->orgWizardFactory->modifyLoginContainer($form, $person);
 
         $form->setDefaults($defaults);
     }
 
     protected function createModel($id) {
-        return $this->serviceContestant->findByPrimary($id);
+        return $this->serviceOrg->findByPrimary($id);
     }
 
 }
