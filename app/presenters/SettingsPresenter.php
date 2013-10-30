@@ -85,7 +85,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup('Autentizace');
-        $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
+        $emailRule = $this->uniqueEmailFactory->create(null, $login);
         $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {

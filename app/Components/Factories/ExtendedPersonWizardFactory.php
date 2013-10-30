@@ -7,10 +7,13 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use ModelPerson;
 use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Utils\Html;
 use ServicePerson;
@@ -20,7 +23,7 @@ use ServicePerson;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ContestantWizardFactory {
+class ExtendedPersonWizardFactory {
 
     const STEP_PERSON = 'person';
     const STEP_DATA = 'data';
@@ -28,10 +31,14 @@ class ContestantWizardFactory {
 
     /* Important elements */
     const EL_PERSON_ID = 'person_id';
+    const EL_EMAIL = 'email';
+    const EL_CREATE_LOGIN = 'createLogin';
+    /* Containers */
     const CONT_PERSON = 'person';
     const CONT_CONTESTANT = 'contestant';
     const CONT_PERSON_INFO = 'person_info';
     const CONT_ADDRESSES = 'addresses';
+    const CONT_LOGIN = 'login';
 
     /* Important groups */
     const GRP_PERSON = 'personGrp';
@@ -61,26 +68,28 @@ class ContestantWizardFactory {
      * @var PersonProvider
      */
     private $personProvider;
-    
+
     /**
      * @var Session
      */
     private $session;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session) {
+    /**
+     * @var UniqueEmailFactory
+     */
+    private $uniqueEmailFactory;
+
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->addressFactory = $addressFactory;
         $this->personService = $personService;
         $this->personProvider = $personProvider;
         $this->session = $session;
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
-        /**
-     * 
-     * @return WizardComponent
-     */
-    public function create() {
+    private function createWizardBase() {
         $wizard = new WizardComponent($this->session);
 
         $wizard->setFirstStep(self::STEP_PERSON);
@@ -89,8 +98,17 @@ class ContestantWizardFactory {
         $wizard->addStep($personForm, self::STEP_PERSON, self::STEP_DATA);
         $wizard->registerStepSubmitter(self::STEP_PERSON, self::SEND);
 
+        return $wizard;
+    }
 
-        $dataForm = $this->createDataForm();
+    /**
+     * 
+     * @return WizardComponent
+     */
+    public function createContestant() {
+        $wizard = $this->createWizardBase();
+
+        $dataForm = $this->createContestantForm();
         $wizard->addStep($dataForm, self::STEP_DATA);
         $wizard->registerStepSubmitter(self::STEP_DATA, self::SEND);
 
@@ -108,9 +126,9 @@ class ContestantWizardFactory {
                         .appendTo(ul);';
         $personElement = new AutocompleteSelectBox(true, 'Jméno', $renderMethod);
         $personElement->setDataProvider($this->personProvider);
-        
 
-        // TODO validate non-existent contestant or restrict selection
+
+// TODO validate non-existent contestant or restrict selection
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
 
@@ -129,7 +147,7 @@ class ContestantWizardFactory {
         return $form;
     }
 
-    private function createDataForm() {
+    private function createContestantForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
 
@@ -139,6 +157,9 @@ class ContestantWizardFactory {
         $group = $form->addGroup('Osoba');
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
         $form->addComponent($personContainer, self::CONT_PERSON);
+
+        $loginContainer = $this->createLoginContainer($group);
+        $form->addComponent($loginContainer, self::CONT_LOGIN);
 
         /*
          * Contestant
@@ -170,13 +191,55 @@ class ContestantWizardFactory {
          * Personal information
          */
         $group = $form->addGroup('Osobní informace');
-        $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_EMAIL | PersonFactory::SHOW_LOGIN_CREATION, $group);
+        $infoContainer = $this->personFactory->createPersonInfo(0, $group);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
 
         $form->setCurrentGroup();
 
         $form->addSubmit(self::SEND, 'Dokončit');
         return $form;
+    }
+
+    private function createLoginContainer($group) {
+        $container = new Container();
+        $container->setCurrentGroup($group);
+
+        $email = $container->addText(self::EL_EMAIL, 'E-mail');
+        $email->addCondition(Form::FILLED)
+                ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+
+        $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
+                ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
+        $email->addConditionOn($createLogin, Form::FILLED)
+                ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
+        return $container;
+    }
+
+    public final function modifyLoginContainer(Form $form, ModelPerson $person) {
+        $container = $form->getComponent(self::CONT_LOGIN);
+        $login = $person->getLogin();
+        $personInfo = $person->getInfo();
+        $hasEmail = ($login && isset($login->email)) || ($personInfo && isset($personInfo->email));
+        $showLogin = !$login || !$hasEmail;
+        if (!$showLogin) {
+            foreach ($container->getControls() as $control) {
+                $control->setDisabled();
+            }
+        }
+        if ($login) {
+            $container[self::EL_CREATE_LOGIN]->setDefaultValue(true);
+            $container[self::EL_CREATE_LOGIN]->setDisabled();
+        }
+
+        $email = ($login && isset($login->email)) ? $login->email :
+                ($personInfo && isset($personInfo->email)) ? $personInfo->email :
+                        null;
+        $container[self::EL_EMAIL]->setDefaultValue($email);
+
+
+        $emailRule = $this->uniqueEmailFactory->create($person);
+        //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, 'Daný e-mail již někdo používá.');
+        $form[self::CONT_LOGIN][self::EL_EMAIL]->addRule($emailRule, 'Daný e-mail již někdo používá.');
     }
 
 }

@@ -5,7 +5,7 @@ services:
     mailTemplateFactory:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
-    - FKSDB\Components\Factories\ContestantWizardFactory
+    - FKSDB\Components\Factories\ExtendedPersonWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     breadcrumbFactory:
         class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)

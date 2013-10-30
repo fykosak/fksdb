@@ -18,6 +18,7 @@ services:
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
     - Submits\SeriesTable
+    - Persons\ContestantHandler
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKS\Components\Controls\PresenterBuilder

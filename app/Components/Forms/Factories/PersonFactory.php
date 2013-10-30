@@ -27,13 +27,9 @@ class PersonFactory {
     const SHOW_EMAIL = 0x10;
     const REQUIRE_AGREEMENT = 0x20;
     const SHOW_LOGIN_CREATION = 0x40;
-    /**
-     * @const Display origin and agreement only (supplement to other form containers).
-     */
+    /** @const Display origin and agreement only (supplement to other form containers). */
     const SHOW_LIKE_SUPPLEMENT = 0x100;
 
-    /* Important elements */
-    const EL_CREATE_LOGIN = 'createLogin';
 
     /* Encapsulation condition argument (workaround) */
     const IDX_CONTROL = 'control';
@@ -94,19 +90,13 @@ class PersonFactory {
         $container = new PersonInfoContainer();
         $container->setCurrentGroup($group);
 
-        if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {            
+        if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {
             if ($options & self::SHOW_EMAIL) {
                 $email = $container->addText('email', 'E-mail');
                 $conditioned = $email->addCondition(Form::FILLED)
                         ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
                 if ($emailRule) {
                     $conditioned->addRule($emailRule, 'Daný e-mail je již použit u někoho jiného.');
-                }
-                if ($options & self::SHOW_LOGIN_CREATION) {
-                    $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
-                            ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
-                    $email->addConditionOn($createLogin, Form::FILLED)
-                            ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
                 }
             }
 

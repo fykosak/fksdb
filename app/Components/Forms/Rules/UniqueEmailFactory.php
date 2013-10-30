@@ -29,7 +29,9 @@ class UniqueEmailFactory {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function create($mode, ModelPerson $person = null, ModelLogin $login = null) {
+    public function create(ModelPerson $person = null, ModelLogin $login = null) {
+        $mode = UniqueEmail::CHECK_LOGIN | UniqueEmail::CHECK_PERSON;
+        $login = $login ?: $person->getLogin();
         $rule = new UniqueEmail($mode, $this->serviceLogin, $this->servicePersonInfo);
         $rule->setIgnoredPerson($person);
         $rule->setIgnoredLogin($login);

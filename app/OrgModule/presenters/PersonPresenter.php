@@ -157,11 +157,7 @@ class PersonPresenter extends EntityPresenter {
          */
         $group = $form->addGroup('Osobní informace');
         $login = $this->getModel()->getLogin();
-        if ($login) {
-            $rule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
-        } else {
-            $rule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_PERSON, $this->getModel(), null);
-        }
+        $rule = $this->uniqueEmailFactory->create($this->getModel());
 
         $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_EMAIL, $group, $rule);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
