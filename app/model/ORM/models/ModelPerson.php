@@ -57,6 +57,20 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
+    /**
+     * @return TableSelection untyped
+     */
+    public function getOrgs($contestId = null) {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        $related = $this->related(DbNames::TAB_ORG, 'person_id');
+        if ($contestId) {
+            $related->where('contest_id', $contestId);
+        }
+        return $related;
+    }
+
     public function getPostContacts() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -147,6 +161,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     public function getFullname() {
         return $this->display_name ? : $this->other_name . ' ' . $this->family_name;
+    }
+
+    public function __toString() {
+        return $this->getFullname();
     }
 
     /**

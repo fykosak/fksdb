@@ -4,7 +4,7 @@ namespace Tasks;
 
 use Nette\InvalidStateException;
 use Pipeline\Pipeline;
-use ServiceOrg;
+use ServicePerson;
 use ServiceTask;
 use ServiceTaskContribution;
 
@@ -39,16 +39,16 @@ class PipelineFactory {
     private $taskContributionService;
 
     /**
-     * @var ServiceOrg
+     * @var ServicePerson
      */
-    private $orgService;
+    private $servicePerson;
 
-    public function __construct($columnMappings, $contributionMappings, ServiceTask $taskService, ServiceTaskContribution $taskContributionService, ServiceOrg $orgService) {
+    public function __construct($columnMappings, $contributionMappings, ServiceTask $taskService, ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->taskService = $taskService;
         $this->taskContributionService = $taskContributionService;
-        $this->orgService = $orgService;
+        $this->servicePerson = $servicePerson;
     }
 
     /**
@@ -85,7 +85,7 @@ class PipelineFactory {
         $deadlineStage = new DeadlineFromXML($this->taskService);
         $pipeline->addStage($deadlineStage);
 
-        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->taskContributionService, $this->orgService);
+        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->taskContributionService, $this->servicePerson);
         $pipeline->addStage($contributionStage);
     }
 

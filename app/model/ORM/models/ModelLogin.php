@@ -102,7 +102,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     public function getName() {
         $person = $this->getPerson();
         if ($person) {
-            return $person->getFullname();
+            return (string) $person;
         }
         if ($this->login) {
             return $this->login;
