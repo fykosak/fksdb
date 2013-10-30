@@ -242,7 +242,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
          */
         if (!$person) {
             $group = $form->addGroup('Přihlašování');
-            $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN);
+            $emailRule = $this->uniqueEmailFactory->create();
             $loginRule = $this->uniqueLoginFactory->create();
             $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
             $form->addComponent($login, self::CONT_LOGIN);
