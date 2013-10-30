@@ -37,7 +37,6 @@ class OwnerAssertion {
         }
 
         $submit = $acl->getQueriedResource();
-
         return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getId();
     }
 
@@ -83,6 +82,27 @@ class OwnerAssertion {
         //TODO restrict also to the current year? Probably another assertion.
         $contestants = $person->getContestants($grant->getContestId());
         return count($contestants) > 0;
+    }
+
+    /**
+     * Checks the user is the org in queried contest.
+     * @param \Nette\Security\Permission $acl
+     * @param type $role
+     * @param type $resourceId
+     * @param type $privilege
+     * @return type
+     * @throws InvalidStateException
+     */
+    public function isOrgSelf(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+
+        $org = $acl->getQueriedResource();
+        $orgLogin = $org->getPerson()->getLogin();
+        $grant = $acl->getQueriedRole();
+
+        return ($org->contest_id == $grant->getContestId()) && ($orgLogin->login_id == $this->user->getId());
     }
 
 }

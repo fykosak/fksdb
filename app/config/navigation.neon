@@ -19,6 +19,7 @@ navigation:
             - org.contestant.list
             - org.school.list
             - org.export.list
+            - org.org.list
         public.dashboard.default:
             - public.submit.default
 

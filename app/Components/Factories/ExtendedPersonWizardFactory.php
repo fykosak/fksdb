@@ -6,11 +6,13 @@ use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
+use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use ModelContest;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
@@ -39,6 +41,7 @@ class ExtendedPersonWizardFactory {
     const CONT_PERSON_INFO = 'person_info';
     const CONT_ADDRESSES = 'addresses';
     const CONT_LOGIN = 'login';
+    const CONT_ORG = 'org';
 
     /* Important groups */
     const GRP_PERSON = 'personGrp';
@@ -52,6 +55,11 @@ class ExtendedPersonWizardFactory {
      * @var ContestantFactory
      */
     private $contestantFactory;
+
+    /**
+     * @var OrgFactory
+     */
+    private $orgFactory;
 
     /**
      * @var AddressFactory
@@ -79,9 +87,10 @@ class ExtendedPersonWizardFactory {
      */
     private $uniqueEmailFactory;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
+        $this->orgFactory = $orgFactory;
         $this->addressFactory = $addressFactory;
         $this->personService = $personService;
         $this->personProvider = $personProvider;
@@ -109,6 +118,20 @@ class ExtendedPersonWizardFactory {
         $wizard = $this->createWizardBase();
 
         $dataForm = $this->createContestantForm();
+        $wizard->addStep($dataForm, self::STEP_DATA);
+        $wizard->registerStepSubmitter(self::STEP_DATA, self::SEND);
+
+        return $wizard;
+    }
+
+    /**
+     * 
+     * @return WizardComponent
+     */
+    public function createOrg(ModelContest $contest) {
+        $wizard = $this->createWizardBase();
+
+        $dataForm = $this->createOrgForm($contest);
         $wizard->addStep($dataForm, self::STEP_DATA);
         $wizard->registerStepSubmitter(self::STEP_DATA, self::SEND);
 
@@ -154,12 +177,7 @@ class ExtendedPersonWizardFactory {
         /*
          * Person
          */
-        $group = $form->addGroup('Osoba');
-        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
-        $form->addComponent($personContainer, self::CONT_PERSON);
-
-        $loginContainer = $this->createLoginContainer($group);
-        $form->addComponent($loginContainer, self::CONT_LOGIN);
+        $this->addPersonContainer($form);
 
         /*
          * Contestant
@@ -198,6 +216,45 @@ class ExtendedPersonWizardFactory {
 
         $form->addSubmit(self::SEND, 'Dokončit');
         return $form;
+    }
+
+    private function createOrgForm(ModelContest $contest) {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+
+        /*
+         * Person
+         */
+        $this->addPersonContainer($form);
+
+        /*
+         * Org
+         */
+        $group = $form->addGroup('Organizátor');
+        $orgContainer = $this->orgFactory->createOrg(null, $group, $contest);
+        $form->addComponent($orgContainer, self::CONT_ORG);
+
+
+        /**
+         * Personal information
+         */
+        $group = $form->addGroup('Osobní informace');
+        $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_ORG_INFO, $group);
+        $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
+
+        $form->setCurrentGroup();
+
+        $form->addSubmit(self::SEND, 'Dokončit');
+        return $form;
+    }
+
+    protected final function addPersonContainer($form) {
+        $group = $form->addGroup('Osoba');
+        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
+        $form->addComponent($personContainer, self::CONT_PERSON);
+
+        $loginContainer = $this->createLoginContainer($group);
+        $form->addComponent($loginContainer, self::CONT_LOGIN);
     }
 
     private function createLoginContainer($group) {
