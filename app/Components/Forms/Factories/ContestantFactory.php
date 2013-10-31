@@ -45,21 +45,21 @@ class ContestantFactory {
         $container->setCurrentGroup($group);
 
         if ($options & self::SHOW_CONTEST) {
-            $container->addSelect('contest_id', 'Seminář')
+            $container->addSelect('contest_id', _('Seminář'))
                     ->setItems($this->serviceContest->getTable()->fetchPairs('contest_id', 'name'))
-                    ->setPrompt('Zvolit seminář')
-                    ->addRule(Form::FILLED, 'Je třeba zvolit seminář.');
+                    ->setPrompt(_('Zvolit seminář'))
+                    ->addRule(Form::FILLED, _('Je třeba zvolit seminář.'));
         }
 
         $school = $this->factorySchool->createSchoolSelect();
         $container->addComponent($school, 'school_id');
 
         if ($options & self::REQUIRE_SCHOOL) {
-            $school->addRule(Form::FILLED, 'Je třeba zadat školu.');
+            $school->addRule(Form::FILLED, _('Je třeba zadat školu.'));
         }
 
         // TODO extract this element and made it more robust (show graduation year)
-        $studyYear = $container->addSelect('study_year', 'Ročník')
+        $studyYear = $container->addSelect('study_year', _('Ročník'))
                 ->setItems(array(
                     1 => '1. ročník SŠ',
                     2 => '2. ročník SŠ',
@@ -69,16 +69,16 @@ class ContestantFactory {
                     7 => '7. ročník ZŠ',
                     8 => '8. ročník ZŠ',
                     9 => '9. ročník ZŠ',
-                ))->setOption('description', 'Kvůli zařazení do kategorie.')
-                ->setPrompt('Zvolit ročník');
+                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
+                ->setPrompt(_('Zvolit ročník'));
 
         if ($options & self::REQUIRE_STUDY_YEAR) {
-            $studyYear->addRule(Form::FILLED, 'Je třeba zadat ročník.');
+            $studyYear->addRule(Form::FILLED, _('Je třeba zadat ročník.'));
         }
 
 
-        $container->addText('class', 'Třída')
-                ->setOption('description', 'Kvůli případné školní korespondenci.');
+        $container->addText('class', _('Třída'))
+                ->setOption('description', _('Kvůli případné školní korespondenci.'));
 
         return $container;
     }

@@ -158,7 +158,7 @@ class ContestantPresenter extends EntityPresenter {
         $contestantContainer = $this->contestantFactory->createContestant();
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleContestantEditFormSuccess');
 

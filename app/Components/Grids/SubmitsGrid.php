@@ -54,7 +54,7 @@ class SubmitsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('task', 'Úloha')
+        $this->addColumn('task', _('Úloha'))
                 ->setRenderer(function($row) use($presenter) {
                             $row->task_id; // stupid caching...
                             $task = $row->getTask();
@@ -69,14 +69,14 @@ class SubmitsGrid extends BaseGrid {
                                 return $FQname;
                             }
                         });
-        $this->addColumn('submitted_on', 'Čas odevzdání');
-        $this->addColumn('source', 'Způsob odevzdání');
+        $this->addColumn('submitted_on', _('Čas odevzdání'));
+        $this->addColumn('source', _('Způsob odevzdání'));
 
         //
         // operations
         //
         $that = $this;
-        $this->addButton("revoke", "Zrušit")
+        $this->addButton("revoke", _("Zrušit"))
                 ->setClass("btn btn-xs btn-warning")
                 ->setText('Zrušit') //todo i18n
                 ->setShow(function($row) use($that) {

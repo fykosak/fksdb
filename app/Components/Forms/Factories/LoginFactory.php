@@ -28,41 +28,41 @@ class LoginFactory {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $login = $container->addText('login', 'Přihlašovací jméno');
+        $login = $container->addText('login', _('Přihlašovací jméno'));
 
         if ($loginRule) {
-            $login->addRule($loginRule, 'Daný login již někdo používá.');
+            $login->addRule($loginRule, _('Daný login již někdo používá.'));
         }
 
-        $email = $container->addText('email', 'E-mail')
-                ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.')
-                ->addRule(Form::FILLED, 'E-mail je třeba zadat.');
+        $email = $container->addText('email', _('E-mail'))
+                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'))
+                ->addRule(Form::FILLED, _('E-mail je třeba zadat.'));
 
         if ($emailRule) {
-            $email->addRule($emailRule, 'Daný email již někdo používá.');
+            $email->addRule($emailRule, _('Daný email již někdo používá.'));
         }
 
         if ($options & self::SHOW_PASSWORD) {
             if ($options & self::VERIFY_OLD_PASSWORD) {
-                $container->addPassword('old_password', 'Staré heslo');
+                $container->addPassword('old_password', _('Staré heslo'));
             }
-            $newPwd = $container->addPassword('password', 'Heslo');
-            $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, 'Heslo musí mít alespoň %d znaků.', 6);
+            $newPwd = $container->addPassword('password', _('Heslo'));
+            $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('Heslo musí mít alespoň %d znaků.'), 6);
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
                 $newPwd->addConditionOn($container['old_password'], Form::FILLED)
-                        ->addRule(Form::FILLED, "Je třeba nastavit nové heslo.");
+                        ->addRule(Form::FILLED, _("Je třeba nastavit nové heslo."));
             } else if ($options & self::REQUIRE_PASSWORD) {
-                $newPwd->addRule(Form::FILLED, "Heslo nemůže být prázdné.");
+                $newPwd->addRule(Form::FILLED, _("Heslo nemůže být prázdné."));
             }
 
 
-            $container->addPassword('password_verify', 'Heslo (ověření)')
-                    ->addRule(Form::EQUAL, 'Zadaná hesla se neshodují.', $newPwd);
+            $container->addPassword('password_verify', _('Heslo (ověření)'))
+                    ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd);
         }
 
         if ($options & self::SHOW_ACTIVE) {
-            $container->addCheckbox('active', 'Aktivní účet');
+            $container->addCheckbox('active', _('Aktivní účet'));
         }
 
         return $container;

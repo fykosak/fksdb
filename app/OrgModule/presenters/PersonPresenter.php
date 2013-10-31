@@ -130,32 +130,32 @@ class PersonPresenter extends EntityPresenter {
         /*
          * Person
          */
-        $group = $form->addGroup('Osoba');
+        $group = $form->addGroup(_('Osoba'));
         $personContainer = $this->personFactory->createPerson(PersonFactory::SHOW_DISPLAY_NAME | PersonFactory::SHOW_GENDER, $group);
         $form->addComponent($personContainer, self::CONT_PERSON);
 
         /**
          * Addresses
          */
-        $group = $form->addGroup('Adresy');
+        $group = $form->addGroup(_('Adresy'));
         $factory = $this->addressFactory;
         $replicator = new Replicator(function($replContainer) use($factory, $group) {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
-                    $replContainer->addSubmit('remove', 'Odebrat adresu')->addRemoveOnClick();
+                    $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();
                 }, 1, true);
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);
 
-        $replicator->addSubmit('add', 'Přidat adresu')->addCreateOnClick();
+        $replicator->addSubmit('add', _('Přidat adresu'))->addCreateOnClick();
 
 
         /**
          * Personal information
          */
-        $group = $form->addGroup('Osobní informace');
+        $group = $form->addGroup(_('Osobní informace'));
         $login = $this->getModel()->getLogin();
         $rule = $this->uniqueEmailFactory->create($this->getModel());
 
@@ -164,7 +164,7 @@ class PersonPresenter extends EntityPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', 'Uložit')->onClick[] = array($this, 'handleEditFormSuccess');
+        $form->addSubmit('send', _('Uložit'))->onClick[] = array($this, 'handleEditFormSuccess');
 
         return $form;
     }

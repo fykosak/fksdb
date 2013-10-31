@@ -60,10 +60,10 @@ class TasksPresenter extends BasePresenter {
         $seriesForm->setRenderer(new BootstrapRenderer());
 
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        $seriesForm->addSelect('series', 'Série')
+        $seriesForm->addSelect('series', _('Série'))
                 ->setItems($seriesItems, false);
 
-        $seriesForm->addSubmit('submit', 'Stáhnout');
+        $seriesForm->addSubmit('submit', _('Stáhnout'));
 
         $seriesForm->onSuccess[] = callback($this, 'validSubmitSeriesForm');
 

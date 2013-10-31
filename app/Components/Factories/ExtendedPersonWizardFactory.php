@@ -150,7 +150,7 @@ class ExtendedPersonWizardFactory {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
 
-        $group = $form->addGroup('Existující osoba');
+        $group = $form->addGroup(_('Existující osoba'));
 
         $renderMethod = 'return $("<li>")
                         .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
@@ -163,7 +163,7 @@ class ExtendedPersonWizardFactory {
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
 
-        $group = $form->addGroup('Nová osoba');
+        $group = $form->addGroup(_('Nová osoba'));
         $group->setOption('container', Html::el('fieldset')->id(self::GRP_PERSON));
         $personContainer = $this->personFactory->createPerson(PersonFactory::SHOW_DISPLAY_NAME | PersonFactory::SHOW_GENDER, $group, array(
             PersonFactory::IDX_CONTROL => $personElement,
@@ -174,7 +174,7 @@ class ExtendedPersonWizardFactory {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit(self::SEND, 'Pokračovat');
+        $form->addSubmit(self::SEND, _('Pokračovat'));
         return $form;
     }
 
@@ -190,7 +190,7 @@ class ExtendedPersonWizardFactory {
         /*
          * Contestant
          */
-        $group = $form->addGroup('Řešitel');
+        $group = $form->addGroup(_('Řešitel'));
         $contestantContainer = $this->contestantFactory->createContestant(null, $group);
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
 
@@ -198,31 +198,31 @@ class ExtendedPersonWizardFactory {
         /**
          * Addresses
          */
-        $group = $form->addGroup('Adresa');
+        $group = $form->addGroup(_('Adresa'));
         $factory = $this->addressFactory;
         $replicator = new Replicator(function($replContainer) use($factory, $group) {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
-                    $replContainer->addSubmit('remove', 'Odebrat adresu')->addRemoveOnClick();
+                    $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();
                 }, 1, true);
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);
 
-        $replicator->addSubmit('add', 'Přidat adresu')->addCreateOnClick();
+        $replicator->addSubmit('add', _('Přidat adresu'))->addCreateOnClick();
 
 
         /**
          * Personal information
          */
-        $group = $form->addGroup('Osobní informace');
+        $group = $form->addGroup(_('Osobní informace'));
         $infoContainer = $this->personFactory->createPersonInfo(0, $group);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
 
         $form->setCurrentGroup();
 
-        $form->addSubmit(self::SEND, 'Dokončit');
+        $form->addSubmit(self::SEND, _('Dokončit'));
         return $form;
     }
 
@@ -238,7 +238,7 @@ class ExtendedPersonWizardFactory {
         /*
          * Org
          */
-        $group = $form->addGroup('Organizátor');
+        $group = $form->addGroup(_('Organizátor'));
         $orgContainer = $this->orgFactory->createOrg(null, $group, $contest);
         $form->addComponent($orgContainer, self::CONT_ORG);
 
@@ -246,18 +246,18 @@ class ExtendedPersonWizardFactory {
         /**
          * Personal information
          */
-        $group = $form->addGroup('Osobní informace');
+        $group = $form->addGroup(_('Osobní informace'));
         $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_ORG_INFO, $group);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
 
         $form->setCurrentGroup();
 
-        $form->addSubmit(self::SEND, 'Dokončit');
+        $form->addSubmit(self::SEND, _('Dokončit'));
         return $form;
     }
 
     protected final function addPersonContainer($form) {
-        $group = $form->addGroup('Osoba');
+        $group = $form->addGroup(_('Osoba'));
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
         $form->addComponent($personContainer, self::CONT_PERSON);
 
@@ -269,16 +269,16 @@ class ExtendedPersonWizardFactory {
         $container = new Container();
         $container->setCurrentGroup($group);
 
-        $email = $container->addText(self::EL_EMAIL, 'E-mail');
+        $email = $container->addText(self::EL_EMAIL, _('E-mail'));
         $email->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
 
-        $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, 'Vytvořit login')
-                ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
+        $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, _('Vytvořit login'))
+                ->setOption('description', _('Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.'));
         $email->addConditionOn($createLogin, Form::FILLED)
-                ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
+                ->addRule(Form::FILLED, _('Pro vytvoření loginu je třeba zadat e-mail.'));
 
-        $container->addSelect(self::EL_CREATE_LOGIN_LANG, 'Jazyk pozvánky')
+        $container->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
                 ->setItems($this->translator->getSupportedLanguages())
                 ->setDefaultValue($this->translator->getLang());
 
@@ -308,8 +308,8 @@ class ExtendedPersonWizardFactory {
 
 
         $emailRule = $this->uniqueEmailFactory->create($person);
-        //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, 'Daný e-mail již někdo používá.');
-        $form[self::CONT_LOGIN][self::EL_EMAIL]->addRule($emailRule, 'Daný e-mail již někdo používá.');
+        //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, _('Daný e-mail již někdo používá.'));
+        $form[self::CONT_LOGIN][self::EL_EMAIL]->addRule($emailRule, _('Daný e-mail již někdo používá.'));
     }
 
 }

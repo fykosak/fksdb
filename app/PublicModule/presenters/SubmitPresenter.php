@@ -92,7 +92,7 @@ class SubmitPresenter extends BasePresenter {
 
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {
-                $form->addGroup(sprintf('Termín %s', $task->submit_deadline));
+                $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
@@ -102,11 +102,11 @@ class SubmitPresenter extends BasePresenter {
             $container = $form->addContainer('task' . $task->task_id);
             $upload = $container->addUpload('file', $task->getFQName())
                     ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, 'Lze nahrávat pouze PDF soubory.', 'application/pdf'); //TODO verify this check at production server
+                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
             if ($submit && $this->submitStorage->existsFile($submit)) {
-                $overwrite = $container->addCheckbox('overwrite', 'Přepsat odeslané řešení.');
-                $upload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, 'Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.');
+                $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                $upload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
             }
 
 
@@ -117,10 +117,10 @@ class SubmitPresenter extends BasePresenter {
         $form->addHidden('tasks', implode(',', $taskIds));
 
         $form->setCurrentGroup();
-        $form->addSubmit('upload', 'Odeslat');
+        $form->addSubmit('upload', _('Odeslat'));
         $form->onSuccess[] = array($this, 'handleUploadFormSuccess');
 
-        $form->addProtection('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.');
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
         return $form;
     }
@@ -150,7 +150,7 @@ class SubmitPresenter extends BasePresenter {
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
-                    $this->flashMessage(sprintf('Úlohu %s již není možno odevzdávat.', $task->label), self::FLASH_ERROR);
+                    $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);
                     continue;
                 }
 
@@ -178,7 +178,7 @@ class SubmitPresenter extends BasePresenter {
                 // store file
                 $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
 
-                $this->flashMessage(sprintf('Úloha %s odevzdána.', $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
 
             $this->submitStorage->commit();

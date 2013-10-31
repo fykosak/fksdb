@@ -250,14 +250,14 @@ class ExportPresenter extends SeriesPresenter {
 
     protected function createComponentComposeForm($name) {
         $form = $this->createDesignForm();
-        $form->addSubmit('save', 'Uložit')
+        $form->addSubmit('save', _('Uložit'))
                 ->onClick[] = array($this, 'handleComposeSuccess');
         return $form;
     }
 
     protected function createComponentEditForm($name) {
         $form = $this->createDesignForm();
-        $form->addSubmit('save', 'Uložit')
+        $form->addSubmit('save', _('Uložit'))
                 ->onClick[] = array($this, 'handleEditSuccess');
         return $form;
     }
@@ -266,7 +266,7 @@ class ExportPresenter extends SeriesPresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
 
-        $group = $form->addGroup('SQL');
+        $group = $form->addGroup(_('SQL'));
 
         $console = $this->storedQueryFormFactory->createConsole(0, $group);
         $form->addComponent($console, self::CONT_CONSOLE);
@@ -275,14 +275,14 @@ class ExportPresenter extends SeriesPresenter {
         $form->addComponent($params, self::CONT_PARAMS_META);
 
 
-        $group = $form->addGroup('Metadata');
+        $group = $form->addGroup(_('Metadata'));
 
         $metadata = $this->storedQueryFormFactory->createMetadata(0, $group);
         $form->addComponent($metadata, self::CONT_META);
 
         $form->setCurrentGroup();
 
-        $submit = $form->addSubmit('execute', 'Spustit')
+        $submit = $form->addSubmit('execute', _('Spustit'))
                 ->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-success');
         $submit->onClick[] = array($this, 'handleComposeExecute');

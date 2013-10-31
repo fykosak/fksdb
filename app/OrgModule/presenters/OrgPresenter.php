@@ -153,7 +153,7 @@ class OrgPresenter extends EntityPresenter {
         $orgContainer = $this->orgFactory->createOrg(0, null, $this->getSelectedContest());
         $form->addComponent($orgContainer, self::CONT_ORG);
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleOrgEditFormSuccess');
 

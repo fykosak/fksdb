@@ -84,7 +84,7 @@ class SchoolPresenter extends EntityPresenter {
     protected function createComponentCreateComponent($name) {
         $form = $this->createForm();
 
-        $form->addSubmit('send', 'Vložit');
+        $form->addSubmit('send', _('Vložit'));
         $form->onSuccess[] = array($this, 'handleCreateFormSuccess');
 
         return $form;
@@ -93,7 +93,7 @@ class SchoolPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $form = $this->createForm();
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
         $form->onSuccess[] = array($this, 'handleEditFormSuccess');
 
         return $form;

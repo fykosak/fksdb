@@ -84,7 +84,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
-        $group = $form->addGroup('Autentizace');
+        $group = $form->addGroup(_('Autentizace'));
         $emailRule = $this->uniqueEmailFactory->create(null, $login);
         $loginRule = $this->uniqueLoginFactory->create($login);
 
@@ -107,7 +107,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
         return $form;

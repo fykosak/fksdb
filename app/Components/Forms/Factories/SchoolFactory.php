@@ -31,31 +31,31 @@ class SchoolFactory {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $container->addText('name_full', 'Plný název')
-                ->setOption('description', 'Úplný nezkrácený název školy.');
+        $container->addText('name_full', _('Plný název'))
+                ->setOption('description', _('Úplný nezkrácený název školy.'));
 
-        $container->addText('name', 'Název')
-                ->addRule(Form::FILLED, 'Název je povinný.')
-                ->setOption('description', 'Název na obálku.');
+        $container->addText('name', _('Název'))
+                ->addRule(Form::FILLED, _('Název je povinný.'))
+                ->setOption('description', _('Název na obálku.'));
 
-        $container->addText('name_abbrev', 'Zkrácený název')
-                ->addRule(Form::FILLED, 'Zkrácený název je povinný.')
-                ->setOption('description', 'Název krátký do výsledkovky.');
+        $container->addText('name_abbrev', _('Zkrácený název'))
+                ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
+                ->setOption('description', _('Název krátký do výsledkovky.'));
 
-        $container->addText('email', 'Kontaktní e-mail')
+        $container->addText('email', _('Kontaktní e-mail'))
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::EMAIL);
 
-        $container->addText('ic', 'IČ')
-                ->addRule(Form::MAX_LENGTH, 'Délka IČ je omezena na 8 znaků.', 8);
+        $container->addText('ic', _('IČ'))
+                ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na 8 znaků.'), 8);
 
-        $container->addText('izo', 'IZO')
-                ->addRule(Form::MAX_LENGTH, 'Délka IZO je omezena na 32 znaků.', 32);
+        $container->addText('izo', _('IZO'))
+                ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na 32 znaků.'), 32);
 
-        $container->addCheckbox('active', 'Aktivní záznam')
+        $container->addCheckbox('active', _('Aktivní záznam'))
                 ->setDefaultValue(true);
 
-        $container->addText('note', 'Poznámka');
+        $container->addText('note', _('Poznámka'));
 
         //$container->addHidden('school_id');
 
@@ -63,7 +63,7 @@ class SchoolFactory {
     }
 
     public function createSchoolSelect() {
-        $schoolElement = new AutocompleteSelectBox(true, 'Škola');
+        $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
         return $schoolElement;
     }

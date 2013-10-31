@@ -122,7 +122,7 @@ class PointsPresenter extends SeriesPresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', 'Uložit');
+        $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
 
         // JS dependencies        

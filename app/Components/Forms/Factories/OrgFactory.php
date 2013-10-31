@@ -39,25 +39,25 @@ class OrgFactory {
         $min = $this->yearCalculator->getFirstYear($contest);
         $max = $this->yearCalculator->getCurrentYear($contest);
 
-        $container->addText('since', 'Od ročníku')
+        $container->addText('since', _('Od ročníku'))
                 ->addRule(Form::NUMERIC)
                 ->addRule(Form::FILLED)
-                ->addRule(Form::RANGE, 'Počáteční ročník není v intervalu [%d, %d].', array($min, $max));
+                ->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), array($min, $max));
 
-        $container->addText('until', 'Do ročníku')
+        $container->addText('until', _('Do ročníku'))
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::NUMERIC)
                 ->addRule(function ($until, $since) {
                             return $since->value <= $until->value;
-                        }, 'Konec nesmí být dříve než začátek', $container['since'])
-                ->addRule(Form::RANGE, 'Koncový ročník není v intervalu [%d, %d].', array($min, $max));
+                        }, _('Konec nesmí být dříve než začátek'), $container['since'])
+                ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), array($min, $max));
 
 
-        $container->addText('role', 'Funkce')
+        $container->addText('role', _('Funkce'))
                 ->addRule(Form::MAX_LENGTH, null, 255);
 
-        $container->addSelect('order', 'Hodnost')
-                ->setOption('description', 'Pro řazení v seznamu organizátorů')
+        $container->addSelect('order', _('Hodnost'))
+                ->setOption('description', _('Pro řazení v seznamu organizátorů'))
                 ->setItems(array(
                     0 => '0 - org',
                     1 => '1',
@@ -66,11 +66,11 @@ class OrgFactory {
                     4 => '4 - hlavní organizátor',
                     9 => '9 - vedoucí semináře',
                 ))
-                ->setPrompt('Zvolit hodnost')
-                ->addRule(Form::FILLED, 'Vyberte hodnost.');
+                ->setPrompt(_('Zvolit hodnost'))
+                ->addRule(Form::FILLED, _('Vyberte hodnost.'));
 
-        $container->addTextArea('contribution', 'Co udělal')
-                ->setOption('description', 'Zobrazeno v síni slávy');
+        $container->addTextArea('contribution', _('Co udělal'))
+                ->setOption('description', _('Zobrazeno v síni slávy'));
 
         return $container;
     }

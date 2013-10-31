@@ -92,28 +92,28 @@ class AwaPresenter extends Action {
 
         $form = new Form;
 
-        $form->addText('login', 'Přihlašovací jméno')
+        $form->addText('login', _('Přihlašovací jméno'))
                 ->setRequired('Vyplňte jméno, pomocí kterého se chcete přihlašovat.')
-                #		->addRule(array($this, 'checkUniqueUsername'), 'Zvolené uživatelské jméno je již obsazené, zvolte prosím jiné.')
+                #		->addRule(array($this, _('checkUniqueUsername')), 'Zvolené uživatelské jméno je již obsazené, zvolte prosím jiné.')
                 ->setDefaultValue($person_login->login)
                 ->setDisabled();
 
-        $form->addText('display_name', 'Přezdívka')
+        $form->addText('display_name', _('Přezdívka'))
                 ->setDefaultValue($person->display_name)
                 ->setDisabled();
 
-        $form->addText('email', 'Email')
+        $form->addText('email', _('Email'))
                 ->setRequired('Vyplňte svůj email')
-                ->addRule(Form::EMAIL, 'Email má neplatný formát.')
+                ->addRule(Form::EMAIL, _('Email má neplatný formát.'))
                 ->setDefaultValue($person_login->email)
                 ->setDisabled();
 
-        $form->addText('other_name', 'Jméno')
+        $form->addText('other_name', _('Jméno'))
                 ->setRequired('Vyplňte své křesní jméno')
                 ->setDefaultValue($person->other_name)
                 ->setDisabled();
 
-        $form->addText('family_name', 'Příjmení')
+        $form->addText('family_name', _('Příjmení'))
                 ->setRequired('Vyplňte své příjmení')
                 ->setDefaultValue($person->family_name)
                 ->setDisabled();
@@ -123,7 +123,7 @@ class AwaPresenter extends Action {
         if ($event_participant) {
             $note = $event_participant->note;
         }
-        $form->addTextArea('note', 'Poznámka')
+        $form->addTextArea('note', _('Poznámka'))
                 ->setAttribute('rows', 3)
                 ->setAttribute('cols', 30)
                 ->setDefaultValue($note);
@@ -145,11 +145,11 @@ class AwaPresenter extends Action {
 
         $form->addText('question', $label)
                 ->setRequired('Vyplňte prosím kontrolní otázku, která ověřuje, zda nejste robot.')
-                ->addRule(Form::EQUAL, "Chybná odpověď\nHint: " . $question['hint'], $question['answer']);
+                ->addRule(Form::EQUAL, _("Chybná odpověď\nHint: ") . $question['hint'], $question['answer']);
 
         $form->addProtection();
 
-        $form->addSubmit('send', 'Odeslat');
+        $form->addSubmit('send', _('Odeslat'));
         $form->onSuccess[] = array($this, 'registrationFormOnSuccess');
 
         return $form;
@@ -181,7 +181,7 @@ class AwaPresenter extends Action {
             1 => array('answer' => 0, 'question' => 'Kolik je deset krat nula?', 'hint' => 'hrdina okamžiku')
         );
 
-        $form->addRadioList('del_radio', '', $alt)
+        $form->addRadioList('del_radio', _(''), $alt)
                 ->setDefaultValue(0);
 
         $session = $this->getSession('delQuestion');
@@ -195,9 +195,9 @@ class AwaPresenter extends Action {
                 ->add(Html::el('em')->setText($question['question']));
         $form->addText('question', $label)
                 ->setRequired('Vyplňte prosím kontrolní otázku, která ověřuje, zda nejste robot.')
-                ->addRule(Form::EQUAL, "Chybná odpověď\nHint: " . $question['hint'], $question['answer']);
+                ->addRule(Form::EQUAL, _("Chybná odpověď\nHint: ") . $question['hint'], $question['answer']);
 
-        $form->addSubmit('send', 'Odeslat');
+        $form->addSubmit('send', _('Odeslat'));
         $form->onSuccess[] = array($this, 'deleteEventParticipantFormOnSuccess');
 
         return $form;

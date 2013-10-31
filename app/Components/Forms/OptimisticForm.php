@@ -94,7 +94,7 @@ class OptimisticForm extends Form {
         $currentFingerprint = $this->fingerprintCallback->invoke();
 
         if ($receivedFingerprint != $currentFingerprint) {
-            $this->addError('Od zobrazení formuláře byla změněna jeho data.'); //TODO customize message accordint to refreshOnConflict value
+            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.')); //TODO customize message accordint to refreshOnConflict value
             $this->setFingerprint($currentFingerprint);
 
             

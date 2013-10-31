@@ -224,16 +224,16 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
-        $form->addText('id', 'Přihlašovací jméno nebo email')
-                ->addRule(Form::FILLED, 'Zadejte přihlašovací jméno nebo emailovou adresu.');
+        $form->addText('id', _('Přihlašovací jméno nebo email'))
+                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
-        $form->addPassword('password', 'Heslo')
-                ->addRule(Form::FILLED, 'Zadejte heslo.');
-        //$form->addCheckbox('remember', 'Zapamatovat si přihlášení');
+        $form->addPassword('password', _('Heslo'))
+                ->addRule(Form::FILLED, _('Zadejte heslo.'));
+        //$form->addCheckbox('remember', _('Zapamatovat si přihlášení'));
 
-        $form->addSubmit('send', 'Přihlásit');
+        $form->addSubmit('send', _('Přihlásit'));
 
-        $form->addProtection('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnout).');
+        $form->addProtection(_('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnout).'));
 
         $form->onSuccess[] = callback($this, 'loginFormSubmitted');
         return $form;
@@ -246,12 +246,12 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentRecoverForm() {
         $form = new Form();
-        $form->addText('id', 'Přihlašovací jméno nebo email')
-                ->addRule(Form::FILLED, 'Zadejte přihlašovací jméno nebo emailovou adresu.');
+        $form->addText('id', _('Přihlašovací jméno nebo email'))
+                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
-        $form->addSubmit('send', 'Pokračovat');
+        $form->addSubmit('send', _('Pokračovat'));
 
-        $form->addProtection('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnout).');
+        $form->addProtection(_('Odešlete prosím formulář znovu. Vypršela jeho časová platnost nebo máte vypnuté cookies (tedy zapnout).'));
 
         $form->onSuccess[] = callback($this, 'recoverFormSubmitted');
         return $form;
