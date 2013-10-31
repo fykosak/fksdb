@@ -84,7 +84,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
-        $group = $form->addGroup('Autentizace');
+        $group = $form->addGroup(_('Autentizace'));
         $emailRule = $this->uniqueEmailFactory->create(null, $login);
         $loginRule = $this->uniqueLoginFactory->create($login);
 
@@ -107,7 +107,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
         return $form;
@@ -131,9 +131,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
-        $this->flashMessage('Uživatelské informace upraveny.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage('Heslo nastaveno.', self::FLASH_SUCCESS); //TODO here may be Facebook ID            
+            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID            
             $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');

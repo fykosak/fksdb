@@ -189,7 +189,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             $person = $this->user->getIdentity()->getPerson();
             if (!$person) {
-                $this->flashMessage('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.', self::FLASH_INFO);
+                $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
                 $this->redirect(':Authentication:login');
             }
 
@@ -197,7 +197,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
                 $contestnats = $person->getActiveContestants($this->yearCalculator);
                 $contest = $this->getSelectedContest();
                 if (isset($contestnats[$contest->contest_id])) {
-                    $this->flashMessage(sprintf('%s již řeší %s.', $person->getFullname(), $contest->name), self::FLASH_INFO);
+                    $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
                     $this->redirect(':Public:Dashboard:default');
                 }
             }
@@ -241,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
          * Login
          */
         if (!$person) {
-            $group = $form->addGroup('Přihlašování');
+            $group = $form->addGroup(_('Přihlašování'));
             $emailRule = $this->uniqueEmailFactory->create();
             $loginRule = $this->uniqueLoginFactory->create();
             $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
@@ -256,7 +256,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         } else {
             $personFlags = 0;
         }
-        $group = $form->addGroup('Osoba');
+        $group = $form->addGroup(_('Osoba'));
         $personCont = $this->personFactory->createPerson($personFlags, $group);
         $form->addComponent($personCont, self::CONT_PERSON);
 
@@ -276,7 +276,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         /*
          * Contestant
          */
-        $group = $form->addGroup('Řešitel');
+        $group = $form->addGroup(_('Řešitel'));
         $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
         if (!$this->getSelectedContest()) {
             $options |= ContestantFactory::SHOW_CONTEST;
@@ -288,10 +288,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
          * Buttons
          */
         $form->setCurrentGroup();
-        $form->addSubmit('register', 'Registrovat');
+        $form->addSubmit('register', _('Registrovat'));
         $form->onSuccess[] = array($this, 'handleContestantFormSuccess');
 
-        $form->addProtection('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.');
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
         return $form;
     }
@@ -390,13 +390,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
                 $this->getUser()->login($login);
             }
 
-            $this->flashMessage($person->gender == 'F' ? 'Řešitelka úspěšně zaregistrována.' : 'Řešitel úspěšně zaregistrován.', self::FLASH_SUCCESS);
+            $this->flashMessage($person->gender == 'F' ? _('Řešitelka úspěšně zaregistrována.') : _('Řešitel úspěšně zaregistrován.'), self::FLASH_SUCCESS);
             $this->redirect(':Public:Dashboard:default');
         } catch (ModelException $e) {
             $this->connection->rollBack();
             $this->getUser()->logout(true);
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Při registraci došlo k chybě.', self::FLASH_ERROR);
+            $this->flashMessage(_('Při registraci došlo k chybě.'), self::FLASH_ERROR);
         }
     }
 

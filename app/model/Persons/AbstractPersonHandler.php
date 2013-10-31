@@ -101,12 +101,13 @@ abstract class AbstractPersonHandler {
                     $login->email = $email;
                     $this->serviceLogin->save($login);
                 } else if ($createLogin) {
-                    $template = $this->mailTemplateFactory->createLoginInvitation($presenter, 'cs'); //TODO i18n of created logins (from the login group)
+                    $lang = $emailData[ExtendedPersonWizardFactory::EL_CREATE_LOGIN_LANG];
+                    $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $lang);
                     try {
                         $login = $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
-                        $presenter->flashMessage('Zvací e-mail odeslán.', $presenter::FLASH_INFO);
+                        $presenter->flashMessage(_('Zvací e-mail odeslán.'), $presenter::FLASH_INFO);
                     } catch (SendFailedException $e) {
-                        $presenter->flashMessage('Zvací e-mail se nepodařilo odeslat.', $presenter::FLASH_ERROR);
+                        $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), $presenter::FLASH_ERROR);
                     }
                 } else {
                     $personInfoData['email'] = $email; // we'll store it as personal info

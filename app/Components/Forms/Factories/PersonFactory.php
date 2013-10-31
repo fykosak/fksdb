@@ -43,42 +43,42 @@ class PersonFactory {
         $container->setCurrentGroup($group);
 
 
-        $control = $container->addText('other_name', 'Křestní jméno')
+        $control = $container->addText('other_name', _('Křestní jméno'))
                 ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělená mezerou.');
+                ->setOption('description', _('Příp. další jména oddělená mezerou.'));
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
         } else {
             $rules = $control;
         }
-        $rules->addRule(Form::FILLED, 'Křestní jméno je povinné.');
+        $rules->addRule(Form::FILLED, _('Křestní jméno je povinné.'));
 
 
 
-        $control = $container->addText('family_name', 'Příjmení')
+        $control = $container->addText('family_name', _('Příjmení'))
                 ->setDisabled($disabled)
-                ->setOption('description', 'Příp. další jména oddělená mezerou.');
+                ->setOption('description', _('Příp. další jména oddělená mezerou.'));
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
         } else {
             $rules = $control;
         }
-        $rules->addRule(Form::FILLED, 'Příjmení je povinné.');
+        $rules->addRule(Form::FILLED, _('Příjmení je povinné.'));
 
 
 
         if ($options & self::SHOW_DISPLAY_NAME) {
-            $control = $container->addText('display_name', 'Zobrazované jméno')
+            $control = $container->addText('display_name', _('Zobrazované jméno'))
                     ->setDisabled($disabled)
-                    ->setOption('description', 'Pouze pokud je odlišené od "jméno příjmení".');
+                    ->setOption('description', _('Pouze pokud je odlišené od "jméno příjmení".'));
         }
 
 
 
         if ($options & self::SHOW_GENDER) {
-            $control = $container->addRadioList('gender', 'Pohlaví', array('M' => 'muž', 'F' => 'žena'))
+            $control = $container->addRadioList('gender', _('Pohlaví'), array('M' => 'muž', 'F' => 'žena'))
                     ->setDefaultValue('M')
                     ->setDisabled($disabled);
         }
@@ -92,60 +92,60 @@ class PersonFactory {
 
         if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {
             if ($options & self::SHOW_EMAIL) {
-                $email = $container->addText('email', 'E-mail');
+                $email = $container->addText('email', _('E-mail'));
                 $conditioned = $email->addCondition(Form::FILLED)
-                        ->addRule(Form::EMAIL, 'Neplatný tvar e-mailu.');
+                        ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 if ($emailRule) {
-                    $conditioned->addRule($emailRule, 'Daný e-mail je již použit u někoho jiného.');
+                    $conditioned->addRule($emailRule, _('Daný e-mail je již použit u někoho jiného.'));
                 }
             }
 
             $container->addDatePicker('born', 'Datum narození');
 
-            $container->addText('id_number', 'Číslo OP')
-                    ->setOption('description', 'U cizinců číslo pasu.')
+            $container->addText('id_number', _('Číslo OP'))
+                    ->setOption('description', _('U cizinců číslo pasu.'))
                     ->addRule(Form::MAX_LENGTH, null, 32);
 
-            $container->addText('born_id', 'Rodné číslo')
-                    ->setOption('description', 'U cizinců prázdné.')
+            $container->addText('born_id', _('Rodné číslo'))
+                    ->setOption('description', _('U cizinců prázdné.'))
                     ->addCondition(Form::FILLED)
-                    ->addRule(new BornNumber(), 'Rodné číslo nemá platný formát.');
+                    ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
 
 
-            $container->addText('phone', 'Telefonní číslo')
+            $container->addText('phone', _('Telefonní číslo'))
                     ->addRule(Form::MAX_LENGTH, null, 32);
 
-            $container->addText('im', 'ICQ, Jabber, apod.')
+            $container->addText('im', _('ICQ, Jabber, apod.'))
                     ->addRule(Form::MAX_LENGTH, null, 32);
 
-            $container->addText('birthplace', 'Místo narození')
-                    ->setOption('description', 'Město a okres (kvůli diplomům).')
+            $container->addText('birthplace', _('Místo narození'))
+                    ->setOption('description', _('Město a okres (kvůli diplomům).'))
                     ->addRule(Form::MAX_LENGTH, null, 255);
 
 
 
             if ($options & self::SHOW_ORG_INFO) {
-                $container->addText('uk_login', 'Login UK')
+                $container->addText('uk_login', _('Login UK'))
                         ->addRule(Form::MAX_LENGTH, null, 8);
 
-                $container->addText('account', 'Číslo bankovního účtu')
+                $container->addText('account', _('Číslo bankovního účtu'))
                         ->addRule(Form::MAX_LENGTH, null, 32);
             }
 
-            $container->addTextArea('note', 'Poznámka');
+            $container->addTextArea('note', _('Poznámka'));
         }
-        $container->addTextArea('origin', 'Jak jsi se o nás dozvěděl(a)?');
+        $container->addTextArea('origin', _('Jak jsi se o nás dozvěděl(a)?'));
 
 
         $link = Html::el('a');
-        $link->setText('Text souhlasu');
-        $link->href = "http://fykos.cz/doc/souhlas.pdf";
+        $link->setText(_('Text souhlasu'));
+        $link->href = _("http://fykos.cz/doc/souhlas.pdf");
 
-        $agreement = $container->addCheckbox('agreed', 'Souhlasím se zpracováním osobních údajů')
+        $agreement = $container->addCheckbox('agreed', _('Souhlasím se zpracováním osobních údajů'))
                 ->setOption('description', $link);
 
         if ($options & self::REQUIRE_AGREEMENT) {
-            $agreement->addRule(Form::FILLED, 'Bez souhlasu nelze bohužel pokračovat.');
+            $agreement->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
         }
 
 

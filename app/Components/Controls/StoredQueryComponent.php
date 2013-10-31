@@ -79,7 +79,7 @@ class StoredQueryComponent extends Control {
         $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
         $form->addComponent($parameters, self::CONT_PARAMS);
 
-        $form->addSubmit('execute', 'Parametrizovat');
+        $form->addSubmit('execute', _('Parametrizovat'));
         $form->onSuccess[] = function(Form $form) {
                     $this->parameters = array();
                     $values = $form->getValues();

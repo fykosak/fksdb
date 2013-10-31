@@ -37,24 +37,24 @@ class ContestantsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', 'Jméno')->setRenderer(function($row) {
+        $this->addColumn('display_name', _('Jméno'))->setRenderer(function($row) {
                     $person = ModelPerson::createFromTableRow($row);
                     return $person->getFullname();
                 });
-        $this->addColumn('study_year', 'Ročník');
-        $this->addColumn('school_name', 'Škola');
+        $this->addColumn('study_year', _('Ročník'));
+        $this->addColumn('school_name', _('Škola'));
 
         //
         // operations
         //
         $that = $this;
-        $this->addButton("edit", "Upravit")
+        $this->addButton("edit", _("Upravit"))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->ct_id);
                         });
         $backlink = $presenter->storeRequest();
-        $this->addButton("editPerson", "Upravit osobu")
+        $this->addButton("editPerson", _("Upravit osobu"))
                 ->setText('Upravit osobu') //todo i18n
                 ->setLink(function($row) use ($presenter, $backlink) {
                             return $presenter->link("Person:edit", array(

@@ -111,7 +111,7 @@ class OrgPresenter extends EntityPresenter {
         $org = $this->getModel();
 
         if ($org->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage('Editace organizátora mimo zvolený seminář.', self::FLASH_WARNING);
+            $this->flashMessage(_('Editace organizátora mimo zvolený seminář.'), self::FLASH_WARNING);
         }
     }
 
@@ -153,7 +153,7 @@ class OrgPresenter extends EntityPresenter {
         $orgContainer = $this->orgFactory->createOrg(0, null, $this->getSelectedContest());
         $form->addComponent($orgContainer, self::CONT_ORG);
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleOrgEditFormSuccess');
 
@@ -173,7 +173,7 @@ class OrgPresenter extends EntityPresenter {
             $this->redirect('list');
         } catch (PersonHandlerException $e) {
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání organizátora.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při zakládání organizátora.'), self::FLASH_ERROR);
         }
     }
 
@@ -207,7 +207,7 @@ class OrgPresenter extends EntityPresenter {
             $this->redirect('list');
         } catch (ModelException $e) {
 
-            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
     }

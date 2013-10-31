@@ -47,19 +47,19 @@ class OrgsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', 'Jméno')->setRenderer(function($row) {
+        $this->addColumn('display_name', _('Jméno'))->setRenderer(function($row) {
                     $person = $row->getPerson();
                     return $person->getFullname();
                 });
-        $this->addColumn('since', 'Začal');
-        $this->addColumn('until', 'Skončil');
-        $this->addColumn('role', 'Funkce');
+        $this->addColumn('since', _('Začal'));
+        $this->addColumn('until', _('Skončil'));
+        $this->addColumn('role', _('Funkce'));
 
         //
         // operations
         //
         $that = $this;
-        $this->addButton("edit", "Upravit")
+        $this->addButton("edit", _("Upravit"))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->org_id);
@@ -68,7 +68,7 @@ class OrgsGrid extends BaseGrid {
                             return $presenter->authorized("edit", array('id' => $row->org_id));
                         });
         $backlink = $presenter->storeRequest();
-        $this->addButton("editPerson", "Upravit osobu")
+        $this->addButton("editPerson", _("Upravit osobu"))
                 ->setText('Upravit osobu') //todo i18n
                 ->setLink(function($row) use ($presenter, $backlink) {
                             return $presenter->link("Person:edit", array(

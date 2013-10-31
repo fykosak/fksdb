@@ -112,11 +112,11 @@ class ContestantPresenter extends EntityPresenter {
         $contestant = $this->getModel();
 
         if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage('Editace řešitele mimo zvolený seminář.', self::FLASH_WARNING);
+            $this->flashMessage(_('Editace řešitele mimo zvolený seminář.'), self::FLASH_WARNING);
         }
 
         if ($contestant->year != $this->getSelectedYear()) {
-            $this->flashMessage('Editace řešitele mimo zvolený ročník semináře.', self::FLASH_WARNING);
+            $this->flashMessage(_('Editace řešitele mimo zvolený ročník semináře.'), self::FLASH_WARNING);
         }
     }
 
@@ -158,7 +158,7 @@ class ContestantPresenter extends EntityPresenter {
         $contestantContainer = $this->contestantFactory->createContestant();
         $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleContestantEditFormSuccess');
 
@@ -178,7 +178,7 @@ class ContestantPresenter extends EntityPresenter {
             $this->redirect('list');
         } catch (PersonHandlerException $e) {
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání řešitele.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při zakládání řešitele.'), self::FLASH_ERROR);
         }
     }
 
@@ -212,7 +212,7 @@ class ContestantPresenter extends EntityPresenter {
             $this->redirect('list');
         } catch (ModelException $e) {
 
-            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
     }

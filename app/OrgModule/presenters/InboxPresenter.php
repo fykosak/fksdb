@@ -152,7 +152,7 @@ class InboxPresenter extends SeriesPresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', 'Uložit');
+        $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
         // JS dependencies        
@@ -174,7 +174,7 @@ class InboxPresenter extends SeriesPresenter {
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
-        $form->addSubmit('save', 'Uložit');
+        $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
         return $form;
@@ -198,7 +198,7 @@ class InboxPresenter extends SeriesPresenter {
             }
         }
         $this->serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Informace o řešeních uložena.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Informace o řešeních uložena.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
@@ -229,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
 
         $connection->commit();
 
-        $this->flashMessage('Přiřazení opravovatelů uloženo.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 

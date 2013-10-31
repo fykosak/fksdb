@@ -33,14 +33,14 @@ class SchoolsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', 'Název');
-        $this->addColumn('city', 'Město');
+        $this->addColumn('name', _('Název'));
+        $this->addColumn('city', _('Město'));
 
         //
         // operations
         //
         $that = $this;
-        $this->addButton("edit", "Upravit")
+        $this->addButton("edit", _("Upravit"))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->school_id);

@@ -8,6 +8,7 @@ use FKS\Components\Controls\PresenterBuilder;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
+use FKS\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -23,8 +24,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     const FLASH_WARNING = 'warning';
     const FLASH_ERROR = 'danger';
 
-    /** @persistent     */
+    /** @persistent  */
     public $tld;
+
+    /** @persistent */
+    public $lang;
 
     /**
      * Backlink for tree construction for breadcrumbs.
@@ -49,6 +53,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private $presenterBuilder;
 
     /**
+     * @var GettextTranslator
+     */
+    protected $translator;
+
+    /**
      * @var string|null
      */
     private $title = false;
@@ -62,6 +71,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var array[string] => bool
      */
     private $authorizedCache = array();
+
+    /**
+     * @var string cache
+     */
+    private $_lang;
 
     public function getYearCalculator() {
         return $this->yearCalculator;
@@ -91,11 +105,20 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->presenterBuilder = $presenterBuilder;
     }
 
+    public function injectTranslator(GettextTranslator $translator) {
+        $this->translator = $translator;
+    }
+
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
-        $template->setTranslator(new DummyTranslator());
+        $template->setTranslator($this->translator);
         $template->beta = $this->context->parameters['beta'];
         return $template;
+    }
+
+    protected function startup() {
+        parent::startup();
+        $this->translator->setLang($this->getLang());
     }
 
     /*     * ******************************
@@ -295,7 +318,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /*     * *******************************
-     * Stuff common to all presenters
+     * I18n
      *      * ****************************** */
 
     /**
@@ -303,7 +326,17 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return string ISO 639-1
      */
     public function getLang() {
-        return 'cs';
+        if (!$this->_lang) {
+            $this->_lang = $this->lang;
+            $supportedLanguages = $this->translator->getSupportedLanguages();
+            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
+                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            }
+            if (!$this->_lang) {
+                $this->_lang = $this->context->parameters['localization']['defaultLanguage'];
+            }
+        }
+        return $this->_lang;
     }
 
 }
