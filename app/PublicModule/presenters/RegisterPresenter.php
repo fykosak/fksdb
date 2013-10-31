@@ -189,7 +189,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         if ($this->user->isLoggedIn()) {
             $person = $this->user->getIdentity()->getPerson();
             if (!$person) {
-                $this->flashMessage('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.', self::FLASH_INFO);
+                $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
                 $this->redirect(':Authentication:login');
             }
 
@@ -396,7 +396,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
             $this->connection->rollBack();
             $this->getUser()->logout(true);
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Při registraci došlo k chybě.', self::FLASH_ERROR);
+            $this->flashMessage(_('Při registraci došlo k chybě.'), self::FLASH_ERROR);
         }
     }
 

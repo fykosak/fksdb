@@ -131,7 +131,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParam(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage("Byl jste odhlášen.", self::FLASH_SUCCESS);
+        $this->flashMessage(_("Byl jste odhlášen."), self::FLASH_SUCCESS);
         $this->backlinkRedirect();
         $this->redirect("login");
     }

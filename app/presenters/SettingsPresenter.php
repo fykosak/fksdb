@@ -131,9 +131,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
-        $this->flashMessage('Uživatelské informace upraveny.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage('Heslo nastaveno.', self::FLASH_SUCCESS); //TODO here may be Facebook ID            
+            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID            
             $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');

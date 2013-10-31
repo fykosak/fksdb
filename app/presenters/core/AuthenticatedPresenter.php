@@ -103,7 +103,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage('Úspešné přihlášení pomocí tokenu.', self::FLASH_INFO);
+                $this->flashMessage(_('Úspešné přihlášení pomocí tokenu.'), self::FLASH_INFO);
             }
 
             $this->getUser()->login($login);

@@ -282,7 +282,7 @@ class PersonPresenter extends EntityPresenter {
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě řešitele.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při úpravě řešitele.'), self::FLASH_ERROR);
         }
     }
 

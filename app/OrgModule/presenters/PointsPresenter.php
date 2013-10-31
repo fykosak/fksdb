@@ -152,9 +152,9 @@ class PointsPresenter extends SeriesPresenter {
             $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
 
 
-            $this->flashMessage('Body úloh uloženy.', self::FLASH_SUCCESS);
+            $this->flashMessage(_('Body úloh uloženy.'), self::FLASH_SUCCESS);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při ukládání bodů.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při ukládání bodů.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
         $this->redirect('this');
@@ -163,9 +163,9 @@ class PointsPresenter extends SeriesPresenter {
     public function handleInvalidate() {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
-            $this->flashMessage('Body invalidovány.', self::FLASH_INFO);
+            $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při invalidaci.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při invalidaci.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
 
@@ -188,9 +188,9 @@ class PointsPresenter extends SeriesPresenter {
                 }
             }
 
-            $this->flashMessage('Body přepočítány.', self::FLASH_INFO);
+            $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
         } catch (Exception $e) {
-            $this->flashMessage('Chyba při přepočtu.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
 

@@ -80,7 +80,7 @@ class StoredQueryFactory {
             $series = $presenter->getSelectedSeries();
         } catch (BadRequestException $e) {
             if ($e->getCode() == 500) {
-                $presenter->flashMessage('Kontext série pro dotazy není dostupný', BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Kontext série pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
             } else {
                 throw $e;
             }

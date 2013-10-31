@@ -166,12 +166,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola založena', self::FLASH_SUCCESS);
+            $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání školy.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při zakládání školy.'), self::FLASH_ERROR);
         }
     }
 
@@ -211,12 +211,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola upravena', self::FLASH_SUCCESS);
+            $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě školy.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při úpravě školy.'), self::FLASH_ERROR);
         }
     }
 

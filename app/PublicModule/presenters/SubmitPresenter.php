@@ -189,13 +189,13 @@ class SubmitPresenter extends BasePresenter {
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($e);
-            $this->flashMessage('Došlo k chybě při ukládání úloh.', self::FLASH_ERROR);
+            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         } catch (ProcessingException $e) {
             $this->submitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
 
             Debugger::log($e);
-            $this->flashMessage('Došlo k chybě při ukládání úloh.', self::FLASH_ERROR);
+            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         }
     }
 

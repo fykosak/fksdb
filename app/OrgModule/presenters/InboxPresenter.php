@@ -198,7 +198,7 @@ class InboxPresenter extends SeriesPresenter {
             }
         }
         $this->serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Informace o řešeních uložena.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Informace o řešeních uložena.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
@@ -229,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
 
         $connection->commit();
 
-        $this->flashMessage('Přiřazení opravovatelů uloženo.', self::FLASH_SUCCESS);
+        $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 

@@ -292,7 +292,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function handleComposeExecute(SubmitButton $button) {
         if (!$this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest())) {
-            $this->flashMessage('Nedostatečné oprávnění ke spuštění dotazu.', self::FLASH_ERROR);
+            $this->flashMessage(_('Nedostatečné oprávnění ke spuštění dotazu.'), self::FLASH_ERROR);
             return;
         }
 
@@ -319,12 +319,12 @@ class ExportPresenter extends SeriesPresenter {
             $values = $form->getValues();
             $this->handleSave($values, $storedQuery);
 
-            $this->flashMessage('Dotaz upraven.', self::FLASH_SUCCESS);
+            $this->flashMessage(_('Dotaz upraven.'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (BadRequestException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (ModelException $e) {
-            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
     }
@@ -341,12 +341,12 @@ class ExportPresenter extends SeriesPresenter {
             $this->handleSave($values, $storedQuery);
 
 
-            $this->flashMessage('Dotaz vytvořen.', self::FLASH_SUCCESS);
+            $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (BadRequestException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         } catch (ModelException $e) {
-            $this->flashMessage('Chyba při ukládání do databáze.', self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
             Debugger::log($e);
         }
     }
