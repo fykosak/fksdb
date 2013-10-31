@@ -11,12 +11,12 @@ branch=$1
 
 function mark_unavailabe {
 	sed "s#^// require '\.main#require '.main#" -i www/index.php
-	echo "Website marked unavailable."
+	echo `date` "Website marked unavailable."
 }
 
 function mark_availabe {
 	sed "s#^require '\.main#// require '.main#" -i www/index.php
-	echo "Website marked available."
+	echo `date` "Website marked available."
 }
 
 function current_branch {
@@ -38,8 +38,9 @@ function update_files {
 	fi
 }
 
-function clean_cache {
+function post_update {
 	rm -rf temp/*
+	i18n/compile.sh
 }
 
 	
@@ -51,10 +52,9 @@ fi
 
 (
 	flock -n -w 10 9 || exit 1 
-	echo `date`
 	mark_unavailabe
 	if update_files ; then
-		clean_cache
+		post_update
 	fi
 
 	mark_availabe
