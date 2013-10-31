@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls;
 
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
+use Nette\Localization\ITranslator;
 use SeriesCalculator;
 use ServiceContest;
 
@@ -33,6 +34,11 @@ class SeriesChooser extends Control {
     private $serviceContest;
 
     /**
+     * @var ITranslator
+     */
+    private $translator;
+
+    /**
      * @var int
      */
     private $series;
@@ -47,10 +53,11 @@ class SeriesChooser extends Control {
      */
     private $valid;
 
-    function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest) {
+    function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
         $this->serviceContest = $serviceContest;
+        $this->translator = $translator;
     }
 
     public function isValid() {
@@ -156,6 +163,12 @@ class SeriesChooser extends Control {
 
     private function isValidSeries($series) {
         return in_array($series, $this->getAllowedSeries());
+    }
+
+    protected function createTemplate($class = NULL) {
+        $template = parent::createTemplate($class);
+        $template->setTranslator($this->translator);
+        return $template;
     }
 
 }
