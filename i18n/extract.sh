@@ -19,7 +19,8 @@ LATTE_SUFFIX=latte2php
 ROOT=`dirname ${BASH_SOURCE[0]}`/..
 
 function latte2php {
-	sed "/{_'/{:next;/'}/{s/{_'\([^}]*\)'}/<?php _('\1') ?>/g;b;};N;b next;}" $1 >$1.$LATTE_SUFFIX
+	sed "/{_'/{:next;/'}/{s/{_'\([^}]*\)'}/<?php _('\1') ?>/g;b;};N;b next;}" $1 | \
+	sed "/{_\"/{:next;/\"}/{s/{_\"\([^}]*\)\"}/<?php _(\"\1\") ?>/g;b;};N;b next;}" >$1.$LATTE_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`

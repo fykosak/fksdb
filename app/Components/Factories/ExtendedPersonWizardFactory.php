@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
@@ -35,6 +36,7 @@ class ExtendedPersonWizardFactory {
     const EL_PERSON_ID = 'person_id';
     const EL_EMAIL = 'email';
     const EL_CREATE_LOGIN = 'createLogin';
+    const EL_CREATE_LOGIN_LANG = 'lang';
     /* Containers */
     const CONT_PERSON = 'person';
     const CONT_CONTESTANT = 'contestant';
@@ -87,7 +89,12 @@ class ExtendedPersonWizardFactory {
      */
     private $uniqueEmailFactory;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
+    /**
+     * @var GettextTranslator
+     */
+    private $translator;
+
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory, GettextTranslator $translator) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->orgFactory = $orgFactory;
@@ -96,6 +103,7 @@ class ExtendedPersonWizardFactory {
         $this->personProvider = $personProvider;
         $this->session = $session;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
+        $this->translator = $translator;
     }
 
     private function createWizardBase() {
@@ -269,6 +277,11 @@ class ExtendedPersonWizardFactory {
                 ->setOption('description', 'Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.');
         $email->addConditionOn($createLogin, Form::FILLED)
                 ->addRule(Form::FILLED, 'Pro vytvoření loginu je třeba zadat e-mail.');
+
+        $container->addSelect(self::EL_CREATE_LOGIN_LANG, 'Jazyk pozvánky')
+                ->setItems($this->translator->getSupportedLanguages())
+                ->setDefaultValue($this->translator->getLang());
+
         return $container;
     }
 

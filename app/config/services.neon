@@ -36,7 +36,7 @@ services:
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
-        
+    translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
 
     # web services
