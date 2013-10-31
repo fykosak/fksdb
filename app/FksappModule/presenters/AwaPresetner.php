@@ -181,7 +181,7 @@ class AwaPresenter extends Action {
             1 => array('answer' => 0, 'question' => 'Kolik je deset krat nula?', 'hint' => 'hrdina okamžiku')
         );
 
-        $form->addRadioList('del_radio', _(''), $alt)
+        $form->addRadioList('del_radio', _('Delete'), $alt)
                 ->setDefaultValue(0);
 
         $session = $this->getSession('delQuestion');

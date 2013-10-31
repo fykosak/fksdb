@@ -20,7 +20,7 @@
     {input password class => 'bottom last form-control', placeholder => $_input->translate($_input->caption)}
 
     {input send class => 'btn btn-lg btn-primary btn-block'}
-    <a n:href=":Public:Register:default" class="btn btn btn-default btn-block">Registrace</a>
+    <a n:href=":Public:Register:default" class="btn btn btn-default btn-block">{_'Registrace'}</a>
     <a class="btn btn-facebook btn-block" href="{$fbUrl}"><i class="fa fa-facebook"></i> | Log in</a>
     <a class="btn btn-link btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
     {/form loginForm}
