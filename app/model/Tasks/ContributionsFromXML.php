@@ -2,6 +2,7 @@
 
 namespace Tasks;
 
+use Pipeline\Pipeline;
 use Pipeline\Stage;
 use ServicePerson;
 use ServiceTaskContribution;
@@ -82,10 +83,9 @@ class ContributionsFromXML extends Stage {
                 $org = $person->getOrgs($this->data->getContest()->contest_id)->fetch();
 
                 if (!$org) {
-                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person));
-                    continue;
+                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person), Pipeline::LOG_WARNING);
                 }
-                $contributors[] = $org;
+                $contributors[] = $person;
             }
 
             // delete old contributions
@@ -96,7 +96,7 @@ class ContributionsFromXML extends Stage {
             // store new contributions
             foreach ($contributors as $contributor) {
                 $contribution = $this->taskContributionService->createNew(array(
-                    'org_id' => $contributor->org_id,
+                    'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
                 ));

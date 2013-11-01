@@ -12,6 +12,10 @@ use Nette\InvalidStateException;
  */
 class Pipeline {
 
+    const LOG_ERROR = 3;
+    const LOG_WARNING = 2;
+    const LOG_INFO = 1;
+
     /**
      * @var array of IStage
      */
@@ -73,7 +77,8 @@ class Pipeline {
         return $data;
     }
 
-    public function log($message) {
+    // TODO implement log level
+    public function log($message, $level = self::LOG_INFO) {
         $this->log[] = $message;
     }
 

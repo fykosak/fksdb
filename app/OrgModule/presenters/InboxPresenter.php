@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use DbNames;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\OrgProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -14,7 +14,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
 use ServiceContestant;
-use ServiceOrg;
+use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
 use Submits\ISubmitStorage;
@@ -37,9 +37,9 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceTaskContribution;
 
     /**
-     * @var ServiceOrg
+     * @var ServicePerson
      */
-    private $serviceOrg;
+    private $servicePerson;
 
     /**
      * @var ServiceSubmit
@@ -64,8 +64,8 @@ class InboxPresenter extends SeriesPresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
-        $this->serviceOrg = $serviceOrg;
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
@@ -120,12 +120,12 @@ class InboxPresenter extends SeriesPresenter {
         $values = array();
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
-            $orgId = $contribution->org_id;
+            $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
             if (!isset($values[$key])) {
                 $values[$key] = array();
             }
-            $values[$key][] = $orgId;
+            $values[$key][] = $personId;
         }
         $this['handoutForm']->setDefaults($values);
     }
@@ -216,10 +216,10 @@ class InboxPresenter extends SeriesPresenter {
                 'type' => ModelTaskContribution::TYPE_GRADE
             ))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
-            foreach ($values[$key] as $orgId) {
+            foreach ($values[$key] as $personId) {
                 $data = array(
                     'task_id' => $task->task_id,
-                    'org_id' => $orgId,
+                    'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 );
                 $contribution = $ORMservice->createNew($data);
@@ -365,7 +365,8 @@ class InboxPresenter extends SeriesPresenter {
 
     private function getOrgProvider() {
         if (!$this->orgProvider) {
-            $this->orgProvider = new OrgProvider($this->getSelectedContest(), $this->serviceOrg, $this->yearCalculator);
+            $this->orgProvider = new PersonProvider($this->servicePerson);
+            $this->orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
         }
         return $this->orgProvider;
     }

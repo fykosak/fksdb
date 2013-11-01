@@ -28,6 +28,6 @@ class DbNames {
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';
-    const TAB_TASK_CONTRIBUTION = 'org_task_contribution';
+    const TAB_TASK_CONTRIBUTION = 'task_contribution';
 
 }

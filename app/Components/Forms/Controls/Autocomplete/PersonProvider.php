@@ -3,9 +3,12 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
+use ModelContest;
 use ModelPerson;
+use Nette\Database\Table\Selection;
 use Nette\NotImplementedException;
 use ServicePerson;
+use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,6 +16,7 @@ use ServicePerson;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonProvider implements IFilteredDataProvider {
+
     const PLACE = 'place';
 
     /**
@@ -20,8 +24,28 @@ class PersonProvider implements IFilteredDataProvider {
      */
     private $servicePerson;
 
+    /**
+     * @var Selection
+     */
+    private $searchTable;
+
     function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+        $this->searchTable = $this->servicePerson->getTable();
+    }
+
+    /**
+     * Syntactic sugar, should be solved more generally.
+     */
+    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+        $orgs = $this->servicePerson->getTable()->where(array(
+            'org:contest_id' => $contest->contest_id
+        ));
+
+        $currentYear = $yearCalculator->getCurrentYear($contest);
+        $orgs->where('org:since <= ?', $currentYear);
+        $orgs->where('org:until IS NULL OR org:until <= ?', $currentYear);
+        $this->searchTable = $orgs;
     }
 
     /**
@@ -33,8 +57,18 @@ class PersonProvider implements IFilteredDataProvider {
     public function getFilteredItems($search) {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
-        $persons = $this->servicePerson->getTable()
-                ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search)
+        $this->searchTable
+                ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
+        return $this->getItems();
+    }
+
+    public function getItemLabel($id) {
+        $person = $this->servicePerson->findByPrimary($id);
+        return $person->getFullname();
+    }
+
+    public function getItems() {
+        $persons = $this->searchTable
                 ->order('family_name, other_name');
 
 
@@ -45,19 +79,10 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    public function getItemLabel($id) {
-        $person = $this->servicePerson->findByPrimary($id);
-        return $person->getFullname();
-    }
-
-    public function getItems() {
-        throw new NotImplementedException();
-    }
-
     private function getItem(ModelPerson $person) {
         $place = null;
         $address = $person->getDeliveryAddress();
-        if($address) {
+        if ($address) {
             $place = $address->getAddress()->city;
         }
         return array(
