@@ -166,7 +166,11 @@ class AutocompleteSelectBox extends TextBase {
                 $this->value = explode(self::INTERNAL_DELIMITER , $value);
             }
         } else {
-            $this->value = $value;
+            if ($value === '') {
+                $this->value = null;
+            } else {
+                $this->value = $value;
+            }
         }
     }
 
