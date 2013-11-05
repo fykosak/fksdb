@@ -1,0 +1,11 @@
+parameters:
+    merger:
+        defaultStrategy: @cummulativeStrategy
+        secondaryKeys:
+            contestant: [contest_id, year, person_id]
+            login: [person_id]
+            person_info: [person_id]
+            submit: [ct_id, task_id]
+
+services:
+    cummulativeStrategy: Persons\Deduplication\CummulativeStrategy
