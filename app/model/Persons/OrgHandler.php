@@ -7,7 +7,6 @@ use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Nette\Application\UI\Presenter;
-use ServiceContestant;
 use ServiceLogin;
 use ServiceOrg;
 use ServicePerson;
@@ -25,10 +24,10 @@ class OrgHandler extends AbstractPersonHandler {
      */
     private $serviceOrg;
 
-    function __construct(ServiceContestant $serviceContestant, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    function __construct(ServiceOrg $serviceOrg, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         parent::__construct($servicePerson, $servicePersonInfo, $serviceLogin, $mailTemplateFactory, $accountManager);
 
-        $this->serviceOrg = $serviceContestant;
+        $this->serviceOrg = $serviceOrg;
     }
 
     protected function storeExtendedData($data, Presenter $presenter) {
