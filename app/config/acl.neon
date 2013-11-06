@@ -6,7 +6,7 @@
 #
 
 services:
-    # assetions
+    # assertions
     ownerAssertion: Authorization\OwnerAssertion
     
     # data services
@@ -72,6 +72,7 @@ services:
             - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL))
 
             - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
+            - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
 
             - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
