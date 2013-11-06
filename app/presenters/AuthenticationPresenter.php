@@ -159,6 +159,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function actionFbLogin() {
+        $this->setView('login'); // do not provide a special view
         try {
             $me = $this->facebook->api('/me');
             $identity = $this->facebookAuthenticator->authenticate($me);
