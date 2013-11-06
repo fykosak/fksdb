@@ -185,9 +185,4 @@ class AutocompleteSelectBox extends TextBase {
     public function setItems(array $items, $useKeys = TRUE) {
         throw new NotImplementedException('Use setDataProvider instead.');
     }
-
-    private function getItemLabel($item) {
-        return $item[IDataProvider::LABEL];
-    }
-
 }
