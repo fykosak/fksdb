@@ -22,7 +22,7 @@ class YearCalculator extends Object {
             case ModelContest::ID_FYKOS:
                 return 15;
             case ModelContest::ID_VYFUK:
-                return 1;
+                return 0;
             default:
                 return null;
         }
