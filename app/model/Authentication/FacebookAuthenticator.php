@@ -106,7 +106,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         return array(
             'family_name' => $fbUser['last_name'],
             'other_name' => $fbUser['first_name'],
-            'display_name' => ($fbUser['first_name'] . ' ' . $fbUser['last_name'] != $fbUser['name']) ? $fbUser['display_name'] : null,
+            'display_name' => ($fbUser['first_name'] . ' ' . $fbUser['last_name'] != $fbUser['name']) ? $fbUser['name'] : null,
             'gender' => ($fbUser['gender']) == 'female' ? 'F' : 'M',
         );
     }
