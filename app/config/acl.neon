@@ -49,6 +49,7 @@ services:
             - allow(org, query.stored, search) # je to k něčemu?
             - allow(org, org, list)
             - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
+            - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
 
             - allow(webmaster, task, insert) # stahování úloh
 

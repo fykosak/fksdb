@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Controls\URLTextBox;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
@@ -130,6 +131,23 @@ class PersonFactory {
 
                 $container->addText('account', _('Číslo bankovního účtu'))
                         ->addRule(Form::MAX_LENGTH, null, 32);
+
+                $container->addText('tex_signature', _('TeX identifikátor'))
+                        ->addRule(Form::MAX_LENGTH, null, 32)
+                        ->addCondition(Form::FILLED)
+                        ->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+
+                $container->addText('domain_alias', _('Jméno v doméně fykos.cz'))
+                        ->addRule(Form::MAX_LENGTH, null, 32)
+                        ->addCondition(Form::FILLED)
+                        ->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+
+                $container->addTextArea('career', _('Co právě dělá'))
+                        ->setOption('description', _('Zobrazeno v síni slávy'));
+
+                $url = new URLTextBox(_('Homepage'));
+                $url->addRule(Form::MAX_LENGTH, null, 255);
+                $container->addComponent($url, 'homepage');
             }
 
             $container->addTextArea('note', _('Poznámka'));

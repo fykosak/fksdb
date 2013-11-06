@@ -156,10 +156,14 @@ class PersonPresenter extends EntityPresenter {
          * Personal information
          */
         $group = $form->addGroup(_('Osobní informace'));
-        $login = $this->getModel()->getLogin();
-        $rule = $this->uniqueEmailFactory->create($this->getModel());
+        $login = $person->getLogin();
+        $rule = $this->uniqueEmailFactory->create($person);
 
-        $infoContainer = $this->personFactory->createPersonInfo(PersonFactory::SHOW_EMAIL, $group, $rule);
+        $options = PersonFactory::SHOW_EMAIL;
+        if (count($person->getOrgs()) > 0) {
+            $options |= PersonFactory::SHOW_ORG_INFO;
+        }
+        $infoContainer = $this->personFactory->createPersonInfo($options, $group, $rule);
         $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
 
         $form->setCurrentGroup();
@@ -282,7 +286,7 @@ class PersonPresenter extends EntityPresenter {
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage(_('Chyba při úpravě řešitele.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při úpravě osoby.'), self::FLASH_ERROR);
         }
     }
 

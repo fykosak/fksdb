@@ -30,7 +30,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         }
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
-            //throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException();
         }
 
         $this->logAuthentication($login);

@@ -105,4 +105,27 @@ class OwnerAssertion {
         return ($org->contest_id == $grant->getContestId()) && ($orgLogin->login_id == $this->user->getId());
     }
 
+    /**
+     * Check that the person is the person of logged user.
+     * 
+     * @note Grant contest is ignored in this context (i.e. person is context-less).
+     * 
+     * @param \Nette\Security\Permission $acl
+     * @param type $role
+     * @param type $resourceId
+     * @param type $privilege
+     * @return type
+     * @throws InvalidStateException
+     */
+    public function isSelf(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+
+        $loggedPerson = $this->user->getIdentity()->getPerson();
+        $person = $acl->getQueriedResource();
+
+        return ($loggedPerson && $loggedPerson->person_id == $person->person_id);
+    }
+
 }
