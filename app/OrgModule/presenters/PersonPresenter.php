@@ -139,12 +139,17 @@ class PersonPresenter extends EntityPresenter {
          */
         $group = $form->addGroup(_('Adresy'));
         $factory = $this->addressFactory;
+        if(count($person->getContestants())) {
+            $defaultAddresses = 1;
+        } else {
+            $defaultAddresses = 0;
+        }
         $replicator = new Replicator(function($replContainer) use($factory, $group) {
                     $factory->buildAddress($replContainer, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
                     $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();
-                }, 1, true);
+                }, $defaultAddresses, true);
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
 
         $form->addComponent($replicator, self::CONT_ADDRESSES);

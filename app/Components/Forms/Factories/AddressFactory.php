@@ -108,6 +108,7 @@ class AddressFactory {
             'D' => _('doručovací (odlišná od trvalé)')
         ));
         $element->setDefaultValue('P');
+        $element->addRule(Form::FILLED, _('%label musí být vyplněn.'));
         return $element;
     }
 
