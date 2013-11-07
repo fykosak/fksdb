@@ -141,6 +141,10 @@ class PersonPresenter extends EntityPresenter {
         $this->updateMergeForm($this['mergeForm']);
     }
 
+    public function titleMerge() {
+        $this->setTitle(sprintf(_('Sloučení osob %s a %s'), $this->trunkPerson->getFullname(), $this->mergedPerson->getFullname()));
+    }
+
     public function titleList() {
         $this->setTitle(_('Osoby'));
     }
@@ -395,7 +399,7 @@ class PersonPresenter extends EntityPresenter {
         } else {
             $this->setMergeConflicts($merger->getConflicts());
             $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
-            $this->redirect('this'); //this is correct
+            //$this->redirect('this'); //this is correct
         }
     }
 

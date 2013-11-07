@@ -77,7 +77,7 @@ class Merger {
     /**
      * @return boolean
      */
-    public function merge() {
+    public function merge($commit = false) {
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
 
@@ -91,7 +91,11 @@ class Merger {
             $this->connection->rollBack();
             return false;
         } else {
-            $this->connection->commit();
+            if ($commit) {
+                $this->connection->commit();
+            } else {
+                $this->connection->rollBack();
+            }
             return true;
         }
     }
