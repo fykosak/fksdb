@@ -80,6 +80,8 @@ class Navigation extends Control {
         }
         if (isset($node->linkPresenter)) {
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+            $presenter->setView($presenter->getView()); // to force update the title    
+
             return $presenter->getTitle();
         }
     }

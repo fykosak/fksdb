@@ -47,7 +47,6 @@ class PresenterBuilder {
         }
         $presenter->loadState($baseParams);
         $presenter->changeAction($action);
-        $presenter->setView($presenter->getView()); // to force update the title    
 
         return $presenter;
     }
