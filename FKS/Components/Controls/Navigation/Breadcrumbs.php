@@ -130,7 +130,31 @@ class Breadcrumbs extends Control {
      * Path traversal
      * ********************** */
 
-    private function getTraversePath(AppRequest $request) {
+    public function getBacklinkUrl() {
+        $presenter = $this->getPresenter();
+        $request = $presenter->getRequest();
+
+        // backlink is actually the second, as first is the current request
+        $path = $this->getTraversePath($request, 2);
+
+        if (count($path) > 1) {
+            $naviRequest = $path[0];
+            $appRequest = $naviRequest->request;
+            
+            // workaround to keep reference to flash session
+            if ($presenter->hasFlashSession()) {
+                $appRequest = clone $appRequest;
+                $params = $appRequest->getParameters();
+                $params[Presenter::FLASH_KEY] = $presenter->getParameter(Presenter::FLASH_KEY);
+                $appRequest->setParameters($params);
+            }
+            return $this->router->constructUrl($appRequest, $this->httpRequest->getUrl());
+        } else {
+            return null;
+        }
+    }
+
+    private function getTraversePath(AppRequest $request, $maxLen = null) {
         $requests = $this->getRequests();
         $backlinkMap = $this->getBacklinkMap();
 
@@ -159,7 +183,7 @@ class Breadcrumbs extends Control {
             $backlinkId = $naviRequest->parent;
             $requestKey = isset($backlinkMap[$backlinkId]) ? $backlinkMap[$backlinkId] : null; // assumes null key is not in backIds
             $naviRequest = isset($requests[$requestKey]) ? $requests[$requestKey] : null; // assumes null key is not in requests
-        } while ($naviRequest);
+        } while ($naviRequest && (!$maxLen || (count($path) < $maxLen)));
 
         return array_reverse($path);
     }
