@@ -92,7 +92,6 @@ class PersonsGrid extends BaseGrid {
     }
 
     private function renderPerson(ModelPerson $person) {
-        $person->gender; // stupid touch
         return $person->getFullname() . ' (' . $person->person_id . ')';
     }
 
