@@ -2,6 +2,7 @@
 
 namespace Persons\Deduplication;
 
+use FKS\Logging\ILogger;
 use Nette\Database\Connection;
 use Nette\Database\Reflection\AmbiguousReferenceKeyException;
 use Nette\Database\Reflection\MissingReferenceException;
@@ -54,11 +55,17 @@ class TableMerger {
      */
     private $globalMergeStrategy;
 
-    function __construct($table, Merger $merger, Connection $connection, IMergeStrategy $globalMergeStrategy) {
+    /**
+     * @var ILogger
+     */
+    private $logger;
+
+    function __construct($table, Merger $merger, Connection $connection, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
         $this->connection = $connection;
         $this->globalMergeStrategy = $globalMergeStrategy;
+        $this->logger = $logger;
     }
 
     /*     * ******************************
@@ -99,20 +106,24 @@ class TableMerger {
      */
     private function tryColumnMerge($column) {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
-            $this->trunkRow->update(array(
+            $values = array(
                 $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
-            ));
+            );
+            $this->logUpdate($this->trunkRow, $values);
+            $this->trunkRow->update($values);
             return true;
-        } else { //TODO null resolution + min date resolution   
+        } else {
             if (isset($this->columnMergeStrategies[$column])) {
                 $strategy = $this->columnMergeStrategies[$column];
             } else {
                 $strategy = $this->globalMergeStrategy;
             }
             try {
-                $this->trunkRow->update(array(
+                $values = array(
                     $column => $strategy->mergeValues($this->trunkRow[$column], $this->mergedRow[$column]),
-                ));
+                );
+                $this->logUpdate($this->trunkRow, $values);
+                $this->trunkRow->update($values);
                 return true;
             } catch (CannotMergeException $e) {
                 return false;
@@ -128,26 +139,31 @@ class TableMerger {
     }
 
     public function merge($newParent = null) {
-        /* Merge fields */
+        /*
+         * First, ordinary columns of merged rows are merged.
+         */
         foreach ($this->getColumns() as $column) {
+            /* Primary key is not merged. */
             if ($this->isPrimaryKey($column)) {
                 continue;
             }
+            /* When we are merging two rows under common parent, we ignore the foreign key.  */
             if ($this->getReferencedTable($column)) {
                 if ($newParent && isset($newParent[$column])) {
                     /* empty */ // row will be deleted eventually
-                } else {
-                    $this->getMergedRow()->update(array(
-                        $column => $this->getTrunkRow()->$column, // set it from the trunk 
-                    ));
+                    continue;
                 }
-                continue;
             }
+            /* For all other columns, we try to apply merging strategy. */
             if (!$this->tryColumnMerge($column)) {
                 $this->getMerger()->addConflict($this->getTrunkRow(), $this->getMergedRow(), $column);
             }
         }
-        /* Merge referenced records */
+
+        /*
+         * Now, we merge child-rows (referencing rows) of the merged rows.
+         * We get the list of possible referncing tables from the database reflection.
+         */
         foreach ($this->getReferencingTables() as $referencingTable => $FKcolumn) {
             $referencingMerger = $this->getMerger()->getMerger($referencingTable);
 
@@ -157,8 +173,13 @@ class TableMerger {
             $newParent = array(
                 $FKcolumn => $this->getTrunkRow()->getPrimary()
             );
+            /*
+             * If simply changing the parent would violate some constraints (i.e. parent
+             * can have only one child with certain properties -- that's the secondary key),
+             * we have to recursively merge the children with the same secondary key.
+             */
             if ($referencingMerger->getSecondaryKey()) {
-                // group by, but ignore the primary key
+                /* Group by ignores the FKcolumn value, as it's being changed. */
                 $groupedTrunks = $referencingMerger->groupBySecondaryKey($trunkDependants, $FKcolumn);
                 $groupedMerged = $referencingMerger->groupBySecondaryKey($mergedDependants, $FKcolumn);
                 $secondaryKeys = array_merge(array_keys($groupedTrunks), array_keys($groupedMerged));
@@ -169,24 +190,22 @@ class TableMerger {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
                     } else if ($refMerged) {
+                        $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged
                     }
                 }
             } else {
-                // redirect dependant to the new parent
+                /* Redirect dependant to the new parent. */
                 foreach ($mergedDependants as $dependant) {
+                    $this->logUpdate($dependant, $newParent);
                     $dependant->update($newParent);
                 }
             }
         }
-        /* Delete merged row */
-        try {
-            $this->getMergedRow()->delete();
-        } catch (PDOException $e) {
-            if ($e->getCode() != 23000) { //constraint violation is expected here
-                throw $e;
-            }
-        }
+        /* Delete merged row. */
+        $this->getMergedRow()->delete();
+        $this->logDelete($this->getMergedRow());
+        $this->logTrunk($this->getTrunkRow());
     }
 
     private function groupBySecondaryKey($rows, $parentColumn) {
@@ -210,6 +229,30 @@ class TableMerger {
             $key[] = $row[$column];
         }
         return implode('_', $key);
+    }
+
+    /*     * ******************************
+     * Logging sugar
+     * ****************************** */
+
+    private function logUpdate(ActiveRow $row, $changes) {
+        $msg = array();
+        foreach ($changes as $column => $value) {
+            if ($row[$column] != $value) {
+                $msg[] = "$column -> $value";
+            }
+        }
+        if ($msg) {
+            $this->logger->log(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), (string) $row, implode(', ', $msg)));
+        }
+    }
+
+    private function logDelete(ActiveRow $row) {
+        $this->logger->log(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), (string) $row));
+    }
+
+    private function logTrunk(ActiveRow $row) {
+        $this->logger->log(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), (string) $row));
     }
 
     /*     * ******************************

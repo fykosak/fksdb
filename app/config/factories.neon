@@ -17,7 +17,13 @@ services:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
     downloaderFactory:
         class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
+    flashDumpFactory:
+        class: Logging\FlashDumpFactory(%logToFlash%)
+
 
 
 factories:
 # (so far unused)
+
+includes:
+    - logToFlash.neon

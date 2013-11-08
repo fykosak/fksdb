@@ -8,6 +8,8 @@ use Nette\InvalidStateException;
  * Represents a simple pipeline where each stage has its input and output and they
  * comprise a linear chain.
  * 
+ * @todo Implement generic ILogger.
+ * 
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {

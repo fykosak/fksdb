@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
@@ -10,6 +11,7 @@ use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use Logging\FlashDumpFactory;
 use ModelException;
 use ModelPerson;
 use Nette\Application\BadRequestException;
@@ -84,6 +86,11 @@ class PersonPresenter extends EntityPresenter {
     private $personMerger;
 
     /**
+     * @var FlashDumpFactory
+     */
+    private $flashDumpFactory;
+
+    /**
      * @var ModelPerson
      */
     private $trunkPerson;
@@ -123,6 +130,10 @@ class PersonPresenter extends EntityPresenter {
 
     public function injectPersonMerger(Merger $personMerger) {
         $this->personMerger = $personMerger;
+    }
+
+    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     public function authorizedMerge($trunkId, $mergedId) {
@@ -389,17 +400,22 @@ class PersonPresenter extends EntityPresenter {
 
     public function handleMergeFormSuccess(Form $form) {
         $values = $form->getValues();
+        $values = FormUtils::emptyStrToNull($values);
 
         $merger = $this->personMerger;
         $merger->setConflictResolution($values);
+        $logger = new MemoryLogger();
+        $merger->setLogger($logger);
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
+            $flashDump = $this->flashDumpFactory->createPersonMerge();
+            $flashDump->dump($logger, $this);
             $this->redirect('this'); //TODO backlink redirect
         } else {
             $this->setMergeConflicts($merger->getConflicts());
             $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
-            //$this->redirect('this'); //this is correct
+            $this->redirect('this'); //this is correct
         }
     }
 

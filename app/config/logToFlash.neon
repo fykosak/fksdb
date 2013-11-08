@@ -1,0 +1,21 @@
+# BasePresenter constants:
+#   FLASH_SUCCESS = 'success';
+#   FLASH_INFO = 'info';
+#   FLASH_WARNING = 'warning';
+#   FLASH_ERROR = 'danger';
+#
+# ILogger constants:
+#   ERROR = 0;
+#   WARNING = 10;
+#   SUCCESS = 20;
+#   INFO = 30;
+#   DEBUG = 40;
+
+parameters:
+    logToFlash:
+        personMerge:
+            0: danger
+            10: warning
+            20: success
+            30: info
+

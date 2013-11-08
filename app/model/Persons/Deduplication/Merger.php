@@ -2,9 +2,10 @@
 
 namespace Persons\Deduplication;
 
+use FKS\Logging\DevNullLogger;
+use FKS\Logging\ILogger;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,6 +42,11 @@ class Merger {
     private $configuration;
 
     /**
+     * @var ILogger
+     */
+    private $logger;
+
+    /**
      *
      * @var TableMerger[]
      */
@@ -49,6 +55,15 @@ class Merger {
     function __construct($configuration, Connection $connection) {
         $this->configuration = $configuration;
         $this->connection = $connection;
+        $this->logger = new DevNullLogger();
+    }
+
+    public function getLogger() {
+        return $this->logger;
+    }
+
+    public function setLogger(ILogger $logger) {
+        $this->logger = $logger;
     }
 
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
@@ -60,6 +75,11 @@ class Merger {
         return $this->conflicts;
     }
 
+    /**
+     * Form values with proper resoluted values.
+     * 
+     * @param mixed $rawValues
+     */
     public function setConflictResolution($rawValues) {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
@@ -75,6 +95,7 @@ class Merger {
     }
 
     /**
+     * @param booled $commit
      * @return boolean
      */
     public function merge($commit = false) {
@@ -114,7 +135,7 @@ class Merger {
     }
 
     private function createTableMerger($table) {
-        $tableMerger = new TableMerger($table, $this, $this->connection, $this->configuration['defaultStrategy']);
+        $tableMerger = new TableMerger($table, $this, $this->connection, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
         }
