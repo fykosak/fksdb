@@ -104,6 +104,7 @@ class Merger {
         $commit = ($commit === null) ? $this->configuration['commit'] : $commit;
 
         $this->trunkRow->getTable()->accessColumn(null); // stupid touch
+        $this->mergedRow->getTable()->accessColumn(null); // stupid touch
 
         $this->connection->beginTransaction();
 
