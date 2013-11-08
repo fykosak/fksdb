@@ -126,6 +126,9 @@ class TableMerger {
     }
 
     public function merge($mergedParent = null) {
+        $this->trunkRow->getTable()->accessColumn(null); // stupid touch
+        $this->mergedRow->getTable()->accessColumn(null); // stupid touch
+
         /*
          * We merge child-rows (referencing rows) of the merged rows.
          * We get the list of possible referncing tables from the database reflection.
