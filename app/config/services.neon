@@ -20,6 +20,8 @@ services:
     - Submits\SeriesTable
     - Persons\ContestantHandler
     - Persons\OrgHandler
+    merger:
+        class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKS\Components\Controls\PresenterBuilder
@@ -48,3 +50,6 @@ services:
     webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
     nette.userStorage: LoginUserStorage
+
+includes:
+    - merger.neon

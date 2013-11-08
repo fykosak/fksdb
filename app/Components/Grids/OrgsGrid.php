@@ -14,7 +14,7 @@ use SQL\SearchableDataSource;
 class OrgsGrid extends BaseGrid {
 
     /**
-     * @var ServiceContestant
+     * @var ServiceOrg
      */
     private $serviceOrg;
 

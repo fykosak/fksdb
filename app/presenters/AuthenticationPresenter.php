@@ -132,18 +132,18 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->getUser()->logout(true);
         }
         $this->flashMessage(_("Byl jste odhlášen."), self::FLASH_SUCCESS);
-        $this->backlinkRedirect();
+        $this->loginBacklinkRedirect();
         $this->redirect("login");
     }
 
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             $login = $this->getUser()->getIdentity();
-            $this->backlinkRedirect($login);
+            $this->loginBacklinkRedirect($login);
             $this->initialRedirect($login);
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
-                $this->backlinkRedirect();
+                $this->loginBacklinkRedirect();
             }
             if ($this->getParam(self::PARAM_REASON)) {
                 switch ($this->getParam(self::PARAM_REASON)) {
@@ -269,7 +269,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $login = $this->user->getIdentity();
 
-            $this->backlinkRedirect($login);
+            $this->loginBacklinkRedirect($login);
             $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
@@ -305,7 +305,7 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function backlinkRedirect($login = null) {
+    private function loginBacklinkRedirect($login = null) {
         if (!$this->backlink) {
             return;
         }

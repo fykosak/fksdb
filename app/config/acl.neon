@@ -31,7 +31,7 @@ services:
             # Resources
             - addResource(submit)        # revoke, upload, download, edit, ALL
             - addResource(task)          # insert, edit
-            - addResource(person)        # create, edit, list, delete
+            - addResource(person)        # create, edit, list, delete, merge
             - addResource(contestant)    # create, edit, list, delete
             - addResource(school)        # create, edit, list, delete
             - addResource(query.adhoc)   # parametrize, edit, show, execute

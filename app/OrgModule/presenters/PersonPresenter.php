@@ -3,19 +3,24 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use Logging\FlashDumpFactory;
 use ModelException;
+use ModelPerson;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
+use Nette\Utils\Html;
+use Persons\Deduplication\Merger;
 use ServiceLogin;
 use ServiceMPostContact;
 use ServicePerson;
@@ -75,6 +80,26 @@ class PersonPresenter extends EntityPresenter {
      */
     private $uniqueEmailFactory;
 
+    /**
+     * @var Merger
+     */
+    private $personMerger;
+
+    /**
+     * @var FlashDumpFactory
+     */
+    private $flashDumpFactory;
+
+    /**
+     * @var ModelPerson
+     */
+    private $trunkPerson;
+
+    /**
+     * @var ModelPerson
+     */
+    private $mergedPerson;
+
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -101,6 +126,34 @@ class PersonPresenter extends EntityPresenter {
 
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
+    }
+
+    public function injectPersonMerger(Merger $personMerger) {
+        $this->personMerger = $personMerger;
+    }
+
+    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
+    }
+
+    public function authorizedMerge($trunkId, $mergedId) {
+        $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
+        $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
+        if (!$this->trunkPerson || !$this->mergedPerson) {
+            throw new BadRequestException('Neexistující osoba.', 404);
+        }
+        $authorized = $this->getContestAuthorizator()->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
+                $this->getContestAuthorizator()->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
+        $this->setAuthorized($authorized);
+    }
+
+    public function actionMerge($trunkId, $mergedId) {
+        $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
+        $this->updateMergeForm($this['mergeForm']);
+    }
+
+    public function titleMerge() {
+        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullname(), $this->trunkPerson->person_id, $this->mergedPerson->getFullname(), $this->mergedPerson->person_id));
     }
 
     public function titleList() {
@@ -139,7 +192,7 @@ class PersonPresenter extends EntityPresenter {
          */
         $group = $form->addGroup(_('Adresy'));
         $factory = $this->addressFactory;
-        if(count($person->getContestants())) {
+        if (count($person->getContestants())) {
             $defaultAddresses = 1;
         } else {
             $defaultAddresses = 0;
@@ -176,6 +229,78 @@ class PersonPresenter extends EntityPresenter {
         $form->addSubmit('send', _('Uložit'))->onClick[] = array($this, 'handleEditFormSuccess');
 
         return $form;
+    }
+
+    protected function createComponentMergeForm($name) {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+
+        $form->addSubmit('send', _('Sloučit osoby'));
+        $form->addSubmit('cancel', _('Storno'))
+                ->getControlPrototype()->addClass('btn-default');
+        $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
+        return $form;
+    }
+
+    private function updateMergeForm(Form $form) {
+        if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
+            $this->setMergeConflicts(null);
+            return;
+        }
+
+        $conflicts = $this->getMergeConflicts();
+
+        foreach ($conflicts as $table => $pairs) {
+            $form->addGroup($table);
+            $tableContainer = $form->addContainer($table);
+
+            foreach ($pairs as $pairId => $data) {
+                if (!isset($data[Merger::IDX_TRUNK])) {
+                    continue;
+                }
+
+                $pairSuffix = '';
+                if (count($pairs) > 1) {
+                    $pairSuffix = " ($pairId)";
+                }
+                $pairContainer = $tableContainer->addContainer($pairId);
+                foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
+                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
+                        $default = $data[Merger::IDX_RESOLUTION][$column];
+                    } else {
+                        $default = $value; // default is trunk
+                    }
+
+                    $textElement = $pairContainer->addText($column, $column . $pairSuffix)
+                            ->setDefaultValue($default);
+
+                    $description = Html::el('div');
+
+                    $trunk = Html::el('div');
+                    $trunk->class('mergeSource');
+                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($value);
+                    $elVal->class('value');
+                    $trunk->add(_('Trunk') . ': ');
+                    $trunk->add($elVal);
+                    $description->add($trunk);
+
+                    $merged = Html::el('div');
+                    $merged->class('mergeSource');
+                    $merged->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($data[Merger::IDX_MERGED][$column]);
+                    $elVal->class('value');
+                    $merged->add(_('Merged') . ': ');
+                    $merged->add($elVal);
+                    $description->add($merged);
+
+                    $textElement->setOption('description', $description);
+                }
+            }
+        }
+        $this->registerJSFile('js/mergeForm.js');
     }
 
     protected function setDefaults(AbstractModelSingle $person, Form $form) {
@@ -295,6 +420,32 @@ class PersonPresenter extends EntityPresenter {
         }
     }
 
+    public function handleMergeFormSuccess(Form $form) {
+        if ($form['cancel']->isSubmittedBy()) {
+            $this->setMergeConflicts(null); // flush the session
+            $this->backlinkRedirect(true);
+        }
+
+        $values = $form->getValues();
+        $values = FormUtils::emptyStrToNull($values);
+
+        $merger = $this->personMerger;
+        $merger->setConflictResolution($values);
+        $logger = new MemoryLogger();
+        $merger->setLogger($logger);
+        if ($merger->merge()) {
+            $this->setMergeConflicts(null); // flush the session
+            $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
+            $flashDump = $this->flashDumpFactory->createPersonMerge();
+            $flashDump->dump($logger, $this);
+            $this->backlinkRedirect(true);
+        } else {
+            $this->setMergeConflicts($merger->getConflicts());
+            $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
+            $this->redirect('this'); //this is correct
+        }
+    }
+
     protected function createComponentGrid($name) {
         // So far, there's no use case that would list all persons.
         throw new NotImplementedException();
@@ -302,6 +453,28 @@ class PersonPresenter extends EntityPresenter {
 
     protected function createModel($id) {
         return $this->servicePerson->findByPrimary($id);
+    }
+
+    /*     * ******************************
+     * Storing conflicts in session
+     * ****************************** */
+
+    private function setMergeConflicts($conflicts) {
+        $section = $this->session->getSection('conflicts');
+        if ($conflicts === null) {
+            $section->remove();
+        } else {
+            $section->data = $conflicts;
+        }
+    }
+
+    private function getMergeConflicts() {
+        $section = $this->session->getSection('conflicts');
+        if (isset($section->data)) {
+            return $section->data;
+        } else {
+            return array();
+        }
     }
 
 }
