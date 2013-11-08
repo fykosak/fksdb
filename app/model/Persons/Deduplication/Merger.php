@@ -6,6 +6,7 @@ use FKS\Logging\DevNullLogger;
 use FKS\Logging\ILogger;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
+use Nette\MemberAccessException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -103,11 +104,17 @@ class Merger {
         $tableMerger = $this->getMerger($table);
         $commit = ($commit === null) ? $this->configuration['commit'] : $commit;
 
+
         $this->connection->beginTransaction();
 
         $tableMerger->setMergedPair($this->trunkRow, $this->mergedRow);
         $this->resetConflicts();
-        $tableMerger->merge();
+        try {
+            $tableMerger->merge();
+        } catch (MemberAccessException $e) { // this is workaround for non-working Nette database cache
+            $this->connection->rollBack();
+            return false;
+        }
         if ($this->hasConflicts()) {
             $this->connection->rollBack();
             return false;
