@@ -12,11 +12,6 @@ navigation:
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
-        org.person.merge:
-            title: Pokusný merge            
-            params:
-                trunkId: 249
-                mergedId: 370
 
     structure:
         org.dashboard.default:
@@ -28,7 +23,7 @@ navigation:
             - org.school.list
             - org.export.list
             - org.org.list
-            - org.person.merge
+            - org.deduplicate.person
         public.dashboard.default:
             - public.submit.default
             - fykos
