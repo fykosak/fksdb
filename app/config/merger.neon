@@ -1,5 +1,8 @@
 parameters:
     merger:
+        # Commit merge transaction (for debugging purposes).
+        commit: true
+
         # Merged children must be unique with respect to the secondary key
         # (FK of the merged parent is ignored).
         secondaryKeys:

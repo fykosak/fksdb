@@ -98,9 +98,10 @@ class Merger {
      * @param booled $commit
      * @return boolean
      */
-    public function merge($commit = false) {
+    public function merge($commit = null) {
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
+        $commit = ($commit === null) ? $this->configuration['commit'] : $commit;
 
 
         $this->connection->beginTransaction();

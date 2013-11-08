@@ -433,7 +433,7 @@ class PersonPresenter extends EntityPresenter {
         $merger->setConflictResolution($values);
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
-        if ($merger->merge(true)) {
+        if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
             $flashDump = $this->flashDumpFactory->createPersonMerge();
