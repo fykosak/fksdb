@@ -263,22 +263,37 @@ class PersonPresenter extends EntityPresenter {
                     } else {
                         $default = $value; // default is trunk
                     }
+
+                    $textElement = $pairContainer->addText($column, $column)
+                            ->setDefaultValue($default);
+
                     $description = Html::el('div');
 
-                    $trunkDesc = Html::el('div');
-                    $trunkDesc->setText(_('Trunk') . ': ' . $value);
-                    $description->add($trunkDesc);
+                    $trunk = Html::el('div');
+                    $trunk->class('mergeSource');
+                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($value);
+                    $elVal->class('value');
+                    $trunk->add(_('Trunk') . ': ');
+                    $trunk->add($elVal);
+                    $description->add($trunk);
 
-                    $mergedDesc = Html::el('div');
-                    $mergedDesc->setText(_('Merged') . ': ' . $data[Merger::IDX_MERGED][$column]);
-                    $description->add($mergedDesc);
+                    $merged = Html::el('div');
+                    $merged->class('mergeSource');
+                    $merged->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($data[Merger::IDX_MERGED][$column]);
+                    $elVal->class('value');
+                    $merged->add(_('Merged') . ': ');
+                    $merged->add($elVal);
+                    $description->add($merged);
 
-                    $pairContainer->addText($column, $column)
-                            ->setOption('description', $description)
-                            ->setDefaultValue($default);
+                    $textElement->setOption('description', $description);
                 }
             }
         }
+        $this->registerJSFile('js/mergeForm.js');
     }
 
     protected function setDefaults(AbstractModelSingle $person, Form $form) {
