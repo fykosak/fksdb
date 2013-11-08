@@ -15,8 +15,8 @@ navigation:
         org.person.merge:
             title: Pokusný merge            
             params:
-                trunkId: 46
-                mergedId: 1950
+                trunkId: 249
+                mergedId: 370
 
     structure:
         org.dashboard.default:

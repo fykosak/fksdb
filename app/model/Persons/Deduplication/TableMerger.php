@@ -8,7 +8,8 @@ use Nette\Database\Reflection\AmbiguousReferenceKeyException;
 use Nette\Database\Reflection\MissingReferenceException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use PDOException;
+use Persons\Deduplication\MergeStrategy\CannotMergeException;
+use Persons\Deduplication\MergeStrategy\IMergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -138,30 +139,9 @@ class TableMerger {
         return $this->merger;
     }
 
-    public function merge($newParent = null) {
+    public function merge($mergedParent = null) {
         /*
-         * First, ordinary columns of merged rows are merged.
-         */
-        foreach ($this->getColumns() as $column) {
-            /* Primary key is not merged. */
-            if ($this->isPrimaryKey($column)) {
-                continue;
-            }
-            /* When we are merging two rows under common parent, we ignore the foreign key.  */
-            if ($this->getReferencedTable($column)) {
-                if ($newParent && isset($newParent[$column])) {
-                    /* empty */ // row will be deleted eventually
-                    continue;
-                }
-            }
-            /* For all other columns, we try to apply merging strategy. */
-            if (!$this->tryColumnMerge($column)) {
-                $this->getMerger()->addConflict($this->getTrunkRow(), $this->getMergedRow(), $column);
-            }
-        }
-
-        /*
-         * Now, we merge child-rows (referencing rows) of the merged rows.
+         * We merge child-rows (referencing rows) of the merged rows.
          * We get the list of possible referncing tables from the database reflection.
          */
         foreach ($this->getReferencingTables() as $referencingTable => $FKcolumn) {
@@ -187,8 +167,13 @@ class TableMerger {
                     $refTrunk = isset($groupedTrunks[$secondaryKey]) ? $groupedTrunks[$secondaryKey] : null;
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
+                        $backTrunk = $referencingMerger->getTrunkRow();
+                        $backMerged = $referencingMerger->getMergedRow();
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
+                        if ($backTrunk) {
+                            $referencingMerger->setMergedPair($backTrunk, $backMerged);
+                        }
                     } else if ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged
@@ -202,8 +187,35 @@ class TableMerger {
                 }
             }
         }
-        /* Delete merged row. */
+        /*
+         * Delete merged row.
+         * Must be done prior updating trunk as there may be unique constraint.
+         */
         $this->getMergedRow()->delete();
+
+        /*
+         * Ordinary columns of merged rows are merged.
+         */
+        foreach ($this->getColumns() as $column) {
+            /* Primary key is not merged. */
+            if ($this->isPrimaryKey($column)) {
+                continue;
+            }
+            /* When we are merging two rows under common parent, we ignore the foreign key.  */
+            if ($this->getReferencedTable($column)) {
+                if ($mergedParent && isset($mergedParent[$column])) {
+                    /* empty */ // row will be deleted eventually
+                    continue;
+                }
+            }
+            /* For all other columns, we try to apply merging strategy. */
+            if (!$this->tryColumnMerge($column)) {
+                $this->getMerger()->addConflict($this->getTrunkRow(), $this->getMergedRow(), $column);
+            }
+        }
+
+
+        /* Log the overeall changes. */
         $this->logDelete($this->getMergedRow());
         $this->logTrunk($this->getTrunkRow());
     }

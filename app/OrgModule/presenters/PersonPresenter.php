@@ -236,6 +236,8 @@ class PersonPresenter extends EntityPresenter {
         $form->setRenderer(new BootstrapRenderer());
 
         $form->addSubmit('send', _('Sloučit osoby'));
+        $form->addSubmit('cancel', _('Storno'))
+                ->getControlPrototype()->addClass('btn-default');
         $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
         return $form;
     }
@@ -256,6 +258,11 @@ class PersonPresenter extends EntityPresenter {
                 if (!isset($data[Merger::IDX_TRUNK])) {
                     continue;
                 }
+
+                $pairSuffix = '';
+                if (count($pairs) > 1) {
+                    $pairSuffix = " ($pairId)";
+                }
                 $pairContainer = $tableContainer->addContainer($pairId);
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
@@ -264,7 +271,7 @@ class PersonPresenter extends EntityPresenter {
                         $default = $value; // default is trunk
                     }
 
-                    $textElement = $pairContainer->addText($column, $column)
+                    $textElement = $pairContainer->addText($column, $column . $pairSuffix)
                             ->setDefaultValue($default);
 
                     $description = Html::el('div');
@@ -414,6 +421,11 @@ class PersonPresenter extends EntityPresenter {
     }
 
     public function handleMergeFormSuccess(Form $form) {
+        if ($form['cancel']->isSubmittedBy()) {
+            $this->setMergeConflicts(null); // flush the session
+            $this->redirect('this'); //TODO backlink redirect
+        }
+
         $values = $form->getValues();
         $values = FormUtils::emptyStrToNull($values);
 

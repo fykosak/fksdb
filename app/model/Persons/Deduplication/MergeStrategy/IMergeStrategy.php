@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 

@@ -1,11 +1,48 @@
 parameters:
     merger:
-        defaultStrategy: @cummulativeStrategy
+        # Merged children must be unique with respect to the secondary key
+        # (FK of the merged parent is ignored).
         secondaryKeys:
-            contestant: [contest_id, year, person_id]
+            contestant: [person_id, contest_id, year]
             login: [person_id]
             person_info: [person_id]
             submit: [ct_id, task_id]
+            org: [person_id, contest_id]
+            post_contact: [person_id, type]
 
+        # Default merge strategy for columns.
+        defaultStrategy: @merge.cummulative
+
+        # Merge strategies per columns.
+        mergeStrategies:
+            person:
+                created: @merge.less
+
+            post_contact:
+                address_id: @merge.cummTrunk
+
+            login:
+                hash: @merge.trunk
+                active: @merge.greater
+                created: @merge.less
+                last_login: @merge.greater
+
+            contestant:
+                created: @merge.less
+            
+            submit:
+                submitted_on: @merge.trunk
+                source: @merge.trunk
+                calc_points: @merge.null
+
+# Instantces of merge strategies.
 services:
-    cummulativeStrategy: Persons\Deduplication\CummulativeStrategy
+    merge.cummulative: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+    merge.cummTrunk: Persons\Deduplication\MergeStrategy\CummulativeStrategy(trunk)
+    merge.cummMerged: Persons\Deduplication\MergeStrategy\CummulativeStrategy(merged)
+    merge.trunk: Persons\Deduplication\MergeStrategy\TrunkStrategy
+    merge.merged: Persons\Deduplication\MergeStrategy\MergedStrategy
+    merge.fail: Persons\Deduplication\MergeStrategy\FailStrategy
+    merge.greater: Persons\Deduplication\MergeStrategy\CompareStrategy(greater)
+    merge.less: Persons\Deduplication\MergeStrategy\CompareStrategy(less)
+    merge.null: Persons\Deduplication\MergeStrategy\ConstantStrategy(null)
