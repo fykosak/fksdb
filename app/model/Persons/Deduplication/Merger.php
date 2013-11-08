@@ -148,8 +148,8 @@ class Merger {
     }
 
     private function resetConflicts() {
-        foreach ($this->conflicts as $table => $conflictPairs) {
-            foreach ($conflictPairs as $pairId => $data) {
+        foreach ($this->conflicts as $table => &$conflictPairs) {
+            foreach ($conflictPairs as $pairId => &$data) {
                 unset($data[self::IDX_TRUNK]);
                 unset($data[self::IDX_MERGED]);
                 // we keep possible resolutions
