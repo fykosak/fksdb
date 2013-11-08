@@ -18,6 +18,9 @@ parameters:
             person:
                 created: @merge.less
 
+            person_info:
+                agreed: @merge.greater
+
             post_contact:
                 address_id: @merge.cummTrunk
 

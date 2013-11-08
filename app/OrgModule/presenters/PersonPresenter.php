@@ -153,7 +153,7 @@ class PersonPresenter extends EntityPresenter {
     }
 
     public function titleMerge() {
-        $this->setTitle(sprintf(_('Sloučení osob %s a %s'), $this->trunkPerson->getFullname(), $this->mergedPerson->getFullname()));
+        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullname(), $this->trunkPerson->person_id, $this->mergedPerson->getFullname(), $this->mergedPerson->person_id));
     }
 
     public function titleList() {

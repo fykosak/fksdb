@@ -87,20 +87,6 @@ class TableMerger {
     }
 
     /**
-     * @return ActiveRow
-     */
-    private function getTrunkRow() {
-        return $this->trunkRow;
-    }
-
-    /**
-     * @return ActiveRow
-     */
-    private function getMergedRow() {
-        return $this->mergedRow;
-    }
-
-    /**
      * 
      * @param mixed $column
      * @return boolean
@@ -147,11 +133,11 @@ class TableMerger {
         foreach ($this->getReferencingTables() as $referencingTable => $FKcolumn) {
             $referencingMerger = $this->getMerger()->getMerger($referencingTable);
 
-            $trunkDependants = $this->getTrunkRow()->related($referencingTable);
-            $mergedDependants = $this->getMergedRow()->related($referencingTable);
+            $trunkDependants = $this->trunkRow->related($referencingTable);
+            $mergedDependants = $this->mergedRow->related($referencingTable);
 
             $newParent = array(
-                $FKcolumn => $this->getTrunkRow()->getPrimary()
+                $FKcolumn => $this->trunkRow->getPrimary()
             );
             /*
              * If simply changing the parent would violate some constraints (i.e. parent
@@ -163,12 +149,13 @@ class TableMerger {
                 $groupedTrunks = $referencingMerger->groupBySecondaryKey($trunkDependants, $FKcolumn);
                 $groupedMerged = $referencingMerger->groupBySecondaryKey($mergedDependants, $FKcolumn);
                 $secondaryKeys = array_merge(array_keys($groupedTrunks), array_keys($groupedMerged));
+                $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
                     $refTrunk = isset($groupedTrunks[$secondaryKey]) ? $groupedTrunks[$secondaryKey] : null;
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
-                        $backTrunk = $referencingMerger->getTrunkRow();
-                        $backMerged = $referencingMerger->getMergedRow();
+                        $backTrunk = $referencingMerger->trunkRow;
+                        $backMerged = $referencingMerger->mergedRow;
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
                         if ($backTrunk) {
@@ -191,7 +178,7 @@ class TableMerger {
          * Delete merged row.
          * Must be done prior updating trunk as there may be unique constraint.
          */
-        $this->getMergedRow()->delete();
+        $this->mergedRow->delete();
 
         /*
          * Ordinary columns of merged rows are merged.
@@ -201,23 +188,22 @@ class TableMerger {
             if ($this->isPrimaryKey($column)) {
                 continue;
             }
-            /* When we are merging two rows under common parent, we ignore the foreign key.  */
-            if ($this->getReferencedTable($column)) {
-                if ($mergedParent && isset($mergedParent[$column])) {
-                    /* empty */ // row will be deleted eventually
-                    continue;
-                }
+            /* When we are merging two rows under common parent, we ignore the foreign key. */
+            if ($mergedParent && isset($mergedParent[$column])) {
+                /* empty */ // row will be deleted eventually
+                continue;
             }
+
             /* For all other columns, we try to apply merging strategy. */
             if (!$this->tryColumnMerge($column)) {
-                $this->getMerger()->addConflict($this->getTrunkRow(), $this->getMergedRow(), $column);
+                $this->getMerger()->addConflict($this->trunkRow, $this->mergedRow, $column);
             }
         }
 
 
         /* Log the overeall changes. */
-        $this->logDelete($this->getMergedRow());
-        $this->logTrunk($this->getTrunkRow());
+        $this->logDelete($this->mergedRow);
+        $this->logTrunk($this->trunkRow);
     }
 
     private function groupBySecondaryKey($rows, $parentColumn) {
@@ -255,16 +241,16 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), (string) $row, implode(', ', $msg)));
+            $this->logger->log(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)));
         }
     }
 
     private function logDelete(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), (string) $row));
+        $this->logger->log(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()));
     }
 
     private function logTrunk(ActiveRow $row) {
-        $this->logger->log(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), (string) $row));
+        $this->logger->log(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()));
     }
 
     /*     * ******************************
@@ -272,13 +258,15 @@ class TableMerger {
      * ****************************** */
 
     private $refTables = null;
+    private static $refreshReferencing = true;
 
     private function getReferencingTables() {
         if ($this->refTables === null) {
             $this->refTables = array();
             foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], false);
+                    list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
                 } catch (MissingReferenceException $e) {
                     /* empty */
@@ -312,11 +300,13 @@ class TableMerger {
     }
 
     private $referencedTables = array();
+    private static $refreshReferenced = true;
 
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, false);
+                list($table, $refColumn) = $this->connection->getDatabaseReflection()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (MissingReferenceException $e) {
                 $this->referencedTables[$column] = null;
