@@ -253,6 +253,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->navigationControl;
     }
 
+    protected function backlinkRedirect($need = false) {
+        $this->putIntoBreadcrumbs();
+        $backlink = $this['breadcrumbs']->getBacklinkUrl();
+        if ($backlink) {
+            $this->redirectUrl($backlink);
+        } else if ($need) {
+            $this->redirect(':Authentication:login'); // will cause dispatch
+        }
+    }
+
     /*     * *******************************
      * Extension of Nette ACL
      *      * ****************************** */

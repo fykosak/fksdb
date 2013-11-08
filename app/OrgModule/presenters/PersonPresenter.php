@@ -423,7 +423,7 @@ class PersonPresenter extends EntityPresenter {
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
-            $this->redirect('this'); //TODO backlink redirect
+            $this->backlinkRedirect(true);
         }
 
         $values = $form->getValues();
@@ -433,12 +433,12 @@ class PersonPresenter extends EntityPresenter {
         $merger->setConflictResolution($values);
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
-        if ($merger->merge()) {
+        if ($merger->merge(true)) {
             $this->setMergeConflicts(null); // flush the session
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
             $flashDump = $this->flashDumpFactory->createPersonMerge();
             $flashDump->dump($logger, $this);
-            $this->redirect('this'); //TODO backlink redirect
+            $this->backlinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());
             $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
