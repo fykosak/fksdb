@@ -9,9 +9,9 @@ class YearCalculator extends Object {
     public function getCurrentYear(ModelContest $contest) {
         switch ($contest->contest_id) {
             case ModelContest::ID_FYKOS:
-                return (int)ceil((time() - strtotime('1987-09-01')) / self::YEAR);
+                return (int) ceil((time() - strtotime('1987-09-01')) / self::YEAR);
             case ModelContest::ID_VYFUK:
-                return (int)ceil((time() - strtotime('2011-09-01')) / self::YEAR);
+                return (int) ceil((time() - strtotime('2011-09-01')) / self::YEAR);
             default:
                 return null;
         }
@@ -29,7 +29,7 @@ class YearCalculator extends Object {
     }
 
     public function isValidYear(ModelContest $contest, $year) {
-        return $year > 0 && $year <= $this->getCurrentYear($contest);
+        return $year >= $this->getFirstYear($contest) && $year <= $this->getCurrentYear($contest);
     }
 
 }
