@@ -284,9 +284,6 @@ final class AuthenticationPresenter extends BasePresenter {
             $connection->beginTransaction();
 
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            if (!$login) {
-                throw new UnknownLoginException();
-            }
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
             $this->accountManager->sendRecovery($template, $login);
             $email = Utils::cryptEmail($login->email);
