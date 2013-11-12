@@ -279,7 +279,7 @@ class ExtendedPersonWizardFactory {
                 ->addRule(Form::FILLED, _('Pro vytvoření loginu je třeba zadat e-mail.'));
 
         $container->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
-                ->setItems($this->translator->getSupportedLanguages())
+                ->setItems($this->translator->getSupportedLanguages(), false)
                 ->setDefaultValue($this->translator->getLang());
 
         return $container;
