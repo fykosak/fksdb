@@ -87,11 +87,15 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             'email' => $fbUser['email'],
             'fb_id' => $fbUser['id'],
         );
-
-        $personData = $this->getPersonData($fbUser);
-        $person = $login->getPerson();
-
         $this->serviceLogin->updateModel($login, $loginData);
+
+        $person = $login->getPerson();
+        
+        $personData = $this->getPersonData($fbUser);
+        // there can be bullshit in this fields, so don't use it for update
+        unset($personData['family_name']);
+        unset($personData['other_name']);
+        unset($personData['display_name']);        
         $this->servicePerson->updateModel($person, $personData);
 
         $this->servicePerson->getConnection()->beginTransaction();
