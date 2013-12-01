@@ -29,7 +29,7 @@ class YearCalculator extends Object {
     }
 
     public function isValidYear(ModelContest $contest, $year) {
-        return $year >= $this->getFirstYear($contest) && $year <= $this->getCurrentYear($contest);
+        return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getCurrentYear($contest);
     }
 
 }
