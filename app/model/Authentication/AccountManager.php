@@ -106,7 +106,7 @@ class AccountManager {
 
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
         $person = $login->getPerson();
-        $recoveryAddress = $person ? $person->getLogin()->email : null;
+        $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
