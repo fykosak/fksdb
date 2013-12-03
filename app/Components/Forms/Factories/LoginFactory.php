@@ -24,7 +24,7 @@ class LoginFactory {
     /**
      * @param type $options
      */
-    public function createLogin($options = 0, ControlGroup $group = null, $emailRule = null, $loginRule = null) {
+    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -32,14 +32,6 @@ class LoginFactory {
 
         if ($loginRule) {
             $login->addRule($loginRule, _('Daný login již někdo používá.'));
-        }
-
-        $email = $container->addText('email', _('E-mail'))
-                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'))
-                ->addRule(Form::FILLED, _('E-mail je třeba zadat.'));
-
-        if ($emailRule) {
-            $email->addRule($emailRule, _('Daný email již někdo používá.'));
         }
 
         if ($options & self::SHOW_PASSWORD) {

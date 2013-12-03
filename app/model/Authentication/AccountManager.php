@@ -74,11 +74,8 @@ class AccountManager {
      * @throws MailNotSendException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
-        $login = $this->serviceLogin->createNew(array(
-            'person_id' => $person->person_id,
-            'email' => $email,
-            'active' => 1,
-        ));
+        $login = $this->createLogin($person);
+        //TODO email
 
         $this->serviceLogin->save($login);
 
@@ -108,7 +105,9 @@ class AccountManager {
     }
 
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
-        if (!$login->email) {
+        $person = $login->getPerson();
+        $recoveryAddress = $person ? $person->getLogin()->email : null;
+        if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
         $token = $this->serviceAuthToken->getTable()->where(array(
@@ -132,7 +131,7 @@ class AccountManager {
         $message->setHtmlBody($template);
         $message->setSubject(_('Obnova hesla'));
         $message->setFrom($this->getEmailFrom());
-        $message->addTo($login->email, $login->__toString());
+        $message->addTo($recoveryAddress, $login->__toString());
 
         Debugger::log((string) $message->getHtmlBody());
 
@@ -148,6 +147,23 @@ class AccountManager {
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ))->delete();
+    }
+
+    public final function createLogin(ModelPerson $person, $login = null, $password = null) {
+        $login = $this->serviceLogin->createNew(array(
+            'person_id' => $person->person_id,
+            'login' => $login,
+            'active' => 1,
+        ));
+
+        $this->serviceLogin->save($login);
+
+        /* Must be done after login_id is allocated. */
+        if ($password) {
+            $login->setHash($password);
+            $this->serviceLogin->save($login);
+        }
+        return $login;
     }
 
 }

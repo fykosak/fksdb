@@ -3,11 +3,13 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Controls\URLTextBox;
+use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
+use Nette\Application\UI\Form;
+use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
@@ -30,12 +32,29 @@ class PersonFactory {
     const SHOW_LOGIN_CREATION = 0x40;
     /** @const Display origin and agreement only (supplement to other form containers). */
     const SHOW_LIKE_SUPPLEMENT = 0x100;
-
+    const REQUIRE_EMAIL = 0x200;
 
     /* Encapsulation condition argument (workaround) */
     const IDX_CONTROL = 'control';
     const IDX_OPERATION = 'op';
     const IDX_VALUE = 'val';
+
+    /* Subcontainers names */
+    const CONT_LOGIN = 'logincr';
+
+    /* Element names */
+    const EL_CREATE_LOGIN = 'createLogin';
+    const EL_CREATE_LOGIN_LANG = 'lang';
+
+    /**
+     *
+     * @var GettextTranslator
+     */
+    private $translator;
+
+    function __construct(GettextTranslator $translator) {
+        $this->translator = $translator;
+    }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
         $disabled = (bool) ($options & self::DISABLED);
@@ -93,12 +112,7 @@ class PersonFactory {
 
         if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {
             if ($options & self::SHOW_EMAIL) {
-                $email = $container->addText('email', _('E-mail'));
-                $conditioned = $email->addCondition(Form::FILLED)
-                        ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-                if ($emailRule) {
-                    $conditioned->addRule($emailRule, _('Daný e-mail je již použit u někoho jiného.'));
-                }
+                $this->appendEmailWithLogin($container, $emailRule, $options);
             }
 
             $container->addDatePicker('born', 'Datum narození');
@@ -168,6 +182,32 @@ class PersonFactory {
 
 
         return $container;
+    }
+
+    public function appendEmailWithLogin(Container $container, callable $emailRule = null, $options = 0) {
+        $email = $container->addText('email', _('E-mail'));
+        if ($options & self::REQUIRE_EMAIL) {
+            $email->addRule(Form::FILLED, _('E-mail je třeba zadat.'));
+        }
+
+        $conditioned = $email->addCondition(Form::FILLED)
+                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+        if ($emailRule) {
+            $conditioned->addRule($emailRule, _('Daný e-mail je již použit u někoho jiného.'));
+        }
+
+        if ($options & self::SHOW_LOGIN_CREATION) {
+            $loginContainer = $container->addContainer(self::CONT_LOGIN);
+
+            $createLogin = $loginContainer->addCheckbox(self::EL_CREATE_LOGIN, _('Vytvořit login'))
+                    ->setOption('description', _('Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.'));
+            $email->addConditionOn($createLogin, Form::FILLED)
+                    ->addRule(Form::FILLED, _('Pro vytvoření loginu je třeba zadat e-mail.'));
+
+            $loginContainer->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
+                    ->setItems($this->translator->getSupportedLanguages(), false)
+                    ->setDefaultValue($this->translator->getLang());
+        }
     }
 
 }

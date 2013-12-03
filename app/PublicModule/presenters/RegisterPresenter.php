@@ -2,12 +2,12 @@
 
 namespace PublicModule;
 
+use Authentication\AccountManager;
 use BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
@@ -110,6 +110,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
     /** @var Connection */
     private $connection;
 
+    /**
+     * @var AccountManager 
+     */
+    private $accountManager;
+
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
     }
@@ -164,6 +169,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
     public function injectConnection(Connection $connection) {
         $this->connection = $connection;
+    }
+
+    public function injectAccountManager(AccountManager $accountManager) {
+        $this->accountManager = $accountManager;
     }
 
     /** @var ModelContest|null */
@@ -242,10 +251,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
          */
         if (!$person) {
             $group = $form->addGroup(_('Přihlašování'));
-            $emailRule = $this->uniqueEmailFactory->create();
             $loginRule = $this->uniqueLoginFactory->create();
-            $login = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $emailRule, $loginRule);
-            $form->addComponent($login, self::CONT_LOGIN);
+            $emailRule = $this->uniqueEmailFactory->create($person);
+            $loginContainer = $this->loginFactory->createLogin(LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD, $group, $loginRule);
+            $this->personFactory->appendEmailWithLogin($loginContainer, $emailRule, PersonFactory::REQUIRE_EMAIL);
+            $form->addComponent($loginContainer, self::CONT_LOGIN);
         }
 
         /*
@@ -318,14 +328,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
                 // store login
                 $loginData = $values[self::CONT_LOGIN];
                 $loginData = FormUtils::emptyStrToNull($loginData);
-                $login = $this->serviceLogin->createNew($loginData);
-                $login->person_id = $person->person_id;
-
-                $this->serviceLogin->save($login); // save to retrieve login_id for hash salting
-
-                $login->setHash($loginData['password']);
-                $login->active = 1; // created accounts are active
-                $this->serviceLogin->save($login);
+                $login = $this->accountManager->createLogin($person, $loginData['login'], $loginData['password']);
             } else {
                 $person = $loggedPerson;
             }
@@ -367,20 +370,22 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
             /*
              * Person info
              */
-            if (isset($values[self::CONT_PERSON_INFO])) { // depends on needInfo
-                $personInfoData = $values[self::CONT_PERSON_INFO];
-                $personInfoData = FormUtils::emptyStrToNull($personInfoData);
-                $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
-                $personInfo = $person->getInfo();
-                if (!$personInfo) {
-                    $personInfo = $this->servicePersonInfo->createNew($personInfoData);
-                    $personInfo->person_id = $person->person_id;
-                } else {
-                    $this->servicePersonInfo->updateModel($personInfo, $personInfoData); // here we update date of the confirmation
-                }
-
-                $this->servicePersonInfo->save($personInfo);
+            $personInfoData = isset($values[self::CONT_PERSON_INFO]) ? $values[self::CONT_PERSON_INFO] : array();
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
+            $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
+            if (isset($values[self::CONT_LOGIN])) {
+                $personInfoData['email'] = $values[self::CONT_LOGIN]['email'];
             }
+            $personInfo = $person->getInfo();
+            if (!$personInfo) {
+                $personInfo = $this->servicePersonInfo->createNew($personInfoData);
+                $personInfo->person_id = $person->person_id;
+            } else {
+                $this->servicePersonInfo->updateModel($personInfo, $personInfoData); // here we update date of the confirmation
+            }
+
+            $this->servicePersonInfo->save($personInfo);
+
 
             if (!$this->connection->commit()) {
                 throw new ModelException();

@@ -4,6 +4,7 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
+use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Mail\MailTemplateFactory;
@@ -88,35 +89,27 @@ abstract class AbstractPersonHandler {
             /*
              * Login
              */
-            $login = $this->person->getLogin();
-            $personInfoData = $data[ExtendedPersonWizardFactory::CONT_PERSON_INFO];
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
-            $emailData = isset($data[ExtendedPersonWizardFactory::CONT_LOGIN]) ? $data[ExtendedPersonWizardFactory::CONT_LOGIN] : null;
+            $emailContainer = $data[ExtendedPersonWizardFactory::CONT_PERSON]; // email data are in person's container
+            $email = $emailContainer['email'];
+            $createLogin = $emailContainer[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN];
 
-            if ($emailData && isset($emailData[ExtendedPersonWizardFactory::EL_EMAIL])) {
-                $email = $emailData[ExtendedPersonWizardFactory::EL_EMAIL];
-                $createLogin = $emailData[ExtendedPersonWizardFactory::EL_CREATE_LOGIN];
-                $login = $this->person->getLogin();
-                if ($login) {
-                    $login->email = $email;
-                    $this->serviceLogin->save($login);
-                } else if ($createLogin) {
-                    $lang = $emailData[ExtendedPersonWizardFactory::EL_CREATE_LOGIN_LANG];
-                    $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $lang);
-                    try {
-                        $login = $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
-                        $presenter->flashMessage(_('Zvací e-mail odeslán.'), $presenter::FLASH_INFO);
-                    } catch (SendFailedException $e) {
-                        $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), $presenter::FLASH_ERROR);
-                    }
-                } else {
-                    $personInfoData['email'] = $email; // we'll store it as personal info
+            if ($email && !$this->person->getLogin() && $createLogin) {
+                $lang = $emailContainer[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN_LANG];
+                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $lang);
+                try {
+                    $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
+                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), $presenter::FLASH_INFO);
+                } catch (SendFailedException $e) {
+                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), $presenter::FLASH_ERROR);
                 }
             }
 
             /*
              * Personal info
              */
+            $personInfoData = $data[ExtendedPersonWizardFactory::CONT_PERSON_INFO];
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
+            $personInfoData['email'] = $email;
             $personInfo = $this->person->getInfo();
             if (!$personInfo) {
                 $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
