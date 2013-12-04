@@ -371,11 +371,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
              * Person info
              */
             $personInfoData = isset($values[self::CONT_PERSON_INFO]) ? $values[self::CONT_PERSON_INFO] : array();
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
             $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
             if (isset($values[self::CONT_LOGIN])) {
                 $personInfoData['email'] = $values[self::CONT_LOGIN]['email'];
             }
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
             $personInfo = $person->getInfo();
             if (!$personInfo) {
                 $personInfo = $this->servicePersonInfo->createNew($personInfoData);

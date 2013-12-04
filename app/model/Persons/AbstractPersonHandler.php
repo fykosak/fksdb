@@ -108,8 +108,8 @@ abstract class AbstractPersonHandler {
              * Personal info
              */
             $personInfoData = $data[ExtendedPersonWizardFactory::CONT_PERSON_INFO];
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
             $personInfoData['email'] = $email;
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
             $personInfo = $this->person->getInfo();
             if (!$personInfo) {
                 $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
