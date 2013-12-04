@@ -268,8 +268,9 @@ class ExtendedPersonWizardFactory {
             }
         }
         if ($login) {
-            $container[self::EL_CREATE_LOGIN]->setDefaultValue(true);
-            $container[self::EL_CREATE_LOGIN]->setDisabled();
+            $container[PersonFactory::EL_CREATE_LOGIN]->setDefaultValue(true);
+            $container[PersonFactory::EL_CREATE_LOGIN]->setDisabled();
+            $container[PersonFactory::EL_CREATE_LOGIN]->setOption('description', _('Login už existuje.'));
         }
 
         $emailElement = $form[self::CONT_PERSON]['email'];
