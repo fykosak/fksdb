@@ -30,6 +30,16 @@ class UnknownLoginException extends AuthenticationException {
 
 }
 
+class NoLoginException extends AuthenticationException {
+
+    public function __construct($previous = null) {
+        $message = _('Nepřipravený účet.');
+        $code = IAuthenticator::NOT_APPROVED;
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
 class InvalidCredentialsException extends AuthenticationException {
 
     public function __construct($previous = null) {

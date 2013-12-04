@@ -261,11 +261,6 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function loginFormSubmitted($form) {
         try {
-//            if ($form['remember']->value) {
-//                $this->user->setExpiration('+20 days', false);
-//            } else {
-//                $this->user->setExpiration(0, true);
-//            }
             $this->user->login($form['id']->value, $form['password']->value);
             $login = $this->user->getIdentity();
 
@@ -286,7 +281,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
             $this->accountManager->sendRecovery($template, $login);
-            $email = Utils::cryptEmail($login->email);
+            $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');

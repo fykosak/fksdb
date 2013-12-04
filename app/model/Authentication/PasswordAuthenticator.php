@@ -5,11 +5,24 @@ namespace Authentication;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
+use ServiceLogin;
+use ServicePerson;
+use YearCalculator;
 
 /**
  * Users authenticator.
  */
 class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
+
+    /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
+
+    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
+        parent::__construct($serviceLogin, $yearCalculator);
+        $this->servicePerson = $servicePerson;
+    }
 
     /**
      * Performs an authentication.
@@ -33,7 +46,19 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     }
 
     public function findLogin($id) {
-        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->fetch();
+        $person = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
+
+        if ($person) {
+            $login = $person->getLogin();
+            if (!$login) {
+                throw new NoLoginException();
+            }
+            return $login;
+        }
+
+        $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
+
+
         if (!$login) {
             throw new UnknownLoginException();
         }

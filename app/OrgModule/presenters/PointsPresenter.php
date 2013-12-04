@@ -6,10 +6,10 @@ use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelContest;
 use ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Nette\InvalidArgumentException;
 use ServiceSubmit;
 use ServiceTask;
 use ServiceTaskContribution;
@@ -174,22 +174,22 @@ class PointsPresenter extends SeriesPresenter {
 
     public function handleRecalculateAll() {
         try {
-            foreach ($this->getAvailableContests() as $contest) {
-                $contest = ModelContest::createFromTableRow($contest);
 
-                $years = $this->serviceTask->getTable()
-                                ->select('year')
-                                ->where(array(
-                                    'contest_id' => $contest->contest_id,
-                                ))->group('year');
+            $contest = $this->getSelectedContest();
 
-                foreach ($years as $year) {
-                    $this->SQLResultsCache->recalculate($contest, $year->year);
-                }
+            $years = $this->serviceTask->getTable()
+                            ->select('year')
+                            ->where(array(
+                                'contest_id' => $contest->contest_id,
+                            ))->group('year');
+
+            foreach ($years as $year) {
+                $this->SQLResultsCache->recalculate($contest, $year->year);
             }
 
+
             $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
-        } catch (Exception $e) {
+        } catch (InvalidArgumentException $e) {
             $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
             Debugger::log($e);
         }

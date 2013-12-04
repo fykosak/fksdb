@@ -85,7 +85,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Autentizace'));
-        $emailRule = $this->uniqueEmailFactory->create($login->getPerson(), $login);
+        $emailRule = $this->uniqueEmailFactory->create($login->getPerson(), $login); //TODO em use it somewhere
         $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
@@ -93,7 +93,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, $emailRule, $loginRule);
+        $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
         $form->addComponent($loginContainer, self::CONT_LOGIN);
 
         if (!$tokenAuthentication) {

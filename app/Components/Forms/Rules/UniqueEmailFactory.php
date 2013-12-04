@@ -2,9 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
 use ModelPerson;
-use ServiceLogin;
 use ServicePersonInfo;
 
 /**
@@ -15,26 +13,17 @@ use ServicePersonInfo;
 class UniqueEmailFactory {
 
     /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
-
-    /**
      * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
-    function __construct(ServiceLogin $serviceLogin, ServicePersonInfo $servicePersonInfo) {
-        $this->serviceLogin = $serviceLogin;
+    function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function create(ModelPerson $person = null, ModelLogin $login = null) {
-        $mode = UniqueEmail::CHECK_LOGIN | UniqueEmail::CHECK_PERSON;
-        $rule = new UniqueEmail($mode, $this->serviceLogin, $this->servicePersonInfo);
-        $login = $login ? : ($person ? $person->getLogin() : null);
+    public function create(ModelPerson $person = null) {
+        $rule = new UniqueEmail($this->servicePersonInfo);
         $rule->setIgnoredPerson($person);
-        $rule->setIgnoredLogin($login);
 
         return $rule;
     }

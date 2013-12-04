@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
@@ -35,14 +34,11 @@ class ExtendedPersonWizardFactory {
     /* Important elements */
     const EL_PERSON_ID = 'person_id';
     const EL_EMAIL = 'email';
-    const EL_CREATE_LOGIN = 'createLogin';
-    const EL_CREATE_LOGIN_LANG = 'lang';
     /* Containers */
     const CONT_PERSON = 'person';
     const CONT_CONTESTANT = 'contestant';
     const CONT_PERSON_INFO = 'person_info';
     const CONT_ADDRESSES = 'addresses';
-    const CONT_LOGIN = 'login';
     const CONT_ORG = 'org';
 
     /* Important groups */
@@ -89,12 +85,7 @@ class ExtendedPersonWizardFactory {
      */
     private $uniqueEmailFactory;
 
-    /**
-     * @var GettextTranslator
-     */
-    private $translator;
-
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory, GettextTranslator $translator) {
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->orgFactory = $orgFactory;
@@ -103,7 +94,6 @@ class ExtendedPersonWizardFactory {
         $this->personProvider = $personProvider;
         $this->session = $session;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
-        $this->translator = $translator;
     }
 
     private function createWizardBase() {
@@ -261,36 +251,17 @@ class ExtendedPersonWizardFactory {
         $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED, $group);
         $form->addComponent($personContainer, self::CONT_PERSON);
 
-        $loginContainer = $this->createLoginContainer($group);
-        $form->addComponent($loginContainer, self::CONT_LOGIN);
-    }
-
-    private function createLoginContainer($group) {
-        $container = new Container();
-        $container->setCurrentGroup($group);
-
-        $email = $container->addText(self::EL_EMAIL, _('E-mail'));
-        $email->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-
-        $createLogin = $container->addCheckbox(self::EL_CREATE_LOGIN, _('Vytvořit login'))
-                ->setOption('description', _('Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.'));
-        $email->addConditionOn($createLogin, Form::FILLED)
-                ->addRule(Form::FILLED, _('Pro vytvoření loginu je třeba zadat e-mail.'));
-
-        $container->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
-                ->setItems($this->translator->getSupportedLanguages(), false)
-                ->setDefaultValue($this->translator->getLang());
-
-        return $container;
+        $this->personFactory->appendEmailWithLogin($personContainer, null, PersonFactory::SHOW_LOGIN_CREATION);
     }
 
     public final function modifyLoginContainer(Form $form, ModelPerson $person) {
-        $container = $form->getComponent(self::CONT_LOGIN);
+
         $login = $person->getLogin();
         $personInfo = $person->getInfo();
-        $hasEmail = ($login && isset($login->email)) || ($personInfo && isset($personInfo->email));
+        $hasEmail = $personInfo && isset($personInfo->email);
         $showLogin = !$login || !$hasEmail;
+
+        $container = $form[self::CONT_PERSON][PersonFactory::CONT_LOGIN];
         if (!$showLogin) {
             foreach ($container->getControls() as $control) {
                 $control->setDisabled();
@@ -301,15 +272,13 @@ class ExtendedPersonWizardFactory {
             $container[self::EL_CREATE_LOGIN]->setDisabled();
         }
 
-        $email = ($login && isset($login->email)) ? $login->email :
-                ($personInfo && isset($personInfo->email)) ? $personInfo->email :
-                        null;
-        $container[self::EL_EMAIL]->setDefaultValue($email);
+        $emailElement = $form[self::CONT_PERSON]['email'];
+        $email = ($personInfo && isset($personInfo->email)) ? $personInfo->email : null;
+        $emailElement->setDefaultValue($email);
 
 
         $emailRule = $this->uniqueEmailFactory->create($person);
-        //$form[ContestantWizardFactory::CONT_PERSON_INFO]['email']->addCondition(Form::FILLED)->addRule($emailRule, _('Daný e-mail již někdo používá.'));
-        $form[self::CONT_LOGIN][self::EL_EMAIL]->addRule($emailRule, _('Daný e-mail již někdo používá.'));
+        $emailElement->addRule($emailRule, _('Daný e-mail již někdo používá.'));
     }
 
 }
