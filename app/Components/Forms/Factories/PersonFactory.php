@@ -7,6 +7,7 @@ use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -185,28 +186,34 @@ class PersonFactory {
     }
 
     public function appendEmailWithLogin(Container $container, callable $emailRule = null, $options = 0) {
-        $email = $container->addText('email', _('E-mail'));
+        $emailElement = $container->addText('email', _('E-mail'));
         if ($options & self::REQUIRE_EMAIL) {
-            $email->addRule(Form::FILLED, _('E-mail je třeba zadat.'));
+            $emailElement->addRule(Form::FILLED, _('E-mail je třeba zadat.'));
         }
 
-        $conditioned = $email->addCondition(Form::FILLED)
+        $filledEmailCondition = $emailElement->addCondition(Form::FILLED)
                 ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         if ($emailRule) {
-            $conditioned->addRule($emailRule, _('Daný e-mail je již použit u někoho jiného.'));
+            $filledEmailCondition->addRule($emailRule, _('Daný e-mail je již použit u někoho jiného.'));
         }
 
         if ($options & self::SHOW_LOGIN_CREATION) {
             $loginContainer = $container->addContainer(self::CONT_LOGIN);
 
             $createLogin = $loginContainer->addCheckbox(self::EL_CREATE_LOGIN, _('Vytvořit login'))
+                    ->setDefaultValue(true)
                     ->setOption('description', _('Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení.'));
-            $email->addConditionOn($createLogin, Form::FILLED)
+            $emailElement->addConditionOn($createLogin, Form::FILLED)
                     ->addRule(Form::FILLED, _('Pro vytvoření loginu je třeba zadat e-mail.'));
 
-            $loginContainer->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
+            $langElement = $loginContainer->addSelect(self::EL_CREATE_LOGIN_LANG, _('Jazyk pozvánky'))
                     ->setItems($this->translator->getSupportedLanguages(), false)
                     ->setDefaultValue($this->translator->getLang());
+
+            $createLogin->addCondition(Form::EQUAL, true);
+            //TODO support in Nette         ->toggle($langElement->getHtmlId() . BootstrapRenderer::PAIR_ID_SUFFIX, true);
+
+            //TODO support in Nette $filledEmailCondition->toggle($createLogin->getHtmlId() . BootstrapRenderer::PAIR_ID_SUFFIX, true);
         }
     }
 
