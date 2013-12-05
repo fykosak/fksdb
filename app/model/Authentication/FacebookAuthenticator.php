@@ -91,7 +91,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         $this->servicePerson->save($person);
 
         $personInfo->person_id = $person->person_id;
-        $this->servicePersonInfo->save($person);
+        $this->servicePersonInfo->save($personInfo);
 
         $login = $this->accountManager->createLogin($person);
 

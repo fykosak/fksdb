@@ -319,11 +319,6 @@ class PersonPresenter extends EntityPresenter {
             $defaults[self::CONT_PERSON_INFO] = $info;
         }
 
-        $login = $person->getLogin();
-        if ($login) {
-            $defaults[self::CONT_PERSON_INFO]['email'] = $login->email;
-        }
-
         $form->setDefaults($defaults);
     }
 
