@@ -3,9 +3,11 @@
 namespace FKS\Components\Forms\Controls\Autocomplete;
 
 use IJavaScriptCollector;
+use Nette\Environment;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
+use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,10 +23,12 @@ class AutocompleteSelectBox extends TextBase {
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
     const INTERNAL_DELIMITER  = ',';
+    const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
     /**
      * @var IDataProvider
      */
+
     private $dataProvider;
 
     /**
@@ -156,6 +160,17 @@ class AutocompleteSelectBox extends TextBase {
         return $code;
     }
 
+    public function loadHttpData() {
+        $meta_path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+        $meta_path[count($meta_path) - 1] .= self::META_ELEMENT_SUFFIX;
+        if (!Arrays::get($this->getForm()->getHttpData(), $meta_path, null)) {
+            $this->addError(sprintf(_('Políčko %s potřebuje povolený Javascript.'), $this->caption));
+            $this->setValue(null);
+        } else {
+            parent::loadHttpData();
+        }
+    }
+
     public function setValue($value) {
         if ($this->isMultiselect()) {
             if (is_array($value)) {
@@ -185,4 +200,5 @@ class AutocompleteSelectBox extends TextBase {
     public function setItems(array $items, $useKeys = TRUE) {
         throw new NotImplementedException('Use setDataProvider instead.');
     }
+
 }
