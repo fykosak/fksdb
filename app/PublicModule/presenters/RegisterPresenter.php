@@ -4,6 +4,7 @@ namespace PublicModule;
 
 use Authentication\AccountManager;
 use BasePresenter as CoreBasePresenter;
+use FKS\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\LoginFactory;
@@ -294,10 +295,18 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $contestant = $this->contestantFactory->createContestant($options, $group);
         $form->addComponent($contestant, self::CONT_CONTESTANT);
 
+        // -----
+        $form->setCurrentGroup();
+
+        /*
+         * CAPTCHA
+         */
+        $captcha = new CaptchaBox();
+        $form->addComponent($captcha, 'captcha');
+
         /*
          * Buttons
          */
-        $form->setCurrentGroup();
         $form->addSubmit('register', _('Registrovat'));
         $form->onSuccess[] = array($this, 'handleContestantFormSuccess');
 
