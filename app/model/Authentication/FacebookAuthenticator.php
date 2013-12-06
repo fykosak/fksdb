@@ -28,15 +28,15 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     private $servicePersonInfo;
 
     /**
-     *
      * @var AccountManager
      */
     private $accountManager;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
+        $this->accountManager = $accountManager;
     }
 
     /**
