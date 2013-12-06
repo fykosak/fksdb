@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FormUtils;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -62,6 +63,19 @@ class SchoolPresenter extends EntityPresenter {
         $this->addressFactory = $addressFactory;
     }
 
+    public function titleList() {
+        $this->setTitle(_('Školy'));
+    }
+
+    public function titleCreate() {
+        $this->setTitle(_('Založit školu'));
+    }
+
+    public function titleEdit($id) {
+        $school = $this->getModel();
+        $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
+    }
+
     public function actionDelete($id) {
         // This should set active flag to false.
         throw new NotImplementedException();
@@ -70,7 +84,7 @@ class SchoolPresenter extends EntityPresenter {
     protected function createComponentCreateComponent($name) {
         $form = $this->createForm();
 
-        $form->addSubmit('send', 'Vložit');
+        $form->addSubmit('send', _('Vložit'));
         $form->onSuccess[] = array($this, 'handleCreateFormSuccess');
 
         return $form;
@@ -79,7 +93,7 @@ class SchoolPresenter extends EntityPresenter {
     protected function createComponentEditComponent($name) {
         $form = $this->createForm();
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
         $form->onSuccess[] = array($this, 'handleEditFormSuccess');
 
         return $form;
@@ -101,13 +115,14 @@ class SchoolPresenter extends EntityPresenter {
 
     private function createForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         $schoolContainer = $this->schoolFactory->createSchool();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
         $addressContainer = $this->addressFactory->createAddress();
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
-        
+
         return $form;
     }
 
@@ -151,12 +166,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola založena');
+            $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při zakládání školy.', 'error');
+            $this->flashMessage(_('Chyba při zakládání školy.'), self::FLASH_ERROR);
         }
     }
 
@@ -196,12 +211,12 @@ class SchoolPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage('Škola upravena');
+            $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
             $this->redirect('list');
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage('Chyba při úpravě školy.', 'error');
+            $this->flashMessage(_('Chyba při úpravě školy.'), self::FLASH_ERROR);
         }
     }
 

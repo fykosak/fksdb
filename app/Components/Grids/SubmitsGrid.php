@@ -9,9 +9,10 @@ use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
+use PublicModule\BasePresenter;
 use ServiceSubmit;
-use Submits\StorageException;
 use Submits\FilesystemSubmitStorage;
+use Submits\StorageException;
 
 /**
  *
@@ -53,7 +54,7 @@ class SubmitsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('task', 'Úloha')
+        $this->addColumn('task', _('Úloha'))
                 ->setRenderer(function($row) use($presenter) {
                             $row->task_id; // stupid caching...
                             $task = $row->getTask();
@@ -68,15 +69,15 @@ class SubmitsGrid extends BaseGrid {
                                 return $FQname;
                             }
                         });
-        $this->addColumn('submitted_on', 'Čas odevzdání');
-        $this->addColumn('source', 'Způsob odevzdání');
+        $this->addColumn('submitted_on', _('Čas odevzdání'));
+        $this->addColumn('source', _('Způsob odevzdání'));
 
         //
         // operations
         //
         $that = $this;
-        $this->addButton("revoke", "Zrušit")
-                ->setClass("delete")
+        $this->addButton("revoke", _("Zrušit"))
+                ->setClass("btn btn-xs btn-warning")
                 ->setText('Zrušit') //todo i18n
                 ->setShow(function($row) use($that) {
                             return $that->canRevoke($row);
@@ -87,6 +88,8 @@ class SubmitsGrid extends BaseGrid {
                 ->setConfirmationDialog(function($row) {
                             return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
                         });
+
+
 
         //
         // appeareance
@@ -116,13 +119,13 @@ class SubmitsGrid extends BaseGrid {
         try {
             $this->submitStorage->deleteFile($submit);
             $this->submitService->dispose($submit);
-            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), BasePresenter::FLASH_SUCCESS);
             $this->redirect('this');
         } catch (StorageException $e) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
             Debugger::log($e);
         } catch (ModelException $e) {
-            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()));
+            $this->flashMessage(sprintf('Během mazání úlohy %s došlo k chybě.', $submit->getTask()->getFQName()), BasePresenter::FLASH_ERROR);
             Debugger::log($e);
         }
     }

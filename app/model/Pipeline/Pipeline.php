@@ -8,9 +8,15 @@ use Nette\InvalidStateException;
  * Represents a simple pipeline where each stage has its input and output and they
  * comprise a linear chain.
  * 
+ * @todo Implement generic ILogger.
+ * 
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {
+
+    const LOG_ERROR = 3;
+    const LOG_WARNING = 2;
+    const LOG_INFO = 1;
 
     /**
      * @var array of IStage
@@ -73,7 +79,8 @@ class Pipeline {
         return $data;
     }
 
-    public function log($message) {
+    // TODO implement log level
+    public function log($message, $level = self::LOG_INFO) {
         $this->log[] = $message;
     }
 

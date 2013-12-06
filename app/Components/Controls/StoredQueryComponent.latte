@@ -1,0 +1,11 @@
+{if $parametrize}
+{control parametrizeForm}
+{/if}
+
+{if $error}
+<div class="alert alert-danger">
+    {$error}
+</div>
+{else}
+    {control grid}
+{/if}

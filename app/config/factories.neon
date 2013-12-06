@@ -2,9 +2,13 @@
 # Factories definitions
 #
 services:
-    MailTemplateFactory: self(%email.templatesDir%)
-    - FKSDB\Components\Factories\ContestantWizardFactory
+    mailTemplateFactory:
+        class: Mail\MailTemplateFactory(%email.templatesDir%)
+
+    - FKSDB\Components\Factories\ExtendedPersonWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
+    breadcrumbFactory:
+        class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
         class: SQL\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: ResultsModelFactory
@@ -13,7 +17,13 @@ services:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
     downloaderFactory:
         class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
+    flashDumpFactory:
+        class: Logging\FlashDumpFactory(%logToFlash%)
+
 
 
 factories:
 # (so far unused)
+
+includes:
+    - logToFlash.neon

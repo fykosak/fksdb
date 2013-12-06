@@ -3,9 +3,11 @@
 namespace PublicModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\ContestChooser;
 use IContestPresenter;
-use ModelContest;
 use ModelContestant;
+use ModelRole;
+use Nette\Application\BadRequestException;
 
 /**
  * Current year of FYKOS.
@@ -16,33 +18,42 @@ use ModelContestant;
  */
 class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
-    /** @var ModelContest */
-    private $selectedContest;
+    const PRESETS_KEY = 'publicPresets';
+
+    /**
+     * @persistent
+     */
+    public $contestId;
+
+    protected function createComponentContestChooser($name) {
+        $control = new ContestChooser(ModelRole::CONTESTANT, $this->session, $this->yearCalculator, $this->serviceContest);
+        return $control;
+    }
 
     /** @var ModelContestant|null|false */
     private $contestant = false;
 
     public function getSelectedContest() {
-        if ($this->selectedContest === null) {
-            $this->selectedContest = $this->serviceContest->findByPrimary(ModelContest::ID_FYKOS);
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
         }
-        return $this->selectedContest;
+        return $contestChooser->getContest();
     }
 
     public function getSelectedYear() {
-        return $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+        $contestChooser = $this['contestChooser'];
+        if (!$contestChooser->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
+        return $contestChooser->getYear();
     }
 
     public function getContestant() {
         if ($this->contestant === false) {
             $person = $this->user->getIdentity()->getPerson();
-            $contestant = $person->getContestants()
-                            ->where(array(
-                                'contest_id' => $this->getSelectedContest()->contest_id,
-                                'year' => $this->getSelectedYear()
-                            ))->fetch();
-
-            $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
+            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $this->contestant = $contestants[$this->getSelectedContest()->contest_id];
         }
 
         return $this->contestant;

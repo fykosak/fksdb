@@ -31,38 +31,28 @@ abstract class EntityPresenter extends BasePresenter {
      */
     protected $modelResourceId;
 
-    public function actionCreate() {
-        if (!$this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedCreate() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'create', $this->getSelectedContest()));
     }
 
-    public function actionEdit($id) {
+    public function authorizedEdit($id) {
         $model = $this->getModel();
-
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
     }
 
-    public function actionList() {
-        if (!$this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedList() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->modelResourceId, 'list', $this->getSelectedContest()));
     }
 
-    public function actionDelete($id) {
+    public function authorizedDelete($id) {
         $model = $this->getModel();
-
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
         }
-        if (!$this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'delete', $this->getSelectedContest()));
     }
 
     public function renderEdit($id) {

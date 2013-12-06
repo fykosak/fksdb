@@ -18,7 +18,18 @@ class DashboardPresenter extends BasePresenter {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    public function authorizedDefault() {
+        $login = $this->getUser()->getIdentity();
+        $access = $login ? $login->isOrg($this->yearCalculator) : false;
+        $this->setAuthorized($access);
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Organizátorský pultík'));
+    }
+
     public function renderDefault() {
+        
     }
 
 }

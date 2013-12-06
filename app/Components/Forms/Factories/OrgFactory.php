@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use ModelContest;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use ServicePerson;
+use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -14,49 +16,61 @@ use ServicePerson;
  */
 class OrgFactory {
 
-    const SHOW_PERSON = 0x1;
-
     /**
      * @var ServicePerson
      */
     private $servicePerson;
 
-    function __construct(ServicePerson $servicePerson) {
+    /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
+
+    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
         $this->servicePerson = $servicePerson;
+        $this->yearCalculator = $yearCalculator;
     }
 
-    public function createContestant($options = 0, ControlGroup $group = null) {
+    public function createOrg($options = 0, ControlGroup $group = null, ModelContest $contest) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        if ($options & self::SHOW_PERSON) {
-            $control = new PersonSelect($this->servicePerson, 'Osoba');
-            //TODO validate non-existent org or restrict selection
-            $container->addComponent($control, 'person_id');
-        }
 
+        $min = $this->yearCalculator->getFirstYear($contest);
+        $max = $this->yearCalculator->getCurrentYear($contest);
 
-        //TODO validate range
-        $container->addText('since', 'Od ročníku')
+        $container->addText('since', _('Od ročníku'))
                 ->addRule(Form::NUMERIC)
-                ->addRule(Form::FILLED);
+                ->addRule(Form::FILLED)
+                ->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), array($min, $max));
 
-        $container->addText('until', 'Do ročníku')
-                ->addRule(Form::NUMERIC);
-
-
-        $container->addText('role', 'Funkce')
-                ->addRule(Form::MAX_LENGTH, null, 32);
-
-        $container->addText('order', 'Hodnost')
-                ->setOption('description', 'Pro řazení v seznamu organizátorů')
+        $container->addText('until', _('Do ročníku'))
+                ->addCondition(Form::FILLED)
                 ->addRule(Form::NUMERIC)
-                ->addRule(Form::FILLED);
+                ->addRule(function ($until, $since) {
+                            return $since->value <= $until->value;
+                        }, _('Konec nesmí být dříve než začátek'), $container['since'])
+                ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), array($min, $max));
 
-        $container->addText('tex_signature', 'Podpis v TeXu')
-                ->addRule(Form::FILLED);
 
-        $container->addTextArea('note', 'Poznámka');
+        $container->addText('role', _('Funkce'))
+                ->addRule(Form::MAX_LENGTH, null, 255);
+
+        $container->addSelect('order', _('Hodnost'))
+                ->setOption('description', _('Pro řazení v seznamu organizátorů'))
+                ->setItems(array(
+                    0 => '0 - org',
+                    1 => '1',
+                    2 => '2',
+                    3 => '3',
+                    4 => '4 - hlavní organizátor',
+                    9 => '9 - vedoucí semináře',
+                ))
+                ->setPrompt(_('Zvolit hodnost'))
+                ->addRule(Form::FILLED, _('Vyberte hodnost.'));
+
+        $container->addTextArea('contribution', _('Co udělal'))
+                ->setOption('description', _('Zobrazeno v síni slávy'));
 
         return $container;
     }

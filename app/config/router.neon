@@ -45,26 +45,26 @@ fksrouter:
         'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
             module: Fksapp          
 
-        # Central authentication domain
+        # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
-        '//%subdomain.auth%.%domain.cz%%path%':
-            presenter: Authentication
-            action: login
-            subdomain: %subdomain.auth%
-            tld: %domain.tld%
-            flags: ONE_WAY
-        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login>':
+        '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
+
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%<presenter register>/<action=default>':
+        '//%subdomain.auth%.%domain.cz%%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
+        '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+            module: Public
+            subdomain: %subdomain.auth%
+            tld: %domain.tld%
+            flags: ONE_WAY
 
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':

@@ -1,0 +1,31 @@
+{*
+/**
+*
+* @author	David Grudl
+*/
+*}
+{if $paginator->pageCount > 1}
+
+<ul class="pagination">
+    {if $paginator->isFirst()}
+    <li class="disabled"><span>«</span></li>
+    {else}
+    <li><a href="{link this, 'page' => $paginator->page - 1}">«</a></li>
+    {/if}
+
+    {foreach $steps as $step}
+    {if $step == $paginator->page}
+    <li class="active"><span>{$step}<span class="sr-only">(current)</span></span></li>
+    {else}
+    <li><a href="{link this, 'page' => $step}">{$step}</a></li>
+    {/if}
+    {if $iterator->nextValue > $step + 1}<li class="divider"><span>…</span></li>{/if}
+    {/foreach}
+
+    {if $paginator->isLast()}
+    <li class="disabled"><span>»</span></li>
+    {else}
+    <li><a href="{link this, 'page' => $paginator->page + 1}">»</a></li>
+    {/if}
+</ul>
+{/if}

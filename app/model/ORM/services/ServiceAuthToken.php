@@ -25,7 +25,14 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $this->getConnection()->beginTransaction();
+        $connection = $this->getConnection();
+        $outerTransaction = false;
+        if (!$connection->inTransaction()) {
+            $this->getConnection()->beginTransaction();
+        } else {
+            $outerTransaction = true;
+        }
+
         do {
             $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
         } while ($this->verifyToken($tokenData));
@@ -39,7 +46,9 @@ class ServiceAuthToken extends AbstractServiceSingle {
             'type' => $type
         ));
         $this->save($token);
-        $this->getConnection()->commit();
+        if (!$outerTransaction) {
+            $this->getConnection()->commit();
+        }
 
         return $token;
     }
@@ -79,9 +88,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->dispose($token);
         }
     }
-    
-    
-    //TODO garbage collection
 
+    //TODO garbage collection
 }
 

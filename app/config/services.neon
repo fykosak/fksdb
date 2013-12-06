@@ -3,17 +3,28 @@
 #
 
 services:
+    accountManager:
+        class: Authentication\AccountManager
+        setup:
+            - setInvitationExpiration(%invitation.expiration%)
+            - setRecoveryExpiration(%recovery.expiration%)
+            - setEmailFrom(%email.from%)
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator
+    - Authentication\TokenAuthenticator    
     contestAuthorizator: Authorization\ContestAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
     - Submits\SeriesTable
+    - Persons\ContestantHandler
+    - Persons\OrgHandler
+    merger:
+        class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    - FKS\Components\Controls\PresenterBuilder
     globalSession:
         class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:
@@ -27,7 +38,7 @@ services:
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
-        
+    translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
 
     # web services
@@ -39,3 +50,6 @@ services:
     webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
     nette.userStorage: LoginUserStorage
+
+includes:
+    - merger.neon

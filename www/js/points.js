@@ -6,8 +6,8 @@ $(document).ready(function() {
             el.text('-'); //TODO
             return el;
         } else {
-            var el = $('<input>');
-            el.attr('type', 'text');
+            var el = $('<input type="text">');
+            el.attr('placeholder', 'Úloha ' + taskData.task.label);
 
             el.change(function() {
                 if (!el.val()) {
@@ -29,20 +29,9 @@ $(document).ready(function() {
     $("input.points").submitFields({
         createElements: function(taskData, allData, dataEl, containerEl) {
             var substEl = createElement(taskData, dataEl, allData);
-            substEl.addClass('inbox-field');
+            substEl.addClass('points-field');
             containerEl.append(substEl);
-
-            if (dataEl.data('graded').indexOf(taskData.task_id) >= 0) {
-                substEl.show();
-            } else {
-                substEl.hide();
-                substEl.addClass('ungraded');
-            }
         }
-    });
-
-    $('.graded-toggler').click(function() {
-        $('.ungraded').toggle();
     });
 });
 

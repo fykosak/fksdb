@@ -83,7 +83,7 @@ abstract class AbstractServiceSingle extends TableSelection {
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
-        $result = $this->getTable()->find($key)->fetch();
+        $result = $this->getTable()->get($key);
         if ($result !== false) {
             return $result;
         } else {

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use ModelSchool;
+use Nette\InvalidStateException;
 use Nette\NotImplementedException;
 use ServiceSchool;
 
@@ -54,6 +55,9 @@ class SchoolProvider implements IFilteredDataProvider {
 
     public function getItemLabel($id) {
         $school = $this->serviceSchool->findByPrimary($id);
+        if (!$school) {
+            throw new InvalidStateException("Cannot find school with ID '$id'.");
+        }
         return $school->name_abbrev;
     }
 

@@ -7,11 +7,13 @@ use ModelLogin;
 use Nette\Http\Session;
 use Nette\Security\AuthenticationException;
 use ServiceAuthToken;
+use ServiceLogin;
+use YearCalculator;
 
 /**
  * Users authenticator.
  */
-class TokenAuthenticator {
+class TokenAuthenticator extends AbstractAuthenticator {
 
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
@@ -26,7 +28,8 @@ class TokenAuthenticator {
      */
     private $session;
 
-    function __construct(ServiceAuthToken $authTokenService, Session $session) {
+    function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+        parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
         $this->session = $session;
     }
@@ -39,13 +42,15 @@ class TokenAuthenticator {
     public function authenticate($tokenData) {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
-            throw new AuthenticationException('Autentizační token je neplatný.');
+            throw new AuthenticationException(_('Autentizační token je neplatný.'));
         }
         // login by the identity
         $login = $token->getLogin();
         if (!$login->active) {
-            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
+            throw new InactiveLoginException();
         }
+
+        $this->logAuthentication($login);
 
         $this->storeAuthToken($token);
 

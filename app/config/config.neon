@@ -3,6 +3,9 @@
 #
 
 parameters:
+    # Flag marking the beta version
+    beta: true
+
     # Temporary directory for various purposes.
     tempDir: %appDir%/../temp
 
@@ -27,6 +30,12 @@ parameters:
     # Configuration of sent emails.
     email:
         templatesDir: %appDir%/templates/emails
+        from: FKSDB <noreply@%domain.cz%>
+
+    # Navigation settings
+    navigation:
+        # How long data for navigation tree is held in the session
+        expiration: '+30 minutes'
 
     # Authentication settings
     authentication:
@@ -95,6 +104,23 @@ parameters:
         # How long (relatively) is authentication token valid after invitation.
         expiration: '+1 month'
 
+    recovery:
+        # Forgotten password recovery
+        expiration: '+1 day'
+
+    # L10n settings
+    localization:
+        # supported locales
+        locales:
+            cs: cs_CZ.utf-8
+            en: en_US.utf-8
+
+        # where locale files are stored
+        localeDir: %appDir%/../i18n/locale
+
+        # default language when not set explicitly
+        defaultLanguage: cs
+
 
 php:
     date.timezone: Europe/Prague
@@ -109,6 +135,7 @@ nette:
 
     session:
         expiration: 14 days
+        autoStart: true
 
 
 includes:
@@ -118,3 +145,4 @@ includes:
     - forms.neon
     - services.neon
     - factories.neon
+    - navigation.neon

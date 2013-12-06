@@ -860,9 +860,9 @@ abstract class Grid extends \Nette\Application\UI\Control
 		}
 		catch(NoRowSelectedException $e){
 			if($subGrid){
-				$this[$gridName]->flashMessage("Nebyl vybrán žádný záznam.","grid-error");
+				$this[$gridName]->flashMessage(_("Nebyl vybrán žádný záznam.","grid-error"));
 			}else{
-				$this->flashMessage("Nebyl vybrán žádný záznam.","grid-error");
+				$this->flashMessage(_("Nebyl vybrán žádný záznam.","grid-error"));
 			}
 			$this->redirect("this");
 		}

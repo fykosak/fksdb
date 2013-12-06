@@ -40,16 +40,15 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', 'Název');
-        $this->addColumn('description', 'Popis');
+        $this->addColumn('name', _('Název'));
+        $this->addColumn('description', _('Popis'));
 
         //
         // operations
         //
         $that = $this;
         $contest = $presenter->getSelectedContest();
-        $this->addButton("edit", "Upravit")
-                ->setClass("edit")
+        $this->addButton("edit", _("Upravit"))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->query_id);
@@ -57,8 +56,7 @@ class StoredQueriesGrid extends BaseGrid {
                 ->setShow(function($row) use ($that, $contest) {
                             return $that->contestAuthorizator->isAllowed($row, 'edit', $contest);
                         });
-        $this->addButton("show", "Zobrazit")
-                ->setClass("show")
+        $this->addButton("show", _("Zobrazit"))
                 ->setText('Zobrazit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("show", $row->query_id);
@@ -67,8 +65,8 @@ class StoredQueriesGrid extends BaseGrid {
                             return $that->contestAuthorizator->isAllowed($row, 'show', $contest);
                         });
 
-        $this->addButton("execute", "Spustit")
-                ->setClass("execute")
+        $this->addButton("execute", _("Spustit"))
+                ->setClass("btn btn-xs btn-primary")
                 ->setText('Spustit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("execute", $row->query_id);
@@ -76,6 +74,9 @@ class StoredQueriesGrid extends BaseGrid {
                 ->setShow(function($row) use ($that, $contest) {
                             return $that->contestAuthorizator->isAllowed($row, 'execute', $contest);
                         });
+
+        $this->addGlobalButton('compose', 'Napsat dotaz')
+                ->setLink($this->getPresenter()->link('compose'));
     }
 
 }

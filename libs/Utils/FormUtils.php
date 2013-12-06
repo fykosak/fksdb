@@ -9,15 +9,21 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      * 
-     * @param array|Traversable $values
+     * @param string|array|Traversable $values
      * @return array
      */
     public static function emptyStrToNull($values) {
-        $result = array();
-        foreach ($values as $key => $value) {
-            $result[$key] = $value === '' ? null : $value;
+        if ($values instanceof Traversable || is_array($values)) {
+            $result = array();
+            foreach ($values as $key => $value) {
+                $result[$key] = self::emptyStrToNull($value);
+            }
+            return $result;
+        } else if ($values === '') {
+            return null;
+        } else {
+            return $values;
         }
-        return $result;
     }
 
 }

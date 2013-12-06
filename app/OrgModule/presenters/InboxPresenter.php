@@ -4,17 +4,17 @@ namespace OrgModule;
 
 use DbNames;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\OrgProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Security\Permission;
-use Persons\OrgsCompletionModel;
 use ServiceContestant;
-use ServiceOrg;
+use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
 use Submits\ISubmitStorage;
@@ -37,9 +37,9 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceTaskContribution;
 
     /**
-     * @var ServiceOrg
+     * @var ServicePerson
      */
-    private $serviceOrg;
+    private $servicePerson;
 
     /**
      * @var ServiceSubmit
@@ -64,8 +64,8 @@ class InboxPresenter extends SeriesPresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
-        $this->serviceOrg = $serviceOrg;
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
@@ -87,20 +87,24 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function actionDefault() {
-        if (!$this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    public function actionHandout() {
-        if (!$this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest())) {
-            throw new BadRequestException('Nedostatečné oprávnění.', 403);
-        }
+    public function authorizedHandout() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
+    }
+
+    public function titleDefault() {
+        $this->setTitle(_('Příjem řešení'));
     }
 
     public function renderDefault() {
         $this['inboxForm']->setDefaults();
+    }
+
+    public function titleHandout() {
+        $this->setTitle(_('Rozdělení úloh opravovatelům'));
     }
 
     public function renderHandout() {
@@ -116,12 +120,12 @@ class InboxPresenter extends SeriesPresenter {
         $values = array();
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
-            $orgId = $contribution->org_id;
+            $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
             if (!isset($values[$key])) {
                 $values[$key] = array();
             }
-            $values[$key][] = $orgId;
+            $values[$key][] = $personId;
         }
         $this['handoutForm']->setDefaults($values);
     }
@@ -130,6 +134,9 @@ class InboxPresenter extends SeriesPresenter {
         $form = new OptimisticForm(
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
+        $renderer = new BootstrapRenderer();
+        $renderer->setColRight(10);
+        $form->setRenderer($renderer);
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
@@ -145,7 +152,7 @@ class InboxPresenter extends SeriesPresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', 'Uložit');
+        $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
         // JS dependencies        
@@ -158,6 +165,7 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentHandoutForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = new AutocompleteSelectBox(false, $task->getFQName());
@@ -166,7 +174,7 @@ class InboxPresenter extends SeriesPresenter {
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
-        $form->addSubmit('save', 'Uložit');
+        $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
         return $form;
@@ -190,7 +198,7 @@ class InboxPresenter extends SeriesPresenter {
             }
         }
         $this->serviceSubmit->getConnection()->commit();
-        $this->flashMessage('Informace o řešeních uložena.');
+        $this->flashMessage(_('Informace o řešeních uložena.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
@@ -208,10 +216,10 @@ class InboxPresenter extends SeriesPresenter {
                 'type' => ModelTaskContribution::TYPE_GRADE
             ))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
-            foreach ($values[$key] as $orgId) {
+            foreach ($values[$key] as $personId) {
                 $data = array(
                     'task_id' => $task->task_id,
-                    'org_id' => $orgId,
+                    'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 );
                 $contribution = $ORMservice->createNew($data);
@@ -221,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
 
         $connection->commit();
 
-        $this->flashMessage('Přiřazení opravovatelů uloženo.');
+        $this->flashMessage(_('Přiřazení opravovatelů uloženo.'), self::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
@@ -357,7 +365,8 @@ class InboxPresenter extends SeriesPresenter {
 
     private function getOrgProvider() {
         if (!$this->orgProvider) {
-            $this->orgProvider = new OrgProvider($this->getSelectedContest(), $this->serviceOrg, $this->yearCalculator);
+            $this->orgProvider = new PersonProvider($this->servicePerson);
+            $this->orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
         }
         return $this->orgProvider;
     }

@@ -1,11 +1,16 @@
-{block title}Vytvoření exportu{/block}
+
+
+{block user-info}
+    {include #parent}
+    {control seriesChooser}
+{/block}
 
 {block content}
-{control formSelectSeries}
 {control composeForm}
 
 {if $control->getStoredQuery()}
-{control adhocResultsComponent}
+    <h2>{_'Výsledek dotazu'}</h2>
+    {control adhocResultsComponent}
 {/if}
 
 {/block}

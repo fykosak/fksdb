@@ -2,30 +2,26 @@
 
 namespace Authentication;
 
-use Nette\DateTime;
-use Nette\Object;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
 use ServiceLogin;
+use ServicePerson;
 use YearCalculator;
 
 /**
  * Users authenticator.
  */
-class PasswordAuthenticator extends Object implements IAuthenticator {
+class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
-    const HASHED_PASSWORD = 10;
+    /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
 
-    /** @var ServiceLogin */
-    private $serviceLogin;
-
-    /** @var YearCalculator */
-    private $yearCalculator;
-
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yc) {
-        $this->serviceLogin = $serviceLogin;
-        $this->yearCalculator = $yc;
+    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
+        parent::__construct($serviceLogin, $yearCalculator);
+        $this->servicePerson = $servicePerson;
     }
 
     /**
@@ -36,24 +32,40 @@ class PasswordAuthenticator extends Object implements IAuthenticator {
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
 
-        $login = $this->serviceLogin->getTable()->where('login = ? OR email = ?', $id, $id)->fetch();
-
-        if (!$login) {
-            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
-        }
-        
-        if (!$login->active) {
-            throw new AuthenticationException('Neaktivní účet.', self::NOT_APPROVED);
-        }
+        $login = $this->findLogin($id);
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
-            throw new AuthenticationException('Neplatné přihlašovací údaje.', self::INVALID_CREDENTIAL);
+            throw new InvalidCredentialsException();
         }
 
-        $login->last_login = DateTime::from(time());
-        $this->serviceLogin->save($login);
+        $this->logAuthentication($login);
+
         $login->injectYearCalculator($this->yearCalculator);
 
+        return $login;
+    }
+
+    public function findLogin($id) {
+        $person = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
+
+        if ($person) {
+            $login = $person->getLogin();
+            if (!$login) {
+                throw new NoLoginException();
+            }
+            return $login;
+        }
+
+        $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
+
+
+        if (!$login) {
+            throw new UnknownLoginException();
+        }
+
+        if (!$login->active) {
+            throw new InactiveLoginException();
+        }
         return $login;
     }
 

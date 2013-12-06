@@ -15,6 +15,13 @@ use Nette\Security\IIdentity;
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
  */
 class LoginUserStorage extends UserStorage {
+    /** @const HTTP GET parameter holding control information for the SSO */
+
+    const PARAM_SSO = 'sso';
+    /** @const Value meaning the user is not centally authneticated. */
+    const SSO_AUTHENTICATED = 'a';
+    /** @const Value meaning the user is not centally authneticated. */
+    const SSO_UNAUTHENTICATED = 'ua';
 
     /** @var ServiceLogin */
     private $loginService;
@@ -71,23 +78,29 @@ class LoginUserStorage extends UserStorage {
              */
             return $local;
         } else {
+            /* Commenting this line out fixes bug #9,
+             * probably is not needed anymore.
+             */
+            //parent::setAuthenticated(false);
+
             $presenter = $this->application->getPresenter();
-            $params = array(
-                'backlink' => (string) $this->request->getUrl(),
-                'flag' => AuthenticationPresenter::FLAG_SSO,
-            );
-            if (Debugger::isEnabled()) {
-                $params['debug-storage'] = 1;
-                $params['debug-presenter'] = get_class($presenter);
-            }
-            //Debugger::dump($var);
+            $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
-            parent::setAuthenticated(false); // somehow session contains authenticated flag
+            /* If this is the first try, we redirect to the central login page,
+             * otherwise we avoid redirection loop by checking PARAM_SSO and
+             * redirection to the login page will be done in the startup method.
+             */
+            if (!$ssoData) {
+                $params = array(
+                    'backlink' => (string) $this->request->getUrl(),
+                    AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
+                    AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
+                );
 
-            if ($presenter instanceof AuthenticatedPresenter) {
-                $presenter->redirect(':Authentication:login', $params);
+                if ($presenter instanceof AuthenticatedPresenter) {
+                    $presenter->redirect(':Authentication:login', $params);
+                }
             }
-            //echo "ret false\n";
             return false;
         }
     }

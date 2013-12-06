@@ -38,9 +38,9 @@ abstract class Auth extends BasePresenter {
 	*/
 	private function loginRedirect() {
 		if ($this->user->logoutReason === UserStorage::INACTIVITY) {
-			$this->flashMessage('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.');
+			$this->flashMessage(_('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.'));
 		} else {
-			$this->flashMessage('Musíte se přihlásit k přístupu na požadovanou stránku.');
+			$this->flashMessage(_('Musíte se přihlásit k přístupu na požadovanou stránku.'));
 		}
 		$backlink = $this->application->storeRequest();
 		$this->redirect(':Authentication:login', array('backlink' => $backlink));

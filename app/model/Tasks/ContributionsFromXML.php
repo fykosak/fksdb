@@ -2,9 +2,9 @@
 
 namespace Tasks;
 
-use Nette\InvalidArgumentException;
+use Pipeline\Pipeline;
 use Pipeline\Stage;
-use ServiceOrg;
+use ServicePerson;
 use ServiceTaskContribution;
 use SimpleXMLElement;
 
@@ -33,14 +33,14 @@ class ContributionsFromXML extends Stage {
     private $taskContributionService;
 
     /**
-     * @var ServiceOrg
+     * @var ServicePerson
      */
-    private $orgService;
+    private $servicePerson;
 
-    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServiceOrg $orgService) {
+    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
         $this->contributionFromXML = $contributionFromXML;
         $this->taskContributionService = $taskContributionService;
-        $this->orgService = $orgService;
+        $this->servicePerson = $servicePerson;
     }
 
     public function setInput($data) {
@@ -72,13 +72,20 @@ class ContributionsFromXML extends Stage {
                 if (!$signature) {
                     continue;
                 }
-                $org = $this->orgService->findByTeXSignature($this->data->getContest(), $signature);
+
+
+                $person = $this->servicePerson->findByTeXSignature($signature);
+                if (!$person) {
+                    $this->log(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature));
+                    continue;
+                }
+
+                $org = $person->getOrgs($this->data->getContest()->contest_id)->fetch();
 
                 if (!$org) {
-                    $this->log(sprintf("Neznámý TeX identifikátor '%s'.", $signature));
-                } else {
-                    $contributors[] = $org;
+                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person), Pipeline::LOG_WARNING);
                 }
+                $contributors[] = $person;
             }
 
             // delete old contributions
@@ -89,7 +96,7 @@ class ContributionsFromXML extends Stage {
             // store new contributions
             foreach ($contributors as $contributor) {
                 $contribution = $this->taskContributionService->createNew(array(
-                    'org_id' => $contributor->org_id,
+                    'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,
                 ));

@@ -5,6 +5,7 @@ use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -53,6 +54,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Nastavení'));
+    }
+
     public function renderDefault() {
         $login = $this->getUser()->getIdentity();
 
@@ -60,15 +65,27 @@ class SettingsPresenter extends AuthenticatedPresenter {
             self::CONT_LOGIN => $login->toArray(),
         );
         $this->getComponent('settingsForm')->setDefaults($defaults);
+
+        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
+            $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
+        }
+
+        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
+            $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
+        }
     }
 
     protected function createComponentSettingsForm($name) {
         $form = new Form();
-        $login = $this->getUser()->getIdentity();
-        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
+        $form->setRenderer(new BootstrapRenderer());
 
-        $group = $form->addGroup('Osobní nastavení');
-        $emailRule = $this->uniqueEmailFactory->create(UniqueEmail::CHECK_LOGIN, null, $login);
+        $login = $this->getUser()->getIdentity();
+        $tokenAuthentication =
+                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+
+        $group = $form->addGroup(_('Autentizace'));
+        $emailRule = $this->uniqueEmailFactory->create($login->getPerson(), $login); //TODO em use it somewhere
         $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
@@ -76,7 +93,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, $emailRule, $loginRule);
+        $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
         $form->addComponent($loginContainer, self::CONT_LOGIN);
 
         if (!$tokenAuthentication) {
@@ -90,7 +107,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
         return $form;
@@ -102,7 +119,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
      */
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
-        $tokenAuthentication = $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN);
+        $tokenAuthentication =
+                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
@@ -112,12 +131,12 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $this->loginService->updateModel($login, $loginData);
         $this->loginService->save($login);
-        $this->flashMessage('Uživatelské informace upraveny.');
-        $this->redirect('this');
+        $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage('Heslo nastaveno.'); //TODO here may be Facebook ID            
-            $this->getTokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
+            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID            
+            $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
+        $this->redirect('this');
     }
 
 }
