@@ -7,7 +7,8 @@ use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
+use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -53,8 +54,14 @@ class PersonFactory {
      */
     private $translator;
 
-    function __construct(GettextTranslator $translator) {
+    /**
+     * @var UniqueEmailFactory
+     */
+    private $uniqueEmailFactory;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory) {
         $this->translator = $translator;
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -212,9 +219,38 @@ class PersonFactory {
 
             $createLogin->addCondition(Form::EQUAL, true);
             //TODO support in Nette         ->toggle($langElement->getHtmlId() . BootstrapRenderer::PAIR_ID_SUFFIX, true);
-
             //TODO support in Nette $filledEmailCondition->toggle($createLogin->getHtmlId() . BootstrapRenderer::PAIR_ID_SUFFIX, true);
         }
+    }
+
+    public function modifyLoginContainer(Container $container, ModelPerson $person) {
+
+        $login = $person->getLogin();
+        $personInfo = $person->getInfo();
+        $hasEmail = $personInfo && isset($personInfo->email);
+        $showLogin = !$login || !$hasEmail;
+
+        //$container = $form[self::CONT_PERSON][PersonFactory::CONT_LOGIN];
+        $loginContainer = $container[self::CONT_LOGIN];
+        if (!$showLogin) {
+            foreach ($loginContainer->getControls() as $control) {
+                $control->setDisabled();
+            }
+        }
+        if ($login) {
+            $loginContainer[PersonFactory::EL_CREATE_LOGIN]->setDefaultValue(true);
+            $loginContainer[PersonFactory::EL_CREATE_LOGIN]->setDisabled();
+            $loginContainer[PersonFactory::EL_CREATE_LOGIN]->setOption('description', _('Login už existuje.'));
+        }
+
+        //$emailElement = $form[self::CONT_PERSON]['email'];
+        $emailElement = $container['email'];
+        $email = ($personInfo && isset($personInfo->email)) ? $personInfo->email : null;
+        $emailElement->setDefaultValue($email);
+
+
+        $emailRule = $this->uniqueEmailFactory->create($person);
+        $emailElement->addRule($emailRule, _('Daný e-mail již někdo používá.'));
     }
 
 }

@@ -80,12 +80,8 @@ class ExtendedPersonWizardFactory {
      */
     private $session;
 
-    /**
-     * @var UniqueEmailFactory
-     */
-    private $uniqueEmailFactory;
 
-    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session, UniqueEmailFactory $uniqueEmailFactory) {
+    function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
         $this->orgFactory = $orgFactory;
@@ -93,7 +89,6 @@ class ExtendedPersonWizardFactory {
         $this->personService = $personService;
         $this->personProvider = $personProvider;
         $this->session = $session;
-        $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
     private function createWizardBase() {
@@ -252,34 +247,6 @@ class ExtendedPersonWizardFactory {
         $form->addComponent($personContainer, self::CONT_PERSON);
 
         $this->personFactory->appendEmailWithLogin($personContainer, null, PersonFactory::SHOW_LOGIN_CREATION);
-    }
-
-    public final function modifyLoginContainer(Form $form, ModelPerson $person) {
-
-        $login = $person->getLogin();
-        $personInfo = $person->getInfo();
-        $hasEmail = $personInfo && isset($personInfo->email);
-        $showLogin = !$login || !$hasEmail;
-
-        $container = $form[self::CONT_PERSON][PersonFactory::CONT_LOGIN];
-        if (!$showLogin) {
-            foreach ($container->getControls() as $control) {
-                $control->setDisabled();
-            }
-        }
-        if ($login) {
-            $container[PersonFactory::EL_CREATE_LOGIN]->setDefaultValue(true);
-            $container[PersonFactory::EL_CREATE_LOGIN]->setDisabled();
-            $container[PersonFactory::EL_CREATE_LOGIN]->setOption('description', _('Login už existuje.'));
-        }
-
-        $emailElement = $form[self::CONT_PERSON]['email'];
-        $email = ($personInfo && isset($personInfo->email)) ? $personInfo->email : null;
-        $emailElement->setDefaultValue($email);
-
-
-        $emailRule = $this->uniqueEmailFactory->create($person);
-        $emailElement->addRule($emailRule, _('Daný e-mail již někdo používá.'));
     }
 
 }
