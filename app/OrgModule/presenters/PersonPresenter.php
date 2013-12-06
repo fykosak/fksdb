@@ -365,27 +365,10 @@ class PersonPresenter extends EntityPresenter {
 
 
             /*
-             * Email stored both in login and person_info
+             * Personal info
              */
             $dataInfo = $values[self::CONT_PERSON_INFO];
             $dataInfo = FormUtils::emptyStrToNull($dataInfo);
-            $email = $dataInfo['email'];
-            if ($email) {
-                unset($dataInfo['email']);
-                $login = $person->getLogin();
-                if ($login) {
-                    $login->email = $email;
-                    $this->serviceLogin->save($login);
-                } else {
-                    $dataInfo['email'] = $email; // we'll store it as personal info
-                }
-            } else {
-                $dataInfo['email'] = null; // erase the person_info field
-            }
-
-            /*
-             * Personal info
-             */
             $personInfo = $person->getInfo();
             if (!$personInfo) {
                 $personInfo = $this->servicePersonInfo->createNew($dataInfo);
