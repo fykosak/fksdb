@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use Authentication\AccountManager;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -12,6 +13,8 @@ use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Logging\FlashDumpFactory;
+use Mail\MailTemplateFactory;
+use Mail\SendFailedException;
 use ModelException;
 use ModelPerson;
 use Nette\Application\BadRequestException;
@@ -100,6 +103,16 @@ class PersonPresenter extends EntityPresenter {
      */
     private $mergedPerson;
 
+    /**
+     * @var AccountManager
+     */
+    private $accountManager;
+
+    /**
+     * @var MailTemplateFactory
+     */
+    private $mailTemplateFactory;
+
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -134,6 +147,14 @@ class PersonPresenter extends EntityPresenter {
 
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
+    }
+
+    public function injectAccountManager(AccountManager $accountManager) {
+        $this->accountManager = $accountManager;
+    }
+
+    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     public function authorizedMerge($trunkId, $mergedId) {
@@ -217,7 +238,7 @@ class PersonPresenter extends EntityPresenter {
         $login = $person->getLogin();
         $rule = $this->uniqueEmailFactory->create($person);
 
-        $options = PersonFactory::SHOW_EMAIL;
+        $options = PersonFactory::SHOW_EMAIL | PersonFactory::SHOW_LOGIN_CREATION;
         if (count($person->getOrgs()) > 0) {
             $options |= PersonFactory::SHOW_ORG_INFO;
         }
@@ -317,6 +338,7 @@ class PersonPresenter extends EntityPresenter {
         $info = $person->getInfo();
         if ($info) {
             $defaults[self::CONT_PERSON_INFO] = $info;
+            $this->personFactory->modifyLoginContainer($form[self::CONT_PERSON_INFO], $person);
         }
 
         $form->setDefaults($defaults);
@@ -363,19 +385,37 @@ class PersonPresenter extends EntityPresenter {
                 $this->serviceMPostContact->save($mPostContact);
             }
 
+            // load data common to login & person_info
+            $personInfoData = $values[self::CONT_PERSON_INFO];
+            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
+
+            /*
+             * Login
+             */
+            $email = $personInfoData['email'];
+            $createLogin = $personInfoData[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN];
+
+            if ($email && !$person->getLogin() && $createLogin) {
+                $lang = $personInfoData[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN_LANG];
+                $template = $this->mailTemplateFactory->createLoginInvitation($this, $lang);
+                try {
+                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->flashMessage(_('Zvací e-mail odeslán.'), self::FLASH_INFO);
+                } catch (SendFailedException $e) {
+                    $this->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), self::FLASH_ERROR);
+                }
+            }
 
             /*
              * Personal info
              */
-            $dataInfo = $values[self::CONT_PERSON_INFO];
-            $dataInfo = FormUtils::emptyStrToNull($dataInfo);
             $personInfo = $person->getInfo();
             if (!$personInfo) {
-                $personInfo = $this->servicePersonInfo->createNew($dataInfo);
+                $personInfo = $this->servicePersonInfo->createNew($personInfoData);
                 $personInfo->person_id = $person->person_id;
             } else {
-                unset($dataInfo['agreed']); // not to overwrite existing confirmation
-                $this->servicePersonInfo->updateModel($personInfo, $dataInfo);
+                unset($personInfoData['agreed']); // not to overwrite existing confirmation
+                $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
             }
 
             $this->servicePersonInfo->save($personInfo);
