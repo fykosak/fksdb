@@ -232,7 +232,8 @@ class OrgPresenter extends EntityPresenter {
             $defaults[ExtendedPersonWizardFactory::CONT_PERSON_INFO] = $info;
         }
 
-        $this->orgWizardFactory->modifyLoginContainer($form, $person);
+        $personContainer = $form[ExtendedPersonWizardFactory::CONT_PERSON];
+        $this->personFactory->modifyLoginContainer($personContainer, $person);
 
         $form->setDefaults($defaults);
     }

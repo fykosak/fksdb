@@ -13,7 +13,7 @@ where
 (email is not null
 	or fb_id is not null
 	or linkedin_id is not null)
-and person_inforson_id is not null
+and l.person_id is not null
 
 ON DUPLICATE KEY UPDATE 
 email = l.email,

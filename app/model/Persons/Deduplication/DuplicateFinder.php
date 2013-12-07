@@ -3,6 +3,7 @@
 namespace Persons\Deduplication;
 
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 use ServicePerson;
 
@@ -13,10 +14,18 @@ use ServicePerson;
  */
 class DuplicateFinder {
 
+    const IDX_PERSON = 'person';
+    const IDX_SCORE = 'score';
+
     /**
      * @var ServicePerson
      */
     private $servicePerson;
+
+    /**
+     * @var double [0,1) threshold for similarity score to consider two recrods equal persons
+     */
+    private $threshold = 0.84;
 
     function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -41,8 +50,12 @@ class DuplicateFinder {
                     if ($personA->person_id >= $personB->person_id) {
                         continue;
                     }
-                    if ($this->getSimilarityScore($personA, $personB)) {
-                        $pairs[$personA->person_id] = $personB;
+                    $score = $this->getSimilarityScore($personA, $personB);
+                    if ($score > $this->threshold) {
+                        $pairs[$personA->person_id] = array(
+                            self::IDX_PERSON => $personB,
+                            self::IDX_SCORE => $score,
+                        );
                         continue; // we search only pairs, so each equivalence class is decomposed into pairs
                     }
                 }
@@ -52,7 +65,9 @@ class DuplicateFinder {
     }
 
     private function getBucketKey(ActiveRow $row) {
-        return $row->gender . mb_substr($row->family_name, 0, 2);
+        $fam = Strings::webalize($row->family_name);
+        return substr($fam, 0, 3) . substr($fam, -1);
+        //return $row->gender . mb_substr($row->family_name, 0, 2);
     }
 
     /**
@@ -63,13 +78,37 @@ class DuplicateFinder {
      * @return float
      */
     private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
-        $checkA = $a->family_name . ':' . $a->other_name;
-        $checkA = Strings::webalize($checkA);
+        /*
+         * Email check
+         */
+        $piA = $a->getInfo();
+        $piB = $b->getInfo();
+        if (!$piA || !$piB) {
+            $emailScore = 0.5; // cannot say anything
+        } else if (!$piA->email || !$piB->email) {
+            $emailScore = 0.8; // a little bit more
+        } else {
+            $emailScore = 1 - $this->relativeDistance($piA->email, $piB->email);
+        }
 
-        $checkB = $b->family_name . ':' . $b->other_name;
-        $checkB = Strings::webalize($checkB);
+        $familyScore = $this->stringScore($a->family_name, $b->family_name);
+        $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
-        return $checkA == $checkB;
+
+        return 0.45 * $familyScore + 0.2 * $otherScore + 0.35 * $emailScore;
+    }
+
+    private function stringScore($a, $b) {
+        return 1 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
+    }
+
+    private function relativeDistance($a, $b) {
+        $maxLen = max(strlen($a), strlen($b));
+        if ($maxLen == 0) {
+            throw new InvalidArgumentException('Distance not defined.');
+        }
+        return levenshtein($a, $b) / $maxLen;
     }
 
 }
+
