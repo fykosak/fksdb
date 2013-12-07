@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use ModelPerson;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Tables\TypedTableSelection;
+use Persons\Deduplication\DuplicateFinder;
 
 /**
  *
@@ -47,9 +48,12 @@ class PersonsGrid extends BaseGrid {
                 });
         $pairs = & $this->pairs;
         $this->addColumn('display_name_b', _('Osoba B'))->setRenderer(function($row) use($that, $pairs) {
-                    return $that->renderPerson($pairs[$row->person_id]);
+                    return $that->renderPerson($pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
                 });
-        //TODO similarity metric
+        $this->addColumn('score', _('Podobnost'))->setRenderer(function($row) use($that, $pairs) {
+                    return sprintf("%0.2f", $pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
+                });
+        
         //
         // operations
         //
@@ -60,26 +64,26 @@ class PersonsGrid extends BaseGrid {
                 ->setLink(function($row) use ($presenter, $pairs) {
                             return $presenter->link("Person:merge", array(
                                         'trunkId' => $row->person_id,
-                                        'mergedId' => $pairs[$row->person_id]->person_id,
+                                        'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                             ));
                         })
                 ->setShow(function($row) use ($presenter, $pairs) {
                             return $presenter->authorized("Person:merge", array(
                                         'trunkId' => $row->person_id,
-                                        'mergedId' => $pairs[$row->person_id]->person_id,
+                                        'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                             ));
                         });
         $this->addButton("mergeBA", _('Sloučit B<-A'))
                 ->setText(_('Sloučit B<-A'))
                 ->setLink(function($row) use ($presenter, $pairs) {
                             return $presenter->link("Person:merge", array(
-                                        'trunkId' => $pairs[$row->person_id]->person_id,
+                                        'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                                         'mergedId' => $row->person_id,
                             ));
                         })
                 ->setShow(function($row) use ($presenter, $pairs) {
                             return $presenter->authorized("Person:merge", array(
-                                        'trunkId' => $pairs[$row->person_id]->person_id,
+                                        'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                                         'mergedId' => $row->person_id,
                             ));
                         });
