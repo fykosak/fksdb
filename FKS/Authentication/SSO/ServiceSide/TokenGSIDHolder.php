@@ -49,7 +49,7 @@ class TokenGSIDHolder implements IGSIDHolder {
         if ($gsid) {
             $_SESSION[self::SESSION_KEY] = $gsid;
             $this->cachedGSID = $gsid;
-        } else {
+        } elseif (session_status() != PHP_SESSION_DISABLED) {
             unset($_SESSION[self::SESSION_KEY]);
             $this->cachedGSID = null;
         }
