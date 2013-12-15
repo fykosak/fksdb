@@ -50,7 +50,7 @@ class Authentication {
 
         $data = array(
             self::PARAM_BACKLINK => $backlink,
-            self::PARAM_FLAG => self::SSO_FLAG,
+            self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
         );
 
         $redirectURL = $this->setHttpParams($this->loginURL, $data);
@@ -65,7 +65,7 @@ class Authentication {
 
         $data = array(
             self::PARAM_BACKLINK => $backlink,
-            self::PARAM_FLAG => self::SSO_FLAG,
+            self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
             self::PARAM_GSID => $this->globalSession->getId(),
         );
 
