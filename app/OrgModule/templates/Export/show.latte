@@ -5,6 +5,10 @@
 {? $presenter->registerJSFile('js/sqlconsole.js')}
 {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
+<div class="btn-toolbar">
+    <a n:href="execute $presenter->getParam('id')" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+</div>
+
 <p>{!$storedQuery->description|escape|nl2br}</p>
 
 {if count($storedQuery->getParameters())}

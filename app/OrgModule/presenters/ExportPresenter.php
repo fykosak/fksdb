@@ -220,7 +220,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleShow($id) {
-        $this->setTitle(sprintf(_('Editace dotazu %s'), $this->getPatternQuery()->name));
+        $this->setTitle(sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name));
     }
 
     public function renderShow($id) {
