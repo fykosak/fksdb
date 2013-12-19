@@ -29,6 +29,7 @@ class ExportPresenter extends SeriesPresenter {
     const CONT_META = 'meta';
     const SESSION_NS = 'sql';
     const PARAM_PREFIX = 'p-';
+    const PARAM_LOAD_FROM_SESSION = 'lfs';
 
     /**
      * @var ServiceStoredQuery
@@ -94,6 +95,10 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     private function getDesignFormFromSession() {
+        // there may be invalid data in session, so we verify it by GET parameter
+        if(!$this->getParam(self::PARAM_LOAD_FROM_SESSION, false)) {
+            return null;
+        }
         $section = $this->session->getSection(self::SESSION_NS);
         return isset($section->data) ? $section->data : null;
     }
@@ -215,7 +220,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleShow($id) {
-        $this->setTitle(sprintf(_('Editace dotazu %s'), $this->getPatternQuery()->name));
+        $this->setTitle(sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name));
     }
 
     public function renderShow($id) {
@@ -304,7 +309,7 @@ class ExportPresenter extends SeriesPresenter {
         if ($this->isAjax()) {
             $this->invalidateControl('adhocResultsComponent');
         } else {
-            $this->redirect('this');
+            $this->redirect('this', array(self::PARAM_LOAD_FROM_SESSION => true));
         }
     }
 
