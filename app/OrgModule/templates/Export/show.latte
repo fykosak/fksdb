@@ -6,7 +6,8 @@
 {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
 <div class="btn-toolbar">
-    <a n:href="execute $presenter->getParam('id')" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+    <a n:href="execute $storedQuery->getPrimary()" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+    <a n:href="edit $storedQuery->getPrimary()" class="btn btn-sm btn-default" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
 </div>
 
 <p>{!$storedQuery->description|escape|nl2br}</p>
