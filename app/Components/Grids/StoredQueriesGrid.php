@@ -11,6 +11,8 @@ use ServiceStoredQuery;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class StoredQueriesGrid extends BaseGrid {
+    /** @const No. of characters that are showed from query description. */
+    const DESCRIPTION_TRUNC = 80;
 
     /**
      * @var ServiceStoredQuery
@@ -41,7 +43,7 @@ class StoredQueriesGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('name', _('Název'));
-        $this->addColumn('description', _('Popis'));
+        $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
 
         //
         // operations
