@@ -35,7 +35,7 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // data
         //
-        $queries = $this->serviceStoredQuery->getTable();
+        $queries = $this->serviceStoredQuery->getTable()->order('name');
 
         $this->setDataSource(new NDataSource($queries));
 
