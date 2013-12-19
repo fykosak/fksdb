@@ -170,7 +170,8 @@ class OrgPresenter extends EntityPresenter {
             $this->orgHandler->store($wizard, $this);
             $person = $this->orgHandler->getPerson();
             $this->flashMessage(sprintf('Organizátor %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
-            $this->redirect('list');
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
         } catch (PersonHandlerException $e) {
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání organizátora.'), self::FLASH_ERROR);
@@ -204,7 +205,8 @@ class OrgPresenter extends EntityPresenter {
             $this->serviceOrg->updateModel($model, $data);
             $this->serviceOrg->save($model);
             $this->flashMessage(sprintf('Organizátor %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
-            $this->redirect('list');
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
 
             $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);

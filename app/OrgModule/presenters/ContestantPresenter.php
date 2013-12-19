@@ -175,7 +175,8 @@ class ContestantPresenter extends EntityPresenter {
             $this->contestantHandler->store($wizard, $this);
             $person = $this->contestantHandler->getPerson();
             $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
-            $this->redirect('list');
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
         } catch (PersonHandlerException $e) {
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání řešitele.'), self::FLASH_ERROR);
@@ -209,7 +210,8 @@ class ContestantPresenter extends EntityPresenter {
             $this->serviceContestant->updateModel($model, $data);
             $this->serviceContestant->save($model);
             $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
-            $this->redirect('list');
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
 
             $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
