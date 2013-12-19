@@ -36,12 +36,6 @@ use ServicePersonInfo;
  */
 class PersonPresenter extends EntityPresenter {
 
-    /**
-     * @persistent
-     * @var string
-     */
-    public $backlink = '';
-
     const CONT_PERSON = 'person';
     const CONT_ADDRESSES = 'addresses';
     const CONT_PERSON_INFO = 'personInfo';
@@ -429,8 +423,8 @@ class PersonPresenter extends EntityPresenter {
 
             $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()), self::FLASH_SUCCESS);
 
-            $this->restoreRequest($this->backlink);
-            $this->redirect('list');
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);

@@ -67,13 +67,11 @@ class OrgsGrid extends BaseGrid {
                 ->setShow(function($row) use ($presenter) {
                             return $presenter->authorized("edit", array('id' => $row->org_id));
                         });
-        $backlink = $presenter->storeRequest();
         $this->addButton("editPerson", _("Upravit osobu"))
                 ->setText('Upravit osobu') //todo i18n
-                ->setLink(function($row) use ($presenter, $backlink) {
+                ->setLink(function($row) use ($presenter) {
                             return $presenter->link("Person:edit", array(
                                         'id' => $row->person_id,
-                                        'backlink' => $backlink,
                             ));
                         })
                 ->setShow(function($row) use ($presenter) {
