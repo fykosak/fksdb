@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-31 06:18+0100\n"
+"POT-Creation-Date: 2013-12-20 00:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,204 +17,237 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:153
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:138
 msgid "Existující osoba"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:166
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:151
 msgid "Nová osoba"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:177
-#: i18n/../app/presenters/AuthenticationPresenter.php:253
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:162
+#: i18n/../app/presenters/AuthenticationPresenter.php:254
 msgid "Pokračovat"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:193
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:279
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:178
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:290
 msgid "Řešitel"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:201
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:186
 msgid "Adresa"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:207
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:146
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:192
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:219
 msgid "Odebrat adresu"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:213
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:152
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:198
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:225
 msgid "Přidat adresu"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:219
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:249
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:158
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:204
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:234
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:231
 msgid "Osobní informace"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:225
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:255
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:210
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:240
 msgid "Dokončit"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:241
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:226
 msgid "Organizátor"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:260
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:259
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:133
+#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:245
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:270
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:201
 msgid "Osoba"
 msgstr ""
 
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:272
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:95
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:37
-msgid "E-mail"
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:274
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:97
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:38
-msgid "Neplatný tvar e-mailu."
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:276
-msgid "Vytvořit login"
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:277
-msgid "Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení."
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:279
-msgid "Pro vytvoření loginu je třeba zadat e-mail."
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:281
-msgid "Jazyk pozvánky"
-msgstr ""
-
-#: i18n/../app/Components/Factories/ExtendedPersonWizardFactory.php:312
-msgid "Daný e-mail již někdo používá."
-msgstr ""
-
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:46
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:74
 msgid "Křestní jméno"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:48
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:61
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:76
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:89
 msgid "Příp. další jména oddělená mezerou."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:55
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:83
 msgid "Křestní jméno je povinné."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:59
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:87
 #: i18n/../app/FksappModule/presenters/AwaPresetner.php:116
 msgid "Příjmení"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:68
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:96
 msgid "Příjmení je povinné."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:73
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:101
 msgid "Zobrazované jméno"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:75
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:103
 msgid "Pouze pokud je odlišené od \"jméno příjmení\"."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:81
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:109
 msgid "Pohlaví"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:99
-msgid "Daný e-mail je již použit u někoho jiného."
-msgstr ""
-
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:105
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:128
 msgid "Číslo OP"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:106
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:129
 msgid "U cizinců číslo pasu."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:109
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:132
 msgid "Rodné číslo"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:110
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:133
 msgid "U cizinců prázdné."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:112
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:135
 msgid "Rodné číslo nemá platný formát."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:115
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:138
 msgid "Telefonní číslo"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:118
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:141
 msgid "ICQ, Jabber, apod."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:121
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:144
 msgid "Místo narození"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:122
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:145
 msgid "Město a okres (kvůli diplomům)."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:128
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:151
 msgid "Login UK"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:131
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:154
 msgid "Číslo bankovního účtu"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:135
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:58
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:157
+msgid "TeX identifikátor"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:160
+msgid "%label obsahuje nepovolené znaky."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:162
+msgid "Jméno v doméně fykos.cz"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:165
+msgid "%l obsahuje nepovolené znaky."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:167
+msgid "Co právě dělá"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:168
+#: i18n/../app/Components/Forms/Factories/OrgFactory.php:73
+msgid "Zobrazeno v síni slávy"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:170
+msgid "Homepage"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:175
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:63
 #: i18n/../app/FksappModule/presenters/AwaPresetner.php:126
 msgid "Poznámka"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:137
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:177
 msgid "Jak jsi se o nás dozvěděl(a)?"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:141
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:181
 msgid "Text souhlasu"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:142
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:182
 msgid "http://fykos.cz/doc/souhlas.pdf"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:144
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:184
 msgid "Souhlasím se zpracováním osobních údajů"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/PersonFactory.php:148
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:188
 msgid "Bez souhlasu nelze bohužel pokračovat."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:196
+msgid "E-mail"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:198
+msgid "E-mail je třeba zadat."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:202
+msgid "Neplatný tvar e-mailu."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:204
+msgid "Daný e-mail je již použit u někoho jiného."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:210
+msgid "Vytvořit login"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:212
+msgid "Vytvoří login a pošle e-mail s instrukcemi pro první přihlášení."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:214
+msgid "Pro vytvoření loginu je třeba zadat e-mail."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:216
+msgid "Jazyk pozvánky"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:243
+msgid "Login už existuje."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PersonFactory.php:253
+msgid "Daný e-mail již někdo používá."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/StoredQueryFactory.php:35
 #: i18n/../app/Components/Forms/Factories/StoredQueryFactory.php:81
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:37
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:40
 #: i18n/../app/Components/Grids/SchoolsGrid.php:36
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:43
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:45
 msgid "Název"
 msgstr ""
 
@@ -265,7 +298,7 @@ msgid "Název parametru může být jen z písmen anglické abecedy a číslic."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/StoredQueryFactory.php:86
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:44
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:46
 msgid "Popis"
 msgstr ""
 
@@ -326,10 +359,6 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/OrgFactory.php:72
 msgid "Co udělal"
-msgstr ""
-
-#: i18n/../app/Components/Forms/Factories/OrgFactory.php:73
-msgid "Zobrazeno v síni slávy"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:53
@@ -413,6 +442,10 @@ msgstr ""
 msgid "doručovací (odlišná od trvalé)"
 msgstr ""
 
+#: i18n/../app/Components/Forms/Factories/AddressFactory.php:111
+msgid "%label musí být vyplněn."
+msgstr ""
+
 #: i18n/../app/Components/Forms/Factories/ContestantFactory.php:48
 msgid "Seminář"
 msgstr ""
@@ -425,32 +458,32 @@ msgstr ""
 msgid "Je třeba zvolit seminář."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:58
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:56
 msgid "Je třeba zadat školu."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:62
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:63
 #: i18n/../app/Components/Grids/ContestantsGrid.php:44
 msgid "Ročník"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:72
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:73
 msgid "Kvůli zařazení do kategorie."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:73
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:74
 msgid "Zvolit ročník"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:76
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:77
 msgid "Je třeba zadat ročník."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:80
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:81
 msgid "Třída"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:81
+#: i18n/../app/Components/Forms/Factories/ContestantFactory.php:82
 msgid "Kvůli případné školní korespondenci."
 msgstr ""
 
@@ -464,113 +497,142 @@ msgid "Daný login již někdo používá."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/LoginFactory.php:39
-msgid "E-mail je třeba zadat."
-msgstr ""
-
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:42
-msgid "Daný email již někdo používá."
-msgstr ""
-
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:47
 msgid "Staré heslo"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:49
-#: i18n/../app/presenters/AuthenticationPresenter.php:230
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:41
+#: i18n/../app/presenters/AuthenticationPresenter.php:231
 msgid "Heslo"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:50
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:42
 #, php-format
 msgid "Heslo musí mít alespoň %d znaků."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:54
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:46
 msgid "Je třeba nastavit nové heslo."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:56
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:48
 msgid "Heslo nemůže být prázdné."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:60
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:52
 msgid "Heslo (ověření)"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:61
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:53
 msgid "Zadaná hesla se neshodují."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/LoginFactory.php:65
+#: i18n/../app/Components/Forms/Factories/LoginFactory.php:57
 msgid "Aktivní účet"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:34
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:36
 msgid "Plný název"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:35
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:38
 msgid "Úplný nezkrácený název školy."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:38
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:42
 msgid "Název je povinný."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:39
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:43
 msgid "Název na obálku."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:41
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:45
 msgid "Zkrácený název"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:42
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:46
+#, php-format
+msgid "Délka zkráceného názvu je omezena na %d znaků."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:47
 msgid "Zkrácený název je povinný."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:43
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:48
 msgid "Název krátký do výsledkovky."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:45
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:50
 msgid "Kontaktní e-mail"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:49
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:54
 msgid "IČ"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:50
-msgid "Délka IČ je omezena na 8 znaků."
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:55
+#, php-format
+msgid "Délka IČ je omezena na %d znaků."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:52
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:57
 msgid "IZO"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:53
-msgid "Délka IZO je omezena na 32 znaků."
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:58
+#, php-format
+msgid "Délka IZO je omezena na %d znaků."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:55
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:60
 msgid "Aktivní záznam"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:66
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:71
 #: i18n/../app/Components/Grids/ContestantsGrid.php:45
 msgid "Škola"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/SchoolFactory.php:74
+msgid "Pokud nelze školu nalézt, napište správci."
 msgstr ""
 
 #: i18n/../app/Components/Forms/OptimisticForm.php:97
 msgid "Od zobrazení formuláře byla změněna jeho data."
 msgstr ""
 
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:46
+msgid "Osoba A"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:50
+msgid "Osoba B"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:53
+msgid "Podobnost"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:61
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:62
+msgid "Sloučit A<-B"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:76
+#: i18n/../app/Components/Grids/Deduplicate/PersonsGrid.php:77
+msgid "Sloučit B<-A"
+msgstr ""
+
 #: i18n/../app/Components/Grids/SchoolsGrid.php:43
 #: i18n/../app/Components/Grids/OrgsGrid.php:62
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:51
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:53
 #: i18n/../app/Components/Grids/ContestantsGrid.php:51
 msgid "Upravit"
+msgstr ""
+
+#: i18n/../app/Components/Grids/StoredQueryGrid.php:61
+msgid "Podrobnosti dotazu"
 msgstr ""
 
 #: i18n/../app/Components/Grids/OrgsGrid.php:50
@@ -587,17 +649,17 @@ msgstr ""
 msgid "Skončil"
 msgstr ""
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:71
-#: i18n/../app/Components/Grids/ContestantsGrid.php:57
+#: i18n/../app/Components/Grids/OrgsGrid.php:70
+#: i18n/../app/Components/Grids/ContestantsGrid.php:56
 msgid "Upravit osobu"
 msgstr ""
 
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:59
-msgid "Zobrazit"
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:61
+msgid "Podrobnosti"
 msgstr ""
 
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:68
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:285
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:70
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:290
 msgid "Spustit"
 msgstr ""
 
@@ -621,20 +683,37 @@ msgstr ""
 msgid "Parametrizovat"
 msgstr ""
 
-#: i18n/../app/model/Persons/AbstractPersonHandler.php:108
+#: i18n/../app/model/Persons/AbstractPersonHandler.php:101
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:397
 msgid "Zvací e-mail odeslán."
 msgstr ""
 
-#: i18n/../app/model/Persons/AbstractPersonHandler.php:110
+#: i18n/../app/model/Persons/AbstractPersonHandler.php:103
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:399
 msgid "Zvací e-mail se nepodařilo odeslat."
 msgstr ""
 
-#: i18n/../app/model/Tasks/ContributionsFromXML.php:78
+#: i18n/../app/model/Persons/Deduplication/TableMerger.php:247
+#, php-format
+msgid "%s(%s) nové hodnoty: %s"
+msgstr ""
+
+#: i18n/../app/model/Persons/Deduplication/TableMerger.php:252
+#, php-format
+msgid "%s(%s) sloučen a smazán."
+msgstr ""
+
+#: i18n/../app/model/Persons/Deduplication/TableMerger.php:256
+#, php-format
+msgid "%s(%s) rozšířen sloučením."
+msgstr ""
+
+#: i18n/../app/model/Tasks/ContributionsFromXML.php:79
 #, php-format
 msgid "Neznámý TeX identifikátor '%s'."
 msgstr ""
 
-#: i18n/../app/model/Tasks/ContributionsFromXML.php:85
+#: i18n/../app/model/Tasks/ContributionsFromXML.php:86
 #, php-format
 msgid "Osoba '%s' není org."
 msgstr ""
@@ -652,28 +731,36 @@ msgid "Neexistující účet."
 msgstr ""
 
 #: i18n/../app/model/Authentication/AuthenticationException.php:36
+msgid "Nepřipravený účet."
+msgstr ""
+
+#: i18n/../app/model/Authentication/AuthenticationException.php:46
 msgid "Neplatné přihlašovací údaje."
 msgstr ""
 
-#: i18n/../app/model/Authentication/AccountManager.php:96
+#: i18n/../app/model/Authentication/AccountManager.php:93
 msgid "Založení účtu"
 msgstr ""
 
-#: i18n/../app/model/Authentication/AccountManager.php:133
-#: i18n/../app/presenters/AuthenticationPresenter.php:189
+#: i18n/../app/model/Authentication/AccountManager.php:132
+#: i18n/../app/presenters/AuthenticationPresenter.php:190
 msgid "Obnova hesla"
 msgstr ""
 
-#: i18n/../app/model/Authentication/AccountManager.php:162
+#: i18n/../app/model/Authentication/AccountManager.php:178
 msgid "Obnova účtu již probíhá."
 msgstr ""
 
-#: i18n/../app/model/Authentication/AccountManager.php:172
+#: i18n/../app/model/Authentication/AccountManager.php:188
 msgid "Přístup k účtu nelze obnovit."
 msgstr ""
 
-#: i18n/../app/model/Authentication/FacebookAuthenticator.php:35
+#: i18n/../app/model/Authentication/FacebookAuthenticator.php:70
 msgid "V profilu Facebooku nebyl nalezen e-mail."
+msgstr ""
+
+#: i18n/../app/model/Authentication/FacebookAuthenticator.php:76
+msgid "Facebook účtu odpovídá více osob."
 msgstr ""
 
 #: i18n/../app/model/Authentication/TokenAuthenticator.php:45
@@ -688,43 +775,43 @@ msgstr ""
 msgid "Řešitelský pultík"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:192
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:202
 msgid "Uživatel musí být osobou, aby se mohl registrovat jako řešitel."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:200
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:210
 #, php-format
 msgid "%s již řeší %s."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:208
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:218
 msgid "Registrace řešitele"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:244
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:254
 msgid "Přihlašování"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:291
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:310
 msgid "Registrovat"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:294
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:313
 #: i18n/../app/PublicModule/presenters/SubmitPresenter.php:123
-#: i18n/../app/presenters/AuthenticationPresenter.php:236
-#: i18n/../app/presenters/AuthenticationPresenter.php:255
+#: i18n/../app/presenters/AuthenticationPresenter.php:237
+#: i18n/../app/presenters/AuthenticationPresenter.php:256
 msgid "Vypršela časová platnost formuláře. Odešlete jej prosím znovu."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:393
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:407
 msgid "Řešitelka úspěšně zaregistrována."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:393
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:407
 msgid "Řešitel úspěšně zaregistrován."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:399
+#: i18n/../app/PublicModule/presenters/RegisterPresenter.php:413
 msgid "Při registraci došlo k chybě."
 msgstr ""
 
@@ -839,6 +926,20 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:41
+msgid "Duplicitní osoby"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:66
+#, php-format
+msgid "%s (%d) a %s (%d) sloučeny."
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:68
+#, php-format
+msgid "%s (%d) a %s (%d) potřebují vyřešit konflitky."
+msgstr ""
+
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:105
 #, php-format
 msgid "Úprava organizátora %s"
@@ -862,21 +963,21 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/InboxPresenter.php:155
 #: i18n/../app/OrgModule/presenters/InboxPresenter.php:177
 #: i18n/../app/OrgModule/presenters/PointsPresenter.php:125
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:253
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:260
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:167
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:258
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:265
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:244
 #: i18n/../app/presenters/SettingsPresenter.php:110
 msgid "Uložit"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/OrgPresenter.php:176
+#: i18n/../app/OrgModule/presenters/OrgPresenter.php:177
 msgid "Chyba při zakládání organizátora."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/OrgPresenter.php:210
-#: i18n/../app/OrgModule/presenters/ContestantPresenter.php:215
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:327
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:349
+#: i18n/../app/OrgModule/presenters/OrgPresenter.php:212
+#: i18n/../app/OrgModule/presenters/ContestantPresenter.php:217
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:333
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:356
 msgid "Chyba při ukládání do databáze."
 msgstr ""
 
@@ -901,15 +1002,15 @@ msgstr ""
 msgid "Škola založena"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:174
+#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:175
 msgid "Chyba při zakládání školy."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:214
+#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:215
 msgid "Škola upravena"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:219
+#: i18n/../app/OrgModule/presenters/SchoolPresenter.php:221
 msgid "Chyba při úpravě školy."
 msgstr ""
 
@@ -934,7 +1035,7 @@ msgstr ""
 msgid "Řešitelé"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ContestantPresenter.php:181
+#: i18n/../app/OrgModule/presenters/ContestantPresenter.php:182
 msgid "Chyba při zakládání řešitele."
 msgstr ""
 
@@ -1001,69 +1102,98 @@ msgstr ""
 msgid "Chyba při přepočtu."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:178
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:183
 #, php-format
 msgid "Úprava dotazu %s"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:201
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:206
 #, php-format
 msgid "Napsat dotaz"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:214
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:219
 msgid "Exporty"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:218
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:223
 #, php-format
-msgid "Editace dotazu %s"
+msgid "Detail dotazu %s"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:226
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:231
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:269
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:274
 msgid "SQL"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:278
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:283
 msgid "Metadata"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:295
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:300
 msgid "Nedostatečné oprávnění ke spuštění dotazu."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:322
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:327
 msgid "Dotaz upraven."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/ExportPresenter.php:344
+#: i18n/../app/OrgModule/presenters/ExportPresenter.php:350
 msgid "Dotaz vytvořen."
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:107
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:171
+#, php-format
+msgid "Sloučení osob %s (%d) a %s (%d)"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:175
 msgid "Osoby"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:111
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:179
 msgid "Založit osobu"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:116
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:184
 #, php-format
 msgid "Úprava osoby %s"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:140
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:208
 msgid "Adresy"
 msgstr ""
 
-#: i18n/../app/OrgModule/presenters/PersonPresenter.php:285
-msgid "Chyba při úpravě řešitele."
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:253
+msgid "Sloučit osoby"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:254
+msgid "Storno"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:300
+msgid "Trunk"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:310
+msgid "Merged"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:431
+msgid "Chyba při úpravě osoby."
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:450
+msgid "Osoby úspešně sloučeny."
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/PersonPresenter.php:456
+msgid "Je třeba ručně vyřešit konflikty."
 msgstr ""
 
 #: i18n/../app/presenters/SettingsPresenter.php:58
@@ -1100,34 +1230,34 @@ msgstr ""
 msgid "Stránka požaduje přihlášení."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:185
+#: i18n/../app/presenters/AuthenticationPresenter.php:186
 msgid "Login"
-msgstr ""
-
-#: i18n/../app/presenters/AuthenticationPresenter.php:227
-#: i18n/../app/presenters/AuthenticationPresenter.php:250
-msgid "Přihlašovací jméno nebo email"
 msgstr ""
 
 #: i18n/../app/presenters/AuthenticationPresenter.php:228
 #: i18n/../app/presenters/AuthenticationPresenter.php:251
+msgid "Přihlašovací jméno nebo email"
+msgstr ""
+
+#: i18n/../app/presenters/AuthenticationPresenter.php:229
+#: i18n/../app/presenters/AuthenticationPresenter.php:252
 msgid "Zadejte přihlašovací jméno nebo emailovou adresu."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:231
+#: i18n/../app/presenters/AuthenticationPresenter.php:232
 msgid "Zadejte heslo."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:234
+#: i18n/../app/presenters/AuthenticationPresenter.php:235
 msgid "Přihlásit"
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:292
+#: i18n/../app/presenters/AuthenticationPresenter.php:285
 #, php-format
 msgid "Na email %s byly poslány další instrukce k obnovení přístupu."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:337
+#: i18n/../app/presenters/AuthenticationPresenter.php:330
 #, php-format
 msgid "Nedovolený backlink %s."
 msgstr ""
@@ -1192,6 +1322,10 @@ msgstr ""
 
 #: i18n/../app/templates/Error/405.latte.latte2php:5
 msgid "Zvolená metoda není pro tuto stránku podporována."
+msgstr ""
+
+#: i18n/../app/OrgModule/templates/Deduplicate/person.latte.latte2php:4
+msgid "Sloučit (A<-B) všechny přípustné osoby"
 msgstr ""
 
 #: i18n/../app/OrgModule/templates/Export/edit.latte.latte2php:12
