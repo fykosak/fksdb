@@ -55,11 +55,13 @@ class StoredQueryGrid extends BaseGrid {
         $this->addGlobalButton('csvh')
                 ->setLabel('Uložit CSV (bez hlavičky)')
                 ->setLink($this->getParent()->link('csv!', array('header' => false)));
-        
-        $this->addGlobalButton('show')
-                ->setLabel(_('Podrobnosti dotazu'))
-                ->setClass('btn btn-sm btn-default')
-                ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
+
+        if (!$this->storedQuery->getQueryPattern()->isNew()) {
+            $this->addGlobalButton('show')
+                    ->setLabel(_('Podrobnosti dotazu'))
+                    ->setClass('btn btn-sm btn-default')
+                    ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
+        }
     }
 
 }
