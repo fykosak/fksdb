@@ -15,6 +15,8 @@ use Nette\Forms\Form;
  */
 class SchoolFactory {
 
+    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
+
     /**
      * @var SchoolProvider
      */
@@ -65,9 +67,13 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect() {
+    public function createSchoolSelect($options = 0) {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
+        if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
+            $schoolElement->setOption('description', _('Pokud nelze školu nalézt, napište správci.'));
+        }
+
         return $schoolElement;
     }
 

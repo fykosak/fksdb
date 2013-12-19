@@ -51,12 +51,13 @@ class ContestantFactory {
                     ->addRule(Form::FILLED, _('Je třeba zvolit seminář.'));
         }
 
-        $school = $this->factorySchool->createSchoolSelect();
-        $container->addComponent($school, 'school_id');
-
         if ($options & self::REQUIRE_SCHOOL) {
+            $school = $this->factorySchool->createSchoolSelect(SchoolFactory::SHOW_UNKNOWN_SCHOOL_HINT);
             $school->addRule(Form::FILLED, _('Je třeba zadat školu.'));
+        } else {
+            $school = $this->factorySchool->createSchoolSelect();
         }
+        $container->addComponent($school, 'school_id');
 
         // TODO extract this element and made it more robust (show graduation year)
         $studyYear = $container->addSelect('study_year', _('Ročník'))
