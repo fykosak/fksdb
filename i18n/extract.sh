@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Space separated list of directories to scan for PHP/Latte files
-PHP_FILES=app
-LATTE_FILES=app
+PHP_FILES="app libs"
+LATTE_FILES="app libs"
 
 # Output
 POT_FILE=i18n/messages.pot

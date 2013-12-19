@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-20 00:39+0100\n"
-"PO-Revision-Date: 2013-12-20 00:46+0100\n"
+"POT-Creation-Date: 2013-12-20 00:51+0100\n"
+"PO-Revision-Date: 2013-12-20 00:52+0100\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: English\n"
@@ -1266,6 +1266,35 @@ msgstr "Backlink %s not allowed."
 #: i18n/../app/presenters/ErrorPresenter.php:16
 msgid "Chyba"
 msgstr "Error"
+
+#: i18n/../libs/NiftyGrid/Grid.php:863 i18n/../libs/NiftyGrid/Grid.php:865
+msgid "Nebyl vybrán žádný záznam."
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:167
+#, php-format
+msgid "Políčko %s potřebuje povolený Javascript."
+msgstr "Field %s requires Javacript enabled."
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:19
+msgid "Jsi robot?"
+msgstr "Are you a robot?"
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:20
+msgid "ne"
+msgstr "no"
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:21
+msgid "ano"
+msgstr "yes"
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:26
+msgid "Tento formulář je jenom pro lidi."
+msgstr "This form is for people only."
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/URLTextBox.php:19
+msgid "%label není platná URL."
+msgstr "%label is not valid URL."
 
 #: i18n/../app/PublicModule/templates/Submit/default.latte.latte2php:7
 msgid "Odevzdaná řešení"

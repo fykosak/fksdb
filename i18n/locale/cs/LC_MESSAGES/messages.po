@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-20 00:39+0100\n"
+"POT-Creation-Date: 2013-12-20 00:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1264,6 +1264,35 @@ msgstr ""
 
 #: i18n/../app/presenters/ErrorPresenter.php:16
 msgid "Chyba"
+msgstr ""
+
+#: i18n/../libs/NiftyGrid/Grid.php:863 i18n/../libs/NiftyGrid/Grid.php:865
+msgid "Nebyl vybrán žádný záznam."
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:167
+#, php-format
+msgid "Políčko %s potřebuje povolený Javascript."
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:19
+msgid "Jsi robot?"
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:20
+msgid "ne"
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:21
+msgid "ano"
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:26
+msgid "Tento formulář je jenom pro lidi."
+msgstr ""
+
+#: i18n/../libs/libfks/FKS/Components/Forms/Controls/URLTextBox.php:19
+msgid "%label není platná URL."
 msgstr ""
 
 #: i18n/../app/PublicModule/templates/Submit/default.latte.latte2php:7
