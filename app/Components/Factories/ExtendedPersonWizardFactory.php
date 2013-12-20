@@ -137,12 +137,7 @@ class ExtendedPersonWizardFactory {
 
         $group = $form->addGroup(_('Existující osoba'));
 
-        $renderMethod = 'return $("<li>")
-                        .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
-                        .appendTo(ul);';
-        $personElement = new AutocompleteSelectBox(true, 'Jméno', $renderMethod);
-        $personElement->setDataProvider($this->personProvider);
-
+        $personElement = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
 
 // TODO validate non-existent contestant or restrict selection
         $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);

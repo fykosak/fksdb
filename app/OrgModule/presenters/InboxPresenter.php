@@ -6,6 +6,7 @@ use DbNames;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
+use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\OptimisticForm;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelSubmit;
@@ -56,6 +57,11 @@ class InboxPresenter extends SeriesPresenter {
      */
     private $seriesTable;
 
+    /**
+     * @var PersonFactory
+     */
+    private $personFactory;
+
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
@@ -78,6 +84,10 @@ class InboxPresenter extends SeriesPresenter {
 
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
+    }
+
+    public function injectPersonFactory(PersonFactory $personFactory) {
+        $this->personFactory = $personFactory;
     }
 
     protected function startup() {
@@ -168,8 +178,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
-            $control = new AutocompleteSelectBox(false, $task->getFQName());
-            $control->setDataProvider($this->getOrgProvider());
+            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
             $control->setMultiselect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }

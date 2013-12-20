@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKS\Components\Forms\Controls\URLTextBox;
 use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -251,6 +253,17 @@ class PersonFactory {
 
         $emailRule = $this->uniqueEmailFactory->create($person);
         $emailElement->addRule($emailRule, _('Daný e-mail již někdo používá.'));
+    }
+
+    public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
+        if ($renderMethod === null) {
+            $renderMethod = 'return $("<li>")
+                        .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
+                        .appendTo(ul);';
+        }
+        $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
+        $select->setDataProvider($dataProvider);
+        return $select;
     }
 
 }
