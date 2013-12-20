@@ -75,7 +75,7 @@ $(function() {
                     response($.ui.autocomplete.filter(
                             items, s));
                 };
-                options.minLength = 1;
+                options.minLength = 3;
             }
 
 
