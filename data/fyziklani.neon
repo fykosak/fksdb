@@ -1,27 +1,35 @@
-# TODO ročníková parametrizac
-#  - (kapacita týmů), začátek/konec registrace
-# TODO condition macros (reuse of conditions)
-# TODO form factories
-# TODO person selection is based on email (otherwise name/additional info must be provided)
-# TODO specifying table is not necessary for fields at default table
-# TODO how to join automatons?
-#    - cartesian product + restrictions
-#    - explicit allowed states or transitions
-#    - should be automaton aware of its context? (then it could be specified as event handler)
-# TODO visibility of team/member applications
+# Based on snippets of PHP code || callbacks (service object + method)
 
-# default class is scalar (TODO type sounds better than class)
+# TODO visibility of team/member applications (-> probably in WF definition)
+# TODO change in schema to time sections of person information (school, study_year)
 
 # MACHINE OPERATION
-# possible transitions are displayed like buttons with labels with transitino names
+# possible transitions are displayed like buttons with labels with transition names
 # exception is __init->* transition it's a button leading to form?
+# should * match all states or all with exception of __init and __terminated (pseudostates)?
+#
+# Connection of machine with data
+#   - validation after form send
+#   - processing after validation ? processing before validation
 
-
+# Solved
+# ------
+# ročníková parametrizace
+#  - (kapacita týmů (# týmů)), začátek/konec registrace
+#  - no. of team members requires brand new workflow -> factory for workflow/workflow names
+#  -> part of the machine/workflow context
+# condition macros (reuse of conditions)
+#  -> string interpolation
+# form factories
+#  -> for each field create form element by DB reflection (at compile time, tinyyint(1) is boolean (checkbox))
+#     or use provided factory callback (argumemt should be the data model + WF context + field metadata (but conditions must be already evaluated))
+# person selection is based on email (otherwise name/additional info must be provided)
+#  -> use the factory mentioned above
 #
 #   TEAM
 #
 name: TEAM
-tables:
+tables: # TODO allow using specialized handlers
     main: e_fyziklani_team
 states:
     pending: Čeká na schválení #i18n
@@ -34,13 +42,15 @@ transitions:
     __init->pending:
         condition: true # TODO add time condition (with registraion period parameters)?
         name: Přihlásit tým
+        after: callback # TODO send email
+        before: callback # not important, emulated by condition, should be called after it's evaluation
     pending->approved:
         condition: false # TODO logged in && event admin
         name: Potvrdit účast týmu
     pending->spare:
         condition: false # TODO logged in && event admin
         name: Potvrdit jako náhradníka
-    approved|spare->participated: # TODO see this syntax for mass transitions, TODO 2: this should enforce moving all members to participated state
+    approved|spare->participated:
         condition: false # TODO logged in && event admin
         name: Potvrdit účast
     *->cancelled: # TODO this means all states except __init
@@ -52,47 +62,46 @@ transitions:
 
 fields:
     team_name:
-        db: e_fyziklani_team.name
+        db: name
         name: Název týmu # i18n
         required: true # or condition
         visible: true # or condition
         modifiable: true # or condition
-    category: # TODO processing
-        db: e_fyziklani_team.category
+    category:
+        db: category
         name: Kategorie # i18n
-        required: true # or condition, evaluated after processing
+        required: true # or condition, evaluated after processing (if not modifiable, otherwise in GUI (too))
         visible: true # or condition
-        modifiable: false # or condition        
+        modifiable: false # it means modifiable in GUI, or condition        
     main_school:
-        db: e_fyziklani_team.main_school_id
+        db: main_school_id
         name: Hlavní škola
         required: true
         visible: true
         modifiable: true
-        class: ModelSchool
+        factory: @formSchoolFactory
     second_school:
-        db: e_fyziklani_team.second_school_id
+        db: second_school_id
         name: Druhá škola
         required: false
         visible: true
         modifiable: true
-        class: ModelSchool
+        factory: @formSchoolFactory
     contact_person:
-        db: e_fyziklani_team.contact_person_id
+        db: contact_person_id
         name: Kontaktní osoba
         required: true
         visible: true
         modifiable: true
-        class: ModelPerson # TODO specify that we require person's phone
+        factory: @formContactPersonFactory
     teacher_arrive:
-        db: e_fyziklani_team.teacher_arrive 
+        db: teacher_arrive 
         name: Přijede učitel
         required: true # TODO?
         visible: true
         modifiable: true
-        class: boolean
     note:
-        db: e_fyziklani_team.note
+        db: note
         name: Poznámka
         required: false
         visible: true
@@ -116,47 +125,74 @@ transitions:
         name: Přihlásit člena
     applied->participated:
         condition: false # TODO logged in && event admin
-        name: Potvrdit účast # TODO name is not necessary due to join to team machine
+        # name: Potvrdit účast # name is not necessary due to join to team machine
     applied->__terminated:
         condition: true # TODO really can everybody delete members?
         name: Odebrat člena
 
 fields:
     person:
-        db: e_participant.person_id
+        db: person_id
         name: Člen
-        required: false # TODO reference to the team and number of memebers, only one member is reqiured
+        required: false
         visible: true
         modifiable: true
-        class: ModelPerson
-    contestant: # TODO it's assigned by processing
-        db: e_participant.ct_id
+        factory: @formMemberPersonFactory
+    contestant: # TODO will be affected by schema refatorizatoin
+        db: ct_id
         required: false # if school and year aren't filled
         visible: false # or condition
         modifiable: false # or condition
     school:
-        db: e_participant.main_school_id
+        db: main_school_id
         name: Škola
         required: false # if contestant isn't found
         visible: true
         modifiable: true
-        class: ModelSchool
+        factory: @formSchoolFactory
     study_year:
-        db: e_participant.study_year
+        db: study_year
         name: Ročník
         required: false # if contestant isn't found
         visible: true
         modifiable: true
-        class: ModelSchool # TODO or other constraint
+        factory: @formStudyYearFactory
 
 #
 #   JOINT WORKFLOW
 #   explanation: workflow consists of several instances of machines
 #
-workflow:    
-    team: TEAM 
-    p1: PARTICIPANT
-    p2: PARTICIPANT
-    p3: PARTICIPANT
-    p4: PARTICIPANT
-    p5: PARTICIPANT
+workflow:
+    machines:
+        team:
+            machine: TEAM 
+            required: true # default false, it's conjuction with fields requirement
+            primary: true # machine states are propagated to the workflow
+            onSubmit: callbackForCategory # here it calculated category, obtains data from form + metadata about fields?
+        p1:
+            machine: PARTICIPANT
+            required: true
+        p2:
+            machine: PARTICIPANT
+        p3:
+            machine: PARTICIPANT
+        p4:
+            machine: PARTICIPANT
+        p5:
+            machine: PARTICIPANT
+
+    joins:
+        # NOTE: Join may not be realized if induced transition isn't viable.
+        # NOTE: Cycle detection can be done statically (e.g. team moves participant and participant moves team in the reaction to this)
+        team.*->team.participated:
+            p1: participated
+            p2: participated
+            p3: participated
+            p4: participated
+            p5: participated
+        team.*->team.__terminated:
+            p1: __terminated
+            p2: __terminated
+            p3: __terminated
+            p4: __terminated
+            p5: __terminated
