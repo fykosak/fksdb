@@ -6,9 +6,10 @@
  */
 class ModelEvent extends AbstractModelSingle {
 
-	public function getEventType() {
-		return $this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id');
-	}
+    public function getEventType() {
+        ModelEventType::createFromTableRow($this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id'));
+    }
+
 }
 
 ?>

@@ -9,6 +9,7 @@ services:
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventParticipant: ServiceEventParticipant
+    ServiceEventType:        ServiceEventType
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
     ServiceMPostContact:     ServiceMPostContact
