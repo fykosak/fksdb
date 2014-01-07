@@ -2,6 +2,7 @@
 
 namespace Events;
 
+use FKS\Config\Functional\Helpers;
 use Nette\Config\CompilerExtension;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -157,7 +158,13 @@ class MachineExtension extends CompilerExtension {
             $label = Arrays::get($transitionDef, 'label', $mask);
             $condition = Arrays::get($transitionDef, 'condition', true);
             $after = Arrays::get($transitionDef, 'after', null);
-            $factory->addSetup('addTransition', $mask, $label, $condition, $after);
+
+            $factory->addSetup('addTransition', array(
+                $mask,
+                $label,
+                Helpers::createConditionStatement($condition),
+                $after
+            ));
         }
     }
 
@@ -174,3 +181,4 @@ class MachineExtension extends CompilerExtension {
 class MachineDefinitionException extends InvalidStateException {
     
 }
+

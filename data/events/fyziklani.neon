@@ -1,4 +1,4 @@
-# Based on snippets of PHP code || callbacks (service object + method)
+# Conditions based callbacks + logic conjuctions on those.
 
 # TODO visibility of team/member applications (-> probably in WF definition)
 # TODO change in schema to time sections of person information (school, study_year)
@@ -6,7 +6,7 @@
 # MACHINE OPERATION
 # possible transitions are displayed like buttons with labels with transition names
 # exception is __init->* transition it's a button leading to form?
-# should * match all states or all with exception of __init and __terminated (pseudostates)?
+# (* match all states with exception of __init and __terminated)
 # between two states may exist at most one transition
 #
 # Connection of machine with data
@@ -46,7 +46,13 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: and(@yearCalculator, @yearCalculator, @yearCalculator) # TODO add time condition (with registraion period parameters)?
+                        condition: and(
+                                [@self, 'foo'],
+                                or(
+                                    [@yearCalculator, 'foo'],
+                                    'Class::callback'
+                                )
+                            ) # TODO add time condition (with registraion period parameters)?
                         label: Přihlásit tým
                         after: callback # TODO send email
                     pending->approved:
@@ -192,6 +198,7 @@ events:
             joins:
                 # NOTE: Join may not be realized if induced transition isn't viable.
                 # NOTE: Cycle detection can be done statically (e.g. team moves participant and participant moves team in the reaction to this)
+                # This means that team that is marked as participated/deleted propagates this change to all its members.
                 team:
                     *->participated:
                         p1: participated
