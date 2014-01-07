@@ -1,0 +1,55 @@
+#
+# Schema definition for events application machines.
+#
+# Fields that do not have default value are required.
+
+machine:
+    baseMachines:
+    handler:
+        default: null
+    onSubmit:
+        default: []
+    joins:
+        default: []
+
+baseMachine:
+    states:
+    transitions:
+    tables:
+    fields:
+
+transition:
+    condition:
+        default: true
+        type: expression
+    label:
+    after:
+        default: null
+
+field:
+    db:
+    name:
+    required:
+        default: false
+        type: expression
+    modifiable:
+        default: true
+        type: expression
+    visible:
+        default: true
+        type: expression
+    factory:
+        default: null
+
+
+bmInstance:
+    bmName:
+    primary:
+        default: false
+    required:
+        default: false
+        type: expression
+    modifiable:
+        default: true
+        type: expression
+

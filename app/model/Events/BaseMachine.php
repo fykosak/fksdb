@@ -4,6 +4,7 @@ namespace Events;
 
 use Nette\Forms\Container;
 use Nette\FreezableObject;
+use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,13 +20,19 @@ class BaseMachine extends FreezableObject {
     private $name;
     private $required;
 
+    public function __construct() {
+        //TODO
+    }
+
     public function addState($state, $name) {
         $this->updating();
         //TODO
     }
 
-    public function addTransition($mask, $label, $condition = true, $after = null) {
+    public function addTransition(Transition $transition) {
         $this->updating();
+        $transition->setBaseMachine($this); // here it should be checked and freezed
+        $transition->freeze(); 
         //TODO
     }
 

@@ -136,7 +136,7 @@ events:
                         label: Přihlásit člena
                     applied->participated:
                         condition: false # TODO logged in && event admin
-                        # label: Potvrdit účast # name is not necessary due to join to team machine
+                        label: Potvrdit účast # name is not necessary due to join to team machine
                     applied->__terminated:
                         condition: true # TODO really can everybody delete members?
                         label: Odebrat člena
@@ -177,20 +177,20 @@ events:
             handler: @yearCalculator
             baseMachines:
                 team:
-                    machine: TEAM 
+                    bmName: TEAM 
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                 p1:
-                    machine: PARTICIPANT
-                    required: true
+                    bmName: PARTICIPANT
+                    required: and(true, false)
                 p2:
-                    machine: PARTICIPANT
+                    bmName: PARTICIPANT
                 p3:
-                    machine: PARTICIPANT
+                    bmName: PARTICIPANT
                 p4:
-                    machine: PARTICIPANT
+                    bmName: PARTICIPANT
                 p5:
-                    machine: PARTICIPANT
+                    bmName: PARTICIPANT
             onSubmit:
                 - [@yearCalculator, 'callbackForCategory'] # here is calculated category, obtains data from form + metadata about fields?
 

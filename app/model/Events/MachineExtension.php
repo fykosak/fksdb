@@ -2,9 +2,11 @@
 
 namespace Events;
 
-use FKS\Config\Functional\Helpers;
+use FKS\Config\Expressions\Helpers;
 use Nette\Config\CompilerExtension;
+use Nette\Config\Loader;
 use Nette\DI\Container;
+use Nette\DI\Statement;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\PhpGenerator\ClassType;
@@ -18,20 +20,39 @@ use Nette\Utils\PhpGenerator\Method;
 class MachineExtension extends CompilerExtension {
 
     const MAIN_FACTORY = 'eventMachine';
-    const MACHINE_PREFIX = 'EventMachine_';
+    const TRANSITION_FACTORY = 'Transition';
+    const MACHINE_PREFIX = 'Machine_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
+    const CLASS_MACHINE = 'Events\Machine';
+    const CLASS_BASE_MACHINE = 'Events\BaseMachine';
+    const CLASS_TRANSITION = 'Events\Transition';
 
-    private $definitions = array();
+    private $scheme;
+
+    /**
+     * Global registry of available events definitions.
+     * 
+     * @var array[event_type_id] => definition[] where definition (name =>, years =>)
+     */
     private $idMaps = array();
+    private $transtionFactory;
+    private $schemeFile;
+
+    function __construct($schemaFile) {
+        $this->schemeFile = $schemaFile;
+    }
 
     public function loadConfiguration() {
         parent::loadConfiguration();
 
+        $this->loadScheme();
+
         $config = $this->getConfig();
-        $builder = $this->getContainerBuilder();
+
+        $this->createDispatchFactory();
+        $this->createTransitionFactory();
 
         foreach ($config as $definitionName => $definition) {
-            $this->definitions[$definitionName] = $definition;
             $eventTypeId = $definition['event_type_id'];
             $years = isset($definition['eventYears']) ? $definition['eventYears'] : true;
 
@@ -43,22 +64,31 @@ class MachineExtension extends CompilerExtension {
                 'years' => $years,
             );
 
-            $this->createMachineFactory($definitionName, $definition);
-        }
+            /*
+             * Create base machine factories.
+             */
+            $machines = array();
+            foreach ($definition['baseMachines'] as $baseMachineName => $baseMachineDef) {
+                $machines[$baseMachineName] = $this->createBaseMachineFactory($definitionName, $baseMachineName, $baseMachineDef);
+            }
 
-        $def = $builder->addDefinition(self::MAIN_FACTORY);
-        $def->setShared(false);
-        $def->setClass('Events\Machine');
-        $def->setParameters(array('eventType', 'eventYear'));
+            $this->createMachineFactory($definitionName, $definition, $machines);
+        }
+    }
+
+    private function loadScheme() {
+        $loader = new Loader();
+        $this->getContainerBuilder()->addDependency($this->schemeFile);
+        $this->scheme = $loader->load($this->schemeFile);
     }
 
     public function afterCompile(ClassType $class) {
         $methodName = Container::getMethodName(self::MAIN_FACTORY, false);
         $method = $class->methods[$methodName];
-        $this->createDispatchFactory($method);
+        $this->createDispatchFactoryBody($method);
     }
 
-    private function createDispatchFactory(Method $method) {
+    private function createDispatchFactoryBody(Method $method) {
         $method->setBody(NULL);
         $method->addBody('$eventTypeId = $eventType->getPrimary();');
         $method->addBody('switch($eventTypeId) {');
@@ -89,26 +119,46 @@ class MachineExtension extends CompilerExtension {
         }');
     }
 
-    private function createMachineFactory($name, $definition) {
-        // create base machines factories
-        foreach ($definition['baseMachines'] as $baseMachineName => $baseMachineDef) {
-            $this->createBaseMachineFactory($name, $baseMachineName, $baseMachineDef);
-        }
+    private function createDispatchFactory() {
+        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
+        $def->setShared(false);
+        $def->setClass(self::CLASS_MACHINE);
+        $def->setParameters(array('eventType', 'eventYear'));
+    }
 
-        // create factory definition
+    private function createTransitionFactory() {
+        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
+        $factory->setShared(false);
+        $factory->setClass(self::CLASS_BASE_MACHINE);
+        $factory->setInternal(true);
+
+        $parameters = array_keys($this->scheme['transition']);
+        array_unshift($parameters, 'mask');
+        $factory->setParameters($parameters);
+
+        $this->transtionFactory = $factory;
+    }
+
+    private function createMachineFactory($name, $definition, $machines) {
+        $machineDef = $this->readDefinition($definition['machine'], $this->scheme['machine']);
+
+        /*
+         * Create factory definition.
+         */
         $factoryName = $this->getMachineName($name);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setShared(false);
-        $factory->setClass('Events\Machine');
+        $factory->setClass(self::CLASS_MACHINE);
         $factory->setInternal(true);
 
-        // use base machine factories to build the machine
+        /*
+         * Create and add base machines into the machine (i.e. creating instances).
+         */
         $primaryName = null;
-        foreach ($definition['machine']['baseMachines'] as $instanceName => $instanceDef) {
-            $baseName = $instanceDef['machine'];
-            $required = Arrays::get($instanceDef, 'required', false);
-            $primary = Arrays::get($instanceDef, 'primary', false);
-            if ($primary) {
+        foreach ($machineDef['baseMachines'] as $instanceName => $instanceDef) {
+            $instanceDef = $this->readDefinition($instanceDef, $this->scheme['bmInstance']);
+
+            if ($instanceDef['primary']) {
                 if (!$primaryName) {
                     $primaryName = $instanceName;
                 } else {
@@ -116,29 +166,32 @@ class MachineExtension extends CompilerExtension {
                 }
             }
 
-            $baseMachineName = $this->getBaseMachineName($name, $baseName);
-            $methodName = Container::getMethodName($baseMachineName, false);
-            $factory->addSetup("\$service->addBaseMachine(\$this->$methodName(?, ?))", array($instanceName, $required));
+            $defka = $machines[$instanceDef['bmName']];
+            $stmt = new Statement($defka, $instanceDef);
+            $factory->addSetup('addBaseMachine', $stmt);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
         $factory->addSetup('setPrimaryMachine', $primaryName);
 
-        // joins (only after the machine is assembled)
-        foreach ($definition['machine']['baseMachines'] as $instanceName => $instanceDef) {
-            $joins = Arrays::get($definition['machine']['joins'], $instanceName, array());
+
+        /*
+         * Set other attributes of the machine.
+         */
+        foreach (array_keys($machineDef['baseMachines']) as $instanceName) {
+            $joins = Arrays::get($machineDef['joins'], $instanceName, array());
 
             foreach ($joins as $mask => $induced) {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", array($instanceName, $mask, $induced));
             }
         }
 
-        $onSubmit = Arrays::get($definition['machine'], 'onSubmit', array());
-        $factory->addSetup('$service->onSubmit[] = ?', $onSubmit);
+        foreach ($machineDef['onSubmit'] as $onSubmit) {
+            $factory->addSetup('$service->onSubmit[] = ?', $onSubmit);
+        }
 
-        $handler = Arrays::get($definition['machine'], 'handler', null); //TODO some default handler?
-        $factory->addSetup('setHandler', $handler);
+        $factory->addSetup('setHandler', $machineDef['handler']); //TODO some default handler?
         $factory->addSetup('freeze');
     }
 
@@ -146,34 +199,61 @@ class MachineExtension extends CompilerExtension {
         $factoryName = $this->getBaseMachineName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setShared(false);
-        $factory->setClass('Events\BaseMachine');
+        $factory->setClass(self::CLASS_BASE_MACHINE);
         $factory->setInternal(true);
-        $factory->setParameters(array('instanceName', 'required'));
+        $factory->setParameters(array_keys($this->scheme['bmInstance']));
 
+        $definition = $this->readDefinition($definition, $this->scheme['baseMachine']);
         foreach ($definition['states'] as $state => $label) {
             $factory->addSetup('addState', $state, $label);
         }
 
         foreach ($definition['transitions'] as $mask => $transitionDef) {
-            $label = Arrays::get($transitionDef, 'label', $mask);
-            $condition = Arrays::get($transitionDef, 'condition', true);
-            $after = Arrays::get($transitionDef, 'after', null);
+            $transitionDef = $this->readDefinition($transitionDef, $this->scheme['transition']);
 
-            $factory->addSetup('addTransition', array(
-                $mask,
-                $label,
-                Helpers::createConditionStatement($condition),
-                $after
-            ));
+            array_unshift($transitionDef, $mask);
+            $defka = $this->transtionFactory;
+            $stmt = new Statement($defka, $transitionDef);
+            $factory->addSetup('addTransition', $stmt);
         }
+
+        return $factory;
     }
 
     private function getMachineName($name) {
-        return self::MACHINE_PREFIX . $name;
+        return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
     private function getBaseMachineName($name, $baseName) {
-        return self::BASE_MACHINE_PREFIX . $name . '_' . $baseName;
+        return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
+    }
+
+    private function getTransitionName() {
+        return $this->prefix(self::TRANSITION_FACTORY);
+    }
+
+    private function readDefinition($definition, $schemeFragment) {
+        $result = array();
+        foreach ($schemeFragment as $key => $metadata) {
+            if ($metadata === null || !array_key_exists('default', $metadata)) {
+                $result[$key] = Arrays::get($definition, $key);
+                if ($metadata === null) {
+                    continue;
+                }
+            } else {
+                $result[$key] = Arrays::get($definition, $key, $metadata['default']);
+            }
+
+            $type = Arrays::get($metadata, 'type', 'neon');
+            if ($type == 'expression') {
+                $result[$key] = Helpers::statementFromExpression($result[$key]);
+            }
+        }
+        $unknown = array_diff(array_keys($definition), array_keys($schemeFragment));
+        if ($unknown) {
+            throw new MachineDefinitionException('Unknown key(s): ' . implode(', ', $unknown) . '.');
+        }
+        return $result;
     }
 
 }

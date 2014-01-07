@@ -2,6 +2,7 @@
 
 namespace Events;
 
+use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use RuntimeException;
 
@@ -10,13 +11,17 @@ use RuntimeException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition {
+class Transition extends FreezableObject {
 
     /**
      * @var BaseMachine
      */
     private $baseMachine;
     private $inducedTransitions = array();
+
+    public function __construct() {
+        //TODO;
+    }
 
     /**
      * Meaningless idenifier.
