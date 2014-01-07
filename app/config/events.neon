@@ -15,7 +15,8 @@ machine:
 baseMachine:
     states:
     transitions:
-    tables:
+    service:
+        default: @ServiceEventParticipant
     fields:
 
 transition:
@@ -27,8 +28,8 @@ transition:
         default: null
 
 field:
-    db:
-    name:
+    label:
+        default: null
     required:
         default: false
         type: expression

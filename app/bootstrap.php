@@ -1,6 +1,6 @@
 <?php
 
-use Events\MachineExtension;
+use Events\EventsExtension;
 use FKS\Config\Extensions\NavigationExtension;
 use FKS\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
@@ -19,7 +19,7 @@ $configurator = new Configurator();
 $configurator->onCompile[] = function ($configurator, $compiler) {
             $compiler->addExtension('fksrouter', new RouterExtension());
             $compiler->addExtension('navigation', new NavigationExtension());
-            $compiler->addExtension('events', new MachineExtension(CONFIG_DIR . '/events.neon'));
+            $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
         };
 
 // Enable Nette Debugger for error visualisation & logging

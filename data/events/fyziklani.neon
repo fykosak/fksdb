@@ -35,8 +35,7 @@ events:
             #   TEAM
             #    
             TEAM:
-                tables: # TODO allow using specialized handlers
-                    main: e_fyziklani_team
+                service: @event.ServiceFyziklaniTeam
                 states:
                     pending: Čeká na schválení #i18n
                     spare: Náhradník
@@ -72,48 +71,41 @@ events:
                         label: Smazat tým
 
                 fields:
-                    team_name:
-                        db: name
-                        name: Název týmu # i18n
+                    name:
+                        label: Název týmu # i18n
                         required: true # or condition
                         visible: true # or condition
                         modifiable: true # or condition
                     category:
-                        db: category
-                        name: Kategorie # i18n
+                        label: Kategorie # i18n
                         required: true # or condition, evaluated after processing (if not modifiable, otherwise in GUI (too))
                         visible: true # or condition
                         modifiable: false # it means modifiable in GUI, or condition        
-                    main_school:
-                        db: main_school_id
-                        name: Hlavní škola
+                    main_school_id:
+                        label: Hlavní škola
                         required: true
                         visible: true
                         modifiable: true
-                        factory: @formSchoolFactory
-                    second_school:
-                        db: second_school_id
-                        name: Druhá škola
+                        factory: @@formSchoolFactory
+                    second_school_id:
+                        label: Druhá škola
                         required: false
                         visible: true
                         modifiable: true
-                        factory: @formSchoolFactory
-                    contact_person:
-                        db: contact_person_id
-                        name: Kontaktní osoba
+                        factory: @@formSchoolFactory
+                    contact_person_id:
+                        label: Kontaktní osoba
                         required: true
                         visible: true
                         modifiable: true
-                        factory: @formContactPersonFactory
+                        factory: @@formContactPersonFactory
                     teacher_arrive:
-                        db: teacher_arrive 
-                        name: Přijede učitel
+                        label: Přijede učitel
                         required: true # TODO?
                         visible: true
                         modifiable: true
                     note:
-                        db: note
-                        name: Poznámka
+                        label: Poznámka
                         required: false
                         visible: true
                         modifiable: true
@@ -122,10 +114,6 @@ events:
             #   PARTICIPANT
             #    
             PARTICIPANT:
-                tables:
-                    main: e_participant
-                    joined: e_fyziklani_participant #TODO necessary?
-
                 states:
                     applied: Přihlášen
                     participated: Účastnil se
@@ -142,32 +130,28 @@ events:
                         label: Odebrat člena
 
                 fields:
-                    person:
-                        db: person_id
-                        name: Člen
+                    person_id:
+                        label: Člen
                         required: false
                         visible: true
                         modifiable: true
-                        factory: @formMemberPersonFactory
+                        factory: @@formMemberPersonFactory
                     contestant: # TODO will be affected by schema refatorizatoin
-                        db: ct_id
                         required: false # if school and year aren't filled
                         visible: false # or condition
                         modifiable: false # or condition
-                    school:
-                        db: main_school_id
-                        name: Škola
+                    main_school_id:
+                        label: Škola
                         required: false # if contestant isn't found
                         visible: true
                         modifiable: true
-                        factory: @formSchoolFactory
+                        factory: @@formSchoolFactory
                     study_year:
-                        db: study_year
-                        name: Ročník
+                        label: Ročník
                         required: false # if contestant isn't found
                         visible: true
                         modifiable: true
-                        factory: @formStudyYearFactory
+                        factory: @@formStudyYearFactory
 
         #
         #   MACHINE

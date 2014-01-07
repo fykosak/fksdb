@@ -1,6 +1,6 @@
 <?php
 
-namespace Events;
+namespace Events\Machine;
 
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;

@@ -33,4 +33,7 @@ class DbNames {
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
     const VIEW_CONTESTANT = 'v_contestant';
 
+    /* Specified tables for events */
+    const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
+
 }

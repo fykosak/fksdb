@@ -25,3 +25,5 @@ services:
     ServiceStoredQueryParameter: ServiceStoredQueryParameter
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
+
+    event.ServiceFyziklaniTeam:     ORM\Services\Events\ServiceFyziklaniTeam

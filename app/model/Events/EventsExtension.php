@@ -17,15 +17,19 @@ use Nette\Utils\PhpGenerator\Method;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class MachineExtension extends CompilerExtension {
+class EventsExtension extends CompilerExtension {
 
     const MAIN_FACTORY = 'eventMachine';
     const TRANSITION_FACTORY = 'Transition';
+    const FIELD_FACTORY = 'Field';
     const MACHINE_PREFIX = 'Machine_';
     const BASE_MACHINE_PREFIX = 'BaseMachine_';
-    const CLASS_MACHINE = 'Events\Machine';
-    const CLASS_BASE_MACHINE = 'Events\BaseMachine';
-    const CLASS_TRANSITION = 'Events\Transition';
+    const DATA_MODEL_PREFIX = 'DataModel_';
+    const CLASS_MACHINE = 'Events\Machine\Machine';
+    const CLASS_BASE_MACHINE = 'Events\Machine\BaseMachine';
+    const CLASS_TRANSITION = 'Events\Machine\Transition';
+    const CLASS_FIELD = 'Events\Model\Field';
+    const CLASS_DATA_MODEL = 'Events\Model\DataModel';
 
     private $scheme;
 
@@ -36,6 +40,7 @@ class MachineExtension extends CompilerExtension {
      */
     private $idMaps = array();
     private $transtionFactory;
+    private $fieldFactory;
     private $schemeFile;
 
     function __construct($schemaFile) {
@@ -51,6 +56,7 @@ class MachineExtension extends CompilerExtension {
 
         $this->createDispatchFactory();
         $this->createTransitionFactory();
+        $this->createFieldFactory();
 
         foreach ($config as $definitionName => $definition) {
             $eventTypeId = $definition['event_type_id'];
@@ -70,6 +76,7 @@ class MachineExtension extends CompilerExtension {
             $machines = array();
             foreach ($definition['baseMachines'] as $baseMachineName => $baseMachineDef) {
                 $machines[$baseMachineName] = $this->createBaseMachineFactory($definitionName, $baseMachineName, $baseMachineDef);
+                $this->createDataModelFactory($definitionName, $baseMachineName, $baseMachineDef);
             }
 
             $this->createMachineFactory($definitionName, $definition, $machines);
@@ -129,7 +136,7 @@ class MachineExtension extends CompilerExtension {
     private function createTransitionFactory() {
         $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName());
         $factory->setShared(false);
-        $factory->setClass(self::CLASS_BASE_MACHINE);
+        $factory->setClass(self::CLASS_TRANSITION);
         $factory->setInternal(true);
 
         $parameters = array_keys($this->scheme['transition']);
@@ -137,6 +144,19 @@ class MachineExtension extends CompilerExtension {
         $factory->setParameters($parameters);
 
         $this->transtionFactory = $factory;
+    }
+
+    private function createFieldFactory() {
+        $factory = $this->getContainerBuilder()->addDefinition($this->getFieldName());
+        $factory->setShared(false);
+        $factory->setClass(self::CLASS_FIELD);
+        $factory->setInternal(true);
+
+        $parameters = array_keys($this->scheme['field']);
+        array_unshift($parameters, 'name');
+        $factory->setParameters($parameters);
+
+        $this->fieldFactory = $factory;
     }
 
     private function createMachineFactory($name, $definition, $machines) {
@@ -220,6 +240,29 @@ class MachineExtension extends CompilerExtension {
         return $factory;
     }
 
+    private function createDataModelFactory($name, $baseName, $definition) {
+        $factoryName = $this->getDataModelName($name, $baseName);
+        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
+        $factory->setShared(false);
+        $factory->setClass(self::CLASS_DATA_MODEL);
+        $factory->setInternal(true);
+        $factory->setParameters(array_keys($this->scheme['bmInstance']));
+
+        $definition = $this->readDefinition($definition, $this->scheme['baseMachine']);
+        $factory->addSetup('setService', $definition['service']);
+
+        foreach ($definition['fields'] as $name => $fieldDef) {
+            $fieldDef = $this->readDefinition($fieldDef, $this->scheme['field']);
+
+            array_unshift($fieldDef, $name);
+            $defka = $this->fieldFactory;
+            $stmt = new Statement($defka, $fieldDef);
+            $factory->addSetup('addField', $stmt);
+        }
+
+        return $factory;
+    }
+
     private function getMachineName($name) {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
@@ -228,8 +271,16 @@ class MachineExtension extends CompilerExtension {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
+    private function getDataModelName($name, $baseName) {
+        return $this->prefix(self::DATA_MODEL_PREFIX . $name . '_' . $baseName);
+    }
+
     private function getTransitionName() {
         return $this->prefix(self::TRANSITION_FACTORY);
+    }
+
+    private function getFieldName() {
+        return $this->prefix(self::FIELD_FACTORY);
     }
 
     private function readDefinition($definition, $schemeFragment) {

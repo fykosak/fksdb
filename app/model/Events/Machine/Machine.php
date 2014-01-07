@@ -1,6 +1,6 @@
 <?php
 
-namespace Events;
+namespace Events\Machine;
 
 use Nette\Application\UI\Form;
 use Nette\FreezableObject;
