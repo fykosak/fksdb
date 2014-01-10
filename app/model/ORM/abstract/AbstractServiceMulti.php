@@ -1,9 +1,9 @@
 <?php
 
 use Nette\Object;
+
 /**
- * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
- *       duplicated in all descedant classes.
+ * Service for object representing one side of M:N relation, or entity in is-a relation ship.
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
@@ -95,9 +95,10 @@ abstract class AbstractServiceMulti extends Object {
      */
     public function dispose(AbstractModelMulti $model) {
         if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot delete ' . get_class($model));
         }
         $this->getJoinedService()->dispose($model->getJoinedModel());
+        //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
     protected function getMainService() {

@@ -7,8 +7,6 @@ use Nette\InvalidArgumentException;
  */
 class ServiceMPostContact extends AbstractServiceMulti {
 
-    protected static $staticMainServiceName = 'ServiceAddress';
-    protected static $staticJoinedServiceName = 'ServicePostContact';
     protected $modelClassName = 'ModelMPostContact';
 
     public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
