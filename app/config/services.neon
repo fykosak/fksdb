@@ -43,7 +43,7 @@ services:
 
     # web services
     soapServer:
-        class: SoapServer(%wdslUrl%)
+        class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
 
