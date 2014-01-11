@@ -3,8 +3,8 @@
 namespace Events\Machine;
 
 use Nette\FreezableObject;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -23,7 +23,7 @@ class BaseMachine extends FreezableObject {
     private $name;
 
     /**
-     * @var string (enum?)
+     * @var string
      */
     private $state;
 
@@ -90,10 +90,14 @@ class BaseMachine extends FreezableObject {
         return $this->state;
     }
 
+    public function setState($state) {
+        $this->state = $state;
+    }
+
     public function getAvailableTransitions() {
-        // a) matches
-        // b) condition
-        throw new NotImplementedException();
+        return array_filter($this->getMatchingTransitions(), function(Transition $transition) {
+                    return $transition->canExecute();
+                });
     }
 
     public function getTransition($name) {
@@ -101,10 +105,22 @@ class BaseMachine extends FreezableObject {
     }
 
     public function getTransitionByTarget($state) {
-        throw new NotImplementedException();
+        $candidates = array_filter($this->transitions, function(Transition $transition) use($state) {
+                    return $transition->getTarget() == $state;
+                });
+        if (count($candidates) > 1) {
+            throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
+        } else if (count($candidates) == 0) {
+            return null;
+        } else {
+            return $candidates[0];
+        }
     }
 
-    private function getMatchingTransitions($mask) {
+    private function getMatchingTransitions($mask = null) {
+        if ($mask === null) {
+            $mask = $this->getState();
+        }
         return array_filter($this->transitions, function(Transition $transition) use($mask) {
                     return $transition->matches($mask);
                 });

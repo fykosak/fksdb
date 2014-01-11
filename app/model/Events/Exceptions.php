@@ -15,3 +15,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
 class SubmitProcessingException extends RuntimeException {
     
 }
+
+class TransitionOnExecutedException extends MachineExecutionException {
+    
+}

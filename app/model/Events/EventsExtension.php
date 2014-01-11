@@ -35,6 +35,9 @@ class EventsExtension extends CompilerExtension {
     const CLASS_BASE_HOLDER = 'Events\Model\BaseHolder';
     const CLASS_HOLDER = 'Events\Model\Holder';
 
+    /** @const Maximum length of state identifier. */
+    const STATE_SIZE = 20;
+
     private $scheme;
 
     /**
@@ -171,7 +174,7 @@ class EventsExtension extends CompilerExtension {
 
         $factory->addSetup('setCondition', '%condition%');
         $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
-        
+
         $this->transtionFactory = $factory;
     }
 
@@ -263,6 +266,9 @@ class EventsExtension extends CompilerExtension {
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         foreach ($definition['states'] as $state => $label) {
+            if (strlen($state) > self::STATE_SIZE) {
+                throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
+            }
             $factory->addSetup('addState', $state, $label);
         }
         $states = array_keys($definition['states']);

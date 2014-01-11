@@ -2,7 +2,7 @@
 
 namespace Events\Model;
 
-use Events\Machine\Machine;
+use Events\Machine\BaseMachine;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
 use ORM\IModel;
@@ -14,6 +14,8 @@ use ORM\IService;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BaseHolder extends FreezableObject {
+
+    const STATE_COLUMN = 'status';
 
     /**
      * @var IService
@@ -33,10 +35,11 @@ class BaseHolder extends FreezableObject {
 
     public function addField(Field $field) {
         $this->updating();
-        $name = $field->getName();
-        $this->fields[$name] = $field;
         $field->setBaseHolder($this);
         $field->freeze();
+
+        $name = $field->getName();
+        $this->fields[$name] = $field;
     }
 
     public function getModel() {
@@ -55,6 +58,31 @@ class BaseHolder extends FreezableObject {
         } else {
             $this->model = $this->service->findByPrimary($model);
         }
+    }
+
+    public function saveModel() {
+        if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
+            $this->service->dispose($this->getModel());
+        } else {
+            $this->service->saev($this->getModel());
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelState() {
+        $model = $this->getModel();
+        if ($model->isNew() && !$model[self::STATE_COLUMN]) {
+            return BaseMachine::STATE_INIT;
+        } else {
+            return $model[self::STATE_COLUMN];
+        }
+    }
+
+    public function setModelState($state) {
+        $model = $this->getModel();
+        $model[self::STATE_COLUMN] = $state;
     }
 
     public function updateModel($values) {

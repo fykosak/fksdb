@@ -2,8 +2,11 @@
 
 namespace Events\Machine;
 
+use Events\TransitionConditionFailedException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
+use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -30,6 +33,16 @@ class Transition extends FreezableObject {
     /**
      * @var string
      */
+    private $target;
+
+    /**
+     * @var string
+     */
+    private $source;
+
+    /**
+     * @var string
+     */
     private $label;
 
     /**
@@ -43,7 +56,7 @@ class Transition extends FreezableObject {
     public $onExecuted;
 
     function __construct($mask, $label) {
-        $this->mask = $mask;
+        $this->setMask($mask);
         $this->label = $label;
     }
 
@@ -60,6 +73,15 @@ class Transition extends FreezableObject {
         return $this->label;
     }
 
+    public function getMask() {
+        return $this->mask;
+    }
+
+    public function setMask($mask) {
+        $this->mask = $mask;
+        list($this->source, $this->target) = self::parseMask($mask);
+    }
+
     public function getBaseMachine() {
         return $this->baseMachine;
     }
@@ -67,6 +89,10 @@ class Transition extends FreezableObject {
     public function setBaseMachine(BaseMachine $baseMachine) {
         $this->updating();
         $this->baseMachine = $baseMachine;
+    }
+
+    public function getTarget() {
+        return $this->target;
     }
 
     public function setCondition($condition) {
@@ -78,30 +104,110 @@ class Transition extends FreezableObject {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
         }
-        $inducedTransition = $targetMachine->getTransitionByTarget($targetState);
-        if (!$inducedTransition) {
-            trigger_error("Transition " . $this . " induced empty transition in " . $targetMachine . ".", E_USER_WARNING);
+        $targetName = $targetMachine->getName();
+        if (isset($this->inducedTransitions[$targetName])) {
+            throw new InvalidArgumentException("Induced transition for machine $targetName already defined.");
+        }
+        $this->inducedTransitions[$targetName] = $targetState;
+    }
+
+    private function getInducedTransitions() {
+        $result = array();
+        foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
+            $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
+            $inducedTransition = $targetMachine->getTransitionByTarget($targetState);
+            if ($inducedTransition) {
+                $result[] = $inducedTransition;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @return null|Transition
+     */
+    private function getBlockingTransition() {
+        foreach ($this->getInducedTransitions() as $inducedTransition) {
+            if (!$inducedTransition->getBlockingTransition()) {
+                return $inducedTransition;
+            }
+        }
+        if (!$this->isConditionFulfilled()) {
+            return $this;
+        }
+        return null;
+    }
+
+    private function isConditionFulfilled() {
+        if (is_bool($this->condition)) {
+            return $this->condition;
+        } else if (is_callable($this->condition)) {
+            return call_user_func($this->condition);
         } else {
-            $this->inducedTransitions[] = $inducedTransition;
+            throw new InvalidStateException("Cannot evaluate condition {$this->condition}.");
         }
     }
 
-    private function canExecute(BaseHolder $holder) {
-        //TODO internally checks the condition -- might be needed for transactional behavior with failed induced transitions
+    public final function canExecute() {
+        return !$this->getBlockingTransition();
     }
 
-    public function execute(BaseHolder $holder) {
-        //TODO (set new state in the machine)
-        // execute after transition handler
-        // throws TransitionConditionFailedException
+    public final function execute() {
+        if (!$this->canExecute()) {
+            throw new TransitionConditionFailedException($blockingTransition);
+        }
+
+        foreach ($this->getInducedTransitions() as $inducedTransition) {
+            $inducedTransition->_execute();
+        }
+
+        $this->_execute();
     }
 
+    /**
+     * @note Assumes the condition is fullfilled.
+     */
+    private function _execute() {
+        $this->getBaseMachine()->setState($this->getTarget());
+        $this->getBaseHolder()->setModelState($this->getTarget());
+
+        $this->onExecuted($this);
+    }
+
+    private function getBaseHolder() {
+        return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());
+    }
+
+    /**
+     * @param string $mask It may be either mask of initial state or mask of whole transition.
+     * @return boolean
+     */
     public function matches($mask) {
-        //TODO
+        $parts = self::parseMask($mask);
+
+        if (count($parts) == 2 && $parts[1] != $this->getTarget()) {
+            return false;
+        }
+
+        if (strpos(BaseMachine::STATE_ANY, $parts[0]) !== false || strpos(BaseMachine::STATE_ANY, $this->source) !== false) {
+            return true;
+        }
+
+        return preg_match("/(^|\\|){$parts[0]}(\\||\$)/", $this->source); //TODO verify
+    }
+
+    /**
+     * @note Assumes mask is valid.
+     * 
+     * @param string $mask
+     */
+    private static function parseMask($mask) {
+        return explode('->', $mask);
     }
 
     public static function validateTransition($mask, $states) {
-        $parts = explode('->', $mask);
+        $parts = self::parseMask('->', $mask);
         if (count($parts) != 2) {
             return false;
         }

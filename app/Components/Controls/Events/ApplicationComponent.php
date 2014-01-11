@@ -4,9 +4,10 @@ namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
-use Events\Machine\SubmitProcessingException;
-use Events\Machine\TransitionConditionFailedException;
 use Events\Model\Holder;
+use Events\SubmitProcessingException;
+use Events\TransitionConditionFailedException;
+use Events\TransitionOnExecutedException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -33,7 +34,12 @@ class ApplicationComponent extends Control {
         $this->holder = $holder;
     }
 
+    public function renderForm() {
+        $this->getComponent('form')->render();
+    }
+
     protected function createComponentForm($name) {
+        $this->initializeMachine();
         $form = new Form();
 
         /*
@@ -75,11 +81,13 @@ class ApplicationComponent extends Control {
     }
 
     private function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
+        $this->initializeMachine();
+        $connection = $this->holder->getConnection();
         try {
             $values = $form->getValues();
             $explicitMachine = $explicitMachineName ? $this->machine->getPrimaryMachine() : $this->machine[$explicitMachineName];
 
-            $this->holder->getConnection()->beginTransaction();
+            $connection->beginTransaction();
 
             /*
              * Find out transitions
@@ -98,16 +106,27 @@ class ApplicationComponent extends Control {
             }
 
             foreach ($transitions as $transition) {
-                $transition->execute();
+                try {
+                    $transition->execute();
+                } catch (TransitionOnExecutedException $e) {
+                    $form->addError($e->getMessage()); //TODO rather flash message due to only state change
+                }
             }
 
-
-            $this->getHandler()->save($values, $this);
+            $this->holder->saveModels();
+            $connection->commit();
+            $this->redirect('this');
         } catch (TransitionConditionFailedException $e) {
             $form->addError($e->getMessage());
+            $connection->rollBack();
         } catch (SubmitProcessingException $e) {
             $form->addError($e->getMessage());
+            $connection->rollBack();
         }
+    }
+
+    private function initializeMachine() {
+        $this->machine->setHolder($this->holder);
     }
 
 }

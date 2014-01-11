@@ -3,12 +3,13 @@
 namespace Events\Machine;
 
 use ArrayAccess;
+use ArrayIterator;
+use Events\Model\Holder;
 use Events\SaveHandler;
 use IteratorAggregate;
-use Nette\Application\UI\Form;
+use LogicException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -33,10 +34,9 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
     private $primaryMachine;
 
     /**
-     *
-     * @var SaveHandler
+     * @var Holder
      */
-    private $handler;
+    private $holder;
 
     public function setPrimaryMachine($name) {
         $this->updating();
@@ -56,15 +56,6 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
         $baseMachine->freeze();
     }
 
-    public function setHandler(SaveHandler $handler) {
-        $this->updating();
-        $this->handler = $handler;
-    }
-
-    public function getHandler() {
-        return $this->handler;
-    }
-
     public function getBaseMachine($name) {
         if (!array_key_exists($name, $this->baseMachines)) {
             throw new InvalidArgumentException("Unknown base machine '$name'.");
@@ -72,51 +63,21 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
         return $this->baseMachines[$name];
     }
 
-    public function createForm() {
-        $form = new Form();
-
-        // create fields for each base machine
+    public function setHolder(Holder $holder) {
         foreach ($this->baseMachines as $name => $baseMachine) {
-            $container = $baseMachine->createFormContainer();
-            $form->addComponent($container, $name);
+            $state = $holder[$name]->getModelState();
+            $baseMachine->setState($state);
         }
-
-        // create transition buttons
-        $that = $this;
-        foreach ($this->primaryMachine->getAvailableTransitions() as $transition) {
-            $transitionName = $transition->getName();
-            $submit = $form->addSubmit($transitionName, $transition->getLabel());
-            $submit->onClick[] = function(Form $form) use($transitionName, $that) {
-                        $that->handleSubmit($form, $transitionName);
-                    };
-        }
-
-        // create save (no transition) button
-        if ($this->primaryMachine->getState() != BaseMachine::STATE_INIT) {
-            $submit = $form->addSubmit('save', _('Uložit'));
-            $submit->onClick[] = array($this, 'handleSubmit');
-        }
-
-        return $form;
+        $this->holder = $holder;
     }
 
-    private function handleSubmit(Form $form, $transitionName = null) {
-        try {
-            $values = $form->getValues();
-            $this->onSubmit($values, $this); //TODO check this can modify data by reference
-
-            if ($transitionName !== null) {
-                $transition = $this->primaryMachine->getTransition($transitionName);
-                $transition->execute(); //TODO may need some parameters
-            }
-
-            $this->getHandler()->save($values, $this);
-        } catch (TransitionConditionFailedException $e) {
-            $form->addError($e->getMessage());
-        } catch (SubmitProcessingException $e) {
-            $form->addError($e->getMessage());
-        }
+    public function getHolder() {
+        return $this->holder;
     }
+
+    /*
+     * Syntactic-sugar interfaces
+     */
 
     public function getIterator() {
         return new ArrayIterator($this->baseMachines);
@@ -138,8 +99,5 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
         throw new LogicException('Cannot delete a base machine.');
     }
 
-    /*
-     * Syntacitc-sugar interfaces
-     */
 }
 

@@ -10,7 +10,6 @@ use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -77,10 +76,16 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
     }
 
+    public function saveModels() {
+        foreach ($this->baseHolders as $name => $baseHolder) {
+            $baseHolder->saveModel();
+        }
+    }
+
     /**
      * Apply processings to the values and sets them to the ORM model.
      * 
-     * @param \Nette\ArrayHash $values
+     * @param ArrayHash $values
      * @return string[] machineName => new state
      */
     public function processFormValues(ArrayHash $values) {
