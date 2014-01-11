@@ -2,6 +2,9 @@
 
 namespace Events\Machine;
 
+use ArrayAccess;
+use Events\SaveHandler;
+use IteratorAggregate;
 use Nette\Application\UI\Form;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
@@ -12,7 +15,7 @@ use RuntimeException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Machine extends FreezableObject {
+class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * @var array of function(ArrayHash $values, Machine $machine)
@@ -40,10 +43,17 @@ class Machine extends FreezableObject {
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
+    public function getPrimaryMachine() {
+        return $this->primaryMachine;
+    }
+
     public function addBaseMachine(BaseMachine $baseMachine) {
         $this->updating();
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
+
+        $baseMachine->setMachine($this);
+        $baseMachine->freeze();
     }
 
     public function setHandler(SaveHandler $handler) {
@@ -108,8 +118,28 @@ class Machine extends FreezableObject {
         }
     }
 
+    public function getIterator() {
+        return new ArrayIterator($this->baseMachines);
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->baseMachines[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return $this->baseMachines[$offset];
+    }
+
+    public function offsetSet($offset, $value) {
+        throw new LogicException('Use addBaseMachine method.');
+    }
+
+    public function offsetUnset($offset) {
+        throw new LogicException('Cannot delete a base machine.');
+    }
+
+    /*
+     * Syntacitc-sugar interfaces
+     */
 }
 
-class SubmitProcessingException extends RuntimeException {
-    
-}

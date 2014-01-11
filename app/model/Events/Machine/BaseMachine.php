@@ -2,9 +2,9 @@
 
 namespace Events\Machine;
 
-use Nette\Forms\Container;
 use Nette\FreezableObject;
 use Nette\InvalidStateException;
+use Nette\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,72 +17,97 @@ class BaseMachine extends FreezableObject {
     const STATE_TERMINATED = '__terminated';
     const STATE_ANY = '*';
 
+    /**
+     * @var string
+     */
     private $name;
-    private $required;
 
-    public function __construct() {
-        //TODO
+    /**
+     * @var string (enum?)
+     */
+    private $state;
+
+    /**
+     * @var string[$state]
+     */
+    private $states;
+
+    /**
+     * @var Transition[$transitionMask]
+     */
+    private $transitions;
+
+    /**
+     * @var Machine
+     */
+    private $machine;
+
+    public function __construct($name) {
+        $this->name = $name;
     }
 
-    public function addState($state, $name) {
+    public function addState($state, $label) {
         $this->updating();
-        //TODO
+        $this->states[$state] = $label;
     }
 
     public function addTransition(Transition $transition) {
         $this->updating();
-        $transition->setBaseMachine($this); // here it should be checked and freezed
-        $transition->freeze(); 
-        //TODO
+        $transition->setBaseMachine($this);
+        $transition->freeze();
+
+        $this->transitions[$transition->getName()] = $transition;
     }
 
     public function getName() {
         return $this->name;
     }
 
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-    public function getRequired() {
-        return $this->required;
-    }
-
-    public function setRequired($required) {//TODO freezing/ctor
-        $this->required = $required;
-    }
-
     public function addInducedTransition($transitionMask, $induced) {
         if (!$this->isFrozen()) {
-            throw new InvalidStateException('Cannot induce transitions from unfreezed base machine.');
+            throw new InvalidStateException('Cannot add induced transitions to unfreezed base machine.');
         }
-        //TODO
+        foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
+            foreach ($induced as $machineName => $state) {
+                $targetMachine = $this->getMachine()->getBaseMachine($machineName);
+                $transition->addInducedTransition($targetMachine, $state);
+            }
+        }
+    }
+
+    public function getMachine() {
+        return $this->machine;
+    }
+
+    public function setMachine(Machine $machine) {
+        $this->machine = $machine;
     }
 
     /**
      * @return string
      */
     public function getState() {
-        
+        return $this->state;
     }
 
     public function getAvailableTransitions() {
-        
+        // a) matches
+        // b) condition
+        throw new NotImplementedException();
     }
 
     public function getTransition($name) {
-        //TODO
+        return $this->transitions[$name];
     }
 
     public function getTransitionByTarget($state) {
-        //TODO, from the current state
+        throw new NotImplementedException();
     }
 
-    /**
-     * @return Container
-     */
-    public function createFormContainer() {
-        
+    private function getMatchingTransitions($mask) {
+        return array_filter($this->transitions, function(Transition $transition) use($mask) {
+                    return $transition->matches($mask);
+                });
     }
 
 }

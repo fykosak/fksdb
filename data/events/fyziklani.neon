@@ -53,7 +53,7 @@ events:
                                 )
                             ) # TODO add time condition (with registraion period parameters)?
                         label: Přihlásit tým
-                        after: callback # TODO send email
+                        onExecuted: [callback] # TODO send email
                     pending->approved:
                         condition: false # TODO logged in && event admin
                         label: Potvrdit účast týmu
@@ -86,7 +86,7 @@ events:
                         required: true
                         visible: true
                         modifiable: true
-                        factory: @@formSchoolFactory
+                        factory: @yearCalculator
                     second_school_id:
                         label: Druhá škola
                         required: false
@@ -175,7 +175,7 @@ events:
                     bmName: PARTICIPANT
                 p5:
                     bmName: PARTICIPANT
-            onSubmit:
+            processings:
                 - [@yearCalculator, 'callbackForCategory'] # here is calculated category, obtains data from form + metadata about fields?
 
 

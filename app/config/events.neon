@@ -7,7 +7,7 @@ machine:
     baseMachines:
     handler:
         default: null
-    onSubmit:
+    processings:
         default: []
     joins:
         default: []
@@ -24,8 +24,8 @@ transition:
         default: true
         type: expression
     label:
-    after:
-        default: null
+    onExecuted:
+        default: []
 
 field:
     label:
@@ -40,7 +40,8 @@ field:
         default: true
         type: expression
     factory:
-        default: null
+        default: @event.DBReflectionFactory
+        type: expression
 
 
 bmInstance:
@@ -52,5 +53,8 @@ bmInstance:
         type: expression
     modifiable:
         default: true
+        type: expression
+    transitionable: # TODO implement?
+        default: false
         type: expression
 

@@ -19,7 +19,8 @@ services:
         class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
     flashDumpFactory:
         class: Logging\FlashDumpFactory(%logToFlash%)
-
+    event.DBReflectionFactory:
+        class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 
 
 factories:
