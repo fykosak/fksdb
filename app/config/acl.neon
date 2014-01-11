@@ -36,7 +36,8 @@ services:
             - addResource(school)        # create, edit, list, delete
             - addResource(query.adhoc)   # parametrize, edit, show, execute
             - addResource(query.stored)  # parametrize, edit, show, execute, create
-            - addResource(org)    # create, edit, list, delete
+            - addResource(org)           # create, edit, list, delete
+            - addResource(event)         # TODO
 
             # ACL
             - allow(contestant, submit, upload)
