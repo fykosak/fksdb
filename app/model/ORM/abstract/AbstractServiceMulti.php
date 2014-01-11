@@ -1,13 +1,15 @@
 <?php
 
+use Nette\InvalidStateException;
 use Nette\Object;
+use ORM\IService;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceMulti extends Object {
+abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * @var string
@@ -101,7 +103,7 @@ abstract class AbstractServiceMulti extends Object {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    protected function getMainService() {
+    public function getMainService() {
         return $this->mainService;
     }
 
@@ -109,7 +111,7 @@ abstract class AbstractServiceMulti extends Object {
         $this->mainService = $mainService;
     }
 
-    protected function getJoinedService() {
+    public function getJoinedService() {
         return $this->joinedService;
     }
 

@@ -4,6 +4,7 @@ use Nette\Database\Connection;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use ORM\IService;
 use ORM\Tables\TypedTableSelection;
 
 /**
@@ -15,7 +16,7 @@ use ORM\Tables\TypedTableSelection;
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends TableSelection {
+abstract class AbstractServiceSingle extends TableSelection implements IService {
 
     /**
      * @var string
