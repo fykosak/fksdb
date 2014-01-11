@@ -3,6 +3,7 @@
 namespace FKS\Config\Expressions;
 
 use Nette\DI\Statement;
+use Nette\Utils\Arrays;
 use stdClass;
 
 /**
@@ -21,7 +22,7 @@ class Helpers {
      * Transforms into dynamic expression tree built from FKS\Expressions\*.
      * 
      * @param stdClass $expression
-     * @return mixed|\Nette\DI\Statement
+     * @return mixed|Statement
      */
     public static function statementFromExpression($expression) {
         if (!$expression instanceof stdClass) {
@@ -33,7 +34,7 @@ class Helpers {
             $arguments[] = self::statementFromExpression($attribute);
         }
 
-        $class = self::$semanticMaps[$expression->value];
+        $class = Arrays::get(self::$semanticMaps, $expression->value, $expression->value);
         return new Statement($class, $arguments);
     }
 
