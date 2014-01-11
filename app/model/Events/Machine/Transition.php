@@ -207,7 +207,7 @@ class Transition extends FreezableObject {
     }
 
     public static function validateTransition($mask, $states) {
-        $parts = self::parseMask('->', $mask);
+        $parts = self::parseMask($mask);
         if (count($parts) != 2) {
             return false;
         }
