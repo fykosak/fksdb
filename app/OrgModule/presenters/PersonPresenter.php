@@ -8,7 +8,6 @@ use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use FKSDB\Components\WizardComponent;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
@@ -27,6 +26,7 @@ use Persons\Deduplication\Merger;
 use ServiceLogin;
 use ServiceMPostContact;
 use ServicePerson;
+use ServicePersonHistory;
 use ServicePersonInfo;
 
 /**
@@ -39,6 +39,7 @@ class PersonPresenter extends EntityPresenter {
     const CONT_PERSON = 'person';
     const CONT_ADDRESSES = 'addresses';
     const CONT_PERSON_INFO = 'personInfo';
+    const CONT_PERSON_HISTORY = 'personHistory';
 
     protected $modelResourceId = 'person';
 
@@ -51,6 +52,11 @@ class PersonPresenter extends EntityPresenter {
      * @var ServicePersonInfo
      */
     private $servicePersonInfo;
+
+    /**
+     * @var ServicePersonHistory
+     */
+    private $servicePersonHistory;
 
     /**
      * @var ServiceLogin
@@ -113,6 +119,10 @@ class PersonPresenter extends EntityPresenter {
 
     public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
+    }
+
+    public function injectServicePersonHistory(ServicePersonHistory $servicePersonHistory) {
+        $this->servicePersonHistory = $servicePersonHistory;
     }
 
     public function injectServiceLogin(ServiceLogin $serviceLogin) {
@@ -224,6 +234,14 @@ class PersonPresenter extends EntityPresenter {
 
         $replicator->addSubmit('add', _('Přidat adresu'))->addCreateOnClick();
 
+        /**
+         * Person history
+         */
+        $group = $form->addGroup(_('Proměnlivé informace'));
+
+        $options = 0;
+        $historyContainer = $this->personFactory->createPersonHistory($options, $group);
+        $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
 
         /**
          * Personal information
@@ -329,6 +347,11 @@ class PersonPresenter extends EntityPresenter {
         }
         $defaults[self::CONT_ADDRESSES] = $addresses;
 
+        $history = $person->getHistory($this->getSelectedAcademicYear());
+        if ($history) {
+            $defaults[self::CONT_PERSON_HISTORY] = $history;
+        }
+
         $info = $person->getInfo();
         if ($info) {
             $defaults[self::CONT_PERSON_INFO] = $info;
@@ -340,8 +363,7 @@ class PersonPresenter extends EntityPresenter {
 
     /**
      * @internal
-     * @param WizardComponent $wizard
-     * @throws ModelException
+     * @param SubmitButton $button
      */
     public function handleEditFormSuccess(SubmitButton $button) {
         $form = $button->getForm();
@@ -399,6 +421,23 @@ class PersonPresenter extends EntityPresenter {
                     $this->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), self::FLASH_ERROR);
                 }
             }
+
+            /*
+             * Person history
+             */
+            $personHistoryData = $values[self::CONT_PERSON_HISTORY];
+            $personHistoryData = FormUtils::emptyStrToNull($personHistoryData);
+
+            $personHistory = $person->getHistory($this->getSelectedAcademicYear());
+            if (!$personHistory) {
+                $personHistory = $this->servicePersonHistory->createNew($personHistoryData);
+                $personHistory->person_id = $person->person_id;
+                $personHistory->ac_year = $this->getSelectedAcademicYear();
+            } else {
+                $this->servicePersonHistory->updateModel($personHistory, $personHistoryData);
+            }
+
+            $this->servicePersonHistory->save($personHistory);
 
             /*
              * Personal info

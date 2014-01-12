@@ -49,6 +49,10 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         return $contestChooser->getYear();
     }
 
+    public function getSelectedAcademicYear() {
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
     public function getContestant() {
         if ($this->contestant === false) {
             $person = $this->user->getIdentity()->getPerson();

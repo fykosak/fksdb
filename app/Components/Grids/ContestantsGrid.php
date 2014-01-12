@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids;
 
 use ModelPerson;
-use NiftyGrid\DataSource\NDataSource;
 use ServiceContestant;
+use SQL\ViewDataSource;
 
 /**
  *
@@ -31,30 +31,22 @@ class ContestantsGrid extends BaseGrid {
         //
         $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest()->contest_id, $presenter->getSelectedYear());
 
-        $this->setDataSource(new NDataSource($contestants));
-        $this->setDefaultOrder('family_name, other_name ASC');
+
+        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
+        $this->setDefaultOrder('name_lex ASC');
 
         //
         // columns
         //
-        $this->addColumn('display_name', _('Jméno'))->setRenderer(function($row) {
-                    $person = ModelPerson::createFromTableRow($row);
-                    return $person->getFullname();
-                });
+        $this->addColumn('name', _('Jméno'));
         $this->addColumn('study_year', _('Ročník'));
         $this->addColumn('school_name', _('Škola'));
 
         //
         // operations
         //
-        $that = $this;
-        $this->addButton("edit", _("Upravit"))
-                ->setText('Upravit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->ct_id);
-                        });
-        $this->addButton("editPerson", _("Upravit osobu"))
-                ->setText('Upravit osobu') //todo i18n
+        $this->addButton("editPerson", _("Upravit"))
+                ->setText(_('Upravit'))
                 ->setLink(function($row) use ($presenter) {
                             return $presenter->link("Person:edit", array(
                                         'id' => $row->person_id,

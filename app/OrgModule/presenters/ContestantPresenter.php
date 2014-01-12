@@ -3,17 +3,15 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
-use Authentication\AccountManager;
 use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Components\WizardComponent;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Mail\MailTemplateFactory;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Nette\NotImplementedException;
 use OrgModule\EntityPresenter;
 use Persons\ContestantHandler;
 use Persons\PersonHandlerException;
@@ -106,20 +104,6 @@ class ContestantPresenter extends EntityPresenter {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
     }
 
-    public function renderEdit($id) {
-        parent::renderEdit($id);
-
-        $contestant = $this->getModel();
-
-        if ($contestant->contest_id != $this->getSelectedContest()->contest_id) {
-            $this->flashMessage(_('Editace řešitele mimo zvolený seminář.'), self::FLASH_WARNING);
-        }
-
-        if ($contestant->year != $this->getSelectedYear()) {
-            $this->flashMessage(_('Editace řešitele mimo zvolený ročník semináře.'), self::FLASH_WARNING);
-        }
-    }
-
     public function titleCreate() {
         $this->setTitle(_('Založit řešitele'));
     }
@@ -149,20 +133,7 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     protected function createComponentEditComponent($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
-
-        $personContainer = $this->personFactory->createPerson(PersonFactory::DISABLED);
-        $form->addComponent($personContainer, self::CONT_PERSON);
-
-        $contestantContainer = $this->contestantFactory->createContestant();
-        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
-
-        $form->addSubmit('send', _('Uložit'));
-
-        $form->onSuccess[] = array($this, 'handleContestantEditFormSuccess');
-
-        return $form;
+        throw new NotImplementedException();
     }
 
     /**
@@ -197,28 +168,6 @@ class ContestantPresenter extends EntityPresenter {
         }
     }
 
-    /**
-     * @internal
-     * @param Form $form
-     */
-    public function handleContestantEditFormSuccess(Form $form) {
-        $values = $form->getValues();
-        $data = $values[self::CONT_CONTESTANT];
-        $model = $this->getModel();
-
-        try {
-            $this->serviceContestant->updateModel($model, $data);
-            $this->serviceContestant->save($model);
-            $this->flashMessage(sprintf('Řešitel %s upraven.', $model->getPerson()->getFullname()), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
-
-            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
-            Debugger::log($e);
-        }
-    }
-
     private function initStepData(WizardComponent $wizard) {
         $person = $this->contestantHandler->loadPerson($wizard);
         $form = $wizard->getComponent(ExtendedPersonWizardFactory::STEP_DATA);
@@ -227,9 +176,9 @@ class ContestantPresenter extends EntityPresenter {
             ExtendedPersonWizardFactory::CONT_PERSON => $person,
         );
 
-        $lastContestant = $person->getLastContestant($this->getSelectedContest());
-        if ($lastContestant) {
-            $defaults[ExtendedPersonWizardFactory::CONT_CONTESTANT] = $lastContestant;
+        $lastHistory = $person->getLastHistory();
+        if ($lastHistory) {
+            $defaults[ExtendedPersonWizardFactory::CONT_PERSON_HISTORY] = $lastHistory;
         }
 
         $addresses = array();

@@ -38,6 +38,12 @@ class PersonFactory {
     const SHOW_LIKE_SUPPLEMENT = 0x100;
     const REQUIRE_EMAIL = 0x200;
 
+    // For person_history
+    const REQUIRE_SCHOOL = 0x400;
+    const REQUIRE_STUDY_YEAR = 0x800;
+    /** @const Display school, study year and class only (supplement to other form containers). */
+    const SHOW_LIKE_CONTESTANT = 0x1000;
+
     /* Encapsulation condition argument (workaround) */
     const IDX_CONTROL = 'control';
     const IDX_OPERATION = 'op';
@@ -61,9 +67,15 @@ class PersonFactory {
      */
     private $uniqueEmailFactory;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory) {
+    /**
+     * @var SchoolFactory
+     */
+    private $factorySchool;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
+        $this->factorySchool = $factorySchool;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -264,6 +276,48 @@ class PersonFactory {
         $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
         $select->setDataProvider($dataProvider);
         return $select;
+    }
+
+    public function createPersonHistory($options = 0, ControlGroup $group = null) {
+        $container = new ModelContainer();
+        $container->setCurrentGroup($group);
+
+
+        if ($options & self::REQUIRE_SCHOOL) {
+            $school = $this->factorySchool->createSchoolSelect(SchoolFactory::SHOW_UNKNOWN_SCHOOL_HINT);
+            $school->addRule(Form::FILLED, _('Je třeba zadat školu.'));
+        } else {
+            $school = $this->factorySchool->createSchoolSelect();
+        }
+        $container->addComponent($school, 'school_id');
+
+        // TODO extract this element and made it more robust (show graduation year)
+        $studyYear = $container->addSelect('study_year', _('Ročník'))
+                ->setItems(array(
+                    1 => '1. ročník SŠ',
+                    2 => '2. ročník SŠ',
+                    3 => '3. ročník SŠ',
+                    4 => '4. ročník SŠ',
+                    6 => '6. ročník ZŠ',
+                    7 => '7. ročník ZŠ',
+                    8 => '8. ročník ZŠ',
+                    9 => '9. ročník ZŠ',
+                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
+                ->setPrompt(_('Zvolit ročník'));
+
+        if ($options & self::REQUIRE_STUDY_YEAR) {
+            $studyYear->addRule(Form::FILLED, _('Je třeba zadat ročník.'));
+        }
+
+
+        $container->addText('class', _('Třída'))
+                ->setOption('description', _('Kvůli případné školní korespondenci.'));
+
+//       For later use.        
+//        if (!($options & self::SHOW_LIKE_SUPPLEMENT)) {
+//            
+//        }
+        return $container;
     }
 
 }
