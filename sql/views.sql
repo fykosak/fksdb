@@ -6,6 +6,15 @@ CREATE OR REPLACE VIEW v_task_stats as
   GROUP BY task_id
 );
 
+create or replace view v_contestant as (
+    select p.name, p.name_lex, p.gender, ct.ct_id, ct.person_id, ct.contest_id, ct.year, ph.study_year, ph.school_id, ph.class, s.name as `school_name`
+    from contestant_base ct
+    inner join v_person p on p.person_id = ct.person_id
+    left join contest_year cy on cy.contest_id = ct.contest_id and cy.year = ct.year
+    left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
+    left join v_school s on s.school_id = ph.school_id
+);
+
 CREATE OR REPLACE VIEW v_gooddata as (
 -- Reseni;Rocnik;Serie;CisloUlohy;Uloha;MaxBodu;Bodu;Resitel;Rokmaturity;Pohlavi;Skola;Mesto;Stat
 
@@ -16,7 +25,7 @@ p.gender AS Pohlavi, sch.name_abbrev AS Skola, scha.city AS Mesto, reg.country_i
 
 from submit s
 left join task t on t.task_id = s.task_id
-left join contestant ct on ct.ct_id = s.ct_id
+left join v_contestant ct on ct.ct_id = s.ct_id
 left join person p on p.person_id = ct.person_id
 left join school sch on ct.school_id = sch.school_id
 left join address scha on scha.address_id = sch.address_id
@@ -57,11 +66,4 @@ create or replace view v_school as (
 	from school s
 );
 
-create or replace view v_contestant as (
-    select p.name, p.name_lex, p.gender, ct.ct_id, ct.person_id, ct.contest_id, ct.year, ph.study_year, ph.school_id, ph.class, s.name as `school_name`
-    from contestant_base ct
-    inner join v_person p on p.person_id = ct.person_id
-    left join contest_year cy on cy.contest_id = ct.contest_id and cy.year = ct.year
-    left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
-    left join v_school s on s.school_id = ph.school_id
-);
+
