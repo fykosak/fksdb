@@ -97,7 +97,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);
 
-        $from = " from contestant ct
+        $from = " from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id

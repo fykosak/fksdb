@@ -96,7 +96,7 @@ class ExportPresenter extends SeriesPresenter {
 
     private function getDesignFormFromSession() {
         // there may be invalid data in session, so we verify it by GET parameter
-        if(!$this->getParam(self::PARAM_LOAD_FROM_SESSION, false)) {
+        if (!$this->getParam(self::PARAM_LOAD_FROM_SESSION, false)) {
             return null;
         }
         $section = $this->session->getSection(self::SESSION_NS);
@@ -424,7 +424,8 @@ class ExportPresenter extends SeriesPresenter {
                 $ctid = $data->ct_id;
 
                 $row = array();
-                $contestant = $serviceContestant->findByPrimary($ctid);
+                //TODO unechecked
+                $contestant = $serviceContestant->getTable()->getConnection()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
                 $person = ModelPerson::createFromTableRow($contestant->person);
 
                 // jména                
