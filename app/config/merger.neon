@@ -9,6 +9,7 @@ parameters:
             contestant: [person_id, contest_id, year]
             login: [person_id]
             person_info: [person_id]
+            person_history: [person_id, ac_year]
             submit: [ct_id, task_id]
             org: [person_id, contest_id]
             post_contact: [person_id, type]
