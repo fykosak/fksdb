@@ -2,9 +2,6 @@
 
 use Nette\Object;
 
-// TODO refactor this class so that it reads data from contest_year table
-//      this is ambiguous
-
 class YearCalculator extends Object {
 
     const YEAR = 31557600; //365.25*24*3600

@@ -13,9 +13,6 @@ use ServiceContest;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestantFactory {
-    //TODO remove this option as it's effectively useless
-
-    const SHOW_CONTEST = 0x1;
 
     /**
      * @var ServiceContest
@@ -37,12 +34,10 @@ class ContestantFactory {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        if ($options & self::SHOW_CONTEST) {
-            $container->addSelect('contest_id', _('Seminář'))
-                    ->setItems($this->serviceContest->getTable()->fetchPairs('contest_id', 'name'))
-                    ->setPrompt(_('Zvolit seminář'))
-                    ->addRule(Form::FILLED, _('Je třeba zvolit seminář.'));
-        }
+        $container->addSelect('contest_id', _('Seminář'))
+                ->setItems($this->serviceContest->getTable()->fetchPairs('contest_id', 'name'))
+                ->setPrompt(_('Zvolit seminář'))
+                ->addRule(Form::FILLED, _('Je třeba zvolit seminář.'));
 
 
         return $container;

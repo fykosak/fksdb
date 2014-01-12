@@ -198,6 +198,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
     }
 
     public function getSelectedAcademicYear() {
+        if (!$this->getSelectedContest()) {
+            return $this->yearCalculator->getCurrentAcademicYear();
+        }
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
@@ -301,11 +304,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
          */
         $group = $form->addGroup(_('Řešitel'));
         if (!$this->getSelectedContest()) {
-            $contestant = $this->contestantFactory->createContestant(ContestantFactory::SHOW_CONTEST, $group);
+            $contestant = $this->contestantFactory->createContestant(0, $group);
             $form->addComponent($contestant, self::CONT_CONTESTANT);
         }
         $options = PersonFactory::REQUIRE_SCHOOL | PersonFactory::REQUIRE_STUDY_YEAR | PersonFactory::SHOW_LIKE_CONTESTANT;
-        $history = $this->personFactory->createPersonHistory($options, $group);
+        $history = $this->personFactory->createPersonHistory($options, $group, $this->getSelectedAcademicYear());
         $form->addComponent($history, self::CONT_PERSON_HISTORY);
 
 
@@ -381,17 +384,15 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
             $contestant->person_id = $person->person_id;
             if (isset($contestant->contest_id)) {
-                $contest = $this->serviceContest->findByPrimary($contestant->contest_id); //TODO try calling ORMs ref
-                $contestant->year = $this->yearCalculator->getCurrentYear($contest);
+                $contest = $this->serviceContest->findByPrimary($contestant->contest_id);
+                $contestant->year = $this->yearCalculator->getCurrentYear($contest); // NOTE: this may be problematic when alowing forward registrations
             } else {
-                $contest = $this->getSelectedContest();
                 $contestant->contest_id = $this->getSelectedContest()->contest_id;
                 $contestant->year = $this->getSelectedYear();
             }
             /**
              * @note $contest is transfered for use with person history
              */
-
             $this->serviceContestant->save($contestant);
 
             /*
@@ -399,7 +400,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
              */
             $personHistoryData = isset($values[self::CONT_PERSON_HISTORY]) ? $values[self::CONT_PERSON_HISTORY] : array();
             $personHistoryData = FormUtils::emptyStrToNull($personHistoryData);
-            $acYear = $this->yearCalculator->getAcademicYear($contest, $contestant->year);
+            $acYear = $this->getSelectedAcademicYear();
             $personHistory = $person->getHistory($acYear);
             if (!$personHistory) {
                 $personHistory = $this->servicePersonHistory->createNew($personHistoryData);
