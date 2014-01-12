@@ -11,6 +11,7 @@ use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
 use ServicePerson;
+use ServicePersonHistory;
 use ServicePersonInfo;
 
 /**
@@ -26,31 +27,47 @@ class ContestantHandler extends AbstractPersonHandler {
     private $serviceContestant;
 
     /**
+     * @var ServicePersonHistory
+     */
+    private $servicePersonHistory;
+
+    /**
      * @var ServiceMPostContact
      */
     private $serviceMPostContact;
 
-    function __construct(ServiceContestant $serviceContestant, ServiceMPostContact $serviceMPostContact, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    function __construct(ServicePersonHistory $servicePersonHistory, ServiceContestant $serviceContestant, ServiceMPostContact $serviceMPostContact, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
         parent::__construct($servicePerson, $servicePersonInfo, $serviceLogin, $mailTemplateFactory, $accountManager);
 
         $this->serviceContestant = $serviceContestant;
         $this->serviceMPostContact = $serviceMPostContact;
+        $this->servicePersonHistory = $servicePersonHistory;
     }
 
     protected function storeExtendedData($data, Presenter $presenter) {
         /*
          * Contestant
          */
-        $dataContestant = $data[ExtendedPersonWizardFactory::CONT_CONTESTANT];
-        $dataContestant = FormUtils::emptyStrToNull($dataContestant);
-
-        $contestant = $this->serviceContestant->createNew($dataContestant);
+        $contestant = $this->serviceContestant->createNew();
 
         $contestant->person_id = $this->person->person_id;
         $contestant->contest_id = $presenter->getSelectedContest()->contest_id;
         $contestant->year = $presenter->getSelectedYear();
 
         $this->serviceContestant->save($contestant);
+
+        /*
+         * Person history
+         */
+        $dataHistory = $data[ExtendedPersonWizardFactory::CONT_PERSON_HISTORY];
+        $dataHistory = FormUtils::emptyStrToNull($dataHistory);
+
+        $personHistory = $this->servicePersonHistory->createNew($dataHistory);
+
+        $personHistory->person_id = $this->person->person_id;
+        $personHistory->ac_year = $presenter->getSelectedAcademicYear();
+
+        $this->servicePersonHistory->save($personHistory);
 
 
         /*

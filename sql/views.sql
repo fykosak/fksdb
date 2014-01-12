@@ -58,8 +58,10 @@ create or replace view v_school as (
 );
 
 create or replace view v_contestant as (
-	select p.name, p.name_lex, p.gender, ct.*, s.name as `school_name`
-	from contestant ct
-	inner join v_person p on p.person_id = ct.person_id
-	left join v_school s on s.school_id = ct.school_id
+    select p.name, p.name_lex, p.gender, ct.ct_id, ct.person_id, ct.contest_id, ct.year, ph.study_year, ph.school_id, ph.class, s.name as `school_name`
+    from contestant_base ct
+    inner join v_person p on p.person_id = ct.person_id
+    left join contest_year cy on cy.contest_id = ct.contest_id and cy.year = ct.year
+    left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
+    left join v_school s on s.school_id = ph.school_id
 );

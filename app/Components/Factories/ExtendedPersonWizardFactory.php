@@ -2,20 +2,16 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelContest;
-use ModelPerson;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Utils\Html;
 use ServicePerson;
@@ -36,7 +32,7 @@ class ExtendedPersonWizardFactory {
     const EL_EMAIL = 'email';
     /* Containers */
     const CONT_PERSON = 'person';
-    const CONT_CONTESTANT = 'contestant';
+    const CONT_PERSON_HISTORY = 'person_history';
     const CONT_PERSON_INFO = 'person_info';
     const CONT_ADDRESSES = 'addresses';
     const CONT_ORG = 'org';
@@ -79,7 +75,6 @@ class ExtendedPersonWizardFactory {
      * @var Session
      */
     private $session;
-
 
     function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session) {
         $this->personFactory = $personFactory;
@@ -171,8 +166,8 @@ class ExtendedPersonWizardFactory {
          * Contestant
          */
         $group = $form->addGroup(_('Řešitel'));
-        $contestantContainer = $this->contestantFactory->createContestant(null, $group);
-        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+        $historyContainer = $this->personFactory->createPersonHistory(PersonFactory::SHOW_LIKE_CONTESTANT, $group);
+        $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
 
 
         /**

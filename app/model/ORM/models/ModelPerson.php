@@ -44,13 +44,31 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * @param int $acYear
+     * @return null
+     */
+    public function getHistory($acYear) {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+                ->where('ac_year', $acYear);
+        $histories->rewind();
+        if (!$histories->valid()) {
+            return null;
+        }
+
+        return ModelPersonHistory::createFromTableRow($histories->current());
+    }
+
+    /**
      * @return TableSelection untyped
      */
     public function getContestants($contestId = null) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
-        $related = $this->related(DbNames::TAB_CONTESTANT, 'person_id');
+        $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
         }
@@ -142,18 +160,16 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * 
-     * @param ModelContest $contest
-     * @return null|ModelContestant the most recent contestant for the person and given contest (if any)
+     * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
-    public function getLastContestant(ModelContest $contest) {
+    public function getLastHistory() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
-        $contestant = $this->getContestants($contest->contest_id)->order('year DESC')->fetch();
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
-        if ($contestant) {
-            return ModelContestant::createFromTableRow($contestant);
+        if ($history) {
+            return ModelPersonHistory::createFromTableRow($history);
         } else {
             return null;
         }
@@ -191,7 +207,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = array();
-        foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
+        foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromTableRow($contestant);
             $year = $yearCalculator->getCurrentYear($contestant->getContest());
             if ($contestant->year == $year) {

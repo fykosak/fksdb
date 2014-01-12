@@ -30,7 +30,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
      * @return ModelContestant
      */
     public function getContestant() {
-        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT, 'ct_id'));
+        return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     public function getResourceId() {

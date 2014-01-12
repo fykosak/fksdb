@@ -6,6 +6,7 @@ services:
     ServiceAddress:          ServiceAddress
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
+    ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventParticipant: ServiceEventParticipant
     ServiceGlobalSession:    ServiceGlobalSession
@@ -13,6 +14,7 @@ services:
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson
+    ServicePersonHistory:    ServicePersonHistory
     ServicePersonInfo:       ServicePersonInfo
     ServicePostContact:      ServicePostContact
     ServiceRegion:           ServiceRegion
