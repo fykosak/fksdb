@@ -102,10 +102,10 @@ class ExtendedPersonWizardFactory {
      * 
      * @return WizardComponent
      */
-    public function createContestant() {
+    public function createContestant($acYear) {
         $wizard = $this->createWizardBase();
 
-        $dataForm = $this->createContestantForm();
+        $dataForm = $this->createContestantForm($acYear);
         $wizard->addStep($dataForm, self::STEP_DATA);
         $wizard->registerStepSubmitter(self::STEP_DATA, self::SEND);
 
@@ -153,7 +153,7 @@ class ExtendedPersonWizardFactory {
         return $form;
     }
 
-    private function createContestantForm() {
+    private function createContestantForm($acYear) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
 
@@ -166,7 +166,7 @@ class ExtendedPersonWizardFactory {
          * Contestant
          */
         $group = $form->addGroup(_('Řešitel'));
-        $historyContainer = $this->personFactory->createPersonHistory(PersonFactory::SHOW_LIKE_CONTESTANT, $group);
+        $historyContainer = $this->personFactory->createPersonHistory(PersonFactory::SHOW_LIKE_CONTESTANT, $group, $acYear);
         $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
 
 

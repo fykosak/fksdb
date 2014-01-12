@@ -11,10 +11,12 @@ use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
-use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\SelectBox;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
+use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -71,6 +73,11 @@ class PersonFactory {
      * @var SchoolFactory
      */
     private $factorySchool;
+
+    /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
 
     function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool) {
         $this->translator = $translator;
@@ -278,10 +285,10 @@ class PersonFactory {
         return $select;
     }
 
-    public function createPersonHistory($options = 0, ControlGroup $group = null) {
+    public function createPersonHistory($options = 0, ControlGroup $group = null, $acYear = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
-
+        $acYear = $acYear ? : $this->yearCalculator->getCurrentAcademicYear();
 
         if ($options & self::REQUIRE_SCHOOL) {
             $school = $this->factorySchool->createSchoolSelect(SchoolFactory::SHOW_UNKNOWN_SCHOOL_HINT);
@@ -291,19 +298,8 @@ class PersonFactory {
         }
         $container->addComponent($school, 'school_id');
 
-        // TODO extract this element and made it more robust (show graduation year)
-        $studyYear = $container->addSelect('study_year', _('Ročník'))
-                ->setItems(array(
-                    1 => '1. ročník SŠ',
-                    2 => '2. ročník SŠ',
-                    3 => '3. ročník SŠ',
-                    4 => '4. ročník SŠ',
-                    6 => '6. ročník ZŠ',
-                    7 => '7. ročník ZŠ',
-                    8 => '8. ročník ZŠ',
-                    9 => '9. ročník ZŠ',
-                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
-                ->setPrompt(_('Zvolit ročník'));
+        $studyYear = $this->createStudyYear($acYear);
+        $container->addComponent($studyYear, 'study_year');
 
         if ($options & self::REQUIRE_STUDY_YEAR) {
             $studyYear->addRule(Form::FILLED, _('Je třeba zadat ročník.'));
@@ -318,6 +314,28 @@ class PersonFactory {
 //            
 //        }
         return $container;
+    }
+
+    private function createStudyYear($acYear) {
+        $studyYear = new SelectBox(_('Ročník'));
+
+        $hsYears = array();
+        foreach (range(1, 4) as $study_year) {
+            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $acYear + (5 - $study_year));
+        }
+
+        $primaryYears = array();
+        foreach (range(6, 9) as $study_year) {
+            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $acYear + (5 - ($study_year - 9)));
+        }
+
+        $studyYear->setItems(array(
+                    _('střední škola') => $hsYears,
+                    _('základní škola nebo víceleté gymnázium') => $primaryYears,
+                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
+                ->setPrompt(_('Zvolit ročník'));
+
+        return $studyYear;
     }
 
 }

@@ -240,7 +240,7 @@ class PersonPresenter extends EntityPresenter {
         $group = $form->addGroup(_('Proměnlivé informace'));
 
         $options = 0;
-        $historyContainer = $this->personFactory->createPersonHistory($options, $group);
+        $historyContainer = $this->personFactory->createPersonHistory($options, $group, $this->getSelectedAcademicYear());
         $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
 
         /**

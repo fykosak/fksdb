@@ -118,7 +118,7 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     protected function createComponentCreateComponent($name) {
-        $wizard = $this->contestantWizardFactory->createContestant();
+        $wizard = $this->contestantWizardFactory->createContestant($this->getSelectedAcademicYear());
 
         $wizard->onProcess[] = array($this, 'processWizard');
         $wizard->onStepInit[] = array($this, 'initWizard');

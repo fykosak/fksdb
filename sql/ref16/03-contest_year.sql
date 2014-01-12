@@ -1,4 +1,4 @@
-insert into contest_year (constest_id, year, ac_year) values
+insert into contest_year (contest_id, year, ac_year) values
 (2, 0, 2010),
 (2, 1, 2011),
 (2, 2, 2012),
