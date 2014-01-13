@@ -6,10 +6,13 @@ use AbstractServiceMulti;
 use AbstractServiceSingle;
 use Events\Machine\BaseMachine;
 use Events\Model\Field;
+use Events\Model\Field as Field2;
+use Nette\Application\UI\Form;
+use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
+use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
@@ -17,7 +20,7 @@ use Nette\InvalidArgumentException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DBReflectionFactory implements IFieldFactory {
+class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @var Connection
@@ -33,7 +36,7 @@ class DBReflectionFactory implements IFieldFactory {
         $this->connection = $connection;
     }
 
-    public function create(Field $field, BaseMachine $machine) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
         $size = $column['size'];
@@ -45,7 +48,8 @@ class DBReflectionFactory implements IFieldFactory {
             $element = new Checkbox($field->getLabel());
         } else if (substr_compare($type, 'INT', '-3') == 0) {
             $element = new TextInput($field->getLabel());
-            $element->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
+            $element->addCondition(Form::FILLED)
+                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
                     ->addRule(Form::MAX_LENGTH, null, $size);
         } else {
             $element = new TextInput($field->getLabel());
@@ -53,24 +57,22 @@ class DBReflectionFactory implements IFieldFactory {
                 $element->addRule(Form::MAX_LENGTH, null, $size);
             }
         }
-
-        /*
-         * Set attributes
-         */
-        $element->setDisabled(!$field->isModifiable($machine));
-        if ($field->isRequired($machine)) {
-            $element->setRequired(_('%label je povinná položka.'));
-        }
-
-        /*
-         * Set value
-         */
-        $element->setDefaultValue($field->getValue());
-
         return $element;
     }
 
-    private function resolveColumn(Field $field) {
+    protected function setDefaultValue(Component $component, Field $field, BaseMachine $machine, Container $container) {
+        $component->setDefaultValue($field->getValue());
+    }
+
+    protected function setDisabled(Component $component, Field $field, BaseMachine $machine, Container $container) {
+        $component->setDisabled(!$field->isModifiable($machine));
+    }
+
+    public function getMainControl(Component $component) {
+        return $component;
+    }
+
+    private function resolveColumn(Field2 $field) {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 
@@ -87,7 +89,7 @@ class DBReflectionFactory implements IFieldFactory {
             }
         }
         if ($column === null) {
-            throw new InvalidArgumentException("Cannot find reflection for field '$name'.");
+            throw new InvalidArgumentException("Cannot find reflection for field '{$field->getName()}'.");
         }
         return $column;
     }
@@ -95,8 +97,8 @@ class DBReflectionFactory implements IFieldFactory {
     private function getColumnMetadata($table, $column) {
         if (!isset($this->columns[$table])) {
             $columns = array();
-            foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $column) {
-                $columns[$column['name']] = $column;
+            foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
+                $columns[$columnMeta['name']] = $columnMeta;
             }
             $this->columns[$table] = $columns;
         }
@@ -108,3 +110,4 @@ class DBReflectionFactory implements IFieldFactory {
     }
 
 }
+

@@ -108,12 +108,12 @@ class BaseMachine extends FreezableObject {
         $candidates = array_filter($this->transitions, function(Transition $transition) use($state) {
                     return $transition->getTarget() == $state;
                 });
-        if (count($candidates) > 1) {
-            throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
-        } else if (count($candidates) == 0) {
+        if (count($candidates) == 0) {
             return null;
+        } else if (count($candidates) > 1) {
+            throw new InvalidArgumentException("Target state '$state' is reachable via multiple edges."); //TODO may this be anytime useful?
         } else {
-            return $candidates[0];
+            return reset($candidates);
         }
     }
 

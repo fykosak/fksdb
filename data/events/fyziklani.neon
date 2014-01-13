@@ -45,15 +45,9 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: and(
-                                [@self, 'foo'],
-                                or(
-                                    [@yearCalculator, 'foo'],
-                                    'Class::callback'
-                                )
-                            ) # TODO add time condition (with registraion period parameters)?
+                        condition: true # TODO add time condition (with registraion period parameters)?
                         label: Přihlásit tým
-                        onExecuted: [callback] # TODO send email
+                        # onExecuted: [callback] # TODO send email
                     pending->approved:
                         condition: false # TODO logged in && event admin
                         label: Potvrdit účast týmu
@@ -81,34 +75,20 @@ events:
                         required: true # or condition, evaluated after processing (if not modifiable, otherwise in GUI (too))
                         visible: true # or condition
                         modifiable: false # it means modifiable in GUI, or condition        
-                    main_school_id:
-                        label: Hlavní škola
-                        required: true
-                        visible: true
-                        modifiable: true
-                        factory: @yearCalculator
-                    second_school_id:
-                        label: Druhá škola
-                        required: false
-                        visible: true
-                        modifiable: true
-                        factory: @@formSchoolFactory
-                    contact_person_id:
+                    liaison_id:
                         label: Kontaktní osoba
                         required: true
                         visible: true
                         modifiable: true
-                        factory: @@formContactPersonFactory
-                    teacher_arrive:
+                    teacher_present:
                         label: Přijede učitel
-                        required: true # TODO?
                         visible: true
                         modifiable: true
-                    note:
-                        label: Poznámka
-                        required: false
+                    teacher_will_stay:
+                        label: Učitel má zájem o program
                         visible: true
                         modifiable: true
+                    # TODO note
 
             #
             #   PARTICIPANT
@@ -132,33 +112,16 @@ events:
                 fields:
                     person_id:
                         label: Člen
-                        required: false
                         visible: true
                         modifiable: true
-                        factory: @@formMemberPersonFactory
-                    contestant: # TODO will be affected by schema refatorizatoin
-                        required: false # if school and year aren't filled
-                        visible: false # or condition
-                        modifiable: false # or condition
-                    main_school_id:
-                        label: Škola
-                        required: false # if contestant isn't found
-                        visible: true
-                        modifiable: true
-                        factory: @@formSchoolFactory
-                    study_year:
-                        label: Ročník
-                        required: false # if contestant isn't found
-                        visible: true
-                        modifiable: true
-                        factory: @@formStudyYearFactory
+                        determining: true
+                        # TODO person factory
 
         #
         #   MACHINE
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            handler: @yearCalculator
             baseMachines:
                 team:
                     bmName: TEAM 
@@ -166,7 +129,7 @@ events:
                     primary: true # base machine states are propagated to the machine
                 p1:
                     bmName: PARTICIPANT
-                    required: and(true, false)
+                    required: true
                 p2:
                     bmName: PARTICIPANT
                 p3:
@@ -176,8 +139,7 @@ events:
                 p5:
                     bmName: PARTICIPANT
             processings:
-                - [@yearCalculator, 'callbackForCategory'] # here is calculated category, obtains data from form + metadata about fields?
-
+                - Events\Model\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
 
             joins:
                 # NOTE: Join may not be realized if induced transition isn't viable.

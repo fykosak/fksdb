@@ -107,7 +107,8 @@ class EventsExtension extends CompilerExtension {
 
     private function createDispatchFactoryBody(Method $method, $nameCallback) {
         $method->setBody(NULL);
-        $method->addBody('$eventTypeId = $eventType->getPrimary();');
+        $method->addBody('$eventTypeId = $event->event_type_id;');
+        $method->addBody('$eventYear = $event->event_year;');
         $method->addBody('switch($eventTypeId) {');
         foreach ($this->idMaps as $eventTypeId => $definitions) {
             $method->addBody('case ?:', array($eventTypeId));
@@ -116,7 +117,7 @@ class EventsExtension extends CompilerExtension {
             foreach ($definitions as $definition) {
                 $machineName = $nameCallback($definition['name']);
                 $methodName = Container::getMethodName($machineName, false);
-                $body = "return \$this->$methodName();";
+                $body = "return \$this->$methodName(\$event);";
                 if ($definition['years'] === true) {
                     $universalDefinition = $body;
                 } else {
@@ -140,12 +141,12 @@ class EventsExtension extends CompilerExtension {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_FACTORY);
         $def->setShared(false);
         $def->setClass(self::CLASS_MACHINE);
-        $def->setParameters(array('eventType', 'eventYear'));
+        $def->setParameters(array('ModelEvent event'));
 
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_HOLDER);
         $def->setShared(false);
         $def->setClass(self::CLASS_HOLDER);
-        $def->setParameters(array('eventType', 'eventYear'));
+        $def->setParameters(array('ModelEvent event'));
     }
 
     public function afterCompile(ClassType $class) {
@@ -249,7 +250,6 @@ class EventsExtension extends CompilerExtension {
             }
         }
 
-        $factory->addSetup('setHandler', $machineDef['handler']); //TODO some default handler?
         $factory->addSetup('freeze');
     }
 
@@ -303,6 +303,7 @@ class EventsExtension extends CompilerExtension {
         $factory->setShared(false);
         $factory->setClass(self::CLASS_HOLDER);
         $factory->setInternal(true);
+        $factory->setParameters(array('ModelEvent event'));
 
         /*
          * Create and add base machines into the machine (i.e. creating instances).
@@ -320,14 +321,16 @@ class EventsExtension extends CompilerExtension {
             }
 
             $defka = $this->baseDefinitions['holders'][$instanceDef['bmName']];
-            $stmt = new Statement($defka, $instanceDef);
             $instanceDef['name'] = $instanceName;
+            $stmt = new Statement($defka, $instanceDef);
             $factory->addSetup('addBaseHolder', $stmt);
         }
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
         $factory->addSetup('setPrimaryHolder', $primaryName);
+
+        $factory->addSetup('setEvent', '%event%');
 
         foreach ($machineDef['processings'] as $processing) {
             $factory->addSetup('addProcessing', $processing);
@@ -342,15 +345,36 @@ class EventsExtension extends CompilerExtension {
         $factoryName = $this->getBaseHolderName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setShared(false);
-        $factory->setClass(self::CLASS_BASE_HOLDER);
+        $factory->setClass(self::CLASS_BASE_HOLDER, array('%name%'));
         $factory->setInternal(true);
-        $factory->setParameters(array_keys($this->scheme['bmInstance']));
+
+        $parameters = array_keys($this->scheme['bmInstance']);
+        array_unshift($parameters, 'name');
+        $factory->setParameters($parameters);
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         $factory->addSetup('setService', $definition['service']);
 
+        foreach (Arrays::grep($parameters, '/^modifiable|visible$/') as $parameter) {
+            $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
+        }
+
+        $hasNondetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
+
+            if ($fieldDef['determining']) {
+                if ($fieldDef['required']) {
+                    throw new MachineDefinitionException("Field '$name' cannot be both required and determining. Set required on the base holder.");
+                }
+                if ($hasNondetermining) {
+                    throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
+                }
+                $fieldDef['required'] = '%required%';
+            } else {
+                $hasNondetermining = true;
+            }
+
 
             array_unshift($fieldDef, $name);
             $defka = $this->fieldFactory;

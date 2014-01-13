@@ -30,7 +30,7 @@ class EventsGrid extends BaseGrid {
         // data
         //
         
-        $events = $this->serviceEvent->getEvents();
+        $events = $this->serviceEvent->getEvents($presenter->getSelectedContest());
 
         $dataSource = new SearchableDataSource($events);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
@@ -44,10 +44,8 @@ class EventsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('typ', _('Typ akce'))
-                ->setTableName('event_type.name');
-        $this->addColumn('name', _('Název'))
-                ->setTableName('event.name');
+        $this->addColumn('type_name', _('Typ akce'));
+        $this->addColumn('name', _('Název'));
         $this->addColumn('year', _('Ročník semináře'));
 
         //
@@ -57,7 +55,12 @@ class EventsGrid extends BaseGrid {
         $this->addButton("edit", _("Upravit"))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->school_id);
+                            return $that->getPresenter()->link("edit", $row->event_id);
+                        });
+        $this->addButton("apply")
+                ->setText('Přihláška') //todo i18n
+                ->setLink(function($row) use ($that) {
+                            return $that->getPresenter()->link(":Public:Application:create", array('eventId' => $row->event_id));
                         });
         $this->addGlobalButton('add')
                 ->setLink($this->getPresenter()->link('create'))

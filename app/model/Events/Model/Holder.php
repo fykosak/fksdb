@@ -4,8 +4,10 @@ namespace Events\Model;
 
 use ArrayAccess;
 use ArrayIterator;
+use Events\Machine\Machine;
 use IteratorAggregate;
 use LogicException;
+use ModelEvent;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
@@ -38,8 +40,19 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
     private $connection;
 
+    /**
+     * @var ModelEvent
+     */
+    private $event;
+
     function __construct(Connection $connection) {
         $this->connection = $connection;
+
+        /*
+         * This implicit processing is the first. It's not optimal
+         * and it may be subject to change.
+         */
+        $this->processings[] = new GenKillProcessing();
     }
 
     public function getConnection() {
@@ -53,9 +66,11 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     public function addBaseHolder(BaseHolder $baseHolder) {
         $this->updating();
+        $baseHolder->setHolder($this);
+        $baseHolder->freeze();
+
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
-        $baseHolder->freeze();
     }
 
     public function addProcessing(IProcessing $processing) {
@@ -68,6 +83,15 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
         return $this->baseHolders[$name];
+    }
+
+    public function getEvent() {
+        return $this->event;
+    }
+
+    public function setEvent(ModelEvent $event) {
+        $this->updating();
+        $this->event = $event;
     }
 
     public function setModels($models) {
@@ -86,12 +110,16 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * Apply processings to the values and sets them to the ORM model.
      * 
      * @param ArrayHash $values
+     * * @param \Events\Model\Machine $machine
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values) {
+    public function processFormValues(ArrayHash $values, Machine $machine) {
         $newStates = array();
         foreach ($this->processings as $processing) {
-            $newStates = array_merge($newStates, $processing->process($this, $values));
+            $result = $processing->process($values, $machine, $this);
+            if ($result) {
+                $newStates = array_merge($newStates, $result);
+            }
         }
 
         foreach ($this->baseHolders as $name => $baseHolder) {

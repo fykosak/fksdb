@@ -5,6 +5,7 @@ namespace Events\Model;
 use Events\Machine\BaseMachine;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
+use Nette\InvalidStateException;
 use ORM\IModel;
 use ORM\IService;
 
@@ -16,6 +17,12 @@ use ORM\IService;
 class BaseHolder extends FreezableObject {
 
     const STATE_COLUMN = 'status';
+    const EVENT_COLUMN = 'event_id';
+
+    /**
+     * @var string
+     */
+    private $name;
 
     /**
      * @var IService
@@ -23,15 +30,33 @@ class BaseHolder extends FreezableObject {
     private $service;
 
     /**
+     * @var Holder
+     */
+    private $holder;
+
+    /**
+     * @var boolean|callable
+     */
+    private $modifiable;
+
+    /**
+     * @var boolean|callable
+     */
+    private $visible;
+
+    /**
+     * @var Field[]
+     */
+    private $fields = array();
+
+    /**
      * @var IModel 
      */
     private $model;
 
-    /**
-     *
-     * @var Field[]
-     */
-    private $fields = array();
+    function __construct($name) {
+        $this->name = $name;
+    }
 
     public function addField(Field $field) {
         $this->updating();
@@ -42,7 +67,44 @@ class BaseHolder extends FreezableObject {
         $this->fields[$name] = $field;
     }
 
-    public function getModel() {
+    public function getHolder() {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder) {
+        $this->updating();
+        $this->holder = $holder;
+    }
+
+    public function setModifiable($modifiable) {
+        $this->updating();
+        $this->modifiable = $modifiable;
+    }
+
+    public function setVisible($visible) {
+        $this->updating();
+        $this->visible = $visible;
+    }
+
+    public function isVisible(BaseMachine $machine) {
+        return $this->evalCondition($this->visible, $machine);
+    }
+
+    public function isModifiable(BaseMachine $machine) {
+        return $this->evalCondition($this->modifiable, $machine);
+    }
+
+    private function evalCondition($condition, BaseMachine $machine) {
+        if (is_bool($condition)) {
+            return $condition;
+        } else if (is_callable($condition)) {
+            return call_user_func($condition, $machine);
+        } else {
+            throw new InvalidStateException("Cannot evaluate condition $condition.");
+        }
+    }
+
+    public function & getModel() {
         if (!$this->model) {
             $this->model = $this->getService()->createNew();
         }
@@ -64,7 +126,7 @@ class BaseHolder extends FreezableObject {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } else {
-            $this->service->saev($this->getModel());
+            $this->service->save($this->getModel());
         }
     }
 
@@ -86,7 +148,12 @@ class BaseHolder extends FreezableObject {
     }
 
     public function updateModel($values) {
+        $values[self::EVENT_COLUMN] = $this->getHolder()->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values);
+    }
+
+    public function getName() {
+        return $this->name;
     }
 
     public function getService() {
@@ -99,20 +166,34 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
+     * @return Field[]
+     */
+    public function getDeterminingFields() {
+        return array_filter($this->fields, function(Field $field) {
+                    return $field->isDetermining();
+                });
+    }
+
+    /**
      * @return Container
      */
     public function createFormContainer(BaseMachine $machine) {
         $container = new Container();
 
         foreach ($this->fields as $name => $field) {
+            //TODO implement self visibility, requirement and modifiability
             if (!$field->isVisible($machine)) {
                 continue;
             }
-            $component = $field->createFormComponent($machine);
+            $component = $field->createFormComponent($machine, $container);
             $container->addComponent($component, $name);
         }
 
         return $container;
+    }
+
+    public function __toString() {
+        return $this->name;
     }
 
 }

@@ -4,6 +4,8 @@ namespace Events\Model;
 
 use Events\Machine\BaseMachine;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
+use Nette\ComponentModel\Component;
+use Nette\Forms\Container;
 use Nette\FreezableObject;
 use Nette\InvalidStateException;
 
@@ -28,6 +30,11 @@ class Field extends FreezableObject {
      * @var string
      */
     private $label;
+
+    /**
+     * @var boolean
+     */
+    private $determining;
 
     /**
      * @var boolean|callable
@@ -75,6 +82,14 @@ class Field extends FreezableObject {
         return $this->label;
     }
 
+    public function isDetermining() {
+        return $this->determining;
+    }
+
+    public function setDetermining($determining) {
+        $this->determining = $determining;
+    }
+
     public function setRequired($required) {
         $this->updating();
         $this->required = $required;
@@ -96,12 +111,20 @@ class Field extends FreezableObject {
     }
 
     /*
-     * "Runtime" operations
+     * Forms
      */
 
-    public function createFormComponent(BaseMachine $machine) {
-        return $this->factory->create($this, $machine);
+    public function createFormComponent(BaseMachine $machine, Container $container) {
+        return $this->factory->create($this, $machine, $container);
     }
+
+    public function getMainControl(Component $component) {
+        return $this->factory->getMainControl($component);
+    }
+
+    /*
+     * "Runtime" operations
+     */
 
     public function isVisible(BaseMachine $machine) {
         return $this->evalCondition($this->visible, $machine);
@@ -128,6 +151,10 @@ class Field extends FreezableObject {
         } else {
             throw new InvalidStateException("Cannot evaluate condition $condition.");
         }
+    }
+
+    public function __toString() {
+        return "{$this->baseHolder}.{$this->name}";
     }
 
 }

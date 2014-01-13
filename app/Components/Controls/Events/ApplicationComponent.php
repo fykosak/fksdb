@@ -4,12 +4,15 @@ namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\MachineExecutionException;
 use Events\Model\Holder;
 use Events\SubmitProcessingException;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -41,6 +44,7 @@ class ApplicationComponent extends Control {
     protected function createComponentForm($name) {
         $this->initializeMachine();
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
 
         /*
          * Create containers
@@ -63,7 +67,8 @@ class ApplicationComponent extends Control {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function(Form $form) use($transitionName, $that) {
+            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
+                        $form = $button->getForm();
                         $that->handleSubmit($form, $transitionName);
                     };
         }
@@ -85,14 +90,14 @@ class ApplicationComponent extends Control {
         $connection = $this->holder->getConnection();
         try {
             $values = $form->getValues();
-            $explicitMachine = $explicitMachineName ? $this->machine->getPrimaryMachine() : $this->machine[$explicitMachineName];
+            $explicitMachine = $explicitMachineName ? $this->machine[$explicitMachineName] : $this->machine->getPrimaryMachine();
 
             $connection->beginTransaction();
 
             /*
              * Find out transitions
              */
-            $newStates = $this->holder->processValues($values);
+            $newStates = $this->holder->processFormValues($values, $this->machine);
             $transitions = array();
             foreach ($newStates as $name => $newState) {
                 $transitions[$name] = $this->machine[$name]->getTransitionByTarget($newState);
@@ -100,7 +105,7 @@ class ApplicationComponent extends Control {
 
             if ($explicitTransitionName !== null) {
                 if (isset($transitions[$explicitMachineName])) {
-                    throw new MachineExectionException(sprintf('Collision of explicit transision %s and processing transition %s', $explicitTransitionName, $explicitTransitionName[$explicitMachineName]->getName()));
+                    throw new MachineExecutionException(sprintf('Collision of explicit transision %s and processing transition %s', $explicitTransitionName, $explicitTransitionName[$explicitMachineName]->getName()));
                 }
                 $transitions[$explicitMachineName] = $explicitMachine->getTransition($explicitTransitionName);
             }

@@ -5,10 +5,9 @@
 
 machine:
     baseMachines:
-    handler:
-        default: null
     processings:
         default: []
+        type: expression array
     joins:
         default: []
 
@@ -30,6 +29,8 @@ transition:
 field:
     label:
         default: null
+    determining:
+        default: false
     required:
         default: false
         type: expression
@@ -52,6 +53,9 @@ bmInstance:
         default: false
         type: expression
     modifiable:
+        default: true
+        type: expression
+    visible:
         default: true
         type: expression
     transitionable: # TODO implement?

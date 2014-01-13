@@ -33,6 +33,11 @@ class Transition extends FreezableObject {
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $target;
 
     /**
@@ -53,7 +58,7 @@ class Transition extends FreezableObject {
     /**
      * @var array
      */
-    public $onExecuted;
+    public $onExecuted = array();
 
     function __construct($mask, $label) {
         $this->setMask($mask);
@@ -66,7 +71,7 @@ class Transition extends FreezableObject {
      * @return string
      */
     public function getName() {
-        return $this->mask;
+        return $this->name;
     }
 
     public function getLabel() {
@@ -80,6 +85,7 @@ class Transition extends FreezableObject {
     public function setMask($mask) {
         $this->mask = $mask;
         list($this->source, $this->target) = self::parseMask($mask);
+        $this->name = $this->source . '_' . $this->target; // it's used for component naming
     }
 
     public function getBaseMachine() {
@@ -189,12 +195,17 @@ class Transition extends FreezableObject {
         if (count($parts) == 2 && $parts[1] != $this->getTarget()) {
             return false;
         }
+        $stateMask = $parts[0];
 
-        if (strpos(BaseMachine::STATE_ANY, $parts[0]) !== false || strpos(BaseMachine::STATE_ANY, $this->source) !== false) {
+        /*
+         * Star matches any state but meta-states (initial and terminal) 
+         */
+        if (strpos(BaseMachine::STATE_ANY, $stateMask) !== false || (strpos(BaseMachine::STATE_ANY, $this->source) !== false &&
+                ($mask != BaseMachine::STATE_INIT && $mask != BaseMachine::STATE_TERMINATED))) {
             return true;
         }
 
-        return preg_match("/(^|\\|){$parts[0]}(\\||\$)/", $this->source); //TODO verify
+        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source); //TODO verify
     }
 
     /**

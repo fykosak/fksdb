@@ -2,6 +2,7 @@
 
 namespace Events\Model;
 
+use Events\Machine\Machine;
 use Events\SubmitProcessingException;
 use Nette\ArrayHash;
 
@@ -13,12 +14,12 @@ use Nette\ArrayHash;
 interface IProcessing {
 
     /**
-     * 
-     * @param Holder $holder
      * @param ArrayHash $values
+     * @param \Events\Model\Machine $machine
+     * @param \Events\Model\Holder $holder
      * @return null|array[machineName] => new state
      * @throws SubmitProcessingException
      */
-    public function process(Holder2 $holder, ArrayHash $values);
+    public function process(ArrayHash $values, Machine $machine, Holder $holder);
 }
 

@@ -34,11 +34,13 @@ class EventFactory {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        $selectType = $this->createEventType($contest);
-        $container->addComponent($selectType, 'event_type_id');
+        $type = $this->createEventType($contest);
+        $type->addRule(Form::FILLED, _('%label je povinný.'));
+
+        $container->addComponent($type, 'event_type_id');
 
         $container->addText('event_year', _('Ročník akce'))
-                ->addFule(Form::INTEGER, _('%label musí být číslo.'))
+                ->addRule(Form::INTEGER, _('%label musí být číslo.'))
                 ->addRule(Form::FILLED, _('%label je povinný.'))
                 ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
 
@@ -69,6 +71,8 @@ class EventFactory {
 
         $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
         $element->setItems($types);
+        $element->setPrompt(_('Zvolit typ'));
+
         return $element;
     }
 
