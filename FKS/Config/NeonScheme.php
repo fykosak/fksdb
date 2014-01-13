@@ -17,6 +17,7 @@ class NeonScheme {
 
     const TYPE_NEON = 'neon';
     const TYPE_EXPRESSION = 'expression';
+    const QUALIFIER_ARRAY = 'array';
 
     public static function readSection($section, $sectionScheme) {
         $result = array();
@@ -34,9 +35,23 @@ class NeonScheme {
                 $result[$key] = Arrays::get($section, $key, $metadata['default']);
             }
 
-            $type = Arrays::get($metadata, 'type', self::TYPE_NEON);
+            $typeDef = Arrays::get($metadata, 'type', self::TYPE_NEON);
+            $typeDef = explode(' ', $typeDef);
+            $type = $typeDef[0];
+            $qualifier = Arrays::get($typeDef, 1, null);
+
             if ($type == self::TYPE_EXPRESSION) {
-                $result[$key] = Helpers::statementFromExpression($result[$key]);
+                if ($qualifier == self::QUALIFIER_ARRAY) {
+                    $result[$key] = array_map(function($it) {
+                                return Helpers::statementFromExpression($it);
+                            }, $result[$key]);
+                } else if ($qualifier === null) {
+                    $result[$key] = Helpers::statementFromExpression($result[$key]);
+                } else {
+                    throw new NeonSchemaException("Unknown type qualifier '$qualifier'.");
+                }
+            } else if ($type != self::TYPE_NEON) {
+                throw new NeonSchemaException("Unknown type '$type'.");
             }
         }
         $unknown = array_diff(array_keys($section), array_keys($sectionScheme));
