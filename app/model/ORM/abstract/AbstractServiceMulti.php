@@ -2,6 +2,7 @@
 
 use Nette\InvalidStateException;
 use Nette\Object;
+use ORM\IModel;
 use ORM\IService;
 
 /**
@@ -69,12 +70,21 @@ abstract class AbstractServiceMulti extends Object implements IService {
         return $result;
     }
 
+    public function updateModel(IModel $model, $data) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+
+        $this->getMainService()->updateModel($model->getMainModel(), $data);
+        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data);
+    }
+
     /**
      * Use this method to store a model!
      * 
      * @param AbstractModelMulti $model
      */
-    public function save(AbstractModelMulti $model) {
+    public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
@@ -95,7 +105,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(AbstractModelMulti $model) {
+    public function dispose(IModel $model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot delete ' . get_class($model));
         }

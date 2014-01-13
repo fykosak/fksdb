@@ -6,13 +6,12 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder;
-use Events\SubmitProcessingException;
-use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use PublicModule\BasePresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -79,13 +78,16 @@ class ApplicationComponent extends Control {
         //TODO display this button in dependence on modifiable
         if ($primaryMachine->getState() != BaseMachine::STATE_INIT) {
             $submit = $form->addSubmit('save', _('Uložit'));
-            $submit->onClick[] = array($this, 'handleSubmit');
+            $submit->onClick[] = function(SubmitButton $button) use($that) {
+                        $form = $button->getForm();
+                        $that->handleSubmit($form);
+                    };
         }
 
         return $form;
     }
 
-    private function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
+    public function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
         $this->initializeMachine();
         $connection = $this->holder->getConnection();
         try {
@@ -120,14 +122,23 @@ class ApplicationComponent extends Control {
 
             $this->holder->saveModels();
             $connection->commit();
-            $this->redirect('this');
-        } catch (TransitionConditionFailedException $e) {
-            $form->addError($e->getMessage());
-            $connection->rollBack();
-        } catch (SubmitProcessingException $e) {
-            $form->addError($e->getMessage());
+
+            $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary();
+            $this->presenter->redirect('this', array(
+                'id' => $id,
+                'eventId' => $this->holder->getEvent()->getPrimary()
+            ));
+        } catch (Exception $e) {
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
         }
+        /* catch (TransitionConditionFailedException $e) {
+          $form->addError($e->getMessage());
+          $connection->rollBack();
+          } catch (SubmitProcessingException $e) {
+          $form->addError($e->getMessage());
+          $connection->rollBack();
+          } */
     }
 
     private function initializeMachine() {

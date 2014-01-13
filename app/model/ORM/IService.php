@@ -16,15 +16,9 @@ interface IService {
 
     public function findByPrimary($key);
 
-    /*
-     * These methods are not declared explicitly as they'd collide with contravariant typehinting.
-     * Type-hinting is considered more important than interface compliance (dynamic typing) so the declarations
-     * are only symbolic.
-     */
-    
-    /* public function update(IModel $model); */
+    public function updateModel(IModel $model, $data);
 
-    /* public function save(IModel &$model); */
+    public function save(IModel &$model);
 
-    /* public function dispose(IModel $model); */
+    public function dispose(IModel $model);
 }

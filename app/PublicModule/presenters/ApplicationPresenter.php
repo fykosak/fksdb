@@ -3,10 +3,13 @@
 namespace PublicModule;
 
 use AuthenticatedPresenter;
+use Events\Machine\Machine;
+use Events\Model\Holder;
 use FKSDB\Components\Events\ApplicationComponent;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use ORM\IModel;
 use ServiceEvent;
 use SystemContainer;
 
@@ -28,6 +31,21 @@ class ApplicationPresenter extends AuthenticatedPresenter {
     private $event = false;
 
     /**
+     * @var IModel
+     */
+    private $eventApplication = false;
+
+    /**
+     * @var Holder 
+     */
+    private $holder;
+
+    /**
+     * @var Machine
+     */
+    private $machine;
+
+    /**
      *
      * @var SystemContainer
      */
@@ -44,34 +62,70 @@ class ApplicationPresenter extends AuthenticatedPresenter {
     public function authorizedCreate($eventId) {
         $event = $this->getEvent();
         if (!$event) {
-            throw new BadRequestException('Neexistující akce.', 404);
+            throw new BadRequestException(_('Neexistující akce.'), 404);
         }
     }
 
-    public function titleCreate($eventId) {
-        $this->setTitle($this->getEvent()->name);
+    public function authorizedDefault($eventId, $id) {
+        if (!$this->getEvent()) {
+            throw new BadRequestException(_('Neexistující akce.'), 404);
+        }
+        if ($id && !$this->getEventApplication()) {
+            throw new BadRequestException(_('Neexistující přihláška.'), 404);
+        }
     }
 
-    public function renderCreate($eventId) {
+    public function titleAuthorized($eventId, $id) {
+        if ($this->getEventApplication()) {
+            $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
+        } else {
+            $this->setTitle("{$this->getEvent()}");
+        }
+    }
+
+    public function actionDefault($eventId, $id) {
+        $this->getHolder()->setModel($this->getEventApplication());
+    }
+
+    public function renderDefault($eventId, $id) {
         
     }
 
     protected function createComponentApplication($name) {
-        $event = $this->getEvent();
-        $machine = $this->container->createEventMachine($event);
-        $holder = $this->container->createEventHolder($event);
-
-        $component = new ApplicationComponent($machine, $holder);
+        $component = new ApplicationComponent($this->getMachine(), $this->getHolder());
 
         return $component;
     }
 
     private function getEvent() {
         if ($this->event === false) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getParam('eventId'));
+            $this->event = $this->serviceEvent->findByPrimary($this->getParameter('eventId'));
         }
 
         return $this->event;
+    }
+
+    private function getEventApplication() {
+        if ($this->eventApplication === false) {
+            $service = $this->getHolder()->getPrimaryHolder()->getService();
+            $this->eventApplication = $service->findByPrimary($this->getParameter('id'));
+        }
+
+        return $this->eventApplication;
+    }
+
+    private function getHolder() {
+        if (!$this->holder) {
+            $this->holder = $this->container->createEventHolder($this->getEvent());
+        }
+        return $this->holder;
+    }
+
+    private function getMachine() {
+        if (!$this->machine) {
+            $this->machine = $this->container->createEventMachine($this->getEvent());
+        }
+        return $this->machine;
     }
 
 }

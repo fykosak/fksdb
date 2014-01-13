@@ -94,6 +94,9 @@ events:
             #   PARTICIPANT
             #    
             PARTICIPANT:
+                service: @event.ServiceMFyziklaniParticipant
+                joinOn: team_id
+
                 states:
                     applied: Přihlášen
                     participated: Účastnil se

@@ -30,6 +30,11 @@ class BaseHolder extends FreezableObject {
     private $service;
 
     /**
+     * @var string
+     */
+    private $joinOn;
+
+    /**
      * @var Holder
      */
     private $holder;
@@ -117,8 +122,10 @@ class BaseHolder extends FreezableObject {
     public function setModel($model) {
         if ($model instanceof IModel) {
             $this->model = $model;
-        } else {
+        } else if ($model) {
             $this->model = $this->service->findByPrimary($model);
+        } else {
+            $this->model = null;
         }
     }
 
@@ -143,8 +150,7 @@ class BaseHolder extends FreezableObject {
     }
 
     public function setModelState($state) {
-        $model = $this->getModel();
-        $model[self::STATE_COLUMN] = $state;
+        $this->getService()->updateModel($this->getModel(), array(self::STATE_COLUMN => $state));
     }
 
     public function updateModel($values) {
@@ -163,6 +169,15 @@ class BaseHolder extends FreezableObject {
     public function setService(IService $service) {
         $this->updating();
         $this->service = $service;
+    }
+
+    public function getJoinOn() {
+        return $this->joinOn;
+    }
+
+    public function setJoinOn($joinOn) {
+        $this->updating();
+        $this->joinOn = $joinOn;
     }
 
     /**

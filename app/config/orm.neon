@@ -26,4 +26,6 @@ services:
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
 
-    event.ServiceFyziklaniTeam:     ORM\Services\Events\ServiceFyziklaniTeam
+    event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
+    event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
+    event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant

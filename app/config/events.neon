@@ -16,6 +16,8 @@ baseMachine:
     transitions:
     service:
         default: @ServiceEventParticipant
+    joinOn:
+        default: null
     fields:
 
 transition:

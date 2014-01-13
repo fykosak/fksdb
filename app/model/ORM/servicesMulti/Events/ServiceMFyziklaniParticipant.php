@@ -1,21 +1,27 @@
 <?php
 
+namespace ORM\ServicesMulti\Events;
+
+use AbstractServiceMulti;
 use ORM\IModel;
+use ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
+use ORM\Services\Events\ServiceFyziklaniParticipant;
+use ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceMPostContact extends AbstractServiceMulti {
+class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
-    protected $modelClassName = 'ModelMPostContact';
+    protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMFyziklaniParticipant';
 
-    public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
     /**
      * Delete post contact including the address.
-     * @param ModelMPostContact $model
+     * @param ModelMFyziklaniParticipant $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
@@ -25,14 +31,14 @@ class ServiceMPostContact extends AbstractServiceMulti {
     /**
      * 
      * @param int $key ID of the post contact
-     * @return ModelMPostContact|null
+     * @return ModelMFyziklaniParticipant|null
      */
     public function findByPrimary($key) {
         $joinedModel = $this->getJoinedService()->findByPrimary($key);
         if (!$joinedModel) {
             return null;
         }
-        $mainModel = $joinedModel->getAddress();
+        $mainModel = $joinedModel->getMainModel();
         return $this->composeModel($mainModel, $joinedModel);
     }
 
