@@ -161,6 +161,9 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if ($this->defaults == null) {
             $this->defaults = array();
             foreach ($this->connection->getSupplementalDriver()->getColumns($this->tableName) as $column) {
+                if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default']) && $column['default'] == 'CURRENT_TIMESTAMP') {
+                    continue;
+                }
                 $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
             }
         }
