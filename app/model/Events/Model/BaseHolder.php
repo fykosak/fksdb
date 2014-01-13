@@ -196,7 +196,6 @@ class BaseHolder extends FreezableObject {
         $container = new Container();
 
         foreach ($this->fields as $name => $field) {
-            //TODO implement self visibility, requirement and modifiability
             if (!$field->isVisible($machine)) {
                 continue;
             }

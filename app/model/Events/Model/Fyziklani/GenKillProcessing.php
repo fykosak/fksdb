@@ -22,6 +22,9 @@ class GenKillProcessing extends Object implements IProcessing {
     public function process(ArrayHash $values, Machine $machine, Holder $holder) {
         $result = array();
         foreach ($holder as $name => $baseHolder) {
+            if (!isset($values[$name])) { // whole machine unmodofiable/invisible
+                continue;
+            }
             $isFilled = true;
             foreach ($baseHolder->getDeterminingFields() as $field) {
                 if (!$values[$name][$field->getName()]) {

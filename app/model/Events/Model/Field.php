@@ -135,7 +135,7 @@ class Field extends FreezableObject {
     }
 
     public function isModifiable(BaseMachine $machine) {
-        return $this->evalCondition($this->modifiable, $machine);
+        return $this->getBaseHolder()->isModifiable($machine) && $this->evalCondition($this->modifiable, $machine);
     }
 
     public function getValue() {
