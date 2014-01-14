@@ -40,6 +40,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     protected static $instances = array();
 
     public function __construct(Connection $connection) {
+        parent::__construct($this->tableName, $connection);
         $this->connection = $connection;
     }
 

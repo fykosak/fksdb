@@ -3,9 +3,11 @@
 namespace PublicModule;
 
 use Events\Machine\Machine;
+use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\ApplicationsGrid;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -68,6 +70,10 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    public function authorizedList() {
+        return $this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson();
+    }
+
     public function titleAuthorized($eventId, $id) {
         if ($this->getEventApplication()) {
             $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
@@ -76,8 +82,16 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    public function titleList() {
+        $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $this->getSelectedContest()->name));
+    }
+
     public function actionDefault($eventId, $id) {
         $this->getHolder()->setModel($this->getEventApplication());
+    }
+
+    public function actionList() {
+        
     }
 
     protected function createComponentContestChooser($name) {
@@ -96,6 +110,17 @@ class ApplicationPresenter extends BasePresenter {
         $component = new ApplicationComponent($this->getMachine(), $this->getHolder());
 
         return $component;
+    }
+
+    protected function createComponentApplicationsGrid($name) {
+        $person = $this->getUser()->getIdentity()->getPerson();
+        $events = $this->serviceEvent->getTable();
+        $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
+
+        $source = new RelatedPersonSource($person, $events, $this->container);
+        $grid = new ApplicationsGrid($this->container, $source);
+
+        return $grid;
     }
 
     private function getEvent() {
