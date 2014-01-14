@@ -218,32 +218,9 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
     private function loadSecondaryModels(IService $service, $joinOn, $holders, IModel $primaryModel = null) {
-        if ($service instanceof AbstractServiceSingle) {
-            $table = $service->getTable();
-        } else if ($service instanceof AbstractServiceMulti) {
-            /*
-             * Assumption that event_participant is'n joined anywhere
-             * and that there single-level is-a hierarchy of extendning tables.
-             */
-            $table = $service->getJoinedService()->getTable();
-        }
+        $table = $service->getTable();
         $secondary = $primaryModel ? $table->where($joinOn, $primaryModel->getPrimary()) : array();
-        $filledHandlers = 0;
-        foreach ($secondary as $secondaryModel) {
-            //TODO this is terrible refactor (4:16 AM)
-            if ($service instanceof AbstractServiceMulti) {
-                $mainModel = $secondaryModel->ref($service->getMainService()->getTable()->getName(), $service->getMainService()->getTable()->getPrimary());
-                $mainModel = $service->getMainService()->createFromTableRow($mainModel);
-                $secondaryModel = $service->composeModel($mainModel, $secondaryModel);
-            }
-            $holders[$filledHandlers]->setModel($secondaryModel);
-            if (++$filledHandlers >= count($holders)) {
-                throw new InvalidStateException("More than expected non-primary models loaded for PK '{$primaryModel->getPrimary()}'.");
-            }
-        }
-        for (; $filledHandlers < count($holders); ++$filledHandlers) {
-            $holders[$filledHandlers]->setModel(null);
-        }
+        $this->setSecondaryModels($holders, $secondary);
     }
 
     private function updateSecondaryModels(IService $service, $joinOn, $holders, IModel $primaryModel = null) {
