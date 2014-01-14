@@ -33,7 +33,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     protected function createComponentContestChooser($name) {
-        $control = new ContestChooser(ModelRole::ORG, $this->session, $this->yearCalculator, $this->serviceContest);
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setContests(ModelRole::ORG);
         return $control;
     }
 

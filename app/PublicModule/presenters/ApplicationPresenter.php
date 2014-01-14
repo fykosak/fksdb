@@ -2,9 +2,9 @@
 
 namespace PublicModule;
 
-use AuthenticatedPresenter;
 use Events\Machine\Machine;
 use Events\Model\Holder;
+use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -18,7 +18,7 @@ use SystemContainer;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ApplicationPresenter extends AuthenticatedPresenter {
+class ApplicationPresenter extends BasePresenter {
 
     /**
      * @var ServiceEvent
@@ -78,6 +78,18 @@ class ApplicationPresenter extends AuthenticatedPresenter {
 
     public function actionDefault($eventId, $id) {
         $this->getHolder()->setModel($this->getEventApplication());
+    }
+
+    protected function createComponentContestChooser($name) {
+        $component = parent::createComponentContestChooser($name);
+        if ($this->getAction() == 'default') {
+            $component->setContests(array(
+                $this->getEvent()->getEventType()->contest_id,
+            ));
+        } else if ($this->getAction() == 'list') {
+            $component->setContests(ContestChooser::ALL_CONTESTS);
+        }
+        return $component;
     }
 
     protected function createComponentApplication($name) {
