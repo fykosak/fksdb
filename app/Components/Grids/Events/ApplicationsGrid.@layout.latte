@@ -1,3 +1,4 @@
+{if}
 <table class="table table-condensed table-hover">
     <thead n:block="header">
 
@@ -9,5 +10,7 @@
         </tr>
         {/foreach}
     </tbody>
-
 </table>
+{else}
+<p n:block="empty">{_'Žádné přihlášky.'}</p>
+{/if $iterations}

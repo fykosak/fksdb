@@ -2,10 +2,8 @@
 
 namespace Events\Model\Grid;
 
-use ArrayIterator;
-use Events\Model\Holder;
+use ModelEvent;
 use ModelPerson;
-use Nette\Object;
 use ORM\Tables\TypedTableSelection;
 use SystemContainer;
 
@@ -19,101 +17,43 @@ use SystemContainer;
  * @method SingleEventSource limit()
  * @method SingleEventSource count() 
  */
-class RelatedPersonSource extends Object implements IHolderSource {
+class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
     /**
      * @var ModelPerson
      */
     private $person;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $events;
-
-    /**
-     * @var SystemContainer
-     */
-    private $container;
-
-    /**
-     *
-     * @var Holder[]
-     */
-    private $holders = null;
-
     function __construct(ModelPerson $person, TypedTableSelection $events, SystemContainer $container) {
+        parent::__construct($events, $container);
         $this->person = $person;
-        $this->events = $events;
-        $this->container = $container;
     }
 
-    private function loadData() {
-        $this->holders = array();
+    public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
-        foreach ($this->events as $eventKey => $event) {
-            $eventSource = new SingleEventSource($event, $this->container);
+        $eventSource = new SingleEventSource($event, $this->container);
 
-            $subconditions = array();
-            $count = 0;
+        $subconditions = array();
+        $count = 0;
 
-            $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
-            $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
-            $count += count($primaryPersonIds);
+        $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
+        $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
+        $count += count($primaryPersonIds);
 
-            foreach ($eventSource->getDummyHolder()->getGroupedSecondaryHolders() as $group) {
-                $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
-                $count += count($group['personIds']);
-            }
-
-            if ($count == 1) {
-                $parameters = $personId;
-            } else {
-                $parameters = array_fill(0, $count, $personId);
-            }
-            $eventSource->where(implode(' OR ', $subconditions), $parameters);
-
-            foreach ($eventSource as $holderKey => $holder) {
-                $key = $eventKey . '_' . $holderKey;
-                $this->holders[$key] = $holder;
-            }
+        foreach ($eventSource->getDummyHolder()->getGroupedSecondaryHolders() as $group) {
+            $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
+            $count += count($group['personIds']);
         }
-    }
 
-    /**
-     * Method propagates selected calls to internal primary models selection.
-     * 
-     * @staticvar array $delegated
-     * @param string $name
-     * @param array $args
-     * @return \Events\Model\Grid\SingleEventSource
-     */
-    public function __call($name, $args) {
-        static $delegated = array(
-    'where' => false,
-    'order' => false,
-    'limit' => false,
-    'count' => true,
-        );
-        if (!isset($delegated[$name])) {
-            return parent::__call($name, $args);
-        }
-        $result = call_user_func_array(array($this->events, $name), $args);
-        $this->holders = null;
-
-        if ($delegated[$name]) {
-            return $result;
+        if ($count == 1) {
+            $parameters = $personId;
         } else {
-            return $this;
+            $parameters = array_fill(0, $count, $personId);
         }
-    }
+        $eventSource->where(implode(' OR ', $subconditions), $parameters);
 
-    public function getIterator() {
-        if ($this->holders === null) {
-            $this->loadData();
-        }
-        return new ArrayIterator($this->holders);
+        return $eventSource;
     }
 
 }

@@ -1,0 +1,21 @@
+{layout 'ApplicationsGrid.@layout.latte'}
+
+{block header}
+<thead>
+    <tr>
+        <th>{_'Typ akce'}</th>
+        <th>{_'Název akce'}</th>
+        <th>{_'Stav'}</th>
+        <th>{_'Operace'}</th>
+    </tr>
+</thead>
+{/block}
+
+{block row}
+<tr>
+    <td>{$event->event_type->name}</td>
+    <td>{$event->name}</td>
+    <td>{control 'application_'.$key:inline state}</td>
+    <td>{control 'application_'.$key:inline transitions}</td>
+</tr>
+{/block}

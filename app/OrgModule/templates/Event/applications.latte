@@ -1,7 +1,9 @@
 
 
 {block content}
-
+<div class="btn-toolbar">
+    <a n:href=":Public:Application:default eventId => $event->getPrimary()" class="btn btn-sm btn-primary">{_'Nová přihláška'}</a> 
+</div>
 {control applicationsGrid}
 
 {/block}

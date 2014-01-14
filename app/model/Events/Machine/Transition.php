@@ -101,6 +101,10 @@ class Transition extends FreezableObject {
         return $this->target;
     }
 
+    public function isCreating() {
+        return strpos($this->source, BaseMachine::STATE_INIT) !== false;
+    }
+
     public function setCondition($condition) {
         $this->updating();
         $this->condition = $condition;

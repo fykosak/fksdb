@@ -79,7 +79,7 @@ class EventPresenter extends EntityPresenter {
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
     }
 
-    public function titleAppplications($id) {
+    public function titleApplications($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
     }
@@ -89,8 +89,8 @@ class EventPresenter extends EntityPresenter {
         throw new NotImplementedException();
     }
 
-    public function actionApplications($id) {
-        
+    public function renderApplications($id) {
+        $this->template->event = $this->getModel();
     }
 
     protected function createComponentCreateComponent($name) {

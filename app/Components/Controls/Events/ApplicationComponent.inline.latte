@@ -1,5 +1,18 @@
-{foreach $availableTransitions as  $transition}
-<a n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
+{if $mode == 'state'}
+{if $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_INIT || $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_TERMINATED}
+<em>{_'neexistuje'}</em>
+{else}
+{$primaryMachine->getStateName()}
+{/if}
+{else if $mode == 'transitions'}
+{if}
+{foreach $primaryMachine->getAvailableTransitions() as  $transition}
+<a n:if="$transition->isCreating()" href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>    
+<a n:if="!$transition->isCreating()"  n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
 {/foreach}
 
-<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $primaryModel->event_id}" class="btn btn-xs btn-primary">{_'Upravit'}</a>    
+<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-primary">{_'Upravit'}</a>    
+{else}
+<em>{_'žádné'}</em>
+{/if $iterations || $canEdit}
+{/if}

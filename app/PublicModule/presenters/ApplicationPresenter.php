@@ -3,6 +3,7 @@
 namespace PublicModule;
 
 use Events\Machine\Machine;
+use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder;
 use FKSDB\Components\Controls\ContestChooser;
@@ -74,7 +75,7 @@ class ApplicationPresenter extends BasePresenter {
         return $this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson();
     }
 
-    public function titleAuthorized($eventId, $id) {
+    public function titleDefault($eventId, $id) {
         if ($this->getEventApplication()) {
             $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
         } else {
@@ -108,7 +109,14 @@ class ApplicationPresenter extends BasePresenter {
 
     protected function createComponentApplication($name) {
         $component = new ApplicationComponent($this->getMachine(), $this->getHolder());
-
+        $that = $this;
+        $component->setRedirectCallback(function($modelId, $eventId) use($that) {
+                    $that->backlinkRedirect();
+                    $that->redirect('this', array(
+                        'eventId' => $eventId,
+                        'id' => $modelId,
+                    ));
+                });
         return $component;
     }
 
@@ -119,6 +127,20 @@ class ApplicationPresenter extends BasePresenter {
 
         $source = new RelatedPersonSource($person, $events, $this->container);
         $grid = new ApplicationsGrid($this->container, $source);
+        $grid->setTemplate('myApplications');
+
+        return $grid;
+    }
+
+    protected function createComponentNewApplicationsGrid($name) {
+        $events = $this->serviceEvent->getTable();
+        $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
+                ->where('registration_begin <= NOW()')
+                ->where('registration_end >= NOW()');
+
+        $source = new InitSource($events, $this->container);
+        $grid = new ApplicationsGrid($this->container, $source);
+        $grid->setTemplate('newApplications');
 
         return $grid;
     }

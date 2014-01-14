@@ -57,11 +57,6 @@ class EventsGrid extends BaseGrid {
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->event_id);
                         });
-        $this->addButton('apply')
-                ->setText('Přihláška') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link(":Public:Application:", array('eventId' => $row->event_id));
-                        });
         $this->addButton('applications')
                 ->setText('Přihlášky') //todo i18n
                 ->setLink(function($row) use ($that) {

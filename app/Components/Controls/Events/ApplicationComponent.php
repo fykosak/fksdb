@@ -46,8 +46,8 @@ class ApplicationComponent extends Control {
         return $this->redirectCallback;
     }
 
-    public function setRedirectCallback(Callback $redirectCallback) {
-        $this->redirectCallback = $redirectCallback;
+    public function setRedirectCallback($redirectCallback) {
+        $this->redirectCallback = new Callback($redirectCallback);
     }
 
     protected function createTemplate($class = NULL) {
@@ -62,17 +62,15 @@ class ApplicationComponent extends Control {
 
     public function renderInline($mode) {
         $this->initializeMachine();
-        if ($mode == 'state') {
-            echo $this->machine->getPrimaryMachine()->getStateName();
-        } else if ($mode == 'transitions') {
-            $primaryMachine = $this->machine->getPrimaryMachine();
-            $this->template->availableTransitions = $primaryMachine->getAvailableTransitions();
-            $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-            $this->template->canEdit = $this->canEdit();
+        
+        $this->template->mode = $mode;
+        $this->template->holder = $this->holder;
+        $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
+        $this->template->primaryMachine = $this->machine->getPrimaryMachine();
+        $this->template->canEdit = $this->canEdit();
 
-            $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
-            $this->template->render();
-        }
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+        $this->template->render();
     }
 
     protected function createComponentForm($name) {
@@ -92,21 +90,7 @@ class ApplicationComponent extends Control {
             $form->addComponent($container, $name);
         }
 
-        /*
-         * Create transition buttons
-         */
-        $primaryMachine = $this->machine->getPrimaryMachine();
         $that = $this;
-        foreach ($primaryMachine->getAvailableTransitions() as $transition) {
-            $transitionName = $transition->getName();
-            $submit = $form->addSubmit($transitionName, $transition->getLabel());
-
-            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
-                        $form = $button->getForm();
-                        $that->handleSubmit($form, $transitionName);
-                    };
-        }
-
         /*
          * Create save (no transition) button
          */
@@ -117,6 +101,22 @@ class ApplicationComponent extends Control {
                         $that->handleSubmit($form);
                     };
         }
+        /*
+         * Create transition buttons
+         */
+        $primaryMachine = $this->machine->getPrimaryMachine();
+        foreach ($primaryMachine->getAvailableTransitions() as $transition) {
+            $transitionName = $transition->getName();
+            $submit = $form->addSubmit($transitionName, $transition->getLabel());
+
+            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
+                        $form = $button->getForm();
+                        $that->handleSubmit($form, $transitionName);
+                    };
+
+            $submit->getControlPrototype()->addClass('btn-default');
+        }
+
 
         return $form;
     }
@@ -160,6 +160,7 @@ class ApplicationComponent extends Control {
             $this->holder->saveModels();
             $connection->commit();
 
+            //TODO better message (create, update, transition) $this->presenter->flashMessage(_('Přihláška vytvořena.'), BasePresenter::FLASH_SUCCESS);
             if ($this->redirectCallback) {
                 $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary();
                 $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());

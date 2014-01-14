@@ -16,6 +16,10 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return 'event';
     }
 
+    public function __toString() {
+        return $this->name;
+    }
+
 }
 
 ?>
