@@ -31,6 +31,9 @@ class Helpers {
 
         $arguments = array();
         foreach ($expression->attributes as $attribute) {
+            if ($attribute == '...') {
+                continue;
+            }
             $arguments[] = self::statementFromExpression($attribute);
         }
 
