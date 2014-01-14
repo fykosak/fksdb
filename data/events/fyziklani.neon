@@ -36,6 +36,9 @@ events:
             #    
             TEAM:
                 service: @event.ServiceFyziklaniTeam
+                personIds: [liaison_id]
+                eventId: e_fyziklani_team.event_id
+                
                 states:
                     pending: Čeká na schválení #i18n
                     spare: Náhradník
@@ -96,6 +99,7 @@ events:
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: team_id
+                personIds: [e_fyziklani_participant:event_participant.person_id]
 
                 states:
                     applied: Přihlášen
@@ -119,6 +123,12 @@ events:
                         modifiable: true
                         determining: true
                         # TODO person factory
+                    note:
+                        label: Poznámka
+                        visible: false
+                        modifiable: true
+                        required: true
+
 
         #
         #   MACHINE

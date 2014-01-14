@@ -5,20 +5,30 @@
 
 machine:
     baseMachines:
+    # processing checks invariants/calculates data on edit form submit, before transitions
     processings:
         default: []
         type: expression array
+    # defines machine transition dependencies (transition invokes another transition)
     joins:
         default: []
 
 baseMachine:
     states:
     transitions:
+    fields:
     service:
         default: @ServiceEventParticipant
+    # When used as secondary model, specify column that is FK to the primary model.
     joinOn:
         default: null
-    fields:
+    # Specify columns that store person_id of anyhow involved persons.
+    personIds:
+        default: [event_participant.person_id]
+    # Specify column that stores FK to the event. (For primary models only.)
+    eventId:
+        default: event_participant.event_id
+    
 
 transition:
     condition:

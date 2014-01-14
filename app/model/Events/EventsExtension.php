@@ -355,6 +355,8 @@ class EventsExtension extends CompilerExtension {
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         $factory->addSetup('setService', $definition['service']);
         $factory->addSetup('setJoinOn', $definition['joinOn']);
+        $factory->addSetup('setPersonIds', array($definition['personIds'])); // must be set after setService
+        $factory->addSetup('setEventId', array($definition['eventId'])); // must be set after setService
 
         foreach (Arrays::grep($parameters, '/^modifiable|visible$/') as $parameter) {
             $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");

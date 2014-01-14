@@ -17,6 +17,7 @@ use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ORM\IModel;
+use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -111,19 +112,14 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         $this->event = $event;
     }
 
-    public function setModel(IModel $primaryModel = null) {
-        $groups = $this->getGroupedSecondaryHolders();
-
-        /*
-         * Load each group (common service)
-         */
-        foreach ($groups as $group) {
-            $this->loadSecondaryModels($group, $primaryModel);
+    public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
+        foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
+            if ($secondaryModels !== null) {
+                $this->setSecondaryModels($group['holders'], $secondaryModels[$key]);
+            } else {
+                $this->loadSecondaryModels($group['service'], $group['joinOn'], $group['holders'], $primaryModel);
+            }
         }
-
-        /*
-         * Load primary
-         */
         $this->primaryHolder->setModel($primaryModel);
     }
 
@@ -143,8 +139,8 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             $this->primaryHolder->saveModel();
             $primaryModel = $this->primaryHolder->getModel();
 
-            foreach ($this->getGroupedSecondaryHolders() as $holders) {
-                $this->updateSecondaryModels($holders, $primaryModel);
+            foreach ($this->getGroupedSecondaryHolders() as $group) {
+                $this->updateSecondaryModels($group['service'], $group['joinOn'], $group['holders'], $primaryModel);
             }
 
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
@@ -182,24 +178,46 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
 
     /**
-     * Group non-primary by servise
-     * @return BaseHolder[]
+     * Group secondary by service
+     * @return array[] items: joinOn, service, holders
      */
-    private function getGroupedSecondaryHolders() {
-        $groups = array();
-        foreach ($this->secondaryBaseHolders as $baseHolder) {
-            $key = spl_object_hash($baseHolder->getService());
-            if (!isset($groups[$key])) {
-                $groups[$key] = array();
+    public function getGroupedSecondaryHolders() {
+        static $result = null; // cache
+
+        if ($result == null) {
+            $result = array();
+
+            foreach ($this->secondaryBaseHolders as $baseHolder) {
+                $key = spl_object_hash($baseHolder->getService());
+                if (!isset($result[$key])) {
+                    $result[$key] = array(
+                        'joinOn' => $baseHolder->getJoinOn(),
+                        'service' => $baseHolder->getService(),
+                        'personIds' => $baseHolder->getPersonIds(),
+                        'holders' => array(),
+                    );
+                }
+                $result[$key]['holders'][] = $baseHolder;
             }
-            $groups[$key][] = $baseHolder;
         }
-        return $groups;
+
+        return $result;
     }
 
-    private function loadSecondaryModels($holders, IModel $primaryModel = null) {
-        $reprHandler = reset($holders);
-        $service = $reprHandler->getService();
+    private function setSecondaryModels($holders, $models) {
+        $filledHandlers = 0;
+        foreach ($models as $secondaryModel) {
+            $holders[$filledHandlers]->setModel($secondaryModel);
+            if (++$filledHandlers >= count($holders)) {
+                throw new InvalidStateException('More than expected secondary models supplied.');
+            }
+        }
+        for (; $filledHandlers < count($holders); ++$filledHandlers) {
+            $holders[$filledHandlers]->setModel(null);
+        }
+    }
+
+    private function loadSecondaryModels(IService $service, $joinOn, $holders, IModel $primaryModel = null) {
         if ($service instanceof AbstractServiceSingle) {
             $table = $service->getTable();
         } else if ($service instanceof AbstractServiceMulti) {
@@ -209,7 +227,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
              */
             $table = $service->getJoinedService()->getTable();
         }
-        $secondary = $primaryModel ? $table->where($reprHandler->getJoinOn(), $primaryModel->getPrimary()) : array();
+        $secondary = $primaryModel ? $table->where($joinOn, $primaryModel->getPrimary()) : array();
         $filledHandlers = 0;
         foreach ($secondary as $secondaryModel) {
             //TODO this is terrible refactor (4:16 AM)
@@ -228,11 +246,9 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
     }
 
-    private function updateSecondaryModels($holders, IModel $primaryModel) {
-        $reprHandler = reset($holders);
-        $service = $reprHandler->getService();
+    private function updateSecondaryModels(IService $service, $joinOn, $holders, IModel $primaryModel = null) {
         foreach ($holders as $holder) {
-            $service->updateModel($holder->getModel(), array($holder->getJoinOn() => $primaryModel->getPrimary()));
+            $service->updateModel($holder->getModel(), array($joinOn => $primaryModel->getPrimary()));
         }
     }
 
@@ -261,3 +277,4 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     }
 
 }
+

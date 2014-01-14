@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
 use Nette\Database\Table\Selection;
@@ -52,15 +52,20 @@ class EventsGrid extends BaseGrid {
         // operations
         //
         $that = $this;
-        $this->addButton("edit", _("Upravit"))
+        $this->addButton('edit', _('Upravit'))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link("edit", $row->event_id);
                         });
-        $this->addButton("apply")
+        $this->addButton('apply')
                 ->setText('Přihláška') //todo i18n
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link(":Public:Application:", array('eventId' => $row->event_id));
+                        });
+        $this->addButton('applications')
+                ->setText('Přihlášky') //todo i18n
+                ->setLink(function($row) use ($that) {
+                            return $that->getPresenter()->link('applications', $row->event_id);
                         });
         $this->addGlobalButton('add')
                 ->setLink($this->getPresenter()->link('create'))

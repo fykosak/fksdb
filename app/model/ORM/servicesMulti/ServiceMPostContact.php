@@ -22,20 +22,6 @@ class ServiceMPostContact extends AbstractServiceMulti {
         $this->getMainService()->dispose($model->getMainModel());
     }
 
-    /**
-     * 
-     * @param int $key ID of the post contact
-     * @return ModelMPostContact|null
-     */
-    public function findByPrimary($key) {
-        $joinedModel = $this->getJoinedService()->findByPrimary($key);
-        if (!$joinedModel) {
-            return null;
-        }
-        $mainModel = $joinedModel->getAddress();
-        return $this->composeModel($mainModel, $joinedModel);
-    }
-
 }
 
 ?>

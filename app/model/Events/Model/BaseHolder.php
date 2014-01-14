@@ -35,6 +35,16 @@ class BaseHolder extends FreezableObject {
     private $joinOn;
 
     /**
+     * @var string[]
+     */
+    private $personIds;
+
+    /**
+     * @var string
+     */
+    private $eventId;
+
+    /**
      * @var Holder
      */
     private $holder;
@@ -178,6 +188,37 @@ class BaseHolder extends FreezableObject {
     public function setJoinOn($joinOn) {
         $this->updating();
         $this->joinOn = $joinOn;
+    }
+
+    public function getPersonIds() {
+        return $this->personIds;
+    }
+
+    public function setPersonIds($personIds) {
+        $this->updating();
+        if (!$this->getService()) {
+            throw new InvalidStateException('Call serService prior setting person IDs.');
+        }
+
+        $this->personIds = array();
+        foreach ($personIds as $personId) {
+            $this->personIds[] = $this->resolveColumnJoins($personId);
+        }
+    }
+
+    public function getEventId() {
+        return $this->eventId;
+    }
+
+    public function setEventId($eventId) {
+        $this->eventId = $this->resolveColumnJoins($eventId);
+    }
+
+    private function resolveColumnJoins($column) {
+        if (strpos($column, '.') === false && strpos($column, ':') === false) {
+            $column = $this->getService()->getTable()->getName() . '.' . $column;
+        }
+        return $column;
     }
 
     /**

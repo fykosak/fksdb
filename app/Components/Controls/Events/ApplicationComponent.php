@@ -40,6 +40,13 @@ class ApplicationComponent extends Control {
         $this->getComponent('form')->render();
     }
 
+    public function renderInline() {
+        echo $this->holder->getPrimaryHolder()->getModelState();
+                
+//        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+//        $this->template->render();
+    }
+
     protected function createComponentForm($name) {
         $this->initializeMachine();
         $form = new Form();

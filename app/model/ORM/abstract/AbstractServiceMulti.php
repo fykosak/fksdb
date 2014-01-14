@@ -4,9 +4,11 @@ use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
 use ORM\IService;
+use ORM\Tables\MultiTableSelection;
 
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
+ * Joined side is in a sense primary (search, select, delete).
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
@@ -50,8 +52,8 @@ abstract class AbstractServiceMulti extends Object implements IService {
      * @return AbstractModelMulti
      */
     public function createNew($data = null) {
-        $mainModel = $this->getMainService()->createNew($this->getMainService()->filterData($data));
-        $joinedModel = $this->getJoinedService()->createNew($this->getJoinedService()->filterData($data));
+        $mainModel = $this->getMainService()->createNew($data);
+        $joinedModel = $this->getJoinedService()->createNew($data);
 
         $className = $this->modelClassName;
         $result = new $className($mainModel, $joinedModel);
@@ -127,6 +129,31 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     protected function setJoinedService(AbstractServiceSingle $joinedService) {
         $this->joinedService = $joinedService;
+    }
+
+    /**
+     * 
+     * @param int $key ID of the joined models
+     * @return AbstractModelMulti|null
+     */
+    public function findByPrimary($key) {
+        $joinedModel = $this->getJoinedService()->findByPrimary($key);
+        if (!$joinedModel) {
+            return null;
+        }
+        $mainModel = $joinedModel->getMainModel();
+        return $this->composeModel($mainModel, $joinedModel);
+    }
+
+    public function getTable() {
+        $joinedTable = $this->getJoinedService()->getTable()->getName();
+        $mainTable = $this->getMainService()->getTable()->getName();
+
+        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getConnection());
+        $selection->select("$joinedTable.*");
+        $selection->select("$mainTable.*");
+
+        return $selection;
     }
 
 }

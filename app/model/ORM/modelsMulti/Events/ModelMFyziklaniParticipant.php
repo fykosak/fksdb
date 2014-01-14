@@ -10,6 +10,6 @@ use AbstractModelMulti;
  */
 class ModelMFyziklaniParticipant extends AbstractModelMulti {
 
-    protected $joiningColumn = 'participant_id';
+    protected $joiningColumn = 'event_participant_id';
 
 }

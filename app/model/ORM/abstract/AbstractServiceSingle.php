@@ -50,31 +50,25 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return AbstractModelSingle
      */
     public function createNew($data = null) {
-        $className = $this->modelClassName;
         if ($data === null) {
             $data = $this->getDefaultData();
         }
-        $data = $this->filterData($data);
-        $result = new $className($data, $this->getTable());
+        $result = $this->createFromArray($data);
         $result->setNew();
         return $result;
     }
 
     /**
-     * Updates values in model from given data.
+     * @internal Used also in MultiTableSelection.
      * 
-     * @param AbstractModelSingle $model
      * @param array $data
+     * @return AbstractModelSingle
      */
-    public function updateModel(IModel $model, $data) {
-        if (!$model instanceof $this->modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
-        }
-
+    public function createFromArray(array $data) {
+        $className = $this->modelClassName;
         $data = $this->filterData($data);
-        foreach ($data as $key => $value) {
-            $model->{$key} = $value;
-        }
+        $result = new $className($data, $this->getTable());
+        return $result;
     }
 
     public function createFromTableRow(ActiveRow $row) {
@@ -94,6 +88,23 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             return $result;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Updates values in model from given data.
+     * 
+     * @param AbstractModelSingle $model
+     * @param array $data
+     */
+    public function updateModel(IModel $model, $data) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+
+        $data = $this->filterData($data);
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
         }
     }
 
@@ -181,7 +192,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @param array|null $data
      * @return array|null
      */
-    public function filterData($data) {
+    protected function filterData($data) {
         if ($data === null) {
             return null;
         }

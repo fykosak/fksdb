@@ -16,4 +16,13 @@ interface IModel extends ArrayAccess {
     public function toArray();
 
     public function getPrimary($need = TRUE);
+
+    /**
+     * @note This is here to straddle duck-typing of ActiveRow.
+     * 
+     * Returns row signature (composition of primary keys)
+     * @param  bool
+     * @return string
+     */
+    public function getSignature($need = TRUE);
 }

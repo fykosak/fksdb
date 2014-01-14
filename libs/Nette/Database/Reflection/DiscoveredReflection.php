@@ -139,7 +139,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
 		if (isset($this->structure['belongsTo'][strtolower($table)])) {
-			foreach ($this->structure['belongsTo'][strtolower($table)] as $column => $targetTable) {
+                    foreach ($this->structure['belongsTo'][strtolower($table)] as $column => $targetTable) {
 				if (stripos($column, $key) !== FALSE) {
 					return array($targetTable, $column);
 				}

@@ -3,15 +3,19 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use Events\Model\Grid\SingleEventSource;
+use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Grids\EventsGrid;
+use FKSDB\Components\Grids\Events\EventsGrid;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
 use ServiceEvent;
+use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -34,12 +38,21 @@ class EventPresenter extends EntityPresenter {
      */
     private $eventFactory;
 
+    /**
+     * @var SystemContainer
+     */
+    private $container;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
     public function injectEventFactory(EventFactory $eventFactory) {
         $this->eventFactory = $eventFactory;
+    }
+
+    public function injectContainer(Container $container) {
+        $this->container = $container;
     }
 
     public function titleList() {
@@ -55,9 +68,18 @@ class EventPresenter extends EntityPresenter {
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
     }
 
+    public function titleAppplications($id) {
+        $model = $this->getModel();
+        $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+    }
+
     public function actionDelete($id) {
         // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
+    }
+
+    public function actionApplications($id) {
+        
     }
 
     protected function createComponentCreateComponent($name) {
@@ -87,6 +109,13 @@ class EventPresenter extends EntityPresenter {
 
     protected function createComponentGrid($name) {
         $grid = new EventsGrid($this->serviceEvent);
+
+        return $grid;
+    }
+
+    protected function createComponentApplicationsGrid($name) {
+        $source = new SingleEventSource($this->getModel(), $this->container);
+        $grid = new ApplicationsGrid($this->container, $source);
 
         return $grid;
     }

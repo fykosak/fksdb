@@ -59,13 +59,6 @@ class ApplicationPresenter extends AuthenticatedPresenter {
         $this->container = $container;
     }
 
-    public function authorizedCreate($eventId) {
-        $event = $this->getEvent();
-        if (!$event) {
-            throw new BadRequestException(_('Neexistující akce.'), 404);
-        }
-    }
-
     public function authorizedDefault($eventId, $id) {
         if (!$this->getEvent()) {
             throw new BadRequestException(_('Neexistující akce.'), 404);
@@ -85,10 +78,6 @@ class ApplicationPresenter extends AuthenticatedPresenter {
 
     public function actionDefault($eventId, $id) {
         $this->getHolder()->setModel($this->getEventApplication());
-    }
-
-    public function renderDefault($eventId, $id) {
-        
     }
 
     protected function createComponentApplication($name) {

@@ -28,20 +28,6 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
         $this->getMainService()->dispose($model->getMainModel());
     }
 
-    /**
-     * 
-     * @param int $key ID of the post contact
-     * @return ModelMFyziklaniParticipant|null
-     */
-    public function findByPrimary($key) {
-        $joinedModel = $this->getJoinedService()->findByPrimary($key);
-        if (!$joinedModel) {
-            return null;
-        }
-        $mainModel = $joinedModel->getMainModel();
-        return $this->composeModel($mainModel, $joinedModel);
-    }
-
 }
 
 ?>

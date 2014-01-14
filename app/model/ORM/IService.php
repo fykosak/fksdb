@@ -2,6 +2,8 @@
 
 namespace ORM;
 
+use Nette\Database\Table\Selection;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
@@ -21,4 +23,9 @@ interface IService {
     public function save(IModel &$model);
 
     public function dispose(IModel $model);
+
+    /**
+     * @return Selection
+     */
+    public function getTable();
 }

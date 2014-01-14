@@ -72,6 +72,10 @@ abstract class AbstractModelMulti extends Object implements IModel {
         return $this->getJoinedModel()->getPrimary($need);
     }
 
+    public function getSignature($need = TRUE) {
+        return implode('|', (array) $this->getPrimary($need));
+    }
+
     public function isNew() {
         return $this->getJoinedModel()->isNew();
     }
