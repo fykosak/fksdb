@@ -60,12 +60,12 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
-    protected function setDefaultValue(Component $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue($field->getValue());
     }
 
-    protected function setDisabled(Component $component, Field $field, BaseMachine $machine, Container $container) {
-        $component->setDisabled(!$field->isModifiable($machine));
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+        $component->setDisabled();
     }
 
     public function getMainControl(Component $component) {

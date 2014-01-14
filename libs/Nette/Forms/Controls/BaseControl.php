@@ -11,11 +11,12 @@
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Forms\IControl,
-	Nette\Utils\Html,
-	Nette\Forms\Form,
-	Nette\Forms\Rule;
+use Nette;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
+use Nette\Forms\Rule;
+use Nette\InvalidStateException;
+use Nette\Utils\Html;
 
 
 /**
@@ -424,6 +425,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
+            if(!$this->rules) {throw new InvalidStateException();}
 		$this->rules->addRule($operation, $message, $arg);
 		return $this;
 	}

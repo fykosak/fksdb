@@ -4,9 +4,11 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKS\Components\Forms\Controls\PersonId;
 use FKS\Components\Forms\Controls\URLTextBox;
 use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\PersonContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
@@ -14,8 +16,10 @@ use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use ServicePerson;
 use YearCalculator;
 
 /**
@@ -79,10 +83,17 @@ class PersonFactory {
      */
     private $yearCalculator;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool) {
+    /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
+        $this->yearCalculator = $yearCalculator;
+        $this->servicePerson = $servicePerson;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -338,4 +349,55 @@ class PersonFactory {
         return $studyYear;
     }
 
+    /*     * ***********************************************
+     * NEW APPROACH
+     * *********************************************** */
+
+    const EX_HIDDEN = 'hidden';
+    const EX_DISABLED = 'disabled';
+    const EX_MODIFIABLE = 'modifiable';
+    const SEARCH_EMAIL = 'email';
+    const SEARCH_NAME = 'name';
+    const SEARCH_NONE = 'none';
+
+    public function createDynamicPerson($searchType, $allowClear, $filledFields, $fieldsDefinition, $acYear, $personProvider) {
+        $hiddenField = new PersonId($this->servicePerson, $acYear, $filledFields, $allowClear);
+
+        $container = new PersonContainer($hiddenField, $this, $personProvider, $this->servicePerson);
+        $container->setAllowClear($allowClear);
+        $container->setSearchType($searchType);
+
+        $fieldControls = array();
+        foreach ($fieldsDefinition as $sub => $fields) {
+            $subcontainer = new Container();
+            $container->addComponent($subcontainer, $sub);
+            $fieldControls[$sub] = array();
+
+            foreach ($fields as $fieldName => $required) {
+                $control = $this->createField($sub, $fieldName);
+                if ($required) {
+                    $control->addConditionOn($hiddenField, Form::FILLED)->addRule(Form::FILLED, 'Pole %label je povinné.');
+                }
+
+                $subcontainer->addComponent($control, $fieldName);
+                $fieldControls[$sub][$fieldName] = $control;
+            }
+        }
+
+
+
+        return array(
+            $hiddenField,
+            $container,
+        );
+    }
+
+    private function createField($sub, $field) {
+        //TODO
+        $control = new TextInput($field);
+
+        return $control;
+    }
+
 }
+

@@ -26,6 +26,16 @@
 #     or use provided factory callback (argumemt should be the data model + WF context + field metadata (but conditions must be already evaluated))
 # person selection is based on email (otherwise name/additional info must be provided)
 #  -> use the factory mentioned above
+parameters:
+    events:
+        fyziklani:
+            liaison:
+                person:
+                    family_name: true
+                    other_name: true
+                person_info:
+                    email: true
+                    phone: false
 events:
     fyziklani:
         event_type_id: 1
@@ -85,6 +95,7 @@ events:
                         required: true
                         visible: true
                         modifiable: true
+                        factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fyziklani.liaison%, ...)
                     teacher_present:
                         label: Přijede učitel
                         visible: true
@@ -124,6 +135,7 @@ events:
                         visible: true
                         modifiable: true
                         determining: true
+                        factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fyziklani.liaison%, ...)
                         # TODO person factory
                     note:
                         label: Poznámka

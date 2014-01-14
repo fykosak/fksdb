@@ -240,8 +240,16 @@ class BaseHolder extends FreezableObject {
             if (!$field->isVisible($machine)) {
                 continue;
             }
-            $component = $field->createFormComponent($machine, $container);
-            $container->addComponent($component, $name);
+            $components = $field->createFormComponent($machine, $container);
+            if (!is_array($components)) {
+                $components = array($components);
+            }
+            $i = 0;
+            foreach ($components as $component) {
+                $componentName = ($i == 0) ? $name : "{$name}_{$i}";
+                $container->addComponent($component, $componentName);
+                ++$i;
+            }
         }
 
         return $container;
