@@ -223,7 +223,7 @@ class PersonPresenter extends EntityPresenter {
             $defaultAddresses = 0;
         }
         $replicator = new Replicator(function($replContainer) use($factory, $group) {
-                    $factory->buildAddress($replContainer, $group);
+                    $factory->buildAddress($replContainer, AddressFactory::SHOW_EXTENDED_ROWS, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
                     $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();

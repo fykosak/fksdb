@@ -18,7 +18,10 @@ use ServicePerson;
  */
 class PersonContainer extends Container {
 
-    const SEARCH_CONTROL = '_c_search';
+    const SEARCH_EMAIL = 'email';
+    const SEARCH_NAME = 'name';
+    const SEARCH_NONE = 'none';
+    const CONTROL_SEARCH = '_c_search';
     const SUBMIT_SEARCH = '__search';
     const SUBMIT_CLEAR = '__clear';
 
@@ -73,16 +76,16 @@ class PersonContainer extends Container {
     public function setSearchType($searchType) {
         $this->searchType = $searchType;
         switch ($this->searchType) {
-            case PersonFactory::SEARCH_EMAIL:
-                $this->addText(self::SEARCH_CONTROL, _('E-mail'))
+            case PersonContainer::SEARCH_EMAIL:
+                $this->addText(self::CONTROL_SEARCH, _('E-mail'))
                         ->addCondition(Form::FILLED)
                         ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 break;
-            case PersonFactory::SEARCH_NAME:
+            case PersonContainer::SEARCH_NAME:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
-                $this->addComponent($control, self::SEARCH_CONTROL);
+                $this->addComponent($control, self::CONTROL_SEARCH);
                 break;
-            case PersonFactory::SEARCH_NONE:
+            case PersonContainer::SEARCH_NONE:
                 $this->personId->setValue(null); // TODO must be filled with Javascript when family_name/other_name is filled
                 break;
         }
@@ -98,10 +101,10 @@ class PersonContainer extends Container {
 
     public function showSearch($value) {
         static $searchComponents = array(
-    self::SEARCH_CONTROL,
+    self::CONTROL_SEARCH,
     self::SUBMIT_SEARCH,
         );
-        if ($this->getSearchType() == PersonFactory::SEARCH_NONE) {
+        if ($this->getSearchType() == PersonContainer::SEARCH_NONE) {
             $value = false;
         }
 
@@ -154,7 +157,7 @@ class PersonContainer extends Container {
         $this->addSubmit(self::SUBMIT_SEARCH, 'Najít')
                         ->setValidationScope(false)
                 ->onClick[] = function(SubmitButton $submit) use($that) {
-                    $term = $that->getComponent(self::SEARCH_CONTROL)->getValue();
+                    $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
                     $person = $that->findPerson($term);
                     $values = array();
                     if (!$person) {
@@ -168,9 +171,9 @@ class PersonContainer extends Container {
 
     private function findPerson($term) {
         switch ($this->searchType) {
-            case PersonFactory::SEARCH_EMAIL:
+            case PersonContainer::SEARCH_EMAIL:
                 return $this->servicePerson->getTable()->where('person_info:email', $term)->fetch();
-            case PersonFactory::SEARCH_NAME:
+            case PersonContainer::SEARCH_NAME:
                 return $this->servicePerson->findByPrimary($term);
         }
         return null;
@@ -178,7 +181,7 @@ class PersonContainer extends Container {
 
     private function getPersonSearchData($term) {
         switch ($this->searchType) {
-            case PersonFactory::SEARCH_EMAIL:
+            case PersonContainer::SEARCH_EMAIL:
                 return array(
                     'person_info' => array('email' => $term)
                 );

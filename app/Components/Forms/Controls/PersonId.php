@@ -2,12 +2,12 @@
 
 namespace FKS\Components\Forms\Controls;
 
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\PersonContainer;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
-use Nette\InvalidStateException;
 use ServicePerson;
 
 /**
@@ -38,8 +38,6 @@ class PersonId extends HiddenField {
      * @var enum
      */
     private $filledFields;
-
-    
 
     //TODO fields may be not necessary, the data are also in container iteself
     function __construct(ServicePerson $servicePerson, $acYear, $filledFields) {
@@ -79,21 +77,35 @@ class PersonId extends HiddenField {
     }
 
     private function setFilledFields(ModelPerson $person) {
-        foreach ($this->personContainer->getComponents() as $sub => $controls) {
-            if (!$controls instanceof Container) {
+        foreach ($this->personContainer->getComponents() as $sub => $subcontainer) {
+            if (!$subcontainer instanceof Container) {
                 continue;
             }
 
-            foreach ($controls->getComponents() as $fieldName => $control) {
-                $value = $this->getPersonValue($person, $sub, $fieldName);
+            if ($subcontainer instanceof AddressContainer) {
+                $value = $this->getPersonValue($person, $sub, null);
                 if ($value) {
                     if ($this->filledFields == PersonFactory::EX_HIDDEN) {
-                        $this->personContainer[$sub]->removeComponent($control);
+                        $this->personContainer->removeComponent($subcontainer);
                     } else if ($this->filledFields == PersonFactory::EX_DISABLED) {
-                        $control->setDisabled();
-                        $control->setValue($value);
+                        $subcontainer->setDisabled();
+                        $subcontainer->setValues($value);
                     } else if ($this->filledFields == PersonFactory::EX_MODIFIABLE) {
-                        $control->setValue($value);
+                        $subcontainer->setValues($value);
+                    }
+                }
+            } else {
+                foreach ($subcontainer->getComponents() as $fieldName => $control) {
+                    $value = $this->getPersonValue($person, $sub, $fieldName);
+                    if ($value) {
+                        if ($this->filledFields == PersonFactory::EX_HIDDEN) {
+                            $this->personContainer[$sub]->removeComponent($control);
+                        } else if ($this->filledFields == PersonFactory::EX_DISABLED) {
+                            $control->setDisabled();
+                            $control->setValue($value);
+                        } else if ($this->filledFields == PersonFactory::EX_MODIFIABLE) {
+                            $control->setValue($value);
+                        }
                     }
                 }
             }
@@ -110,13 +122,13 @@ class PersonId extends HiddenField {
             return null;
         }
         switch ($sub) {
-            case 'base':
+            case 'person':
                 return $person[$field];
-            case 'info':
+            case 'person_info':
                 return ($info = $person->getInfo()) ? $info[$field] : null;
-            case 'history':
+            case 'person_history':
                 return ($history = $person->getHistory($this->acYear)) ? $history[$field] : null;
-            case 'address':
+            case 'post_contact':
                 return $person->getDeliveryAddress(); //TODO distinquish delivery and permanent address
         }
     }

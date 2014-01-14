@@ -39,7 +39,7 @@ class AddressContainer extends ModelContainer {
 
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);
-        if (!isset($values['region_id'])) {
+        if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException("You must set ServiceRegion before getting values from the address container.");
             }

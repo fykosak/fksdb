@@ -10,14 +10,20 @@ use Nette\Forms\Container;
  * Formulářový kontejder reprezentující záznam z DB tabulky.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- */ 
+ */
 class ModelContainer extends Container {
 
     public function setValues($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow|| $values instanceof AbstractModelMulti) {
+        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
         }
         parent::setValues($values, $erase);
+    }
+
+    public function setDisabled() {
+        foreach ($this->getComponents() as $component) {
+            $component->setDisabled();
+        }
     }
 
 }

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
 use Events\Model\Field;
+use FKSDB\Components\Forms\Containers\PersonContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory as CorePersonFactory;
 use Nette\ComponentModel\Component;
@@ -27,7 +28,7 @@ class PersonFactory extends AbstractFactory {
      * @var PersonProvider
      */
     private $personProvider;
-    private $searchType = CorePersonFactory::SEARCH_EMAIL;
+    private $searchType = PersonContainer::SEARCH_EMAIL;
     private $allowClear = true; //TODO depends on is logged in and outer settings
     private $filledFields = CorePersonFactory::EX_DISABLED; //TODO depends on is logged in and outer settings
 

@@ -36,6 +36,8 @@ parameters:
                 person_info:
                     email: true
                     phone: false
+                post_contact:
+
 events:
     fyziklani:
         event_type_id: 1

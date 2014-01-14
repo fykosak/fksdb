@@ -18,6 +18,8 @@ use ServiceRegion;
  */
 class AddressFactory {
 
+    const SHOW_EXTENDED_ROWS = 0x1;
+
     /**
      * @var ServiceAddress
      */
@@ -33,9 +35,9 @@ class AddressFactory {
         $this->serviceRegion = $serviceRegion;
     }
 
-    public function createAddress(ControlGroup $group = null) {
+    public function createAddress($options = 0, ControlGroup $group = null) {
         $container = new AddressContainer();
-        $this->buildAddress($container, $group);
+        $this->buildAddress($container, $options, $group);
         return $container;
     }
 
@@ -46,16 +48,17 @@ class AddressFactory {
      * @param \FKSDB\Components\Forms\Factories\Container $container
      * @param ControlGroup $group
      */
-    public function buildAddress(AddressContainer $container, ControlGroup $group = null) {
+    public function buildAddress(AddressContainer $container, $options = 0, ControlGroup $group = null) {
         $container->setServiceRegion($this->serviceRegion);
         $container->setCurrentGroup($group);
 
-        $container->addText('first_row', _('První řádek'))
-                ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
+        if ($options & self::SHOW_EXTENDED_ROWS) {
+            $container->addText('first_row', _('První řádek'))
+                    ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
 
-        $container->addText('second_row', _('Druhý řádek'))
-                ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
-
+            $container->addText('second_row', _('Druhý řádek'))
+                    ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
+        }
 
         $container->addText('target', _('Místo'))
                 ->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))

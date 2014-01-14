@@ -88,12 +88,18 @@ class PersonFactory {
      */
     private $servicePerson;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
+    /**
+     * @var AddressFactory
+     */
+    private $addressFactory;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, YearCalculator $yearCalculator, ServicePerson $servicePerson, AddressFactory $addressFactory) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
         $this->yearCalculator = $yearCalculator;
         $this->servicePerson = $servicePerson;
+        $this->addressFactory = $addressFactory;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -356,9 +362,6 @@ class PersonFactory {
     const EX_HIDDEN = 'hidden';
     const EX_DISABLED = 'disabled';
     const EX_MODIFIABLE = 'modifiable';
-    const SEARCH_EMAIL = 'email';
-    const SEARCH_NAME = 'name';
-    const SEARCH_NONE = 'none';
 
     public function createDynamicPerson($searchType, $allowClear, $filledFields, $fieldsDefinition, $acYear, $personProvider) {
         $hiddenField = new PersonId($this->servicePerson, $acYear, $filledFields, $allowClear);
@@ -367,24 +370,23 @@ class PersonFactory {
         $container->setAllowClear($allowClear);
         $container->setSearchType($searchType);
 
-        $fieldControls = array();
         foreach ($fieldsDefinition as $sub => $fields) {
-            $subcontainer = new Container();
-            $container->addComponent($subcontainer, $sub);
-            $fieldControls[$sub] = array();
+            if ($sub == 'post_contact') {
+                $subcontainer = $this->addressFactory->createAddress();
+                $required = $fields['address'];
+            } else {
+                $subcontainer = new Container();
+                foreach ($fields as $fieldName => $required) {
+                    $control = $this->createField($sub, $fieldName);
+                    if ($required) {
+                        $control->addConditionOn($hiddenField, Form::FILLED)->addRule(Form::FILLED, 'Pole %label je povinné.');
+                    }
 
-            foreach ($fields as $fieldName => $required) {
-                $control = $this->createField($sub, $fieldName);
-                if ($required) {
-                    $control->addConditionOn($hiddenField, Form::FILLED)->addRule(Form::FILLED, 'Pole %label je povinné.');
+                    $subcontainer->addComponent($control, $fieldName);
                 }
-
-                $subcontainer->addComponent($control, $fieldName);
-                $fieldControls[$sub][$fieldName] = $control;
             }
+            $container->addComponent($subcontainer, $sub);
         }
-
-
 
         return array(
             $hiddenField,
