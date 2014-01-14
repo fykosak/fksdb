@@ -22,6 +22,7 @@ class EventsExtension extends CompilerExtension {
 
     const MAIN_FACTORY = 'eventMachine';
     const MAIN_HOLDER = 'eventHolder';
+    const MAIN_RESOLVER = 'eventLayoutResolver';
     const TRANSITION_FACTORY = 'Transition';
     const FIELD_FACTORY = 'Field';
     const MACHINE_PREFIX = 'Machine_';
@@ -34,6 +35,7 @@ class EventsExtension extends CompilerExtension {
     const CLASS_FIELD = 'Events\Model\Field';
     const CLASS_BASE_HOLDER = 'Events\Model\BaseHolder';
     const CLASS_HOLDER = 'Events\Model\Holder';
+    const CLASS_RESOLVER = 'FKSDB\Components\Grids\Events\LayoutResolver';
 
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
@@ -71,15 +73,16 @@ class EventsExtension extends CompilerExtension {
         $this->createFieldFactory();
 
         foreach ($config as $definitionName => $definition) {
+            $definition = NeonScheme::readSection($definition, $this->scheme['definition']);
             $eventTypeId = $definition['event_type_id'];
-            $years = isset($definition['eventYears']) ? $definition['eventYears'] : true;
 
             if (!isset($this->idMaps[$eventTypeId])) {
                 $this->idMaps[$eventTypeId] = array();
             }
             $this->idMaps[$eventTypeId][] = array(
                 'name' => $definitionName,
-                'years' => $years,
+                'years' => $definition['eventYears'],
+                'tableLayout' => $definition['tableLayout'],
             );
 
             /*
@@ -93,6 +96,8 @@ class EventsExtension extends CompilerExtension {
             $this->createMachineFactory($definitionName, $definition);
             $this->createHolderFactory($definitionName, $definition);
         }
+
+        $this->createLayoutResolverFactory();
     }
 
     private function loadScheme() {
@@ -157,6 +162,16 @@ class EventsExtension extends CompilerExtension {
         $methodName = Container::getMethodName(self::MAIN_HOLDER, false);
         $method = $class->methods[$methodName];
         $this->createDispatchFactoryBody($method, array($this, 'getHolderName'));
+    }
+
+    private function createLayoutResolverFactory() {
+        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
+        $def->setShared(true);
+        $def->setClass(self::CLASS_RESOLVER);
+
+        $parameters = $this->getContainerBuilder()->parameters;
+        $templateDir = $parameters['events']['templateDir'];
+        $def->setArguments(array($templateDir, $this->idMaps));
     }
 
     /*

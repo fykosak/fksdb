@@ -3,6 +3,15 @@
 #
 # Fields that do not have default value are required.
 
+definition:
+    event_type_id:
+    eventYears:
+        default: true
+    tableLayout:
+        default: participants
+    baseMachines:
+    machine:
+
 machine:
     baseMachines:
     # processing checks invariants/calculates data on edit form submit, before transitions

@@ -349,4 +349,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->_lang;
     }
 
+    public function getTranslator() {
+        return $this->translator;
+    }
+
 }

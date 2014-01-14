@@ -94,6 +94,13 @@ class BaseMachine extends FreezableObject {
         $this->state = $state;
     }
 
+    /**
+     * @return string
+     */
+    public function getStateName() {
+        return $this->states[$this->state];
+    }
+
     public function getAvailableTransitions() {
         return array_filter($this->getMatchingTransitions(), function(Transition $transition) {
                     return $transition->canExecute();

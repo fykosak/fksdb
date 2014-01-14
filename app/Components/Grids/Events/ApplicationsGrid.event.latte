@@ -1,0 +1,16 @@
+{layout 'ApplicationsGrid.@layout.latte'}
+
+<table class="table table-condensed table-hover">
+    <thead n:block="header">
+
+    </thead>
+    <tbody>
+        {foreach $eventApplications as $key => $event}
+        <tr>
+            <td>{$event->name}</td>
+            <td>{control 'application_'.$key:inline}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+
+</table>

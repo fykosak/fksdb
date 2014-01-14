@@ -1,0 +1,13 @@
+<table class="table table-condensed table-hover">
+    <thead n:block="header">
+
+    </thead>
+    <tbody>
+        {foreach $eventApplications as $key => $event}
+        {var $holder = $holders[$key]->getPrimaryHolder()}
+        <tr n:block="row">
+        </tr>
+        {/foreach}
+    </tbody>
+
+</table>

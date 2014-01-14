@@ -1,0 +1,5 @@
+{foreach $availableTransitions as  $transition}
+<a n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
+{/foreach}
+
+<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $primaryModel->event_id}" class="btn btn-xs btn-primary">{_'Upravit'}</a>    

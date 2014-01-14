@@ -7,6 +7,7 @@ use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
@@ -39,6 +40,12 @@ class EventPresenter extends EntityPresenter {
     private $eventFactory;
 
     /**
+     *
+     * @var LayoutResolver
+     */
+    private $layoutResolver;
+
+    /**
      * @var SystemContainer
      */
     private $container;
@@ -49,6 +56,10 @@ class EventPresenter extends EntityPresenter {
 
     public function injectEventFactory(EventFactory $eventFactory) {
         $this->eventFactory = $eventFactory;
+    }
+
+    public function injectLayoutResolver(LayoutResolver $layoutResolver) {
+        $this->layoutResolver = $layoutResolver;
     }
 
     public function injectContainer(Container $container) {
@@ -100,13 +111,6 @@ class EventPresenter extends EntityPresenter {
         return $form;
     }
 
-    protected function setDefaults(AbstractModelSingle $model, Form $form) {
-        $defaults = array(
-            self::CONT_EVENT => $model->toArray(),
-        );
-        $form->setDefaults($defaults);
-    }
-
     protected function createComponentGrid($name) {
         $grid = new EventsGrid($this->serviceEvent);
 
@@ -115,7 +119,10 @@ class EventPresenter extends EntityPresenter {
 
     protected function createComponentApplicationsGrid($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
+
         $grid = new ApplicationsGrid($this->container, $source);
+        $template = $this->layoutResolver->getTemplate($this->getModel());
+        $grid->setTemplate($template);
 
         return $grid;
     }
@@ -128,6 +135,13 @@ class EventPresenter extends EntityPresenter {
         $form->addComponent($eventContainer, self::CONT_EVENT);
 
         return $form;
+    }
+
+    protected function setDefaults(AbstractModelSingle $model, Form $form) {
+        $defaults = array(
+            self::CONT_EVENT => $model->toArray(),
+        );
+        $form->setDefaults($defaults);
     }
 
     protected function createModel($id) {

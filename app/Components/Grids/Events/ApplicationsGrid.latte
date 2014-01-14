@@ -1,8 +1,0 @@
-<table>
-    {foreach $eventApplications as $key => $event}
-    <tr>
-        <td>{$event->name}</td>
-        <td>{control 'application_'.$key:inline}</td>
-    </tr>
-    {/foreach}
-</table>

@@ -120,7 +120,11 @@ parameters:
 
         # default language when not set explicitly
         defaultLanguage: cs
-
+    
+    # Events
+    events:
+        # where locale files are stored
+        templateDir: %appDir%/../data/events
 
 php:
     date.timezone: Europe/Prague

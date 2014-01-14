@@ -30,6 +30,8 @@ events:
     fyziklani:
         event_type_id: 1
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklani
+
         baseMachines:
             #
             #   TEAM
@@ -52,10 +54,10 @@ events:
                         label: Přihlásit tým
                         # onExecuted: [callback] # TODO send email
                     pending->approved:
-                        condition: false # TODO logged in && event admin
+                        condition: true # TODO logged in && event admin
                         label: Potvrdit účast týmu
                     pending->spare:
-                        condition: false # TODO logged in && event admin
+                        condition: true # TODO logged in && event admin
                         label: Potvrdit jako náhradníka
                     approved|spare->participated:
                         condition: false # TODO logged in && event admin

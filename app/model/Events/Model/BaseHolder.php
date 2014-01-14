@@ -142,7 +142,7 @@ class BaseHolder extends FreezableObject {
     public function saveModel() {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
-        } else {
+        } else if ($this->getModelState() != BaseMachine::STATE_INIT) {
             $this->service->save($this->getModel());
         }
     }
