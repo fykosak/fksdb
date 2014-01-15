@@ -15,10 +15,12 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use Persons\PersonHandler2;
 use ServicePerson;
 use YearCalculator;
 
@@ -93,13 +95,21 @@ class PersonFactory {
      */
     private $addressFactory;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, YearCalculator $yearCalculator, ServicePerson $servicePerson, AddressFactory $addressFactory) {
+    /**
+     *
+     * @var PersonHandler2
+     */
+    private $personHandler;
+
+    // Eww, that smells.
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, YearCalculator $yearCalculator, ServicePerson $servicePerson, AddressFactory $addressFactory, PersonHandler2 $personHandler) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
         $this->yearCalculator = $yearCalculator;
         $this->servicePerson = $servicePerson;
         $this->addressFactory = $addressFactory;
+        $this->personHandler = $personHandler;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -363,27 +373,20 @@ class PersonFactory {
     const EX_DISABLED = 'disabled';
     const EX_MODIFIABLE = 'modifiable';
 
-    public function createDynamicPerson($searchType, $allowClear, $filledFields, $fieldsDefinition, $acYear, $personProvider) {
-        $hiddenField = new PersonId($this->servicePerson, $acYear, $filledFields, $allowClear);
+    public function createDynamicPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $filledFields, $updateResolution, $personProvider) {
+        $hiddenField = new PersonId($this->servicePerson, $acYear, $filledFields);
 
-        $container = new PersonContainer($hiddenField, $this, $personProvider, $this->servicePerson);
+        $container = new PersonContainer($hiddenField, $this, $personProvider, $this->servicePerson, $this->personHandler, $acYear);
         $container->setAllowClear($allowClear);
         $container->setSearchType($searchType);
+        $container->setUpdateResolution($updateResolution);
 
         foreach ($fieldsDefinition as $sub => $fields) {
-            if ($sub == 'post_contact') {
-                $subcontainer = $this->addressFactory->createAddress();
-                $required = $fields['address'];
-            } else {
-                $subcontainer = new Container();
-                foreach ($fields as $fieldName => $required) {
-                    $control = $this->createField($sub, $fieldName);
-                    if ($required) {
-                        $control->addConditionOn($hiddenField, Form::FILLED)->addRule(Form::FILLED, 'Pole %label je povinné.');
-                    }
+            $subcontainer = new Container();
+            foreach ($fields as $fieldName => $metadata) {
+                $control = $this->createField($sub, $fieldName, $metadata);
 
-                    $subcontainer->addComponent($control, $fieldName);
-                }
+                $subcontainer->addComponent($control, $fieldName);
             }
             $container->addComponent($subcontainer, $sub);
         }
@@ -394,11 +397,30 @@ class PersonFactory {
         );
     }
 
-    private function createField($sub, $field) {
-        //TODO
-        $control = new TextInput($field);
+    private function createField($sub, $field, $metadata, HiddenField $personId = null) {
+        $required = $metadata;
 
-        return $control;
+        if ($sub == 'post_contact') {
+            if ($field == 'type') {
+                return new HiddenField($required);
+            } else if ($field == 'address') {
+                //TODO required, support for multiple addresses?
+                return $this->addressFactory->createAddress();
+            }
+        } else {
+            //TODO
+            $control = new TextInput($field);
+
+            if ($required) {
+                $conditioned = $control;
+                if ($personId) {
+                    $conditioned = $control->addConditionOn($personId, Form::FILLED);
+                }
+                $conditioned->addRule(Form::FILLED, 'Pole %label je povinné.');
+            }
+
+            return $control;
+        }
     }
 
 }

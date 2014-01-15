@@ -3,12 +3,16 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKS\Components\Forms\Controls\PersonId;
+use FKS\Utils\Promise;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
+use Persons\PersonHandler2;
+use Persons\ResolutionException;
 use ServicePerson;
 
 /**
@@ -50,16 +54,28 @@ class PersonContainer extends Container {
     private $servicePerson;
 
     /**
+     * @var PersonHandler2
+     */
+    private $handler;
+    private $acYear;
+
+    /**
      * @var boolean
      */
     private $allowClear = true;
+    private $createResolution = PersonHandler2::RESOLUTION_EXCEPTION;
+    private $updateResolution = PersonHandler2::RESOLUTION_OVERWRITE;
 
-    public function __construct(PersonId $personId, PersonFactory $personFactory, PersonProvider $personProvider, ServicePerson $servicePerson) {
+    public function __construct(PersonId $personId, PersonFactory $personFactory, PersonProvider $personProvider, ServicePerson $servicePerson, PersonHandler2 $handler, $acYear) {
         parent::__construct();
+        $this->monitor('Nette\Forms\Form');
+
         $this->personId = $personId;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
         $this->servicePerson = $servicePerson;
+        $this->handler = $handler;
+        $this->acYear = $acYear;
 
         $this->createClearButton();
         $this->createSearchButton();
@@ -97,6 +113,22 @@ class PersonContainer extends Container {
 
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
+    }
+
+    public function getCreateResolution() {
+        return $this->createResolution;
+    }
+
+    public function setCreateResolution($createResolution) {
+        $this->createResolution = $createResolution;
+    }
+
+    public function getUpdateResolution() {
+        return $this->updateResolution;
+    }
+
+    public function setUpdateResolution($updateResolution) {
+        $this->updateResolution = $updateResolution;
     }
 
     public function showSearch($value) {
@@ -143,6 +175,47 @@ class PersonContainer extends Container {
         }
     }
 
+    //TODO move to person ID?
+    private function createOrUpdatePerson(Form $form) {
+        $personId = $this->personId->getValue();
+        if (!$personId) {
+            return;
+        }
+        $that = $this;
+        $values = $this->getValues();
+        $promise = new Promise(function() use($form, $that, $personId, $values) {
+                    if ($personId === PersonId::VALUE_PROMISE) {
+                        try {
+                            $person = $this->handler->createFromValues($values, $that->acYear, $that->getCreateResolution());
+                            return $person;
+                        } catch (ResolutionException $e) {
+                            $form->addError(_('Data se neshodují s evidovanou osobou. Byla doplněna evidovaná data.')); //TODO should contain GUI name of the container
+                            $that->personId->setValue($e->getPerson());
+                            throw $e;
+                        }
+                    } else if ($personId) {
+                        $person = $this->servicePerson->findByPrimary($personId);
+                        $this->handler->update($person, $values, $this->acYear, $this->getUpdateResolution());
+                        return $personId;
+                    }
+                });
+        $this->personId->setValue($personId);
+        $this->personId->setPromise($promise);
+    }
+
+    private $attachedOnValidate = false;
+
+    protected function attached($obj) {
+        parent::attached($obj);
+        if (!$this->attachedOnValidate && $obj instanceof Form) {
+            $that = $this;
+            $obj->onValidate[] = function(Form $form) use($that) {
+                        $that->createOrUpdatePerson($form);
+                    };
+            $this->attachedOnValidate = true;
+        }
+    }
+
     private function createClearButton() {
         $that = $this;
         $this->addSubmit(self::SUBMIT_CLEAR, 'X')
@@ -172,7 +245,7 @@ class PersonContainer extends Container {
     private function findPerson($term) {
         switch ($this->searchType) {
             case PersonContainer::SEARCH_EMAIL:
-                return $this->servicePerson->getTable()->where('person_info:email', $term)->fetch();
+                return $this->servicePerson->findByEmail($term);
             case PersonContainer::SEARCH_NAME:
                 return $this->servicePerson->findByPrimary($term);
         }

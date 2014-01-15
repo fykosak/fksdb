@@ -114,7 +114,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
-            if ($secondaryModels !== null) {
+            if ($secondaryModels) {
                 $this->setSecondaryModels($group['holders'], $secondaryModels[$key]);
             } else {
                 $this->loadSecondaryModels($group['service'], $group['joinOn'], $group['holders'], $primaryModel);

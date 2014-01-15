@@ -2,10 +2,11 @@
 
 namespace FKS\Components\Forms\Controls;
 
-use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKS\Utils\Promise;
 use FKSDB\Components\Forms\Containers\PersonContainer;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use ModelPerson;
+use ModelPostContact;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
 use ServicePerson;
@@ -39,7 +40,11 @@ class PersonId extends HiddenField {
      */
     private $filledFields;
 
-    //TODO fields may be not necessary, the data are also in container iteself
+    /**
+     * @var Promise
+     */
+    private $promise;
+
     function __construct(ServicePerson $servicePerson, $acYear, $filledFields) {
         parent::__construct();
         $this->servicePerson = $servicePerson;
@@ -55,12 +60,21 @@ class PersonId extends HiddenField {
         $this->personContainer = $personContainer;
     }
 
+    public function getPromise() {
+        return $this->promise;
+    }
+
+    public function setPromise(Promise $promise) {
+        $this->promise = $promise;
+    }
+
     public function setValue($person) {
-        if (!$person instanceof ModelPerson && $person !== self::VALUE_PROMISE) {
+        $isPromise = ($person instanceof Promise || $person === self::VALUE_PROMISE);
+        if (!($person instanceof ModelPerson) && !$isPromise) {
             $person = $this->servicePerson->findByPrimary($person);
         }
         $container = $this->personContainer;
-        if ($person === self::VALUE_PROMISE) {
+        if ($isPromise) {
             $container->showSearch(false);
             $container->setClearButton(true);
         } else if (!$person) {
@@ -72,8 +86,25 @@ class PersonId extends HiddenField {
 
             $this->setFilledFields($person);
         }
+        if ($isPromise) {
+            $value = self::VALUE_PROMISE;
+            if ($person instanceof Promise) {
+                $this->promise = $person;
+            }
+        } else if ($person instanceof ModelPerson) {
+            $value = $person->getPrimary();
+        } else {
+            $value = $person;
+        }
+        parent::setValue($value);
+    }
 
-        parent::setValue(($person instanceof ModelPerson) ? $person->getPrimary() : $person);
+    public function getValue() {
+        if ($this->promise) {
+            return $this->promise->getValue();
+        }
+
+        return parent::getValue();
     }
 
     private function setFilledFields(ModelPerson $person) {
@@ -82,30 +113,16 @@ class PersonId extends HiddenField {
                 continue;
             }
 
-            if ($subcontainer instanceof AddressContainer) {
-                $value = $this->getPersonValue($person, $sub, null);
+            foreach ($subcontainer->getComponents() as $fieldName => $control) {
+                $value = $this->getPersonValue($person, $sub, $fieldName);
                 if ($value) {
                     if ($this->filledFields == PersonFactory::EX_HIDDEN) {
-                        $this->personContainer->removeComponent($subcontainer);
+                        $this->personContainer[$sub]->removeComponent($control);
                     } else if ($this->filledFields == PersonFactory::EX_DISABLED) {
-                        $subcontainer->setDisabled();
-                        $subcontainer->setValues($value);
+                        $control->setDisabled();
+                        $control->setValue($value);
                     } else if ($this->filledFields == PersonFactory::EX_MODIFIABLE) {
-                        $subcontainer->setValues($value);
-                    }
-                }
-            } else {
-                foreach ($subcontainer->getComponents() as $fieldName => $control) {
-                    $value = $this->getPersonValue($person, $sub, $fieldName);
-                    if ($value) {
-                        if ($this->filledFields == PersonFactory::EX_HIDDEN) {
-                            $this->personContainer[$sub]->removeComponent($control);
-                        } else if ($this->filledFields == PersonFactory::EX_DISABLED) {
-                            $control->setDisabled();
-                            $control->setValue($value);
-                        } else if ($this->filledFields == PersonFactory::EX_MODIFIABLE) {
-                            $control->setValue($value);
-                        }
+                        $control->setValue($value);
                     }
                 }
             }
@@ -129,7 +146,11 @@ class PersonId extends HiddenField {
             case 'person_history':
                 return ($history = $person->getHistory($this->acYear)) ? $history[$field] : null;
             case 'post_contact':
-                return $person->getDeliveryAddress(); //TODO distinquish delivery and permanent address
+                if ($field == 'type') {
+                    return ModelPostContact::TYPE_PERMANENT; //TODO distinquish delivery and permanent address
+                } else if ($field == 'address') {
+                    return $person->getPermanentAddress(); //TODO distinquish delivery and permanent address
+                }
         }
     }
 

@@ -37,6 +37,8 @@ parameters:
                     email: true
                     phone: false
                 post_contact:
+                    type: P
+                    address: true
 
 events:
     fyziklani:

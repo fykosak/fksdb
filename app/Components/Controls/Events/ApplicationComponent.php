@@ -7,12 +7,15 @@ use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder;
 use Events\TransitionOnExecutedException;
+use Exception;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
+use Persons\ResolutionException;
 use PublicModule\BasePresenter;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -62,7 +65,7 @@ class ApplicationComponent extends Control {
 
     public function renderInline($mode) {
         $this->initializeMachine();
-        
+
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
@@ -165,10 +168,12 @@ class ApplicationComponent extends Control {
                 $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary();
                 $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
             } else {
-                $this->redirect('this');
+                $this->redirect('this'); //TODO backlink?
             }
+        } catch (ResolutionException $e) {
+            $connection->rollBack();
         } catch (Exception $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR); //TODO check this exceptions
             $connection->rollBack();
         }
     }
