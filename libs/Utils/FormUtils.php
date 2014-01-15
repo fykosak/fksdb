@@ -1,5 +1,7 @@
 <?php
 
+use Nette\ArrayHash;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -14,7 +16,7 @@ class FormUtils {
      */
     public static function emptyStrToNull($values) {
         if ($values instanceof Traversable || is_array($values)) {
-            $result = array();
+            $result = new ArrayHash();
             foreach ($values as $key => $value) {
                 $result[$key] = self::emptyStrToNull($value);
             }
