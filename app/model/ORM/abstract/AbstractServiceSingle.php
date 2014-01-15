@@ -54,7 +54,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if ($data === null) {
             $data = $this->getDefaultData();
         }
-        $result = $this->createFromArray($data);
+        $result = $this->createFromArray((array) $data);
         $result->setNew();
         return $result;
     }
