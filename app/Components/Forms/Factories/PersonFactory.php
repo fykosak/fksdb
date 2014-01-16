@@ -451,7 +451,7 @@ class PersonFactory {
     }
 
     public function createOrigin($acYear = null) {
-        return (new TextInput(_('Jak jsi se o nás dozvěděl(a)?')));
+        return (new TextArea(_('Jak jsi se o nás dozvěděl(a)?')));
     }
 
     public function createAgreed($acYear = null) {
