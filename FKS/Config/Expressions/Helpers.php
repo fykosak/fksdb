@@ -16,6 +16,7 @@ class Helpers {
     private static $semanticMaps = array(
         'and' => 'FKS\Expressions\Logic\And_',
         'or' => 'FKS\Expressions\Logic\or_',
+        'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
     );
 
     /**
@@ -31,7 +32,7 @@ class Helpers {
 
         $arguments = array();
         foreach ($expression->attributes as $attribute) {
-            if ($attribute == '...') {
+            if ($attribute === '...') {
                 continue;
             }
             $arguments[] = self::statementFromExpression($attribute);
