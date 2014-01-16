@@ -6,7 +6,6 @@ use FKS\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\IControl;
 use Nette\Utils\Arrays;
@@ -16,7 +15,7 @@ use Nette\Utils\Arrays;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedContainer extends Container {
+class ReferencedContainer extends ContainerWithOptions {
 
     const SEARCH_NONE = 'none';
     const CONTROL_SEARCH = '_c_search';
