@@ -2,7 +2,7 @@
 
 namespace FKS\Components\Forms\Controls\Autocomplete;
 
-use IJavaScriptCollector;
+use FKS\Application\IJavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
@@ -57,7 +57,7 @@ class AutocompleteSelectBox extends TextBase {
         parent::__construct($label);
 
         $this->monitor('FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
-        $this->monitor('\IJavaScriptCollector');
+        $this->monitor('FKS\Application\IJavaScriptCollector');
         $this->ajax = $ajax;
         $this->renderMethod = $renderMethod;
     }
