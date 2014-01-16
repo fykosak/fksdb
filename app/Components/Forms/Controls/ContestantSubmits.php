@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKS\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
 use FormUtils;
-use IJavaScriptCollector;
 use InvalidArgumentException;
 use ModelContestant;
 use ModelSubmit;
@@ -56,7 +56,7 @@ class ContestantSubmits extends BaseControl {
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $label = null) {
         parent::__construct($label);
-        $this->monitor('IJavaScriptCollector');
+        $this->monitor('FKS\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;

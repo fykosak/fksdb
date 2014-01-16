@@ -1,5 +1,7 @@
 <?php
 
+use FKS\Application\IJavaScriptCollector;
+use FKS\Application\IStylesheetCollector;
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
 use FKS\Components\Controls\Navigation\INavigablePresenter;
