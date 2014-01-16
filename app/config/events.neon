@@ -50,6 +50,8 @@ transition:
 field:
     label:
         default: null
+    description:
+        default: null
     determining:
         default: false
     required:
@@ -68,6 +70,10 @@ field:
 
 bmInstance:
     bmName:
+    label:
+        default: null
+    description:
+        default: null
     primary:
         default: false
     required:

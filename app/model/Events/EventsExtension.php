@@ -373,7 +373,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setPersonIds', array($definition['personIds'])); // must be set after setService
         $factory->addSetup('setEventId', array($definition['eventId'])); // must be set after setService
 
-        foreach (Arrays::grep($parameters, '/^modifiable|visible$/') as $parameter) {
+        foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
             $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
         }
 

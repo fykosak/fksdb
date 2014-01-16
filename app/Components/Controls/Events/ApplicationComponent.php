@@ -78,7 +78,9 @@ class ApplicationComponent extends Control {
     protected function createComponentForm($name) {
         $this->initializeMachine();
         $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $renderer = new BootstrapRenderer();
+        $renderer->setGroupLevel(2);
+        $form->setRenderer($renderer);
 
         /*
          * Create containers
@@ -90,6 +92,10 @@ class ApplicationComponent extends Control {
             }
             $container = $baseHolder->createFormContainer($baseMachine);
             $form->addComponent($container, $name);
+
+            foreach ($container->getControls() as $control) {
+                $control->setOption('visualPath', $name . '- ' . $control->getOption('visualPath'));
+            }
         }
 
         $that = $this;

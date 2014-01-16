@@ -3,6 +3,7 @@
 namespace Events\Model;
 
 use Events\Machine\BaseMachine;
+use FKS\Components\Forms\Containers\ContainerWithOptions;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
 use Nette\InvalidStateException;
@@ -23,6 +24,16 @@ class BaseHolder extends FreezableObject {
      * @var string
      */
     private $name;
+
+    /**
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @var string
+     */
+    private $description;
 
     /**
      * @var IService
@@ -181,6 +192,24 @@ class BaseHolder extends FreezableObject {
         $this->service = $service;
     }
 
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function setLabel($label) {
+        $this->updating();
+        $this->label = $label;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->updating();
+        $this->description = $description;
+    }
+
     public function getJoinOn() {
         return $this->joinOn;
     }
@@ -234,7 +263,9 @@ class BaseHolder extends FreezableObject {
      * @return Container
      */
     public function createFormContainer(BaseMachine $machine) {
-        $container = new Container();
+        $container = new ContainerWithOptions();
+        $container->setOption('label', $this->getLabel());
+        $container->setOption('description', $this->getDescription());
 
         foreach ($this->fields as $name => $field) {
             if (!$field->isVisible($machine)) {

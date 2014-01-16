@@ -94,12 +94,6 @@ events:
                         required: true # or condition, evaluated after processing (if not modifiable, otherwise in GUI (too))
                         visible: true # or condition
                         modifiable: false # it means modifiable in GUI, or condition        
-                    liaison_id:
-                        label: Kontaktní osoba
-                        required: true
-                        visible: true
-                        modifiable: true
-                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, overwrite, ...)
                     teacher_present:
                         label: Přijede učitel
                         visible: true
@@ -108,6 +102,12 @@ events:
                         label: Učitel má zájem o program
                         visible: true
                         modifiable: true
+                    liaison_id:
+                        label: Kontaktní osoba
+                        required: true
+                        visible: true
+                        modifiable: true
+                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, overwrite, ...)
                     # TODO note
 
             #
@@ -135,7 +135,7 @@ events:
 
                 fields:
                     person_id:
-                        label: Člen
+                        label: Osoba
                         visible: true
                         modifiable: true
                         determining: true
@@ -143,8 +143,8 @@ events:
                         # TODO person factory
                     note:
                         label: Poznámka
-                        visible: false
-                        modifiable: true
+                        visible: true
+                        modifiable: false
                         required: true
 
 
@@ -156,19 +156,25 @@ events:
             baseMachines:
                 team:
                     bmName: TEAM 
+                    label: Tým
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                 p1:
                     bmName: PARTICIPANT
+                    label: 1. člen
                     required: true
                 p2:
                     bmName: PARTICIPANT
+                    label: 2. člen
                 p3:
                     bmName: PARTICIPANT
+                    label: 3. člen
                 p4:
                     bmName: PARTICIPANT
+                    label: 4. člen
                 p5:
                     bmName: PARTICIPANT
+                    label: 5. člen
             processings:
                 - Events\Model\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
 

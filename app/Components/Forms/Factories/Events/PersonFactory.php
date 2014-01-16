@@ -48,7 +48,10 @@ class PersonFactory extends AbstractFactory {
         $event = $field->getBaseHolder()->getHolder()->getEvent();
         $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
 
-        return $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $fillingMode, $resolution);
+        $components = $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $fillingMode, $resolution);
+        $components[1]->setOption('label', $field->getLabel());
+        $components[1]->setOption('description', $field->getDescription());
+        return $components;
     }
 
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {

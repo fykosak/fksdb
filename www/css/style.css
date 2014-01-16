@@ -34,3 +34,12 @@ html, body {
 .navbar-brand .beta {
     font-size: 65%;
 }
+
+
+.well legend {
+    color: #999;
+    border-style: none;
+    border-width: 0;
+    font-size: 100%;
+}
+
