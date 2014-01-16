@@ -109,7 +109,7 @@ class PersonFactory {
         $control = $this->createOtherName()
                 ->setDisabled($disabled)
                 ->setOption('description', _('Příp. další jména oddělená mezerou.'));
-        $container->addComponent('other_name', $control);
+        $container->addComponent($control, 'other_name');
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);
@@ -123,7 +123,7 @@ class PersonFactory {
         $control = $this->createFamilyName()
                 ->setDisabled($disabled)
                 ->setOption('description', _('Příp. další jména oddělená mezerou.'));
-        $container->addComponent('family_name', $control);
+        $container->addComponent($control, 'family_name');
 
         if ($requiredCondition) {
             $rules = $control->addConditionOn($requiredCondition[self::IDX_CONTROL], $requiredCondition[self::IDX_OPERATION], $requiredCondition[self::IDX_VALUE]);

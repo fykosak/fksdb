@@ -286,7 +286,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $personCont = $this->personFactory->createPerson($personFlags, $group);
         $form->addComponent($personCont, self::CONT_PERSON);
 
-        $address = $this->addressFactory->createAddress($group);
+        $address = $this->addressFactory->createAddress(0, $group);
         $form->addComponent($address, self::CONT_ADDRESS);
 
         if ($person) {
