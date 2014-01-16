@@ -7,6 +7,7 @@ use Events\Model\Field;
 use FKSDB\Components\Forms\Containers\PersonContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory as CorePersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Persons\PersonHandler2;
@@ -19,31 +20,35 @@ use Persons\PersonHandler2;
 class PersonFactory extends AbstractFactory {
 
     private $fieldsDefinition;
+    private $searchType;
+    private $allowClear;
+    private $fillingMode;
+    private $resolution;
 
     /**
-     * @var CorePersonFactory
+     * @var ReferencedPersonFactory
      */
-    private $personFactory;
+    private $referencedPersonFactory;
 
-    /**
-     * @var PersonProvider
-     */
-    private $personProvider;
-    private $searchType = PersonContainer::SEARCH_EMAIL;
-    private $allowClear = true; //TODO depends on is logged in and outer settings
-    private $filledFields = CorePersonFactory::EX_DISABLED; //TODO depends on is logged in and outer settings
-    private $updateResolution = PersonHandler2::RESOLUTION_EXCEPTION; //TODO depends on is logged in and outer settings
-
-    function __construct($fieldsDefinition, CorePersonFactory $personFactory, PersonProvider $personProvider) {
+    function __construct($fieldsDefinition, $searchType, $allowClear, $fillingMode, $resolution, ReferencedPersonFactory $referencedPersonFactory) {
         $this->fieldsDefinition = $fieldsDefinition;
-        $this->personFactory = $personFactory;
-        $this->personProvider = $personProvider;
+        $this->searchType = $searchType;
+        $this->allowClear = $allowClear;
+        $this->fillingMode = $fillingMode;
+        $this->resolution = $resolution;
+        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+        $searchType = $this->evalParam($this->searchType);
+        $allowClear = $this->evalParam($this->allowClear);
+        $fillingMode = $this->evalParam($this->fillingMode);
+        $resolution = $this->evalParam($this->resolution);
+
         $event = $field->getBaseHolder()->getHolder()->getEvent();
         $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
-        return $this->personFactory->createDynamicPerson($this->fieldsDefinition, $acYear, $this->searchType, $this->allowClear, $this->filledFields, $this->updateResolution, $this->personProvider);
+
+        return $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $fillingMode, $resolution);
     }
 
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
@@ -58,6 +63,14 @@ class PersonFactory extends AbstractFactory {
 
     public function getMainControl(Component $component) {
         return $component;
+    }
+
+    private function evalParam($param) {
+        if (is_object($param)) {
+            return $param->__invoke();
+        } else {
+            return $param;
+        }
     }
 
 }

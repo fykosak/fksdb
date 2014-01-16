@@ -8,14 +8,13 @@ use Events\MachineExecutionException;
 use Events\Model\Holder;
 use Events\TransitionOnExecutedException;
 use Exception;
+use FKS\Components\Forms\Controls\AlreadyExistsException;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
-use Persons\ResolutionException;
 use PublicModule\BasePresenter;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -170,10 +169,8 @@ class ApplicationComponent extends Control {
             } else {
                 $this->redirect('this'); //TODO backlink?
             }
-        } catch (ResolutionException $e) {
-            $connection->rollBack();
-        } catch (Exception $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR); //TODO check this exceptions
+        } catch (AlreadyExistsException $e) {
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
         }
     }

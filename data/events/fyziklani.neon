@@ -31,14 +31,14 @@ parameters:
         fyziklani:
             liaison:
                 person:
-                    family_name: true
                     other_name: true
+                    family_name: true
                 person_info:
                     email: true
                     phone: false
-                post_contact:
-                    type: P
-                    address: true
+#                post_contact:
+#                    type: P
+#                    address: true
 
 events:
     fyziklani:
@@ -99,7 +99,7 @@ events:
                         required: true
                         visible: true
                         modifiable: true
-                        factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fyziklani.liaison%, ...)
+                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, overwrite, ...)
                     teacher_present:
                         label: Přijede učitel
                         visible: true
@@ -139,7 +139,7 @@ events:
                         visible: true
                         modifiable: true
                         determining: true
-                        factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fyziklani.liaison%, ...)
+                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, exception, ...)
                         # TODO person factory
                     note:
                         label: Poznámka
