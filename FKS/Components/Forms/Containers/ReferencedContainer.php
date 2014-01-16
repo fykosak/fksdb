@@ -2,11 +2,14 @@
 
 namespace FKS\Components\Forms\Containers;
 
+use FKS\Application\IJavaScriptCollector;
 use FKS\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Arrays;
 
@@ -17,6 +20,8 @@ use Nette\Utils\Arrays;
  */
 class ReferencedContainer extends ContainerWithOptions {
 
+    const ID_MASK = 'frm%s-%s';
+    const CSS_AJAX = 'ajax';
     const SEARCH_NONE = 'none';
     const CONTROL_SEARCH = '_c_search';
     const SUBMIT_SEARCH = '__search';
@@ -62,6 +67,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * Custom metadata.
+     * TODO refactor to options?
      * 
      * @var mixed
      */
@@ -69,6 +75,8 @@ class ReferencedContainer extends ContainerWithOptions {
 
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
+        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('Nette\Forms\Form');
 
         $this->referencedId = $referencedId;
 
@@ -184,9 +192,26 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function createSearchButton() {
         $that = $this;
-        $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
-                        ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
+        $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
+                ->setValidationScope(false);
+        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->onClick[] = function(SubmitButton $submit) use($that) {
+                    $form = $that->getForm();
+                    $presenter = $form->lookup('Nette\Application\UI\Presenter');
+                    //$template = $form->getRenderer()->getTemplate();
+                    if ($presenter->isAjax()) {
+                        //NOTE: stejně se renderuje všechno...
+                        $control = $form->getParent();
+                        $control->invalidateControl();
+                        $control->invalidateControl('form');
+                        $control->invalidateControl($that->getHtmlId());
+                        $control->invalidateControl('groupsContainer');
+//                        $presenter->invalidateControl('jsLoader');
+//                        $presenter->invalidateControl(null);
+//                        $presenter->invalidateControl($that->getHtmlId());
+//                        $presenter->invalidateControl('groupsContainer');
+                    }
+
                     $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
                     $model = $that->searchCallback->invoke($term);
 
@@ -198,6 +223,50 @@ class ReferencedContainer extends ContainerWithOptions {
                     $that->referencedId->setValue($model);
                     $that->setValues($values);
                 };
+    }
+
+    private function getHtmlId() {
+        if (!$this->getOption('id')) {
+            $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
+        }
+        return $this->getOption('id');
+    }
+
+    private $attachedJS = false;
+    private $attachedAjax = false;
+
+    protected function attached($obj) {
+        parent::attached($obj);
+        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
+            $this->attachedJS = true;
+            $obj->registerJSFile('js/referencedContainer.js');
+            $obj->registerJSCode($this->getJSCode(), $this->getHtmlId());
+        }
+        if (!$this->attachedAjax && $obj instanceof Form) {
+            $this->attachedAjax = true;
+            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+        }
+    }
+
+    protected function detached($obj) {
+        parent::detached($obj);
+        if ($obj instanceof IJavaScriptCollector) {
+            $this->attachedJS = false;
+            $obj->unregisterJSCode($this->getHtmlId());
+        }
+    }
+
+    private function getJSCode() {
+        $id = $this->getHtmlId();
+        $referencedId = $this->referencedId->getHtmlId();
+        $code = "jQuery(function() { var el = jQuery('#$id').referencedContainer({ refId: jQuery('#$referencedId')});";
+        //TODO
+//        if ($this->renderMethod) {
+//            $code .= "el.data('autocomplete').data('ui-autocomplete')._renderItem = function(ul, item) { {$this->renderMethod} };";
+//        }
+        $code .= "});";
+
+        return $code;
     }
 
 }
