@@ -25,6 +25,7 @@ class ReferencedContainer extends ContainerWithOptions {
     const JSON_DATA = 'referencedContainer';
     const SEARCH_NONE = 'none';
     const CONTROL_SEARCH = '_c_search';
+    const CONTROL_COMPACT = '_c_compact';
     const SUBMIT_SEARCH = '__search';
     const SUBMIT_CLEAR = '__clear';
     const FILLED_HIDDEN = 'hidden';
@@ -83,6 +84,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
         $this->createClearButton();
         $this->createSearchButton();
+        $this->createCompactValue();
         $this->referencedId->setReferencedContainer($this);
     }
 
@@ -184,9 +186,10 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function createClearButton() {
         $that = $this;
-        $this->addSubmit(self::SUBMIT_CLEAR, 'X')
-                        ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
+        $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
+                ->setValidationScope(false);
+        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->onClick[] = function(SubmitButton $submit) use($that) {
                     $that->referencedId->setValue(null);
                     $that->invalidateFormGroup();
                 };
@@ -210,6 +213,10 @@ class ReferencedContainer extends ContainerWithOptions {
                     $that->setValues($values);
                     $that->invalidateFormGroup();
                 };
+    }
+
+    private function createCompactValue() {
+        $this->addHidden(self::CONTROL_COMPACT);
     }
 
     private function invalidateFormGroup() {
@@ -242,8 +249,9 @@ class ReferencedContainer extends ContainerWithOptions {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
+            $id = $this->getHtmlId();
             $obj->registerJSFile('js/referencedContainer.js');
-            $obj->registerJSCode($this->getJSCode(), $this->getHtmlId());
+            $obj->registerJSCode($this->getJSCode(), $id);
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
@@ -264,7 +272,7 @@ class ReferencedContainer extends ContainerWithOptions {
         $snippetId = $this->getForm()->getParent()->getSnippetId("group-$id");
         $referencedId = $this->referencedId->getHtmlId();
 
-        $code = "jQuery(function() { var el = jQuery('#$snippetId').referencedContainer({ refId: jQuery('#$referencedId')});";
+        $code = "jQuery(function() { var el = jQuery('#$snippetId').referencedContainer({ refId: '#$referencedId'});";
         $code .= "});";
 
         return $code;

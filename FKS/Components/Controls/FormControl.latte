@@ -2,15 +2,17 @@
     General help macros.
 *}
 {define errors}
-    {var $fieldErrors = array()}
-    {foreach $form->getControls() as $control}
-        {foreach $control->getErrors() as $error}
-            {var $fieldErrors[$error] = 1}
+    {if $form instanceof Nette\Forms\Form}
+        {var $fieldErrors = array()}
+        {foreach $form->getControls() as $control}
+            {foreach $control->getErrors() as $error}
+                {var $fieldErrors[$error] = 1}
+            {/foreach}
         {/foreach}
-    {/foreach}
-    {foreach $form->getErrors() as $error}
+        {foreach $form->getErrors() as $error}
 <div n:if="!isset($fieldErrors[$error])" class="alert alert-danger">{$error}</div>
-    {/foreach}
+        {/foreach}
+    {/if}
 {/define}
 
 {define metadata}
