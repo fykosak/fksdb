@@ -89,6 +89,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $fillingMode = $container->getFillingMode();
         $acYear = $container->getMetadata();
 
+        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model->getFullname());
+
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
@@ -116,6 +118,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
                         ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+                $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
