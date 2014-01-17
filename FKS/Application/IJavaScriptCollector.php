@@ -18,6 +18,7 @@ interface IJavaScriptCollector {
      * 
      * @param sting $code JS code taht should be inserted into the page
      * @param string $tag tag of the code for later reference
+     * @deprecated Leads to eval for AJAX requests.
      */
     public function registerJSCode($code, $tag = null);
 

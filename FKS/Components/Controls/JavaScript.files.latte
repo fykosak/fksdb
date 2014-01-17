@@ -1,3 +1,4 @@
+{snippet jsFiles}
 {foreach $files as $file}
     {var $url => $file[$control::FILENAME]}
     {if $control::isRelative($url)}
@@ -6,3 +7,4 @@
     <script src="{$url}"></script>
     {/if}
 {/foreach}
+{/snippet}
