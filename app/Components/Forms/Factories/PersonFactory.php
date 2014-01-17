@@ -280,7 +280,7 @@ class PersonFactory {
 
     public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
         if ($renderMethod === null) {
-            $renderMethod = 'return $("<li>")
+            $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
                         .appendTo(ul);';
         }
