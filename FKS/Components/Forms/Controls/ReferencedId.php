@@ -18,7 +18,7 @@ use ORM\IService;
 class ReferencedId extends HiddenField {
 
     const VALUE_PROMISE = '__promise';
-
+    
     /**
      * @var ReferencedContainer
      */

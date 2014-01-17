@@ -15,7 +15,7 @@ $(function() {
         },
         _create: function() {
             var elContainer = $(this.element);
-            this.options.refId = $(this.options.refId);
+            this.options.refId = $('#' + elContainer.data('referenced-id'));
 
             this.transformContainer(elContainer);
         },
@@ -148,18 +148,20 @@ $(function() {
             }
         }
     });
+    if (!$.nette.ext('referencedContainer')) {
+        $.nette.ext('referencedContainer', {
+            success: function(payload, status, jqXHR, settings) {
+                if (payload.referencedContainer) {
+                    var el = $('#' + payload.referencedContainer.id);
+                    el.val(payload.referencedContainer.value);
 
-    $.nette.ext('referencedContainer', {
-        success: function(payload, status, jqXHR, settings) {
-            if (payload.referencedContainer) {
-                var el = $('#' + payload.referencedContainer.id);
-                el.val(payload.referencedContainer.value);
-
-                for (var id in payload.snippets) {
-                    $.fks.referencedContainer('tranformContainer', $('#' + id));
+                    for (var id in payload.snippets) {
+                        $.fks.referencedContainer('tranformContainer', $('#' + id));
+                    }
                 }
             }
-        }
-    }, {});
+        }, {});
+    }
+    $("[data-referenced]").referencedContainer();
 
 });

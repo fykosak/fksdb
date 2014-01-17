@@ -235,13 +235,6 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    private function getHtmlId() {
-        if (!$this->getOption('id')) {
-            $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
-        }
-        return $this->getOption('id');
-    }
-
     private $attachedJS = false;
     private $attachedAjax = false;
 
@@ -249,9 +242,8 @@ class ReferencedContainer extends ContainerWithOptions {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
-            $id = $this->getHtmlId();
             $obj->registerJSFile('js/referencedContainer.js');
-            $obj->registerJSCode($this->getJSCode(), $id);
+            $this->updateHtmlData();
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
@@ -263,19 +255,20 @@ class ReferencedContainer extends ContainerWithOptions {
         parent::detached($obj);
         if ($obj instanceof IJavaScriptCollector) {
             $this->attachedJS = false;
-            $obj->unregisterJSCode($this->getHtmlId());
+            $obj->unregisterJSFile('js/referencedContainer.js');
         }
     }
 
-    private function getJSCode() {
-        $id = $this->getHtmlId();
-        $snippetId = $this->getForm()->getParent()->getSnippetId("group-$id");
+    /**
+     * @note Must be called after a form is attached.
+     */
+    private function updateHtmlData() {
+        $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
-
-        $code = "jQuery(function() { var el = jQuery('#$snippetId').referencedContainer({ refId: '#$referencedId'});";
-        $code .= "});";
-
-        return $code;
+        $this->setOption('data', array(
+            'referenced-id' => $referencedId,
+            'referenced' => (int) true,
+        ));
     }
 
 }
