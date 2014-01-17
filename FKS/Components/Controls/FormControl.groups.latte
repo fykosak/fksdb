@@ -3,24 +3,34 @@
 {*
     Actual rendering
 *}
+
+
 {form form class => 'form-horizontal'}
 {include #errors form => $mainContainer}
 
 {* render each group *}
 {snippet groupContainer}
+    {var
+    $left = $fullLeft,
+    $right = $fullRight,
+    }
 {foreach $mainContainer->getGroups() as $key => $group}
 <fieldset n:snippet="group-$key">
     <legend n:if="$group->getOption('label')">{$group->getOption('label')}</legend>
     <p n:if="$group->getOption('description')">{$group->getOption('description')}</p>    
-    {include #controls controls => $group->getControls()}
+    {include #controls controls => $group->getControls(), left => $left, right => $right}
 </fieldset>
 {/foreach}
 {/snippet}
 
 {* render controls out of groups *}
 {snippet bareContainer}
+    {var
+    $left = $fullLeft,
+    $right = $fullRight,
+    }
 {var $remaining = new Nette\Iterators\Filter($mainContainer->getControls(), function($it) {return !$it->current()->getOption('rendered'); })}
-{include #controls controls => $remaining}
+{include #controls controls => $remaining, left => $left, right => $right}
 {/snippet}
 
 
