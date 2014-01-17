@@ -18,17 +18,18 @@ $(function() {
             var ajax = elVal.data('ac-ajax');
             var multiselect = elVal.data('ac-multiselect');
             var defaultText = elVal.data('ac-default-value');
+            var renderMethod = elVal.data('ac-render-method');
 
-            var el = $('<input type="text"/>');  
+            var el = $('<input type="text"/>');
             el.attr('class', elVal.attr('class'));
             elVal.replaceWith(el);
             elVal.hide();
             elVal.insertAfter(el);
-            
+
             // element to detect enabled JavaScript
             var metaEl = $('<input type="hidden" value="JS" />');
-             // this should work both for array and scalar names
-            var metaName = elVal.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');            
+            // this should work both for array and scalar names
+            var metaName = elVal.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');
             metaEl.attr('name', metaName);
             metaEl.insertAfter(el);
 
@@ -108,8 +109,18 @@ $(function() {
                     return false;
                 };
             }
-            el.autocomplete(options);
+
+            var acEl = el.autocomplete(options);
+
+            if (renderMethod) {
+                acEl.data('ui-autocomplete')._renderItem = function(ul, item) {
+                    return eval(renderMethod);
+                };
+            }
+
         }
     });
+
+    $('input[data-ac]').autocompleteSelect();
 
 });

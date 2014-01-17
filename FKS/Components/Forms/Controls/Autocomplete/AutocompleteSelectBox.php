@@ -78,7 +78,6 @@ class AutocompleteSelectBox extends TextBase {
         if (!$this->attachedJS && $presenter instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
             $presenter->registerJSFile('js/autocompleteSelect.js');
-            $presenter->registerJSCode($this->getJSCode(), $this->getHtmlId());
         }
     }
 
@@ -119,9 +118,11 @@ class AutocompleteSelectBox extends TextBase {
     public function getControl() {
         $control = parent::getControl();
 
+        $control->data['ac'] = (int) true;
         $control->data['ac-ajax'] = (int) $this->isAjax();
         $control->data['ac-multiselect'] = (int) $this->isMultiselect();
         $control->data['ac-ajax-url'] = $this->ajaxUrl;
+        $control->data['ac-render-method'] = $this->renderMethod;
 
         $control->addClass(self::SELECTOR_CLASS);
 
@@ -146,17 +147,6 @@ class AutocompleteSelectBox extends TextBase {
         }
 
         return $control;
-    }
-
-    private function getJSCode() {
-        $id = $this->getHtmlId();
-        $code = "jQuery(function() { var el = jQuery('#$id').autocompleteSelect();";
-        if ($this->renderMethod) {
-            $code .= "el.data('autocomplete').data('ui-autocomplete')._renderItem = function(ul, item) { {$this->renderMethod} };";
-        }
-        $code .= "});";
-
-        return $code;
     }
 
     public function loadHttpData() {
