@@ -63,7 +63,7 @@ class ApplicationComponent extends Control {
 
     public function renderForm() {
         $this->initializeMachine();
-        
+
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.form.latte');
         $this->template->render();
     }
@@ -122,15 +122,33 @@ class ApplicationComponent extends Control {
         foreach ($primaryMachine->getAvailableTransitions() as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
-            $submit->setOption('row', 2);
 
             $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
                         $form = $button->getForm();
                         $that->handleSubmit($form, $transitionName);
                     };
 
-            $submit->getControlPrototype()->addClass('btn-default');
+            if ($transition->isCreating()) {
+                $submit->getControlPrototype()->addClass('btn-success');
+                $submit->setOption('row', 1);
+            } else {
+                $submit->getControlPrototype()->addClass('btn-default');
+                $submit->setOption('row', 2);
+            }
         }
+
+        /*
+         * Create cancel button
+         */
+        $submit = $form->addSubmit('cancel', _('Storno'));
+        $submit->setOption('row', 1);
+        $submit->setValidationScope(false);
+        $submit->getControlPrototype()->addClass('btn-link');
+        $submit->onClick[] = function(SubmitButton $button) use($that) {
+                    $that->initializeMachine();
+                    $that->finalRedirect();
+                };
+
 
 
         return $result;
@@ -176,12 +194,7 @@ class ApplicationComponent extends Control {
             $connection->commit();
 
             //TODO better message (create, update, transition) $this->presenter->flashMessage(_('Přihláška vytvořena.'), BasePresenter::FLASH_SUCCESS);
-            if ($this->redirectCallback) {
-                $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary();
-                $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
-            } else {
-                $this->redirect('this'); //TODO backlink?
-            }
+            $this->finalRedirect();
         } catch (AlreadyExistsException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
@@ -206,6 +219,15 @@ class ApplicationComponent extends Control {
     private function canEdit() {
         //TODO display this button in dependence on modifiable
         return $this->machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT;
+    }
+
+    private function finalRedirect() {
+        if ($this->redirectCallback) {
+            $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
+            $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
+        } else {
+            $this->redirect('this'); //TODO backlink?
+        }
     }
 
 }
