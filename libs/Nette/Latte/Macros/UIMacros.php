@@ -99,7 +99,7 @@ class UIMacros extends MacroSet
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
 					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
-					. ($snippet ? '; $_control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
+					. ($snippet ? '; $_control->validateControl(' . var_export(substr($name, 1), TRUE) . '); $_dynSnippets = new stdClass()' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -231,7 +231,7 @@ if (!empty($_control->snippetMode)) {
 				}
 				$parent->data->dynamic = TRUE;
 				$node->data->leave = TRUE;
-				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>";
+				$node->closingCode = "<?php \$_dynSnippets->{\$_dynSnippetId} = ob_get_flush() ?>";
 
 				if ($node->htmlNode) {
 					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
@@ -281,7 +281,7 @@ if (!empty($_control->snippetMode)) {
 			$tag = $tag ? $tag : 'div';
 			return $writer->write("$prolog ?>\n<$tag id=\"<?php echo \$_control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
 				(string) substr($name, 1), $name
-			);
+			);                        
 
 		} elseif ($node->name === 'define') {
 			return $prolog;
@@ -310,7 +310,7 @@ if (!empty($_control->snippetMode)) {
 
 			if (empty($node->data->leave)) {
 				if (!empty($node->data->dynamic)) {
-					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
+					$node->content .= '<?php return (array)$_dynSnippets; ?>';
 				}
 				$this->namedBlocks[$node->data->name] = $tmp = rtrim(ltrim($node->content, "\n"), " \t");
 				$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($tmp));
