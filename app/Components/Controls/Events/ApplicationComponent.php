@@ -7,9 +7,8 @@ use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder;
 use Events\TransitionOnExecutedException;
-use Exception;
+use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\AlreadyExistsException;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
@@ -58,8 +57,15 @@ class ApplicationComponent extends Control {
         return $template;
     }
 
+    public function render() {
+        $this->renderForm();
+    }
+
     public function renderForm() {
-        $this->getComponent('form')->render();
+        $this->initializeMachine();
+        
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.form.latte');
+        $this->template->render();
     }
 
     public function renderInline($mode) {
@@ -77,10 +83,9 @@ class ApplicationComponent extends Control {
 
     protected function createComponentForm($name) {
         $this->initializeMachine();
-        $form = new Form();
-        $renderer = new BootstrapRenderer();
-        $renderer->setGroupLevel(2);
-        $form->setRenderer($renderer);
+        $result = new FormControl();
+        $result->setGroupMode(FormControl::GROUP_CONTAINER);
+        $form = $result['form'];
 
         /*
          * Create containers
@@ -104,6 +109,7 @@ class ApplicationComponent extends Control {
          */
         if ($this->canEdit()) {
             $submit = $form->addSubmit('save', _('Uložit'));
+            $submit->setOption('row', 1);
             $submit->onClick[] = function(SubmitButton $button) use($that) {
                         $form = $button->getForm();
                         $that->handleSubmit($form);
@@ -116,6 +122,7 @@ class ApplicationComponent extends Control {
         foreach ($primaryMachine->getAvailableTransitions() as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
+            $submit->setOption('row', 2);
 
             $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
                         $form = $button->getForm();
@@ -126,7 +133,7 @@ class ApplicationComponent extends Control {
         }
 
 
-        return $form;
+        return $result;
     }
 
     public function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
