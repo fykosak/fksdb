@@ -425,7 +425,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
-            if(!$this->rules) {throw new InvalidStateException();}
 		$this->rules->addRule($operation, $message, $arg);
 		return $this;
 	}
