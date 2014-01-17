@@ -1,0 +1,27 @@
+{includeblock FormControl.latte}
+
+{*
+    Actual rendering
+*}
+{form form class => 'form-horizontal'}
+{include #errors form => $mainContainer}
+
+{* render each group *}
+{snippet groupContainer}
+{foreach $mainContainer->getGroups() as $key => $group}
+<fieldset n:snippet="group-$key">
+    <legend n:if="$group->getOption('label')">{$group->getOption('label')}</legend>
+    <p n:if="$group->getOption('description')">{$group->getOption('description')}</p>    
+    {include #controls controls => $group->getControls()}
+</fieldset>
+{/foreach}
+{/snippet}
+
+{* render controls out of groups *}
+{snippet bareContainer}
+{var $remaining = new Nette\Iterators\Filter($mainContainer->getControls(), function($it) {return !$it->current()->getOption('rendered'); })}
+{include #controls controls => $remaining}
+{/snippet}
+
+
+{/form}

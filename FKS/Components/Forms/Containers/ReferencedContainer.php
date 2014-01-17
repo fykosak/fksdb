@@ -3,11 +3,11 @@
 namespace FKS\Components\Forms\Containers;
 
 use FKS\Application\IJavaScriptCollector;
+use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -22,6 +22,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     const ID_MASK = 'frm%s-%s';
     const CSS_AJAX = 'ajax';
+    const JSON_DATA = 'referencedContainer';
     const SEARCH_NONE = 'none';
     const CONTROL_SEARCH = '_c_search';
     const SUBMIT_SEARCH = '__search';
@@ -187,6 +188,7 @@ class ReferencedContainer extends ContainerWithOptions {
                         ->setValidationScope(false)
                 ->onClick[] = function(SubmitButton $submit) use($that) {
                     $that->referencedId->setValue(null);
+                    $that->invalidateFormGroup();
                 };
     }
 
@@ -196,22 +198,6 @@ class ReferencedContainer extends ContainerWithOptions {
                 ->setValidationScope(false);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function(SubmitButton $submit) use($that) {
-                    $form = $that->getForm();
-                    $presenter = $form->lookup('Nette\Application\UI\Presenter');
-                    //$template = $form->getRenderer()->getTemplate();
-                    if ($presenter->isAjax()) {
-                        //NOTE: stejně se renderuje všechno...
-                        $control = $form->getParent();
-                        $control->invalidateControl();
-                        $control->invalidateControl('form');
-                        $control->invalidateControl($that->getHtmlId());
-                        $control->invalidateControl('groupsContainer');
-//                        $presenter->invalidateControl('jsLoader');
-//                        $presenter->invalidateControl(null);
-//                        $presenter->invalidateControl($that->getHtmlId());
-//                        $presenter->invalidateControl('groupsContainer');
-                    }
-
                     $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
                     $model = $that->searchCallback->invoke($term);
 
@@ -222,7 +208,24 @@ class ReferencedContainer extends ContainerWithOptions {
                     }
                     $that->referencedId->setValue($model);
                     $that->setValues($values);
+                    $that->invalidateFormGroup();
                 };
+    }
+
+    private function invalidateFormGroup() {
+        $form = $this->getForm();
+        $presenter = $form->lookup('Nette\Application\UI\Presenter');
+        if ($presenter->isAjax()) {
+            $control = $form->getParent();
+            $control->invalidateControl(FormControl::SNIPPET_MAIN);
+            $control->getTemplate()->mainContainer = $this;
+            $control->getTemplate()->level = 2; //TODO should depend on lookup path
+            $payload = $presenter->getPayload();
+            $payload->{self::JSON_DATA} = (object) array(
+                        'id' => $this->referencedId->getHtmlId(),
+                        'value' => $this->referencedId->getValue(),
+            );
+        }
     }
 
     private function getHtmlId() {
@@ -258,12 +261,10 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function getJSCode() {
         $id = $this->getHtmlId();
+        $snippetId = $this->getForm()->getParent()->getSnippetId("group-$id");
         $referencedId = $this->referencedId->getHtmlId();
-        $code = "jQuery(function() { var el = jQuery('#$id').referencedContainer({ refId: jQuery('#$referencedId')});";
-        //TODO
-//        if ($this->renderMethod) {
-//            $code .= "el.data('autocomplete').data('ui-autocomplete')._renderItem = function(ul, item) { {$this->renderMethod} };";
-//        }
+
+        $code = "jQuery(function() { var el = jQuery('#$snippetId').referencedContainer({ refId: jQuery('#$referencedId')});";
         $code .= "});";
 
         return $code;

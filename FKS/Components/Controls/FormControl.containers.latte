@@ -1,0 +1,55 @@
+{*
+    Actual rendering
+*}
+{form form class => 'form-horizontal'}
+
+{* render root container *}
+{snippet groupContainer}
+{includeblock FormControl.latte}
+
+{include #errors form => $mainContainer}
+
+{var $container = $mainContainer,
+    $level = isset($level) ? $level : 0
+}
+{block group}
+    {var
+    $left = $level > 1 ? $subLeft : $fullLeft,
+    $right = $level > 1 ? $subRight : $fullRight,
+    $id = $level > 1 ? $container->getOption('id') : null
+    }
+
+<div class="row" n:snippet="group-$id">
+    <div n:tag-if="$level > 1" class="well well-sm col-lg-{$subWidth} col-lg-offset-{$subOffset}">
+        <fieldset n:tag-if="$level > 0">
+            <legend n:if="$level > 0 && $container->getOption('label')">{$container->getOption('label')}</legend>
+            <p n:if="$level > 0 && $container->getOption('description')">{$container->getOption('description')}</p>    
+{var $controls = array()}
+{foreach $container->getComponents() as $component}
+    {if $component instanceof Nette\Forms\Container}
+        {if $controls}
+        {include #controls controls => $controls, left => $left, right => $right}
+        {var $controls = array()}
+        {/if}
+        {if $level < 2}
+            {include #group container => $component, level => $level + 1}
+        {else}
+            {include #controls controls => $component->getControls(), left => $left, right => $right}
+        {/if}
+    {else}
+        {var $controls[] = $component}
+    {/if}
+{/foreach}
+{if $controls}
+{include #controls controls => $controls, left => $left, right => $right}
+{var $controls = array()}
+{/if}
+        </fieldset>
+    </div>
+</div>
+{/block}
+
+
+{/snippet}
+
+{/form}

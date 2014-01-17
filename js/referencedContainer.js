@@ -17,9 +17,9 @@ $(function() {
             var options = this.options;
 
             var createCompactField = function(label, value) {
-                var compactGroup = $('<div class="control-group">\
-<div class="form-group"><label class="control-label ' + options.colLeft + ' control-label"/>\
-<div class="' + options.colRight + '"><input type="text" class="form-control"/></div></div></div>');
+                var compactGroup = $('<div class="form-group">\
+<label class="control-label ' + options.colLeft + ' control-label"/>\
+<div class="' + options.colRight + '"><input type="text" class="form-control"/></div></div>');
 
                 var elLabel = compactGroup.find('label');
                 elLabel.text(label);
@@ -67,17 +67,17 @@ $(function() {
                 });
 
                 // change form
-                var searchGroup = elSearch.closest('.control-group');
+                var searchGroup = elSearch.closest('.form-group');
 
 
-                searchGroup.children('.form-group').children('.control-label').removeClass(this.options.subColLeft).addClass(this.options.colLeft);
-                searchGroup.children('.form-group').children('div').removeClass(this.options.subColRight).addClass(this.options.colRight);
-
-                searchGroup.children('.form-group').children('.control-label').text(elGroup.find('legend').text());
-
-                elGroup.replaceWith(searchGroup);
-                elGroup.hide();
-                elGroup.appendTo(searchGroup);// we need the group to working form
+//                searchGroup.children('.form-group').children('.control-label').removeClass(this.options.subColLeft).addClass(this.options.colLeft);
+//                searchGroup.children('.form-group').children('div').removeClass(this.options.subColRight).addClass(this.options.colRight);
+//
+//                searchGroup.children('.form-group').children('.control-label').text(elGroup.find('legend').text());
+//
+//                elGroup.replaceWith(searchGroup);
+//                elGroup.hide();
+//                elGroup.appendTo(searchGroup);// we need the group to working form
 
             }
             if (elClear.length) {

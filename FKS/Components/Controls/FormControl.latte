@@ -1,0 +1,113 @@
+{*
+    General help macros.
+*}
+{define errors}
+    {var $fieldErrors = array()}
+    {foreach $form->getControls() as $control}
+        {foreach $control->getErrors() as $error}
+            {var $fieldErrors[$error] = 1}
+        {/foreach}
+    {/foreach}
+    {foreach $form->getErrors() as $error}
+<div n:if="!isset($fieldErrors[$error])" class="alert alert-danger">{$error}</div>
+    {/foreach}
+{/define}
+
+{define metadata}
+        {if $description = $field->getOption('description')}<span class="help-block">{$description}</span>{/if}
+        {foreach $field->getErrors() as $error}
+<div class="alert alert-danger">{$error}</div>
+        {/foreach}
+{/define}
+
+{define plain}
+<div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+        {label $field class => "col-lg-$left control-label"/}
+    <div class="col-lg-{$right}">
+        {input $field class => 'form-control'}
+        {include #metadata field => $field}
+    </div>
+</div>
+{/define}
+
+{define checkbox}
+<div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+    <div class="col-lg-offset-{$left} col-lg-{$right}">
+        <div class="checkbox">
+            {label $field}
+                {input $field} {$field->getLabel()->setName(null)}
+            {/label}
+        </div>
+        {include #metadata field => $field}
+    </div>
+</div>
+{/define}
+
+{define radiolist}
+<div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+    {label $field class => "col-lg-$left control-label"/}
+    <div class="col-lg-{$right}">
+        {foreach $field->getItems() as $key => $item}
+        <div class="radio">
+            <label>{$field->getControl($key)}</label>
+        </div>
+        {/foreach}
+        {include #metadata field => $field}
+    </div>
+</div>
+{/define}
+
+{define button}
+        {? $field->getControlPrototype()->addClass('btn')}        
+        {if !Nette\Utils\Arrays::grep(array_keys($field->getControlPrototype()->getClass()), '/btn-/')}        
+        {? $field->getControlPrototype()->addClass('btn-primary')}
+        {/if}
+        {? $field->getControlPrototype()->addClass("col-lg-$btnWidth")}
+        {input $field}
+{/define}
+
+{define buttonArray}
+{var $buttonRows = array()}
+{foreach $buttons as $button}
+    {? if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = array()}
+    {var $buttonRows[$button->getOption('row')][] = $button}
+{/foreach}
+{? ksort($buttonRows)}
+{foreach $buttonRows as $row}
+<div class="form-group" n:if="$row">
+    <div class="col-lg-offset-{$left} col-lg-{$right} btn-group">
+        {foreach $row as $button}
+            {include #button field => $button, left => $left, right => $right}
+        {/foreach}
+    </div>
+</div>
+{/foreach}
+{/define}
+
+{define hidden}
+{input $field}
+{/define}
+
+
+{define controls}
+{var $buttons = array()}
+{foreach $controls as $name => $field}
+    {if !$field instanceof Nette\Forms\Controls\Button}
+        {include #buttonArray buttons => $buttons, left => $left, right => $right}  
+        {var $buttons = array()}
+    {/if}
+    {if $field instanceof Nette\Forms\Controls\Checkbox}
+        {include #checkbox field => $field, left => $left, right => $right}
+    {elseif $field instanceof Nette\Forms\Controls\HiddenField}
+        {include #hidden field => $field}
+    {elseif $field instanceof Nette\Forms\Controls\RadioList}
+        {include #radiolist field => $field, left => $left, right => $right}        
+    {elseif $field instanceof Nette\Forms\Controls\Button}
+        {var $buttons[] = $field}
+    {else}
+        {include #plain field => $field, left => $left, right => $right}
+    {/if}
+{/foreach}
+{include #buttonArray buttons => $buttons, left => $left, right => $right}  
+{/define}
+
