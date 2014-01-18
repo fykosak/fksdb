@@ -1,60 +1,60 @@
-	#
-	# General services (data processing, model factories, etc.)
-	#
+#
+# General services (data processing, model factories, etc.)
+#
 
-	services:
-		accountManager:
-			class: Authentication\AccountManager
-			setup:
-				- setInvitationExpiration(%invitation.expiration%)
-				- setRecoveryExpiration(%recovery.expiration%)
-				- setEmailFrom(%email.from%)
-		- Authentication\FacebookAuthenticator
-		- Authentication\PasswordAuthenticator
-		- Authentication\TokenAuthenticator    
-		contestAuthorizator: Authorization\ContestAuthorizator
-		Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
-		yearCalculator: YearCalculator
-		seriesCalculator: SeriesCalculator
-		- SQLResultsCache
-		- Submits\SeriesTable
-		- Persons\ContestantHandler
-		- Persons\OrgHandler
-		merger:
-			class: Persons\Deduplication\Merger(%merger%, ...)
-		- FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
-		- FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
-		- FKS\Components\Controls\PresenterBuilder
-		globalSession:
-			class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
-			setup:
-				- start()
-		- Authentication\SSO\TokenGSIDHolder
-		submitStorage: 
-			class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
-			setup:
-				- addProcessing(@PDFStamper)
-		PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
-		readOnlyConnection:
-			class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
-			autowired: false
-		translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+services:
+    accountManager:
+        class: Authentication\AccountManager
+        setup:
+            - setInvitationExpiration(%invitation.expiration%)
+            - setRecoveryExpiration(%recovery.expiration%)
+            - setEmailFrom(%email.from%)
+    - Authentication\FacebookAuthenticator
+    - Authentication\PasswordAuthenticator
+    - Authentication\TokenAuthenticator    
+    contestAuthorizator: Authorization\ContestAuthorizator
+    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
+    yearCalculator: YearCalculator
+    seriesCalculator: SeriesCalculator
+    - SQLResultsCache
+    - Submits\SeriesTable
+    - Persons\ContestantHandler
+    - Persons\OrgHandler
+    merger:
+        class: Persons\Deduplication\Merger(%merger%, ...)
+    - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
+    - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
+    - FKS\Components\Controls\PresenterBuilder
+    globalSession:
+        class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
+        setup:
+            - start()
+    - Authentication\SSO\TokenGSIDHolder
+    submitStorage: 
+        class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        setup:
+            - addProcessing(@PDFStamper)
+    PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
+    readOnlyConnection:
+        class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
+        autowired: false
+    translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
 
-		# web services
-		soapServer:
-			class: SoapServer(%wsdlUrl%)
-			setup:
-				- setObject(@webServiceModel)
+    # web services
+    soapServer:
+        class: SoapServer(%wsdlUrl%)
+        setup:
+            - setObject(@webServiceModel)
 
-		webServiceModel:        WebServiceModel(%contestMapping%, ...)
+    webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
-		nette.userStorage: LoginUserStorage
-		
-		#
-		# Events
-		#
-		events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
+    nette.userStorage: LoginUserStorage
+
+    #
+    # Events
+    #
+    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
 
 includes:
     - merger.neon

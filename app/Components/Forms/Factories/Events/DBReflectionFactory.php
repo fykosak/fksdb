@@ -6,12 +6,12 @@ use AbstractServiceMulti;
 use AbstractServiceSingle;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
-use Nette\Application\UI\Form;
 use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
@@ -72,7 +72,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $component;
     }
 
-    private function resolveColumn(Field2 $field) {
+    private function resolveColumn(Field $field) {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 
