@@ -74,6 +74,10 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId->setReferencedContainer($this);
     }
 
+    public function getReferencedId() {
+        return $this->referencedId;
+    }
+
     public function setDisabled($value = TRUE) {
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);

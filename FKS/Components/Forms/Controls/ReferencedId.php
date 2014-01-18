@@ -18,7 +18,7 @@ use ORM\IService;
 class ReferencedId extends HiddenField {
 
     const VALUE_PROMISE = '__promise';
-    
+
     /**
      * @var ReferencedContainer
      */
@@ -71,6 +71,10 @@ class ReferencedId extends HiddenField {
 
     public function getService() {
         return $this->service;
+    }
+
+    public function getHandler() {
+        return $this->handler;
     }
 
     public function setValue($pvalue) {
