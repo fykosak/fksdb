@@ -65,7 +65,7 @@ class AutocompleteSelectBox extends TextBase {
     private $attachedJSON = false;
     private $attachedJS = false;
 
-    protected function attached($obj ){
+    protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
             $this->attachedJSON = true;
@@ -78,14 +78,6 @@ class AutocompleteSelectBox extends TextBase {
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
             $obj->registerJSFile('js/autocompleteSelect.js');
-        }
-    }
-
-    protected function detached($obj) {
-        parent::detached($obj);
-        if ($obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = false;
-            $obj->unregisterJSCode($this->getHtmlId());
         }
     }
 
