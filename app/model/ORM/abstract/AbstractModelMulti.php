@@ -68,6 +68,14 @@ abstract class AbstractModelMulti extends Object implements IModel {
         return $this->getMainModel()->__isset($name) || $this->getJoinedModel()->__isset($name);
     }
 
+    public function __set($name, $value) {
+        throw new LogicException("Cannot update multimodel directly.");
+    }
+
+    public function __unset($name) {
+        throw new LogicException("Cannot update multimodel directly.");
+    }
+
     public function getPrimary($need = TRUE) {
         return $this->getJoinedModel()->getPrimary($need);
     }
@@ -81,7 +89,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
     public function offsetExists($offset) {
-        return $this->__isset($name);
+        return $this->__isset($offset);
     }
 
     public function &offsetGet($offset) {

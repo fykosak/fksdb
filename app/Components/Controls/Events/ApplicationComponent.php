@@ -8,7 +8,7 @@ use Events\MachineExecutionException;
 use Events\Model\Holder;
 use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Controls\AlreadyExistsException;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
@@ -195,8 +195,13 @@ class ApplicationComponent extends Control {
 
             //TODO better message (create, update, transition) $this->presenter->flashMessage(_('Přihláška vytvořena.'), BasePresenter::FLASH_SUCCESS);
             $this->finalRedirect();
-        } catch (AlreadyExistsException $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+        } catch (ModelDataConflictException $e) {
+            $container = $e->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($e->getConflicts());
+
+            $message = sprintf(_("Některá pole skupiny %s neodpovídají existujícímu záznamu."), $container->getOption('label'));
+            $this->presenter->flashMessage($message, BasePresenter::FLASH_ERROR);
+
             $connection->rollBack();
         }
     }

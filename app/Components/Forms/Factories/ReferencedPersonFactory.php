@@ -16,6 +16,7 @@ use Nette\Object;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
 use Persons\IVisibilityResolver;
+use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
 use ServicePerson;
 
@@ -105,6 +106,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $modifiable = $container->getOption('modifiabilityResolver')->isModifiable($model);
         $resolution = $container->getOption('modifiabilityResolver')->getResolutionMode($model);
         $visible = $container->getOption('visibilityResolver')->isVisible($model);
+        $submittedBySearch = $container->isSearchSubmitted();
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model->getFullname());
@@ -133,7 +135,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
                 if ($value) {
-                    $component->setDefaultValue($value);
+                    if($resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                        $component->setDisabled(); // could not store any way
+                    }
+                    if ($submittedBySearch) {
+                        $component->setValue($value);
+                    } else {
+                        $component->setDefaultValue($value);
+                    }
                 }
             }
         }

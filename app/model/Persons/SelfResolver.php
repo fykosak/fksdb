@@ -31,7 +31,7 @@ class SelfResolver extends Object implements IVisibilityResolver, IModifialibity
     }
 
     public function isModifiable(ModelPerson $person) {
-        return true || $this->isSelf($person);
+        return $person->isNew() || $this->isSelf($person);
     }
 
     protected function isSelf(ModelPerson $person) {

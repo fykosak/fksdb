@@ -28,4 +28,25 @@ class FormUtils {
         }
     }
 
+    /**
+     * Convert empty strings to nulls.
+     * 
+     * @param string|array|Traversable $values
+     * @return array
+     */
+    public static function removeEmptyHashes(ArrayHash $values) {
+        $result = new ArrayHash();
+        foreach ($values as $key => $value) {
+            if ($value instanceof ArrayHash) {
+                $clear = self::removeEmptyHashes($value);
+                if (count($clear)) {
+                    $result[$key] = $clear;
+                }
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
 }

@@ -45,13 +45,12 @@ parameters:
                 person_info:
                     email: true
                     phone: false
-                    born: false
                 person_history:
                     school_id: true
                     study_year: true
-#                post_contact:
-#                    type: P
-#                    address: true
+                post_contact:
+                    type: P
+                    address: true
 
 events:
     fyziklani:

@@ -31,6 +31,15 @@ class AddressContainer extends ModelContainer {
         $this->setValues($value);
     }
 
+    /**
+     * Used for substituing form's IControl (via duck-typing).
+     * 
+     * @param Traversable $value
+     */
+    public function setDefaultValue($value) {
+        $this->setDefaults($value);
+    }
+
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {

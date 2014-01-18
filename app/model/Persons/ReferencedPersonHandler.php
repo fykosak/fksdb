@@ -2,11 +2,12 @@
 
 namespace Persons;
 
-use FKS\Components\Forms\Controls\AlreadyExistsException;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Components\Forms\Controls\IReferencedHandler;
 use FormUtils;
 use ModelException;
 use ModelPerson;
+use ModelPostContact;
 use Nette\ArrayHash;
 use Nette\Object;
 use ORM\IModel;
@@ -94,65 +95,55 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
              * Person & its extensions
              */
 
-            $subs = array(
-                array(
-                    'type' => 'person',
-                    'model' => $person,
-                    'data' => isset($data['person']) ? $data['person'] : new ArrayHash(),
-                    'service' => $this->servicePerson,
-                ),
-                array(
-                    'type' => 'person_info',
-                    'model' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
-                    'data' => isset($data['person_info']) ? $data['person_info'] : new ArrayHash(),
-                    'service' => $this->servicePersonInfo,
-                ), array(
-                    'type' => 'person_history',
-                    'model' => ($info = $person->getHistory($this->acYear)) ? : $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
-                    'data' => isset($data['person_history']) ? $data['person_history'] : new ArrayHash(),
-                    'service' => $this->servicePersonHistory,
-                )
+            $models = array(
+                'person' => &$person,
+                'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
+                'person_history' => ($history = $person->getHistory($this->acYear)) ? : $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
+                'post_contact' => ($dataPostContact = $person->getPermanentAddress()) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT)), //TODO other types than permanent
             );
-            foreach ($subs as $sub) {
-                $sub['data'] = FormUtils::emptyStrToNull($sub['data']);
-                if (!$this->checkModel($sub['model'], $sub['data'])) {
-                    switch ($this->resolution) {
-                        case self::RESOLUTION_EXCEPTION:
-                            throw new AlreadyExistsException($person);
-                        case self::RESOLUTION_OVERWRITE:
-                            $sub['service']->updateModel($sub['model'], $sub['data']);
-                        // default: RESOLUTION_KEEP
-                    }
-                } else {
-                    $sub['service']->updateModel($sub['model'], $sub['data']);
+            $services = array(
+                'person' => $this->servicePerson,
+                'person_info' => $this->servicePersonInfo,
+                'person_history' => $this->servicePersonHistory,
+                'post_contact' => $this->serviceMPostContact,
+            );
+
+
+
+            if (isset($data['post_contact'])) {
+                $dataPostContact = isset($data['post_contact']['address']) ? $data['post_contact']['address'] : new ArrayHash();
+                $type = isset($data['post_contact']['type']) ? $data['post_contact']['type'] : null;
+                if ($type) {
+                    $dataPostContact['type'] = $type;
                 }
-                $sub['model']->person_id = $person->person_id; // this works even for person itself
-                $sub['service']->save($sub['model']);
-                if ($sub['type'] == 'person') {
-                    $person = $sub['model']; // model (reference) was changed by the service
-                }
+                $data['post_contact'] = $dataPostContact;
             }
 
-            /*
-             * Post contact
-             */
-            $type = (isset($data['post_contact']) && isset($data['post_contact']['type'])) ? $data['post_contact']['type'] : null;
-            $addressData = (isset($data['post_contact']) && isset($data['post_contact']['address'])) ? $data['post_contact']['address'] : null;
-            $updatePostContact = $type && $addressData;
-            if ($updatePostContact) {
-                foreach ($person->getMPostContacts($type) as $mPostContact) {
-                    $this->serviceMPostContact->dispose($mPostContact);
+            $data = FormUtils::emptyStrToNull($data);
+            $data = FormUtils::removeEmptyHashes($data);
+            $conflicts = $this->getConflicts($models, $data);
+
+            if ($this->resolution == self::RESOLUTION_EXCEPTION) {
+                if (count($conflicts)) {
+                    throw new ModelDataConflictException($conflicts);
                 }
+            } else if ($this->resolution == self::RESOLUTION_KEEP) {
+                $data = $this->removeConflicts($data, $conflicts);
+            } else if ($this->resolution == self::RESOLUTION_OVERWRITE) {
+                $data = $conflicts;
+            }
 
-                $dataPostContact = FormUtils::emptyStrToNull($addressData);
-                $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
-                $mPostContact->getPostContact()->person_id = $person->person_id;
-
-                $this->serviceMPostContact->save($mPostContact);
+            foreach ($models as $t => & $model) {
+                if (!isset($data[$t])) {
+                    continue;
+                }
+                $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
+                $services[$t]->updateModel($model, $data[$t]);
+                $services[$t]->save($model);
             }
 
             $this->commit();
-        } catch (AlreadyExistsException $e) {
+        } catch (ModelDataConflictException $e) {
             $this->rollback();
             throw $e;
         } catch (ModelException $e) {
@@ -163,15 +154,39 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private $outerTransaction = false;
 
-    private function checkModel(IModel $model, ArrayHash $values) {
+    private function getConflicts($model, ArrayHash $values) {
+        $conflicts = new ArrayHash();
         foreach ($values as $key => $value) {
-            //TODO check that overwriting null is handled correctly
-            if (isset($model[$key]) && $model[$key] != $value) {
-                return false;
+            if (isset($model[$key])) {
+                if ($model[$key] instanceof IModel) {
+                    $subconflicts = $this->getConflicts($model[$key], $value);
+                    if (count($subconflicts)) {
+                        $conflicts[$key] = $subconflicts;
+                    }
+                } else {
+                    if ($model[$key] != $value) {
+                        $conflicts[$key] = $value;
+                    }
+                }
             }
         }
 
-        return true;
+        return $conflicts;
+    }
+
+    private function removeConflicts(ArrayHash $data, ArrayHash $conflicts) {
+        $result = $data;
+        foreach ($conflicts as $key => $value) {
+            if (isset($data[$key])) {
+                if ($data[$key] instanceof ArrayHash) {
+                    $result[$key] = $this->removeConflicts($data[$key], $value);
+                } else {
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        return $result;
     }
 
     private function beginTransaction() {
