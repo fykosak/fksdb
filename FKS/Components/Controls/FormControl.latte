@@ -24,7 +24,7 @@
 {/define}
 
 {define plain}
-<div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+<div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required" id="{$field->getHtmlId()}-pair">
         {label $field class => "col-lg-$left control-label"/}
     <div class="col-lg-{$right}">
         {input $field class => 'form-control'}
@@ -88,7 +88,13 @@
 {/define}
 
 {define hidden}
-{input $field}
+<div n:tag-if="$field->hasErrors()" n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+    <div n:tag-if="$field->hasErrors()" class="col-lg-offset-{$left} col-lg-{$right}">
+        {input $field}
+        {include #metadata field => $field}
+    </div>
+
+</div>
 {/define}
 
 

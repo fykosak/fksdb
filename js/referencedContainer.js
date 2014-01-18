@@ -15,17 +15,18 @@ $(function() {
         },
         _create: function() {
             var elContainer = $(this.element);
-            this.options.refId = $('#' + elContainer.data('referenced-id'));
-
-            this.transformContainer(elContainer);
+            this.transformContainer(elContainer, $('#' + elContainer.data('referenced-id')));
         },
-        transformContainer: function(elContainer) {
+        transformContainer: function(elContainer, elRefId) {
             var elSearch = elContainer.find("input[name*='" + this.options.searchMask + "']");
             var elCompactValue = elContainer.find("input[name*='" + this.options.compactValueMask + "']");
             var elSubmitSearch = elContainer.find("input[type='submit'][name*='" + this.options.submitSearchMask + "']");
             var elClear = elContainer.find("input[type='submit'][name*='" + this.options.clearMask + "']");
             var compacted = null;
             var options = this.options;
+            if (elRefId) {
+                options.refId = elRefId;
+            }
 
             function searchifyContainer() {
                 // create search button
@@ -125,7 +126,6 @@ $(function() {
 
             function decorateClearButton() {
                 var well = elContainer.find('.well');
-                //var button = $('<button type="button" class="close" title="Smazat"><span class="glyphicon glyphicon-trash"></span></button>');
                 var buttonDel = $('<button type="button" class="btn btn-sm btn-warning pull-right" title="Smazat"><span class="glyphicon glyphicon-trash"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
@@ -134,9 +134,22 @@ $(function() {
                 buttonDel.prependTo(well);
             }
 
+            var writableFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear);
+            writableFields.change(function() {
+                var filledFields = writableFields.filter(function() {
+                    return $(this).val() != '';
+                });
+                if (filledFields.length > 0) {
+                    options.refId.val('__promise');
+                } else {
+                    options.refId.val('');
+                }
+            });
+
             var hasAnyFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear).filter(function() {
                 return $(this).val() == '';
             });
+
 
 
             if (elSearch.length) {
@@ -152,11 +165,11 @@ $(function() {
         $.nette.ext('referencedContainer', {
             success: function(payload, status, jqXHR, settings) {
                 if (payload.referencedContainer) {
-                    var el = $('#' + payload.referencedContainer.id);
-                    el.val(payload.referencedContainer.value);
+                    var elRefId = $('#' + payload.referencedContainer.id);
+                    elRefId.val(payload.referencedContainer.value);
 
                     for (var id in payload.snippets) {
-                        $.fks.referencedContainer('tranformContainer', $('#' + id));
+                        $.fks.referencedContainer._proto.transformContainer($('#' + id), elRefId);
                     }
                 }
             }
