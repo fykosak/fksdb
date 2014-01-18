@@ -4,8 +4,8 @@ namespace FKS\Config;
 
 use FKS\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
+use Nette\Utils\NeonException;
 
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
@@ -63,7 +63,7 @@ class NeonScheme {
 
 }
 
-class NeonSchemaException extends InvalidStateException {
+class NeonSchemaException extends NeonException {
     
 }
 
