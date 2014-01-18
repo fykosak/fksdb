@@ -27,6 +27,12 @@ $(document).ready(function () {
     $("input.date").each(function () { // input[type=date] does not work in IE
         var el = $(this);
         var value = el.val();
+        var hasOriginal = false;
+        if (value == '__original') {
+            hasOriginal = true;
+            value = '';
+        }
+
         var date = (value ? $.datepicker.parseDate($.datepicker.W3C, value) : null);
 
         var minDate = el.attr("min") || null;
@@ -48,7 +54,10 @@ $(document).ready(function () {
             minDate: minDate,
             maxDate: maxDate
         });
-        el.val($.datepicker.formatDate(el.datepicker("option", "dateFormat"), date));
+
+        if(!hasOriginal) {
+            el.val($.datepicker.formatDate(el.datepicker("option", "dateFormat"), date));
+        }
     });
 });
 

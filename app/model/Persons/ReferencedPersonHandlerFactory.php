@@ -42,7 +42,7 @@ class ReferencedPersonHandlerFactory extends Object {
         $this->serviceMPostContact = $serviceMPostContact;
     }
 
-    public function create($acYear, $resolution) {
+    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
         return new ReferencedPersonHandler(
                 $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $acYear, $resolution
         );

@@ -5,12 +5,13 @@ namespace FKSDB\Components\Forms\Factories;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKS\Components\Forms\Controls\URLTextBox;
+use FKS\Components\Forms\Controls\WriteonlyDatePicker;
+use FKS\Components\Forms\Controls\WriteonlyInput;
 use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use JanTvrdik\Components\DatePicker;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -378,17 +379,17 @@ class PersonFactory {
      */
 
     public function createBorn($acYear = null) {
-        return (new DatePicker(_('Datum narození')));
+        return (new WriteonlyDatePicker(_('Datum narození')));
     }
 
     public function createIdNumber($acYear = null) {
-        return (new TextInput(_('Číslo OP')))
+        return (new WriteonlyInput(_('Číslo OP')))
                         ->setOption('description', _('U cizinců číslo pasu.'))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
     public function createBornId($acYear = null) {
-        $control = new TextInput(_('Rodné číslo'));
+        $control = new WriteonlyInput(_('Rodné číslo'));
         $control->setOption('description', _('U cizinců prázdné.'))
                 ->addCondition(Form::FILLED)
                 ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
@@ -396,28 +397,28 @@ class PersonFactory {
     }
 
     public function createPhone($acYear = null) {
-        return (new TextInput(_('Telefonní číslo')))
+        return (new WriteonlyInput(_('Telefonní číslo')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
     public function createIm($acYear = null) {
-        return (new TextInput(_('ICQ, Jabber, apod.')))
+        return (new WriteonlyInput(_('ICQ, Jabber, apod.')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
     public function createBirthplace($acYear = null) {
-        return (new TextInput(_('Místo narození')))
+        return (new WriteonlyInput(_('Místo narození')))
                         ->setOption('description', _('Město a okres (kvůli diplomům).'))
                         ->addRule(Form::MAX_LENGTH, null, 255);
     }
 
     public function createUkLogin($acYear = null) {
-        return (new TextInput(_('Login UK')))
+        return (new WriteonlyInput(_('Login UK')))
                         ->addRule(Form::MAX_LENGTH, null, 8);
     }
 
     public function createAccount($acYear = null) {
-        return (new TextInput(_('Číslo bankovního účtu')))
+        return (new WriteonlyInput(_('Číslo bankovního účtu')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
 

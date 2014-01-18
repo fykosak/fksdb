@@ -44,6 +44,8 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
+                    phone: false
+                    born: false
                 person_history:
                     school_id: true
                     study_year: true
@@ -118,7 +120,7 @@ events:
                         required: true
                         visible: true
                         modifiable: true
-                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, overwrite, ...)
+                        factory: RefPerson(%events.fyziklani.liaison%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...)
                     # TODO note
 
             #
@@ -150,7 +152,7 @@ events:
                         visible: true
                         modifiable: true
                         determining: true
-                        factory: RefPerson(%events.fyziklani.participant%, email, true, hidden, exception, ...)
+                        factory: RefPerson(%events.fyziklani.participant%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...)
                         # TODO person factory
                     note:
                         label: Poznámka

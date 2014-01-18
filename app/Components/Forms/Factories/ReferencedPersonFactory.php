@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Containers\IReferencedSetter;
+use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use ModelPerson;
@@ -13,6 +14,8 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Object;
 use ORM\IModel;
+use Persons\IModifialibityResolver;
+use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandlerFactory;
 use ServicePerson;
 
@@ -26,9 +29,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';
     const SEARCH_NONE = 'none';
-    const FILLED_HIDDEN = 'hidden';
-    const FILLED_DISABLED = 'disabled';
-    const FILLED_MODIFIABLE = 'modifiable';
 
     /**
      * @var ServicePerson
@@ -51,9 +51,19 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
     }
 
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $fillingMode, $resolution) {
+    /**
+     * 
+     * @param type $fieldsDefinition
+     * @param type $acYear
+     * @param type $searchType
+     * @param type $allowClear
+     * @param IModifialibityResolver $modifiabilityResolver is person modifiable?
+     * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
+     * @return array
+     */
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
 
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, $resolution);
+        $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
 
@@ -65,8 +75,9 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
 
         $container->setAllowClear($allowClear);
-        $container->setOption('fillingMode', $fillingMode);
         $container->setOption('acYear', $acYear);
+        $container->setOption('modifiabilityResolver', $modifiabilityResolver);
+        $container->setOption('visibilityResolver', $visibilityResolver);
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
@@ -90,9 +101,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     public function setModel(ReferencedContainer $container, IModel $model) {
-        $fillingMode = $container->getOption('fillingMode');
         $acYear = $container->getOption('acYear');
+        $modifiable = $container->getOption('modifiabilityResolver')->isModifiable($model);
+        $resolution = $container->getOption('modifiabilityResolver')->getResolutionMode($model);
+        $visible = $container->getOption('visibilityResolver')->isVisible($model);
 
+        $container->getReferencedId()->getHandler()->setResolution($resolution);
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model->getFullname());
 
         foreach ($container->getComponents() as $sub => $subcontainer) {
@@ -100,17 +114,26 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 continue;
             }
 
-            foreach ($subcontainer->getComponents() as $fieldName => $control) {
+            foreach ($subcontainer->getComponents() as $fieldName => $component) {
+                if ($component instanceof IWriteonly) {
+                    $controlVisible = $visible;
+                } else {
+                    $controlVisible = true;
+                }
+                if (!$controlVisible && !$modifiable) {
+                    $container[$sub]->removeComponent($component);
+                } else if (!$controlVisible && $modifiable) {
+                    $component->setWriteonly(true);
+                } else if ($controlVisible && !$modifiable) {
+                    $component->setDisabled();
+                } else if ($controlVisible && $modifiable) {
+                    if ($component instanceof IWriteonly) {
+                        $component->setWriteonly(false);
+                    }
+                }
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
                 if ($value) {
-                    if ($fillingMode == self::FILLED_HIDDEN) {
-                        $container[$sub]->removeComponent($control);
-                    } else if ($fillingMode == self::FILLED_DISABLED) {
-                        $control->setDisabled();
-                        $control->setValue($value);
-                    } else if ($fillingMode == self::FILLED_MODIFIABLE) {
-                        $control->setValue($value);
-                    }
+                    $component->setDefaultValue($value);
                 }
             }
         }

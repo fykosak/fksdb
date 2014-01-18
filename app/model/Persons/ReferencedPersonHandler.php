@@ -22,10 +22,6 @@ use ServicePersonInfo;
  */
 class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
-    const RESOLUTION_OVERWRITE = 'overwrite';
-    const RESOLUTION_KEEP = 'keep';
-    const RESOLUTION_EXCEPTION = 'exception';
-
     /**
      * @var ServicePerson
      */
@@ -62,6 +58,14 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->acYear = $acYear;
+        $this->resolution = $resolution;
+    }
+
+    public function getResolution() {
+        return $this->resolution;
+    }
+
+    public function setResolution($resolution) {
         $this->resolution = $resolution;
     }
 
