@@ -14,14 +14,22 @@ $(function() {
 
             var button = $('<i class="glyphicon glyphicon-remove"/>');
             var actualGroup = $('<div class="right-inner-addon"/>');
-            actualInput.replaceWith(actualGroup);
+
+            // Workardound: .replaceWith breaks datepicker.
+            var par = actualInput.parent();
+            var prev = actualInput.prev();
+            
             actualGroup.append(actualInput);
             actualGroup.append(button);
+            if (prev.length) {
+                actualGroup.insertAfter(prev);
+            } else {
+                actualGroup.appendTo(par);
+            }            
 
             var overlayInput = actualInput.clone().attr('id', null).attr('name', null).val('').attr('placeholder', originalLabel);
             overlayInput.removeAttr('data-writeonly');
-            overlayInput.data('michal', true);
-            console.log('clone', overlayInput);
+            overlayInput.removeData('data-writeonly');
             overlayInput.insertAfter(actualGroup);
 
 
@@ -56,6 +64,6 @@ $(function() {
             actualInput.data('writeonly-enabled', true);
         }
     });
-    $("input[data-writeonly]").writeonlyInput();
+    $("input[data-writeonly],input:data(writeonly)").writeonlyInput();
 
 });

@@ -3,7 +3,7 @@
 namespace FKS\Components\Forms\Controls;
 
 use FKS\Components\Forms\Containers\IWriteonly;
-use Nette\Forms\Controls\TextInput;
+use JanTvrdik\Components\DatePicker;
 
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
@@ -11,7 +11,7 @@ use Nette\Forms\Controls\TextInput;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class WriteonlyInput extends TextInput implements IWriteonly {
+class WriteonlyDatePicker extends DatePicker implements IWriteonly {
 
     use WriteonlyTrait;
 

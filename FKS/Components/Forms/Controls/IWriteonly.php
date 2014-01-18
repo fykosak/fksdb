@@ -10,6 +10,8 @@ namespace FKS\Components\Forms\Containers;
  */
 interface IWriteonly {
 
+    const VALUE_ORIGINAL = '__original';
+
     public function setWriteonly($value = true);
 
     public function getWriteonly();
