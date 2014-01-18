@@ -65,19 +65,19 @@ class AutocompleteSelectBox extends TextBase {
     private $attachedJSON = false;
     private $attachedJS = false;
 
-    protected function attached($presenter) {
-        parent::attached($presenter);
-        if (!$this->attachedJSON && $presenter instanceof IAutocompleteJSONProvider) {
+    protected function attached($obj ){
+        parent::attached($obj);
+        if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
             $this->attachedJSON = true;
-            $name = $this->lookupPath('Nette\Application\UI\Presenter');
+            $name = $this->lookupPath('FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
 
-            $this->ajaxUrl = $presenter->link('autocomplete!', array(
+            $this->ajaxUrl = $obj->link('autocomplete!', array(
                 self::PARAM_NAME => $name,
             ));
         }
-        if (!$this->attachedJS && $presenter instanceof IJavaScriptCollector) {
+        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
             $this->attachedJS = true;
-            $presenter->registerJSFile('js/autocompleteSelect.js');
+            $obj->registerJSFile('js/autocompleteSelect.js');
         }
     }
 

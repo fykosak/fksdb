@@ -8,9 +8,12 @@ use FKS\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 
 /**
@@ -130,6 +133,12 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->metadata = $metadata;
     }
 
+    protected function validateChildComponent(IComponent $child) {
+        if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
+            throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
+        }
+    }
+
     /**
      * Swaps hidden and attached components from/to the container.
      * 
@@ -146,7 +155,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
         foreach ($this->hiddenComponents as $name => $component) {
             if ($value == !!Arrays::grep($searchComponents, "/^$name/")) {
-                $this->addComponent($component, $name);
+                $component->setOption('visible', true);
                 unset($this->hiddenComponents[$name]);
             }
         }
@@ -154,7 +163,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
         foreach ($this->getComponents() as $name => $component) {
             if ($value == !Arrays::grep($searchComponents, "/^$name/")) {
-                $this->removeComponent($component);
+                $component->setOption('visible', false);
                 $this->hiddenComponents[$name] = $component;
             }
         }
@@ -172,14 +181,14 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($value) {
             $component = Arrays::get($this->hiddenComponents, self::SUBMIT_CLEAR, null);
             if ($component) {
-                $this->addComponent($component, self::SUBMIT_CLEAR);
+                $component->setOption('visible', true);
                 unset($this->hiddenComponents[self::SUBMIT_CLEAR]);
             }
         } else {
             $component = $this->getComponent(self::SUBMIT_CLEAR, false);
             if ($component) {
                 $this->hiddenComponents[self::SUBMIT_CLEAR] = $component;
-                $this->removeComponent($component);
+                $component->setOption('visible', false);
             }
         }
     }

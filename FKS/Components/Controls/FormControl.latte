@@ -94,6 +94,7 @@
 {define controls}
 {var $buttons = array()}
 {foreach $controls as $name => $field}
+    {continueIf !$field->getOption('visible', true)}
     {if !$field instanceof Nette\Forms\Controls\Button}
         {include #buttonArray buttons => $buttons, left => $left, right => $right}  
         {var $buttons = array()}

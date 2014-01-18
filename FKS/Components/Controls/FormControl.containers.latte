@@ -20,7 +20,7 @@
     $id = $level > 1 ? $container->getOption('id') : null
     }
 
-<div class="row" n:snippet="group-$id" n:attr="data => $withOptions ? $container->getOption('data') : null">
+<div class="row" n:if="!$withOptions || $container->getOption('visible', true)" n:snippet="group-$id" n:attr="data => $withOptions ? $container->getOption('data') : null">
     <div n:tag-if="$level > 1" class="well well-sm col-lg-{$subWidth} col-lg-offset-{$subOffset}">
         <fieldset n:tag-if="$level > 0">
             <legend n:if="$level > 0 && $container->getOption('label')">{$container->getOption('label')}</legend>
