@@ -115,6 +115,18 @@ class ReferencedContainer extends ContainerWithOptions {
         return $this->getForm(false) && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
+    public function setConflicts(ArrayHash $conflicts, $container = null) {
+        $container = $container ? : $this;
+        foreach ($conflicts as $key => $value) {
+            $component = $container->getComponent($key, false);
+            if ($component instanceof Container) {
+                $this->setConflicts($value, $component);
+            } else if ($component instanceof BaseControl) {
+                $component->addError(null);
+            }
+        }
+    }
+
     /**
      * Swaps hidden and attached components from/to the container.
      * 

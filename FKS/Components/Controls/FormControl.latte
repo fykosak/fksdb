@@ -18,6 +18,7 @@
 {define metadata}
         {if $description = $field->getOption('description')}<span class="help-block">{$description}</span>{/if}
         {foreach $field->getErrors() as $error}
+        {continueIf !$error}
 <div class="alert alert-danger">{$error}</div>
         {/foreach}
 {/define}

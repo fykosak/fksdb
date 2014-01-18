@@ -26,7 +26,7 @@ interface IReferencedHandler {
     public function createFromValues(ArrayHash $values);
 }
 
-class AlreadyExistsException extends RuntimeException {
+class ModelDataConflictException extends RuntimeException {
 
     /** @var ArrayHash */
     private $conflicts;
@@ -35,9 +35,7 @@ class AlreadyExistsException extends RuntimeException {
     private $referencedId;
 
     public function __construct($conflicts, $code = null, $previous = null) {
-        $message = "Collision with existing model when creating model from values.";
-        parent::__construct($message, $code, $previous);
-
+        parent::__construct(null, $code, $previous);
         $this->conflicts = $conflicts;
     }
 

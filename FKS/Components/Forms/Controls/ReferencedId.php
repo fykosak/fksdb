@@ -4,6 +4,7 @@ namespace FKS\Components\Forms\Controls;
 
 use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\ReferencedContainer;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -126,19 +127,18 @@ class ReferencedId extends HiddenField {
         $values = $this->referencedContainer->getValues();
         $handler = $this->handler;
         $promise = new Promise(function() use($handler, $referencedId, $values, $referencedIdControl) {
-                    if ($referencedId === self::VALUE_PROMISE) {
-                        try {
+                    try {
+                        if ($referencedId === self::VALUE_PROMISE) {
                             $model = $handler->createFromValues($values);
-                            return $model;
-                        } catch (AlreadyExistsException $e) {
-                            $e->setIdName($referencedIdControl->getName());
-                            $referencedIdControl->setValue($e->getModel());
-                            throw $e;
+                            return $model->getPrimary();
+                        } else if ($referencedId) {
+                            $model = $referencedIdControl->getService()->findByPrimary($referencedId);
+                            $handler->update($model, $values);
+                            return $referencedId;
                         }
-                    } else if ($referencedId) {
-                        $model = $referencedIdControl->getService()->findByPrimary($referencedId);
-                        $handler->update($model, $values);
-                        return $referencedId;
+                    } catch (ModelDataConflictException $e) {
+                        $e->setReferencedId($referencedIdControl);
+                        throw $e;
                     }
                 });
         $this->setValue($referencedId);

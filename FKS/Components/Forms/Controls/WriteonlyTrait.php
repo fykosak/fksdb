@@ -51,7 +51,7 @@ trait WriteonlyTrait {
         $form = $this->getForm(FALSE);
         $isSubmitted = $form && $form->isAnchored() && $form->isSubmitted();
 // for JS
-        if ($this->writeonly && $this->defaultValue && (!$isSubmitted || ($this->getValue() && $this->getValue() != self::VALUE_ORIGINAL))) {
+        if ($this->writeonly && $this->defaultValue) {
             $control->data['writeonly'] = (int) true;
             $control->data['writeonly-value'] = self::VALUE_ORIGINAL;
             $control->data['writeonly-label'] = _('skrytá hodnota');
