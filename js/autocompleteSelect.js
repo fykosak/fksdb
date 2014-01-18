@@ -22,6 +22,7 @@ $(function() {
 
             var el = $('<input type="text"/>');
             el.attr('class', elVal.attr('class'));
+            el.attr('disabled', elVal.attr('disabled'));
             elVal.replaceWith(el);
             elVal.hide();
             elVal.insertAfter(el);
