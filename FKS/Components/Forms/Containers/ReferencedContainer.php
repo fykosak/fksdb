@@ -9,6 +9,7 @@ use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
+use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -110,6 +111,10 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
+    public function isSearchSubmitted() {
+        return $this->getForm(false) && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
+    }
+
     /**
      * Swaps hidden and attached components from/to the container.
      * 
@@ -126,16 +131,14 @@ class ReferencedContainer extends ContainerWithOptions {
 
         foreach ($this->hiddenComponents as $name => $component) {
             if ($value == !!Arrays::grep($searchComponents, "/^$name/")) {
-                $component->setOption('visible', true);
-                unset($this->hiddenComponents[$name]);
+                $this->showComponent($name, $component);
             }
         }
 
 
         foreach ($this->getComponents() as $name => $component) {
             if ($value == !Arrays::grep($searchComponents, "/^$name/")) {
-                $component->setOption('visible', false);
-                $this->hiddenComponents[$name] = $component;
+                $this->hideComponent($name, $component);
             }
         }
     }
@@ -152,14 +155,12 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($value) {
             $component = Arrays::get($this->hiddenComponents, self::SUBMIT_CLEAR, null);
             if ($component) {
-                $component->setOption('visible', true);
-                unset($this->hiddenComponents[self::SUBMIT_CLEAR]);
+                $this->showComponent(self::SUBMIT_CLEAR, $component);
             }
         } else {
             $component = $this->getComponent(self::SUBMIT_CLEAR, false);
             if ($component) {
-                $this->hiddenComponents[self::SUBMIT_CLEAR] = $component;
-                $component->setOption('visible', false);
+                $this->hideComponent(self::SUBMIT_CLEAR, $component);
             }
         }
     }
@@ -249,6 +250,36 @@ class ReferencedContainer extends ContainerWithOptions {
             'referenced-id' => $referencedId,
             'referenced' => (int) true,
         ));
+    }
+
+    private function hideComponent($name, $component) {
+        $component->setOption('visible', false);
+        if ($name) {
+            $this->hiddenComponents[$name] = $component;
+        }
+        if ($component instanceof BaseControl) {
+            //$component->setOption('wasDisabled', $component->isDisabled());
+            $component->setDisabled(true);
+        } else if ($component instanceof Container) {
+            foreach ($component->getComponents() as $subcomponent) {
+                $this->hideComponent(null, $subcomponent);
+            }
+        }
+    }
+
+    private function showComponent($name, $component) {
+        $component->setOption('visible', true);
+        if ($name) {
+            unset($this->hiddenComponents[$name]);
+        }
+        if ($component instanceof BaseControl) {
+            //$component->setDisabled($component->getOption('wasDisabled', $component->isDisabled()));
+            $component->setDisabled(false);
+        } else if ($component instanceof Container) {
+            foreach ($component->getComponents() as $subcomponent) {
+                $this->showComponent(null, $subcomponent);
+            }
+        }
     }
 
 }

@@ -27,7 +27,7 @@
             <p n:if="$level > 0 && $container->getOption('description')">{$container->getOption('description')}</p>    
 {var $controls = array()}
 {foreach $container->getComponents() as $component}
-    {if $component instanceof Nette\Forms\Container}
+    {if $component instanceof Nette\Forms\Container && $component->getOption('visible', true)}
         {if $controls}
         {include #controls controls => $controls, left => $left, right => $right}
         {var $controls = array()}

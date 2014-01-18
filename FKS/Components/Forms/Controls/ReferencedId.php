@@ -81,12 +81,11 @@ class ReferencedId extends HiddenField {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
+        } else if ($isPromise) {
+            $pvalue = $this->service->createNew();
         }
         $container = $this->referencedContainer;
-        if ($isPromise) {
-            $container->setSearchButton(false);
-            $container->setClearButton(true);
-        } else if (!$pvalue) {
+        if (!$pvalue) {
             $container->setSearchButton(true);
             $container->setClearButton(false);
         } else {

@@ -28,29 +28,29 @@ interface IReferencedHandler {
 
 class AlreadyExistsException extends RuntimeException {
 
-    /** @var IModel */
-    private $model;
+    /** @var ArrayHash */
+    private $conflicts;
 
-    /** @var string */
-    private $idName;
+    /** @var ReferencedId */
+    private $referencedId;
 
-    public function __construct(IModel $model, $code = null, $previous = null) {
+    public function __construct($conflicts, $code = null, $previous = null) {
         $message = "Collision with existing model when creating model from values.";
         parent::__construct($message, $code, $previous);
 
-        $this->model = $model;
+        $this->conflicts = $conflicts;
     }
 
-    public function getModel() {
-        return $this->model;
+    public function getConflicts() {
+        return $this->conflicts;
     }
 
-    public function getIdName() {
-        return $this->idName;
+    public function getReferencedId() {
+        return $this->referencedId;
     }
 
-    public function setIdName($idName) {
-        $this->idName = $idName;
+    public function setReferencedId(ReferencedId $referencedId) {
+        $this->referencedId = $referencedId;
     }
 
 }
