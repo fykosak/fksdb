@@ -1,6 +1,8 @@
 <?php
 
 use Nette\ArrayHash;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
 /**
  *
@@ -11,6 +13,7 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      * 
+     * @todo Mode to general utils.
      * @param string|array|Traversable $values
      * @return array
      */
@@ -31,6 +34,7 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      * 
+     * @todo Mode to general utils.
      * @param string|array|Traversable $values
      * @return array
      */
@@ -47,6 +51,15 @@ class FormUtils {
             }
         }
         return $result;
+    }
+
+    public static function findFirstSubmit(Form $form) {
+        foreach ($form->getComponents() as $component) {
+            if ($component instanceof SubmitButton) {
+                return $component;
+            }
+        }
+        return null;
     }
 
 }
