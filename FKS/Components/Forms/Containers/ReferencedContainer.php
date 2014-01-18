@@ -26,14 +26,10 @@ class ReferencedContainer extends ContainerWithOptions {
     const ID_MASK = 'frm%s-%s';
     const CSS_AJAX = 'ajax';
     const JSON_DATA = 'referencedContainer';
-    const SEARCH_NONE = 'none';
     const CONTROL_SEARCH = '_c_search';
     const CONTROL_COMPACT = '_c_compact';
     const SUBMIT_SEARCH = '__search';
     const SUBMIT_CLEAR = '__clear';
-    const FILLED_HIDDEN = 'hidden';
-    const FILLED_DISABLED = 'disabled';
-    const FILLED_MODIFIABLE = 'modifiable';
 
     /**
      * @var Component[]
@@ -56,11 +52,6 @@ class ReferencedContainer extends ContainerWithOptions {
     private $allowClear = true;
 
     /**
-     * @var enum
-     */
-    private $fillingMode = self::FILLED_DISABLED;
-
-    /**
      * @var Callback
      */
     private $searchCallback;
@@ -69,14 +60,6 @@ class ReferencedContainer extends ContainerWithOptions {
      * @var Callback
      */
     private $termToValuesCallback;
-
-    /**
-     * Custom metadata.
-     * TODO refactor to options?
-     * 
-     * @var mixed
-     */
-    private $metadata;
 
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
@@ -115,22 +98,6 @@ class ReferencedContainer extends ContainerWithOptions {
 
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
-    }
-
-    public function getFillingMode() {
-        return $this->fillingMode;
-    }
-
-    public function setFillingMode($fillingMode) {
-        $this->fillingMode = $fillingMode;
-    }
-
-    public function getMetadata() {
-        return $this->metadata;
-    }
-
-    public function setMetadata($metadata) {
-        $this->metadata = $metadata;
     }
 
     protected function validateChildComponent(IComponent $child) {
