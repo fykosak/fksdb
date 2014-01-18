@@ -4,8 +4,7 @@ namespace Events\Machine;
 
 use ArrayAccess;
 use ArrayIterator;
-use Events\Model\Holder;
-use Events\SaveHandler;
+use Events\Model\Holder\Holder;
 use IteratorAggregate;
 use LogicException;
 use Nette\FreezableObject;

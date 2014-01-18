@@ -3,7 +3,7 @@
 namespace Events\Model\Grid;
 
 use ArrayIterator;
-use Events\Model\Holder;
+use Events\Model\Holder\Holder;
 use ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\Object;

@@ -1,8 +1,9 @@
 <?php
 
-namespace Events\Model;
+namespace Events\Processings;
 
 use Events\Machine\Machine;
+use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use Nette\ArrayHash;
 
@@ -16,7 +17,7 @@ interface IProcessing {
     /**
      * @param ArrayHash $values
      * @param \Events\Model\Machine $machine
-     * @param \Events\Model\Holder $holder
+     * @param Holder $holder
      * @return null|array[machineName] => new state
      * @throws SubmitProcessingException
      */

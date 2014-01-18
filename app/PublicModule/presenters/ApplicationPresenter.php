@@ -5,7 +5,7 @@ namespace PublicModule;
 use Events\Machine\Machine;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
-use Events\Model\Holder;
+use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;

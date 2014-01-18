@@ -4,7 +4,7 @@ namespace FKSDB\Components\Events;
 
 use Events\Machine\Machine;
 use Events\Model\Grid\IHolderSource;
-use Events\Model\Holder;
+use Events\Model\Holder\Holder;
 use ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;

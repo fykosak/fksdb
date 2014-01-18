@@ -193,10 +193,11 @@ events:
                     bmName: PARTICIPANT
                     label: 5. člen
             formAdjustments:
-                - Events\Model\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
-                - Events\Model\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
+                - @events.privacyPolicy
+                - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
+                - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
             processings:
-                - Events\Model\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
+                - Events\Spec\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
 
             joins:
                 # NOTE: Join may not be realized if induced transition isn't viable.

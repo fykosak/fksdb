@@ -1,12 +1,14 @@
 <?php
 
-namespace Events\Model;
+namespace Events\Processings;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use Nette\ArrayHash;
 use Nette\Object;
+
 
 /**
  * Checks determining fields in sent data and either terminates the application

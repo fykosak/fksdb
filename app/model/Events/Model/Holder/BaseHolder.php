@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model;
+namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
 use FKS\Components\Forms\Containers\ContainerWithOptions;

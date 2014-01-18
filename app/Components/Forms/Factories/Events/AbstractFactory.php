@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
-use Events\Model\Field;
+use Events\Model\Holder\Field;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;

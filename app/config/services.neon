@@ -50,6 +50,11 @@ services:
     webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
     nette.userStorage: LoginUserStorage
+    
+    #
+    # Events
+    #
+    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
 
 includes:
     - merger.neon

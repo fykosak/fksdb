@@ -6,7 +6,6 @@ use Events\TransitionConditionFailedException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

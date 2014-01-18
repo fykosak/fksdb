@@ -32,9 +32,9 @@ class EventsExtension extends CompilerExtension {
     const CLASS_MACHINE = 'Events\Machine\Machine';
     const CLASS_BASE_MACHINE = 'Events\Machine\BaseMachine';
     const CLASS_TRANSITION = 'Events\Machine\Transition';
-    const CLASS_FIELD = 'Events\Model\Field';
-    const CLASS_BASE_HOLDER = 'Events\Model\BaseHolder';
-    const CLASS_HOLDER = 'Events\Model\Holder';
+    const CLASS_FIELD = 'Events\Model\Holder\Field';
+    const CLASS_BASE_HOLDER = 'Events\Model\Holder\BaseHolder';
+    const CLASS_HOLDER = 'Events\Model\Holder\Holder';
     const CLASS_RESOLVER = 'FKSDB\Components\Grids\Events\LayoutResolver';
 
     /** @const Maximum length of state identifier. */

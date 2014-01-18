@@ -1,18 +1,21 @@
 <?php
 
-namespace Events\Model;
+namespace Events\Model\Holder;
 
 use ArrayAccess;
 use ArrayIterator;
+use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Processings\GenKillProcessing;
+use Events\Processings\IProcessing;
 use FKS\Config\NeonScheme;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
-use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
+use Nette\Forms\Form;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;

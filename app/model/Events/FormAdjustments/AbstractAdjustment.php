@@ -1,16 +1,14 @@
 <?php
 
-namespace Events\Model\FormAdjustments;
+namespace Events\FormAdjustments;
 
 use Events\Machine\Machine;
-use Events\Model\Holder;
-use Events\Model\IFormAdjustment;
+use Events\Model\Holder\Holder;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 use Nette\Object;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

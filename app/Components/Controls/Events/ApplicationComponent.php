@@ -5,7 +5,7 @@ namespace FKSDB\Components\Events;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\MachineExecutionException;
-use Events\Model\Holder;
+use Events\Model\Holder\Holder;
 use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ModelDataConflictException;

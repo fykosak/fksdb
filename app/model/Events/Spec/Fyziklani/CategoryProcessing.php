@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\Model\Fyziklani;
+namespace Events\Spec\Fyziklani;
 
 use Events\Machine\Machine;
-use Events\Model\Holder;
-use Events\Model\IProcessing;
+use Events\Model\Holder\Holder;
+use Events\Processings\IProcessing;
 use Nette\ArrayHash;
 use Nette\Object;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\FormAdjustments;
+namespace Events\FormAdjustments;
 
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -10,10 +10,10 @@ use Nette\Forms\IControl;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DependentRequirements extends AbstractAdjustment {
+class DependentVisibility extends AbstractAdjustment {
 
     protected function processPair(IControl $target, IControl $prerequisity) {
-        $target->getRules()->addConditionOn($prerequisity, Form::FILLED)->addRule(Form::FILLED, _('Pole %label je třeba vyplnit.'));
+        $target->getRules()->addConditionOn($prerequisity, Form::FILLED)->toggle($target->getHtmlId() . '-pair');
     }
 
 }

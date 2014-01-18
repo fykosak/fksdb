@@ -1,8 +1,9 @@
 <?php
 
-namespace Events\Model;
+namespace Events\FormAdjustments;
 
 use Events\Machine\Machine;
+use Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 
 /**
@@ -15,7 +16,7 @@ interface IFormAdjustment {
     /**
      * @param Form $values
      * @param Machine $machine
-     * @param \Events\Model\Holder $holder
+     * @param Holder $holder
      */
     public function adjust(Form $form, Machine $machine, Holder $holder);
 }
