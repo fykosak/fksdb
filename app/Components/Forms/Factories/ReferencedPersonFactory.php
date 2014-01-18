@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
@@ -65,7 +66,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $container->setMetadata($acYear);
 
         foreach ($fieldsDefinition as $sub => $fields) {
-            $subcontainer = new Container();
+            $subcontainer = new ContainerWithOptions();
             foreach ($fields as $fieldName => $metadata) {
                 if (is_scalar($metadata)) {
                     $metadata = array(
@@ -163,7 +164,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case 'person_info':
                 return ($info = $person->getInfo()) ? $info[$field] : null;
             case 'person_history':
-                return ($history = $person->getHistory($this->acYear)) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear)) ? $history[$field] : null;
             case 'post_contact':
                 if ($field == 'type') {
                     return ModelPostContact::TYPE_PERMANENT; //TODO distinquish delivery and permanent address

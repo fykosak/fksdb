@@ -35,7 +35,18 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
-                    phone: false
+#                post_contact:
+#                    type: P
+#                    address: true
+            participant:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                person_history:
+                    school_id: true
+                    study_year: true
 #                post_contact:
 #                    type: P
 #                    address: true
@@ -139,7 +150,7 @@ events:
                         visible: true
                         modifiable: true
                         determining: true
-                        factory: RefPerson(%events.fyziklani.liaison%, email, true, modifiable, exception, ...)
+                        factory: RefPerson(%events.fyziklani.participant%, email, true, hidden, exception, ...)
                         # TODO person factory
                     note:
                         label: Poznámka
