@@ -26,6 +26,9 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';
     const SEARCH_NONE = 'none';
+    const FILLED_HIDDEN = 'hidden';
+    const FILLED_DISABLED = 'disabled';
+    const FILLED_MODIFIABLE = 'modifiable';
 
     /**
      * @var ServicePerson
@@ -62,8 +65,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
 
         $container->setAllowClear($allowClear);
-        $container->setFillingMode($fillingMode);
-        $container->setMetadata($acYear);
+        $container->setOption('fillingMode', $fillingMode);
+        $container->setOption('acYear', $acYear);
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
@@ -87,8 +90,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     public function setModel(ReferencedContainer $container, IModel $model) {
-        $fillingMode = $container->getFillingMode();
-        $acYear = $container->getMetadata();
+        $fillingMode = $container->getOption('fillingMode');
+        $acYear = $container->getOption('acYear');
 
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model->getFullname());
 
@@ -100,12 +103,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             foreach ($subcontainer->getComponents() as $fieldName => $control) {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
                 if ($value) {
-                    if ($fillingMode == ReferencedContainer::FILLED_HIDDEN) {
+                    if ($fillingMode == self::FILLED_HIDDEN) {
                         $container[$sub]->removeComponent($control);
-                    } else if ($fillingMode == ReferencedContainer::FILLED_DISABLED) {
+                    } else if ($fillingMode == self::FILLED_DISABLED) {
                         $control->setDisabled();
                         $control->setValue($value);
-                    } else if ($fillingMode == ReferencedContainer::FILLED_MODIFIABLE) {
+                    } else if ($fillingMode == self::FILLED_MODIFIABLE) {
                         $control->setValue($value);
                     }
                 }
