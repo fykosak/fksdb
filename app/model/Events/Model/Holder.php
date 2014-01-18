@@ -2,8 +2,6 @@
 
 namespace Events\Model;
 
-use AbstractServiceMulti;
-use AbstractServiceSingle;
 use ArrayAccess;
 use ArrayIterator;
 use Events\Machine\BaseMachine;
@@ -11,6 +9,7 @@ use Events\Machine\Machine;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
+use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
@@ -27,9 +26,14 @@ use ORM\IService;
 class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
+     * @var IFormAdjustment[]
+     */
+    private $formAdjustments = array();
+
+    /**
      * @var IProcessing[]
      */
-    public $processings = array();
+    private $processings = array();
 
     /**
      * @var BaseHolder[]
@@ -89,6 +93,11 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
+    }
+
+    public function addFormAdjustment(IFormAdjustment $formAdjusment) {
+        $this->updating();
+        $this->formAdjustments[] = $formAdjusment;
     }
 
     public function addProcessing(IProcessing $processing) {
@@ -171,6 +180,12 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             }
         }
         return $newStates;
+    }
+
+    public function adjustForm(Form $form, Machine $machine) {
+        foreach ($this->formAdjustments as $adjustment) {
+            $adjustment->adjust($form, $machine, $this);
+        }
     }
 
     /*

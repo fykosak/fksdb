@@ -149,7 +149,10 @@ class ApplicationComponent extends Control {
                     $that->finalRedirect();
                 };
 
-
+        /*
+         * Custom adjustments
+         */
+        $this->holder->adjustForm($form, $this->machine);
 
         return $result;
     }

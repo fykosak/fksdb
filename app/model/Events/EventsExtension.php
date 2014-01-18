@@ -351,6 +351,10 @@ class EventsExtension extends CompilerExtension {
             $factory->addSetup('addProcessing', $processing);
         }
 
+        foreach ($machineDef['formAdjustments'] as $formAdjustment) {
+            $factory->addSetup('addFormAdjustment', $formAdjustment);
+        }
+
 
 
         $factory->addSetup('freeze');

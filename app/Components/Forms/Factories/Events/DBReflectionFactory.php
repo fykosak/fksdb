@@ -53,6 +53,7 @@ class DBReflectionFactory extends AbstractFactory {
                     ->addRule(Form::MAX_LENGTH, null, $size);
         } else {
             $element = new TextInput($field->getLabel());
+            $element->setOption('description', $field->getDescription());
             if ($size) {
                 $element->addRule(Form::MAX_LENGTH, null, $size);
             }

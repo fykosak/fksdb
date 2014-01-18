@@ -18,6 +18,10 @@ machine:
     processings:
         default: []
         type: expression array
+    # adjustments are called on the whole form right after creation
+    formAdjustments:
+        default: []
+        type: expression array
     # defines machine transition dependencies (transition invokes another transition)
     joins:
         default: []

@@ -30,8 +30,8 @@ class Field extends FreezableObject {
      * @var string
      */
     private $label;
-    
-        /**
+
+    /**
      * @var string
      */
     private $description;
@@ -86,7 +86,7 @@ class Field extends FreezableObject {
     public function getLabel() {
         return $this->label;
     }
-    
+
     public function getDescription() {
         return $this->description;
     }
@@ -96,7 +96,6 @@ class Field extends FreezableObject {
         $this->description = $description;
     }
 
-    
     public function isDetermining() {
         return $this->determining;
     }

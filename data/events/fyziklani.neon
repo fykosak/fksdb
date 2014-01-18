@@ -44,13 +44,15 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
-                    phone: false
+                    id_number: false
                 person_history:
                     school_id: true
                     study_year: true
-                post_contact:
-                    type: P
-                    address: true
+            dep:
+                require:
+                    p*.person_id.person_info.id_number: p*.note
+                visible:
+                    team.name: team.teacher_will_stay
 
 events:
     fyziklani:
@@ -156,8 +158,9 @@ events:
                     note:
                         label: Poznámka
                         visible: true
-                        modifiable: false
-                        required: true
+                        modifiable: true
+                        required: false
+                        description: jhahah
 
 
         #
@@ -187,6 +190,9 @@ events:
                 p5:
                     bmName: PARTICIPANT
                     label: 5. člen
+            formAdjustments:
+                - Events\Model\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
+                - Events\Model\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
             processings:
                 - Events\Model\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
 
