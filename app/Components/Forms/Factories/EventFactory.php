@@ -60,8 +60,11 @@ class EventFactory {
 
         $container->addDatePicker('registration_end', 'Konec registrace');
 
-        $container->addText('report', _('Text'))
+        $container->addTextArea('report', _('Text'))
                 ->setOption('description', _('Shrnující text k akci.'));
+        
+        $container->addTextArea('parameters', _('Parametry'))
+                ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
 
         return $container;
     }

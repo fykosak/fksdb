@@ -4,6 +4,8 @@ namespace OrgModule;
 
 use AbstractModelSingle;
 use Events\Model\Grid\SingleEventSource;
+use FKS\Config\NeonSchemaException;
+use FKS\Config\NeonScheme;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
@@ -14,7 +16,10 @@ use ModelException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Diagnostics\Debugger;
+use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
+use Nette\Utils\Neon;
+use Nette\Utils\NeonException;
 use ServiceEvent;
 use SystemContainer;
 
@@ -133,6 +138,25 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
+
+        if ($event = $this->getModel()) {
+            $holder = $this->container->createEventHolder($event);
+            $scheme = $holder->getParamScheme();
+            $description = _('Klíče: ') . implode(', ', array_keys($scheme));
+            $paramControl = $eventContainer->getComponent('parameters');
+            $paramControl->setOption('description', $description);
+            $paramControl->addRule(function(BaseControl $control) use($scheme) {
+                        $parameters = $control->getValue();
+                        try {
+                            $parameters = Neon::decode($parameters);
+                            NeonScheme::readSection($parameters, $scheme);
+                            return true;
+                        } catch (NeonException $e) {
+                            $control->addError($e->getMessage());
+                            return false;
+                        }
+                    }, _('Parametry nesplňují Neon schéma'));
+        }
 
         return $form;
     }

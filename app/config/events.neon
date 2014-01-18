@@ -9,6 +9,8 @@ definition:
         default: true
     tableLayout:
         default: participants
+    paramScheme:
+        default: []
     baseMachines:
     machine:
 

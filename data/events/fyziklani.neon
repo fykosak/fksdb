@@ -59,6 +59,8 @@ events:
         event_type_id: 1
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani
+        paramScheme:
+            cc_mail:
 
         baseMachines:
             #

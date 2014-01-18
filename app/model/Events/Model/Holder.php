@@ -6,6 +6,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use FKS\Config\NeonScheme;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
@@ -15,11 +16,14 @@ use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\Utils\Neon;
 use ORM\IModel;
 use ORM\IService;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
+ * A bit bloated class.
+ * 
+ * It takes care of data loading/storing and also provides event's metadata.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -59,6 +63,16 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * @var ModelEvent
      */
     private $event;
+
+    /**
+     * @var array
+     */
+    private $paramScheme;
+
+    /**
+     * @var array
+     */
+    private $parameters;
 
     function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -119,6 +133,16 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function setEvent(ModelEvent $event) {
         $this->updating();
         $this->event = $event;
+        $this->cacheParameters();
+    }
+
+    public function getParamScheme() {
+        return $this->paramScheme;
+    }
+
+    public function setParamScheme($paramScheme) {
+        $this->updating();
+        $this->paramScheme = $paramScheme;
     }
 
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
@@ -242,6 +266,22 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         foreach ($holders as $holder) {
             $service->updateModel($holder->getModel(), array($joinOn => $primaryModel->getPrimary()));
         }
+    }
+
+    /*
+     * Parameter handling
+     */
+
+    private function cacheParameters() {
+        $parameters = $this->getEvent()->parameters;
+        $parameters = Neon::decode($parameters);
+        $this->parameters = $parameters ? NeonScheme::readSection($parameters, $this->getParamScheme()) : array();
+    }
+
+    public function getParameter($name, $default = null) {
+        $args = func_get_args();
+        array_unshift($args, $this->parameters);
+        return call_user_func_array('Arrays::get', $args);
     }
 
     /*
