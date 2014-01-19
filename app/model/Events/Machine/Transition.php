@@ -163,6 +163,11 @@ class Transition extends FreezableObject {
         return !$this->getBlockingTransition();
     }
 
+    /**
+     * Launch induced transitions and sets new state.
+     * 
+     * @throws TransitionConditionFailedException
+     */
     public final function execute() {
         if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =
             throw new TransitionConditionFailedException($blockingTransition);
@@ -176,16 +181,27 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @note Assumes the condition is fullfilled.
+     * Triggers onExecuted event.
+     * 
+     * @throws TransitionOnExecutedException
      */
-    private function _execute() {
-        $this->getBaseMachine()->setState($this->getTarget());
-        $this->getBaseHolder()->setModelState($this->getTarget());
+    public final function executed() {
+        foreach ($this->getInducedTransitions() as $inducedTransition) {
+            $inducedTransition->executed();
+        }
         try {
             $this->onExecuted($this);
         } catch (Exception $e) {
             throw new TransitionOnExecutedException($this->getName(), null, $e);
         }
+    }
+
+    /**
+     * @note Assumes the condition is fullfilled.
+     */
+    private function _execute() {
+        $this->getBaseMachine()->setState($this->getTarget());
+        $this->getBaseHolder()->setModelState($this->getTarget());
     }
 
     public function getBaseHolder() {

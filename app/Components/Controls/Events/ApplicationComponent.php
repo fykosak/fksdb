@@ -186,14 +186,15 @@ class ApplicationComponent extends Control {
             }
 
             foreach ($transitions as $transition) {
-                try {
-                    $transition->execute();
-                } catch (TransitionOnExecutedException $e) {
-                    $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
-                }
+                $transition->execute();
             }
 
             $this->holder->saveModels();
+
+            foreach ($transitions as $transition) {
+                $transition->executed(); //note the 'd', it only triggers onExecuted event
+            }
+
             $connection->commit();
 
             if ($form) {
@@ -213,6 +214,9 @@ class ApplicationComponent extends Control {
             $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
             $this->presenter->flashMessage($message, BasePresenter::FLASH_ERROR);
 
+            $connection->rollBack();
+        } catch (TransitionOnExecutedException $e) {
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
         }
     }
