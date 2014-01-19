@@ -3,6 +3,7 @@
 namespace PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
+use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;

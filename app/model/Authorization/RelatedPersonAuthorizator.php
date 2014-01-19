@@ -1,4 +1,5 @@
 <?php
+
 namespace Authorization;
 
 use Events\Machine\BaseMachine;
@@ -6,7 +7,6 @@ use Events\Model\Holder\Holder;
 use ModelContest;
 use Nette\Object;
 use Nette\Security\User;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,6 +19,10 @@ class RelatedPersonAuthorizator extends Object {
      * @var User
      */
     private $user;
+
+    function __construct(User $user) {
+        $this->user = $user;
+    }
 
     public function getUser() {
         return $this->user;

@@ -12,7 +12,8 @@ services:
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
     - Authentication\TokenAuthenticator    
-    contestAuthorizator: Authorization\ContestAuthorizator
+    - Authorization\ContestAuthorizator
+    - Authorization\RelatedPersonAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
