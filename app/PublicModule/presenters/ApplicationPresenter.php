@@ -9,9 +9,11 @@ use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
+use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\InvalidArgumentException;
 use ORM\IModel;
 use ServiceEvent;
 use SystemContainer;
@@ -63,12 +65,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedDefault($eventId, $id) {
-        if (!$this->getEvent()) {
-            throw new BadRequestException(_('Neexistující akce.'), 404);
-        }
-        if ($id && !$this->getEventApplication()) {
-            throw new BadRequestException(_('Neexistující přihláška.'), 404);
-        }
+        
     }
 
     public function authorizedList() {
@@ -87,12 +84,37 @@ class ApplicationPresenter extends BasePresenter {
         $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $this->getSelectedContest()->name));
     }
 
+    protected function unauthorizedAccess() {
+        $this->initializeMachine();
+        if ($this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
+            // bla bla
+        } else {
+            parent::unauthorizedAccess();
+        }
+    }
+
+    public function requiresLogin() {
+        return $this->getAction() != 'default';
+    }
+
     public function actionDefault($eventId, $id) {
+        if (!$this->getEvent()) {
+            throw new BadRequestException(_('Neexistující akce.'), 404);
+        }
+        if ($id && !$this->getEventApplication()) {
+            throw new BadRequestException(_('Neexistující přihláška.'), 404);
+        }
         $this->getHolder()->setModel($this->getEventApplication());
+        //TODO check avilable transitions
     }
 
     public function actionList() {
         
+    }
+
+    private function initializeMachine() {
+        $this->getHolder()->setModel($this->getEventApplication());
+        $this->getMachine()->setHolder($this->getHolder());
     }
 
     protected function createComponentContestChooser($name) {
@@ -147,7 +169,13 @@ class ApplicationPresenter extends BasePresenter {
 
     private function getEvent() {
         if ($this->event === false) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getParameter('eventId'));
+            $eventId = null;
+            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+                $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                $eventId = $data['eventId'];
+            }
+            $eventId = $eventId ? : $this->getParameter('eventId');
+            $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
         return $this->event;
@@ -155,8 +183,14 @@ class ApplicationPresenter extends BasePresenter {
 
     private function getEventApplication() {
         if ($this->eventApplication === false) {
+            $id = null;
+            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+                $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                $id = $data['id'];
+            }
+            $id = $id ? : $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
-            $this->eventApplication = $service->findByPrimary($this->getParameter('id'));
+            $this->eventApplication = $service->findByPrimary($id);
         }
 
         return $this->eventApplication;
@@ -176,4 +210,20 @@ class ApplicationPresenter extends BasePresenter {
         return $this->machine;
     }
 
+    public static function encodeParameters($eventId, $id) {
+        return "$eventId:$id";
+    }
+
+    public static function decodeParameters($data) {
+        $parts = explode(':', $data);
+        if (count($parts) != 2) {
+            throw new InvalidArgumentException("Cannot decode '$data'.");
+        }
+        return array(
+            'eventId' => $parts[0],
+            'id' => $parts[1],
+        );
+    }
+
 }
+

@@ -250,7 +250,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         $filledHandlers = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHandlers]->setModel($secondaryModel);
-            if (++$filledHandlers >= count($holders)) {
+            if (++$filledHandlers > count($holders)) {
                 throw new InvalidStateException('More than expected secondary models supplied.');
             }
         }

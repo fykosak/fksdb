@@ -5,6 +5,7 @@ namespace Authentication;
 use ModelAuthToken;
 use ModelLogin;
 use Nette\Http\Session;
+use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 use ServiceAuthToken;
 use ServiceLogin;
@@ -66,7 +67,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
             $this->authTokenService->disposeToken($section->token);
-            unset($section->token);
+            $section->remove();
         }
     }
 
@@ -77,15 +78,24 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public function isAuthenticatedByToken($tokenType = null) {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
-            return ($section->type === null) ? true : ($section->type == $tokenType);
+            return ($tokenType === null) ? true : ($section->type == $tokenType);
         }
         return false;
+    }
+
+    public function getTokenData() {
+        if (!$this->isAuthenticatedByToken()) {
+            throw new InvalidStateException('Not authenticated by token.');
+        }
+        $section = $this->session->getSection(self::SESSION_NS);
+        return $section->data;
     }
 
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;
         $section->type = $token->type;
+        $section->data = $token->data;
     }
 
 }

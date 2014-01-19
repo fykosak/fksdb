@@ -3,5 +3,7 @@
 
 {block user-info}
 {include #parent}
-{control contestChooser}
+{if $control['contestChooser']->isValid()}
+    {control contestChooser}
+{/if}
 {/block}

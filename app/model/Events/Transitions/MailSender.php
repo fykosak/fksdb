@@ -17,6 +17,7 @@ use Nette\Mail\Message;
 use Nette\Object;
 use Nette\Utils\Strings;
 use ORM\IModel;
+use PublicModule\ApplicationPresenter;
 use ServiceAuthToken;
 use ServicePerson;
 
@@ -31,6 +32,7 @@ class MailSender extends Object {
 
     const BCC_PARAM = 'notifyBcc';
     const FROM_PARAM = 'notifyFrom';
+
     /**
      * @var string
      */
@@ -107,8 +109,8 @@ class MailSender extends Object {
         $email = $person->getInfo()->email;
         $application = $holder->getPrimaryHolder()->getModel();
 
-        $until = $this->getUntil($event);
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $event->getPrimary());
+        $token = $this->createToken($login, $event, $application);
+        $until = $token->until;
 
         // prepare and send email      
         $template = $this->mailTemplateFactory->createFromFile($filename);
@@ -133,6 +135,13 @@ class MailSender extends Object {
 
         Debugger::log((string) $message->getHtmlBody()); //TODO move logging to mailer
         return $message;
+    }
+
+    private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
+        $until = $this->getUntil($event);
+        $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
+        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data);
+        return $token;
     }
 
     private function getPerson(BaseHolder $baseHolder) {
