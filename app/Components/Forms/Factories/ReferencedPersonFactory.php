@@ -58,7 +58,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @param type $acYear
      * @param type $searchType
      * @param type $allowClear
-     * @param IModifialibityResolver $modifiabilityResolver is person modifiable?
+     * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
@@ -117,26 +117,26 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             }
 
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
-                if ($component instanceof IWriteonly) {
-                    $controlVisible = $visible;
-                } else {
-                    $controlVisible = true;
-                }
-                if (!$controlVisible && !$modifiable) {
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
+                
+                $controlModifiable = $value ? $modifiable : true;
+                $controlVisible  = ($component instanceof IWriteonly) ? $visible : true;
+                
+                if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
-                } else if (!$controlVisible && $modifiable) {
+                } else if (!$controlVisible && $controlModifiable) {
                     $component->setWriteonly(true);
-                } else if ($controlVisible && !$modifiable) {
+                } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
-                } else if ($controlVisible && $modifiable) {
+                } else if ($controlVisible && $controlModifiable) {
                     if ($component instanceof IWriteonly) {
                         $component->setWriteonly(false);
                     }
                 }
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
+                
                 if ($value) {
                     if($resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
-                        $component->setDisabled(); // could not store any way
+                        $component->setDisabled(); // could not store different value anyway
                     }
                     if ($submittedBySearch) {
                         $component->setValue($value);
