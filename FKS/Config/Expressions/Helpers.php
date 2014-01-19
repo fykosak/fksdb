@@ -13,11 +13,16 @@ use stdClass;
  */
 class Helpers {
 
-    private static $semanticMaps = array(
+    private static $semanticMap = array(
         'and' => 'FKS\Expressions\Logic\And_',
         'or' => 'FKS\Expressions\Logic\or_',
-        'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
+        'after' => 'FKS\Expressions\Predicates\After',
+        'before' => 'FKS\Expressions\Predicates\Before',
     );
+
+    public static function registerSemantic($semanticMap) {
+        self::$semanticMap += $semanticMap;
+    }
 
     /**
      * Transforms into dynamic expression tree built from FKS\Expressions\*.
@@ -38,7 +43,7 @@ class Helpers {
             $arguments[] = self::statementFromExpression($attribute);
         }
 
-        $class = Arrays::get(self::$semanticMaps, $expression->value, $expression->value);
+        $class = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
         return new Statement($class, $arguments);
     }
 
