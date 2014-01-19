@@ -27,6 +27,11 @@ class CategoryProcessing extends AbstractProcessing {
     }
 
     protected function _process(ArrayHash $values, Machine $machine, Holder $holder) {
+        if (!isset($value['team'])) {
+            return;
+        }
+        //TODO would need also sanitatio of behavior when not all forms are enabled
+
         $event = $holder->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;

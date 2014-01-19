@@ -74,14 +74,15 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
              */
             $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
             $result = $this->connection->table(DbNames::TAB_EVENT_PARTICIPANT)
-                    ->select('person.person_history:school_id')
+                    ->select('person.person_history:school_id')                    
                     ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                     ->where($baseHolder->getEventId(), $event->getPrimary())
-                    ->where('person.person_history:school_id', $schools)
-                    ->where('person.person_history:ac_year', $acYear);
+                    ->where('person.person_history:ac_year', $acYear)                    
+                    ->where('person.person_history:school_id', $schools);
+
             //TODO filter by team status?
             if ($team && !$team->isNew()) {
-                $result->where('NOT e_fyziklani_participant.e_fyziklani_team_id', $team->getPrimary());
+                $result->where('NOT e_fyziklani_participant:e_fyziklani_team_id', $team->getPrimary());
             }
 
             $result->group('person.person_history:school_id', 'COUNT(DISTINCT e_fyziklani_participant:e_fyziklani_team.e_fyziklani_team_id) >= ' . self::TEAMS_PER_SCHOOL);

@@ -8,8 +8,24 @@ use Nette\Security\IResource;
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
+    private $eventType = false;
+    private $contest = false;
+
     public function getEventType() {
-        return ModelEventType::createFromTableRow($this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id'));
+        if ($this->eventType === false) {
+            $this->eventType = ModelEventType::createFromTableRow($this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id'));
+        }
+        return $this->eventType;
+    }
+
+    /**
+     * @return ModelContest
+     */
+    public function getContest() {
+        if ($this->contest === false) {
+            $this->contest = ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'event_type_id'));
+        }
+        return $this->contest;
     }
 
     public function getResourceId() {

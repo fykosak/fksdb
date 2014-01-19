@@ -35,6 +35,9 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                 $cTarget = $this->getControl($target);
                 $cPrerequisity = $this->getControl($prerequisity);
 
+                if (!$cTarget || $cPrerequisity) {
+                    return;
+                }
                 if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {
                     foreach ($cTarget as $key => $control) {
                         if (isset($cPrerequisity[$key])) {
@@ -50,6 +53,8 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                         $this->processPair($control, reset($cPrerequisity));
                     }
                 } else {
+                    $sTarget = count($cTarget);
+                    $sPrerequisity = count($cPrerequisity);
                     throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisity ($sPrerequisity match(es))'.");
                 }
             }

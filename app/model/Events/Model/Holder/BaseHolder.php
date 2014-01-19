@@ -3,6 +3,7 @@
 namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
+use Events\Model\ConditionEvaluator;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
@@ -80,6 +81,11 @@ class BaseHolder extends FreezableObject {
      */
     private $model;
 
+    /**
+     * @var ConditionEvaluator
+     */
+    private $evaluator;
+
     function __construct($name) {
         $this->name = $name;
     }
@@ -112,22 +118,20 @@ class BaseHolder extends FreezableObject {
         $this->visible = $visible;
     }
 
+    public function getEvaluator() {
+        return $this->evaluator;
+    }
+
+    public function setEvaluator(ConditionEvaluator $evaluator) {
+        $this->evaluator = $evaluator;
+    }
+
     public function isVisible() {
-        return $this->evalCondition($this->visible);
+        return $this->evaluator->evaluate($this->visible, $this);
     }
 
     public function isModifiable() {
-        return $this->evalCondition($this->modifiable);
-    }
-
-    private function evalCondition($condition) {
-        if (is_bool($condition)) {
-            return $condition;
-        } else if (is_callable($condition)) {
-            return call_user_func($condition, $this);
-        } else {
-            throw new InvalidStateException("Cannot evaluate condition $condition.");
-        }
+        return $this->evaluator->evaluate($this->modifiable, $this);
     }
 
     public function & getModel() {

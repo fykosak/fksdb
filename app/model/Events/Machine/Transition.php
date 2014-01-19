@@ -2,6 +2,7 @@
 
 namespace Events\Machine;
 
+use Events\Model\ConditionEvaluator;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Nette\FreezableObject;
@@ -54,6 +55,11 @@ class Transition extends FreezableObject {
      * @var boolean|callable
      */
     private $condition;
+
+    /**
+     * @var ConditionEvaluator
+     */
+    private $evaluator;
 
     /**
      * @var array
@@ -110,6 +116,14 @@ class Transition extends FreezableObject {
         $this->condition = $condition;
     }
 
+    public function getEvaluator() {
+        return $this->evaluator;
+    }
+
+    public function setEvaluator(ConditionEvaluator $evaluator) {
+        $this->evaluator = $evaluator;
+    }
+
     public function addInducedTransition(BaseMachine $targetMachine, $targetState) {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
@@ -150,13 +164,7 @@ class Transition extends FreezableObject {
     }
 
     private function isConditionFulfilled() {
-        if (is_bool($this->condition)) {
-            return $this->condition;
-        } else if (is_callable($this->condition)) {
-            return call_user_func($this->condition, $this);
-        } else {
-            throw new InvalidStateException("Cannot evaluate condition {$this->condition}.");
-        }
+        return $this->evaluator->evaluate($this->condition, $this);
     }
 
     public final function canExecute() {

@@ -3,6 +3,7 @@
 namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
+use Events\Model\ConditionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -50,6 +51,11 @@ class Field extends FreezableObject {
      * @var boolean|callable
      */
     private $modifiable;
+
+    /**
+     * @var ConditionEvaluator
+     */
+    private $evaluator;
 
     /**
      * @var boolean|callable
@@ -120,6 +126,14 @@ class Field extends FreezableObject {
         $this->visible = $visible;
     }
 
+    public function getEvaluator() {
+        return $this->evaluator;
+    }
+
+    public function setEvaluator(ConditionEvaluator $evaluator) {
+        $this->evaluator = $evaluator;
+    }
+
     public function setFactory(IFieldFactory $factory) {
         $this->updating();
         $this->factory = $factory;
@@ -142,30 +156,20 @@ class Field extends FreezableObject {
      */
 
     public function isVisible() {
-        return $this->evalCondition($this->visible);
+        return $this->evaluator->evaluate($this->visible, $this);
     }
 
     public function isRequired() {
-        return $this->evalCondition($this->required);
+        return $this->evaluator->evaluate($this->required, $this, false);
     }
 
     public function isModifiable() {
-        return $this->getBaseHolder()->isModifiable() && $this->evalCondition($this->modifiable);
+        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
 
     public function getValue() {
         $model = $this->getBaseHolder()->getModel();
         return $model ? $model[$this->name] : null;
-    }
-
-    private function evalCondition($condition) {
-        if (is_bool($condition)) {
-            return $condition;
-        } else if (is_callable($condition)) {
-            return call_user_func($condition, $this);
-        } else {
-            throw new InvalidStateException("Cannot evaluate condition $condition.");
-        }
     }
 
     public function __toString() {
