@@ -110,7 +110,8 @@ class ReferencedId extends HiddenField {
             return $this->promise->getValue();
         }
 
-        return parent::getValue();
+        $value = parent::getValue();
+        return $value ? : null;
     }
 
     public function setDisabled($value = TRUE) {
