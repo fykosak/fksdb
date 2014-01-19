@@ -7,7 +7,6 @@ use Events\Model\Holder\Holder;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use Nette\InvalidArgumentException;
 use Nette\Object;
 
 /**
@@ -21,51 +20,23 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
     const WILDCART = '*';
 
     private $pathCache;
-    private $rules;
 
-    function __construct($rules) {
-        $this->rules = $rules;
-    }
-
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public final function adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setForm($form);
-
-        foreach ($this->rules as $target => $prerequisities) {
-            if (is_scalar($prerequisities)) {
-                $prerequisities = array($prerequisities);
-            }
-
-            foreach ($prerequisities as $prerequisity) {
-                $cTarget = $this->getControl($target);
-                $cPrerequisity = $this->getControl($prerequisity);
-
-                if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {
-                    foreach ($cTarget as $key => $control) {
-                        if (isset($cPrerequisity[$key])) {
-                            $this->processPair($control, $cPrerequisity[$key]);
-                        }
-                    }
-                } else if (count($cTarget) == 1) {
-                    foreach ($cPrerequisity as $control) {
-                        $this->processPair(reset($cTarget), $control);
-                    }
-                } else if (count($cPrerequisity) == 1) {
-                    foreach ($cTarget as $control) {
-                        $this->processPair($control, reset($cPrerequisity));
-                    }
-                } else {
-                    throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisity ($sPrerequisity match(es))'.");
-                }
-            }
-        }
+        $this->_adjust($form, $machine, $holder);
     }
 
-    abstract protected function processPair(IControl $target, IControl $prerequisity);
+    protected abstract function _adjust(Form $form, Machine $machine, Holder $holder);
 
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 
+    /**
+     * 
+     * @param string $mask
+     * @return IControl[]
+     */
     protected final function getControl($mask) {
         $keys = array_keys($this->pathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);

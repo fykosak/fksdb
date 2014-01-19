@@ -1,5 +1,6 @@
 <?php
 
+use Nette\Database\Table\ActiveRow;
 use Nette\Object;
 
 class YearCalculator extends Object {
@@ -19,7 +20,7 @@ class YearCalculator extends Object {
         $this->preloadCache();
     }
 
-    public function getAcademicYear(ModelContest $contest, $year) {
+    public function getAcademicYear(ActiveRow $contest, $year) {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             // TODO possibly allow creatiom
             throw new InvalidArgumentException("No academic year defined for $key.");
@@ -38,6 +39,17 @@ class YearCalculator extends Object {
             $calYear -= 1;
         }
         return $calYear;
+    }
+
+    public function getGraduationYear($studyYear, $acYear = null) {
+        $acYear = ($acYear !== null) ? : $this->getCurrentAcademicYear();
+
+        if ($studyYear >= 4 && $studyYear <= 9) {
+            return $acYear + (5 - ($studyYear - 9));
+        }
+        if ($studyYear >= 1 && $studyYear <= 4) {
+            return $acYear + (5 - $studyYear);
+        }
     }
 
     public function getCurrentYear(ModelContest $contest) {

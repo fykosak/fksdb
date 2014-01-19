@@ -77,6 +77,11 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
     private $parameters;
 
+    /**
+     * @var Machine 
+     */
+    private $machine;
+
     function __construct(Connection $connection) {
         $this->connection = $connection;
 
@@ -146,6 +151,17 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function setParamScheme($paramScheme) {
         $this->updating();
         $this->paramScheme = $paramScheme;
+    }
+
+    public function getMachine() {
+        return $this->machine;
+    }
+
+    public function setMachine(Machine $machine) {
+        $this->machine = $machine;
+        if ($machine->getHolder() !== $this) {
+            $machine->setHolder($this);
+        }
     }
 
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {

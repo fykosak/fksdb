@@ -3,6 +3,7 @@
 namespace Events;
 
 use Events\Machine\Transition;
+use FKS\Config\Expressions\Helpers;
 use FKS\Config\NeonScheme;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Loader;
@@ -55,6 +56,11 @@ class EventsExtension extends CompilerExtension {
 
     function __construct($schemaFile) {
         $this->schemeFile = $schemaFile;
+        Helpers::registerSemantic(array(
+            'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
+            'role' => 'Events\Semantics\Role',
+            'regOpen' => 'Events\Semantics\RegOpen',
+        ));
     }
 
     /*
@@ -345,7 +351,7 @@ class EventsExtension extends CompilerExtension {
         }
         $factory->addSetup('setPrimaryHolder', $primaryName);
         $factory->addSetup('setParamScheme', array($definition['paramScheme']));
-        
+
         $factory->addSetup('setEvent', '%event%');
 
         foreach ($machineDef['processings'] as $processing) {

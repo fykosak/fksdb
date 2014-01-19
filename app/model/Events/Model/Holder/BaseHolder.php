@@ -112,19 +112,19 @@ class BaseHolder extends FreezableObject {
         $this->visible = $visible;
     }
 
-    public function isVisible(BaseMachine $machine) {
-        return $this->evalCondition($this->visible, $machine);
+    public function isVisible() {
+        return $this->evalCondition($this->visible);
     }
 
-    public function isModifiable(BaseMachine $machine) {
-        return $this->evalCondition($this->modifiable, $machine);
+    public function isModifiable() {
+        return $this->evalCondition($this->modifiable);
     }
 
-    private function evalCondition($condition, BaseMachine $machine) {
+    private function evalCondition($condition) {
         if (is_bool($condition)) {
             return $condition;
         } else if (is_callable($condition)) {
-            return call_user_func($condition, $machine);
+            return call_user_func($condition, $this);
         } else {
             throw new InvalidStateException("Cannot evaluate condition $condition.");
         }
@@ -250,7 +250,7 @@ class BaseHolder extends FreezableObject {
         return $column;
     }
 
-    private function getBareColumn($column) {
+    public static function getBareColumn($column) {
         $column = str_replace(':', '.', $column);
         $pos = strrpos($column, '.');
         return $pos === false ? $column : substr($column, $pos + 1);
@@ -301,7 +301,7 @@ class BaseHolder extends FreezableObject {
             return null;
         }
         $personColumn = reset($personColumns); //TODO we support only single person per model, so far
-        $personColumn = $this->getBareColumn($personColumn);
+        $personColumn = self::getBareColumn($personColumn);
         $model = $this->getModel();
         return $model[$personColumn];
     }

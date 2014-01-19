@@ -25,6 +25,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 use ServicePerson;
+use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -92,12 +93,19 @@ class PersonFactory {
      */
     private $addressFactory;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory) {
+    /**
+     *
+     * @var YearCalculator
+     */
+    private $yearCalculator;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, YearCalculator $yearCalculator) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
         $this->servicePerson = $servicePerson;
         $this->addressFactory = $addressFactory;
+        $this->yearCalculator = $yearCalculator;
     }
 
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
@@ -480,12 +488,12 @@ class PersonFactory {
 
         $hsYears = array();
         foreach (range(1, 4) as $study_year) {
-            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $acYear + (5 - $study_year));
+            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $this->yearCalculator->getGraduationYear($study_year, $acYear));
         }
 
         $primaryYears = array();
         foreach (range(6, 9) as $study_year) {
-            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $acYear + (5 - ($study_year - 9)));
+            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $this->yearCalculator->getGraduationYear($study_year, $acYear));
         }
 
         $studyYear->setItems(array(

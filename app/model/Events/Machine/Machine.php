@@ -68,6 +68,9 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
             $baseMachine->setState($state);
         }
         $this->holder = $holder;
+        if ($holder->getMachine() !== $this) {
+            $holder->setMachine($this);
+        }
     }
 
     public function getHolder() {

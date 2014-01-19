@@ -85,7 +85,7 @@ class Transition extends FreezableObject {
     public function setMask($mask) {
         $this->mask = $mask;
         list($this->source, $this->target) = self::parseMask($mask);
-        $this->name = $this->source . '_' . $this->target; // it's used for component naming
+        $this->name = str_replace('*', '__any', $this->source . '_' . $this->target); // it's used for component naming
     }
 
     public function getBaseMachine() {
@@ -153,7 +153,7 @@ class Transition extends FreezableObject {
         if (is_bool($this->condition)) {
             return $this->condition;
         } else if (is_callable($this->condition)) {
-            return call_user_func($this->condition);
+            return call_user_func($this->condition, $this);
         } else {
             throw new InvalidStateException("Cannot evaluate condition {$this->condition}.");
         }

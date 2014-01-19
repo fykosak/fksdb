@@ -10,6 +10,7 @@ use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -50,13 +51,15 @@ class DBReflectionFactory extends AbstractFactory {
             $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
                     ->addRule(Form::MAX_LENGTH, null, $size);
+        } else if ($type == 'TEXT') {
+            $element = new TextArea($field->getLabel());
         } else {
             $element = new TextInput($field->getLabel());
-            $element->setOption('description', $field->getDescription());
             if ($size) {
                 $element->addRule(Form::MAX_LENGTH, null, $size);
             }
         }
+        $element->setOption('description', $field->getDescription());
         return $element;
     }
 

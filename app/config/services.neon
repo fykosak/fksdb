@@ -55,6 +55,7 @@ services:
     # Events
     #
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
+    - Events\Spec\Fyziklani\SchoolCheck
 
 includes:
     - merger.neon

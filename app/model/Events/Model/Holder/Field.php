@@ -141,16 +141,16 @@ class Field extends FreezableObject {
      * "Runtime" operations
      */
 
-    public function isVisible(BaseMachine $machine) {
-        return $this->evalCondition($this->visible, $machine);
+    public function isVisible() {
+        return $this->evalCondition($this->visible);
     }
 
-    public function isRequired(BaseMachine $machine) {
-        return $this->evalCondition($this->required, $machine);
+    public function isRequired() {
+        return $this->evalCondition($this->required);
     }
 
-    public function isModifiable(BaseMachine $machine) {
-        return $this->getBaseHolder()->isModifiable($machine) && $this->evalCondition($this->modifiable, $machine);
+    public function isModifiable() {
+        return $this->getBaseHolder()->isModifiable() && $this->evalCondition($this->modifiable);
     }
 
     public function getValue() {
@@ -158,11 +158,11 @@ class Field extends FreezableObject {
         return $model ? $model[$this->name] : null;
     }
 
-    private function evalCondition($condition, BaseMachine $machine) {
+    private function evalCondition($condition) {
         if (is_bool($condition)) {
             return $condition;
         } else if (is_callable($condition)) {
-            return call_user_func($condition, $machine);
+            return call_user_func($condition, $this);
         } else {
             throw new InvalidStateException("Cannot evaluate condition $condition.");
         }

@@ -3,6 +3,7 @@
 namespace Authorization;
 
 use ModelContest;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\Permission;
 use Nette\Security\User;
 
@@ -42,18 +43,19 @@ class ContestAuthorizator {
      * 
      * @param mixed $resource
      * @param enum $privilege
-     * @param ModelContest $contest queried contest
+     * @param int|ModelContest $contest queried contest
      * @return boolean
      */
-    public function isAllowed($resource, $privilege, ModelContest $contest) {
+    public function isAllowed($resource, $privilege, $contest) {
         if (!$this->getUser()->isLoggedIn()) {
             return false;
         }
 
+        $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $this->getUser()->getIdentity()->getRoles();
 
         foreach ($roles as $role) {
-            if ($role->getContestId() != $contest->contest_id) {
+            if ($role->getContestId() != $contestId) {
                 continue;
             }
             if ($this->acl->isAllowed($role, $resource, $privilege)) {
@@ -63,5 +65,5 @@ class ContestAuthorizator {
 
         return false;
     }
-    
+
 }

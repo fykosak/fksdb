@@ -1,43 +1,14 @@
-# Conditions based callbacks + logic conjuctions on those.
-
-# TODO visibility of team/member applications (-> probably in WF definition)
-# TODO change in schema to time sections of person information (school, study_year)
-
-# MACHINE OPERATION
-# possible transitions are displayed like buttons with labels with transition names
-# exception is __init->* transition it's a button leading to form?
-# (* match all states with exception of __init and __terminated)
-# between two states may exist at most one transition
-#
-# Connection of machine with data
-#   - validation after form send
-#   - processing after validation ? processing before validation
-
-# Solved
-# ------
-# ročníková parametrizace
-#  - (kapacita týmů (# týmů)), začátek/konec registrace
-#  - no. of team members requires brand new workflow -> factory for workflow/workflow names
-#  -> part of the machine/workflow context
-# condition macros (reuse of conditions)
-#  -> string interpolation
-# form factories
-#  -> for each field create form element by DB reflection (at compile time, tinyyint(1) is boolean (checkbox))
-#     or use provided factory callback (argumemt should be the data model + WF context + field metadata (but conditions must be already evaluated))
-# person selection is based on email (otherwise name/additional info must be provided)
-#  -> use the factory mentioned above
 parameters:
     events:
         fyziklani:
-            liaison:
+            cond: or(before(2014-01-19 23:59:59), role('admin')) # date for modifications after regClose
+            teacher:
                 person:
                     other_name: true
                     family_name: true
                 person_info:
                     email: true
-#                post_contact:
-#                    type: P
-#                    address: true
+                    id_number: false
             participant:
                 person:
                     other_name: true
@@ -50,9 +21,13 @@ parameters:
                     study_year: true
             dep:
                 require:
-                    p*.person_id.person_info.id_number: p*.note
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
                 visible:
-                    team.name: team.teacher_will_stay
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
+                    team.teacher_present: team.teacher_id
+                    team.teacher_accomodation: team.teacher_id
 
 events:
     fyziklani:
@@ -70,11 +45,11 @@ events:
             #    
             TEAM:
                 service: @event.ServiceFyziklaniTeam
-                personIds: [liaison_id]
+                personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
                 
                 states:
-                    pending: Čeká na schválení #i18n
+                    pending: Čeká na schválení
                     spare: Náhradník
                     approved: Potvrzen
                     participated: Účastnil se
@@ -82,59 +57,67 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: true # TODO add time condition (with registraion period parameters)?
+                        condition: or(regOpen(), role('admin'))
                         label: Přihlásit tým
                         onExecuted:
                             - Events\Transitions\MailSender(fyziklani,...)
                     pending->approved:
-                        condition: true # TODO logged in && event admin
+                        condition: role('admin')
                         label: Potvrdit účast týmu
                     pending->spare:
-                        condition: true # TODO logged in && event admin
+                        condition: role('admin')
                         label: Potvrdit jako náhradníka
                     approved|spare->participated:
-                        condition: false # TODO logged in && event admin
+                        condition: role('admin')
                         label: Potvrdit účast
-                    *->cancelled: # TODO this means all states except __init
-                        condition: false # TODO logged in && event admin
+                    *->cancelled:
+                        condition: role('admin')
                         label: Zrušit tým
                     cancelled->__terminated:
-                        condition: false # TODO logged in && event admin
+                        condition: role('admin')
                         label: Smazat tým
 
                 fields:
                     name:
                         label: Název týmu # i18n
-                        required: true # or condition
+                        required: true
                         visible: true # or condition
-                        modifiable: true # or condition
+                        modifiable: %events.fyziklani.cond%
                     category:
                         label: Kategorie # i18n
-                        required: true # or condition, evaluated after processing (if not modifiable, otherwise in GUI (too))
-                        visible: true # or condition
-                        modifiable: false # it means modifiable in GUI, or condition        
-                    teacher_present:
-                        label: Přijede učitel
-                        visible: true
-                        modifiable: true
-                    teacher_will_stay:
-                        label: Učitel má zájem o program
-                        visible: true
-                        modifiable: true
-                    liaison_id:
-                        label: Kontaktní osoba
                         required: true
                         visible: true
+                        modifiable: false
+                    phone:
+                        label: Kontaktní telefon
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani.cond%
+                    teacher_id:
+                        label: Učitel/doprovod
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani.cond%
+                        factory: RefPerson(%events.fyziklani.teacher%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...)
+                    teacher_present:
+                        label: Učitel má zájem o program
+                        visible: true
+                        modifiable: %events.fyziklani.cond%
+                    teacher_accomodation:
+                        label: Ubytování pro učitele
+                        visible: true
+                        modifiable: %events.fyziklani.cond%
+                    note:
+                        label: Poznámka
+                        visible: true
                         modifiable: true
-                        factory: RefPerson(%events.fyziklani.liaison%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...)
-                    # TODO note
 
             #
             #   PARTICIPANT
             #    
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
-                joinOn: team_id
+                joinOn: e_fyziklani_team_id
                 personIds: [e_fyziklani_participant:event_participant.person_id]
 
                 states:
@@ -143,30 +126,29 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: true
+                        condition: regOpen()
                         label: Přihlásit člena
                         onExecuted:
                             - Events\Transitions\LoginInvitation(...)
                             - Events\Transitions\MailSender(fyziklani,...)
                     applied->participated:
-                        condition: false # TODO logged in && event admin
+                        condition: role('admin')
                         label: Potvrdit účast # name is not necessary due to join to team machine
                     applied->__terminated:
-                        condition: true # TODO really can everybody delete members?
+                        condition: or(regOpen(), role('admin')) # TODO this is not specified in rules
                         label: Odebrat člena
 
                 fields:
                     person_id:
                         label: Osoba
                         visible: true
-                        modifiable: true
+                        modifiable: %events.fyziklani.cond%
                         determining: true
-                        factory: RefPerson(%events.fyziklani.participant%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...)
-                        # TODO person factory
-                    note:
-                        label: Poznámka
+                        factory: RefPerson(%events.fyziklani.participant%, email, true, Persons\SelfResolver(), Persons\SelfResolver(), ...) # TODO ?
+                    accomodation:
+                        label: Ubytování
                         visible: true
-                        modifiable: true
+                        modifiable: or(regOpen(), role('admin')) # TODO this is not specified in rules
                         required: false
                         description: jhahah
 
@@ -202,13 +184,13 @@ events:
                 - @events.privacyPolicy
                 - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
+                - Events\FormAdjustments\UniqueCheck('team.name')
+                - Events\Spec\Fyziklani\SchoolCheck()
+                #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:
-                - Events\Spec\Fyziklani\CategoryProcessing() # TODO calculate category & check <= 2 schools
+                - Events\Spec\Fyziklani\CategoryProcessing(...)
 
             joins:
-                # NOTE: Join may not be realized if induced transition isn't viable.
-                # NOTE: Cycle detection can be done statically (e.g. team moves participant and participant moves team in the reaction to this)
-                # This means that team that is marked as participated/deleted propagates this change to all its members.
                 team:
                     *->participated:
                         p1: participated
