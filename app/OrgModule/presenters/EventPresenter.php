@@ -4,7 +4,6 @@ namespace OrgModule;
 
 use AbstractModelSingle;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Config\NeonSchemaException;
 use FKS\Config\NeonScheme;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Forms\Factories\EventFactory;
@@ -13,6 +12,7 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Diagnostics\Debugger;
@@ -102,7 +102,10 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $form->onSuccess[] = array($this, 'handleCreateFormSuccess');
+        $that = $this;
+        $form->onSuccess[] = function(Form $form) use($that) {
+                    $that->handleFormSuccess($form, true);
+                };
 
         return $form;
     }
@@ -111,7 +114,10 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Uložit'));
-        $form->onSuccess[] = array($this, 'handleEditFormSuccess');
+        $that = $this;
+        $form->onSuccess[] = function(Form $form) use($that) {
+                    $that->handleFormSuccess($form, false);
+                };
 
         return $form;
     }
@@ -173,53 +179,18 @@ class EventPresenter extends EntityPresenter {
     }
 
     /**
-     * @internal
      * @param Form $form
      */
-    public function handleCreateFormSuccess(Form $form) {
+    private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();
         $values = $form->getValues();
-
-
-        try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-
-            /*
-             * Event
-             */
-            $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
-            $model = $this->serviceEvent->createNew($data);
+        if ($isNew) {
+            $model = $this->serviceEvent->createNew();
             $model->year = $this->getSelectedYear();
-            // TODO ACL check
-            $this->serviceEvent->save($model);
-
-            /*
-             * Finalize
-             */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
-
-            $this->flashMessage(sprintf(_('Akce %s přidána.'), $model->name), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
-            $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
+        } else {
+            $model = $this->getModel();
         }
-    }
 
-    /**
-     * @internal
-     * @param Form $form
-     */
-    public function handleEditFormSuccess(Form $form) {
-        $connection = $this->serviceEvent->getConnection();
-        $values = $form->getValues();
-        $model = $this->getModel();
 
         try {
             if (!$connection->beginTransaction()) {
@@ -231,6 +202,11 @@ class EventPresenter extends EntityPresenter {
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
             $this->serviceEvent->updateModel($model, $data);
+
+            if (!$this->getContestAuthorizator()->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())) {
+                throw new ForbiddenRequestException();
+            }
+
             $this->serviceEvent->save($model);
 
             /*
@@ -240,13 +216,16 @@ class EventPresenter extends EntityPresenter {
                 throw new ModelException();
             }
 
-            $this->flashMessage(sprintf(_('Akce %s upravena.'), $model->name), self::FLASH_SUCCESS);
+            $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
             $this->backlinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage(_('Chyba při úpravě akce.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba přidání akce.'), self::FLASH_ERROR);
+        } catch (ForbiddenRequestException $e) {
+            $connection->rollBack();
+            $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }
     }
 
