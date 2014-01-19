@@ -60,7 +60,9 @@ events:
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani
         paramScheme:
-            cc_mail:
+            notifyBcc:
+            notifyFrom:
+                default: FYKOSí Fyziklání <noreply@fyziklani.cz>
 
         baseMachines:
             #
@@ -82,7 +84,8 @@ events:
                     __init->pending:
                         condition: true # TODO add time condition (with registraion period parameters)?
                         label: Přihlásit tým
-                        # onExecuted: [callback] # TODO send email
+                        onExecuted:
+                            - Events\Transitions\MailSender(fyziklani,...)
                     pending->approved:
                         condition: true # TODO logged in && event admin
                         label: Potvrdit účast týmu
@@ -142,6 +145,9 @@ events:
                     __init->applied:
                         condition: true
                         label: Přihlásit člena
+                        onExecuted:
+                            - Events\Transitions\LoginInvitation(...)
+                            - Events\Transitions\MailSender(fyziklani,...)
                     applied->participated:
                         condition: false # TODO logged in && event admin
                         label: Potvrdit účast # name is not necessary due to join to team machine

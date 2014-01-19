@@ -163,7 +163,7 @@ class Transition extends FreezableObject {
     }
 
     public final function execute() {
-        if (!$this->canExecute()) {
+        if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
@@ -184,7 +184,7 @@ class Transition extends FreezableObject {
         $this->onExecuted($this);
     }
 
-    private function getBaseHolder() {
+    public function getBaseHolder() {
         return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());
     }
 

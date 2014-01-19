@@ -284,7 +284,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function getParameter($name, $default = null) {
         $args = func_get_args();
         array_unshift($args, $this->parameters);
-        return call_user_func_array('Arrays::get', $args);
+        return call_user_func_array('Nette\Utils\Arrays::get', $args);
     }
 
     /*

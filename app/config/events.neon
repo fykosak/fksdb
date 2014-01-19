@@ -52,6 +52,7 @@ transition:
     label:
     onExecuted:
         default: []
+        type: expression array
 
 field:
     label:

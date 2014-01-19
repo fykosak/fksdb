@@ -250,6 +250,12 @@ class BaseHolder extends FreezableObject {
         return $column;
     }
 
+    private function getBareColumn($column) {
+        $column = str_replace(':', '.', $column);
+        $pos = strrpos($column, '.');
+        return $pos === false ? $column : substr($column, $pos + 1);
+    }
+
     /**
      * @return Field[]
      */
@@ -284,6 +290,20 @@ class BaseHolder extends FreezableObject {
         }
 
         return $container;
+    }
+
+    /**
+     * @return int|null  ID of a person associated with the application
+     */
+    public function getPersonId() {
+        $personColumns = $this->getPersonIds();
+        if (!$personColumns) {
+            return null;
+        }
+        $personColumn = reset($personColumns); //TODO we support only single person per model, so far
+        $personColumn = $this->getBareColumn($personColumn);
+        $model = $this->getModel();
+        return $model[$personColumn];
     }
 
     public function __toString() {
