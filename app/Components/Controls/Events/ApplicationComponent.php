@@ -97,10 +97,6 @@ class ApplicationComponent extends Control {
             }
             $container = $baseHolder->createFormContainer($baseMachine);
             $form->addComponent($container, $name);
-
-            foreach ($container->getControls() as $control) {
-                $control->setOption('visualPath', $name . '- ' . $control->getOption('visualPath'));
-            }
         }
 
         $that = $this;
