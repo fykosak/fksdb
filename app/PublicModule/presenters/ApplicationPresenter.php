@@ -2,6 +2,7 @@
 
 namespace PublicModule;
 
+use Authorization\RelatedPersonAuthorizator;
 use Events\Machine\Machine;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
@@ -12,6 +13,7 @@ use FKSDB\Components\Events\ApplicationsGrid;
 use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -24,11 +26,6 @@ use SystemContainer;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
-
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
 
     /**
      * @var ModelEvent
@@ -51,10 +48,19 @@ class ApplicationPresenter extends BasePresenter {
     private $machine;
 
     /**
-     *
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
+
+    /**
      * @var SystemContainer
      */
     private $container;
+
+    /**
+     * @var RelatedPersonAuthorizator
+     */
+    private $relatedPersonAuthorizator;
 
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -62,6 +68,10 @@ class ApplicationPresenter extends BasePresenter {
 
     public function injectContainer(Container $container) {
         $this->container = $container;
+    }
+
+    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
+        $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
     }
 
     public function authorizedDefault($eventId, $id) {
@@ -85,12 +95,14 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     protected function unauthorizedAccess() {
-        $this->initializeMachine();
-        if ($this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
-            // bla bla
-        } else {
-            parent::unauthorizedAccess();
+        if ($this->getAction() == 'default') {
+            $this->initializeMachine();
+            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+                return;
+            }
         }
+        
+        parent::unauthorizedAccess();
     }
 
     public function requiresLogin() {
@@ -104,8 +116,19 @@ class ApplicationPresenter extends BasePresenter {
         if ($id && !$this->getEventApplication()) {
             throw new BadRequestException(_('Neexistující přihláška.'), 404);
         }
-        $this->getHolder()->setModel($this->getEventApplication());
-        //TODO check avilable transitions
+
+        $this->initializeMachine();
+
+        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder())) {
+            throw new ForbiddenRequestException(_('Cizí přihláška.'));
+        }
+
+        if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+            if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
+                $this->setView('closed');
+                $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
+            }
+        }
     }
 
     public function actionList() {

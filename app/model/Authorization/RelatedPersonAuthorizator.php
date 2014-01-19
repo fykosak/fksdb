@@ -1,41 +1,27 @@
 <?php
-
 namespace Authorization;
 
+use Events\Machine\BaseMachine;
+use Events\Model\Holder\Holder;
 use ModelContest;
-use Nette\Database\Table\ActiveRow;
 use Nette\Object;
-use Nette\Security\Permission;
 use Nette\Security\User;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ContestAuthorizator extends Object {
+class RelatedPersonAuthorizator extends Object {
 
     /**
      * @var User
      */
     private $user;
 
-    /**
-     * @var Permission
-     */
-    private $acl;
-
-    function __construct(User $identity, Permission $acl) {
-        $this->user = $identity;
-        $this->acl = $acl;
-    }
-
     public function getUser() {
         return $this->user;
-    }
-
-    protected function getAcl() {
-        return $this->acl;
     }
 
     /**
@@ -47,19 +33,24 @@ class ContestAuthorizator extends Object {
      * @param int|ModelContest $contest queried contest
      * @return boolean
      */
-    public function isAllowed($resource, $privilege, $contest) {
+    public function isRelatedPerson(Holder $holder) {
+        // everyone is related
+        if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            return true;
+        }
+
+        // further on only logged users can be related person
         if (!$this->getUser()->isLoggedIn()) {
             return false;
         }
 
-        $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
-        $roles = $this->getUser()->getIdentity()->getRoles();
+        $person = $this->getUser()->getIdentity()->getPerson();
+        if (!$person) {
+            return false;
+        }
 
-        foreach ($roles as $role) {
-            if ($role->getContestId() != $contestId) {
-                continue;
-            }
-            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+        foreach ($holder as $baseHolder) {
+            if ($baseHolder->getPersonId() == $person->person_id) {
                 return true;
             }
         }
