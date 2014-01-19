@@ -196,13 +196,21 @@ class ApplicationComponent extends Control {
             $this->holder->saveModels();
             $connection->commit();
 
-            //TODO better message (create, update, transition) $this->presenter->flashMessage(_('Přihláška vytvořena.'), BasePresenter::FLASH_SUCCESS);
+            if ($form) {
+                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' uložena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
+            }
+            if (count($transitions) == 1 && reset($transitions)->isCreating()) {
+                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' vytvořena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
+            } else if (isset($transitions[$explicitMachineName])) {
+                $this->presenter->flashMessage(sprintf(_("Stav přihlášky '%s' změněn."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_INFO);
+            }
+
             $this->finalRedirect();
         } catch (ModelDataConflictException $e) {
             $container = $e->getReferencedId()->getReferencedContainer();
             $container->setConflicts($e->getConflicts());
 
-            $message = sprintf(_("Některá pole skupiny %s neodpovídají existujícímu záznamu."), $container->getOption('label'));
+            $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
             $this->presenter->flashMessage($message, BasePresenter::FLASH_ERROR);
 
             $connection->rollBack();
@@ -234,7 +242,7 @@ class ApplicationComponent extends Control {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
             $this->redirectCallback->invoke($id, $this->holder->getEvent()->getPrimary());
         } else {
-            $this->redirect('this'); //TODO backlink?
+            $this->redirect('this');
         }
     }
 

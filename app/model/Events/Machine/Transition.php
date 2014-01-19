@@ -3,6 +3,7 @@
 namespace Events\Machine;
 
 use Events\TransitionConditionFailedException;
+use Events\TransitionOnExecutedException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -180,8 +181,11 @@ class Transition extends FreezableObject {
     private function _execute() {
         $this->getBaseMachine()->setState($this->getTarget());
         $this->getBaseHolder()->setModelState($this->getTarget());
-
-        $this->onExecuted($this);
+        try {
+            $this->onExecuted($this);
+        } catch (Exception $e) {
+            throw new TransitionOnExecutedException($this->getName(), null, $e);
+        }
     }
 
     public function getBaseHolder() {
