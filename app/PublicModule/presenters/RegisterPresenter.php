@@ -253,7 +253,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $defaults[self::CONT_PERSON_INFO] = $personInfo ? : array();
 
 
-        $this['contestantForm']->setDefaults($defaults);
+        $this['contestantForm']['form']->setDefaults($defaults);
     }
 
     public function createComponentContestantForm($name) {
