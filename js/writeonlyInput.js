@@ -24,7 +24,7 @@ $(function() {
             if (prev.length) {
                 actualGroup.insertAfter(prev);
             } else {
-                actualGroup.appendTo(par);
+                actualGroup.prependTo(par);
             }            
 
             var overlayInput = actualInput.clone().attr('id', null).attr('name', null).val('').attr('placeholder', originalLabel);

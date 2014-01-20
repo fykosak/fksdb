@@ -35,34 +35,16 @@ trait WriteonlyTrait {
         $this->writeonly = $writeonly;
     }
 
-    public function setValue($value) {
-        parent::setValue($value);
-        $form = $this->getForm(FALSE);
-        $isSubmitted = $form && $form->isAnchored() && $form->isSubmitted();
-        if (!$isSubmitted) {
-            $this->defaultValue = $value;
-        }
-        if ($value == self::VALUE_ORIGINAL) {
-            $this->value = $value;
-        }
-    }
-
     private function writeonlyAdjustControl(Html $control) {
-        $form = $this->getForm(FALSE);
-        $isSubmitted = $form && $form->isAnchored() && $form->isSubmitted();
-// for JS
-        if ($this->writeonly && $this->defaultValue) {
-            $control->data['writeonly'] = (int) true;
-            $control->data['writeonly-value'] = self::VALUE_ORIGINAL;
-            $control->data['writeonly-label'] = _('skrytá hodnota');
-        }
-
 // rendered control may not disabled
         $control->disabled = $this->actuallyDisabled;
 
 // don't show the value (only if it's form displayed after submit)
-
-        if ($this->writeonly && !$isSubmitted && $this->getValue() && $this->getValue() != self::VALUE_ORIGINAL) {
+// for JS
+        if ($this->writeonly && $this->getValue()) {
+            $control->data['writeonly'] = (int) true;
+            $control->data['writeonly-value'] = self::VALUE_ORIGINAL;
+            $control->data['writeonly-label'] = _('skrytá hodnota');
             $control->value = self::VALUE_ORIGINAL;
         }
         return $control;
