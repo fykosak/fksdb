@@ -293,7 +293,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
 
     private function cacheParameters() {
-        $parameters = $this->getEvent()->parameters;
+        $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = Neon::decode($parameters);
         $this->parameters = $parameters ? NeonScheme::readSection($parameters, $this->getParamScheme()) : array();
     }
