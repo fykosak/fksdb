@@ -91,6 +91,14 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return $section->data;
     }
 
+    public function disposeTokenData() {
+        if (!$this->isAuthenticatedByToken()) {
+            throw new InvalidStateException('Not authenticated by token.');
+        }
+        $section = $this->session->getSection(self::SESSION_NS);
+        unset($section->data);
+    }
+
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;

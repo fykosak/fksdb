@@ -102,7 +102,7 @@ class ApplicationPresenter extends BasePresenter {
                 return;
             }
         }
-        
+
         parent::unauthorizedAccess();
     }
 
@@ -119,6 +119,12 @@ class ApplicationPresenter extends BasePresenter {
         }
 
         $this->initializeMachine();
+
+        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            $data = $this->getTokenAuthenticator()->getTokenData();
+            $this->getTokenAuthenticator()->disposeTokenData();
+            $this->redirect('this', self::decodeParameters($data));
+        }
 
         if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
             throw new ForbiddenRequestException(_('Cizí přihláška.'));
