@@ -3,12 +3,13 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
+use Events\Model\ConditionEvaluator;
 use Events\Model\Holder\Field;
+use Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
-use Persons\IModifialibityResolver;
-use Persons\IVisibilityResolver;
+use Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,29 +21,33 @@ class PersonFactory extends AbstractFactory {
     private $fieldsDefinition;
     private $searchType;
     private $allowClear;
-
-    /**
-     * @var IModifialibityResolver
-     */
-    private $modifiabilityResolver;
-
-    /**
-     * @var IVisibilityResolver
-     */
-    private $visibilityResolver;
+    private $modifiable;
+    private $visible;
 
     /**
      * @var ReferencedPersonFactory
      */
     private $referencedPersonFactory;
 
-    function __construct($fieldsDefinition, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, ReferencedPersonFactory $referencedPersonFactory) {
+    /**
+     * @var SelfResolver
+     */
+    private $selfResolver;
+
+    /**
+     * @var ConditionEvaluator
+     */
+    private $evaluator;
+
+    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ConditionEvaluator $evaluator) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
-        $this->modifiabilityResolver = $modifiabilityResolver;
-        $this->visibilityResolver = $visibilityResolver;
+        $this->modifiable = $modifiable;
+        $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
+        $this->selfResolver = $selfResolver;
+        $this->evaluator = $evaluator;
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
@@ -52,7 +57,9 @@ class PersonFactory extends AbstractFactory {
         $event = $field->getBaseHolder()->getHolder()->getEvent();
         $acYear = $event->getAcYear();
 
-        $components = $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $this->visibilityResolver, $this->modifiabilityResolver);
+        $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
+        $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
+        $components = $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
         $components[1]->setOption('label', $field->getLabel());
         $components[1]->setOption('description', $field->getDescription());
         return $components;

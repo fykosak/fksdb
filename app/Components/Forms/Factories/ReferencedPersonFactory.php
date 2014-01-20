@@ -7,6 +7,7 @@ use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
 use ModelPostContact;
 use Nette\Forms\Container;
@@ -46,10 +47,16 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      */
     private $referencedPersonHandlerFactory;
 
-    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory) {
+    /**
+     * @var PersonProvider
+     */
+    private $personProvider;
+
+    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
+        $this->personProvider = $personProvider;
     }
 
     /**

@@ -21,6 +21,7 @@ services:
     - Submits\SeriesTable
     - Persons\ContestantHandler
     - Persons\OrgHandler
+    - Persons\SelfResolver
     merger:
         class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider

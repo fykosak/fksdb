@@ -3,6 +3,7 @@
 namespace Events\Semantics;
 
 use Authorization\ContestAuthorizator;
+use Authorization\RelatedPersonAuthorizator;
 use Nette\Object;
 use Nette\Security\User;
 
@@ -13,10 +14,12 @@ use Nette\Security\User;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Role extends Object {
+
     use WithEventTrait;
 
     const GUEST = 'guest';
     const REGISTERED = 'registered';
+    const RELATED = 'related';
     const ADMIN = 'admin';
 
     /**
@@ -32,19 +35,29 @@ class Role extends Object {
     /**
      * @var ContestAuthorizator
      */
-    private $authorizator;
+    private $contestAuthorizator;
 
-    function __construct($role, User $user, ContestAuthorizator $authorizator) {
+    /**
+     *
+     * @var RelatedPersonAuthorizator
+     */
+    private $relatedAuthorizator;
+
+    function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
-        $this->authorizator = $authorizator;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
     public function __invoke($obj) {
         switch ($this->role) {
             case self::ADMIN:
                 $event = $this->getEvent($obj);
-                return $this->authorizator->isAllowed($event, 'application', $event->getEventType()->contest);
+                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getEventType()->contest);
+            case self::RELATED:
+                $event = $this->getEvent($obj);
+                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($obj));
             case self::REGISTERED:
                 return $this->user->isLoggedIn();
             case self::GUEST:
