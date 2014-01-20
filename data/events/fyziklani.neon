@@ -102,7 +102,7 @@ events:
                         required: false
                         visible: true
                         modifiable: %events.fyziklani.appCond%
-                        factory: RefPerson(%events.fyziklani.teacher%, email, true, or(role('related'),role('admin')), false)
+                        factory: RefPerson(%events.fyziklani.teacher%, email, true, role('admin'), false)
                     teacher_present:
                         label: Učitel má zájem o program
                         visible: true
@@ -148,7 +148,7 @@ events:
                         visible: true
                         modifiable: %events.fyziklani.appCond%
                         determining: true
-                        factory: RefPerson(%events.fyziklani.participant%, email, true, or(role('related'),role('admin')), false)
+                        factory: RefPerson(%events.fyziklani.participant%, email, true, role('admin'), false)
                     accomodation:
                         label: Ubytování
                         visible: true
