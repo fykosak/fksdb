@@ -124,8 +124,10 @@ class ApplicationPresenter extends BasePresenter {
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
             $data = $this->getTokenAuthenticator()->getTokenData();
-            $this->getTokenAuthenticator()->disposeTokenData();
-            $this->redirect('this', self::decodeParameters($data));
+            if ($data) {
+                $this->getTokenAuthenticator()->disposeTokenData();
+                $this->redirect('this', self::decodeParameters($data));
+            }
         }
 
         if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
@@ -208,8 +210,11 @@ class ApplicationPresenter extends BasePresenter {
         if ($this->event === false) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                $eventId = $data['eventId'];
+                $data = $this->getTokenAuthenticator()->getTokenData();
+                if ($data) {
+                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                    $eventId = $data['eventId'];
+                }
             }
             $eventId = $eventId ? : $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
@@ -222,8 +227,11 @@ class ApplicationPresenter extends BasePresenter {
         if ($this->eventApplication === false) {
             $id = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                $id = $data['id'];
+                $data = $this->getTokenAuthenticator()->getTokenData();
+                if ($data) {
+                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                    $eventId = $data['id'];
+                }
             }
             $id = $id ? : $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
