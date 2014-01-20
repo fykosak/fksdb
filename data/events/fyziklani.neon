@@ -37,6 +37,7 @@ events:
         formLayout: fyziklani.form
         paramScheme:
             notifyBcc:
+                default: michal+bcc@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <noreply@fyziklani.cz>
 
