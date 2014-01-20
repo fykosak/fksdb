@@ -211,12 +211,21 @@ class ApplicationComponent extends Control {
             $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
             $this->presenter->flashMessage($message, BasePresenter::FLASH_ERROR);
 
+            if ($form) {
+                $this->rollbackReferencedId($form);
+            }
             $connection->rollBack();
         } catch (TransitionOnExecutedException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            if ($form) {
+                $this->rollbackReferencedId($form);
+            }
             $connection->rollBack();
         } catch (SubmitProcessingException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            if ($form) {
+                $this->rollbackReferencedId($form);
+            }
             $connection->rollBack();
         }
     }
@@ -230,6 +239,12 @@ class ApplicationComponent extends Control {
             $transitions[$name] = $this->machine[$name]->getTransitionByTarget($newState);
         }
         return $transitions;
+    }
+
+    private function rollbackReferencedId(Form $form) {
+        foreach ($form->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            $referencedId->rollback();
+        }
     }
 
     private function initializeMachine() {

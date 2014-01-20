@@ -94,15 +94,7 @@ class CategoryProcessing extends AbstractProcessing {
         } else {
             throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));
         }
-        $values['team']['category'] = $result;
-
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
-        if ($original != $result) {
-            $form->getPresenter()->flashMessage(sprintf(_('Tým zařazen do kategorie %s (koeficient %s).'), $result, round($category_handle, 2)));
-        }
-
-
-        // konec kodu pocitajiciho kategorii
+        return $result;
     }
 
 }
