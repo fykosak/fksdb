@@ -4,6 +4,7 @@ $(function() {
 // default options
         options: {
             refId: null,
+            valuePromise: '__promise',
             clearMask: '__clear',
             submitSearchMask: '__search',
             searchMask: '_c_search',
@@ -139,9 +140,9 @@ $(function() {
                 var filledFields = writableFields.filter(function() {
                     return $(this).val() != '';
                 });
-                if (filledFields.length > 0) {
-                    options.refId.val('__promise');
-                } else {
+                if (filledFields.length > 0 && options.refId.val() == '') {
+                    options.refId.val(options.valuePromise);
+                } else if (filledFields.length == 0 && options.refId.val() == options.valuePromise) {
                     options.refId.val('');
                 }
             });

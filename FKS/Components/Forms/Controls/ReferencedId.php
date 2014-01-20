@@ -78,7 +78,7 @@ class ReferencedId extends HiddenField {
         return $this->handler;
     }
 
-    public function setValue($pvalue) {
+    public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
@@ -92,9 +92,9 @@ class ReferencedId extends HiddenField {
         } else {
             $container->setSearchButton(false);
             $container->setClearButton(true);
-
-            $this->referencedSetter->setModel($container, $pvalue);
         }
+        $this->referencedSetter->setModel($container, $pvalue, $force);
+
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
         } else if ($pvalue instanceof IModel) {
@@ -120,9 +120,6 @@ class ReferencedId extends HiddenField {
 
     private function createPromise() {
         $referencedId = $this->getValue();
-        if (!$referencedId) {
-            return;
-        }
 
         $referencedIdControl = $this;
         $values = $this->referencedContainer->getValues();
@@ -131,11 +128,17 @@ class ReferencedId extends HiddenField {
                     try {
                         if ($referencedId === self::VALUE_PROMISE) {
                             $model = $handler->createFromValues($values);
+                            $referencedIdControl->setValue($model, true);
                             return $model->getPrimary();
                         } else if ($referencedId) {
                             $model = $referencedIdControl->getService()->findByPrimary($referencedId);
                             $handler->update($model, $values);
+                            // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
+                            $model = $referencedIdControl->getService()->findByPrimary($model->getPrimary());
+                            $referencedIdControl->setValue($model, true);
                             return $referencedId;
+                        } else {
+                            $referencedIdControl->setValue(null, true);
                         }
                     } catch (ModelDataConflictException $e) {
                         $e->setReferencedId($referencedIdControl);

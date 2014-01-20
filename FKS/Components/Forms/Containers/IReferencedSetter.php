@@ -11,5 +11,5 @@ use ORM\IModel;
  */
 interface IReferencedSetter {
 
-    public function setModel(ReferencedContainer $container, IModel $model);
+    public function setModel(ReferencedContainer $container, IModel $model = null, $force = false);
 }
