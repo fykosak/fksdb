@@ -45,6 +45,11 @@ class ReferencedId extends HiddenField {
      */
     private $referencedSetter;
 
+    /**
+     * @var boolean
+     */
+    private $modelCreated;
+
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor('Nette\Forms\Form');
@@ -78,6 +83,14 @@ class ReferencedId extends HiddenField {
         return $this->handler;
     }
 
+    public function getModelCreated() {
+        return $this->modelCreated;
+    }
+
+    public function setModelCreated($modelCreated) {
+        $this->modelCreated = $modelCreated;
+    }
+
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
@@ -105,13 +118,22 @@ class ReferencedId extends HiddenField {
         parent::setValue($value);
     }
 
-    public function getValue() {
-        if ($this->promise) {
+    public function getValue($fullfilPromise = true) {
+        if ($fullfilPromise && $this->promise) {
             return $this->promise->getValue();
         }
 
         $value = parent::getValue();
         return $value ? : null;
+    }
+
+    public function rollback() {
+        if ($this->getModelCreated()) {
+            $this->referencedSetter->setModel($this->referencedContainer, NULL, IReferencedSetter::MODE_ROLLBACK);
+            if (parent::getValue()) {
+                parent::setValue(self::VALUE_PROMISE);
+            }
+        }
     }
 
     public function setDisabled($value = TRUE) {
@@ -128,17 +150,18 @@ class ReferencedId extends HiddenField {
                     try {
                         if ($referencedId === self::VALUE_PROMISE) {
                             $model = $handler->createFromValues($values);
-                            $referencedIdControl->setValue($model, true);
+                            $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
+                            $referencedIdControl->setModelCreated(true);
                             return $model->getPrimary();
                         } else if ($referencedId) {
                             $model = $referencedIdControl->getService()->findByPrimary($referencedId);
                             $handler->update($model, $values);
                             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                             $model = $referencedIdControl->getService()->findByPrimary($model->getPrimary());
-                            $referencedIdControl->setValue($model, true);
+                            $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
                             return $referencedId;
                         } else {
-                            $referencedIdControl->setValue(null, true);
+                            $referencedIdControl->setValue(null, IReferencedSetter::MODE_FORCE);
                         }
                     } catch (ModelDataConflictException $e) {
                         $e->setReferencedId($referencedIdControl);
