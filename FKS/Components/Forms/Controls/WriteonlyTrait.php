@@ -20,7 +20,6 @@ trait WriteonlyTrait {
 
     private $writeonly = true;
     private $actuallyDisabled = false;
-    private $defaultValue;
 
     private function writeonlyAppendMonitors() {
         $this->monitor('Nette\Forms\Form');
