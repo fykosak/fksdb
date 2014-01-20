@@ -35,7 +35,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                 $cTarget = $this->getControl($target);
                 $cPrerequisity = $this->getControl($prerequisity);
 
-                if (!$cTarget || $cPrerequisity) {
+                if (!$cTarget || !$cPrerequisity) {
                     return;
                 }
                 if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {

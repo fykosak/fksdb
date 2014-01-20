@@ -93,7 +93,7 @@ class MailSender extends Object {
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressee($transition);
         $persons = $this->servicePerson->getTable()
-                ->where('person_id', $personsIds)
+                ->where('person.person_id', $personIds)
                 ->where('person_info:email IS NOT NULL')
                 ->fetchPairs('person_id');
 
@@ -146,7 +146,7 @@ class MailSender extends Object {
         }
         $message->addTo($email, $person->getFullname());
 
-        Debugger::log("Subject: " . $message->getSubject() . "\nTo: " . $message->getHeader("to") . "\n" . (string) $message->getHtmlBody()); //TODO move logging to mailer
+        Debugger::log("Subject: " . $message->getSubject() . "\nTo: " . implode(',', $message->getHeader("To")) . "\n" . (string) $message->getHtmlBody()); //TODO move logging to mailer
         return $message;
     }
 
@@ -184,7 +184,7 @@ class MailSender extends Object {
             } else {
                 $addressees = $this->addressees;
             }
-            switch ($this->addressees) {
+            switch ($addressees) {
                 case self::ADDR_SELF:
                     $names = array($transition->getBaseHolder()->getName());
                     break;
@@ -202,6 +202,8 @@ class MailSender extends Object {
                 case self::ADDR_ALL:
                     $names = array_keys(iterator_to_array($transition->getBaseHolder()->getHolder()));
                     break;
+                default:
+                    $names = array();
             }
         }
 
