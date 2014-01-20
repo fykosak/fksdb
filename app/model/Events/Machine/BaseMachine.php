@@ -112,7 +112,7 @@ class BaseMachine extends FreezableObject {
     }
 
     public function getTransitionByTarget($state) {
-        $candidates = array_filter($this->transitions, function(Transition $transition) use($state) {
+        $candidates = array_filter($this->getMatchingTransitions(), function(Transition $transition) use($state) {
                     return $transition->getTarget() == $state;
                 });
         if (count($candidates) == 0) {

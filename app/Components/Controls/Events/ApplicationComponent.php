@@ -7,6 +7,7 @@ use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
+use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
@@ -221,6 +222,12 @@ class ApplicationComponent extends Control {
                 $this->rollbackReferencedId($form);
             }
             $connection->rollBack();
+        } catch (TransitionConditionFailedException $e) {
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            if ($form) {
+                $this->rollbackReferencedId($form);
+            }
+            $connection->rollBack();
         } catch (SubmitProcessingException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             if ($form) {
@@ -236,7 +243,10 @@ class ApplicationComponent extends Control {
         $newStates = $this->holder->processFormValues($form, $values, $this->machine);
         $transitions = array();
         foreach ($newStates as $name => $newState) {
-            $transitions[$name] = $this->machine[$name]->getTransitionByTarget($newState);
+            $transition = $this->machine[$name]->getTransitionByTarget($newState);
+            if ($transition) {
+                $transitions[$name] = $transition;
+            }
         }
         return $transitions;
     }

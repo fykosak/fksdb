@@ -236,7 +236,7 @@ class Transition extends FreezableObject {
             return true;
         }
 
-        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source); //TODO verify
+        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source);
     }
 
     /**
