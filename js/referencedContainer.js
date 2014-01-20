@@ -170,7 +170,11 @@ $(function() {
                     elRefId.val(payload.referencedContainer.value);
 
                     for (var id in payload.snippets) {
-                        $.fks.referencedContainer._proto.transformContainer($('#' + id), elRefId);
+                        var snippet = $('#' + id);
+                        $.fks.referencedContainer._proto.transformContainer(snippet, elRefId);
+                        snippet.closest('form').each(function() {
+				window.Nette.initForm(this);
+			});
                     }
                 }
             }
