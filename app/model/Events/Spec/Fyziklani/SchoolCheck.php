@@ -8,9 +8,11 @@ use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Nette\Database\Connection;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use ORM\IModel;
+use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,32 +29,56 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
      */
     private $connection;
 
-    function __construct(Connection $connection) {
+    /**
+     * @var ServicePersonHistory
+     */
+    private $servicePersonHistory;
+
+    /**
+     * @var Holder
+     */
+    private $holder;
+
+    function __construct(Connection $connection, ServicePersonHistory $servicePersonHistory) {
         $this->connection = $connection;
+        $this->servicePersonHistory = $servicePersonHistory;
     }
 
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
-        $controls = $this->getControl('p*.person_id.person_history.school_id');
+        $this->holder = $holder;
+        $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
+        $personControls = $this->getControl('p*.person_id');
 
         $that = $this;
         $first = true;
         $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), self::SCHOOLS_IN_TEAM);
         $msgMulti = sprintf(_('Škola nemůže mít v soutěži více týmů než %d.'), self::TEAMS_PER_SCHOOL);
-        foreach ($controls as $control) {
-            $control->addRule(function(IControl $control) use ($that, $controls, $form, $msgMixture) {
-                        $schools = $that->getSchools($controls);
-                        if (!$this->checkMixture($schools)) {
+        foreach ($schoolControls as $control) {
+            $control->addRule(function(IControl $control) use ($that, $schoolControls, $personControls, $form, $msgMixture) {
+                        $schools = $that->getSchools($schoolControls, $personControls);
+                        if (!$that->checkMixture($schools)) {
                             $form->addError($msgMixture);
                             return false;
                         }
                         return true;
                     }, $msgMixture);
-            $control->addRule(function(IControl $control) use ($first, $that, $controls, $holder) {
-                        $schools = $that->getSchools($controls);
-                        return $this->checkMulti($first, $control, $schools, $holder, $holder->getPrimaryHolder()->getModel());
+            $control->addRule(function(IControl $control) use ($first, $that, $schoolControls, $personControls, $holder) {
+                        $schools = $that->getSchools($schoolControls, $personControls);
+                        return $that->checkMulti($first, $control, $schools, $holder);
                     }, $msgMulti);
             $first = false;
         }
+        $form->onValidate[] = function(Form $form) use($that, $schoolControls, $personControls, $msgMixture, $msgMulti) {
+                    if ($form->isValid()) { // it means that all schools may have been disabled
+                        $schools = $that->getSchools($schoolControls, $personControls);
+                        if (!$that->checkMixture($schools)) {
+                            $form->addError($msgMixture);
+                        }
+                        if (!$that->checkMulti(true, NULL, $schools, $that->holder)) {
+                            $form->addError($msgMulti);
+                        }
+                    }
+                };
     }
 
     private function checkMixture($schools) {
@@ -62,6 +88,7 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
     private $cache;
 
     private function checkMulti($first, $control, $schools, Holder $holder, IModel $team = null) {
+        $team = $holder->getPrimaryHolder()->getModel();
         $event = $holder->getEvent();
         $secondaryGroups = $holder->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
@@ -74,10 +101,10 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
              */
             $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
             $result = $this->connection->table(DbNames::TAB_EVENT_PARTICIPANT)
-                    ->select('person.person_history:school_id')                    
+                    ->select('person.person_history:school_id')
                     ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                     ->where($baseHolder->getEventId(), $event->getPrimary())
-                    ->where('person.person_history:ac_year', $acYear)                    
+                    ->where('person.person_history:ac_year', $acYear)
                     ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?
@@ -89,20 +116,30 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
             $this->cache = $result->fetchPairs('school_id', 'teams');
         }
-        $school = $control->getValue();
-        if (isset($this->cache[$school])) {
-            $control->addError($this->cache[$school]);
-            return false;
-        } else {
-            return true;
+        if ($control) {
+            $school = $control->getValue();
+            if (isset($this->cache[$school])) {
+                $control->addError($this->cache[$school]);
+            }
         }
+        return count($this->cache) == 0;
     }
 
-    private function getSchools($controls) {
+    private function getSchools($schoolControls, $personControls) {
+        $personIds = array_map(function(BaseControl $control) {
+                    return $control->getValue();
+                }, $personControls);
+        $schools = $this->servicePersonHistory->getTable()
+                ->where('person_id', $personIds)
+                ->where('ac_year', $this->holder->getEvent()->getAcYear())
+                ->fetchPairs('person_id', 'school_id');
+
         $result = array();
-        foreach ($controls as $control) {
+        foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();
+            } else if ($schoolId = $personControls[$key]->getValue()) { // intentionally =
+                $result[] = $schools[$schoolId];
             }
         }
         return $result;
