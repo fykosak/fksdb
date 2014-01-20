@@ -23,7 +23,7 @@ class SelfResolver extends Object implements IVisibilityResolver, IModifialibity
     }
 
     public function isVisible(ModelPerson $person) {
-        return $this->isSelf($person);
+        return $person->isNew() || $this->isSelf($person);
     }
 
     public function getResolutionMode(ModelPerson $person) {

@@ -8,7 +8,7 @@ use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FormUtils;
-use Nette\Application\UI\Control;
+use Nette\Application\UI\Form as AppForm;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
@@ -48,7 +48,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process(Control $control, ArrayHash $values, Machine $machine, Holder $holder) {
+    public function process($states, AppForm $form, ArrayHash $values, Machine $machine, Holder $holder) {
         //TODO think about what it should actually do (set agreed to all related persons or whoever?)
         //     and possibly restrict conditions when checkbox is added at all
     }

@@ -101,15 +101,15 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         );
     }
 
-    public function setModel(ReferencedContainer $container, IModel $model) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, $force = false) {
         $acYear = $container->getOption('acYear');
-        $modifiable = $container->getOption('modifiabilityResolver')->isModifiable($model);
-        $resolution = $container->getOption('modifiabilityResolver')->getResolutionMode($model);
-        $visible = $container->getOption('visibilityResolver')->isVisible($model);
+        $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
+        $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $container->getOption('visibilityResolver')->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
-        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model->getFullname());
+        $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
 
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
@@ -118,10 +118,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
-                
+
                 $controlModifiable = $value ? $modifiable : true;
-                $controlVisible  = ($component instanceof IWriteonly) ? $visible : true;
-                
+                $controlVisible = ($component instanceof IWriteonly) ? $visible : true;
+
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
@@ -133,16 +133,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                         $component->setWriteonly(false);
                     }
                 }
-                
-                if ($value) {
-                    if($resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
-                        $component->setDisabled(); // could not store different value anyway
-                    }
-                    if ($submittedBySearch) {
-                        $component->setValue($value);
-                    } else {
-                        $component->setDefaultValue($value);
-                    }
+
+                if ($submittedBySearch || $force) {
+                    $component->setValue($value);
+                } else {
+                    $component->setDefaultValue($value);
+                }
+                if ($value && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                    $component->setDisabled(); // could not store different value anyway
                 }
             }
         }
@@ -192,7 +190,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    private function getPersonValue(ModelPerson $person, $sub, $field, $acYear) {
+    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear) {
+        if (!$person) {
+            return null;
+        }
         switch ($sub) {
             case 'person':
                 return $person[$field];

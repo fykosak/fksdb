@@ -197,7 +197,7 @@ class ApplicationComponent extends Control {
             if ($form) {
                 $this->presenter->flashMessage(sprintf(_("Přihláška '%s' uložena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
             }
-            if (count($transitions) == 1 && reset($transitions)->isCreating()) {
+            if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->presenter->flashMessage(sprintf(_("Přihláška '%s' vytvořena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
                 $this->presenter->flashMessage(sprintf(_("Stav přihlášky '%s' změněn."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_INFO);
@@ -224,7 +224,7 @@ class ApplicationComponent extends Control {
     private function processValues(Form $form) {
         $values = $form->getValues();
         // Find out transitions
-        $newStates = $this->holder->processFormValues($this->getPresenter(), $values, $this->machine);
+        $newStates = $this->holder->processFormValues($form, $values, $this->machine);
         $transitions = array();
         foreach ($newStates as $name => $newState) {
             $transitions[$name] = $this->machine[$name]->getTransitionByTarget($newState);

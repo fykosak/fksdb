@@ -7,6 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
+use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use YearCalculator;
 
@@ -27,27 +28,26 @@ class CategoryProcessing extends AbstractProcessing {
         $this->yearCalculator = $yearCalculator;
     }
 
-    protected function _process(\Nette\Application\UI\Control $control, ArrayHash $values, Machine $machine, Holder $holder) {
+    protected function _process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
         if (!isset($values['team'])) {
             return;
         }
-        //TODO would need also sanitatio of behavior when not all forms are enabled
 
         $event = $holder->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-// prepare input for Aleš:
-        $maxYear = $acYear - 1;
-        $participants = array();
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            $formValue = $this->getValue("$name.person_history.study_year");
+            $formControl = $this->getControl("$name.person_id.person_history.study_year");
+            $formControl = reset($formControl);
+            $formValue = $formControl ? $formControl->getValue() : null;
+
             if (!$formValue) {
-                if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
+                if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
                 $person = $baseHolder->getModel()->getMainModel()->person;
@@ -55,47 +55,35 @@ class CategoryProcessing extends AbstractProcessing {
             } else {
                 $studyYear = $formValue;
             }
-            $participants[] = $this->yearCalculator->getGraduationYear($studyYear, $acYear);
+            $participants[] = $studyYear;
         }
 
-// Aleš begin
+        $result = $values['team']['category'] = $this->getCategory($participants);
 
-        $coefficients = array($maxYear + 4 => 0, $maxYear + 3 => 1, $maxYear + 2 => 2, $maxYear + 1 => 3, $maxYear => 4);
-        $possible_years = array($maxYear + 4, $maxYear + 3, $maxYear + 2, $maxYear + 1, $maxYear);
+        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        if ($original != $result) {
+            $form->getPresenter()->flashMessage(sprintf(_('Tým zařazen do kategorie %s.'), $result));
+        }
 
+    }
 
+    private function getCategory($participants) {
         $coefficient_sum = 0;
-        $year_error = false;
         $count_4 = 0;
         $count_3 = 0;
 
-        foreach ($participants as $graduationYear) {
-//$coefficient_sum .= $graduationYear."-".$coefficients[$graduationYear].";";
+        foreach ($participants as $studyYear) {
+            $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
+            $coefficient_sum += $coefficient;
 
-            if (in_array($graduationYear, $possible_years)) {
-
-                $coefficient = $coefficients[$graduationYear];
-                $coefficient_sum += $coefficient;
-
-                if ($coefficient == 4)
-                    $count_4++;
-                else if ($coefficient == 3)
-                    $count_3++;
-            } else {
-                $year_error = true;
-            }
+            if ($coefficient == 4)
+                $count_4++;
+            else if ($coefficient == 3)
+                $count_3++;
         }
 
 
-        $category_handle = 100;
-
-        if (!$year_error) {
-            if (count($participants) == 0) {
-                $category_handle = 'error';
-            } else {
-                $category_handle = $coefficient_sum / count($participants);
-            }
-        }
+        $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
         if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
@@ -110,7 +98,7 @@ class CategoryProcessing extends AbstractProcessing {
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $control->flashMessage(sprintf(_('Týmu zařazen do kategorie %s.'), $result));
+            $form->getPresenter()->flashMessage(sprintf(_('Tým zařazen do kategorie %s (koeficient %s).'), $result, round($category_handle, 2)));
         }
 
 

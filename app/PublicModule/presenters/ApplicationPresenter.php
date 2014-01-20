@@ -120,7 +120,7 @@ class ApplicationPresenter extends BasePresenter {
 
         $this->initializeMachine();
 
-        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder())) {
+        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
             throw new ForbiddenRequestException(_('Cizí přihláška.'));
         }
 

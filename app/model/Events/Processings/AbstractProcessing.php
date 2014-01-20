@@ -2,10 +2,12 @@
 
 namespace Events\Processings;
 
+use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
-use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 use Nette\ArrayHash;
+use Nette\ComponentModel\Component;
 use Nette\Forms\IControl;
 use Nette\Object;
 
@@ -19,14 +21,21 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    private $pathCache;
+    private $valuesPathCache;
+    private $formPathCache;
+    private $states;
+    private $holder;
+    private $values;
 
-    public function process(Control $control, ArrayHash $values, Machine $machine, Holder $holder) {        
+    public final function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
+        $this->states = $states;
+        $this->holder = $holder;
         $this->setValues($values);
-        $this->_process($control, $values, $machine, $holder);
+        $this->setForm($form);
+        $this->_process($states, $form, $values, $machine, $holder);
     }
 
-    abstract protected function _process(Control $control, ArrayHash $values, Machine $machine, Holder $holder);
+    abstract protected function _process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder);
 
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
@@ -38,7 +47,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
      * @return IControl[]
      */
     protected final function getValue($mask) {
-        $keys = array_keys($this->pathCache);
+        $keys = array_keys($this->valuesPathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
@@ -46,24 +55,74 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $result = array();
         foreach ($keys as $key) {
             if (preg_match($pattern, $key)) {
-                $result[] = $this->pathCache[$key];
+                $result[] = $this->valuesPathCache[$key];
             }
         }
         return $result;
     }
 
+    /**
+     * 
+     * @param string $mask
+     * @return IControl[]
+     */
+    protected final function getControl($mask) {
+        $keys = array_keys($this->formPathCache);
+        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = preg_quote($pMask);
+        $pMask = str_replace('__WC__', '(.+)', $pMask);
+        $pattern = "/^$pMask\$/";
+        $result = array();
+        foreach ($keys as $key) {
+            if (preg_match($pattern, $key)) {
+                $result[] = $this->formPathCache[$key];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Checks whether base is really empty after a value
+     * from it wasn't loaded.
+     * When it returns false, correct value can be loaded from the model
+     * (which is not updated yet).
+     * 
+     * @return boolean
+     */
+    protected final function isBaseReallyEmpty($name) {
+        $baseHolder = $this->holder[$name];
+        if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
+            return true; // it was empty since begining
+        }
+        if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
+            return true; // it has been deleted by user
+        }
+        return false;
+    }
+
     private function setValues(ArrayHash $values, $prefix = '') {
         if (!$prefix) {
-            $this->pathCache = array();
+            $this->values = $values;
+            $this->valuesPathCache = array();
         }
 
         foreach ($values as $key => $value) {
-            $key = str_replace('_1', '', $key);
+            $key = $prefix . str_replace('_1', '', $key);
             if ($value instanceof ArrayHash) {
                 $this->setValues($value, $key . self::DELIMITER);
             } else {
-                $this->pathCache[$prefix . $key] = $value;
+                $this->valuesPathCache[$key] = $value;
             }
+        }
+    }
+
+    private function setForm($form) {
+        $this->formPathCache = array();
+        foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
+            $path = $control->lookupPath('Nette\Forms\Form');
+            $path = str_replace('_1', '', $path);
+            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
+            $this->formPathCache[$path] = $control;
         }
     }
 
