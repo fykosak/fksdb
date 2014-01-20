@@ -28,6 +28,8 @@ use SystemContainer;
  */
 class ApplicationPresenter extends BasePresenter {
 
+    const PARAM_AFTER = 'a';
+
     /**
      * @var ModelEvent
      */
@@ -126,14 +128,18 @@ class ApplicationPresenter extends BasePresenter {
             $this->redirect('this', self::decodeParameters($data));
         }
 
-        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
-            throw new ForbiddenRequestException(_('Cizí přihláška.'));
-        }
-
         if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
             if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
+            }
+        }
+
+        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
+            if ($this->getParameter(self::PARAM_AFTER, false)) {
+                $this->setView('closed');
+            } else {
+                throw new ForbiddenRequestException(_('Cizí přihláška.'));
             }
         }
     }
@@ -167,6 +173,7 @@ class ApplicationPresenter extends BasePresenter {
                     $that->redirect('this', array(
                         'eventId' => $eventId,
                         'id' => $modelId,
+                        self::PARAM_AFTER => true,
                     ));
                 });
         return $component;

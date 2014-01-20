@@ -138,8 +138,10 @@ class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();
-            } else if ($schoolId = $personControls[$key]->getValue(false) && $schoolId) { // intentionally =
-                $result[] = $schools[$schoolId];
+            } else if ($schoolId = $personControls[$key]->getValue(false)) { // intentionally =
+                if ($schoolId) {
+                    $result[] = $schools[$schoolId];
+                }
             }
         }
         return $result;
