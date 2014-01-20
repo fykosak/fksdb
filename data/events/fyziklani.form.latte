@@ -1,0 +1,38 @@
+{layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
+
+{block content}
+{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
+<ul>
+    <li><strong>Systém přihlašování</strong> &ndash; po vyplnění formuláře
+        a&nbsp;přihlášení týmu web automaticky přijímá týmy jako náhradníky,
+        odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
+        kontrole organizátorem se stává tým účastníkem.
+        Není tedy třeba psát emailem dotaz, jestli bude váš tým přijat, pokud váš
+        tým splňuje podmínky. Stačí počkat a&nbsp;brzy se status vašeho týmu změní
+        na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.</li>
+    <li>
+        Kategorie budou rozděleny do budov až podle počtu přihlášených týmů v jednotlivých kategoriích.
+        Informace týmům, do které budovy se mají dostavit, přijde emailem nejpozději v pondělí 10. 2. 2014.
+    </li>
+    <li>Jakékoliv dotazy
+        ohledně soutěže prosím pište na
+        <a href="mailto:fyziklaniZAVINACfykos.cz" title="E-mail na FYKOSí Fyziklání">fyziklani<img src="/pic/zavinac.gif" alt="." class="icon" />fykos.cz</a>. </li>
+    <li>Kapacita soutěže je 110 týmů.</li>    <li>
+        Informujte o Fyziklání a&nbsp;těchto stránkách! Můžete využít i&nbsp;<a href="https://www.smore.com/1rg1-fykos-fyzikl-n" target="_blank">e-plakát</a>.
+
+{*      a&nbsp;<a href="http://fykos.cz/pic/fyziklani/plakat_2013.png" target="_blank">plakátek</a> určený k&nbsp;tisku. *}
+
+        Přidejte se k&nbsp;<a href="https://www.facebook.com/events/698649963501559/" target="_blank">události na Facebooku</a> a&nbsp;sdílejte ji dál!
+    </li>
+    <li>Můžeme zajistit ubytování noc před akcí v <a href="http://www.hostelelf.com/jak-nas-najdete.html" target="_blank">hostelu</a> za dotovanou cenu 100,- Kč/osobu (vhodné pro ty, kteří by se jinak kvůli dlouhé cestě v den soutěže nevyspali).</li>
+    <li>Den před Fyzikláním (tedy ve čtvrtek 13. 1. 2014) bude <a href="http://dsef.cz">Den s&nbsp;experimentální fyzikou</a>. Přes víkend po FYKOSím Fyziklání je plánována FYKOSí víkendovka (informace k oběma akcím by se měly objevit do 24. 1.).</li>
+
+</ul>
+
+
+
+<hr/>
+{/if}
+
+
+{control form}

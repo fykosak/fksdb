@@ -29,17 +29,25 @@ class LayoutResolver extends Object {
         $this->data = $data;
     }
 
-    public function getTemplate(ModelEvent $event) {
+    public function getTableLayout(ModelEvent $event) {
+        return $this->getTemplate($event, 'tableLayout');
+    }
+
+    public function getFormLayout(ModelEvent $event) {
+        return $this->getTemplate($event, 'formLayout');
+    }
+
+    private function getTemplate(ModelEvent $event, $type) {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;
         $definitions = $this->data[$eventTypeId];
         $result = null;
         foreach ($definitions as $definition) {
             if ($definition['years'] === true) {
-                $result = $definition['tableLayout'];
+                $result = $definition[$type];
             }
             if (is_array($definition['years']) && in_array($eventYear, $definition['years'])) {
-                $result = $definition['tableLayout'];
+                $result = $definition[$type];
                 break;
             }
         }

@@ -11,6 +11,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
+use FKSDB\Components\Grids\Events\LayoutResolver;
 use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -65,6 +66,11 @@ class ApplicationPresenter extends BasePresenter {
      */
     private $relatedPersonAuthorizator;
 
+    /**
+     * @var LayoutResolver
+     */
+    private $layoutResolver;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -75,6 +81,10 @@ class ApplicationPresenter extends BasePresenter {
 
     public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
+    }
+
+    public function injectLayoutResolver(LayoutResolver $layoutResolver) {
+        $this->layoutResolver = $layoutResolver;
     }
 
     public function authorizedDefault($eventId, $id) {
@@ -178,6 +188,7 @@ class ApplicationPresenter extends BasePresenter {
                         self::PARAM_AFTER => true,
                     ));
                 });
+        $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
     }
 

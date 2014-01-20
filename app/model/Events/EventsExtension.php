@@ -89,6 +89,7 @@ class EventsExtension extends CompilerExtension {
                 'name' => $definitionName,
                 'years' => $definition['eventYears'],
                 'tableLayout' => $definition['tableLayout'],
+                'formLayout' => $definition['formLayout'],
             );
 
             /*

@@ -1,7 +1,7 @@
 parameters:
     events:
         fyziklani:
-            cond: or(before(2014-01-19 23:59:59), role('admin')) # date for modifications after regClose
+            appCond: or(regOpen(), role('admin'))
             teacher:
                 person:
                     other_name: true
@@ -33,7 +33,8 @@ events:
     fyziklani:
         event_type_id: 1
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani
+        tableLayout: fyziklani.grid
+        formLayout: fyziklani.form
         paramScheme:
             notifyBcc:
             notifyFrom:
@@ -57,15 +58,15 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: or(regOpen(), role('admin'))
+                        condition: %events.fyziklani.appCond%
                         label: Přihlásit tým
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.team, .*,...)
+                            - Events\Transitions\MailSender(fyziklani.team, .*)
                     pending->approved:
                         condition: role('admin')
                         label: Schválit účast
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.team, *,...)
+                            - Events\Transitions\MailSender(fyziklani.team, *)
                     pending->spare:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
@@ -84,7 +85,7 @@ events:
                         label: Název týmu # i18n
                         required: true
                         visible: true # or condition
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                     category:
                         label: Kategorie # i18n
                         required: true
@@ -94,25 +95,25 @@ events:
                         label: Kontaktní telefon
                         required: false
                         visible: true
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                     teacher_id:
                         label: Učitel/doprovod
                         required: false
                         visible: true
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                         factory: RefPerson(%events.fyziklani.teacher%, email, true, or(role('related'),role('admin')), false)
                     teacher_present:
                         label: Učitel má zájem o program
                         visible: true
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                     teacher_accomodation:
                         label: Ubytování pro učitele
                         visible: true
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                     note:
                         label: Poznámka
                         visible: true
-                        modifiable: true
+                        modifiable: %events.fyziklani.appCond%
 
             #
             #   PARTICIPANT
@@ -128,29 +129,29 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: regOpen()
+                        condition: %events.fyziklani.appCond%
                         label: Přihlásit člena
                         onExecuted:
-                            - Events\Transitions\LoginInvitation(...)
-                            - Events\Transitions\MailSender(fyziklani.member,self,...)
+                            - Events\Transitions\LoginInvitation()
+                            - Events\Transitions\MailSender(fyziklani.member,self)
                     applied->participated:
                         condition: role('admin')
                         label: Potvrdit účast # name is not necessary due to join to team machine
                     applied->__terminated:
-                        condition: or(regOpen(), role('admin')) # TODO this is not specified in rules
+                        condition: %events.fyziklani.appCond% # TODO this is not specified in rules
                         label: Odebrat člena
 
                 fields:
                     person_id:
                         label: Osoba
                         visible: true
-                        modifiable: %events.fyziklani.cond%
+                        modifiable: %events.fyziklani.appCond%
                         determining: true
                         factory: RefPerson(%events.fyziklani.participant%, email, true, or(role('related'),role('admin')), false)
                     accomodation:
                         label: Ubytování
                         visible: true
-                        modifiable: or(regOpen(), role('admin')) # TODO this is not specified in rules
+                        modifiable: %events.fyziklani.appCond%
                         required: false
 
 
@@ -189,7 +190,7 @@ events:
                 - Events\Spec\Fyziklani\SchoolCheck()
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:
-                - Events\Spec\Fyziklani\CategoryProcessing(...)
+                - Events\Spec\Fyziklani\CategoryProcessing()
 
             joins:
                 team:

@@ -39,10 +39,26 @@ class ApplicationComponent extends Control {
      */
     private $redirectCallback;
 
+    /**
+     * @var string
+     */
+    private $templateFile;
+
     function __construct(Machine $machine, Holder $holder) {
         parent::__construct();
         $this->machine = $machine;
         $this->holder = $holder;
+    }
+
+    /**
+     * @param string $template name of the standard template or whole path
+     */
+    public function setTemplate($template) {
+        if (stripos($template, '.latte') !== false) {
+            $this->templateFile = $template;
+        } else {
+            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationComponent.$template.latte";
+        }
     }
 
     public function getRedirectCallback() {
@@ -51,6 +67,14 @@ class ApplicationComponent extends Control {
 
     public function setRedirectCallback($redirectCallback) {
         $this->redirectCallback = new Callback($redirectCallback);
+    }
+
+    /**
+     * Syntactic sugar for the template.
+     */
+    public function isEventAdmin() {
+        $event = $this->holder->getEvent();
+        return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
     protected function createTemplate($class = NULL) {
@@ -64,9 +88,17 @@ class ApplicationComponent extends Control {
     }
 
     public function renderForm() {
+        if (!$this->templateFile) {
+            throw new InvalidStateException('Must set template for the application form.');
+        }
+
         $this->initializeMachine();
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.form.latte');
+        $this->template->setFile($this->templateFile);
+        $this->template->holder = $this->holder;
+        $this->template->event = $this->holder->getEvent();
+        $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
+        $this->template->primaryMachine = $this->machine->getPrimaryMachine();
         $this->template->render();
     }
 
