@@ -133,7 +133,7 @@ class EventPresenter extends EntityPresenter {
         $source->order('created');
 
         $grid = new ApplicationsGrid($this->container, $source);
-        $template = $this->layoutResolver->getTemplate($this->getModel());
+        $template = $this->layoutResolver->getTableLayout($this->getModel());
         $grid->setTemplate($template);
 
         return $grid;
