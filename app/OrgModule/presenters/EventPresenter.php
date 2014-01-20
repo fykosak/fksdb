@@ -130,6 +130,7 @@ class EventPresenter extends EntityPresenter {
 
     protected function createComponentApplicationsGrid($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
+        $source->order('created');
 
         $grid = new ApplicationsGrid($this->container, $source);
         $template = $this->layoutResolver->getTemplate($this->getModel());

@@ -199,7 +199,7 @@ class ApplicationPresenter extends BasePresenter {
 
         $source = new InitSource($events, $this->container);
         $grid = new ApplicationsGrid($this->container, $source);
-        $grid->setTemplate('newApplications');
+        $grid->setTemplate('myApplications');
 
         return $grid;
     }

@@ -3,19 +3,17 @@
 {block header}
 <thead>
     <tr>
-        <th>{_'Typ akce'}</th>
-        <th>{_'Název akce'}</th>
-        <th>{_'Stav'}</th>
-        <th>{_'Operace'}</th>
+        <th>{_'Akce'}</th>
+        <th>{_'Přihláška'}</th>
+        {include #menuHeader}
     </tr>
 </thead>
 {/block}
 
 {block row}
 <tr>
-    <td>{$event->event_type->name}</td>
-    <td>{$event->name}</td>
-    <td>{control 'application_'.$key:inline state}</td>
-    <td>{control 'application_'.$key:inline transitions}</td>
+    <td><span title="{$event->event_type->name}">{$event->name}</span></td>
+    <td>{if $holder->getPrimaryHolder()->getModelState() == Events\Machine\BaseMachine::STATE_INIT}&mdash;{else}{$holder->getPrimaryHolder()->getModel()->__toString()}{/if}</td>
+    {include #menuRow key => $key, holder => $holder}
 </tr>
 {/block}
