@@ -20,7 +20,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param \Nette\DateTime $since
      * @return ModelAuthToken
      */
-    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, DateTime $since = null) {
+    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -33,18 +33,32 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $outerTransaction = true;
         }
 
-        do {
-            $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
-        } while ($this->verifyToken($tokenData));
+        if ($refresh) {
+            $token = $this->getTable()
+                    ->where('login_id', $login->login_id)
+                    ->where('type', $type)
+                    ->where('data', $data)
+                    ->where('since <= NOW()')
+                    ->where('until IS NULL OR until >= NOW()')
+                    ->fetch();
+        } else {
+            $token = null;
+        }
+        if (!$token) {
+            do {
+                $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
+            } while ($this->verifyToken($tokenData));
 
-        $token = $this->createNew(array(
-            'login_id' => $login->login_id,
-            'token' => $tokenData,
-            'data' => $data,
-            'since' => $since,
-            'until' => $until,
-            'type' => $type
-        ));
+            $token = $this->createNew(array(
+                'login_id' => $login->login_id,
+                'token' => $tokenData,
+                'data' => $data,
+                'since' => $since,
+                'type' => $type
+            ));
+        }
+        $token->until = $until;
+
         $this->save($token);
         if (!$outerTransaction) {
             $this->getConnection()->commit();

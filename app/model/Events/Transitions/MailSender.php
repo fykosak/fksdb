@@ -153,7 +153,7 @@ class MailSender extends Object {
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data);
+        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
         return $token;
     }
 
