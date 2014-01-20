@@ -236,43 +236,43 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * Joined data manipulation
      */
 
+    private $groupedHolders;
+
     /**
      * Group secondary by service
      * @return array[] items: joinOn, service, holders
      */
     public function getGroupedSecondaryHolders() {
-        static $result = null; // cache
-
-        if ($result == null) {
-            $result = array();
+        if ($this->groupedHolders == null) {
+            $this->groupedHolders = array();
 
             foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $key = spl_object_hash($baseHolder->getService());
-                if (!isset($result[$key])) {
-                    $result[$key] = array(
+                if (!isset($this->groupedHolders[$key])) {
+                    $this->groupedHolders[$key] = array(
                         'joinOn' => $baseHolder->getJoinOn(),
                         'service' => $baseHolder->getService(),
                         'personIds' => $baseHolder->getPersonIds(),
                         'holders' => array(),
                     );
                 }
-                $result[$key]['holders'][] = $baseHolder;
+                $this->groupedHolders[$key]['holders'][] = $baseHolder;
             }
         }
 
-        return $result;
+        return $this->groupedHolders;
     }
 
     private function setSecondaryModels($holders, $models) {
-        $filledHandlers = 0;
+        $filledHolders = 0;
         foreach ($models as $secondaryModel) {
-            $holders[$filledHandlers]->setModel($secondaryModel);
-            if (++$filledHandlers > count($holders)) {
+            $holders[$filledHolders]->setModel($secondaryModel);
+            if (++$filledHolders > count($holders)) {
                 throw new InvalidStateException('More than expected secondary models supplied.');
             }
         }
-        for (; $filledHandlers < count($holders); ++$filledHandlers) {
-            $holders[$filledHandlers]->setModel(null);
+        for (; $filledHolders < count($holders); ++$filledHolders) {
+            $holders[$filledHolders]->setModel(null);
         }
     }
 
