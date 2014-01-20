@@ -81,7 +81,7 @@ bmInstance:
     bmName:
     label:
         default: null
-    description: # TODO where is it used
+    description: # it's show beneatch legend of the form group
         default: null
     primary:
         default: false
