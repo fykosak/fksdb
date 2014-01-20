@@ -4,6 +4,7 @@ namespace Events\Processings;
 
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
+use Nette\Application\UI\Control;
 use Nette\ArrayHash;
 use Nette\Forms\IControl;
 use Nette\Object;
@@ -20,12 +21,12 @@ abstract class AbstractProcessing extends Object implements IProcessing {
 
     private $pathCache;
 
-    public function process(ArrayHash $values, Machine $machine, Holder $holder) {
+    public function process(Control $control, ArrayHash $values, Machine $machine, Holder $holder) {        
         $this->setValues($values);
-        $this->_process($values, $machine, $holder);
+        $this->_process($control, $values, $machine, $holder);
     }
 
-    abstract protected function _process(ArrayHash $values, Machine $machine, Holder $holder);
+    abstract protected function _process(Control $control, ArrayHash $values, Machine $machine, Holder $holder);
 
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;

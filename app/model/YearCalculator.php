@@ -42,9 +42,9 @@ class YearCalculator extends Object {
     }
 
     public function getGraduationYear($studyYear, $acYear = null) {
-        $acYear = ($acYear !== null) ? : $this->getCurrentAcademicYear();
+        $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
 
-        if ($studyYear >= 4 && $studyYear <= 9) {
+        if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
         }
         if ($studyYear >= 1 && $studyYear <= 4) {

@@ -6,6 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
+use Nette\Application\UI\Control;
 use Nette\ArrayHash;
 use Nette\Object;
 
@@ -21,7 +22,7 @@ use Nette\Object;
  */
 class GenKillProcessing extends Object implements IProcessing {
 
-    public function process(ArrayHash $values, Machine $machine, Holder $holder) {
+    public function process(Control $control, ArrayHash $values, Machine $machine, Holder $holder) {        
         $result = array();
         foreach ($holder as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible

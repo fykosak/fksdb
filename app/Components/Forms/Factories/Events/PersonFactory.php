@@ -50,7 +50,7 @@ class PersonFactory extends AbstractFactory {
         $allowClear = $this->evalParam($this->allowClear);
 
         $event = $field->getBaseHolder()->getHolder()->getEvent();
-        $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
+        $acYear = $event->getAcYear();
 
         $components = $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $this->visibilityResolver, $this->modifiabilityResolver);
         $components[1]->setOption('label', $field->getLabel());

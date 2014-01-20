@@ -2,18 +2,19 @@
 
 namespace Events\Spec\Fyziklani;
 
+use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
+use Events\SubmitProcessingException;
 use Nette\ArrayHash;
-use Submits\ProcessingException;
 use YearCalculator;
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
  * 
  * @author Aleš Podolník <ales@fykos.cz>
- * @author Michal Koutný <michal@fykos.cz> (only ported to FKSDB)
+ * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
 class CategoryProcessing extends AbstractProcessing {
 
@@ -26,8 +27,8 @@ class CategoryProcessing extends AbstractProcessing {
         $this->yearCalculator = $yearCalculator;
     }
 
-    protected function _process(ArrayHash $values, Machine $machine, Holder $holder) {
-        if (!isset($value['team'])) {
+    protected function _process(\Nette\Application\UI\Control $control, ArrayHash $values, Machine $machine, Holder $holder) {
+        if (!isset($values['team'])) {
             return;
         }
         //TODO would need also sanitatio of behavior when not all forms are enabled
@@ -37,12 +38,25 @@ class CategoryProcessing extends AbstractProcessing {
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-// Aleš input:
+// prepare input for Aleš:
         $maxYear = $acYear - 1;
         $participants = array();
-        foreach ($this->getValue('p*.person_history.study_year') as $studyYear) {
+        foreach ($holder as $name => $baseHolder) {
+            if ($name == 'team') {
+                continue;
+            }
+            $formValue = $this->getValue("$name.person_history.study_year");
+            if (!$formValue) {
+                if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
+                    continue;
+                }
+                $person = $baseHolder->getModel()->getMainModel()->person;
+                $studyYear = $person->related('person_history')->where('ac_year', $acYear)->fetch()->study_year;
+            } else {
+                $studyYear = $formValue;
+            }
             $participants[] = $this->yearCalculator->getGraduationYear($studyYear, $acYear);
-        };
+        }
 
 // Aleš begin
 
@@ -84,13 +98,19 @@ class CategoryProcessing extends AbstractProcessing {
         }
 
         if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
-            $values['team']['category'] = 'C';
+            $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
-            $values['team']['category'] = 'B';
+            $result = 'B';
         } else if ($category_handle <= 4) {
-            $values['team']['category'] = 'A';
+            $result = 'A';
         } else {
-            throw new ProcessingException(_('Nelze spočítat kategorii.'));
+            throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));
+        }
+        $values['team']['category'] = $result;
+
+        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        if ($original != $result) {
+            $control->flashMessage(sprintf(_('Týmu zařazen do kategorie %s.'), $result));
         }
 
 

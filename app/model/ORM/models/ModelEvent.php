@@ -10,6 +10,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
 
     private $eventType = false;
     private $contest = false;
+    private $acYear = false;
 
     public function getEventType() {
         if ($this->eventType === false) {
@@ -26,6 +27,18 @@ class ModelEvent extends AbstractModelSingle implements IResource {
             $this->contest = ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'event_type_id'));
         }
         return $this->contest;
+    }
+
+    /**
+     * Syntactic sugar.
+     * 
+     * @return int
+     */
+    public function getAcYear() {
+        if ($this->acYear === false) {
+            $this->acYear = $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
+        }
+        return $this->acYear;
     }
 
     public function getResourceId() {

@@ -6,6 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder\Holder;
+use Events\SubmitProcessingException;
 use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
@@ -214,13 +215,16 @@ class ApplicationComponent extends Control {
         } catch (TransitionOnExecutedException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
+        } catch (SubmitProcessingException $e) {
+            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
+            $connection->rollBack();
         }
     }
 
     private function processValues(Form $form) {
         $values = $form->getValues();
         // Find out transitions
-        $newStates = $this->holder->processFormValues($values, $this->machine);
+        $newStates = $this->holder->processFormValues($this->getPresenter(), $values, $this->machine);
         $transitions = array();
         foreach ($newStates as $name => $newState) {
             $transitions[$name] = $this->machine[$name]->getTransitionByTarget($newState);

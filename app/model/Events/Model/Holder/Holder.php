@@ -13,6 +13,7 @@ use FKS\Config\NeonScheme;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
+use Nette\Application\UI\Control;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
@@ -204,14 +205,15 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /**
      * Apply processings to the values and sets them to the ORM model.
      * 
+     * @parem Control $control
      * @param ArrayHash $values
-     * * @param \Events\Model\Machine $machine
+     * @param \Events\Model\Machine $machine
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine) {
+    public function processFormValues(Control $control, ArrayHash $values, Machine $machine) {
         $newStates = array();
         foreach ($this->processings as $processing) {
-            $result = $processing->process($values, $machine, $this);
+            $result = $processing->process($control, $values, $machine, $this);
             if ($result) {
                 $newStates = array_merge($newStates, $result);
             }
