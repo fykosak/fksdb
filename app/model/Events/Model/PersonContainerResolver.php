@@ -36,7 +36,7 @@ class PersonContainerResolver extends Object implements IVisibilityResolver, IMo
      * @var ConditionEvaluator
      */
     private $evaluator;
-    
+
     function __construct(Field $field, $condition, SelfResolver $selfResolver, ConditionEvaluator $evaluator) {
         $this->field = $field;
         $this->condition = $condition;
@@ -44,8 +44,8 @@ class PersonContainerResolver extends Object implements IVisibilityResolver, IMo
         $this->evaluator = $evaluator;
     }
 
-        public function getResolutionMode(ModelPerson $person) {
-        return $this->isModifiable($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+    public function getResolutionMode(ModelPerson $person) {
+        return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(ModelPerson $person) {
