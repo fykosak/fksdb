@@ -60,10 +60,12 @@ events:
                         condition: or(regOpen(), role('admin'))
                         label: Přihlásit tým
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani,...)
+                            - Events\Transitions\MailSender(fyziklani.team, .*,...)
                     pending->approved:
                         condition: role('admin')
-                        label: Potvrdit účast týmu
+                        label: Schválit účast
+                        onExecuted:
+                            - Events\Transitions\MailSender(fyziklani.team, *,...)
                     pending->spare:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
@@ -130,7 +132,7 @@ events:
                         label: Přihlásit člena
                         onExecuted:
                             - Events\Transitions\LoginInvitation(...)
-                            - Events\Transitions\MailSender(fyziklani,...)
+                            - Events\Transitions\MailSender(fyziklani.member,self,...)
                     applied->participated:
                         condition: role('admin')
                         label: Potvrdit účast # name is not necessary due to join to team machine

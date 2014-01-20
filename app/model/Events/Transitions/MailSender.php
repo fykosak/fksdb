@@ -33,10 +33,23 @@ class MailSender extends Object {
     const BCC_PARAM = 'notifyBcc';
     const FROM_PARAM = 'notifyFrom';
 
+    // Adressee
+    const ADDR_SELF = 'self';
+    const ADDR_PRIMARY = 'primary';
+    const ADDR_SECONDARY = 'secondary';
+    const ADDR_ALL = '*';
+    const BCC_PREFIX = '.';
+
     /**
      * @var string
      */
     private $filename;
+
+    /**
+     *
+     * @var array
+     */
+    private $addressees;
 
     /**
      * @var IMailer
@@ -63,8 +76,9 @@ class MailSender extends Object {
      */
     private $servicePerson;
 
-    function __construct($filename, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServiceAuthToken $serviceAuthToken, ServicePerson $servicePerson) {
+    function __construct($filename, $addresees, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServiceAuthToken $serviceAuthToken, ServicePerson $servicePerson) {
         $this->filename = $filename;
+        $this->addressees = $addresees;
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
@@ -77,28 +91,25 @@ class MailSender extends Object {
     }
 
     private function send(Transition $transition) {
-        $baseHolder = $transition->getBaseHolder();
-        $person = $this->getPerson($baseHolder);
+        $personIds = $this->resolveAdressee($transition);
+        $persons = $this->servicePerson->getTable()
+                ->where('person_id', $personsIds)
+                ->where('person_info:email IS NOT NULL')
+                ->fetchPairs('person_id');
 
-        if (!$person) {
-            return;
-        }
-        $info = $person->getInfo();
-        $email = $info ? $info->email : null;
-
-        if (!$email) {
-            return;
-        }
-
-        $login = $person->getLogin();
-        if (!$login) {
-            $login = $this->accountManager->createLogin($person);
+        $logins = array();
+        foreach ($persons as $person) {
+            $login = $person->getLogin();
+            if (!$login) {
+                $login = $this->accountManager->createLogin($person);
+            }
+            $logins[] = $login;
         }
 
-        $baseMachine = $transition->getBaseMachine();
-        $message = $this->composeMessage($this->filename, $login, $baseMachine);
-
-        $this->mailer->send($message);
+        foreach ($logins as $login) {
+            $message = $this->composeMessage($this->filename, $login, $transition->getBaseMachine());
+            $this->mailer->send($message);
+        }
     }
 
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
@@ -130,10 +141,12 @@ class MailSender extends Object {
         $message->setSubject($this->getSubject($event, $application, $machine));
 
         $message->setFrom($holder->getParameter(self::FROM_PARAM));
-        $message->addBcc($holder->getParameter(self::BCC_PARAM));
+        if ($this->hasBcc()) {
+            $message->addBcc($holder->getParameter(self::BCC_PARAM));
+        }
         $message->addTo($email, $person->getFullname());
 
-        Debugger::log((string) $message->getHtmlBody()); //TODO move logging to mailer
+        Debugger::log("Subject: " . $message->getSubject() . "\nTo: " . $message->getHeader("to") . "\n" . (string) $message->getHtmlBody()); //TODO move logging to mailer
         return $message;
     }
 
@@ -155,6 +168,53 @@ class MailSender extends Object {
 
     private function getUntil(ModelEvent $event) {
         return $event->registration_end; //TODO extension point
+    }
+
+    private function hasBcc() {
+        return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
+    }
+
+    private function resolveAdressee(Transition $transition) {
+        $holder = $transition->getBaseHolder()->getHolder();
+        if (is_array($this->addressees)) {
+            $names = $this->addressees;
+        } else {
+            if ($this->hasBcc()) {
+                $addressees = substr($this->addressees, strlen(self::BCC_PREFIX));
+            } else {
+                $addressees = $this->addressees;
+            }
+            switch ($this->addressees) {
+                case self::ADDR_SELF:
+                    $names = array($transition->getBaseHolder()->getName());
+                    break;
+                case self::ADDR_PRIMARY:
+                    $names = array($holder->getPrimaryHolder()->getName());
+                    break;
+                case self::ADDR_SECONDARY:
+                    $names = array();
+                    foreach ($holder->getGroupedSecondaryHolders() as $group) {
+                        $names = array_merge($names, array_map(function($it) {
+                                            return $it->getName();
+                                        }, $group->holders));
+                    }
+                    break;
+                case self::ADDR_ALL:
+                    $names = array_keys(iterator_to_array($transition->getBaseHolder()->getHolder()));
+                    break;
+            }
+        }
+
+
+        $persons = array();
+        foreach ($names as $name) {
+            $personId = $holder[$name]->getPersonId();
+            if ($personId) {
+                $persons[] = $personId;
+            }
+        }
+
+        return $persons;
     }
 
 }
