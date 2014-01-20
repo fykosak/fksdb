@@ -129,9 +129,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 }
             } else if ($this->resolution == self::RESOLUTION_KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
-            } else if ($this->resolution == self::RESOLUTION_OVERWRITE) {
-                $data = $conflicts;
             }
+            // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
+            //    $data = $conflicts;
+
 
             foreach ($models as $t => & $model) {
                 if (!isset($data[$t])) {
