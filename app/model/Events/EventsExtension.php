@@ -60,6 +60,7 @@ class EventsExtension extends CompilerExtension {
             'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
             'role' => 'Events\Semantics\Role',
             'regOpen' => 'Events\Semantics\RegOpen',
+            'state' => 'Events\Semantics\State',
         ));
     }
 
