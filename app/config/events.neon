@@ -1,0 +1,97 @@
+#
+# Schema definition for events application machines.
+#
+# Fields that do not have default value are required.
+
+definition:
+    event_type_id:
+    eventYears:
+        default: true
+    tableLayout:
+        default: participants
+    formLayout:
+        default: application
+    paramScheme:
+        default: []
+    baseMachines:
+    machine:
+
+machine:
+    baseMachines:
+    # processing checks invariants/calculates data on edit form submit, before transitions
+    processings:
+        default: []
+        type: expression array
+    # adjustments are called on the whole form right after creation
+    formAdjustments:
+        default: []
+        type: expression array
+    # defines machine transition dependencies (transition invokes another transition)
+    joins:
+        default: []
+
+baseMachine:
+    states:
+    transitions:
+    fields:
+    service:
+        default: @ServiceEventParticipant
+    # When used as secondary model, specify column that is FK to the primary model.
+    joinOn:
+        default: null
+    # Specify columns that store person_id of anyhow involved persons.
+    personIds:
+        default: [event_participant.person_id]
+    # Specify column that stores FK to the event. (For primary models only.)
+    eventId:
+        default: event_participant.event_id
+    
+
+transition:
+    condition:
+        default: true
+        type: expression
+    label:
+    onExecuted:
+        default: []
+        type: expression array
+
+field:
+    label:
+        default: null
+    description:
+        default: null
+    determining:
+        default: false
+    required:
+        default: false
+        type: expression
+    modifiable:
+        default: true
+        type: expression
+    visible:
+        default: true
+        type: expression
+    factory:
+        default: @event.DBReflectionFactory
+        type: expression
+
+
+bmInstance:
+    bmName:
+    label:
+        default: null
+    description: # it's show beneatch legend of the form group
+        default: null
+    primary:
+        default: false
+    required:
+        default: false
+        type: expression
+    modifiable:
+        default: true
+        type: expression
+    visible:
+        default: true
+        type: expression
+

@@ -26,7 +26,8 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     public $contestId;
 
     protected function createComponentContestChooser($name) {
-        $control = new ContestChooser(ModelRole::CONTESTANT, $this->session, $this->yearCalculator, $this->serviceContest);
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setContests(ModelRole::CONTESTANT);
         return $control;
     }
 

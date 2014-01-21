@@ -6,7 +6,6 @@ use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use ModelContest;
 use ModelPerson;
 use Nette\Database\Table\Selection;
-use Nette\NotImplementedException;
 use ServicePerson;
 use YearCalculator;
 
@@ -92,5 +91,4 @@ class PersonProvider implements IFilteredDataProvider {
         );
     }
 
-//put your code here
 }

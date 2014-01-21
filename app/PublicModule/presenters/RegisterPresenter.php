@@ -4,6 +4,7 @@ namespace PublicModule;
 
 use Authentication\AccountManager;
 use BasePresenter as CoreBasePresenter;
+use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
@@ -13,7 +14,6 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
 use IContestPresenter;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelException;
 use ModelPostContact;
@@ -253,12 +253,12 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $defaults[self::CONT_PERSON_INFO] = $personInfo ? : array();
 
 
-        $this['contestantForm']->setDefaults($defaults);
+        $this['contestantForm']['form']->setDefaults($defaults);
     }
 
     public function createComponentContestantForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $result = new FormControl();
+        $form = $result['form'];
 
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
 
@@ -286,7 +286,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $personCont = $this->personFactory->createPerson($personFlags, $group);
         $form->addComponent($personCont, self::CONT_PERSON);
 
-        $address = $this->addressFactory->createAddress($group);
+        $address = $this->addressFactory->createAddress(0, $group);
         $form->addComponent($address, self::CONT_ADDRESS);
 
         if ($person) {
@@ -329,7 +329,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        return $form;
+        return $result;
     }
 
     public function handleContestantFormSuccess(Form $form) {

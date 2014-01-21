@@ -1,0 +1,17 @@
+{layout '../../app/Components/Grids/Events/ApplicationsGrid.@layout.latte'}
+
+{block header}
+<thead>
+    <tr>
+        <th>{_'Název týmu'}</th>
+        {include #menuHeader}
+    </tr>
+</thead>
+{/block}
+
+{block row}
+<tr>
+    <td>{$holder->getPrimaryHolder()->getModel()->name}</td>
+    {include #menuRow key => $key, holder => $holder}
+</tr>
+{/block}

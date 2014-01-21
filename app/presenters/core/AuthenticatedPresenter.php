@@ -77,6 +77,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     private function loginRedirect() {
+        if (!$this->requiresLogin()) {
+            return;
+        }
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -84,6 +87,17 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
         $backlink = $this->application->storeRequest(); //TODO this doesn't work in cross domain environment
         $this->redirect(':Authentication:login', array('backlink' => $backlink, AuthenticationPresenter::PARAM_REASON => $reason));
+    }
+
+    /**
+     * This method may be overriden, however only simple conditions
+     * can be checked there -- user session is not prepared at the
+     * moment of the call.
+     * 
+     * @return boolean
+     */
+    public function requiresLogin() {
+        return true;
     }
 
     protected function unauthorizedAccess() {

@@ -1,11 +1,12 @@
 <?php
 
 use Nette\Object;
+use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelMulti extends Object {
+abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
      * @var AbstractModelSingle 
@@ -16,6 +17,10 @@ abstract class AbstractModelMulti extends Object {
      * @var AbstractModelSingle 
      */
     protected $joinedModel;
+
+    /**
+     * @var string
+     */
     protected $joiningColumn;
 
     public function __construct($mainModel, $joinedModel) {
@@ -45,6 +50,58 @@ abstract class AbstractModelMulti extends Object {
 
     public function setJoinedModel(AbstractModelSingle $joinedModel) {
         $this->joinedModel = $joinedModel;
+    }
+
+    public function &__get($name) {
+        if ($this->getMainModel()->__isset($name)) {
+            return $this->getMainModel()->__get($name);
+        }
+        if ($this->getJoinedModel()->__isset($name)) {
+            return $this->getJoinedModel()->__get($name);
+        }
+        // this reference isn't that important
+        $null = null;
+        return $null;
+    }
+
+    public function __isset($name) {
+        return $this->getMainModel()->__isset($name) || $this->getJoinedModel()->__isset($name);
+    }
+
+    public function __set($name, $value) {
+        throw new LogicException("Cannot update multimodel directly.");
+    }
+
+    public function __unset($name) {
+        throw new LogicException("Cannot update multimodel directly.");
+    }
+
+    public function getPrimary($need = TRUE) {
+        return $this->getJoinedModel()->getPrimary($need);
+    }
+
+    public function getSignature($need = TRUE) {
+        return implode('|', (array) $this->getPrimary($need));
+    }
+
+    public function isNew() {
+        return $this->getJoinedModel()->isNew();
+    }
+
+    public function offsetExists($offset) {
+        return $this->__isset($offset);
+    }
+
+    public function &offsetGet($offset) {
+        return $this->__get($offset);
+    }
+
+    public function offsetSet($offset, $value) {
+        throw new LogicException("Cannot update multimodel directly.");
+    }
+
+    public function offsetUnset($offset) {
+        throw new LogicException("Cannot update multimodel directly.");
     }
 
 }

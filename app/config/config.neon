@@ -10,7 +10,7 @@ parameters:
     tempDir: %appDir%/../temp
 
     # WDSL file defining provided services.
-    wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
+    wsdlUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 
     # URL to the public website of the contests. (Keys are from contestMapping)
     website:
@@ -120,7 +120,11 @@ parameters:
 
         # default language when not set explicitly
         defaultLanguage: cs
-
+    
+    # Events
+    events:
+        # where locale files are stored
+        templateDir: %appDir%/../data/events
 
 php:
     date.timezone: Europe/Prague

@@ -1,0 +1,209 @@
+parameters:
+    events:
+        fyziklani:
+            appCond: or(regOpen(), role('admin'))
+            teacher:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    id_number: false
+            participant:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    id_number: false
+                person_history:
+                    school_id: true
+                    study_year: true
+            dep:
+                require:
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
+                visible:
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
+                    team.teacher_present: team.teacher_id
+                    team.teacher_accomodation: team.teacher_id
+
+events:
+    fyziklani:
+        event_type_id: 1
+        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklani.grid
+        formLayout: fyziklani.form
+        paramScheme:
+            notifyBcc:
+                default: michal+bcc@fykos.cz
+            notifyFrom:
+                default: FYKOSí Fyziklání <noreply@fyziklani.cz>
+
+        baseMachines:
+            #
+            #   TEAM
+            #    
+            TEAM:
+                service: @event.ServiceFyziklaniTeam
+                personIds: [teacher_id]
+                eventId: e_fyziklani_team.event_id
+                
+                states:
+                    pending: Čeká na schválení
+                    spare: Náhradník
+                    approved: Potvrzen
+                    participated: Účastnil se
+                    cancelled: Zrušen
+
+                transitions:
+                    __init->pending:
+                        condition: %events.fyziklani.appCond%
+                        label: Přihlásit tým
+                        onExecuted:
+                            - Events\Transitions\MailSender(fyziklani.team, .*)
+                    pending->approved:
+                        condition: role('admin')
+                        label: Schválit účast
+                        onExecuted:
+                            - Events\Transitions\MailSender(fyziklani.team, *)
+                    pending->spare:
+                        condition: role('admin')
+                        label: Potvrdit jako náhradníka
+                    approved|spare->participated:
+                        condition: role('admin')
+                        label: Potvrdit účast
+                    *->cancelled:
+                        condition: role('admin')
+                        label: Zrušit tým
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat tým
+
+                fields:
+                    name:
+                        label: Název týmu # i18n
+                        required: true
+                        visible: true # or condition
+                        modifiable: %events.fyziklani.appCond%
+                    category:
+                        label: Kategorie # i18n
+                        required: true
+                        visible: true
+                        modifiable: false
+                    phone:
+                        label: Kontaktní telefon
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                    teacher_id:
+                        label: Učitel/doprovod
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                        factory: RefPerson(%events.fyziklani.teacher%, email, true, role('admin'), false)
+                    teacher_present:
+                        label: Učitel má zájem o program
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                    teacher_accomodation:
+                        label: Ubytování pro učitele
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                    note:
+                        label: Poznámka
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+
+            #
+            #   PARTICIPANT
+            #    
+            PARTICIPANT:
+                service: @event.ServiceMFyziklaniParticipant
+                joinOn: e_fyziklani_team_id
+                personIds: [e_fyziklani_participant:event_participant.person_id]
+
+                states:
+                    applied: Přihlášen
+                    participated: Účastnil se
+
+                transitions:
+                    __init->applied:
+                        condition: %events.fyziklani.appCond%
+                        label: Přihlásit člena
+                        onExecuted:
+                            - Events\Transitions\LoginInvitation()
+                            - Events\Transitions\MailSender(fyziklani.member,self)
+                    applied->participated:
+                        condition: role('admin')
+                        label: Potvrdit účast # name is not necessary due to join to team machine
+                    applied->__terminated:
+                        condition: %events.fyziklani.appCond% # TODO this is not specified in rules
+                        label: Odebrat člena
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                        determining: true
+                        factory: RefPerson(%events.fyziklani.participant%, email, true, role('admin'), false)
+                    accomodation:
+                        label: Ubytování
+                        visible: true
+                        modifiable: %events.fyziklani.appCond%
+                        required: false
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                team:
+                    bmName: TEAM 
+                    label: Tým
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                p1:
+                    bmName: PARTICIPANT
+                    label: 1. člen
+                    required: true
+                p2:
+                    bmName: PARTICIPANT
+                    label: 2. člen
+                p3:
+                    bmName: PARTICIPANT
+                    label: 3. člen
+                p4:
+                    bmName: PARTICIPANT
+                    label: 4. člen
+                p5:
+                    bmName: PARTICIPANT
+                    label: 5. člen
+            formAdjustments:
+                - @events.privacyPolicy
+                - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
+                - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
+                - Events\FormAdjustments\UniqueCheck('team.name')
+                - Events\Spec\Fyziklani\SchoolCheck()
+                #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
+            processings:
+                - Events\Spec\Fyziklani\CategoryProcessing()
+
+            joins:
+                team:
+                    *->participated:
+                        p1: participated
+                        p2: participated
+                        p3: participated
+                        p4: participated
+                        p5: participated
+                    *->__terminated:
+                        p1: __terminated
+                        p2: __terminated
+                        p3: __terminated
+                        p4: __terminated
+                        p5: __terminated

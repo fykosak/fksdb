@@ -15,6 +15,9 @@ class ModelAuthToken extends AbstractModelSingle {
     /** @const Password recovery login */
     const TYPE_RECOVERY = 'recovery';
 
+    /** @const Notification about an event application. */
+    const TYPE_EVENT_NOTIFY = 'event_notify';
+
     /**
      * @return ModelLogin
      */

@@ -34,3 +34,24 @@ html, body {
 .navbar-brand .beta {
     font-size: 65%;
 }
+
+.well legend {
+    color: #999;
+    border-style: none;
+    border-width: 0;
+    font-size: 100%;
+    margin-bottom: 15px;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;    
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 8px 12px;
+    cursor: pointer; /* TODO not general enough, might be a static icon */
+}

@@ -12,7 +12,8 @@ services:
     - Authentication\FacebookAuthenticator
     - Authentication\PasswordAuthenticator
     - Authentication\TokenAuthenticator    
-    contestAuthorizator: Authorization\ContestAuthorizator
+    - Authorization\ContestAuthorizator
+    - Authorization\RelatedPersonAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
@@ -20,6 +21,7 @@ services:
     - Submits\SeriesTable
     - Persons\ContestantHandler
     - Persons\OrgHandler
+    - Persons\SelfResolver
     merger:
         class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
@@ -43,13 +45,20 @@ services:
 
     # web services
     soapServer:
-        class: SoapServer(%wdslUrl%)
+        class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
 
     webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
     nette.userStorage: LoginUserStorage
+
+    #
+    # Events
+    #
+    events.conditionEvaluator: Events\Model\ConditionEvaluator
+    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
+    - Events\Spec\Fyziklani\SchoolCheck
 
 includes:
     - merger.neon

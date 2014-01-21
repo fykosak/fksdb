@@ -2,6 +2,7 @@
 
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
+use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,9 +12,9 @@ class ServiceAddress extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_ADDRESS;
     protected $modelClassName = 'ModelAddress';
 
-    public function save(\AbstractModelSingle &$model) {
-        if (!$model instanceof ModelAddress) {
-            throw new InvalidArgumentException("Expecting ModelAddress, got '" . get_class($model) . "'");
+    public function save(IModel &$model) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         if (!isset($model->region_id)) {
             $model->region_id = $this->inferRegion($model->postal_code);

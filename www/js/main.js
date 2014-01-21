@@ -7,5 +7,8 @@ $(document).ready(function() {
             $('#spinner').hide();
         }
     });
+    // TODO is still needed spinner above?
+    $.nette.init();
+
 });
 

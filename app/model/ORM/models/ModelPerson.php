@@ -128,14 +128,23 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function getDeliveryAddress() {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
         if (count($dAddresses)) {
-            return $dAddresses[0];
+            return reset($dAddresses);
         } else {
-            $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
-            if (count($pAddresses)) {
-                return $pAddresses[0];
-            } else {
-                return null;
-            }
+            return $this->getPermanentAddress();
+        }
+    }
+
+    /**
+     * Main permanent address of the contestant.
+     * 
+     * @return MPostContact|null
+     */
+    public function getPermanentAddress() {
+        $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
+        if (count($pAddresses)) {
+            return reset($pAddresses);
+        } else {
+            return null;
         }
     }
 

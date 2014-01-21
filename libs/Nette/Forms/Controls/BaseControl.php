@@ -11,11 +11,12 @@
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Forms\IControl,
-	Nette\Utils\Html,
-	Nette\Forms\Form,
-	Nette\Forms\Rule;
+use Nette;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
+use Nette\Forms\Rule;
+use Nette\InvalidStateException;
+use Nette\Utils\Html;
 
 
 /**

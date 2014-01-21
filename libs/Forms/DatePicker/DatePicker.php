@@ -10,7 +10,7 @@ namespace JanTvrdik\Components;
 
 use DateTime;
 use Exception;
-use IJavaScriptCollector;
+use FKS\Application\IJavaScriptCollector;
 use InvalidArgumentException;
 use Nette;
 use Nette\Forms;
@@ -50,7 +50,7 @@ class DatePicker extends Forms\Controls\BaseControl
 	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
-                $this->monitor('IJavaScriptCollector');
+                $this->monitor('FKS\Application\IJavaScriptCollector');
 		$this->control->type = 'date';
 	}
         

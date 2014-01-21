@@ -1,2 +1,0 @@
-Each presenter in must extends class main/Main.php and
-implements pullActionsWActions!
