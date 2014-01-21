@@ -72,6 +72,8 @@ services:
             - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL))
             - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL))
 
+            - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO
+
             - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
             - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
 
