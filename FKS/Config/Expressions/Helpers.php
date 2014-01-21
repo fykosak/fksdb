@@ -15,7 +15,8 @@ class Helpers {
 
     private static $semanticMap = array(
         'and' => 'FKS\Expressions\Logic\And_',
-        'or' => 'FKS\Expressions\Logic\or_',
+        'or' => 'FKS\Expressions\Logic\Or_',
+        'neg' => 'FKS\Expressions\Logic\Not',
         'after' => 'FKS\Expressions\Predicates\After',
         'before' => 'FKS\Expressions\Predicates\Before',
     );
