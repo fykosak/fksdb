@@ -42,7 +42,6 @@ services:
         autowired: false
     translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
-
     # web services
     soapServer:
         class: SoapServer(%wsdlUrl%)
@@ -52,6 +51,11 @@ services:
     webServiceModel:        WebServiceModel(%contestMapping%, ...)
 
     nette.userStorage: LoginUserStorage
+    nette.mailer:
+        class: LoggingMailer(Nette\Mail\SendmailMailer())
+        setup:
+            - setLogPath(%logDir%/mail)
+
 
     #
     # Events

@@ -146,7 +146,6 @@ class MailSender extends Object {
         }
         $message->addTo($email, $person->getFullname());
 
-        Debugger::log("Subject: " . $message->getSubject() . "\nTo: " . implode(',', $message->getHeader("To")) . "\n" . (string) $message->getHtmlBody()); //TODO move logging to mailer
         return $message;
     }
 
