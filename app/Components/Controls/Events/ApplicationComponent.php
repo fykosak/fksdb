@@ -199,7 +199,7 @@ class ApplicationComponent extends Control {
         $this->initializeMachine();
         $connection = $this->holder->getConnection();
         try {
-            $explicitMachine = $explicitMachineName ? $this->machine[$explicitMachineName] : $this->machine->getPrimaryMachine();
+            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
 
             $connection->beginTransaction();
 
@@ -209,10 +209,13 @@ class ApplicationComponent extends Control {
             }
 
             if ($explicitTransitionName !== null) {
-                if (isset($transitions[$explicitMachineName])) {
+                $explicitMachine = $this->machine[$explicitMachineName];
+                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
+                if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->getTarget() != $explicitTransition->getTarget()) {
                     throw new MachineExecutionException(sprintf('Collision of explicit transision %s and processing transition %s', $explicitTransitionName, $explicitTransitionName[$explicitMachineName]->getName()));
                 }
-                $transitions[$explicitMachineName] = $explicitMachine->getTransition($explicitTransitionName);
+
+                $transitions[$explicitMachineName] = $explicitTransition;
             }
 
             foreach ($transitions as $transition) {
