@@ -161,6 +161,9 @@ class ApplicationComponent extends Control {
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-success');
                 $submit->setOption('row', 1);
+            }if ($transition->isTerminating()) {
+                $submit->getControlPrototype()->addClass('btn-danger');
+                $submit->setOption('row', 3);
             } else {
                 $submit->getControlPrototype()->addClass('btn-default');
                 $submit->setOption('row', 2);
@@ -199,7 +202,7 @@ class ApplicationComponent extends Control {
         $this->initializeMachine();
         $connection = $this->holder->getConnection();
         try {
-            $explicitMachine = $explicitMachineName ? $this->machine[$explicitMachineName] : $this->machine->getPrimaryMachine();
+            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
 
             $connection->beginTransaction();
 
@@ -209,10 +212,13 @@ class ApplicationComponent extends Control {
             }
 
             if ($explicitTransitionName !== null) {
-                if (isset($transitions[$explicitMachineName])) {
+                $explicitMachine = $this->machine[$explicitMachineName];
+                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
+                if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->getTarget() != $explicitTransition->getTarget()) {
                     throw new MachineExecutionException(sprintf('Collision of explicit transision %s and processing transition %s', $explicitTransitionName, $explicitTransitionName[$explicitMachineName]->getName()));
                 }
-                $transitions[$explicitMachineName] = $explicitMachine->getTransition($explicitTransitionName);
+
+                $transitions[$explicitMachineName] = $explicitTransition;
             }
 
             foreach ($transitions as $transition) {
@@ -229,10 +235,12 @@ class ApplicationComponent extends Control {
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->presenter->flashMessage(sprintf(_("Přihláška '%s' vytvořena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
+            } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
+                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' smazána."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
                 $this->presenter->flashMessage(sprintf(_("Stav přihlášky '%s' změněn."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_INFO);
             }
-            if ($form) {
+            if ($form && !$transitions[$explicitMachineName]->isTerminating()) {
                 $this->presenter->flashMessage(sprintf(_("Přihláška '%s' uložena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
             }
 

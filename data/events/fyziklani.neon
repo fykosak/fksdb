@@ -133,7 +133,6 @@ events:
                         condition: %events.fyziklani.appCond%
                         label: Přihlásit člena
                         onExecuted:
-                            - Events\Transitions\LoginInvitation()
                             - Events\Transitions\MailSender(fyziklani.member,self)
                     applied->participated:
                         condition: role('admin')
