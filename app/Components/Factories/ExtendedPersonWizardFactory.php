@@ -135,7 +135,7 @@ class ExtendedPersonWizardFactory {
         $personElement = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
 
 // TODO validate non-existent contestant or restrict selection
-        $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
+//        $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
 
         $group = $form->addGroup(_('Nová osoba'));
