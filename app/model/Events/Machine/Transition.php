@@ -111,6 +111,10 @@ class Transition extends FreezableObject {
         return strpos($this->source, BaseMachine::STATE_INIT) !== false;
     }
 
+    public function isTerminating() {
+        return $this->target == BaseMachine::STATE_TERMINATED;
+    }
+
     public function setCondition($condition) {
         $this->updating();
         $this->condition = $condition;
@@ -153,7 +157,7 @@ class Transition extends FreezableObject {
      */
     private function getBlockingTransition() {
         foreach ($this->getInducedTransitions() as $inducedTransition) {
-            if (!$inducedTransition->getBlockingTransition()) {
+            if ($inducedTransition->getBlockingTransition()) {
                 return $inducedTransition;
             }
         }
