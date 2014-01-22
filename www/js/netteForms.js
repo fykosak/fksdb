@@ -340,28 +340,29 @@ Nette.validators = {
 			}
 		}
 		return true;
-	},
-
-	mimeType: function (elem, arg, val) {
-		arg = Nette.isArray(arg) ? arg : [arg];
-		for (var i = 0, len = arg.length, re = []; i < len; i++) {
-			re.push('^' + arg[i].replace('*', '.*') + '$');
-		}
-		re = new RegExp(re.join('|'));
-
-		if (window.FileList && val instanceof FileList) {
-			for (var i = 0; i < val.length; i++) {
-				if (val[i].type && !re.test(val[i].type)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	},
-
-	image: function (elem, arg, val) {
-		return Nette.validators.mimeType(elem, ['image/gif', 'image/png', 'image/jpeg'], val);
 	}
+// Has false negatives in FF, this disabled (https://bugzilla.mozilla.org/show_bug.cgi?id=373621#c45).
+//	mimeType: function (elem, arg, val) {
+//		arg = Nette.isArray(arg) ? arg : [arg];
+//		for (var i = 0, len = arg.length, re = []; i < len; i++) {
+//			re.push('^' + arg[i].replace('*', '.*') + '$');
+//		}
+//		re = new RegExp(re.join('|'));
+//
+//		if (window.FileList && val instanceof FileList) {
+//			for (var i = 0; i < val.length; i++) {
+//                            alert(val[i].type + "!" + re);
+//				if (val[i].type && !re.test(val[i].type)) {                                    
+//					return false;
+//				}
+//			}
+//		}
+//		return true;
+//	},
+//
+//	image: function (elem, arg, val) {
+//		return Nette.validators.mimeType(elem, ['image/gif', 'image/png', 'image/jpeg'], val);
+//	}
 };
 
 
