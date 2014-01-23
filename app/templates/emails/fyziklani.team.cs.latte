@@ -1,10 +1,5 @@
 <p>
-    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.<br/>
-    Pro případné úpravy lze do {$until} použít odkaz:<br/>
-    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a>
+    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
 </p>
-
-<p>
-    S pozdravem,<br/>
-    FKSDB
-</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}

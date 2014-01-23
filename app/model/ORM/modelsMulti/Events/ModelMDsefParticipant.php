@@ -10,6 +10,8 @@ use AbstractModelMulti;
  */
 class ModelMDsefParticipant extends AbstractModelMulti {
 
-    protected $joiningColumn = 'event_participant_id';
+    public function __toString() {
+        return $this->getMainModel()->getPerson()->getFullname();
+    }
 
 }

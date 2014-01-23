@@ -62,10 +62,10 @@ events:
                         default: fromLogin
                         factory: RefPerson(%events.dsef.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
-                        label: Skupina
+                        label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef.appCond%
-                        #TODO factory
+                        factory: Chooser(Zvolit skupinu, Events\Spec\Fyziklani\GroupOptions())
                     accomodation:
                         label: Ubytování
                         modifiable: %events.dsef.appCond%

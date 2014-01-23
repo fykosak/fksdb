@@ -8,8 +8,6 @@ use Nette\Security\IRole;
  */
 class ModelMGrant extends AbstractModelMulti implements IRole {
 
-    protected $joiningColumn = 'role_id';
-
     /**
      * @return string
      */

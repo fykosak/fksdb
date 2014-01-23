@@ -14,6 +14,7 @@ use ServiceEventParticipant;
 class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMFyziklaniParticipant';
+    protected $joiningColumn = 'event_participant_id';
 
     public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);

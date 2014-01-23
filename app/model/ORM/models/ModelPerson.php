@@ -113,7 +113,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         foreach ($postContacts as $postContact) {
             $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
-            $result[] = new ModelMPostContact(
+            $result[] = ModelMPostContact::createFromExistingModels(
                     ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
             );
         }
