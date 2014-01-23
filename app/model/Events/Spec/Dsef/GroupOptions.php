@@ -61,7 +61,6 @@ class GroupOptions extends Object implements IOptionsProvider {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
             if ($data['capacity'] > $occupied) {
                 $remains = $data['capacity'] - $occupied;
-                var_dump($selfGroup, $key);
                 if ($selfGroup === $key) {
                     $remains -= 1;
                 }
