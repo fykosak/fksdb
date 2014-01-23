@@ -95,6 +95,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $joinedModel = $model->getJoinedModel();
         $this->getMainService()->save($mainModel);
         //update ID when it was new
+        $model->setService($this);
         $model->setMainModel($mainModel);
         $this->getJoinedService()->save($joinedModel);
         $model->setJoinedModel($joinedModel);

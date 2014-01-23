@@ -73,6 +73,14 @@ abstract class AbstractModelMulti extends Object implements IModel {
         $this->joinedModel = $joinedModel;
     }
 
+    public function getService() {
+        return $this->service;
+    }
+
+    public function setService(AbstractServiceMulti $service) {
+        $this->service = $service;
+    }
+
     public function &__get($name) {
         if ($this->getMainModel()->__isset($name)) {
             return $this->getMainModel()->__get($name);

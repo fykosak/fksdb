@@ -6,6 +6,7 @@ use AbstractServiceMulti;
 use AbstractServiceSingle;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
+use FKS\Components\Forms\Controls\TimeBox;
 use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
@@ -53,6 +54,8 @@ class DBReflectionFactory extends AbstractFactory {
                     ->addRule(Form::MAX_LENGTH, null, $size);
         } else if ($type == 'TEXT') {
             $element = new TextArea($field->getLabel());
+        } else if ($type == 'TIME') {
+            $element = new TimeBox($field->getLabel());
         } else {
             $element = new TextInput($field->getLabel());
             if ($size) {
