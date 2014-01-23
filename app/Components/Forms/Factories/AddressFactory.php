@@ -60,9 +60,10 @@ class AddressFactory {
                     ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
-        $container->addText('target', _('Místo'))
-                ->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
+        $control = new \FKS\Components\Forms\Controls\WriteonlyInput(_('Místo'));
+        $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
                 ->setOption('description', _('Nejčastěji ulice a číslo, ale třeba i P. O. Box.'));
+        $container->addComponent($control, 'target');
 
         $container->addText('city', _('Město'))
                 ->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));

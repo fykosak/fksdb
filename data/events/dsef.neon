@@ -1,0 +1,103 @@
+parameters:
+    events:
+        dsef:
+            appCond: or(regOpen(), role('admin'))
+            person:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    id_number: true
+                    born: true
+                post_contact:
+                    type: P
+                    address: true
+
+events:
+    dsef:
+        event_type_id: 2
+        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: dsef.grid
+        formLayout: dsef.form
+        paramScheme:
+            groups:
+                default:
+                    Alpha: 10
+            notifyBcc:
+                default: dsef@fykos.cz
+            notifyFrom:
+                default: Den s experimentální fyzikou <noreply@dsef.cz>
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceMDsefParticipant
+                
+                states:
+                    applied: Přihlášen
+                    participated: Účastnil se
+                    cancelled: Zrušen
+
+                transitions:
+                    __init->applied:
+                        condition: %events.dsef.appCond%
+                        label: Přihlásit účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(dsef.participant, .self)
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
+                    applied->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat přihlášku
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        required: true
+                        modifiable: %events.dsef.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.dsef.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    e_dsef_group_id:
+                        label: Skupina
+                        required: true
+                        modifiable: %events.dsef.appCond%
+                        #TODO factory
+                    accomodation:
+                        label: Ubytování
+                        modifiable: %events.dsef.appCond%
+                    arrival_time:
+                        label: Očekávaný příjezd
+                        modifiable: %events.dsef.appCond%
+                    lunch_count:
+                        label:  Počet baget k obědu                        
+                        modifiable: %events.dsef.appCond%
+                        description:  à 30 Kč
+                    message:
+                        label: Vzkaz ostatním
+                        modifiable: true
+                    note:
+                        label: Poznámka
+                        modifiable: %events.dsef.appCond%
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: Účastník
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            #formAdjustments:
+                # - @events.privacyPolicy
+                # - Events\Spec\Dsef\GroupCapacityCheck() TODO would need also visibility condition result
+                #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
+            processings:
+                - Events\Spec\Fyziklani\CategoryProcessing()

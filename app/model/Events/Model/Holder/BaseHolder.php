@@ -3,7 +3,7 @@
 namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
-use Events\Model\ConditionEvaluator;
+use Events\Model\ExpressionEvaluator;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
@@ -82,7 +82,7 @@ class BaseHolder extends FreezableObject {
     private $model;
 
     /**
-     * @var ConditionEvaluator
+     * @var ExpressionEvaluator
      */
     private $evaluator;
 
@@ -122,7 +122,7 @@ class BaseHolder extends FreezableObject {
         return $this->evaluator;
     }
 
-    public function setEvaluator(ConditionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
     }
 

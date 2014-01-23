@@ -29,3 +29,5 @@ services:
     event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
     event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
+    event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant

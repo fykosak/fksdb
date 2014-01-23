@@ -72,10 +72,10 @@ events:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
                     approved|spare->participated:
-                        condition: role('admin')
-                        label: Potvrdit účast
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
                     *->cancelled:
-                        condition: role('admin')
+                        condition: and(role('admin'),neg(state('cancelled')))
                         label: Zrušit tým
                     cancelled->__terminated:
                         condition: role('admin')

@@ -64,7 +64,13 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        $component->setDefaultValue($field->getValue());
+        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+            $column = $this->resolveColumn($field);
+            $default = $column['default'];
+        } else {
+            $default = $field->getValue();
+        }
+        $component->setDefaultValue($default);
     }
 
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
