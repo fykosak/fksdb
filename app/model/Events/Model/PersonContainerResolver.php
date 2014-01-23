@@ -33,11 +33,11 @@ class PersonContainerResolver extends Object implements IVisibilityResolver, IMo
     private $selfResolver;
 
     /**
-     * @var ConditionEvaluator
+     * @var ExpressionEvaluator
      */
     private $evaluator;
 
-    function __construct(Field $field, $condition, SelfResolver $selfResolver, ConditionEvaluator $evaluator) {
+    function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;
         $this->condition = $condition;
         $this->selfResolver = $selfResolver;

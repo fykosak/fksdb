@@ -28,7 +28,7 @@ class AddressContainer extends ModelContainer {
      * @param Traversable $value
      */
     public function setValue($value) {
-        $this->setValues($value);
+        $this->setValues($value === null ? array() : $value);
     }
 
     /**
@@ -37,7 +37,7 @@ class AddressContainer extends ModelContainer {
      * @param Traversable $value
      */
     public function setDefaultValue($value) {
-        $this->setDefaults($value);
+        $this->setDefaults($value === null ? array() : $value);
     }
 
     public function setValues($values, $erase = FALSE) {

@@ -24,7 +24,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      */
     public function getContest() {
         if ($this->contest === false) {
-            $this->contest = ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'event_type_id'));
+            $this->contest = ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
         }
         return $this->contest;
     }

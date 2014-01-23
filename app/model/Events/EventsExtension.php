@@ -60,6 +60,7 @@ class EventsExtension extends CompilerExtension {
             'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
             'role' => 'Events\Semantics\Role',
             'regOpen' => 'Events\Semantics\RegOpen',
+            'eventWas' => 'Events\Semantics\EventWas',
             'state' => 'Events\Semantics\State',
         ));
     }
@@ -197,7 +198,7 @@ class EventsExtension extends CompilerExtension {
         $factory->setParameters($parameters);
 
         $factory->addSetup('setCondition', '%condition%');
-        $factory->addSetup('setEvaluator', '@events.conditionEvaluator');
+        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
         $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
 
         $this->transtionFactory = $factory;
@@ -213,7 +214,7 @@ class EventsExtension extends CompilerExtension {
         array_unshift($parameters, 'name');
         $factory->setParameters($parameters);
 
-        $factory->addSetup('setEvaluator', '@events.conditionEvaluator');
+        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
 
         foreach (Arrays::grep($parameters, "/^name|label$/", PREG_GREP_INVERT) as $parameter) {
             $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");
@@ -387,7 +388,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setJoinOn', $definition['joinOn']);
         $factory->addSetup('setPersonIds', array($definition['personIds'])); // must be set after setService
         $factory->addSetup('setEventId', array($definition['eventId'])); // must be set after setService
-        $factory->addSetup('setEvaluator', '@events.conditionEvaluator');
+        $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
 
         foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
             $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");

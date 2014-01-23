@@ -3,12 +3,11 @@
 namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
-use Events\Model\ConditionEvaluator;
+use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -53,7 +52,12 @@ class Field extends FreezableObject {
     private $modifiable;
 
     /**
-     * @var ConditionEvaluator
+     * @var mixed
+     */
+    private $default;
+
+    /**
+     * @var ExpressionEvaluator
      */
     private $evaluator;
 
@@ -126,11 +130,20 @@ class Field extends FreezableObject {
         $this->visible = $visible;
     }
 
+    public function getDefault() {
+        return $this->default;
+    }
+
+    public function setDefault($default) {
+        $this->updating();
+        $this->default = $default;
+    }
+
     public function getEvaluator() {
         return $this->evaluator;
     }
 
-    public function setEvaluator(ConditionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
     }
 
@@ -168,8 +181,12 @@ class Field extends FreezableObject {
     }
 
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel();
-        return $model ? $model[$this->name] : null;
+        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            return $this->getDefault();
+        } else {
+            $model = $this->getBaseHolder()->getModel();
+            return $model ? $model[$this->name] : null;
+        }
     }
 
     public function __toString() {

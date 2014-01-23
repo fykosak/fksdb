@@ -60,7 +60,7 @@ services:
     #
     # Events
     #
-    events.conditionEvaluator: Events\Model\ConditionEvaluator
+    events.expressionEvaluator: Events\Model\ExpressionEvaluator
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
     - Events\Spec\Fyziklani\SchoolCheck
 
