@@ -58,6 +58,7 @@ class EventsExtension extends CompilerExtension {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(array(
             'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
+            'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
             'role' => 'Events\Semantics\Role',
             'regOpen' => 'Events\Semantics\RegOpen',
             'eventWas' => 'Events\Semantics\EventWas',

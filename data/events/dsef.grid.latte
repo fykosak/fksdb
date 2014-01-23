@@ -11,7 +11,7 @@
 
 {block row}
 <tr>
-    <td>{$holder->getPrimaryHolder()->getModel()->person->family_name}</td>
+    <td>{$holder->getPrimaryHolder()->getModel()->__toString()}</td>
     {include #menuRow key => $key, holder => $holder}
 </tr>
 {/block}

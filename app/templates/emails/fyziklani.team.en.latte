@@ -1,10 +1,5 @@
 <p>
-    Application state of the team <em>{$application}</em> has changed. Current state &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.<br/>
-    Changes are possible until {$until} using the link below:<br/>
-    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a>
+    Application state of the team <em>{$application}</em> has changed. Current state &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
 </p>
-
-<p>
-    With kind regards,<br/>
-    FKSDB
-</p>
+{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/closing.en.latte'}

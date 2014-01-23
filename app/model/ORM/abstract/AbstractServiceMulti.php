@@ -56,7 +56,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         $className = $this->modelClassName;
-        $result = new $className($mainModel, $joinedModel);
+        $result = new $className($this, $mainModel, $joinedModel);
         return $result;
     }
 
@@ -68,7 +68,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
      */
     public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         $className = $this->modelClassName;
-        $result = new $className($mainModel, $joinedModel);
+        $result = new $className($this, $mainModel, $joinedModel);
         return $result;
     }
 
@@ -131,6 +131,10 @@ abstract class AbstractServiceMulti extends Object implements IService {
         $this->joinedService = $joinedService;
     }
 
+    public function getJoiningColumn() {
+        return $this->joiningColumn;
+    }
+
     /**
      * 
      * @param int $key ID of the joined models
@@ -141,7 +145,11 @@ abstract class AbstractServiceMulti extends Object implements IService {
         if (!$joinedModel) {
             return null;
         }
-        $mainModel = $joinedModel->getMainModel();
+        $this->modelClassName;
+        $mainModel = $this->getMainService()
+                ->getTable()
+                ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
+                ->fetch(); //?? is this always unique??
         return $this->composeModel($mainModel, $joinedModel);
     }
 
