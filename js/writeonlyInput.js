@@ -27,9 +27,13 @@ $(function() {
                 actualGroup.prependTo(par);
             }            
 
-            var overlayInput = actualInput.clone().attr('id', null).attr('name', null).val('').attr('placeholder', originalLabel);
+            var overlayInput = actualInput.clone();
+            overlayInput.removeAttr('id', null).val('').attr('placeholder', originalLabel);
+            overlayInput.removeClass('date').removeAttr('name');
             overlayInput.removeAttr('data-writeonly');
-            overlayInput.removeData('data-writeonly');
+            overlayInput.removeAttr('data-nette-rules');
+            overlayInput.removeAttr('required');
+            overlayInput.attr('data-writeonly-overlay', true);
             overlayInput.insertAfter(actualGroup);
 
 

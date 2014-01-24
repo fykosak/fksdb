@@ -26,6 +26,15 @@ class WriteonlyDatePicker extends DatePicker implements IWriteonly {
         return $control;
     }
 
+    public function setValue($value) {
+        if ($value == self::VALUE_ORIGINAL) {
+            $this->value = $value;
+            $this->rawValue = $value;
+        } else {
+            parent::setValue($value);
+        }
+    }
+
     protected function attached($obj) {
         parent::attached($obj);
         $this->writeonlyAttached($obj);
