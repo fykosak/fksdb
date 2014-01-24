@@ -131,24 +131,20 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
 
                 $controlModifiable = $value ? $modifiable : true;
-                $controlVisible = ($component instanceof IWriteonly) ? $visible : true;
+                $controlVisible = $this->isWriteonly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
-                    $component->setWriteonly(true);
+                    $this->setWriteonly($component, true);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                 } else if ($controlVisible && $controlModifiable) {
-                    if ($component instanceof IWriteonly) {
-                        $component->setWriteonly(false);
-                    }
+                    $this->setWriteonly($component, false);
                 }
                 if ($mode == self::MODE_ROLLBACK) {
                     $component->setDisabled(false);
-                    if ($component instanceof IWriteonly) {
-                        $component->setWriteonly(false);
-                    }
+                    $this->setWriteonly($component, false);
                 } else {
                     if ($submittedBySearch || $force) {
                         $component->setValue($value);
@@ -158,6 +154,28 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     if ($value && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
+                }
+            }
+        }
+    }
+
+    private function setWriteonly($component, $value) {
+        if ($component instanceof IWriteonly) {
+            $component->setWriteonly($value);
+        } else if ($component instanceof Container) {
+            foreach ($component->getComponents() as $subcomponent) {
+                $this->setWriteonly($subcomponent, $value);
+            }
+        }
+    }
+
+    private function isWriteonly($component) {
+        if ($component instanceof IWriteonly) {
+            return true;
+        } else if ($component instanceof Container) {
+            foreach ($component->getComponents() as $subcomponent) {
+                if ($this->isWriteonly($subcomponent)) {
+                    return true;
                 }
             }
         }
