@@ -70,6 +70,7 @@ class WizardComponent extends Control {
     public function addStep(Form $form, $name, $nextCallback = null) {
         $form->addHidden(self::ID_ELEMENT);
         $form->onSuccess[] = array($this, 'stepSubmitted');
+        $form->onError[] = array($this, 'stepError');
         $this->addComponent($form, $name);
         if ($nextCallback !== null) {
             $this->nextCallbacks[$name] = $nextCallback;
@@ -229,6 +230,20 @@ class WizardComponent extends Control {
             $this->setCurrentStep(null);
             $this->onProcess($this);
         }
+    }
+
+    /**
+     * @interal
+     * @param Form $form
+     */
+    public function stepError(Form $form) {
+        // detect where we are
+        $name = $form->getName();
+        $this->setCurrentStep($name);
+
+        $values = $form->getValues();
+        $this->setWizardId($values[self::ID_ELEMENT]);
+        unset($values[self::ID_ELEMENT]);
     }
 
     private function getSession() {
