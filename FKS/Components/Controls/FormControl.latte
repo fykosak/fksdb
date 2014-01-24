@@ -28,7 +28,8 @@
 <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required" id="{$field->getHtmlId()}-pair">
         {label $field class => "col-lg-$left control-label"/}
     <div class="col-lg-{$right}">
-        {input $field class => 'form-control'}
+        {? $field->getControlPrototype()->addClass('form-control')}
+        {input $field}
         {include #metadata field => $field}
     </div>
 </div>
