@@ -240,7 +240,7 @@ class ApplicationComponent extends Control {
             } else if (isset($transitions[$explicitMachineName])) {
                 $this->presenter->flashMessage(sprintf(_("Stav přihlášky '%s' změněn."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_INFO);
             }
-            if ($form && !$transitions[$explicitMachineName]->isTerminating()) {
+            if ($form && isset($transitions[$explicitMachineName]) && !$transitions[$explicitMachineName]->isTerminating()) {
                 $this->presenter->flashMessage(sprintf(_("Přihláška '%s' uložena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
             }
 
