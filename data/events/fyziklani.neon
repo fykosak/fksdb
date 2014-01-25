@@ -187,6 +187,7 @@ events:
                 - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\Spec\Fyziklani\SchoolCheck()
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:
