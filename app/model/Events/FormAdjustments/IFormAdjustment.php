@@ -7,7 +7,8 @@ use Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
+ * @note If you write a form control validator be sure that you don't call
+ * getValue on ReferencedId control -- it may cause a query out of transaction.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
