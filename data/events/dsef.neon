@@ -95,7 +95,8 @@ events:
                     label: Účastník
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
-            #formAdjustments:
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 # - @events.privacyPolicy
                 # - Events\Spec\Dsef\GroupCapacityCheck() TODO would need also visibility condition result
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
