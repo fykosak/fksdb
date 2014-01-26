@@ -11,10 +11,12 @@ use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FormUtils;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\InvalidStateException;
 use PublicModule\BasePresenter;
 
 /**
@@ -279,7 +281,8 @@ class ApplicationComponent extends Control {
     }
 
     private function processValues(Form $form) {
-        $values = $form->getValues();
+        $values = FormUtils::emptyStrToNull($form->getValues());
+        
         // Find out transitions
         $newStates = $this->holder->processFormValues($form, $values, $this->machine);
         $transitions = array();
