@@ -195,6 +195,7 @@ events:
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()
+                - @events.privacyPolicy
 
             joins:
                 team:
