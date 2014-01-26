@@ -28,6 +28,8 @@ events:
                 default: dsef@fykos.cz
             notifyFrom:
                 default: Den s experimentální fyzikou <noreply@dsef.cz>
+            accomodationCapacity:
+                default: 0
 
         baseMachines:
             PARTICIPANT:
@@ -97,6 +99,7 @@ events:
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 # - @events.privacyPolicy
                 # - Events\Spec\Dsef\GroupCapacityCheck() TODO would need also visibility condition result
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
