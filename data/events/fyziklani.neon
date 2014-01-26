@@ -40,6 +40,8 @@ events:
                 default: michal+bcc@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <noreply@fyziklani.cz>
+            accomodationCapacity:
+                default: 0
 
         baseMachines:
             #
@@ -188,6 +190,7 @@ events:
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
                 - Events\Spec\Fyziklani\SchoolCheck()
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:

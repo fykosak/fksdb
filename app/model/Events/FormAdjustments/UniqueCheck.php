@@ -5,11 +5,14 @@ namespace Events\FormAdjustments;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use FKS\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
+ * @note Assumes the first part of the field name is the holder name or
+ * the dynamic (wildcart) part represents the holder name.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -36,7 +39,7 @@ class UniqueCheck extends AbstractAdjustment {
             $control->addRule(function(IControl $control) use($baseHolder, $field) {
                         $table = $baseHolder->getService()->getTable();
                         $column = BaseHolder::getBareColumn($field);
-                        if ($control instanceof \FKS\Components\Forms\Controls\ReferencedId) {
+                        if ($control instanceof ReferencedId) {
                             $value = $control->getValue(false);
                         } else {
                             $value = $control->getValue();
