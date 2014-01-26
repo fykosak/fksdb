@@ -1,5 +1,6 @@
 <?php
 
+use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
 
@@ -19,13 +20,30 @@ abstract class AbstractModelMulti extends Object implements IModel {
     protected $joinedModel;
 
     /**
-     * @var string
+     * @var AbstractServiceMulti
      */
-    protected $joiningColumn;
+    protected $service;
 
-    public function __construct($mainModel, $joinedModel) {
-        $this->setJoinedModel($joinedModel);
-        $this->setMainModel($mainModel);
+    /**
+     * @note DO NOT use directly, use AbstracServiceMulti::composeModel or AbstractModelMulti::createFromExistingModels.
+     * 
+     * @param AbstractServiceMulti $service
+     * @param IModel $mainModel
+     * @param IModel $joinedModel
+     */
+    public function __construct($service, $mainModel, $joinedModel) {
+        if ($service == null) {
+            $this->joinedModel = $joinedModel;
+            $this->mainModel = $mainModel;
+        } else {
+            $this->service = $service;
+            $this->setJoinedModel($joinedModel);
+            $this->setMainModel($mainModel);
+        }
+    }
+
+    public static function createFromExistingModels($mainModel, $joinedModel) {
+        return new static(null, $mainModel, $joinedModel);
     }
 
     public function toArray() {
@@ -37,9 +55,12 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
     public function setMainModel(AbstractModelSingle $mainModel) {
+        if (!$this->service) {
+            throw new InvalidStateException('Cannot set main model on multimodel w/out service.');
+        }
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->getJoinedModel()) { // bind via foreign key
-            $joiningColumn = $this->joiningColumn;
+            $joiningColumn = $this->service->getJoiningColumn();
             $this->getJoinedModel()->$joiningColumn = $mainModel->getPrimary();
         }
     }
@@ -50,6 +71,14 @@ abstract class AbstractModelMulti extends Object implements IModel {
 
     public function setJoinedModel(AbstractModelSingle $joinedModel) {
         $this->joinedModel = $joinedModel;
+    }
+
+    public function getService() {
+        return $this->service;
+    }
+
+    public function setService(AbstractServiceMulti $service) {
+        $this->service = $service;
     }
 
     public function &__get($name) {

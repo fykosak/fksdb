@@ -40,6 +40,8 @@ events:
                 default: michal+bcc@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <noreply@fyziklani.cz>
+            accomodationCapacity:
+                default: 0
 
         baseMachines:
             #
@@ -72,10 +74,10 @@ events:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
                     approved|spare->participated:
-                        condition: role('admin')
-                        label: Potvrdit účast
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
                     *->cancelled:
-                        condition: role('admin')
+                        condition: and(role('admin'),neg(state('cancelled')))
                         label: Zrušit tým
                     cancelled->__terminated:
                         condition: role('admin')
@@ -186,11 +188,14 @@ events:
                 - @events.privacyPolicy
                 - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
-                - Events\FormAdjustments\UniqueCheck('team.name')
+                - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
                 - Events\Spec\Fyziklani\SchoolCheck()
                 #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()
+                - @events.privacyPolicy
 
             joins:
                 team:

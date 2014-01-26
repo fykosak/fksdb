@@ -6,8 +6,6 @@
  */
 class ModelMPostContact extends AbstractModelMulti {
 
-    protected $joiningColumn = 'address_id';
-
     /**
      * @return ModelAddress
      */

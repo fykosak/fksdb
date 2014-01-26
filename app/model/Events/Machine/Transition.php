@@ -2,7 +2,7 @@
 
 namespace Events\Machine;
 
-use Events\Model\ConditionEvaluator;
+use Events\Model\ExpressionEvaluator;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
 use Nette\FreezableObject;
@@ -57,7 +57,7 @@ class Transition extends FreezableObject {
     private $condition;
 
     /**
-     * @var ConditionEvaluator
+     * @var ExpressionEvaluator
      */
     private $evaluator;
 
@@ -124,7 +124,7 @@ class Transition extends FreezableObject {
         return $this->evaluator;
     }
 
-    public function setEvaluator(ConditionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
     }
 

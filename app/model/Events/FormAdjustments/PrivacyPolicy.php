@@ -12,13 +12,11 @@ use Nette\Application\UI\Form as AppForm;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
+use ServicePersonInfo;
 
 /**
- * Checks determining fields in sent data and either terminates the application
- * or tries to find unambiguous transition from the initial state.
- * 
- * @note Transition conditions are evaluated od pre-edited data.
- * @note All determining fields must be filled to consider application complete.
+ * Creates required checkbox for whole application and then
+ * sets agreed bit in all person_info containers found (even for editations).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -31,8 +29,14 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
      */
     private $personFactory;
 
-    function __construct(PersonFactory $personFactory) {
+    /**
+     * @var ServicePersonInfo
+     */
+    private $servicePersonInfo;
+
+    function __construct(PersonFactory $personFactory, ServicePersonInfo $servicePersonInfo) {
         $this->personFactory = $personFactory;
+        $this->servicePersonInfo = $servicePersonInfo;
     }
 
     public function adjust(Form $form, Machine $machine, Holder $holder) {
@@ -49,8 +53,25 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
     }
 
     public function process($states, AppForm $form, ArrayHash $values, Machine $machine, Holder $holder) {
-        //TODO think about what it should actually do (set agreed to all related persons or whoever?)
-        //     and possibly restrict conditions when checkbox is added at all
+        $this->trySetAgreed($values);
+    }
+
+    private function trySetAgreed(ArrayHash $values) {
+        foreach ($values as $key => $value) {
+            if ($value instanceof ArrayHash) {
+                $this->trySetAgreed($value);
+            } else {
+                if (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
+                    $personId = $value;
+                    $personInfo = $this->servicePersonInfo->findByPrimary($personId);
+                    if ($personInfo) {
+                        $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
+                        $this->servicePersonInfo->save($personInfo);
+                        $values[$key . '_1']['person_info']['agreed'] = 1;
+                    }
+                }
+            }
+        }
     }
 
 }

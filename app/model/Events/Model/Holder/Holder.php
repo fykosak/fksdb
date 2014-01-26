@@ -133,6 +133,10 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
         return $this->baseHolders[$name];
     }
+    
+    public function hasBaseHolder($name) {
+        return isset($this->baseHolders[$name]);
+    }
 
     public function getEvent() {
         return $this->event;

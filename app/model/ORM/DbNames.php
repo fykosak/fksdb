@@ -36,5 +36,6 @@ class DbNames {
     /* Specified tables for events */
     const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
+    const TAB_E_DSEF_PARTICIPANT = 'e_dsef_participant';
 
 }

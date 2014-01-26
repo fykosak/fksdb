@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Controls\WriteonlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
@@ -60,12 +60,14 @@ class AddressFactory {
                     ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
-        $container->addText('target', _('Místo'))
-                ->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
-                ->setOption('description', _('Nejčastěji ulice a číslo, ale třeba i P. O. Box.'));
+        $control = new WriteonlyInput(_('Místo'));
+        $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
+                ->setOption('description', _('Typicky ulice a číslo popisné. (Alternativně poštovní přihrádka, poste restance apod.)')); //TODO problem distinguishing permanent and delivery address
+        $container->addComponent($control, 'target');
 
-        $container->addText('city', _('Město'))
-                ->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+        $control = new WriteonlyInput(_('Město'));
+        $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+        $container->addComponent($control, 'city');
 
 
         $postalCode = $container->addText('postal_code', _('PSČ'))

@@ -72,6 +72,8 @@ field:
     visible:
         default: true
         type: expression
+    default:
+        default: null
     factory:
         default: @event.DBReflectionFactory
         type: expression
