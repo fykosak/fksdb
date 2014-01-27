@@ -62,7 +62,7 @@ class AddressFactory {
 
         $control = new WriteonlyInput(_('Místo'));
         $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
-                ->setOption('description', _('Typicky ulice a číslo popisné. (Alternativně poštovní přihrádka, poste restance apod.)')); //TODO problem distinguishing permanent and delivery address
+                ->setOption('description', _('Typicky ulice a číslo popisné. (Alternativně poštovní přihrádka, poste restante apod.)')); //TODO problem distinguishing permanent and delivery address
         $container->addComponent($control, 'target');
 
         $control = new WriteonlyInput(_('Město'));
