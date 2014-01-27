@@ -1,6 +1,7 @@
 {if}
 <table class="table table-condensed table-hover">
     <thead n:block="header">
+    <th>{_'Účastník'}</th>
         {block menuHeader}
     <th class="col-lg-2">{_'Stav'}</th>
     <th class="col-lg-4">{_'Operace'}</th>
@@ -11,6 +12,7 @@
         {foreach $eventApplications as $key => $event}
         {var $holder = $holders[$key]}
     <tr n:block="row">
+        <td>{$holder->getPrimaryHolder()->getModel()->__toString()}</td>
         {block menuRow}
         <td>
             <span n:tag-if="$holder->getPrimaryHolder()->getModelState() != Events\Machine\BaseMachine::STATE_INIT" title="Vytvořeno: {$holder->getPrimaryHolder()->getModel()->created}">

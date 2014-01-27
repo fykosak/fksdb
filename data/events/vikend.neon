@@ -1,0 +1,107 @@
+parameters:
+    events:
+        vikend:
+            appCond: or(regOpen(), role('admin'))
+            person:
+                person:
+                    other_name: true
+                    family_name: true
+                person_history:
+                    school_id: true
+                person_info:
+                    email: true
+                    id_number: true
+                    born: true
+
+events:
+    vikend:
+        event_type_id: 3
+        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: event.grid
+        formLayout: vikend.form
+        paramScheme:
+            notifyBcc:
+                default: webmaster@fykos.cz
+            notifyFrom:
+                default: FYKOSí víkend <noreply@fykos.cz>
+            capacity:
+                default: 0
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceMVikendParticipant
+                
+                states:
+                    applied: Přihlášen
+                    spare: Náhradník
+                    participated: Účastnil se
+                    cancelled: Zrušen
+
+                transitions:
+                    __init->applied:
+                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        label: Přihlásit účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(vikend.participant, .self)
+                    __init->spare:
+                        condition: or(and(regOpen(),neg(le(count('applied'),param('capacity')))), role('admin'))
+                        label: Přihlásit náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(vikend.participant, .self)
+                    spare->applied:
+                        condition: role('admin')
+                        label: Nasadit náhradníka
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
+                    *->cancelled:
+                        condition: and(neg(state('participated')),neg(state('cancelled')),role('admin'))
+                        label: Zrušit přihlášku
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat přihlášku
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        required: true
+                        modifiable: %events.vikend.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.vikend.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    answer:
+                        label: 'Jakou barvu má Higgsův boson?'
+                        required: true
+                        modifiable: %events.vikend.appCond%
+                    gives_lecture:
+                        label: Název vlastní přednášky
+                        description: 'Pokud chcete přednášet, napište si sem téma. Možno doplnit později.'
+                        modifiable: %events.vikend.appCond%
+                    gives_lecture_desc:
+                        label: Anotace vlastní přednášky
+                        description: 'Pokud chcete přednášet, napiště si sem krátkou anotaci. Možno editovat později.'
+                        modifiable: %events.vikend.appCond%
+                    wants_lecture:
+                        label: Jakou přednášku bys chtěl slyšet?
+                        modifiable: %events.vikend.appCond%
+                    note:
+                        label: Vzkary organizátorům
+                        modifiable: %events.vikend.appCond%
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: Účastník
+                    required: true
+                    primary: true
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                
+            processings:
+                - @events.privacyPolicy

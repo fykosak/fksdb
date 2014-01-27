@@ -60,7 +60,7 @@ class LoggingMailer extends Object implements IMailer {
         if ($e) {
             fprintf($f, "FAILED %s\n", $e->getMessage());
         }
-        fprintf($f, $mail->generateMessage());
+        fwrite($f, $mail->generateMessage());
 
         fclose($f);
     }

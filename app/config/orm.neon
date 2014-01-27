@@ -31,3 +31,5 @@ services:
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
     event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
+    event.ServiceVikendParticipant:         ORM\Services\Events\ServiceVikendParticipant
+    event.ServiceMVikendParticipant:        ORM\ServicesMulti\Events\ServiceMVikendParticipant

@@ -1,0 +1,6 @@
+{* General template for any event. *}
+<p>
+    We confirm receiving your application for <em>{$event}</em>.
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}
