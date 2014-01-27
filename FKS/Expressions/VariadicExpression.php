@@ -2,14 +2,12 @@
 
 namespace FKS\Expressions;
 
-use Nette\Object;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class VariadicExpression extends Object {
+abstract class VariadicExpression extends FunctionExpression {
 
     private $arguments;
 
@@ -24,13 +22,8 @@ abstract class VariadicExpression extends Object {
 
     abstract protected function evaluate($args);
 
-    protected function evalArg($index, $args) {
-        $evaluated = $this->arguments[$index];
-        if (is_callable($evaluated)) {
-            return call_user_func_array($evaluated, $args);
-        } else {
-            return $evaluated;
-        }
+    protected function evalArgAt($index, $args) {
+        return $this->evalArg($this->arguments[$index], $args);
     }
 
     protected function getArg($index) {

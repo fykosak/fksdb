@@ -19,6 +19,8 @@ class Helpers {
         'neg' => 'FKS\Expressions\Logic\Not',
         'after' => 'FKS\Expressions\Predicates\After',
         'before' => 'FKS\Expressions\Predicates\Before',
+        'le' => 'FKS\Expressions\Comparison\Le',
+        'leq' => 'FKS\Expressions\Comparison\Leq',
     );
 
     public static function registerSemantic($semanticMap) {

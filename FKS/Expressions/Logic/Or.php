@@ -13,7 +13,7 @@ class Or_ extends VariadicExpression {
 
     protected function evaluate($args) {
         for ($i = 0; $i < $this->getArity(); ++$i) {
-            if ($this->evalArg($i, $args)) {
+            if ($this->evalArgAt($i, $args)) {
                 return true;
             }
         }
