@@ -18,7 +18,7 @@ events:
     dsef:
         event_type_id: 2
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
-        tableLayout: dsef.grid
+        tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
             groups:
@@ -103,5 +103,4 @@ events:
                 - @events.privacyPolicy
                 
             processings:
-                - Events\Spec\Fyziklani\CategoryProcessing()
                 - @events.privacyPolicy

@@ -5,6 +5,7 @@ namespace Events\Semantics;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Field;
+use Events\Model\Holder\Holder;
 use ModelEvent;
 
 /**

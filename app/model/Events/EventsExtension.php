@@ -63,6 +63,9 @@ class EventsExtension extends CompilerExtension {
             'regOpen' => 'Events\Semantics\RegOpen',
             'eventWas' => 'Events\Semantics\EventWas',
             'state' => 'Events\Semantics\State',
+            'param' => 'Events\Semantics\Parameter',
+            'parameter' => 'Events\Semantics\Parameter',
+            'count' => 'Events\Semantics\Count',
         ));
     }
 
