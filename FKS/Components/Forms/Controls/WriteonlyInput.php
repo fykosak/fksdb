@@ -26,6 +26,11 @@ class WriteonlyInput extends TextInput implements IWriteonly {
         return $control;
     }
 
+    public function loadHttpData() {
+        parent::loadHttpData();
+        $this->writeonlyLoadHttpData();
+    }
+
     protected function attached($obj) {
         parent::attached($obj);
         $this->writeonlyAttached($obj);

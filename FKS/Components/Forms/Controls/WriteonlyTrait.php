@@ -13,13 +13,16 @@ use Nette\Utils\Html;
  * @note When using this trait, be sure to call:
  *           writeonlyAppendMonitors in __constuctor
  *           writeonlyAdjustControl in getControl
- *       and writeonlyAttached in attached
+ *           writeonlyLoadHttpData in loadHttpData after original loadHttpData
+ *       and writeonlyAttached in attached.
+ * 
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait WriteonlyTrait {
 
     private $writeonly = true;
     private $actuallyDisabled = false;
+    private $hasManualValue = false;
 
     private function writeonlyAppendMonitors() {
         $this->monitor('Nette\Forms\Form');
@@ -40,13 +43,19 @@ trait WriteonlyTrait {
 
 // don't show the value (only if it's form displayed after submit)
 // for JS
-        if ($this->writeonly && $this->getValue()) {
+        if ($this->writeonly && $this->getValue() && !$this->hasManualValue) {
             $control->data['writeonly'] = (int) true;
             $control->data['writeonly-value'] = self::VALUE_ORIGINAL;
             $control->data['writeonly-label'] = _('skrytá hodnota');
             $control->value = self::VALUE_ORIGINAL;
         }
         return $control;
+    }
+
+    protected function writeonlyLoadHttpData() {
+        if ($this->getValue() != self::VALUE_ORIGINAL) {
+            $this->hasManualValue = true;
+        }
     }
 
     private function writeonlyDisable() {
