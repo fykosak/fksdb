@@ -2,6 +2,7 @@ parameters:
     events:
         fyziklani:
             appCond: or(regOpen(), role('admin'))
+            accomodation: 'Noc před soutěží (tj. z 13.2. na 14.2.).'
             teacher:
                 person:
                     other_name: true
@@ -112,6 +113,7 @@ events:
                     teacher_accomodation:
                         label: Ubytování pro učitele
                         visible: true
+                        description: %events.fyziklani.accomodation%
                         modifiable: %events.fyziklani.appCond%
                     note:
                         label: Poznámka
@@ -153,6 +155,7 @@ events:
                     accomodation:
                         label: Ubytování
                         visible: true
+                        description: %events.fyziklani.accomodation%
                         modifiable: %events.fyziklani.appCond%
                         required: false
 

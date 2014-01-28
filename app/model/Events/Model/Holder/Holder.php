@@ -133,7 +133,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
         return $this->baseHolders[$name];
     }
-    
+
     public function hasBaseHolder($name) {
         return isset($this->baseHolders[$name]);
     }
@@ -211,10 +211,14 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * @parem Form $form
      * @param ArrayHash $values
      * @param \Events\Model\Machine $machine
+     * @param Transition[] $transitions
      * @return string[] machineName => new state
      */
-    public function processFormValues(Form $form, ArrayHash $values, Machine $machine) {
+    public function processFormValues(Form $form, ArrayHash $values, Machine $machine, $transitions) {
         $newStates = array();
+        foreach ($transitions as $name => $transition) {
+            $newStates[$name] = $transition->getTarget();
+        }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $form, $values, $machine, $this);
             if ($result) {

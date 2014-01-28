@@ -10,7 +10,6 @@ use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Object;
 
-
 /**
  * Checks determining fields in sent data and either terminates the application
  * or tries to find unambiguous transition from the initial state.
@@ -22,7 +21,7 @@ use Nette\Object;
  */
 class GenKillProcessing extends Object implements IProcessing {
 
-    public function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {        
+    public function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
         $result = array();
         foreach ($holder as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
@@ -43,6 +42,8 @@ class GenKillProcessing extends Object implements IProcessing {
                 $transitions = $baseMachine->getAvailableTransitions();
                 if (count($transitions) == 0) {
                     throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
+                } else if (isset($states[$name])) {
+                    $result[$name] = $states[$name]; // propagate already set state
                 } else if (count($transitions) > 1) {
                     throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
                 } else {
