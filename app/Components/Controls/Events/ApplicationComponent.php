@@ -209,19 +209,17 @@ class ApplicationComponent extends Control {
             $connection->beginTransaction();
 
             $transitions = array();
-            if ($form) {
-                $transitions = $this->processValues($form);
-            }
-
             if ($explicitTransitionName !== null) {
                 $explicitMachine = $this->machine[$explicitMachineName];
                 $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
-                if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->getTarget() != $explicitTransition->getTarget()) {
-                    throw new MachineExecutionException(sprintf('Collision of explicit transision %s and processing transition %s', $explicitTransitionName, $explicitTransitionName[$explicitMachineName]->getName()));
-                }
 
                 $transitions[$explicitMachineName] = $explicitTransition;
             }
+
+            if ($form) {
+                $transitions = $this->processValues($form, $transitions);
+            }
+
 
             foreach ($transitions as $transition) {
                 $transition->execute();
@@ -280,12 +278,11 @@ class ApplicationComponent extends Control {
         }
     }
 
-    private function processValues(Form $form) {
+    private function processValues(Form $form, $transitions) {
         $values = FormUtils::emptyStrToNull($form->getValues());
 
         // Find out transitions
-        $newStates = $this->holder->processFormValues($form, $values, $this->machine);
-        $transitions = array();
+        $newStates = $this->holder->processFormValues($form, $values, $this->machine, $transitions);
         foreach ($newStates as $name => $newState) {
             $transition = $this->machine[$name]->getTransitionByTarget($newState);
             if ($transition) {
