@@ -2,6 +2,7 @@ parameters:
     events:
         dsef:
             appCond: or(regOpen(), role('admin'))
+            accomodation: 'Noc před akcí (tj. z 12.2. na 13.2.).'
             person:
                 person:
                     other_name: true
@@ -70,6 +71,7 @@ events:
                         factory: Chooser(Zvolit skupinu, Events\Spec\Fyziklani\GroupOptions())
                     accomodation:
                         label: Ubytování
+                        description: %events.dsef.accomodation%
                         modifiable: %events.dsef.appCond%
                     arrival_time:
                         label: Očekávaný příjezd
