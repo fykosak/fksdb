@@ -104,7 +104,7 @@ $(function() {
                 var buttonEdit = $('<button type="button" class="btn btn-sm btn-default" title="Upravit"><span class="glyphicon glyphicon-edit"></span></button>');
                 buttonEdit.click(decompactifyContainer);
 
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning" title="Smazat"><span class="glyphicon glyphicon-trash"></span></button>');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
                 });
@@ -135,7 +135,7 @@ $(function() {
 
             function decorateClearButton() {
                 var well = elContainer.find('.well');
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning pull-right" title="Smazat"><span class="glyphicon glyphicon-trash"></span></button>');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning pull-right" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
                 });
