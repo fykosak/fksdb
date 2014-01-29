@@ -156,16 +156,17 @@ $(function() {
             });
 
             var hasAnyFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear).filter(function() {
-                return $(this).val() == '';
+                return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
             });
 
+            var hasErrors = elContainer.find(".has-error");
 
 
             if (elSearch.length) {
                 searchifyContainer();
-            } else if (elClear.length && !hasAnyFields.length) {
+            } else if (elClear.length && !(hasAnyFields.length || hasErrors.length)) {
                 compactifyContainer();
-            } else if (elClear.length && hasAnyFields.length) {
+            } else if (elClear.length && (hasAnyFields.length || hasErrors.length)) {
                 decorateClearButton();
             }
         }
