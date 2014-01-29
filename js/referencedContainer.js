@@ -48,12 +48,14 @@ $(function() {
 
                 elSearch.keydown(function(e) {
                     var code = e.keyCode || e.which;
+                    var hasShift = e.shiftKey;
                     if (code == '9') {
-                        var controls = $('.form-control,input[type="submit"]');
+                        var controls = $('.form-control,input[type="submit"],input[type="checkbox"]');
                         var next = this;
+                        var diff = hasShift ? -1 : 1;
                         //var next = controls.eq(controls.index(this) + 1);
                         do {
-                            next = controls.eq(controls.index(next) + 1);
+                            next = controls.eq(controls.index(next) + diff);
                             next.focus();
                         } while (!next.is(':focus'));
 
