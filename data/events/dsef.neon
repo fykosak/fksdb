@@ -103,6 +103,7 @@ events:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')                
                 - @events.privacyPolicy
+                - @events.captcha
                 
             processings:
                 - @events.privacyPolicy

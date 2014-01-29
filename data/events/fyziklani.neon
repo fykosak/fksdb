@@ -189,6 +189,7 @@ events:
                     label: 5. člen
             formAdjustments:
                 - @events.privacyPolicy
+                - @events.captcha
                 - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")

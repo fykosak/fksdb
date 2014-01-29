@@ -102,6 +102,7 @@ events:
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
+                - @events.captcha
                 
             processings:
                 - @events.privacyPolicy
