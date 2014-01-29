@@ -84,7 +84,7 @@ events:
                         label: Jakou přednášku bys chtěl slyšet?
                         modifiable: %events.vikend.appCond%
                     note:
-                        label: Vzkary organizátorům
+                        label: Vzkazy organizátorům
                         modifiable: %events.vikend.appCond%
 
 
