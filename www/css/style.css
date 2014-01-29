@@ -35,6 +35,9 @@ html, body {
     font-size: 65%;
 }
 
+/*
+ * Forms
+ */ 
 .well legend {
     color: #999;
     border-style: none;
@@ -54,4 +57,10 @@ html, body {
     right: 0px;
     padding: 8px 12px;
     cursor: pointer; /* TODO not general enough, might be a static icon */
+}
+
+.required .control-label:before {
+    color: #b94a48;
+    content: '* ';
+    display:inline;
 }
