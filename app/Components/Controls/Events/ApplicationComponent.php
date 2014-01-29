@@ -170,7 +170,7 @@ class ApplicationComponent extends Control {
                 } else if ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            }if ($transition->isTerminating()) {
+            } else if ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-danger');
                 $submit->setOption('row', 3);
             } else {
