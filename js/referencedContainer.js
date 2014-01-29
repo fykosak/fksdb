@@ -60,6 +60,12 @@ $(function() {
                         return false;
                     }
                 });
+
+                elSearch.keypress(function(e) {
+                    if (e.which == 13) {
+                        return false;
+                    }
+                });
                 // promote search group in place of the container
                 var searchGroup = elSearch.closest('.form-group');
 
@@ -173,8 +179,9 @@ $(function() {
                         var snippet = $('#' + id);
                         $.fks.referencedContainer._proto.transformContainer(snippet, elRefId);
                         snippet.closest('form').each(function() {
-				window.Nette.initForm(this);
-			});
+                            window.Nette.initForm(this);
+                            $(this).enterSubmitForm('update');
+                        });
                     }
                 }
             }
