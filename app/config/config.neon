@@ -32,7 +32,7 @@ parameters:
 
     # Configuration of sent emails.
     email:
-        templatesDir: %appDir%/templates/emails
+        templatesDir: %appDir%/../data/emails
         from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
