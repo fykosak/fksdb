@@ -139,10 +139,11 @@ class ApplicationComponent extends Control {
         /*
          * Create save (no transition) button
          */
+        $saveSubmit = null;
         if ($this->canEdit()) {
-            $submit = $form->addSubmit('save', _('Uložit'));
-            $submit->setOption('row', 1);
-            $submit->onClick[] = function(SubmitButton $button) use($that) {
+            $saveSubmit = $form->addSubmit('save', _('Uložit'));
+            $saveSubmit->setOption('row', 1);
+            $saveSubmit->onClick[] = function(SubmitButton $button) use($that) {
                         $form = $button->getForm();
                         $that->handleSubmit($form);
                     };
@@ -151,6 +152,7 @@ class ApplicationComponent extends Control {
          * Create transition buttons
          */
         $primaryMachine = $this->machine->getPrimaryMachine();
+        $transitionSubmit = null;
         foreach ($primaryMachine->getAvailableTransitions() as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
@@ -163,6 +165,11 @@ class ApplicationComponent extends Control {
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-success');
                 $submit->setOption('row', 1);
+                if ($transitionSubmit !== false) {
+                    $transitionSubmit = $submit;
+                } else if ($transitionSubmit) {
+                    $transitionSubmit = false; // if there is more than one submit set no one
+                }
             }if ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-danger');
                 $submit->setOption('row', 3);
@@ -188,6 +195,12 @@ class ApplicationComponent extends Control {
          * Custom adjustments
          */
         $this->holder->adjustForm($form, $this->machine);
+        $form->getElementPrototype()->data['submit-on'] = 'enter';
+        if ($saveSubmit) {
+            $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
+        } else if ($transitionSubmit) {
+            $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
+        }
 
         return $result;
     }
