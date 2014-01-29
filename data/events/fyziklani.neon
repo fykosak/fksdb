@@ -71,11 +71,6 @@ events:
                         label: Schválit účast
                         onExecuted:
                             - Events\Transitions\MailSender(fyziklani.team, *)
-                    pending->pending:
-                        condition: role('admin')
-                        label: Poslat mail 1
-                        onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.team.up, *)
                     pending->spare:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
