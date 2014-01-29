@@ -259,7 +259,11 @@ class PersonPresenter extends EntityPresenter {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit('send', _('Uložit'))->onClick[] = array($this, 'handleEditFormSuccess');
+        $submit = $form->addSubmit('send', _('Uložit'));
+        $submit->onClick[] = array($this, 'handleEditFormSuccess');
+
+        $form->getElementPrototype()->data['submit-on'] = 'enter';
+        $submit->getControlPrototype()->data['submit-on'] = 'this';
 
         return $form;
     }

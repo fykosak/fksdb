@@ -197,7 +197,11 @@ class ExtendedPersonWizardFactory {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit(self::SEND, _('Dokončit'));
+        $submit = $form->addSubmit(self::SEND, _('Dokončit'));
+        
+        $form->getElementPrototype()->data['submit-on'] = 'enter';
+        $submit->getControlPrototype()->data['submit-on'] = 'this';
+        
         return $form;
     }
 
