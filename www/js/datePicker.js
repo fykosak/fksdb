@@ -36,7 +36,9 @@ $(document).ready(function() {
 
         el.datepicker({
             minDate: minDate,
-            maxDate: maxDate
+            maxDate: maxDate,
+            changeMonth: true,
+            changeYear: true
         });
 
         var value = el.val();
