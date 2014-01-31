@@ -99,6 +99,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
                     $working = $dest . self::TEMPORARY_EXT;
 
                     rename($filename, $original);
+                    chmod($original, 0644);
                     copy($original, $working);
                     foreach ($this->processings as $processing) {
                         $processing->setInputFile($working);
