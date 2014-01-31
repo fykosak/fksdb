@@ -28,7 +28,7 @@ events:
             notifyBcc:
                 default: dsef@fykos.cz
             notifyFrom:
-                default: Den s experimentální fyzikou <noreply@dsef.cz>
+                default: Den s experimentální fyzikou <dsef@fykos.cz>
             accomodationCapacity:
                 default: 0
 
