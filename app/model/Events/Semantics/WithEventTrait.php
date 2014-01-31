@@ -28,6 +28,9 @@ trait WithEventTrait {
      * @return Holder
      */
     protected function getHolder($obj) {
+        if ($obj instanceof Holder)
+            return $obj;
+        
         if ($obj instanceof Transition)
             return $obj->getBaseMachine()->getMachine()->getHolder();
 

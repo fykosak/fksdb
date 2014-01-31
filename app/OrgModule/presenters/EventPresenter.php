@@ -18,6 +18,7 @@ use Nette\DI\Container;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
+use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ServiceEvent;
@@ -90,7 +91,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function actionDelete($id) {
-        // There's no use case for this. (Errors must be deleted manually via SQL.)
+// There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
 
@@ -146,12 +147,11 @@ class EventPresenter extends EntityPresenter {
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
 
-        if ($event = $this->getModel()) {
+        if ($event = $this->getModel()) { // intentionally =
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getParamScheme();
-            $description = _('Klíče: ') . implode(', ', array_keys($scheme));
             $paramControl = $eventContainer->getComponent('parameters');
-            $paramControl->setOption('description', $description);
+            $paramControl->setOption('description', $this->createParamDescription($scheme));
             $paramControl->addRule(function(BaseControl $control) use($scheme) {
                         $parameters = $control->getValue();
                         try {
@@ -166,6 +166,22 @@ class EventPresenter extends EntityPresenter {
         }
 
         return $form;
+    }
+
+    private function createParamDescription($scheme) {
+        $result = Html::el('ul');
+        foreach ($scheme as $key => $meta) {
+            $item = Html::el('li');
+            $result->add($item);
+
+            $item->add(Html::el(null)->setText($key));
+            if (isset($meta['default'])) {
+                $item->add(': ');
+                $item->add(Html::el(null)->setText($meta['default']));
+            }
+        }
+
+        return $result;
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {

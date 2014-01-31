@@ -38,11 +38,15 @@ events:
         formLayout: fyziklani.form
         paramScheme:
             notifyBcc:
-                default: michal+bcc@fykos.cz
+                default: fyziklani@fykos.cz
             notifyFrom:
-                default: FYKOSí Fyziklání <noreply@fyziklani.cz>
+                default: FYKOSí Fyziklání <fyziklani@fykos.cz>
             accomodationCapacity:
                 default: 0
+            schoolsInTeam:
+                default: 2
+            teamsPerSchool:
+                default: 2
 
         baseMachines:
             #
@@ -195,8 +199,9 @@ events:
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
-                - Events\Spec\Fyziklani\SchoolCheck()
-                #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
+                - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()
                 - @events.privacyPolicy

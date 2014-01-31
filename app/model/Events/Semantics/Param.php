@@ -21,7 +21,7 @@ class Parameter extends Object {
 
     public function __invoke($obj) {
         $holder = $this->getHolder($obj);
-        return $holder->getParameter($this->parameter, null);
+        return $holder->getParameter($this->parameter);
     }
 
 }
