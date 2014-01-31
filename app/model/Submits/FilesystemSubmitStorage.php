@@ -20,11 +20,16 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     const DELIMITER = '__';
 
-    /** File extension that marks original untouched file. */
+    /** @const File extension that marks original untouched file. */
     const ORIGINAL_EXT = '.bak';
 
-    /** File extension that marks temporary working file. */
+    /** @const File extension that marks temporary working file. */
     const TEMPORARY_EXT = '.tmp';
+
+    /** @const File extension that marks final file extension.
+     *         It's a bit dangerous that only supported filetype is hard-coded in this class
+     */
+    const FINAL_EXT = '.pdf';
 
     private $todo = null;
 
@@ -249,7 +254,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $filename = sprintf($this->filenameMask, $contestantName, $contestName, $year, $series, $label);
 
         // append metadata
-        $filename = $filename . self::DELIMITER . $submit->submit_id;
+        $filename = $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;
 
         return $filename;
     }
