@@ -200,8 +200,8 @@ events:
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
-                - Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
-                #- Events\FormAdjustments\Spec\Fyziklani\AntiMulti() # TODO is not specified in rules
+                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()
                 - @events.privacyPolicy
