@@ -63,7 +63,6 @@ services:
     events.expressionEvaluator: Events\Model\ExpressionEvaluator
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
     events.captcha: Events\FormAdjustments\Captcha
-    - Events\Spec\Fyziklani\SchoolCheck
 
 includes:
     - merger.neon
