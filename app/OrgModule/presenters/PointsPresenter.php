@@ -104,6 +104,7 @@ class PointsPresenter extends SeriesPresenter {
                 array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
         $renderer = new BootstrapRenderer();
+        $renderer->setColLeft(2);
         $renderer->setColRight(10);
         $form->setRenderer($renderer);
 
