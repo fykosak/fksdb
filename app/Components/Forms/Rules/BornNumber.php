@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
+use FKS\Components\Forms\Controls\WriteonlyInput;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -15,6 +16,10 @@ class BornNumber {
 
     public function __invoke(BaseControl $control) {
         $rc = $control->getValue();
+        // suppose once validated is always valid
+        if($rc == WriteonlyInput::VALUE_ORIGINAL) {
+            return true;
+        }
         $matches = array();
         // "be liberal in what you receive"
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {

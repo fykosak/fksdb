@@ -75,7 +75,7 @@ class SQLResultsCache {
             $sql = '
             UPDATE submit s
             LEFT JOIN task t ON s.task_id = s.task_id
-            LEFT JOIN contestant ct ON ct.ct_id = s.ct_id
+            LEFT JOIN v_contestant ct ON ct.ct_id = s.ct_id
             SET calc_points = (
                 SELECT ' . $evaluationStrategy->getPointsColumn($task) . '
                 FROM dual

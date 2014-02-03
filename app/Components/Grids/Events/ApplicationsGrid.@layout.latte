@@ -1,0 +1,31 @@
+{if}
+<table class="table table-condensed table-hover">
+    <thead n:block="header">
+    <th>{_'Účastník'}</th>
+        {block menuHeader}
+    <th class="col-lg-2">{_'Stav'}</th>
+    <th class="col-lg-4">{_'Operace'}</th>
+    <th class="col-lg-1">&nbsp;</th>
+        {/block}
+</thead>
+<tbody>
+        {foreach $eventApplications as $key => $event}
+        {var $holder = $holders[$key]}
+    <tr n:block="row">
+        <td>{$holder->getPrimaryHolder()->getModel()->__toString()}</td>
+        {block menuRow}
+        <td>
+            <span n:tag-if="$holder->getPrimaryHolder()->getModelState() != Events\Machine\BaseMachine::STATE_INIT" title="Vytvořeno: {$holder->getPrimaryHolder()->getModel()->created}">
+            {control 'application_'.$key:inline state}
+            </span>
+        </td>
+        <td>{control 'application_'.$key:inline transitions}</td>
+        <td>{control 'application_'.$key:inline edit}</td>
+        {/block}
+    </tr>
+        {/foreach}
+</tbody>
+</table>
+{else}
+<p n:block="empty">{_'Žádné přihlášky.'}</p>
+{/if $iterations}

@@ -15,6 +15,8 @@ use Nette\Forms\Form;
  */
 class SchoolFactory {
 
+    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
+
     /**
      * @var SchoolProvider
      */
@@ -32,13 +34,16 @@ class SchoolFactory {
         $container->setCurrentGroup($group);
 
         $container->addText('name_full', _('Plný název'))
+                ->addRule(Form::MAX_LENGTH, null, 255)
                 ->setOption('description', _('Úplný nezkrácený název školy.'));
 
         $container->addText('name', _('Název'))
+                ->addRule(Form::MAX_LENGTH, null, 255)
                 ->addRule(Form::FILLED, _('Název je povinný.'))
                 ->setOption('description', _('Název na obálku.'));
 
         $container->addText('name_abbrev', _('Zkrácený název'))
+                ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
                 ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
                 ->setOption('description', _('Název krátký do výsledkovky.'));
 
@@ -47,10 +52,10 @@ class SchoolFactory {
                 ->addRule(Form::EMAIL);
 
         $container->addText('ic', _('IČ'))
-                ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na 8 znaků.'), 8);
+                ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na %d znaků.'), 8);
 
         $container->addText('izo', _('IZO'))
-                ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na 32 znaků.'), 32);
+                ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
 
         $container->addCheckbox('active', _('Aktivní záznam'))
                 ->setDefaultValue(true);
@@ -62,9 +67,13 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect() {
+    public function createSchoolSelect($options = 0) {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
+        if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
+            $schoolElement->setOption('description', _('Pokud nelze školu nalézt, napište správci.'));
+        }
+
         return $schoolElement;
     }
 

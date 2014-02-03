@@ -1,8 +1,16 @@
 {block title}{$storedQuery->name}{if $storedQuery->qid} ({$storedQuery->qid}){/if} &ndash; definice{/block}
 
 {block content}
+{? $presenter->registerJSFile('js/codemirror.min.js')}
+{? $presenter->registerJSFile('js/sqlconsole.js')}
+{? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
-<p>{$storedQuery->description}</p>
+<div class="btn-toolbar">
+    <a n:href="execute $storedQuery->getPrimary()" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+    <a n:href="edit $storedQuery->getPrimary()" class="btn btn-sm btn-default" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+</div>
+
+<p>{!$storedQuery->description|escape|nl2br}</p>
 
 {if count($storedQuery->getParameters())}
 <h3>Parametry</h3>
@@ -19,7 +27,7 @@
 {/if}
 
 <h3>SQL</h3>
-<pre>{* todo syntax highlight *}
+<pre class="syntax-sql">
 {$storedQuery->sql}
 </pre>
 

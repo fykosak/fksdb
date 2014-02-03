@@ -1,0 +1,5 @@
+<p>
+    Application state of the team <em>{$application}</em> has changed. Current state &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
+</p>
+{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/closing.en.latte'}

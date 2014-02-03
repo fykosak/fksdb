@@ -9,6 +9,7 @@ use ModelPerson;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
+use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Templating\ITemplate;
 use RuntimeException;
@@ -31,16 +32,22 @@ class AccountManager {
      * @var ServiceAuthToken
      */
     private $serviceAuthToken;
+    
+    /**
+     * @var IMailer
+     */
+    private $mailer;
     private $invitationExpiration = '+1 month';
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
 
-    function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken) {
+    function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken, IMailer $mailer) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
+        $this->mailer = $mailer;
     }
 
-    public function getInvitationExpiration() {
+        public function getInvitationExpiration() {
         return $this->invitationExpiration;
     }
 
@@ -133,10 +140,8 @@ class AccountManager {
         $message->setFrom($this->getEmailFrom());
         $message->addTo($recoveryAddress, $login->__toString());
 
-        Debugger::log((string) $message->getHtmlBody());
-
         try {
-            $message->send();
+            $this->mailer->send($message);
         } catch (InvalidStateException $e) {
             throw new MailNotSendException(null, null, $e);
         }

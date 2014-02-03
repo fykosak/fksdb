@@ -33,7 +33,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     protected function createComponentContestChooser($name) {
-        $control = new ContestChooser(ModelRole::ORG, $this->session, $this->yearCalculator, $this->serviceContest);
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setContests(ModelRole::ORG);
         return $control;
     }
 
@@ -51,6 +52,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
             throw new BadRequestException('No contests available.', 403);
         }
         return $contestChooser->getYear();
+    }
+
+    public function getSelectedAcademicYear() {
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
 }

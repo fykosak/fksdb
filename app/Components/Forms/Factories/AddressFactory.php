@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Controls\WriteonlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
@@ -17,6 +17,8 @@ use ServiceRegion;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AddressFactory {
+
+    const SHOW_EXTENDED_ROWS = 0x1;
 
     /**
      * @var ServiceAddress
@@ -33,9 +35,9 @@ class AddressFactory {
         $this->serviceRegion = $serviceRegion;
     }
 
-    public function createAddress(ControlGroup $group = null) {
+    public function createAddress($options = 0, ControlGroup $group = null) {
         $container = new AddressContainer();
-        $this->buildAddress($container, $group);
+        $this->buildAddress($container, $options, $group);
         return $container;
     }
 
@@ -46,23 +48,26 @@ class AddressFactory {
      * @param \FKSDB\Components\Forms\Factories\Container $container
      * @param ControlGroup $group
      */
-    public function buildAddress(AddressContainer $container, ControlGroup $group = null) {
+    public function buildAddress(AddressContainer $container, $options = 0, ControlGroup $group = null) {
         $container->setServiceRegion($this->serviceRegion);
         $container->setCurrentGroup($group);
 
-        $container->addText('first_row', _('První řádek'))
-                ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
+        if ($options & self::SHOW_EXTENDED_ROWS) {
+            $container->addText('first_row', _('První řádek'))
+                    ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
 
-        $container->addText('second_row', _('Druhý řádek'))
-                ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
+            $container->addText('second_row', _('Druhý řádek'))
+                    ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
+        }
 
+        $control = new WriteonlyInput(_('Místo'));
+        $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
+                ->setOption('description', _('Typicky ulice a číslo popisné. (Alternativně poštovní přihrádka, poste restante apod.)')); //TODO problem distinguishing permanent and delivery address
+        $container->addComponent($control, 'target');
 
-        $container->addText('target', _('Místo'))
-                ->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'))
-                ->setOption('description', _('Nejčastěji ulice a číslo, ale třeba i P. O. Box.'));
-
-        $container->addText('city', _('Město'))
-                ->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+        $control = new WriteonlyInput(_('Město'));
+        $control->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+        $container->addComponent($control, 'city');
 
 
         $postalCode = $container->addText('postal_code', _('PSČ'))

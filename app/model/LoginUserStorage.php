@@ -91,13 +91,13 @@ class LoginUserStorage extends UserStorage {
              * redirection to the login page will be done in the startup method.
              */
             if (!$ssoData) {
-                $params = array(
-                    'backlink' => (string) $this->request->getUrl(),
-                    AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
-                    AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                );
+                if ($presenter instanceof AuthenticatedPresenter && $presenter->requiresLogin()) {
+                    $params = array(
+                        'backlink' => (string) $this->request->getUrl(),
+                        AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
+                        AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
+                    );
 
-                if ($presenter instanceof AuthenticatedPresenter) {
                     $presenter->redirect(':Authentication:login', $params);
                 }
             }

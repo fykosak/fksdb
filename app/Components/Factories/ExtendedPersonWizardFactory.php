@@ -2,20 +2,16 @@
 
 namespace FKSDB\Components\Factories;
 
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\OrgFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\WizardComponent;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelContest;
-use ModelPerson;
 use Nette\Application\UI\Form;
-use Nette\Forms\Container;
 use Nette\Http\Session;
 use Nette\Utils\Html;
 use ServicePerson;
@@ -36,7 +32,7 @@ class ExtendedPersonWizardFactory {
     const EL_EMAIL = 'email';
     /* Containers */
     const CONT_PERSON = 'person';
-    const CONT_CONTESTANT = 'contestant';
+    const CONT_PERSON_HISTORY = 'person_history';
     const CONT_PERSON_INFO = 'person_info';
     const CONT_ADDRESSES = 'addresses';
     const CONT_ORG = 'org';
@@ -80,7 +76,6 @@ class ExtendedPersonWizardFactory {
      */
     private $session;
 
-
     function __construct(PersonFactory $personFactory, ContestantFactory $contestantFactory, OrgFactory $orgFactory, AddressFactory $addressFactory, ServicePerson $personService, PersonProvider $personProvider, Session $session) {
         $this->personFactory = $personFactory;
         $this->contestantFactory = $contestantFactory;
@@ -107,10 +102,10 @@ class ExtendedPersonWizardFactory {
      * 
      * @return WizardComponent
      */
-    public function createContestant() {
+    public function createContestant($acYear) {
         $wizard = $this->createWizardBase();
 
-        $dataForm = $this->createContestantForm();
+        $dataForm = $this->createContestantForm($acYear);
         $wizard->addStep($dataForm, self::STEP_DATA);
         $wizard->registerStepSubmitter(self::STEP_DATA, self::SEND);
 
@@ -137,15 +132,10 @@ class ExtendedPersonWizardFactory {
 
         $group = $form->addGroup(_('Existující osoba'));
 
-        $renderMethod = 'return $("<li>")
-                        .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
-                        .appendTo(ul);';
-        $personElement = new AutocompleteSelectBox(true, 'Jméno', $renderMethod);
-        $personElement->setDataProvider($this->personProvider);
-
+        $personElement = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
 
 // TODO validate non-existent contestant or restrict selection
-        $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
+//        $personElement->addCondition(Form::FILLED)->toggle(self::GRP_PERSON, false);
         $form->addComponent($personElement, self::EL_PERSON_ID);
 
         $group = $form->addGroup(_('Nová osoba'));
@@ -163,7 +153,7 @@ class ExtendedPersonWizardFactory {
         return $form;
     }
 
-    private function createContestantForm() {
+    private function createContestantForm($acYear) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
 
@@ -176,8 +166,8 @@ class ExtendedPersonWizardFactory {
          * Contestant
          */
         $group = $form->addGroup(_('Řešitel'));
-        $contestantContainer = $this->contestantFactory->createContestant(null, $group);
-        $form->addComponent($contestantContainer, self::CONT_CONTESTANT);
+        $historyContainer = $this->personFactory->createPersonHistory(PersonFactory::SHOW_LIKE_CONTESTANT, $group, $acYear);
+        $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
 
 
         /**
@@ -186,7 +176,7 @@ class ExtendedPersonWizardFactory {
         $group = $form->addGroup(_('Adresa'));
         $factory = $this->addressFactory;
         $replicator = new Replicator(function($replContainer) use($factory, $group) {
-                    $factory->buildAddress($replContainer, $group);
+                    $factory->buildAddress($replContainer, AddressFactory::SHOW_EXTENDED_ROWS, $group);
                     $replContainer->addComponent($factory->createTypeElement(), 'type');
 
                     $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();
@@ -207,7 +197,11 @@ class ExtendedPersonWizardFactory {
 
         $form->setCurrentGroup();
 
-        $form->addSubmit(self::SEND, _('Dokončit'));
+        $submit = $form->addSubmit(self::SEND, _('Dokončit'));
+        
+        $form->getElementPrototype()->data['submit-on'] = 'enter';
+        $submit->getControlPrototype()->data['submit-on'] = 'this';
+        
         return $form;
     }
 

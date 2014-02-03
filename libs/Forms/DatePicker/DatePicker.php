@@ -10,7 +10,7 @@ namespace JanTvrdik\Components;
 
 use DateTime;
 use Exception;
-use IJavaScriptCollector;
+use FKS\Application\IJavaScriptCollector;
 use InvalidArgumentException;
 use Nette;
 use Nette\Forms;
@@ -50,7 +50,7 @@ class DatePicker extends Forms\Controls\BaseControl
 	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
-                $this->monitor('IJavaScriptCollector');
+                $this->monitor('FKS\Application\IJavaScriptCollector');
 		$this->control->type = 'date';
 	}
         
@@ -105,7 +105,7 @@ class DatePicker extends Forms\Controls\BaseControl
 		list($min, $max) = $this->extractRangeRule($this->getRules());
 		if ($min !== NULL) $control->min = $min->format(self::W3C_DATE_FORMAT);
 		if ($max !== NULL) $control->max = $max->format(self::W3C_DATE_FORMAT);
-		if ($this->value) $control->value = $this->value->format(self::W3C_DATE_FORMAT);
+		if ($this->value && is_object($this->value)) $control->value = $this->value->format(self::W3C_DATE_FORMAT);
 		return $control;
 	}
 

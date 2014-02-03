@@ -9,8 +9,11 @@ parameters:
     # Temporary directory for various purposes.
     tempDir: %appDir%/../temp
 
+    # Various logs
+    logDir: %appDir%/../log
+
     # WDSL file defining provided services.
-    wdslUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
+    wsdlUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 
     # URL to the public website of the contests. (Keys are from contestMapping)
     website:
@@ -29,7 +32,7 @@ parameters:
 
     # Configuration of sent emails.
     email:
-        templatesDir: %appDir%/templates/emails
+        templatesDir: %appDir%/../data/emails
         from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
@@ -120,7 +123,11 @@ parameters:
 
         # default language when not set explicitly
         defaultLanguage: cs
-
+    
+    # Events
+    events:
+        # where locale files are stored
+        templateDir: %appDir%/../data/events
 
 php:
     date.timezone: Europe/Prague

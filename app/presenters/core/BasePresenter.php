@@ -1,5 +1,7 @@
 <?php
 
+use FKS\Application\IJavaScriptCollector;
+use FKS\Application\IStylesheetCollector;
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
 use FKS\Components\Controls\Navigation\INavigablePresenter;
@@ -347,6 +349,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             }
         }
         return $this->_lang;
+    }
+
+    public function getTranslator() {
+        return $this->translator;
     }
 
 }

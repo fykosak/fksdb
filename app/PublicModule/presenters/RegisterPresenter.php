@@ -4,6 +4,7 @@ namespace PublicModule;
 
 use Authentication\AccountManager;
 use BasePresenter as CoreBasePresenter;
+use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
@@ -13,11 +14,8 @@ use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FormUtils;
 use IContestPresenter;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
-use ModelContestant;
 use ModelException;
-use ModelPerson;
 use ModelPostContact;
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
@@ -28,6 +26,7 @@ use ServiceContestant;
 use ServiceLogin;
 use ServiceMPostContact;
 use ServicePerson;
+use ServicePersonHistory;
 use ServicePersonInfo;
 use ServicePostContact;
 
@@ -59,6 +58,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
     const CONT_PERSON = 'person';
     const CONT_PERSON_INFO = 'person_info';
+    const CONT_PERSON_HISTORY = 'person_history';
     const CONT_LOGIN = 'login';
     const CONT_ADDRESS = 'address';
     const CONT_CONTESTANT = 'contestant';
@@ -74,6 +74,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
     /** @var ServicePersonInfo */
     private $servicePersonInfo;
+
+    /** @var ServicePersonHistory */
+    private $servicePersonHistory;
 
     /** @var ServiceLogin */
     private $serviceLogin;
@@ -140,6 +143,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
+    public function injectServicePersonHistory(ServicePersonHistory $servicePersonHistory) {
+        $this->servicePersonHistory = $servicePersonHistory;
+    }
+
     public function injectServiceLogin(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
@@ -190,6 +197,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         return $this->yearCalculator->getCurrentYear($this->getSelectedContest());
     }
 
+    public function getSelectedAcademicYear() {
+        if (!$this->getSelectedContest()) {
+            return $this->yearCalculator->getCurrentAcademicYear();
+        }
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
     public function actionDefault() {
         // so far we do not implement registration of person only
         $this->redirect('contestant');
@@ -232,18 +246,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $address = $person->getDeliveryAddress();
         $defaults[self::CONT_ADDRESS] = $address ? : array();
 
-        $contestant = $this->getBaseContestant($person);
-        $defaults[self::CONT_CONTESTANT] = $contestant ? : array();
+        $personHistory = $person->getLastHistory();
+        $defaults[self::CONT_PERSON_HISTORY] = $personHistory ? : array();
 
         $personInfo = $person->getInfo();
         $defaults[self::CONT_PERSON_INFO] = $personInfo ? : array();
 
-        $this['contestantForm']->setDefaults($defaults);
+
+        $this['contestantForm']['form']->setDefaults($defaults);
     }
 
     public function createComponentContestantForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $result = new FormControl();
+        $form = $result['form'];
 
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
 
@@ -271,7 +286,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         $personCont = $this->personFactory->createPerson($personFlags, $group);
         $form->addComponent($personCont, self::CONT_PERSON);
 
-        $address = $this->addressFactory->createAddress($group);
+        $address = $this->addressFactory->createAddress(0, $group);
         $form->addComponent($address, self::CONT_ADDRESS);
 
         if ($person) {
@@ -285,15 +300,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
         }
 
         /*
-         * Contestant
+         * Contestant & person_history
          */
         $group = $form->addGroup(_('Řešitel'));
-        $options = ContestantFactory::REQUIRE_SCHOOL | ContestantFactory::REQUIRE_STUDY_YEAR;
         if (!$this->getSelectedContest()) {
-            $options |= ContestantFactory::SHOW_CONTEST;
+            $contestant = $this->contestantFactory->createContestant(0, $group);
+            $form->addComponent($contestant, self::CONT_CONTESTANT);
         }
-        $contestant = $this->contestantFactory->createContestant($options, $group);
-        $form->addComponent($contestant, self::CONT_CONTESTANT);
+        $options = PersonFactory::REQUIRE_SCHOOL | PersonFactory::REQUIRE_STUDY_YEAR | PersonFactory::SHOW_LIKE_CONTESTANT;
+        $history = $this->personFactory->createPersonHistory($options, $group, $this->getSelectedAcademicYear());
+        $form->addComponent($history, self::CONT_PERSON_HISTORY);
+
 
         // -----
         $form->setCurrentGroup();
@@ -312,7 +329,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
-        return $form;
+        return $result;
     }
 
     public function handleContestantFormSuccess(Form $form) {
@@ -361,20 +378,39 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
             /*
              * Contestant
              */
-            $contestantData = $values[self::CONT_CONTESTANT];
+            $contestantData = isset($values[self::CONT_CONTESTANT]) ? $values[self::CONT_CONTESTANT] : array();
             $contestantData = FormUtils::emptyStrToNull($contestantData);
             $contestant = $this->serviceContestant->createNew($contestantData);
 
             $contestant->person_id = $person->person_id;
             if (isset($contestant->contest_id)) {
-                $contest = $this->serviceContest->findByPrimary($contestant->contest_id); //TODO try calling ORMs ref
-                $contestant->year = $this->yearCalculator->getCurrentYear($contest);
+                $contest = $this->serviceContest->findByPrimary($contestant->contest_id);
+                $contestant->year = $this->yearCalculator->getCurrentYear($contest); // NOTE: this may be problematic when alowing forward registrations
             } else {
-                $contestant->year = $this->getSelectedYear();
                 $contestant->contest_id = $this->getSelectedContest()->contest_id;
+                $contestant->year = $this->getSelectedYear();
+            }
+            /**
+             * @note $contest is transfered for use with person history
+             */
+            $this->serviceContestant->save($contestant);
+
+            /*
+             * Person history
+             */
+            $personHistoryData = isset($values[self::CONT_PERSON_HISTORY]) ? $values[self::CONT_PERSON_HISTORY] : array();
+            $personHistoryData = FormUtils::emptyStrToNull($personHistoryData);
+            $acYear = $this->getSelectedAcademicYear();
+            $personHistory = $person->getHistory($acYear);
+            if (!$personHistory) {
+                $personHistory = $this->servicePersonHistory->createNew($personHistoryData);
+                $personHistory->person_id = $person->person_id;
+                $personHistory->ac_year = $acYear;
+            } else {
+                $this->servicePersonHistory->updateModel($personHistory, $personHistoryData); // here we update date of the confirmation
             }
 
-            $this->serviceContestant->save($contestant);
+            $this->servicePersonHistory->save($personHistory);
 
             /*
              * Person info
@@ -412,20 +448,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter {
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage(_('Při registraci došlo k chybě.'), self::FLASH_ERROR);
         }
-    }
-
-    private function getBaseContestant(ModelPerson $person) {
-        $contestant = null;
-        if ($this->getSelectedContest()) {
-            $contestant = $person->getLastContestant($this->getSelectedContest());
-        }
-
-        if (!$contestant) {
-            $contestant = $person->getContestants()->order('contest_id DESC')->fetch();
-            $contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
-        }
-
-        return $contestant;
     }
 
 }

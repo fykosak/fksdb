@@ -1,0 +1,19 @@
+{if $mode == 'state'}
+    {if $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_INIT || $primaryMachine->getState() == Events\Machine\BaseMachine::STATE_TERMINATED}
+<em>&mdash;</em>
+    {else}
+    {$primaryMachine->getStateName()}
+    {/if}
+{elseif  $mode == 'transitions'}
+    {if}
+    {foreach $primaryMachine->getAvailableTransitions() as  $transition}
+<a n:if="$transition->isCreating()" href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>    
+<a n:if="!$transition->isCreating() && !$transition->isTerminating()"  n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
+<a n:if="$transition->isTerminating()"  n:href="transition! $transition->getName()" class="btn btn-xs btn-danger">{$transition->getLabel()}</a>    
+    {/foreach}
+    {else}
+<em>{_'žádné'}</em>
+    {/if $iterations}
+{elseif $mode == 'edit'}
+<a n:if="$canEdit" href="{plink :Public:Application:default id => $primaryModel->getPrimary(), eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-primary">{_'Upravit'}</a>    
+{/if}

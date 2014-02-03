@@ -1,10 +1,13 @@
 <?php
 
+use ORM\CachingServiceTrait;
+
 /**
- * @todo Consider refactoring methods
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceLogin extends AbstractServiceSingle {
+
+    use CachingServiceTrait;
 
     protected $tableName = DbNames::TAB_LOGIN;
     protected $modelClassName = 'ModelLogin';

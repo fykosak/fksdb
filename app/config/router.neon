@@ -34,6 +34,13 @@ parameters:
 
 fksrouter:
     routes:
+        # PHP-like scripts compatibility
+        'index.php':
+            module: Public
+            presenter: Dashboard
+            action: default
+            flags: ONE_WAY
+
         # Backward compatibility
         'web-service/<action>':
             module: Org

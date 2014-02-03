@@ -1,11 +1,12 @@
 <?php
 
 use Nette\Database\Table\ActiveRow as TableRow;
+use ORM\IModel;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelSingle extends TableRow {
+abstract class AbstractModelSingle extends TableRow implements IModel {
 
     protected $stored = true;
 

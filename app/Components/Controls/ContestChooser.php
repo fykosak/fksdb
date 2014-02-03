@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls;
 
 use ModelContest;
 use ModelRole;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use ServiceContest;
@@ -17,11 +18,17 @@ use YearCalculator;
 class ContestChooser extends Control {
 
     const SESSION_PREFIX = 'contestPreset';
+    const ALL_CONTESTS = '__*';
 
     /**
-     * @var string  enum
+     * @var mixed
      */
-    private $role;
+    private $contestsDefinition;
+
+    /**
+     * @var ModelContest[]
+     */
+    private $contests;
 
     /**
      * @var Session
@@ -54,11 +61,24 @@ class ContestChooser extends Control {
     private $valid;
     private $initialized = false;
 
-    function __construct($role, Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        $this->role = $role;
+    /**
+     * 
+
+     * @param Session $session
+     * @param YearCalculator $yearCalculator
+     * @param ServiceContest $serviceContest
+     */
+    function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
+    }
+
+    /**
+     * @param mixed $contestsDefinition role enum|ALL_CONTESTS|array of contests
+     */
+    public function setContests($contestsDefinition) {
+        $this->contestsDefinition = $contestsDefinition;
     }
 
     public function isValid() {
@@ -81,10 +101,6 @@ class ContestChooser extends Control {
                 'year' => $this->year
             ));
         }
-    }
-
-    public function getRole() {
-        return $this->role;
     }
 
     public function getContest() {
@@ -110,7 +126,7 @@ class ContestChooser extends Control {
         }
         $this->valid = true;
 
-        $session = $this->session->getSection(self::SESSION_PREFIX . $this->role);
+        $session = $this->session->getSection(self::SESSION_PREFIX);
         $presenter = $this->getPresenter();
 
         /* CONTEST */
@@ -127,7 +143,7 @@ class ContestChooser extends Control {
 
         // final check
         if (!in_array($contestId, $contestIds)) {
-            $contestId = $contestIds[0]; // by default choose the first
+            $contestId = reset($contestIds); // by default choose the first
         }
         $this->contest = $this->serviceContest->findByPrimary($contestId);
 
@@ -139,42 +155,55 @@ class ContestChooser extends Control {
 
         // remember
         $session->contestId = $this->contest->contest_id;
-        $session->{$this->getRole() . 'year'} = $this->year;
+        $session->year = $this->year;
     }
 
     /**
      * @return array of contests where user is either ORG or CONTESTANT
      */
     private function getContests() {
-        if (!$this->getLogin()) {
-            return array();
-        }
+        if ($this->contests === null) {
+            if (is_array($this->contestsDefinition)) { // explicit
+                $contests = array_map(function($contest) {
+                            return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
+                        }, $this->contestsDefinition);
+            } else if ($this->contestsDefinition === self::ALL_CONTESTS) { // all
+                $pk = $this->serviceContest->getPrimary();
+                $contests = $this->serviceContest->fetchPairs($pk, $pk);
+            } else { // implicity -- by role
+                $login = $this->getLogin();
 
-        $ids = array();
-        if ($this->role == ModelRole::ORG) {
-            $ids = array_keys($this->getLogin()->getActiveOrgs($this->yearCalculator));
-        } else if ($this->role == ModelRole::CONTESTANT) {
-            $person = $this->getLogin()->getPerson();
-            if ($person) {
-                $ids = array_keys($person->getActiveContestants($this->yearCalculator));
+                if (!$login) {
+                    $contests = array();
+                }
+
+                $contests = array();
+                if ($this->contestsDefinition == ModelRole::ORG) {
+                    $contests = array_keys($this->getLogin()->getActiveOrgs($this->yearCalculator));
+                } else if ($this->contestsDefinition == ModelRole::CONTESTANT) {
+                    $person = $this->getLogin()->getPerson();
+                    if ($person) {
+                        $contests = array_keys($person->getActiveContestants($this->yearCalculator));
+                    }
+                }
+            }
+            $this->contests = array();
+            foreach ($contests as $id) {
+                $contest = $this->serviceContest->findByPrimary($id);
+                $min = $this->yearCalculator->getFirstYear($contest);
+                $max = $this->yearCalculator->getCurrentYear($contest);
+                $this->contests[$id] = (object) array(
+                            'contest' => $contest,
+                            'years' => array_reverse(range($min, $max)),
+                            'currentYear' => $max,
+                );
             }
         }
-        $result = array();
-        foreach ($ids as $id) {
-            $contest = $this->serviceContest->findByPrimary($id);
-            $min = $this->yearCalculator->getFirstYear($contest);
-            $max = $this->yearCalculator->getCurrentYear($contest);
-            $result[$id] = (object) array(
-                        'contest' => $contest,
-                        'years' => array_reverse(range($min, $max)),
-                        'currentYear' => $max,
-            );
-        }
-        return $result;
+        return $this->contests;
     }
 
     private function isAllowedYear() {
-        return $this->role == ModelRole::ORG;
+        return $this->contestsDefinition == ModelRole::ORG;
     }
 
     private function getLogin() {
@@ -182,6 +211,9 @@ class ContestChooser extends Control {
     }
 
     public function render() {
+        if (!$this->isValid()) {
+            throw new BadRequestException('No contests available.', 403);
+        }
         $this->template->contests = $this->getContests();
         $this->template->isAllowedYear = $this->isAllowedYear();
         $this->template->currentContest = $this->getContest()->contest_id;
@@ -224,8 +256,8 @@ class ContestChooser extends Control {
         $year = null;
         if ($this->isAllowedYear()) {
             // session
-            if (isset($session->{$this->getRole() . 'year'})) {
-                $year = $session->{$this->getRole() . 'year'};
+            if (isset($session->year)) {
+                $year = $session->year;
             }
             // URL
             if ($presenter->year) {

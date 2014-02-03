@@ -22,6 +22,24 @@ class AddressContainer extends ModelContainer {
         $this->serviceRegion = $serviceRegion;
     }
 
+    /**
+     * Used for substituing form's IControl (via duck-typing).
+     * 
+     * @param Traversable $value
+     */
+    public function setValue($value) {
+        $this->setValues($value === null ? array() : $value);
+    }
+
+    /**
+     * Used for substituing form's IControl (via duck-typing).
+     * 
+     * @param Traversable $value
+     */
+    public function setDefaultValue($value) {
+        $this->setDefaults($value === null ? array() : $value);
+    }
+
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
@@ -39,7 +57,7 @@ class AddressContainer extends ModelContainer {
 
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);
-        if (!isset($values['region_id'])) {
+        if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException("You must set ServiceRegion before getting values from the address container.");
             }

@@ -6,13 +6,16 @@ services:
     ServiceAddress:          ServiceAddress
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
+    ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventParticipant: ServiceEventParticipant
+    ServiceEventType:        ServiceEventType
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson
+    ServicePersonHistory:    ServicePersonHistory
     ServicePersonInfo:       ServicePersonInfo
     ServicePostContact:      ServicePostContact
     ServiceRegion:           ServiceRegion
@@ -22,3 +25,11 @@ services:
     ServiceStoredQueryParameter: ServiceStoredQueryParameter
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
+
+    event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
+    event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
+    event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
+    event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
+    event.ServiceVikendParticipant:         ORM\Services\Events\ServiceVikendParticipant
+    event.ServiceMVikendParticipant:        ORM\ServicesMulti\Events\ServiceMVikendParticipant

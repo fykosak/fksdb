@@ -1,21 +1,25 @@
 <?php
 
+use Events\EventsExtension;
 use FKS\Config\Extensions\NavigationExtension;
 use FKS\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
 use Nette\Forms\Container;
+use Nette\Utils\Finder;
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
 
+define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 
 // Configure application
 $configurator = new Configurator();
 $configurator->onCompile[] = function ($configurator, $compiler) {
             $compiler->addExtension('fksrouter', new RouterExtension());
             $compiler->addExtension('navigation', new NavigationExtension());
+            $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
         };
 
 // Enable Nette Debugger for error visualisation & logging
@@ -30,8 +34,14 @@ $configurator->createRobotLoader()
         ->register();
 
 // Create Dependency Injection container from config.neon file
-$configurator->addConfig(dirname(__FILE__) . '/config/config.neon', Configurator::NONE);
-$configurator->addConfig(dirname(__FILE__) . '/config/config.local.neon', Configurator::NONE);
+$configurator->addConfig(CONFIG_DIR . '/config.neon', Configurator::NONE);
+$configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
+
+// Load all .neon files in events data directory
+foreach (Finder::findFiles('*.neon')->in(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+    $configurator->addConfig($filename, Configurator::NONE);
+};
+
 $container = $configurator->createContainer();
 
 

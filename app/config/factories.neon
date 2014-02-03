@@ -7,6 +7,8 @@ services:
 
     - FKSDB\Components\Factories\ExtendedPersonWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
+    - FKSDB\Components\Forms\Factories\ReferencedPersonFactory
+    - Persons\ReferencedPersonHandlerFactory
     breadcrumbFactory:
         class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
@@ -19,7 +21,8 @@ services:
         class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
     flashDumpFactory:
         class: Logging\FlashDumpFactory(%logToFlash%)
-
+    event.DBReflectionFactory:
+        class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 
 
 factories:

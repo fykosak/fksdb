@@ -1,9 +1,11 @@
 <?php
 
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
-use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use ORM\IModel;
+use ORM\IService;
 use ORM\Tables\TypedTableSelection;
 
 /**
@@ -15,7 +17,7 @@ use ORM\Tables\TypedTableSelection;
  * 
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractServiceSingle extends TableSelection {
+abstract class AbstractServiceSingle extends TableSelection implements IService {
 
     /**
      * @var string
@@ -38,6 +40,7 @@ abstract class AbstractServiceSingle extends TableSelection {
     protected static $instances = array();
 
     public function __construct(Connection $connection) {
+        parent::__construct($this->tableName, $connection);
         $this->connection = $connection;
     }
 
@@ -48,32 +51,30 @@ abstract class AbstractServiceSingle extends TableSelection {
      * @return AbstractModelSingle
      */
     public function createNew($data = null) {
-        $className = $this->modelClassName;
         if ($data === null) {
             $data = $this->getDefaultData();
         }
-        $data = $this->filterData($data);
-        $result = new $className($data, $this->getTable());
+        $result = $this->createFromArray((array) $data);
         $result->setNew();
         return $result;
     }
 
     /**
-     * Updates values in model from given data.
+     * @internal Used also in MultiTableSelection.
      * 
-     * @param AbstractModelSingle $model
      * @param array $data
+     * @return AbstractModelSingle
      */
-    public function updateModel(AbstractModelSingle $model, $data) {
+    public function createFromArray(array $data) {
+        $className = $this->modelClassName;
         $data = $this->filterData($data);
-        foreach ($data as $key => $value) {
-            $model->{$key} = $value;
-        }
+        $result = new $className($data, $this->getTable());
+        return $result;
     }
 
-    public static function createFromTableRow(TableRow $row) {
+    public function createFromTableRow(ActiveRow $row) {
         $className = $this->modelClassName;
-        return new static($row->toArray(), $row->getTable());
+        return new $className($row->toArray(), $row->getTable());
     }
 
     /**
@@ -92,13 +93,30 @@ abstract class AbstractServiceSingle extends TableSelection {
     }
 
     /**
+     * Updates values in model from given data.
+     * 
+     * @param AbstractModelSingle $model
+     * @param array $data
+     */
+    public function updateModel(IModel $model, $data) {
+        if (!$model instanceof $this->modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
+        }
+
+        $data = $this->filterData($data);
+        foreach ($data as $key => $value) {
+            $model->{$key} = $value;
+        }
+    }
+
+    /**
      * Use this method to store a model!
      * 
      * @param AbstractModelSingle $model
      * @throws InvalidArgumentException
      * @throws ModelException
      */
-    public function save(AbstractModelSingle & $model) {
+    public function save(IModel & $model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
@@ -132,7 +150,7 @@ abstract class AbstractServiceSingle extends TableSelection {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(AbstractModelSingle $model) {
+    public function dispose(IModel $model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
@@ -159,7 +177,10 @@ abstract class AbstractServiceSingle extends TableSelection {
     protected function getDefaultData() {
         if ($this->defaults == null) {
             $this->defaults = array();
-            foreach ($this->connection->getSupplementalDriver()->getColumns($this->tableName) as $column) {
+            foreach ($this->getColumnMetadata() as $column) {
+                if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default']) && $column['default'] == 'CURRENT_TIMESTAMP') {
+                    continue;
+                }
                 $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
             }
         }
@@ -172,18 +193,27 @@ abstract class AbstractServiceSingle extends TableSelection {
      * @param array|null $data
      * @return array|null
      */
-    public function filterData($data) {
+    protected function filterData($data) {
         if ($data === null) {
             return null;
         }
         $result = array();
-        foreach ($this->getConnection()->getSupplementalDriver()->getColumns($this->getTable()->getName()) as $column) {
+        foreach ($this->getColumnMetadata() as $column) {
             $name = $column['name'];
             if (array_key_exists($name, $data)) {
                 $result[$name] = $data[$name];
             }
         }
         return $result;
+    }
+
+    private $columns;
+
+    private function getColumnMetadata() {
+        if ($this->columns === null) {
+            $this->columns = $this->getConnection()->getSupplementalDriver()->getColumns($this->tableName);
+        }
+        return $this->columns;
     }
 
 }

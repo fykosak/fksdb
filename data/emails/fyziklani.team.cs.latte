@@ -1,0 +1,5 @@
+<p>
+    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}
