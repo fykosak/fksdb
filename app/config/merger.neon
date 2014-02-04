@@ -13,6 +13,7 @@ parameters:
             submit: [ct_id, task_id]
             org: [person_id, contest_id]
             post_contact: [person_id, type]
+            event_participant: [person_id, event_id]
 
         # Default merge strategy for columns.
         defaultStrategy: @merge.cummulative
