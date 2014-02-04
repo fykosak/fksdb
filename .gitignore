@@ -1,3 +1,4 @@
+.install-lock
 nbproject
 log/*
 !log/.htaccess
