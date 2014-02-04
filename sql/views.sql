@@ -34,8 +34,9 @@ left join contest cst on cst.contest_id = ct.contest_id
 );
 
 CREATE OR REPLACE VIEW v_person as (
-	select person_id, concat(family_name, other_name) AS name_lex, IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name, gender
-	from person
+	select p.person_id, concat(family_name, other_name) AS name_lex, IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name, gender, email
+	from person p
+	left join person_info pi on pi.person_id = p.person_id
 );
 
 CREATE OR REPLACE VIEW v_post_contact as (
