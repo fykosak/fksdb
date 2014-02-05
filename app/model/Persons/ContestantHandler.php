@@ -59,13 +59,20 @@ class ContestantHandler extends AbstractPersonHandler {
         /*
          * Person history
          */
+        $acYear = $presenter->getSelectedAcademicYear();
+        $personHistory = $this->person->getHistory($acYear);
+        if (!$personHistory) {
+            $data = array(
+                'person_id' => $this->person->person_id,
+                'ac_year' => $acYear,
+            );
+            $personHistory = $this->servicePersonHistory->createNew($data);
+        }
+
         $dataHistory = $data[ExtendedPersonWizardFactory::CONT_PERSON_HISTORY];
         $dataHistory = FormUtils::emptyStrToNull($dataHistory);
+        $this->servicePersonHistory->updateModel($personHistory, $dataHistory);
 
-        $personHistory = $this->servicePersonHistory->createNew($dataHistory);
-
-        $personHistory->person_id = $this->person->person_id;
-        $personHistory->ac_year = $presenter->getSelectedAcademicYear();
 
         $this->servicePersonHistory->save($personHistory);
 
