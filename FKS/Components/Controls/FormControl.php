@@ -38,6 +38,13 @@ class FormControl extends Control {
         $this->addComponent($form, 'form');
     }
 
+    /**
+     * @return Form
+     */
+    public final function getForm() {
+        return $this->getComponent('form');
+    }
+
     public function getGroupMode() {
         return $this->groupMode;
     }
