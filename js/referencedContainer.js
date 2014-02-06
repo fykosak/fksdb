@@ -81,6 +81,20 @@ $(function() {
                 elContainer.replaceWith(searchGroup);
                 elContainer.hide();
                 elContainer.appendTo(searchGroup);// we need the group to working form
+
+                // ensure proper filling of the referenced id
+                var writableFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear);
+                writableFields.change(function() {
+                    var filledFields = writableFields.filter(function() {
+                        return $(this).val() != '';
+                    });
+                    if (filledFields.length > 0 && options.refId.val() == '') {
+                        options.refId.val(options.valuePromise);
+                    } else if (filledFields.length == 0 && options.refId.val() == options.valuePromise) {
+                        options.refId.val('');
+                    }
+                });
+
             }
 
             function decompactifyContainer() {
@@ -142,18 +156,6 @@ $(function() {
                 elClear.closest('.form-group').hide();
                 buttonDel.prependTo(well);
             }
-
-            var writableFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear);
-            writableFields.change(function() {
-                var filledFields = writableFields.filter(function() {
-                    return $(this).val() != '';
-                });
-                if (filledFields.length > 0 && options.refId.val() == '') {
-                    options.refId.val(options.valuePromise);
-                } else if (filledFields.length == 0 && options.refId.val() == options.valuePromise) {
-                    options.refId.val('');
-                }
-            });
 
             var hasAnyFields = elContainer.find(":input[type!='hidden'][disabled!='disabled']").not(elClear).filter(function() {
                 return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
