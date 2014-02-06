@@ -153,3 +153,4 @@ includes:
     - services.neon
     - factories.neon
     - navigation.neon
+    - contests.neon

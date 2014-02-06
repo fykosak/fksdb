@@ -3,27 +3,29 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
-use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
+use FKS\Components\Controls\FormControl;
+use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKS\Config\GlobalParameters;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Components\WizardComponent;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use OrgModule\EntityPresenter;
-use Persons\ContestantHandler;
-use Persons\PersonHandlerException;
+use Persons\AclResolver;
 use ServiceContestant;
-use ServiceLogin;
 use ServicePerson;
-use ServicePersonInfo;
 
 class ContestantPresenter extends EntityPresenter {
 
+    const EL_PERSON = 'person_id';
     const CONT_PERSON = 'person';
-    const CONT_CONTESTANT = 'contestant';
+    const CONT_MAIN = 'main';
 
     protected $modelResourceId = 'contestant';
 
@@ -38,16 +40,6 @@ class ContestantPresenter extends EntityPresenter {
     private $servicePerson;
 
     /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
-
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
-
-    /**
      * @var ContestantFactory
      */
     private $contestantFactory;
@@ -58,46 +50,33 @@ class ContestantPresenter extends EntityPresenter {
     private $personFactory;
 
     /**
-     * @var ExtendedPersonWizardFactory
+     * @var ReferencedPersonFactory
      */
-    private $contestantWizardFactory;
+    private $referencedPersonFactory;
 
     /**
-     *
-     * @var ContestantHandler
+     * @var GlobalParameters
      */
-    private $contestantHandler;
+    private $globalParameters;
 
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
-    }
-
-    public function injectContestantWizardFactory(ExtendedPersonWizardFactory $contestantWizardFactory) {
-        $this->contestantWizardFactory = $contestantWizardFactory;
     }
 
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
-        $this->servicePersonInfo = $servicePersonInfo;
-    }
-
-    public function injectServiceLogin(ServiceLogin $serviceLogin) {
-        $this->serviceLogin = $serviceLogin;
-    }
-
     public function injectContestantFactory(ContestantFactory $contestantFactory) {
         $this->contestantFactory = $contestantFactory;
     }
 
-    public function injectPersonFactory(PersonFactory $personFactory) {
-        $this->personFactory = $personFactory;
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    public function injectContestantHandler(ContestantHandler $contestantHandler) {
-        $this->contestantHandler = $contestantHandler;
+    public function injectGlobalParameters(GlobalParameters $globalParameters) {
+        $this->globalParameters = $globalParameters;
     }
 
     public function titleEdit($id) {
@@ -113,17 +92,42 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {
-        $form[self::CONT_PERSON]->setValues($this->getModel()->getPerson()->toArray());
-        $form[self::CONT_CONTESTANT]->setDefaults($this->getModel()->toArray());
+        $form[self::EL_PERSON]->setDefaultValue($this->getModel()->getPerson()->getPrimary(false));
+    }
+
+    private function getFieldsDefinition() {
+        $contestId = $this->getSelectedContest()->contest_id;
+        $contestName = $this->globalParameters['contestMapping'][$contestId];
+        return $this->globalParameters[$contestName]['contestantCreation'];
     }
 
     protected function createComponentCreateComponent($name) {
-        $wizard = $this->contestantWizardFactory->createContestant($this->getSelectedAcademicYear());
+        $control = new FormControl();
+        $form = $control->getForm();
+        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
-        $wizard->onProcess[] = array($this, 'processWizard');
-        $wizard->onStepInit[] = array($this, 'initWizard');
+        $container = new ContainerWithOptions();
+        $form->addComponent($container, self::CONT_MAIN);
 
-        return $wizard;
+        $fieldsDefinition = $this->getFieldsDefinition();
+        $acYear = $this->getSelectedAcademicYear();
+        $searchType = ReferencedPersonFactory::SEARCH_ID;
+        $allowClear = true;
+        $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest(), $this->getModel() ? : 'contestant');
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $components[1]->setOption('label', _('Osoba'));
+
+        $container->addComponent($components[0], self::EL_PERSON);
+        $container->addComponent($components[1], self::CONT_PERSON);
+
+        $submit = $form->addSubmit('send', _('Založit'));
+        $that = $this;
+        $submit->onClick[] = function(SubmitButton $button) use($that) {
+                    $form = $button->getForm();
+                    $that->handleFormSuccess($form);
+                };
+
+        return $control;
     }
 
     protected function createComponentGrid($name) {
@@ -136,66 +140,46 @@ class ContestantPresenter extends EntityPresenter {
         throw new NotImplementedException();
     }
 
-    /**
-     * @internal
-     * @param WizardComponent $wizard
-     * @throws ModelException
-     */
-    public function processWizard(WizardComponent $wizard) {
+    private function handleFormSuccess(Form $form) {
+        $connection = $this->servicePerson->getConnection();
         try {
-            $this->contestantHandler->store($wizard, $this);
-            $person = $this->contestantHandler->getPerson();
-            $this->flashMessage(sprintf('Řešitel %s založen.', $person->getFullname()), self::FLASH_SUCCESS);
+            if (!$connection->beginTransaction()) {
+                throw new ModelException();
+            }
+            $data = array(
+                'contest_id' => $this->getSelectedContest()->contest_id,
+                'year' => $this->getSelectedYear(),
+            );
+            $contestant = $this->serviceContestant->createNew($data);
+            $values = $form->getValues();
+
+            $contestant->person_id = $values[self::CONT_MAIN][self::EL_PERSON];
+
+            $this->serviceContestant->save($contestant);
+
+            //TODO login
+
+            /*
+             * Finalize
+             */
+            if (!$connection->commit()) {
+                throw new ModelException();
+            }
+
+            $this->flashMessage(sprintf('Řešitel %s založen.', $contestant->getPerson()->getFullname()), self::FLASH_SUCCESS);
+
             $this->backlinkRedirect();
             $this->redirect('list'); // if there's no backlink
-        } catch (PersonHandlerException $e) {
+        } catch (ModelException $e) {
+            $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage(_('Chyba při zakládání řešitele.'), self::FLASH_ERROR);
+        } catch (ModelDataConflictException $e) {
+            $form->addError(_('Zadaná data se neshodují s již uloženými.'));
+            $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
+            $e->getReferencedId()->rollback();
+            $connection->rollBack();
         }
-    }
-
-    /**
-     * @internal
-     * @param type $stepName
-     * @param WizardComponent $wizard
-     */
-    public function initWizard($stepName, WizardComponent $wizard) {
-        switch ($stepName) {
-            case ExtendedPersonWizardFactory::STEP_DATA:
-                $this->initStepData(
-                        $wizard);
-                break;
-        }
-    }
-
-    private function initStepData(WizardComponent $wizard) {
-        $person = $this->contestantHandler->loadPerson($wizard);
-        $form = $wizard->getComponent(ExtendedPersonWizardFactory::STEP_DATA);
-
-        $defaults = array(
-            ExtendedPersonWizardFactory::CONT_PERSON => $person,
-        );
-
-        $lastHistory = $person->getLastHistory();
-        if ($lastHistory) {
-            $defaults[ExtendedPersonWizardFactory::CONT_PERSON_HISTORY] = $lastHistory;
-        }
-
-        $addresses = array();
-        foreach ($person->getMPostContacts() as $mPostContact) {
-            $addresses[] = $mPostContact->toArray();
-        }
-        $defaults[ExtendedPersonWizardFactory::CONT_ADDRESSES] = $addresses;
-
-        $info = $person->getInfo();
-        if ($info) {
-            $defaults[ExtendedPersonWizardFactory::CONT_PERSON_INFO] = $info;
-        }
-
-        $personContainer = $form[ExtendedPersonWizardFactory::CONT_PERSON];
-        $this->personFactory->modifyLoginContainer($personContainer, $person);
-
-        $form->setDefaults($defaults);
     }
 
     protected function createModel($id) {

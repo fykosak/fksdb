@@ -1,0 +1,38 @@
+#
+# Contest specific configuration of FKSDB
+#
+
+parameters:
+    fykos:
+        contestantRegistration:
+            person:
+                other_name: true
+                family_name: true
+            person_info:
+                email: true
+                id_number: false
+            person_history:
+                school_id: true
+                study_year: true
+        contestantCreation:
+            person:
+                other_name: true
+                family_name: true
+                display_name: false
+                gender: true
+            person_history:
+                school_id: true
+                study_year: true
+            person_info:
+                email: true
+                born: false
+                birthplace: false
+                note: false
+                origin: false
+            post_contact:
+                address: true
+                type: P
+
+     vyfuk:
+        contestantRegistration: %fykos.contestantRegistration%
+        contestantCreation: %fykos.contestantCreation%

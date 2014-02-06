@@ -15,6 +15,7 @@ services:
     - Authorization\ContestAuthorizator
     - Authorization\RelatedPersonAuthorizator
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
+    - FKS\Config\GlobalParameters
     yearCalculator: YearCalculator
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
