@@ -50,6 +50,11 @@ class ReferencedId extends HiddenField {
      */
     private $modelCreated;
 
+    /**
+     * @var IModel
+     */
+    private $model;
+
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
         $this->monitor('Nette\Forms\Form');
@@ -91,12 +96,18 @@ class ReferencedId extends HiddenField {
         $this->modelCreated = $modelCreated;
     }
 
+    public function getModel() {
+        return $this->model;
+    }
+
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
         } else if ($isPromise) {
             $pvalue = $this->service->createNew();
+        } else if ($pvalue instanceof IModel) {
+            $this->model = $pvalue;
         }
         $container = $this->referencedContainer;
         if (!$pvalue) {
