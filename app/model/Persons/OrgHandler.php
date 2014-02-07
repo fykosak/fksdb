@@ -3,14 +3,12 @@
 namespace Persons;
 
 use Authentication\AccountManager;
-use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
-use FormUtils;
+use FKS\Config\GlobalParameters;
 use Mail\MailTemplateFactory;
-use Nette\Application\UI\Presenter;
-use ServiceLogin;
+use Nette\ArrayHash;
+use Nette\Database\Connection;
+use Nette\Forms\Form;
 use ServiceOrg;
-use ServicePerson;
-use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -24,25 +22,17 @@ class OrgHandler extends AbstractPersonHandler {
      */
     private $serviceOrg;
 
-    function __construct(ServiceOrg $serviceOrg, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
-        parent::__construct($servicePerson, $servicePersonInfo, $serviceLogin, $mailTemplateFactory, $accountManager);
-
+    function __construct(ServiceOrg $serviceOrg, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+        parent::__construct($connection, $mailTemplateFactory, $accountManager, $globalParameters);
         $this->serviceOrg = $serviceOrg;
     }
 
-    protected function storeExtendedData($data, Presenter $presenter) {
-        /*
-         * Contestant
-         */
-        $dataOrg = $data[ExtendedPersonWizardFactory::CONT_ORG];
-        $dataOrg = FormUtils::emptyStrToNull($dataOrg);
+    protected function getReferencedPerson(Form $form) {
+        //TODO   
+    }
 
-        $org = $this->serviceOrg->createNew($dataOrg);
-
-        $org->person_id = $this->person->person_id;
-        $org->contest_id = $presenter->getSelectedContest()->contest_id;
-
-        $this->serviceOrg->save($org);
+    protected function storeExtendedModel(ArrayHash $values) {
+        //TODO
     }
 
 }

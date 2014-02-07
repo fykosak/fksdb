@@ -106,6 +106,7 @@ parameters:
     invitation:
         # How long (relatively) is authentication token valid after invitation.
         expiration: '+1 month'
+        defaultLang: 'cs'
 
     recovery:
         # Forgotten password recovery

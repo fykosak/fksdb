@@ -7,7 +7,6 @@ use ModelAuthToken;
 use ModelLogin;
 use ModelPerson;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
@@ -32,7 +31,7 @@ class AccountManager {
      * @var ServiceAuthToken
      */
     private $serviceAuthToken;
-    
+
     /**
      * @var IMailer
      */
@@ -47,7 +46,7 @@ class AccountManager {
         $this->mailer = $mailer;
     }
 
-        public function getInvitationExpiration() {
+    public function getInvitationExpiration() {
         return $this->invitationExpiration;
     }
 
@@ -101,10 +100,8 @@ class AccountManager {
         $message->setFrom($this->getEmailFrom());
         $message->addTo($email, $person->getFullname());
 
-        Debugger::log((string) $message->getHtmlBody());
-
         try {
-            $message->send();
+            $this->mailer->send($message);
             return $login;
         } catch (InvalidStateException $e) {
             throw new SendFailedException(null, null, $e);

@@ -225,6 +225,11 @@ class PersonFactory {
         return $container;
     }
 
+    /**
+     * @deprecated Logins are created by default.
+     * @param \Nette\Forms\Container $container
+     * @param ModelPerson $person
+     */
     public function appendEmailWithLogin(Container $container, callable $emailRule = null, $options = 0) {
         $emailElement = $this->createEmail();
         $container->addComponent($emailElement, 'email');
@@ -257,6 +262,11 @@ class PersonFactory {
         }
     }
 
+    /**
+     * @deprecated Logins are created by default.
+     * @param \Nette\Forms\Container $container
+     * @param ModelPerson $person
+     */
     public function modifyLoginContainer(Container $container, ModelPerson $person) {
 
         $login = $person->getLogin();

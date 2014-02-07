@@ -3,16 +3,15 @@
 namespace Persons;
 
 use Authentication\AccountManager;
-use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
-use FormUtils;
+use FKS\Config\GlobalParameters;
 use Mail\MailTemplateFactory;
-use Nette\Application\UI\Presenter;
+use ModelContest;
+use Nette\ArrayHash;
+use Nette\Database\Connection;
+use Nette\Forms\Form;
+use Nette\InvalidStateException;
+use OrgModule\ContestantPresenter;
 use ServiceContestant;
-use ServiceLogin;
-use ServiceMPostContact;
-use ServicePerson;
-use ServicePersonHistory;
-use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,71 +26,55 @@ class ContestantHandler extends AbstractPersonHandler {
     private $serviceContestant;
 
     /**
-     * @var ServicePersonHistory
+     * @var ModelContest
      */
-    private $servicePersonHistory;
+    private $contest;
 
     /**
-     * @var ServiceMPostContact
+     * @var int
      */
-    private $serviceMPostContact;
+    private $year;
 
-    function __construct(ServicePersonHistory $servicePersonHistory, ServiceContestant $serviceContestant, ServiceMPostContact $serviceMPostContact, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
-        parent::__construct($servicePerson, $servicePersonInfo, $serviceLogin, $mailTemplateFactory, $accountManager);
-
-        $this->serviceContestant = $serviceContestant;
-        $this->serviceMPostContact = $serviceMPostContact;
-        $this->servicePersonHistory = $servicePersonHistory;
+    public function getContest() {
+        return $this->contest;
     }
 
-    protected function storeExtendedData($data, Presenter $presenter) {
-        /*
-         * Contestant
-         */
-        $contestant = $this->serviceContestant->createNew();
+    public function setContest(ModelContest $contest) {
+        $this->contest = $contest;
+    }
 
-        $contestant->person_id = $this->person->person_id;
-        $contestant->contest_id = $presenter->getSelectedContest()->contest_id;
-        $contestant->year = $presenter->getSelectedYear();
+    public function getYear() {
+        return $this->year;
+    }
 
+    public function setYear($year) {
+        $this->year = $year;
+    }
+
+    function __construct(ServiceContestant $serviceContestant, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+        parent::__construct($connection, $mailTemplateFactory, $accountManager, $globalParameters);
+        $this->serviceContestant = $serviceContestant;
+    }
+
+    protected function getReferencedPerson(Form $form) {
+        return $form[ContestantPresenter::CONT_MAIN][ContestantPresenter::EL_PERSON]->getModel();
+    }
+
+    protected function storeExtendedModel(ArrayHash $values) {
+        if ($this->contest === null || $this->year === null) {
+            throw new InvalidStateException('Must set contest and year before storing contestant.');
+        }
+        // initialize model
+        $data = array(
+            'contest_id' => $this->getContest()->contest_id,
+            'year' => $this->getYear(),
+        );
+        $contestant = $this->serviceContestant->createNew($data);
+
+        $contestant->person_id = $values[ContestantPresenter::CONT_MAIN][ContestantPresenter::EL_PERSON];
+
+        // store model
         $this->serviceContestant->save($contestant);
-
-        /*
-         * Person history
-         */
-        $acYear = $presenter->getSelectedAcademicYear();
-        $personHistory = $this->person->getHistory($acYear);
-        if (!$personHistory) {
-            $data = array(
-                'person_id' => $this->person->person_id,
-                'ac_year' => $acYear,
-            );
-            $personHistory = $this->servicePersonHistory->createNew($data);
-        }
-
-        $dataHistory = $data[ExtendedPersonWizardFactory::CONT_PERSON_HISTORY];
-        $dataHistory = FormUtils::emptyStrToNull($dataHistory);
-        $this->servicePersonHistory->updateModel($personHistory, $dataHistory);
-
-
-        $this->servicePersonHistory->save($personHistory);
-
-
-        /*
-         * Post contacts
-         */
-        foreach ($this->person->getMPostContacts() as $mPostContact) {
-            $this->serviceMPostContact->dispose($mPostContact);
-        }
-
-        $dataPostContacts = $data[ExtendedPersonWizardFactory::CONT_ADDRESSES];
-        foreach ($dataPostContacts as $dataPostContact) {
-            $dataPostContact = FormUtils::emptyStrToNull((array) $dataPostContact);
-            $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
-            $mPostContact->getPostContact()->person_id = $this->person->person_id;
-
-            $this->serviceMPostContact->save($mPostContact);
-        }
     }
 
 }

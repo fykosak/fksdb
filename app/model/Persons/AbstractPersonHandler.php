@@ -3,19 +3,18 @@
 namespace Persons;
 
 use Authentication\AccountManager;
-use FKSDB\Components\Factories\ExtendedPersonWizardFactory;
-use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\WizardComponent;
-use FormUtils;
+use BasePresenter;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKS\Config\GlobalParameters;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use ModelException;
-use ModelPerson;
-use Nette\Application\UI\Presenter;
-use Nette\DateTime;
-use ServiceLogin;
-use ServicePerson;
-use ServicePersonInfo;
+use Nette\ArrayHash;
+use Nette\Database\Connection;
+use Nette\Diagnostics\Debugger;
+use Nette\Forms\Form;
+use OrgModule\ContestantPresenter;
+use OrgModule\EntityPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,19 +24,10 @@ use ServicePersonInfo;
 abstract class AbstractPersonHandler {
 
     /**
-     * @var ServicePerson
+     *
+     * @var Connection
      */
-    protected $servicePerson;
-
-    /**
-     * @var ServicePersonInfo
-     */
-    protected $servicePersonInfo;
-
-    /**
-     * @var ServiceLogin
-     */
-    protected $serviceLogin;
+    protected $connection;
 
     /**
      * @var MailTemplateFactory
@@ -50,81 +40,44 @@ abstract class AbstractPersonHandler {
     protected $accountManager;
 
     /**
-     * @var ModelPerson
+     * @var GlobalParameters
      */
-    protected $person;
+    protected $globalParameters;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServiceLogin $serviceLogin, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
-        $this->servicePerson = $servicePerson;
-        $this->servicePersonInfo = $servicePersonInfo;
-        $this->serviceLogin = $serviceLogin;
+    function __construct(Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+        $this->connection = $connection;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
+        $this->globalParameters = $globalParameters;
     }
 
-    public final function loadPerson(WizardComponent $wizard) {
-        $personData = $wizard->getData(ExtendedPersonWizardFactory::STEP_PERSON);
-        $this->person = $this->getPersonFromPersonStep($personData);
-        return $this->person;
-    }
+    abstract protected function getReferencedPerson(Form $form);
 
-    public final function store(WizardComponent $wizard, Presenter $presenter) {
-        $this->loadPerson($wizard);
-        /*
-         * Process data
-         */
-        $connection = $this->servicePerson->getConnection();
+    abstract protected function storeExtendedModel(ArrayHash $values);
+
+    public final function handleForm(Form $form, EntityPresenter $presenter) {
+        $connection = $this->connection;
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
 
-            /*
-             * Person
-             */
-            $this->servicePerson->save($this->person);
+            $values = $form->getValues();
+            $this->storeExtendedModel($values);
 
-            $data = $wizard->getData(ExtendedPersonWizardFactory::STEP_DATA);
-
-            /*
-             * Login
-             */
-            $emailContainer = $data[ExtendedPersonWizardFactory::CONT_PERSON]; // email data are in person's container
-            $email = $emailContainer['email'];
-            $createLogin = $emailContainer[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN];
-
-            if ($email && !$this->person->getLogin() && $createLogin) {
-                $lang = $emailContainer[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN_LANG];
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $lang);
+            // create login
+            $person = $this->getReferencedPerson($form);
+            $email = $person->getInfo() ? $person->getInfo()->email : null;
+            $login = $person->getLogin();
+            if ($email && !$login) {
+                $template = $presenter->mailTemplateFactory->createLoginInvitation($presenter, $this->globalParameters['invitation']['defaultLang']);
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $this->person, $email);
-                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), $presenter::FLASH_INFO);
+                    $presenter->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), self::FLASH_INFO);
                 } catch (SendFailedException $e) {
-                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), $presenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
                 }
             }
-
-            /*
-             * Personal info
-             */
-            $personInfoData = $data[ExtendedPersonWizardFactory::CONT_PERSON_INFO];
-            $personInfoData['email'] = $email;
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
-            $personInfo = $this->person->getInfo();
-            if (!$personInfo) {
-                $personInfoData['agreed'] = $personInfoData['agreed'] ? new DateTime() : null;
-                $personInfo = $this->servicePersonInfo->createNew($personInfoData);
-                $personInfo->person_id = $this->person->person_id;
-            } else {
-                unset($personInfoData['agreed']); // do not overwrite in existing person_info
-                $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
-            }
-            $this->servicePersonInfo->save($personInfo);
-
-            /*
-             * Extension data
-             */
-            $this->storeExtendedData($data, $presenter);
 
             /*
              * Finalize
@@ -132,38 +85,21 @@ abstract class AbstractPersonHandler {
             if (!$connection->commit()) {
                 throw new ModelException();
             }
-            $wizard->disposeData();
+
+            $presenter->flashMessage(sprintf('Osoba %s založena.', $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+
+            $presenter->backlinkRedirect();
+            $presenter->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
-            throw new PersonHandlerException(null, null, $e);
+            Debugger::log($e, Debugger::ERROR);
+            $presenter->flashMessage(_('Chyba při zakládání osoby.'), ContestantPresenter::FLASH_ERROR);
+        } catch (ModelDataConflictException $e) {
+            $form->addError(_('Zadaná data se neshodují s již uloženými.'));
+            $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
+            $e->getReferencedId()->rollback();
+            $connection->rollBack();
         }
     }
 
-    abstract protected function storeExtendedData($data, Presenter $presenter);
-
-    public function getPerson() {
-        return $this->person;
-    }
-
-    /**
-     * 
-     * @param mixed $data
-     * @return ModelPerson
-     */
-    private function getPersonFromPersonStep($data) {
-        if ($data[ExtendedPersonWizardFactory::EL_PERSON_ID]) {
-            $person = $this->servicePerson->findByPrimary($data[ExtendedPersonWizardFactory::EL_PERSON_ID]);
-        } else {
-            $dataPerson = $data[ExtendedPersonWizardFactory::CONT_PERSON];
-            $dataPerson = FormUtils::emptyStrToNull($dataPerson);
-
-            $person = $this->servicePerson->createNew($dataPerson);
-        }
-        return $person;
-    }
-
-}
-
-class PersonHandlerException extends ModelException {
-    
 }

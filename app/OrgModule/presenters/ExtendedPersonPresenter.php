@@ -3,18 +3,23 @@
 namespace OrgModule;
 
 use AbstractModelSingle;
+use Authentication\AccountManager;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Config\GlobalParameters;
 use FKSDB\Components\Forms\Factories\ContestantFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\ContestantsGrid;
+use Mail\MailTemplateFactory;
+use Mail\SendFailedException;
+use ModelException;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use OrgModule\EntityPresenter;
 use Persons\AclResolver;
-use Persons\ContestantHandler;
 use ServiceContestant;
 
 class ContestantPresenter extends EntityPresenter {
@@ -46,9 +51,14 @@ class ContestantPresenter extends EntityPresenter {
     private $globalParameters;
 
     /**
-     * @var ContestantHandler
+     * @var AccountManager
      */
-    private $handler;
+    private $accountManager;
+
+    /**
+     * @var MailTemplateFactory
+     */
+    private $mailTemplateFactory;
 
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
@@ -66,10 +76,12 @@ class ContestantPresenter extends EntityPresenter {
         $this->globalParameters = $globalParameters;
     }
 
-    public function injectHandler(ContestantHandler $handler) {
-        $this->handler = $handler;
-        $this->handler->setContest($this->getSelectedContest());
-        $this->handler->setYear($this->getSelectedYear());
+    public function injectAccountManager(AccountManager $accountManager) {
+        $this->accountManager = $accountManager;
+    }
+
+    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     public function titleEdit($id) {
@@ -85,7 +97,7 @@ class ContestantPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(AbstractModelSingle $model, Form $form) {
-        $form[self::EL_PERSON]->setDefaultValue($model->getPerson()->getPrimary(false));
+        $form[self::EL_PERSON]->setDefaultValue($this->getModel()->getPerson()->getPrimary(false));
     }
 
     private function getFieldsDefinition() {
@@ -117,7 +129,7 @@ class ContestantPresenter extends EntityPresenter {
         $that = $this;
         $submit->onClick[] = function(SubmitButton $button) use($that) {
                     $form = $button->getForm();
-                    $that->handler->handleForm($form, $that);
+                    $that->handleFormSuccess($form);
                 };
 
         return $control;
@@ -131,6 +143,65 @@ class ContestantPresenter extends EntityPresenter {
 
     protected function createComponentEditComponent($name) {
         throw new NotImplementedException();
+    }
+
+    private function handleFormSuccess(Form $form) {
+        $connection = $this->serviceContestant->getConnection();
+        try {
+            if (!$connection->beginTransaction()) {
+                throw new ModelException();
+            }
+
+            // initialize model
+            $data = array(
+                'contest_id' => $this->getSelectedContest()->contest_id,
+                'year' => $this->getSelectedYear(),
+            );
+            $contestant = $this->serviceContestant->createNew($data);
+
+            // store values
+            $values = $form->getValues();
+
+            $contestant->person_id = $values[self::CONT_MAIN][self::EL_PERSON];
+
+            // store model
+            $this->serviceContestant->save($contestant);
+
+            // create login
+            $person = $contestant->getPerson();
+            $email = $person->getInfo() ? $person->getInfo()->email : null;
+            $login = $contestant->getPerson()->getLogin();
+            if ($email && !$login) {
+                $template = $this->mailTemplateFactory->createLoginInvitation($this, $this->globalParameters['invitation']['defaultLang']);
+                try {
+                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->flashMessage(_('Zvací e-mail odeslán.'), self::FLASH_INFO);
+                } catch (SendFailedException $e) {
+                    $this->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), self::FLASH_ERROR);
+                }
+            }
+
+            /*
+             * Finalize
+             */
+            if (!$connection->commit()) {
+                throw new ModelException();
+            }
+
+            $this->flashMessage(sprintf('Řešitel %s založen.', $contestant->getPerson()->getFullname()), self::FLASH_SUCCESS);
+
+            $this->backlinkRedirect();
+            $this->redirect('list'); // if there's no backlink
+        } catch (ModelException $e) {
+            $connection->rollBack();
+            Debugger::log($e, Debugger::ERROR);
+            $this->flashMessage(_('Chyba při zakládání řešitele.'), self::FLASH_ERROR);
+        } catch (ModelDataConflictException $e) {
+            $form->addError(_('Zadaná data se neshodují s již uloženými.'));
+            $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
+            $e->getReferencedId()->rollback();
+            $connection->rollBack();
+        }
     }
 
     protected function createModel($id) {
