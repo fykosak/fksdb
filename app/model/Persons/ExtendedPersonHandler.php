@@ -18,7 +18,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\Object;
 use OrgModule\ContestantPresenter;
-use OrgModule\EntityPresenter;
+use OrgModule\ExtendedPersonPresenter;
 use ORM\IService;
 
 /**
@@ -96,13 +96,14 @@ class ExtendedPersonHandler extends Object {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
 
-    public final function handleForm(Form $form, EntityPresenter $presenter) {
+    public final function handleForm(Form $form, ExtendedPersonPresenter $presenter) {
         $connection = $this->connection;
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
             $values = $form->getValues();
+            $create = !$presenter->getModel();
 
             $person = $this->getReferencedPerson($form);
             $this->storeExtendedModel($person, $values, $presenter);
@@ -127,14 +128,19 @@ class ExtendedPersonHandler extends Object {
                 throw new ModelException();
             }
 
-            $presenter->flashMessage(sprintf('Osoba %s založena.', $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            if ($create) {
+                $msg = $presenter->messageCreate();
+            } else {
+                $msg = $presenter->messageEdit();
+            }
+            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
 
             $presenter->backlinkRedirect();
             $presenter->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
-            $presenter->flashMessage(_('Chyba při zakládání osoby.'), ContestantPresenter::FLASH_ERROR);
+            $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
         } catch (ModelDataConflictException $e) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());

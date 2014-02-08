@@ -79,5 +79,17 @@ class OrgPresenter extends ExtendedPersonPresenter {
         return $this->serviceOrg;
     }
 
+    public function messageCreate() {
+        return _('Organizátor %s založen.');
+    }
+
+    public function messageEdit() {
+        return _('Organizátor %s upraven.');
+    }
+
+    public function messageError() {
+        return _('Chyba při zakládání organizátora.');
+    }
+
 }
 

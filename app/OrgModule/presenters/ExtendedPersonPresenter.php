@@ -63,6 +63,18 @@ abstract class ExtendedPersonPresenter extends EntityPresenter {
 
     abstract protected function getORMService();
 
+    /**
+     * @note First '%s' is replaced with referenced person's name.
+     */
+    abstract public function messageCreate();
+
+    /**
+     * @note First '%s' is replaced with referenced person's name.
+     */
+    abstract public function messageEdit();
+
+    abstract public function messageError();
+
     protected function getAcYearFromModel() {
         return null;
     }

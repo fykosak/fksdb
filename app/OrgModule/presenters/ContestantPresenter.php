@@ -52,6 +52,19 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         }
         return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
     }
+    
+        public function messageCreate() {
+        return _('Řešitel %s založen.');
+    }
+
+    public function messageEdit() {
+        return _('Řešitel %s upraven.');
+    }
+
+    public function messageError() {
+        return _('Chyba při zakládání řešitele.');
+    }
+
 
 }
 
