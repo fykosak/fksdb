@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKS\Config\GlobalParameters;
+use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -47,7 +47,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter {
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return $this->globalParameters[$contestName][$this->fieldsDefinition];
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition]);
     }
 
     abstract protected function appendExtendedContainer(Form $form);

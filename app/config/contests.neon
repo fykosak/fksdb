@@ -18,7 +18,9 @@ parameters:
             person:
                 other_name: true
                 family_name: true
-                display_name: false
+                display_name:
+                    required: true
+                    description: _(Uložit)
                 gender: true
             person_history:
                 school_id: true
