@@ -2,10 +2,10 @@
 
 use Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
+use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use Authentication\UnknownLoginException;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
