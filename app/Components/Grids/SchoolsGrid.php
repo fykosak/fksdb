@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\BaseGrid;
 use Nette\Database\Table\Selection;
+use ServiceSchool;
 use SQL\SearchableDataSource;
 
 /**
@@ -12,14 +13,23 @@ use SQL\SearchableDataSource;
  */
 class SchoolsGrid extends BaseGrid {
 
+    /**
+     * @var ServiceSchool
+     */
+    private $serviceSchool;
+
+    public function __construct(ServiceSchool $serviceSchool) {
+        parent::__construct();
+        $this->serviceSchool = $serviceSchool;
+    }
+
     protected function configure($presenter) {
         parent::configure($presenter);
 
         //
         // data
         //
-        $serviceSchool = $presenter->context->getService('ServiceSchool');
-        $schools = $serviceSchool->getSchools();
+        $schools = $this->serviceSchool->getSchools();
 
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function(Selection $table, $value) {

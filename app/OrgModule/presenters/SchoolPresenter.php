@@ -111,7 +111,7 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     protected function createComponentGrid($name) {
-        $grid = new SchoolsGrid();
+        $grid = new SchoolsGrid($this->serviceSchool);
 
         return $grid;
     }

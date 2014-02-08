@@ -22,21 +22,12 @@ abstract class ExtendedPersonPresenter extends EntityPresenter {
     private $referencedPersonFactory;
 
     /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
-
-    /**
      * @var ExtendedPersonHandlerFactory
      */
     private $handlerFactory;
 
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    public function injectGlobalParameters(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
     }
 
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
