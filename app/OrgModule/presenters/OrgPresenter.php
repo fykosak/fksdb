@@ -57,10 +57,11 @@ class OrgPresenter extends ExtendedPersonPresenter {
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
         if (!$model) {
-            $defaults = array();
-            $defaults[ExtendedPersonHandler::CONT_MODEL]['since'] = $this->getSelectedYear();
-            $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
+            return;
         }
+        $defaults = array();
+        $defaults[ExtendedPersonHandler::CONT_MODEL]['since'] = $this->getSelectedYear();
+        $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
     }
 
     protected function createComponentGrid($name) {

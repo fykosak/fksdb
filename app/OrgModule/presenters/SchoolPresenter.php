@@ -100,6 +100,9 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
+        if (!$model) {
+            return;
+        }
         $defaults = array(
             self::CONT_SCHOOL => $model->toArray(),
             self::CONT_ADDRESS => $model->getAddress()->toArray(),

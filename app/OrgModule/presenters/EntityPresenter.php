@@ -77,9 +77,10 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
-        if ($model) {
-            $form->setDefaults($model->toArray());
+        if (!$model) {
+            return;
         }
+        $form->setDefaults($model->toArray());
     }
 
     /**

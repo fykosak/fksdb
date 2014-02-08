@@ -44,11 +44,12 @@ abstract class ExtendedPersonPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
-        if ($model) {
-            $form[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON]->setDefaultValue($model->person_id);
-            if ($form->getComponent(ExtendedPersonHandler::CONT_MODEL, false)) {
-                $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($this->getModel());
-            }
+        if (!$model) {
+            return;
+        }
+        $form[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON]->setDefaultValue($model->person_id);
+        if ($form->getComponent(ExtendedPersonHandler::CONT_MODEL, false)) {
+            $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($this->getModel());
         }
     }
 

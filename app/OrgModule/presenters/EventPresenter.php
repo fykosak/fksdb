@@ -185,6 +185,9 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
+        if(!$model) {
+            return;
+        }
         $defaults = array(
             self::CONT_EVENT => $model->toArray(),
         );

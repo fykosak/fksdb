@@ -341,6 +341,9 @@ class PersonPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $person = null, Form $form) {
+        if (!$model) {
+            return;
+        }
         $defaults = array();
 
         $defaults[self::CONT_PERSON] = $person;
