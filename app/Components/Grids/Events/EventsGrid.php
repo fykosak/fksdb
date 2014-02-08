@@ -30,7 +30,7 @@ class EventsGrid extends BaseGrid {
         // data
         //
         
-        $events = $this->serviceEvent->getEvents($presenter->getSelectedContest());
+        $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new SearchableDataSource($events);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
