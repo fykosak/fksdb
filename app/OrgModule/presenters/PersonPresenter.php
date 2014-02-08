@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use AbstractModelSingle;
 use Authentication\AccountManager;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -22,6 +21,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
+use ORM\IModel;
 use Persons\Deduplication\Merger;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -340,7 +340,7 @@ class PersonPresenter extends EntityPresenter {
         $this->registerJSFile('js/mergeForm.js');
     }
 
-    protected function setDefaults(AbstractModelSingle $person, Form $form) {
+    protected function setDefaults(IModel $person = null, Form $form) {
         $defaults = array();
 
         $defaults[self::CONT_PERSON] = $person;
@@ -506,7 +506,7 @@ class PersonPresenter extends EntityPresenter {
         throw new NotImplementedException();
     }
 
-    protected function createModel($id) {
+    protected function loadModel($id) {
         return $this->servicePerson->findByPrimary($id);
     }
 

@@ -48,8 +48,8 @@ class ContestantsGrid extends BaseGrid {
         $this->addButton("editPerson", _("Upravit"))
                 ->setText(_('Upravit'))
                 ->setLink(function($row) use ($presenter) {
-                            return $presenter->link("Person:edit", array(
-                                        'id' => $row->person_id,
+                            return $presenter->link("Contestant:edit", array(
+                                        'id' => $row->ct_id,
                             ));
                         });
 

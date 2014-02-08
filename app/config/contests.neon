@@ -14,7 +14,7 @@ parameters:
             person_history:
                 school_id: true
                 study_year: true
-        contestantCreation:
+        adminContestant:
             person:
                 other_name: true
                 family_name: true
@@ -23,16 +23,28 @@ parameters:
             person_history:
                 school_id: true
                 study_year: true
+            post_contact:
+                address: true
+                type: P
             person_info:
                 email: true
                 born: false
                 birthplace: false
                 note: false
                 origin: false
-            post_contact:
-                address: true
-                type: P
+                agreed: false
+
+        adminOrg:
+            person:
+                other_name: true
+                family_name: true
+            person_info:
+                email: true
+            person_history:
+                school_id: true
+                study_year: true
 
      vyfuk:
         contestantRegistration: %fykos.contestantRegistration%
-        contestantCreation: %fykos.contestantCreation%
+        adminContestant: %fykos.adminContestant%
+        adminOrg: %fykos.adminOrg%

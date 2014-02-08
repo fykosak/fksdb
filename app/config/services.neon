@@ -20,8 +20,7 @@ services:
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
     - Submits\SeriesTable
-    - Persons\ContestantHandler
-    - Persons\OrgHandler
+    - Persons\ExtendedPersonHandlerFactory
     - Persons\SelfResolver
     merger:
         class: Persons\Deduplication\Merger(%merger%, ...)

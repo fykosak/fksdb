@@ -255,7 +255,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->navigationControl;
     }
 
-    protected function backlinkRedirect($need = false) {
+    public final function backlinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
         $backlink = $this['breadcrumbs']->getBacklinkUrl();
         if ($backlink) {

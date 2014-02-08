@@ -233,7 +233,11 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case 'person':
                 return $person[$field];
             case 'person_info':
-                return ($info = $person->getInfo()) ? $info[$field] : null;
+                $result = ($info = $person->getInfo()) ? $info[$field] : null;
+                if ($field == 'agreed') {
+                    $result = (bool) $result;
+                }
+                return $result;
             case 'person_history':
                 return ($history = $person->getHistory($acYear)) ? $history[$field] : null;
             case 'post_contact':
