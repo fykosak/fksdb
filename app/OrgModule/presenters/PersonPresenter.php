@@ -32,6 +32,7 @@ use ServicePersonInfo;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
+ * @deprecated It's better to used ReferencedId and ReferencedContainer inside the form.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonPresenter extends EntityPresenter {
