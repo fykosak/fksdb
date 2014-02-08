@@ -2,7 +2,6 @@
 
 use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Forms\Factories\LoginFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -90,13 +89,15 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         if ($tokenAuthentication) {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
+        } else if (!$login->hash) {
+            $options = LoginFactory::SHOW_PASSWORD;
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
         $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
         $form->addComponent($loginContainer, self::CONT_LOGIN);
 
-        if (!$tokenAuthentication) {
+        if ($loginContainer->getComponent('old_password', false)) {
             $loginContainer['old_password']
                     ->addCondition(Form::FILLED)
                     ->addRule(function(BaseControl $control) use($login) {

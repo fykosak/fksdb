@@ -13,8 +13,9 @@ use ORM\IModel;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
+use Persons\IExtendedPersonPresenter;
 
-abstract class ExtendedPersonPresenter extends EntityPresenter {
+abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
     /**
      * @var ReferencedPersonFactory
@@ -91,12 +92,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter {
 
         $this->appendExtendedContainer($form);
 
-        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear());
+        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
         $that = $this;
         $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
                     $form = $button->getForm();
                     $handler->handleForm($form, $that);
+
+                    $that->backlinkRedirect();
+                    $that->redirect('list');
                 };
 
         return $control;
