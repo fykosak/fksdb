@@ -117,6 +117,24 @@ class Utils {
     }
 
     /**
+     * Returns string represetation of iterable objects.
+     *  
+     * @param mixed $object
+     * @return string
+     */
+    public static function getRepr($object) {
+        if ($object instanceof Traversable || is_array($object)) {
+            $items = array();
+            foreach ($object as $key => $item) {
+                $items[] = "$key: " . self::getRepr($item);
+            }
+            return '{' . implode(', ', $items) . '}';
+        } else {
+            return (string) $object;
+        }
+    }
+
+    /**
      * Tranform an address in order only the owner could recongize it.
      * 
      * @param string $email

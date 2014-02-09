@@ -23,6 +23,7 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceEvent;
 use SystemContainer;
+use Utils;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -177,7 +178,7 @@ class EventPresenter extends EntityPresenter {
             $item->add(Html::el(null)->setText($key));
             if (isset($meta['default'])) {
                 $item->add(': ');
-                $item->add(Html::el(null)->setText($meta['default']));
+                $item->add(Html::el(null)->setText(Utils::getRepr($meta['default'])));
             }
         }
 
@@ -185,7 +186,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
-        if(!$model) {
+        if (!$model) {
             return;
         }
         $defaults = array(
