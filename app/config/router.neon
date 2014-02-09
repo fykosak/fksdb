@@ -67,10 +67,12 @@ fksrouter:
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
         '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
             flags: ONE_WAY
 
         # Application itself (note the presenters w/out module are handled specially)

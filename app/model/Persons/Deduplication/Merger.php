@@ -4,6 +4,7 @@ namespace Persons\Deduplication;
 
 use FKS\Logging\DevNullLogger;
 use FKS\Logging\ILogger;
+use Nette\Caching\Cache;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
@@ -100,6 +101,10 @@ class Merger {
      * @return boolean
      */
     public function merge($commit = null) {
+        // This workaround fixes inproper caching of referenced tables.
+        $this->connection->getCache()->clean(array(Cache::ALL => true));
+        $this->connection->getDatabaseReflection()->setConnection($this->connection);
+
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = ($commit === null) ? $this->configuration['commit'] : $commit;

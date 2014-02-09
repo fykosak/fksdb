@@ -1,5 +1,6 @@
 <?php
 
+use Nette\Diagnostics\Debugger;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
@@ -41,7 +42,9 @@ class LoggingMailer extends Object implements IMailer {
 
     public function send(Message $mail) {
         try {
-            $this->mailer->send($mail);
+            if (!Debugger::isEnabled()) { // do not really send emails when debugging
+                $this->mailer->send($mail);
+            }
             $this->logMessage($mail);
         } catch (Exception $e) {
             $this->logMessage($mail, $e);

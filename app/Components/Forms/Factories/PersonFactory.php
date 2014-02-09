@@ -108,6 +108,14 @@ class PersonFactory {
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * 
+     * @deprecated
+     * @param type $options
+     * @param \Nette\Forms\ControlGroup $group
+     * @param array $requiredCondition
+     * @return \FKSDB\Components\Forms\Containers\ModelContainer
+     */
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
         $disabled = (bool) ($options & self::DISABLED);
 
@@ -161,6 +169,13 @@ class PersonFactory {
         return $container;
     }
 
+    /**
+     * @deprecated
+     * @param type $options
+     * @param \Nette\Forms\ControlGroup $group
+     * @param type $emailRule
+     * @return \FKSDB\Components\Forms\Containers\PersonInfoContainer
+     */
     public function createPersonInfo($options = 0, ControlGroup $group = null, $emailRule = null) {
         $container = new PersonInfoContainer();
         $container->setCurrentGroup($group);
@@ -225,6 +240,11 @@ class PersonFactory {
         return $container;
     }
 
+    /**
+     * @deprecated Logins are created by default.
+     * @param \Nette\Forms\Container $container
+     * @param ModelPerson $person
+     */
     public function appendEmailWithLogin(Container $container, callable $emailRule = null, $options = 0) {
         $emailElement = $this->createEmail();
         $container->addComponent($emailElement, 'email');
@@ -257,6 +277,11 @@ class PersonFactory {
         }
     }
 
+    /**
+     * @deprecated Logins are created by default.
+     * @param \Nette\Forms\Container $container
+     * @param ModelPerson $person
+     */
     public function modifyLoginContainer(Container $container, ModelPerson $person) {
 
         $login = $person->getLogin();
@@ -298,6 +323,13 @@ class PersonFactory {
         return $select;
     }
 
+    /**
+     * @deprecated
+     * @param type $options
+     * @param \Nette\Forms\ControlGroup $group
+     * @param type $acYear
+     * @return \FKSDB\Components\Forms\Containers\ModelContainer
+     */
     public function createPersonHistory($options = 0, ControlGroup $group = null, $acYear) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
@@ -344,7 +376,11 @@ class PersonFactory {
                 if ($hiddenField) {
                     $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
                 }
-                $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                    $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                } else {
+                    $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                }
             }
             if ($caption = Arrays::get($metadata, 'caption', null)) { // intentionally =
                 $control->caption = $caption;

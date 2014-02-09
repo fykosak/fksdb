@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use AbstractModelSingle;
 use Events\Model\Grid\SingleEventSource;
 use FKS\Config\NeonScheme;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -21,6 +20,7 @@ use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
+use ORM\IModel;
 use ServiceEvent;
 use SystemContainer;
 
@@ -184,14 +184,17 @@ class EventPresenter extends EntityPresenter {
         return $result;
     }
 
-    protected function setDefaults(AbstractModelSingle $model, Form $form) {
+    protected function setDefaults(IModel $model = null, Form $form) {
+        if(!$model) {
+            return;
+        }
         $defaults = array(
             self::CONT_EVENT => $model->toArray(),
         );
         $form->setDefaults($defaults);
     }
 
-    protected function createModel($id) {
+    protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);
     }
 

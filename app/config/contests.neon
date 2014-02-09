@@ -1,0 +1,59 @@
+#
+# Contest specific configuration of FKSDB
+#
+
+parameters:
+    fykos:
+        registerContestant:
+            person:
+                other_name: true
+                family_name: true
+            person_history:
+                school_id: true
+                study_year: true
+                class: false
+            post_contact:
+                address: true
+                type: P
+            person_info:
+                email: true
+                origin: false
+                agreed: true
+        adminContestant:
+            person:
+                other_name: true
+                family_name: true
+                display_name: false
+                gender: true
+            person_history:
+                school_id: true
+                study_year: true
+            post_contact:
+                address: true
+                type: P
+            person_info:
+                email: true
+                born: false
+                birthplace: false
+                note: false
+                origin: false
+                agreed: false
+
+        adminOrg:
+            person:
+                other_name: true
+                family_name: true
+            person_info:
+                email: true
+                career: false
+                uk_login: false
+                account: false
+                tex_signature: false
+                domain_alias: false
+                homepage: false
+                note: false
+
+     vyfuk:
+        registerContestant: %fykos.registerContestant%
+        adminContestant: %fykos.adminContestant%
+        adminOrg: %fykos.adminOrg%

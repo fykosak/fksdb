@@ -2,9 +2,10 @@
 
 namespace OrgModule;
 
-use AbstractModelSingle;
+use FKS\Components\Controls\FormControl;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use ORM\IModel;
 
 /**
  * Abstract functionality for basic CRUD.
@@ -21,7 +22,7 @@ abstract class EntityPresenter extends BasePresenter {
     const COMP_GRID = 'grid';
 
     /**
-     * @var AbstractModelSingle
+     * @var IModel
      */
     private $model = false;
 
@@ -56,25 +57,36 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     public function renderEdit($id) {
-        $this->setDefaults($this->getModel(), $this->getComponent(self::COMP_EDIT_FORM));
+        $component = $this->getComponent(self::COMP_EDIT_FORM);
+        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $this->setDefaults($this->getModel(), $form);
     }
 
-    protected function getModel() {
+    public function renderCreate() {
+        $component = $this->getComponent(self::COMP_CREATE_FORM);
+        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $this->setDefaults($this->getModel(), $form);
+    }
+
+    public final function getModel() {
         if ($this->model === false) {
-            $this->model = $this->createModel($this->getParam('id'));
+            $this->model = $this->getParam('id') ? $this->loadModel($this->getParam('id')) : null;
         }
 
         return $this->model;
     }
 
-    protected function setDefaults(AbstractModelSingle $model, Form $form) {
+    protected function setDefaults(IModel $model = null, Form $form) {
+        if (!$model) {
+            return;
+        }
         $form->setDefaults($model->toArray());
     }
 
     /**
      * @return AbstracModelSingle
      */
-    abstract protected function createModel($id);
+    abstract protected function loadModel($id);
 
     abstract protected function createComponentEditComponent($name);
 
