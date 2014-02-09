@@ -157,15 +157,18 @@ class ExtendedPersonHandler extends Object {
                 $msg = $presenter->messageEdit();
             }
             $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            return true;
         } catch (ModelException $e) {
             $connection->rollBack();
             Debugger::log($e, Debugger::ERROR);
             $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+            return false;
         } catch (ModelDataConflictException $e) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
             $e->getReferencedId()->rollback();
             $connection->rollBack();
+            return false;
         }
     }
 

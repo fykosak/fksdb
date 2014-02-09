@@ -142,7 +142,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function renderContestant() {
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
         $referencedId = $this['contestantForm']->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
-        if ($person) {            
+        if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
             $referencedId->setDefaultValue(ReferencedId::VALUE_PROMISE);
@@ -187,13 +187,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $that = $this;
         $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
                     $form = $button->getForm();
-                    $handler->handleForm($form, $that);
-                    //TODO login
-                    if (!$that->getPerson()) {
-                        $login = $handler->getPerson()->getLogin();
-                        $that->getUser()->login($login);
+                    if ($handler->handleForm($form, $that)) {
+                        if (!$that->getPerson()) {
+                            $login = $handler->getPerson()->getLogin();
+                            $that->getUser()->login($login);
+                        }
+                        $this->redirect(':Public:Dashboard:default');
                     }
-                    $this->redirect(':Public:Dashboard:default');
                 };
 
 

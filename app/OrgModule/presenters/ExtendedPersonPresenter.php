@@ -97,10 +97,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $that = $this;
         $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
                     $form = $button->getForm();
-                    $handler->handleForm($form, $that);
-
-                    $that->backlinkRedirect();
-                    $that->redirect('list');
+                    if ($handler->handleForm($form, $that)) {
+                        $that->backlinkRedirect();
+                        $that->redirect('list');
+                    }
                 };
 
         return $control;
