@@ -1,4 +1,4 @@
-<ul n:if="$contests" class="nav navbar-nav navbar-right">
+<ul n:if="$contests" class="{$class}">
     {foreach $contests as $contestId => $contest}
     <li{if $contestId==$currentContest} class="active"{/if}><a href="{link change! $contestId}">{$contest->contest->name}</a></li>
     <li n:if="$isAllowedYear" class="dropdown{if $contestId==$currentContest && $contest->currentYear != $currentYear} alert-danger{/if}">
@@ -7,7 +7,7 @@
             <li n:foreach="$contest->years as $year"{if $contestId==$currentContest && $year == $currentYear} class="active"{/if}><a href="{link changeYear! $contestId, $year}">{$contest->contest->name} {$year}</a></li>
         </ul>
     </li>
-    <li class="divider-vertical"></li>
+    <li n:if="$class" class="divider-vertical"></li>
 
     {/foreach}
 </ul>    

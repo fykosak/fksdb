@@ -19,6 +19,8 @@ class ContestChooser extends Control {
 
     const SESSION_PREFIX = 'contestPreset';
     const ALL_CONTESTS = '__*';
+    const DEFAULT_FIRST = 'first';
+    const DEFAULT_NULL = 'null';
 
     /**
      * @var mixed
@@ -62,6 +64,11 @@ class ContestChooser extends Control {
     private $initialized = false;
 
     /**
+     * @var enum DEFAULT_*
+     */
+    private $defaultContest = self::DEFAULT_FIRST;
+
+    /**
      * 
 
      * @param Session $session
@@ -79,6 +86,14 @@ class ContestChooser extends Control {
      */
     public function setContests($contestsDefinition) {
         $this->contestsDefinition = $contestsDefinition;
+    }
+
+    public function getDefaultContest() {
+        return $this->defaultContest;
+    }
+
+    public function setDefaultContest($defaultContest) {
+        $this->defaultContest = $defaultContest;
     }
 
     public function isValid() {
@@ -143,19 +158,30 @@ class ContestChooser extends Control {
 
         // final check
         if (!in_array($contestId, $contestIds)) {
-            $contestId = reset($contestIds); // by default choose the first
+            switch ($this->defaultContest) {
+                case self::DEFAULT_FIRST:
+                    $contestId = reset($contestIds);
+                    break;
+                case self::DEFAULT_NULL:
+                    $contestId = null;
+                    break;
+            }
         }
+
         $this->contest = $this->serviceContest->findByPrimary($contestId);
 
+        if ($this->contest === null) {
+            $this->year = null;
+        } else {
+            /* YEAR */
+            $year = $this->calculateYear($session, $this->contest);
+            $this->year = $year;
 
-        /* YEAR */
-        $year = $this->calculateYear($session, $this->contest);
-        $this->year = $year;
 
-
-        // remember
-        $session->contestId = $this->contest->contest_id;
-        $session->year = $this->year;
+            // remember
+            $session->contestId = $this->contest->contest_id;
+            $session->year = $this->year;
+        }
     }
 
     /**
@@ -210,14 +236,15 @@ class ContestChooser extends Control {
         return $this->getPresenter()->getUser()->getIdentity();
     }
 
-    public function render() {
+    public function render($class = null) {
         if (!$this->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
         $this->template->contests = $this->getContests();
         $this->template->isAllowedYear = $this->isAllowedYear();
-        $this->template->currentContest = $this->getContest()->contest_id;
+        $this->template->currentContest = $this->getContest() ? $this->getContest()->contest_id : null;
         $this->template->currentYear = $this->getYear();
+        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
         $this->template->render();

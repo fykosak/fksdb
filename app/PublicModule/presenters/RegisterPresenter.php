@@ -8,6 +8,7 @@ use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
+use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
 use ModelContest;
@@ -86,7 +87,15 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->handlerFactory = $handlerFactory;
     }
 
+    protected function createComponentContestChooser($name) {
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setContests(ContestChooser::ALL_CONTESTS);
+        $control->setDefaultContest(ContestChooser::DEFAULT_NULL);
+        return $control;
+    }
+
     public function getSelectedContest() {
+        return $this['contestChooser']->getContest();
         if ($this->selectedContest === null) {
             $this->selectedContest = $this->serviceContest->findByPrimary($this->contestId);
         }
@@ -94,6 +103,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
+        return $this['contestChooser']->getYear();
         return $this->yearCalculator->getCurrentYear($this->getSelectedContest());
     }
 
@@ -131,7 +141,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
                     $this->redirect(':Public:Dashboard:default');
                 }
-            } // TODO show contest chooser
+            }
+        }
+        if (!$this->getSelectedContest()) {
+            $this->setView('contestChooser');
         }
     }
 
