@@ -45,9 +45,13 @@ parameters:
                 family_name: true
             person_info:
                 email: true
-            person_history:
-                school_id: true
-                study_year: true
+                career: false
+                uk_login: false
+                account: false
+                tex_signature: false
+                domain_alias: false
+                homepage: false
+                note: false
 
      vyfuk:
         registerContestant: %fykos.registerContestant%
