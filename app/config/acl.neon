@@ -74,6 +74,8 @@ services:
 
             - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO
             - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
+            - allow(eventManager, query.stored, search) # TODO (needs better distinction)
+            - allow(eventManager, query.stored, execute) # TODO (needs better distinction)
 
             - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
             - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
