@@ -155,13 +155,15 @@ class CSVResponse extends Object implements IResponse {
             if (!is_array($row)) {
                 $row = iterator_to_array($row);
             }
+            $escapedRow = array();
             foreach ($row as $key => $value) {
                 $value = preg_replace('/[\r\n]+/', ' ', $value);  // remove line endings
                 if ($q) {
                     $value = str_replace($q, $q . $q, $value);          // escape double quotes
                 }
+                $escapedRow[] = $value;
             }
-            $csv[] = $q . join($q . $this->glue . $q, $row) . $q;
+            $csv[] = $q . join($q . $this->glue . $q, $escapedRow) . $q;
         }
 
         return join("\r\n", $csv);
