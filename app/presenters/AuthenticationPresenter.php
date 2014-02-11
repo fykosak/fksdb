@@ -2,10 +2,10 @@
 
 use Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
+use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use Authentication\UnknownLoginException;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
@@ -101,7 +101,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function actionLogout() {
-        $subdomainAuth = $this->context->parameters['subdomain']['auth'];
+        $subdomainAuth = $this->globalParameters['subdomain']['auth'];
         $subdomain = $this->getParam('subdomain');
 
         if ($subdomain != $subdomainAuth) {
@@ -309,7 +309,7 @@ final class AuthenticationPresenter extends BasePresenter {
         if (in_array($this->flag, array(self::FLAG_SSO_PROBE, self::FLAG_SSO_LOGIN))) {
             if ($login) {
                 $gsid = $this->globalSession->getId();
-                $expiration = $this->context->parameters['authentication']['sso']['tokenExpiration'];
+                $expiration = $this->globalParameters['authentication']['sso']['tokenExpiration'];
                 $until = DateTime::from($expiration);
                 $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $gsid);
                 $url->appendQuery(array(
@@ -324,7 +324,7 @@ final class AuthenticationPresenter extends BasePresenter {
         }
 
         if ($url->getHost()) { // this would indicate absolute URL
-            if (in_array($url->getHost(), $this->context->parameters['authentication']['backlinkHosts'])) {
+            if (in_array($url->getHost(), $this->globalParameters['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string) $url, 303);
             } else {
                 $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), self::FLASH_ERROR);

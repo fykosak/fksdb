@@ -10,6 +10,7 @@ use FKS\Components\Controls\PresenterBuilder;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
+use FKS\Config\GlobalParameters;
 use FKS\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -44,6 +45,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /** @var ServiceContest */
     protected $serviceContest;
+
+    /** @var GlobalParameters     */
+    protected $globalParameters;
 
     /** @var BreadcrumbsFactory */
     private $breadcrumbsFactory;
@@ -95,6 +99,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->serviceContest = $serviceContest;
     }
 
+    public function injectGlobalParameters(GlobalParameters $globalParameters) {
+        $this->globalParameters = $globalParameters;
+    }
+
     public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
@@ -114,7 +122,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);
-        $template->beta = $this->context->parameters['beta'];
+        $template->beta = $this->globalParameters['beta'];
         return $template;
     }
 
@@ -255,7 +263,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->navigationControl;
     }
 
-    protected function backlinkRedirect($need = false) {
+    public final function backlinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
         $backlink = $this['breadcrumbs']->getBacklinkUrl();
         if ($backlink) {
@@ -345,7 +353,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
                 $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
             if (!$this->_lang) {
-                $this->_lang = $this->context->parameters['localization']['defaultLanguage'];
+                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
             }
         }
         return $this->_lang;

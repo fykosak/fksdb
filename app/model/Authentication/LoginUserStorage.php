@@ -1,13 +1,18 @@
 <?php
+namespace Authentication;
 
+use AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
+use AuthenticationPresenter;
+use ModelLogin;
 use Nette\Application\Application;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
+use ServiceLogin;
+use YearCalculator;
 
 /**
  *

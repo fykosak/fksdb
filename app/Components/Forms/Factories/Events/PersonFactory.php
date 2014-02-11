@@ -6,6 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
+use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -68,7 +69,8 @@ class PersonFactory extends AbstractFactory {
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
-        $components = $this->referencedPersonFactory->createReferencedPerson($this->fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
+        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition);
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
         $components[1]->setOption('label', $field->getLabel());
         $components[1]->setOption('description', $field->getDescription());
         return $components;

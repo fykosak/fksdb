@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use AbstractModelSingle;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Grids\SchoolsGrid;
@@ -12,6 +11,7 @@ use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
+use ORM\IModel;
 use ServiceAddress;
 use ServiceSchool;
 
@@ -99,7 +99,10 @@ class SchoolPresenter extends EntityPresenter {
         return $form;
     }
 
-    protected function setDefaults(AbstractModelSingle $model, Form $form) {
+    protected function setDefaults(IModel $model = null, Form $form) {
+        if (!$model) {
+            return;
+        }
         $defaults = array(
             self::CONT_SCHOOL => $model->toArray(),
             self::CONT_ADDRESS => $model->getAddress()->toArray(),
@@ -108,7 +111,7 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     protected function createComponentGrid($name) {
-        $grid = new SchoolsGrid();
+        $grid = new SchoolsGrid($this->serviceSchool);
 
         return $grid;
     }
@@ -126,7 +129,7 @@ class SchoolPresenter extends EntityPresenter {
         return $form;
     }
 
-    protected function createModel($id) {
+    protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
     }
 

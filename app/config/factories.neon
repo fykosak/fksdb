@@ -5,7 +5,6 @@ services:
     mailTemplateFactory:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
-    - FKSDB\Components\Factories\ExtendedPersonWizardFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     - FKSDB\Components\Forms\Factories\ReferencedPersonFactory
     - Persons\ReferencedPersonHandlerFactory

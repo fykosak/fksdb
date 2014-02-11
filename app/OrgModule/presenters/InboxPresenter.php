@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use DbNames;
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKS\Config\GlobalParameters;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -361,7 +361,7 @@ class InboxPresenter extends SeriesPresenter {
         }
 
         $filename = $this->submitStorage->retrieveFile($oldSubmit, ISubmitStorage::TYPE_ORIGINAL);
-        $tempDir = $this->context->parameters['tempDir']; // TODO is this right way (TM)? how else it could be done?
+        $tempDir = $this->globalParameters['tempDir'];
         $backup = tempnam($tempDir, 'restamp');
         copy($filename, $backup);
 

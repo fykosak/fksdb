@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use AbstractModelSingle;
 use Authentication\AccountManager;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -22,6 +21,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
+use ORM\IModel;
 use Persons\Deduplication\Merger;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -32,6 +32,7 @@ use ServicePersonInfo;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
+ * @deprecated It's better to used ReferencedId and ReferencedContainer inside the form.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonPresenter extends EntityPresenter {
@@ -340,7 +341,10 @@ class PersonPresenter extends EntityPresenter {
         $this->registerJSFile('js/mergeForm.js');
     }
 
-    protected function setDefaults(AbstractModelSingle $person, Form $form) {
+    protected function setDefaults(IModel $person = null, Form $form) {
+        if (!$model) {
+            return;
+        }
         $defaults = array();
 
         $defaults[self::CONT_PERSON] = $person;
@@ -506,7 +510,7 @@ class PersonPresenter extends EntityPresenter {
         throw new NotImplementedException();
     }
 
-    protected function createModel($id) {
+    protected function loadModel($id) {
         return $this->servicePerson->findByPrimary($id);
     }
 

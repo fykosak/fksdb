@@ -61,6 +61,6 @@ html, body {
 
 .required .control-label:before {
     color: #b94a48;
-    content: '* ';
+    /*content: '* ';*/
     display:inline;
 }

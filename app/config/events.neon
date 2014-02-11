@@ -32,6 +32,7 @@ machine:
 
 baseMachine:
     states:
+        type: expression array
     transitions:
     fields:
     service:
@@ -52,6 +53,7 @@ transition:
         default: true
         type: expression
     label:
+        type: expression
     onExecuted:
         default: []
         type: expression array
@@ -59,8 +61,10 @@ transition:
 field:
     label:
         default: null
+        type: expression
     description:
         default: null
+        type: expression
     determining:
         default: false
     required:
@@ -83,8 +87,10 @@ bmInstance:
     bmName:
     label:
         default: null
+        type: expression
     description: # it's show beneatch legend of the form group
         default: null
+        type: expression
     primary:
         default: false
     required:
