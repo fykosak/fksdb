@@ -173,6 +173,9 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
+        if ($query && $this->getParameter('qid')) {
+            $this->redirect('this', $query->getPrimary());
+        }
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
     }

@@ -48,10 +48,15 @@ fksrouter:
             action: default
             flags: ONE_WAY
 
-        # FKSAPP
-        'fksapp/<presenter=Homepage>/<action=default>[/<id>]':
-            module: Fksapp          
-
+        # Cool URL
+        '%path%<contestId %contests%><year [0-9]+>/q/<qid>':
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            module: Org
+            presenter: Export
+            action: execute
+            contestId: [filterTable: %inverseContestMapping%]
+                       
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
             presenter: Authentication
