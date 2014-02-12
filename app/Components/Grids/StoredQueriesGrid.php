@@ -75,7 +75,7 @@ class StoredQueriesGrid extends BaseGrid {
                             return $that->getPresenter()->link("execute", $row->query_id);
                         })
                 ->setShow(function($row) use ($that, $contest) {
-                            return $that->contestAuthorizator->isAllowed($row, 'execute', $contest);
+                            return $that->contestAuthorizator->isAllowed($row, 'show', $contest);
                         });
 
         if ($this->getPresenter()->authorized('compose')) {
