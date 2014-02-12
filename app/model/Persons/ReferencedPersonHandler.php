@@ -149,7 +149,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             throw $e;
         } catch (ModelException $e) {
             $this->rollBack();
-            throw new PersonHandlerException(null, null, $e);
+            throw $e;
         }
     }
 
