@@ -130,9 +130,7 @@ class ExportPresenter extends SeriesPresenter {
             $id = $this->getParam('id');
             $this->patternQuery = $this->serviceStoredQuery->findByPrimary($id);
             if (!$this->patternQuery && $this->getParam('qid')) {
-                $this->patternQuery = $this->serviceStoredQuery->find(array(
-                    'qid' => $this->getParam('qid')
-                ));
+                $this->patternQuery = $this->serviceStoredQuery->findByQid($this->getParam('qid'));
             }
         }
         return $this->patternQuery;

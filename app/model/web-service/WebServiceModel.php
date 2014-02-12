@@ -1,10 +1,22 @@
 <?php
 
+use Authorization\ContestAuthorizator;
+use Nette\Diagnostics\Debugger;
+use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
+use SQL\StoredQuery;
+use SQL\StoredQueryFactory;
+
 /**
  * Web service provider for fksdb.wdsl
  * @author michal
  */
 class WebServiceModel {
+
+    /**
+     * @var array  contest name => contest_id
+     */
+    private $inverseContestMap;
 
     /**
      * @var ServiceContest
@@ -27,16 +39,28 @@ class WebServiceModel {
     private $authenticatedLogin;
 
     /**
-     * @var Nette\Security\IAuthenticator
+     * @var IAuthenticator
      */
     private $authenticator;
 
-    function __construct(array $contestMap, Nette\Security\IAuthenticator $authenticator, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory) {
+    /**
+     * @var StoredQueryFactory
+     */
+    private $storedQueryFactory;
+
+    /**
+     * @var ContestAuthorizator
+     */
+    private $contestAuthorizator;
+
+    function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
+        $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
         $this->statsModelFactory = $statsModelFactory;
         $this->authenticator = $authenticator;
-        $this->contestMap = array_flip($contestMap);
+        $this->storedQueryFactory = $storedQueryFactory;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
@@ -52,14 +76,14 @@ class WebServiceModel {
         }
 
         $credentials = array(
-            Nette\Security\IAuthenticator::USERNAME => $args->username,
-            Nette\Security\IAuthenticator::PASSWORD => $args->password,
+            IAuthenticator::USERNAME => $args->username,
+            IAuthenticator::PASSWORD => $args->password,
         );
 
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
             $this->log(" Successfully authenticated for web service request.");
-        } catch (Nette\Security\AuthenticationException $e) {
+        } catch (AuthenticationException $e) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
         }
@@ -67,11 +91,11 @@ class WebServiceModel {
 
     public function GetResults($args) {
         $this->checkAuthentication(__FUNCTION__);
-        if (!isset($this->contestMap[$args->contest])) {
+        if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
 
-        $contest = $this->serviceContest->findByPrimary($this->contestMap[$args->contest]);
+        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
 
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
@@ -119,11 +143,11 @@ class WebServiceModel {
 
     public function GetStats($args) {
         $this->checkAuthentication(__FUNCTION__);
-        if (!isset($this->contestMap[$args->contest])) {
+        if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
 
-        $contest = $this->serviceContest->findByPrimary($this->contestMap[$args->contest]);
+        $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $year = (string) $args->year;
 
         $doc = new DOMDocument();
@@ -165,6 +189,46 @@ class WebServiceModel {
         return new SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
     }
 
+    public function GetExport($args) {
+        $this->checkAuthentication(__FUNCTION__);
+
+        // parse arguments
+        $qid = $args->qid;
+        $parameters = array();
+
+        foreach ($args->parameter as $parameter) {
+            $parameters[$parameter->name] = $parameter->{'_'};
+            if ($parameter->name == StoredQueryFactory::PARAM_CONTEST) {
+                if (!isset($this->inverseContestMap[$parameters[$parameter->name]])) {
+                    $msg = "Unknown contest '{$parameters[$parameter->name]}'.";
+                    $this->log($msg);
+                    throw new SoapFault('Sender', $msg);
+                }
+                $parameters[$parameter->name] = $this->inverseContestMap[$parameters[$parameter->name]];
+            }
+        }
+
+        $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
+
+        // authorization
+        if (!$this->isAuthorizedExport($storedQuery)) {
+            $msg = 'Unauthorized';
+            $this->log($msg);
+            throw new SoapFault('Sender', $msg);
+        }
+
+        $doc = new DOMDocument();
+        $exportNode = $doc->createElement('export');
+        $exportNode->setAttribute('qid', $qid);
+        $doc->appendChild($exportNode);
+
+        $this->fillExportNode($storedQuery, $exportNode, $doc);
+
+        $doc->formatOutput = true;
+
+        return new SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
+    }
+
     private function checkAuthentication($serviceName) {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
@@ -174,14 +238,22 @@ class WebServiceModel {
         }
     }
 
+    private function isAuthorizedExport(StoredQuery $query) {
+        $implicitParameters = $query->getImplicitParameters();
+        if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
+            return false;
+        }
+        return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
+    }
+
     private function log($msg) {
         if (!$this->authenticatedLogin) {
             $message = "unauthenticated@";
         } else {
-            $message = $this->authenticatedLogin->getName() . "\t\t(" . $this->authenticatedLogin->login_id . ")@";
+            $message = $this->authenticatedLogin->__toString() . ")@";
         }
-        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $message;
-        Nette\Diagnostics\Debugger::log($message);
+        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
+        Debugger::log($message);
     }
 
     private function createDetailNode(IResultsModel $resultsModel, DOMDocument $doc) {
@@ -256,8 +328,40 @@ class WebServiceModel {
                 }
             }
         } catch (Exception $e) {
-            Nette\Diagnostics\Debugger::log($e);
+            Debugger::log($e);
             throw new SoapFault('Receiver', 'Internal error.');
+        }
+    }
+
+    private function fillExportNode(StoredQuery $storedQuery, DOMElement $exportNode, DOMDocument $doc) {
+        // parameters
+        $parametersNode = $doc->createElement('parameters');
+        $exportNode->appendChild($parametersNode);
+        foreach ($storedQuery->getImplicitParameters() as $name => $value) {
+            $parameterNode = $doc->createElement('parameters', $value);
+            $parameterNode->setAttribute('name', $name);
+            $parametersNode->appendChild($parameterNode);
+        }
+
+        // column definitions
+        $columnDefinitionsNode = $doc->createElement('column-definitions');
+        $exportNode->appendChild($columnDefinitionsNode);
+        foreach ($storedQuery->getColumnNames() as $column) {
+            $columnDefinitionNode = $doc->createElement('column-definition');
+            $columnDefinitionNode->setAttribute('name', $column);
+            $columnDefinitionsNode->appendChild($columnDefinitionNode);
+        }
+
+        // data
+        $dataNode = $doc->createElement('data');
+        $exportNode->appendChild($dataNode);
+        foreach ($storedQuery->getData() as $row) {
+            $rowNode = $doc->createElement('row');
+            $dataNode->appendChild($rowNode);
+            foreach ($row as $col) {
+                $colNode = $doc->createElement('col', $col);
+                $rowNode->appendChild($colNode);
+            }
         }
     }
 

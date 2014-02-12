@@ -107,7 +107,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         if ($this->login) {
             return $this->login;
         } else {
-            return $this->email;
+            return 'NAMELESS LOGIN';
         }
     }
 

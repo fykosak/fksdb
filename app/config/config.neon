@@ -13,7 +13,7 @@ parameters:
     logDir: %appDir%/../log
 
     # WDSL file defining provided services.
-    wsdlUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
+    wsdlUrl: http://db.fykos.local/FKSDBWebServices.wsdl
 
     # URL to the public website of the contests. (Keys are from contestMapping)
     website:

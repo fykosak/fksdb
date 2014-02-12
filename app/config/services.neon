@@ -48,7 +48,7 @@ services:
         setup:
             - setObject(@webServiceModel)
 
-    webServiceModel:        WebServiceModel(%contestMapping%, ...)
+    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
 
     nette.userStorage: Authentication\LoginUserStorage
     nette.mailer:

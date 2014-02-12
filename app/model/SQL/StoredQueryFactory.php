@@ -7,6 +7,7 @@ use ISeriesPresenter;
 use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
 use SQL\StoredQuery;
@@ -52,7 +53,7 @@ class StoredQueryFactory {
 
     public function createQuery(ModelStoredQuery $patternQuery) {
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->setContext($storedQuery);
+        $this->presenterContextToQuery($storedQuery);
 
         return $storedQuery;
     }
@@ -64,12 +65,23 @@ class StoredQueryFactory {
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->setContext($storedQuery);
+        $this->presenterContextToQuery($storedQuery);
 
         return $storedQuery;
     }
 
-    private function setContext(StoredQuery $storedQuery) {
+    public function createQueryFromQid($qid, $parameters) {
+        $patternQuery = $this->serviceStoredQuery->findByQid($qid);
+        if (!$patternQuery) {
+            throw new InvalidArgumentException("Unknown QID '$qid'.");
+        }
+        $storedQuery = new StoredQuery($patternQuery, $this->connection);
+        $storedQuery->setImplicitParameters($parameters); // treat all parameters as implicit (better API for web service)
+
+        return $storedQuery;
+    }
+
+    private function presenterContextToQuery(StoredQuery $storedQuery) {
         if (!$this->getPresenter()) {
             throw new InvalidStateException("Must provide provider of context for implicit parameters.");
         }
