@@ -12,6 +12,7 @@ use ServiceStoredQuery;
  */
 class StoredQueriesGrid extends BaseGrid {
     /** @const No. of characters that are showed from query description. */
+
     const DESCRIPTION_TRUNC = 80;
 
     /**
@@ -74,11 +75,13 @@ class StoredQueriesGrid extends BaseGrid {
                             return $that->getPresenter()->link("execute", $row->query_id);
                         })
                 ->setShow(function($row) use ($that, $contest) {
-                            return $that->contestAuthorizator->isAllowed($row, 'execute', $contest);
+                            return $that->contestAuthorizator->isAllowed($row, 'show', $contest);
                         });
 
-        $this->addGlobalButton('compose', 'Napsat dotaz')
-                ->setLink($this->getPresenter()->link('compose'));
+        if ($this->getPresenter()->authorized('compose')) {
+            $this->addGlobalButton('compose', 'Napsat dotaz')
+                    ->setLink($this->getPresenter()->link('compose'));
+        }
     }
 
 }

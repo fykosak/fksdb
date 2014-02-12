@@ -130,22 +130,20 @@ class ExportPresenter extends SeriesPresenter {
             $id = $this->getParam('id');
             $this->patternQuery = $this->serviceStoredQuery->findByPrimary($id);
             if (!$this->patternQuery && $this->getParam('qid')) {
-                $this->patternQuery = $this->serviceStoredQuery->find(array(
-                    'qid' => $this->getParam('qid')
-                ));
+                $this->patternQuery = $this->serviceStoredQuery->findByQid($this->getParam('qid'));
             }
         }
         return $this->patternQuery;
     }
 
     public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('query.stored', 'search', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
     public function authorizedCompose() {
         $this->setAuthorized(
-                ($this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest()) &&
-                $this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest()))
+                ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
+                $this->getContestAuthorizator()->isAllowed('export.adhoc', 'execute', $this->getSelectedContest()))
         );
     }
 
@@ -162,7 +160,7 @@ class ExportPresenter extends SeriesPresenter {
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'read', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
 
     public function authorizedExecute($id) {
@@ -170,11 +168,14 @@ class ExportPresenter extends SeriesPresenter {
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'execute', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
+        if ($query && $this->getParameter('qid')) {
+            $this->redirect('this', $query->getPrimary());
+        }
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
     }
@@ -296,12 +297,6 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function handleComposeExecute(SubmitButton $button) {
-        if (!$this->getContestAuthorizator()->isAllowed('query.adhoc', 'execute', $this->getSelectedContest())) {
-            $this->flashMessage(_('Nedostatečné oprávnění ke spuštění dotazu.'), self::FLASH_ERROR);
-            return;
-        }
-
-
         $form = $button->getForm();
         $values = $form->getValues();
         $this->storeDesignFormToSession($values);
@@ -337,7 +332,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function handleComposeSuccess(SubmitButton $button) {
         try {
-            if (!$this->getContestAuthorizator()->isAllowed('query.stored', 'create', $this->getSelectedContest())) {
+            if (!$this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest())) {
                 throw new BadRequestException('Nedostatečné oprávnění ke vytvoření dotazu.', 403);
             }
 

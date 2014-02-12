@@ -8,6 +8,7 @@ use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
+use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
@@ -15,7 +16,7 @@ use NiftyGrid\DataSource\IDataSource;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQuery implements IDataSource {
+class StoredQuery implements IDataSource, IResource {
 
     const INNER_QUERY = 'sub';
 
@@ -92,6 +93,10 @@ class StoredQuery implements IDataSource {
         }
     }
 
+    public function getImplicitParameters() {
+        return $this->implicitParameterValues;
+    }
+
     public function setParameters($parameters) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
@@ -103,6 +108,10 @@ class StoredQuery implements IDataSource {
                 $this->invalidateAll();
             }
         }
+    }
+
+    public function getParameters() {
+        return $this->parameterValues;
     }
 
     public function getQueryPattern() {
@@ -244,6 +253,10 @@ class StoredQuery implements IDataSource {
         }
         $this->orders[0] = "$by $way";
         $this->invalidateData();
+    }
+
+    public function getResourceId() {
+        return 'export';
     }
 
 }

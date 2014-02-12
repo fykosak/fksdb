@@ -9,6 +9,7 @@
 	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
 	xmlns:fksres="http://fykos.cz/xml/results/schema"
 	xmlns:fksst="http://fykos.cz/xml/stats/schema"
+	xmlns:fksex="http://fykos.cz/xml/export/schema"	
 	xmlns:tns="http://fykos.cz/xml/ws/service"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
@@ -18,6 +19,7 @@
 		<xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
 			<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="http://fykos.cz/xml/results/schema.xsd"/>
 			<xsd:import namespace="http://fykos.cz/xml/stats/schema" schemaLocation="http://fykos.cz/xml/stats/schema.xsd"/>
+			<xsd:import namespace="http://fykos.cz/xml/export/schema" schemaLocation="http://fykos.cz/xml/export/schema.xsd"/>			
 			<!-- types for web service only -->
 			<xsd:complexType name="GetResultsRequestType">
 				<xsd:sequence>
@@ -47,6 +49,12 @@
 						  </xsd:complexContent>
 						</xsd:complexType> 
 					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>							
+			<xsd:complexType name="GetExportRequestType">
+				<xsd:sequence>
+					<xsd:element name="qid" minOccurs="1" maxOccures="1" type="fksex:qid-type"/>
+					<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="fksex:parameter-type"/>
 				</xsd:sequence>
 			</xsd:complexType>							
 			<xsd:complexType name="AuthenticationCredentialsType">
@@ -79,6 +87,14 @@
 		<wsdl:part name="GetResultsResponse" element="fksst:stats"/>
 	</wsdl:message>
 
+	<wsdl:message name="GetExportRequest">
+		<wsdl:part name="GetExportRequest" type="xsd1:GetExportRequestType"/>
+	</wsdl:message>
+
+	<wsdl:message name="GetExportResponse">
+		<wsdl:part name="GetExportResponse" element="fksex:export"/>
+	</wsdl:message>
+
 
 	<wsdl:portType name="FKSDBPortType">
 		<wsdl:operation name="GetResults">
@@ -89,6 +105,10 @@
 			<wsdl:input message="tns:GetStatsRequest"/>
 			<wsdl:output message="tns:GetStatsResponse"/>
 		</wsdl:operation>
+		<wsdl:operation name="GetExport">
+			<wsdl:input message="tns:GetExportRequest"/>
+			<wsdl:output message="tns:GetExportResponse"/>
+		</wsdl:operation>		
 	</wsdl:portType>
 
 
@@ -114,6 +134,16 @@
 				<soap:body use="literal"/>
 			</wsdl:output>
 		</wsdl:operation>
+		<wsdl:operation name="GetExport">
+			<soap:operation soapAction="GetExport"/>
+			<wsdl:input>
+				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
 	</wsdl:binding>
 
 	<wsdl:service name="FKSDBService">

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use PDOException;
+use \BasePresenter;
 use SQL\StoredQuery;
 
 /**
@@ -61,6 +62,12 @@ class StoredQueryGrid extends BaseGrid {
                     ->setLabel(_('Podrobnosti dotazu'))
                     ->setClass('btn btn-sm btn-default')
                     ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
+            if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally qid
+                $this->addGlobalButton('qid')
+                        ->setLabel(_('Odkaz'))
+                        ->setClass('btn btn-sm btn-default')
+                        ->setLink($this->getPresenter()->link('Export:execute', array('qid' => $qid, 'bc' => null)));
+            }
         }
     }
 

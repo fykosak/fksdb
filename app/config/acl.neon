@@ -34,8 +34,9 @@ services:
             - addResource(person)        # create, edit, list, delete, merge
             - addResource(contestant)    # create, edit, list, delete
             - addResource(school)        # create, edit, list, delete
-            - addResource(query.adhoc)   # parametrize, edit, show, execute
-            - addResource(query.stored)  # parametrize, edit, show, execute, create
+            - addResource(storedQuery)   # create, edit, list, delete, show
+            - addResource(export.adhoc)  # execute
+            - addResource(export)        # execute
             - addResource(org)           # create, edit, list, delete
             - addResource(event)         # create, edit, list, application
 
@@ -47,15 +48,16 @@ services:
             - allow(org, submit, edit)      # zadávání bodů
             - allow(org, contestant, list)
             - allow(org, school, list)
-            - allow(org, query.stored, search) # je to k něčemu?
+            - allow(org, storedQuery, list) # aby měli přehled
             - allow(org, org, list)
             - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
             - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
 
             - allow(webmaster, task, insert) # stahování úloh
 
-            - allow(dispatcher, query.stored, search)
-            - allow(dispatcher, query.stored, execute)
+            - allow(dispatcher, storedQuery, list)
+            - allow(dispatcher, storedQuery, show)
+            - allow(dispatcher, export, execute)
 
             - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
@@ -69,13 +71,14 @@ services:
 
             - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
             - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, query.adhoc, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, query.stored, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, storedQuery, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, export, ::constant(Nette\Security\Permission::ALL))
+            - allow(dataManager, export.adhoc, ::constant(Nette\Security\Permission::ALL))
 
             - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO
             - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
-            - allow(eventManager, query.stored, search) # TODO (needs better distinction)
-            - allow(eventManager, query.stored, execute) # TODO (needs better distinction)
+            - allow(eventManager, storedQuery, show) # TODO TODO (needs better distinction -- assertion at event org)
+            - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
 
             - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
             - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
