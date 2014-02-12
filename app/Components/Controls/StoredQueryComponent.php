@@ -6,11 +6,13 @@ use Authorization\ContestAuthorizator;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use PDOException;
 use PePa\CSVResponse;
 use SQL\StoredQuery;
+use SQL\StoredQueryFactory as StoredQueryFactorySQL;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,7 +50,7 @@ class StoredQueryComponent extends Control {
     private $error;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $showParametrize = true;
 
@@ -73,7 +75,7 @@ class StoredQueryComponent extends Control {
 
     protected function createComponentParametrizeForm($name) {
         $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());                
+        $form->setRenderer(new BootstrapRenderer());
 
         $queryPattern = $this->storedQuery->getQueryPattern();
         $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
@@ -103,14 +105,8 @@ class StoredQueryComponent extends Control {
         return $this->error;
     }
 
-    public function canParametrize() {
-        $query = $this->storedQuery->getQueryPattern();
-        $presenter = $this->getPresenter();
-        return count($query->getParameters()) && $this->contestAuthorizator->isAllowed($query, 'parametrize', $presenter->getSelectedContest()); //TODO is it correct to read the property from the presenter here?
-    }
-
     public function render() {
-        if ($this->parameters && $this->canParametrize()) {
+        if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = array();
             foreach ($this->parameters as $key => $value) {
@@ -119,17 +115,23 @@ class StoredQueryComponent extends Control {
             $defaults = array(self::CONT_PARAMS => $defaults);
             $this['parametrizeForm']->setDefaults($defaults);
         }
-
-        $this->template->error = $this->getSqlError();
-        $this->template->parametrize = $this->getShowParametrize() && $this->canParametrize();
+        if (!$this->isAuthorized()) {
+            $this->template->error = _('Nedostatečné oprávnění.');
+        } else {
+            $this->template->error = $this->getSqlError();
+        }
+        $this->template->hasParameters = $this->showParametrize && count($this->storedQuery->getQueryPattern()->getParameters());
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryComponent.latte');
         $this->template->render();
     }
 
     public function handleCSV($header = true) {
-        if ($this->parameters && $this->canParametrize()) {
+        if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
+        }
+        if (!$this->isAuthorized()) {
+            throw new ForbiddenRequestException();
         }
 
         $data = array();
@@ -146,6 +148,14 @@ class StoredQueryComponent extends Control {
         $response->setGlue(';');
 
         $this->presenter->sendResponse($response);
+    }
+
+    private function isAuthorized() {
+        $implicitParameters = $this->storedQuery->getImplicitParameters();
+        if (!isset($implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST])) {
+            return false;
+        }
+        return $this->contestAuthorizator->isAllowed($this->storedQuery, 'execute', $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]);
     }
 
 }

@@ -31,7 +31,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     public function getResourceId() {
-        return 'query.stored';
+        return 'storedQuery';
     }
 
 }

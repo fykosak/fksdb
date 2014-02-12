@@ -256,7 +256,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     public function getResourceId() {
-        return 'query.stored';
+        return 'export';
     }
 
 }
