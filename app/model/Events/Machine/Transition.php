@@ -80,6 +80,13 @@ class Transition extends FreezableObject {
         return $this->name;
     }
 
+    private function setName($name) {
+        // it's used for component naming
+        $name = str_replace('*', '_any_', $name);
+        $name = str_replace('|', '_or_', $name);
+        $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
+    }
+
     public function getLabel() {
         return $this->label;
     }
@@ -91,7 +98,7 @@ class Transition extends FreezableObject {
     public function setMask($mask) {
         $this->mask = $mask;
         list($this->source, $this->target) = self::parseMask($mask);
-        $this->name = str_replace('*', '__any', $this->source . '_' . $this->target); // it's used for component naming
+        $this->setName($mask);
     }
 
     public function getBaseMachine() {
