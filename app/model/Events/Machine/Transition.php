@@ -57,6 +57,11 @@ class Transition extends FreezableObject {
     private $condition;
 
     /**
+     * @var boolean|callable
+     */
+    private $dangerous;
+
+    /**
      * @var ExpressionEvaluator
      */
     private $evaluator;
@@ -122,9 +127,18 @@ class Transition extends FreezableObject {
         return $this->target == BaseMachine::STATE_TERMINATED;
     }
 
+    public function isDangerous() {
+        return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
+    }
+
     public function setCondition($condition) {
         $this->updating();
         $this->condition = $condition;
+    }
+
+    public function setDangerous($dangerous) {
+        $this->updating();
+        $this->dangerous = $dangerous;
     }
 
     public function getEvaluator() {

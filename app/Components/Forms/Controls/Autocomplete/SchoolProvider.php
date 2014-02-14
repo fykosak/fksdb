@@ -38,7 +38,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
         $schools = $this->serviceSchool->getTable();
         foreach ($tokens as $token) {
-            $schools->where('name_full LIKE concat(\'%\', ?, \'%\')', $token);
+            $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
         }
         $schools->order('name_abbrev');
 

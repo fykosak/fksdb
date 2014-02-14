@@ -7,9 +7,13 @@
 {elseif  $mode == 'transitions'}
     {if}
     {foreach $primaryMachine->getAvailableTransitions() as  $transition}
-<a n:if="$transition->isCreating()" href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>    
-<a n:if="!$transition->isCreating() && !$transition->isTerminating()"  n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
-<a n:if="$transition->isTerminating()"  n:href="transition! $transition->getName()" class="btn btn-xs btn-danger">{$transition->getLabel()}</a>    
+{if $transition->isCreating()}
+<a href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>    
+{elseif $transition->isDangerous()}
+<a n:href="transition! $transition->getName()" class="btn btn-xs btn-danger">{$transition->getLabel()}</a>    
+{else}
+<a n:href="transition! $transition->getName()" class="btn btn-xs btn-default">{$transition->getLabel()}</a>    
+{/if}
     {/foreach}
     {else}
 <em>{_'žádné'}</em>

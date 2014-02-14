@@ -57,6 +57,9 @@ transition:
     onExecuted:
         default: []
         type: expression array
+    dangerous:
+        default: false
+        type: expression
 
 field:
     label:
