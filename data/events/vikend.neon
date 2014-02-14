@@ -57,6 +57,7 @@ events:
                     *->cancelled:
                         condition: and(neg(state('participated')),neg(state('cancelled')),role('admin'))
                         label: Zrušit přihlášku
+                        dangerous: true
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku

@@ -84,6 +84,7 @@ events:
                     *->cancelled:
                         condition: and(role('admin'),neg(state('cancelled')))
                         label: Zrušit tým
+                        dangerous: true
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat tým

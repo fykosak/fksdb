@@ -171,6 +171,9 @@ class ApplicationComponent extends Control {
             } else if ($transition->isTerminating()) {
                 $submit->getControlPrototype()->addClass('btn-danger');
                 $submit->setOption('row', 3);
+            } else if ($transition->isDangerous()) {
+                $submit->getControlPrototype()->addClass('btn-danger');
+                $submit->setOption('row', 2);
             } else {
                 $submit->getControlPrototype()->addClass('btn-default');
                 $submit->setOption('row', 2);
