@@ -38,9 +38,9 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
     }
 
     protected final function getSchools($schoolControls, $personControls) {
-        $personIds = array_map(function(BaseControl $control) {
-                    return $control->getValue(false);
-                }, $personControls);
+        $personIds = array_filter(array_map(function(BaseControl $control) {
+                            return $control->getValue(false);
+                        }, $personControls));
 
         $schools = $this->servicePersonHistory->getTable()
                 ->where('person_id', $personIds)
