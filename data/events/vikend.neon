@@ -2,6 +2,7 @@ parameters:
     events:
         vikend:
             appCond: or(regOpen(), role('admin'))
+            cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
             person:
                 person:
                     other_name: true
@@ -35,6 +36,7 @@ events:
                     applied: Přihlášen
                     spare: Náhradník
                     participated: Účastnil se
+                    missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
@@ -54,8 +56,12 @@ events:
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: Nepřijel
+                        dangerous: true
                     *->cancelled:
-                        condition: and(neg(state('participated')),neg(state('cancelled')),role('admin'))
+                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: Zrušit přihlášku
                         dangerous: true
                     cancelled->__terminated:
