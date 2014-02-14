@@ -2,10 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
 use ModelPerson;
 use Nette\Forms\Controls\BaseControl;
-use ServiceLogin;
 use ServicePersonInfo;
 
 /**

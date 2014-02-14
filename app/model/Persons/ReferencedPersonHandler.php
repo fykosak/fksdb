@@ -2,13 +2,14 @@
 
 namespace Persons;
 
-use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Components\Forms\Controls\IReferencedHandler;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
 use ModelException;
 use ModelPerson;
 use ModelPostContact;
 use Nette\ArrayHash;
+use Nette\InvalidArgumentException;
 use Nette\Object;
 use ORM\IModel;
 use ServiceMPostContact;
@@ -212,6 +213,17 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             $connection->rollBack();
         }
         //else: TODO ? throw an exception?
+    }
+
+    public function isSecondaryKey($field) {
+        return $field == 'person_info.email';
+    }
+
+    public function findBySecondaryKey($field, $key) {
+        if (!$this->isSecondaryKey($field)) {
+            throw new InvalidArgumentException("'$field' is not a secondary key.");
+        }
+        return $this->servicePerson->findByEmail($key);
     }
 
 }

@@ -8,11 +8,14 @@ use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
 use ModelPostContact;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
@@ -96,6 +99,27 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     );
                 }
                 $control = $this->personFactory->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $fullFieldName = "$sub.$fieldName";
+                if ($handler->isSecondaryKey($fullFieldName)) {
+                    if ($fieldName != 'email') {
+                        throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
+                    }
+
+                    $control->addCondition(function() use($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
+                                        $personId = $hiddenField->getValue(false);
+                                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
+                                    })
+                            ->addRule(function(BaseControl $control) use($fullFieldName, $hiddenField, $handler) {
+                                        $personId = $hiddenField->getValue(false);
+
+                                        $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
+                                        if ($foundPerson && $foundPerson->getPrimary() != $personId) {
+                                            $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                            return false;
+                                        }
+                                        return true;
+                                    }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                }
 
                 $subcontainer->addComponent($control, $fieldName);
             }

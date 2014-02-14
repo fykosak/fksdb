@@ -41,6 +41,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         $personIds = array_map(function(BaseControl $control) {
                     return $control->getValue(false);
                 }, $personControls);
+
         $schools = $this->servicePersonHistory->getTable()
                 ->where('person_id', $personIds)
                 ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())
@@ -50,9 +51,9 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();
-            } else if ($schoolId = $personControls[$key]->getValue(false)) { // intentionally =
-                if ($schoolId) {
-                    $result[] = $schools[$schoolId];
+            } else if ($personId = $personControls[$key]->getValue(false)) { // intentionally =
+                if ($personId && isset($schools[$personId])) {
+                    $result[] = $schools[$personId];
                 }
             }
         }
