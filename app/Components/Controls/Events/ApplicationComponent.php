@@ -7,8 +7,6 @@ use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
-use Events\TransitionConditionFailedException;
-use Events\TransitionOnExecutedException;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
@@ -270,13 +268,7 @@ class ApplicationComponent extends Control {
                 $this->rollbackReferencedId($form);
             }
             $connection->rollBack();
-        } catch (TransitionOnExecutedException $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
-            if ($form) {
-                $this->rollbackReferencedId($form);
-            }
-            $connection->rollBack();
-        } catch (TransitionConditionFailedException $e) {
+        } catch (MachineExecutionException $e) {
             $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
             if ($form) {
                 $this->rollbackReferencedId($form);
@@ -300,6 +292,9 @@ class ApplicationComponent extends Control {
             $transition = $this->machine[$name]->getTransitionByTarget($newState);
             if ($transition) {
                 $transitions[$name] = $transition;
+            } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
+                throw new MachineExecutionException(sprintf($msg, $this->holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
             }
         }
         return $transitions;

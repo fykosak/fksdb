@@ -146,7 +146,7 @@ events:
                         condition: role('admin')
                         label: Potvrdit účast # name is not necessary due to join to team machine
                     applied->__terminated:
-                        condition: %events.fyziklani.appCond% # TODO this is not specified in rules
+                        condition: %events.fyziklani.appCond% # TODO the time period is not specified in rules
                         label: Odebrat člena
 
                 fields:

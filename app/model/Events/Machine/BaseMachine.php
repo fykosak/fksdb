@@ -95,10 +95,21 @@ class BaseMachine extends FreezableObject {
     }
 
     /**
+     * @param string state identification
      * @return string
      */
-    public function getStateName() {
-        return $this->states[$this->state];
+    public function getStateName($state = null) {
+        if ($state === null) {
+            $state = $this->state;
+        }
+        switch ($state) {
+            case self::STATE_INIT:
+                return _('vznikající');
+            case self::STATE_TERMINATED:
+                return _('zaniklý');
+            default:
+                return $this->states[$state];
+        }
     }
 
     public function getAvailableTransitions() {
