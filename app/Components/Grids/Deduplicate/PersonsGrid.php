@@ -44,16 +44,19 @@ class PersonsGrid extends BaseGrid {
         //
         $that = $this;
         $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function($row) use($that) {
-                    return $that->renderPerson($row);
-                });
+                            return $that->renderPerson($row);
+                        })
+                ->setSortable(false);
         $pairs = & $this->pairs;
         $this->addColumn('display_name_b', _('Osoba B'))->setRenderer(function($row) use($that, $pairs) {
-                    return $that->renderPerson($pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
-                });
+                            return $that->renderPerson($pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
+                        })
+                ->setSortable(false);
         $this->addColumn('score', _('Podobnost'))->setRenderer(function($row) use($that, $pairs) {
-                    return sprintf("%0.2f", $pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
-                });
-        
+                            return sprintf("%0.2f", $pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
+                        })
+                ->setSortable(false);
+
         //
         // operations
         //
