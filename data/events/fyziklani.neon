@@ -63,6 +63,7 @@ events:
                     approved: Potvrzen
                     participated: Účastnil se
                     cancelled: Zrušen
+                    missed: Nepřijel
 
                 transitions:
                     __init->pending:
@@ -81,8 +82,12 @@ events:
                     approved|spare->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
+                    approved|spare->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: Nepřijel
+                        dangerous: true
                     *->cancelled:
-                        condition: and(role('admin'),neg(state('cancelled')))
+                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: Zrušit tým
                         dangerous: true
                     cancelled->__terminated:
@@ -136,6 +141,7 @@ events:
                 states:
                     applied: Přihlášen
                     participated: Účastnil se
+                    missed: Nepřijel
 
                 transitions:
                     __init->applied:
@@ -215,6 +221,12 @@ events:
                         p3: participated
                         p4: participated
                         p5: participated
+                    *->missed:
+                        p1: missed
+                        p2: missed
+                        p3: missed
+                        p4: missed
+                        p5: missed
                     *->__terminated:
                         p1: __terminated
                         p2: __terminated
