@@ -12,7 +12,8 @@ use ORM\IModel;
 use ORM\IService;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
+ * Be careful when calling getValue as it executes SQL queries and thus
+ * it should always be run inside a transaction.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */

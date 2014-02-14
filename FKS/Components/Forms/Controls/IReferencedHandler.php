@@ -24,6 +24,15 @@ interface IReferencedHandler {
     public function update(IModel $model, ArrayHash $values);
 
     public function createFromValues(ArrayHash $values);
+
+    public function isSecondaryKey($field);
+
+    /**
+     * @param string $field
+     * @param mixed $key
+     * @return IModel
+     */
+    public function findBySecondaryKey($field, $key);
 }
 
 class ModelDataConflictException extends RuntimeException {
