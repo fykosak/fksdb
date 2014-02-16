@@ -196,6 +196,10 @@ class WebServiceModel {
         $qid = $args->qid;
         $parameters = array();
 
+        // stupid PHP deserialization
+        if (!is_array($args->parameter)) {
+            $args->parameter = array($args->parameter);
+        }
         foreach ($args->parameter as $parameter) {
             $parameters[$parameter->name] = $parameter->{'_'};
             if ($parameter->name == StoredQueryFactory::PARAM_CONTEST) {
