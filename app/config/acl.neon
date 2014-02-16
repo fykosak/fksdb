@@ -21,11 +21,12 @@ services:
             - addRole(webmaster, org)           # webař
             - addRole(taskManager, org)         # úlohář
             - addRole(dispatcher, org)          # koordinátor obálkování
-            - addRole(dataManager, org)         # správce DB
+            - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
+            - addRole(dataManager, [org, exportDesigner]) # správce dat DB
             - addRole(eventManager, org)        # správce přihlášek
             - addRole(inboxManager, org)        # příjemce řešení
             - addRole(boss, org)                # šéf
-            - addRole(superuser, [org, webmaster, taskManager, dispatcher, dataManager, eventManager, inboxManager, boss])
+            - addRole(superuser, [org, webmaster, taskManager, dispatcher, dataManager, exportDesigner, eventManager, inboxManager, boss])
             - addRole(cartesian)
 
             # Resources
@@ -71,9 +72,10 @@ services:
 
             - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
             - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, storedQuery, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, export, ::constant(Nette\Security\Permission::ALL))
-            - allow(dataManager, export.adhoc, ::constant(Nette\Security\Permission::ALL))
+
+            - allow(exportDesigner, storedQuery, ::constant(Nette\Security\Permission::ALL))
+            - allow(exportDesigner, export, ::constant(Nette\Security\Permission::ALL))
+            - allow(exportDesigner, export.adhoc, ::constant(Nette\Security\Permission::ALL))
 
             - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO
             - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
