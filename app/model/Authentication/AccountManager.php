@@ -117,7 +117,8 @@ class AccountManager {
         $token = $this->serviceAuthToken->getTable()->where(array(
                     'login_id' => $login->login_id,
                     'type' => ModelAuthToken::TYPE_RECOVERY,
-                ))->fetch();
+                ))
+                ->where('until > ?', new DateTime())->fetch();
 
         if ($token) {
             throw new RecoveryExistsException();
