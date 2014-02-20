@@ -32,6 +32,11 @@ class ExportPresenter extends SeriesPresenter {
     const PARAM_LOAD_FROM_SESSION = 'lfs';
 
     /**
+     * @persistent
+     */
+    public $lfs;
+
+    /**
      * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
