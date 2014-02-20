@@ -1,0 +1,34 @@
+Installation
+============
+
+Environment
+-----------
+1) Create /etc/hosts entries for addresses 'db.fykos.local' and 'auth.fykos.local'.
+
+2) Configure virtual hosts in '/etc/apache/sites-enabled' with proper ServerName
+   and ServerAlias (see domains above).
+
+3) Install missing PHP extensions (like php5-mysql, php5-curl).
+
+Database
+--------
+
+4) Run 'sql/schema.sql' and 'sql/initval.sql' in your MySQL database.
+
+5) Run 'sql/views.sql' in your MySQL database. May require two times execution
+   due to bad sorting.
+
+Configuration
+-------------
+
+6) Copy 'app/config/config.local.neon.sample' to 'app/config/config.local.neon'
+   and fill it with proper values (don't forget to add domain settings like:
+    domain:
+        cz: fykos.local
+        org: fykos.localen
+        tld: local
+
+Run
+===
+
+1) Register yourself and then add superuser role to the created login.
