@@ -28,6 +28,9 @@ Configuration
         org: fykos.localen
         tld: local
 
+7) Make directories temp/, log/ and upload/ writable by your Apache user.
+
+
 Run
 ===
 
