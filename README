@@ -5,8 +5,12 @@ Environment
 -----------
 1) Create /etc/hosts entries for addresses 'db.fykos.local' and 'auth.fykos.local'.
 
+127.0.0.1   fykos.local fykos.localen 
+127.0.0.1   db.fykos.local db.fykos.localen
+127.0.0.1   auth.fykos.local
+
 2) Configure virtual hosts in '/etc/apache/sites-enabled' with proper ServerName
-   and ServerAlias (see domains above).
+   and ServerAlias (see domains above). (You need only virtual host for FKSDB.)
 
 3) Install missing PHP extensions (like php5-mysql, php5-curl).
 
