@@ -6,6 +6,10 @@
 #
 
 parameters:
+    domain:
+        cz: fykos.local
+        org: fykos.localen
+        tld: local
     astrid:
         host: astrid.fykos.cz
         user: 
