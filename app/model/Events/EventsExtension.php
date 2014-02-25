@@ -46,9 +46,9 @@ class EventsExtension extends CompilerExtension {
     /**
      * Global registry of available events definitions.
      * 
-     * @var array[event_type_id] => definition[] where definition (name =>, years =>)
+     * @var array[definitionName] => definition[] where definition (eventTypes =>, years =>, tableLayout =>, formLayout =>)
      */
-    private $idMaps = array();
+    private $definitionsMap = array();
     private $transtionFactory;
     private $fieldFactory;
     private $schemeFile;
@@ -86,13 +86,10 @@ class EventsExtension extends CompilerExtension {
 
         foreach ($config as $definitionName => $definition) {
             $definition = NeonScheme::readSection($definition, $this->scheme['definition']);
-            $eventTypeId = $definition['event_type_id'];
+            $eventTypeIds = is_array($definition['event_type_id']) ? $definition['event_type_id'] : array($definition['event_type_id']);
 
-            if (!isset($this->idMaps[$eventTypeId])) {
-                $this->idMaps[$eventTypeId] = array();
-            }
-            $this->idMaps[$eventTypeId][] = array(
-                'name' => $definitionName,
+            $this->definitionsMap[$definitionName] = array(
+                'eventTypes' => $eventTypeIds,
                 'years' => $definition['eventYears'],
                 'tableLayout' => $definition['tableLayout'],
                 'formLayout' => $definition['formLayout'],
@@ -127,32 +124,61 @@ class EventsExtension extends CompilerExtension {
         $method->setBody(NULL);
         $method->addBody('$eventTypeId = $event->event_type_id;');
         $method->addBody('$eventYear = $event->event_year;');
-        $method->addBody('switch($eventTypeId) {');
-        foreach ($this->idMaps as $eventTypeId => $definitions) {
-            $method->addBody('case ?:', array($eventTypeId));
-            $universalDefinition = null;
-            $indent = "\t";
-            foreach ($definitions as $definition) {
-                $machineName = $nameCallback($definition['name']);
-                $methodName = Container::getMethodName($machineName, false);
-                $body = "return \$this->$methodName(\$event);";
-                if ($definition['years'] === true) {
-                    $universalDefinition = $body;
+        $method->addBody('$key = "$eventTypeId-$eventYear";');
+        $method->addBody('switch($key) {');
+        $definitions = $this->getTransposedDefinitions();
+        $universals = array();
+        $indent = "\t";
+        foreach ($definitions as $definitionName => $keys) {
+            $machineName = $nameCallback($definitionName);
+            $methodName = Container::getMethodName($machineName, false);
+            $resultStmt = "return \$this->$methodName(\$event);";
+            $cases = false;
+            foreach ($keys as $key) {
+                if (strpos($key, '-') === false) {
+                    $universals[$key] = $resultStmt;
+                    continue;
                 } else {
-                    $method->addBody($indent . 'if(in_array($eventYear, ?)) ' . $body, array($definition['years']));
+                    $cases = true;
+                    $method->addBody('case ?:', array($key));
                 }
             }
-            if ($universalDefinition) {
-                $method->addBody($indent . $universalDefinition);
-            } else {
-                $method->addBody($indent . 'throw new Nette\InvalidArgumentException("Undefined year $eventYear for event_type_id $eventTypeId");');
+            if ($cases) {
+                $method->addBody($indent . $resultStmt);
+                $method->addBody('break;');
             }
-            $method->addBody('break;');
         }
-        $method->addBody('default:
-                throw new Nette\InvalidArgumentException("Unknown event_type_id $eventTypeId");
-            break;
-        }');
+
+        $method->addBody('default:');
+        $method->addBody($indent . 'switch($eventTypeId) {');
+        foreach ($universals as $key => $resultStmt) {
+            $method->addBody($indent . 'case ?:', array($key));
+            $method->addBody($indent . $resultStmt);
+            $method->addBody($indent . 'break;');
+        }
+        $method->addBody('default:');
+        $method->addBody('throw new Nette\InvalidArgumentException("Unknown event_type_id $eventTypeId");');
+        $method->addBody($indent . '}');
+        $method->addBody('}');
+    }
+
+    private function getTransposedDefinitions() {
+        $result = array();
+        foreach ($this->definitionsMap as $definitionName => $definition) {
+            $result[$definitionName] = array();
+            foreach ($definition['eventTypes'] as $eventType) {
+                if ($definition['years'] === true) {
+                    $key = "$eventType";
+                    $result[$definitionName][] = $key;
+                } else {
+                    foreach ($definition['years'] as $year) {
+                        $key = "$eventType-$year";
+                        $result[$definitionName][] = $key;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
     private function createDispatchFactories() {
@@ -184,7 +210,7 @@ class EventsExtension extends CompilerExtension {
 
         $parameters = $this->getContainerBuilder()->parameters;
         $templateDir = $parameters['events']['templateDir'];
-        $def->setArguments(array($templateDir, $this->idMaps));
+        $def->setArguments(array($templateDir, $this->definitionsMap)); //TODO!!
     }
 
     /*

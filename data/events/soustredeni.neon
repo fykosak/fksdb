@@ -22,7 +22,7 @@ parameters:
 
 events:
     soustredeni:
-        event_type_id: 4 # TODO jarní a podzimní sous. nejsou zas tak různé, udělat podporu pro obě
+        event_type_id: [4, 5] # jarní i podzimní sous. nejsou různá
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
         formLayout: soustredeni.form
