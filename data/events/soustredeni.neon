@@ -1,0 +1,119 @@
+parameters:
+    events:
+        soustredeni:
+            appCond: or(regOpen(), role('admin'))
+            person:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    born_id: 
+                        required: true
+                        description: "Kvůli pojišťovně."
+                    birthplace: true
+                    phone:
+                        required: true
+                        description: "Telefon, jež budete mít s sebou."
+                post_contact:
+                    type: P
+                    address: true
+                person_history:
+                    school_id: true
+
+events:
+    soustredeni:
+        event_type_id: 4 # TODO jarní a podzimní sous. nejsou zas tak různé, udělat podporu pro obě
+        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: event.grid
+        formLayout: soustredeni.form
+        paramScheme:
+            notifyBcc:
+                default: fykos@fykos.cz
+            notifyFrom:
+                default: FYKOS <fykos@fykos.cz>
+
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceEventParticipant
+                
+                states:
+                    invited: Pozvaný
+                    spare: Nahradník
+                    applied: Učastní se
+                    interested: Chce jet
+                    participated: Účastnil se
+                    rejected: Odmítl
+                    missed: Nepřijel
+                    cancelled: Zrušen
+
+                transitions:
+                    __init->invited:
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.invited, .self)
+                    __init->spare:
+                        condition: role('admin')
+                        label: Pozvat náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.spare, .self)
+                    invited->applied:
+                        #condition: 
+                        label: Potrvrdit učast
+                    spare->interested:
+                        #condition: role('admin')
+                        label: Chci jet
+                    invited->rejected:
+                        #condition: 
+                        label: Odmietnuť učasť
+                        dangerous: true
+                    spare->rejected:
+                        #condition: role('admin')
+                        label: Odmietnuť učasť
+                        dangerous: true
+                    interested->applied:
+                        condition: role('admin')
+                        label: Presunuť do učastnikov
+                    spare->invited:
+                        condition: role('admin')
+                        label: Pozvať ako učstnika
+                    applied->participated:
+                        condition: role('admin')
+                        label: Zučastnil sa 
+                    applied->missed:
+                        condition: role('admin')
+                        label: Neprišiel
+
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat přihlášku
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        required: true
+                        modifiable: %events.soustredeni.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
+                    note:
+                        label: Jídlo a zdraví
+                        description: "Uveďte speciální stravovací návyky nebo zdravotní omezení."
+                        modifiable: true
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: Účastník
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")      
+                
+            processings: []

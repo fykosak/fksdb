@@ -8,7 +8,6 @@ services:
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
-    ServiceEventParticipant: ServiceEventParticipant
     ServiceEventType:        ServiceEventType
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
@@ -26,6 +25,7 @@ services:
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
 
+    event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
     event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant

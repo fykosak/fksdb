@@ -17,6 +17,10 @@ class ModelEventParticipant extends AbstractModelSingle {
         return $this->person;
     }
 
+    public function __toString() {
+        return $this->getPerson()->getFullname();
+    }
+
 }
 
 ?>
