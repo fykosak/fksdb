@@ -23,4 +23,8 @@ class After extends Object {
         return $this->datetime->getTimestamp() <= time();
     }
 
+    public function __toString() {
+        return "now >= {$this->datetime}";
+    }
+
 }

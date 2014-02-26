@@ -20,4 +20,8 @@ class And_ extends VariadicExpression {
         return true;
     }
 
+    protected function getInfix() {
+        return '&&';
+    }
+
 }

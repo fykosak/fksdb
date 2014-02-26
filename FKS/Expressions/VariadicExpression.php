@@ -22,6 +22,8 @@ abstract class VariadicExpression extends FunctionExpression {
 
     abstract protected function evaluate($args);
 
+    abstract protected function getInfix();
+
     protected function evalArgAt($index, $args) {
         return $this->evalArg($this->arguments[$index], $args);
     }
@@ -32,6 +34,18 @@ abstract class VariadicExpression extends FunctionExpression {
 
     public function getArity() {
         return count($this->arguments);
+    }
+
+    public function __toString() {
+        $terms = array();
+        foreach ($this->arguments as $arg) {
+            $terms[] = (string) $arg;
+        };
+        $result = implode(' ' . $this->getInfix() . ' ', $terms);
+        if (count($terms) > 1) {
+            $result = "($result)";
+        }
+        return $result;
     }
 
 }

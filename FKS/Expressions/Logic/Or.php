@@ -20,4 +20,8 @@ class Or_ extends VariadicExpression {
         return false;
     }
 
+    protected function getInfix() {
+        return '||';
+    }
+
 }

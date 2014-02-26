@@ -22,4 +22,8 @@ class Not extends FunctionExpression {
         return !$this->evalArg($this->expression, $args);
     }
 
+    public function __toString() {
+        return "!({$this->expression})";
+    }
+
 }

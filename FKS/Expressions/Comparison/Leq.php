@@ -24,4 +24,8 @@ class Leq extends FunctionExpression {
         return $this->evalArg($this->a, $args) <= $this->evalArg($this->b, $args);
     }
 
+    public function __toString() {
+        return "{$this->a} <= {$this->b}";
+    }
+
 }
