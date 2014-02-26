@@ -196,6 +196,10 @@ class Transition extends FreezableObject {
         return !$this->getBlockingTransition();
     }
 
+    public function getCondition() {
+        return $this->condition;
+    }
+
     /**
      * Launch induced transitions and sets new state.
      * 

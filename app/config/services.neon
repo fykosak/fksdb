@@ -14,6 +14,7 @@ services:
     - Authentication\TokenAuthenticator    
     - Authorization\ContestAuthorizator
     - Authorization\RelatedPersonAuthorizator
+    - FKSDB\Components\Events\ExpressionPrinter
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     - FKS\Config\GlobalParameters
     yearCalculator: YearCalculator

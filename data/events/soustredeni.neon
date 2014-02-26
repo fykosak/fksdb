@@ -85,6 +85,9 @@ events:
                         condition: role('admin')
                         label: Neprišiel
 
+                    invited|spare|applied|interested->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku

@@ -5,12 +5,15 @@ namespace OrgModule;
 use Events\Model\Grid\SingleEventSource;
 use FKS\Config\NeonScheme;
 use FKSDB\Components\Events\ApplicationsGrid;
+use FKSDB\Components\Events\ExpressionPrinter;
+use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -57,6 +60,11 @@ class EventPresenter extends EntityPresenter {
      */
     private $container;
 
+    /**
+     * @var ExpressionPrinter
+     */
+    private $expressionPrinter;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -71,6 +79,22 @@ class EventPresenter extends EntityPresenter {
 
     public function injectContainer(Container $container) {
         $this->container = $container;
+    }
+
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+        $this->expressionPrinter = $expressionPrinter;
+    }
+
+    public function authorizedModel($id) {
+        $model = $this->getModel();
+        if (!$model) {
+            throw new BadRequestException('Neexistující model.', 404);
+        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
+    }
+
+    public function actionModel($id) {
+        
     }
 
     public function titleList() {
@@ -89,6 +113,11 @@ class EventPresenter extends EntityPresenter {
     public function titleApplications($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+    }
+
+    public function titleModel($id) {
+        $model = $this->getModel();
+        $this->setTitle(sprintf(_('Model akce %s'), $model->name));
     }
 
     public function actionDelete($id) {
@@ -139,6 +168,14 @@ class EventPresenter extends EntityPresenter {
         $grid->setTemplate($template);
 
         return $grid;
+    }
+
+    protected function createComponentGraphComponent($name) {
+        $event = $this->getModel();
+        $machine = $this->container->createEventMachine($event);
+
+        $component = new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
+        return $component;
     }
 
     private function createForm() {

@@ -24,4 +24,8 @@ class State extends Object {
         return $holder->getMachine()->getPrimaryMachine()->getState() == $this->state;
     }
 
+    public function __toString() {
+        return "state == {$this->state}";
+    }
+
 }

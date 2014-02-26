@@ -67,4 +67,8 @@ class Role extends Object {
         }
     }
 
+    public function __toString() {
+        return "role({$this->role})";
+    }
+
 }
