@@ -18,7 +18,9 @@ parameters:
                     type: P
                     address: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
+                        description: "Pokud nelze školu nalézt, napište správci."
 
 events:
     soustredeni:
