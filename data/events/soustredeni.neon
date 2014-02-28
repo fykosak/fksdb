@@ -20,7 +20,7 @@ parameters:
                 person_history:
                     school_id:
                         required: true
-                        description: "Pokud nelze školu nalézt, napište správci."
+                        description: "Pokud nelze školu nalézt, napiš správci."
 
 events:
     soustredeni:
