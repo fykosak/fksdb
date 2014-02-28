@@ -81,7 +81,7 @@ class StoredQueryFactory {
         $container->addText('name', _('Název'))
                 ->addRule(Form::FILLED, _('Název parametru musí být vyplněn.'))
                 ->addRule(Form::MAX_LENGTH, _('Název parametru je moc dlouhý.'), 16)
-                ->addRule(Form::REGEXP, _('Název parametru může být jen z písmen anglické abecedy a číslic.'), '/^[a-z][a-z0-9]*$/');
+                ->addRule(Form::REGEXP, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '/^[a-z][a-z0-9_]*$/');
 
         $container->addText('description', _('Popis'));
 
