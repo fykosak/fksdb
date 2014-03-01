@@ -28,7 +28,7 @@ events:
         formLayout: soustredeni.form
         paramScheme:
             notifyBcc:
-                default: fykos@fykos.cz
+                default: soustredeni@fykos.cz
             notifyFrom:
                 default: FYKOS <fykos@fykos.cz>
 
@@ -59,17 +59,27 @@ events:
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare, .self)
                     invited->applied:
-                        #condition: 
+                        condition: param('before') 
                         label: Potrvrdit učast
                     spare->interested:
-                        #condition: role('admin')
+                        condition: param('before') 
                         label: Chci jet
                     invited->rejected:
-                        #condition: 
+                        condition: or(param('before'),and(role('admin'),neg(param('before'))))
                         label: Odmietnuť učasť
                         dangerous: true
+                    spare->spare:
+                        condition:and(role('admin'),param('before'))
+                        label: poslať upozornujúci email
+                        #onExecuted:
+                        #   - Events\Transitions\MailSender(sous.spare, self)
+                    invited->invited:
+                        condition:and(role('admin'),param('before'))
+                        label: poslať upozornujúci email
+                        #onExecuted:
+                        #   - Events\Transitions\MailSender(sous.invited, self)
                     spare->rejected:
-                        #condition: role('admin')
+                        condition: or(param('before'),and(role('admin'),neg(param('before'))))
                         label: Odmietnuť učasť
                         dangerous: true
                     interested->applied:
@@ -79,7 +89,7 @@ events:
                         condition: role('admin')
                         label: Pozvať ako učstnika
                     applied->participated:
-                        condition: role('admin')
+                        condition: and(role('admin'),eventWas())
                         label: Zučastnil sa 
                     applied->missed:
                         condition: role('admin')
