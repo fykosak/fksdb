@@ -14,7 +14,7 @@
 
 {if $storedQuery->getPostProcessing()}
 <h3>{_'PHP post processing'}</h3>
-<p>{$storedQuery->getPostProcessing()->getDescription()|escape|nl2br}</p>
+<p>{!$storedQuery->getPostProcessing()->getDescription()|escape|nl2br}</p>
 {/if}
 
 {if count($storedQuery->getParameters())}
