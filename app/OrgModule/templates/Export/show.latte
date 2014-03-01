@@ -12,8 +12,13 @@
 
 <p>{!$storedQuery->description|escape|nl2br}</p>
 
+{if $storedQuery->getPostProcessing()}
+<h3>{_'PHP post processing'}</h3>
+<p>{$storedQuery->getPostProcessing()->getDescription()|escape|nl2br}</p>
+{/if}
+
 {if count($storedQuery->getParameters())}
-<h3>Parametry</h3>
+<h3>{_'Parametry'}</h3>
 <table>
     <tr><th>Název</th><th>Popis</th><th>Výchozí hodnota</th></tr>
     {foreach $storedQuery->getParameters() as $param}

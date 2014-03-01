@@ -75,9 +75,19 @@ class StoredQuery implements IDataSource, IResource {
      */
     private $columnNames;
 
+    /**
+     * @var StoredQueryPostProcessing
+     */
+    private $postProcessing;
+
     function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
-        $this->queryPattern = $queryPattern;
+        $this->setQueryPattern($queryPattern);
         $this->connection = $connection;
+    }
+
+    private function setQueryPattern(ModelStoredQuery $queryPattern) {
+        $this->queryPattern = $queryPattern;
+        $this->postProcessing = $this->queryPattern->getPostProcessing();
     }
 
     public function setImplicitParameters($parameters) {
@@ -158,6 +168,9 @@ class StoredQuery implements IDataSource, IResource {
      */
     private function bindParams($sql) {
         $statement = $this->connection->prepare($sql);
+        if ($this->postProcessing) {
+            $this->postProcessing->resetParameters();
+        }
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
@@ -165,6 +178,9 @@ class StoredQuery implements IDataSource, IResource {
                 continue;
             }
             $statement->bindValue($key, $value);
+            if ($this->postProcessing) {
+                $this->postProcessing->bindValue($key, $value);
+            }
         }
 
         // bind explicit parameters
@@ -178,6 +194,9 @@ class StoredQuery implements IDataSource, IResource {
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
+            if ($this->postProcessing) {
+                $this->postProcessing->bindValue($key, $value, $type);
+            }
         }
         return $statement;
     }
@@ -206,6 +225,9 @@ class StoredQuery implements IDataSource, IResource {
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->count = $statement->fetchField();
+            if ($this->postProcessing) {
+                $this->count = $this->postProcessing->processCount($this->count);
+            }
         }
         return $this->count;
     }
@@ -226,6 +248,9 @@ class StoredQuery implements IDataSource, IResource {
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->data = $statement;
+            if ($this->postProcessing) {
+                $this->data = $this->postProcessing->processData($this->data, $this->orders, $this->offset, $this->limit);
+            }
         }
         return $this->data; // lazy load during iteration?
     }

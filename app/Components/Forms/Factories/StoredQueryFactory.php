@@ -42,8 +42,12 @@ class StoredQueryFactory {
                 ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
                 ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
 
-
         $container->addTextArea('description', _('Popis dotazu'));
+
+        $container->addText('php_post_proc', _('PHP post processing'))
+                ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
+                ->setDisabled();
+
 
         return $container;
     }
