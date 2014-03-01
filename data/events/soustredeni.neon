@@ -39,9 +39,11 @@ events:
             PARTICIPANT:
                 service: @event.ServiceMSousParticipant
                 
-                states:
+                states:                    
                     invited: Pozvaný
+                    auto.invited: "Pozvaný (auto)"
                     spare: Nahradník
+                    auto.spare: "Náhradník (auto)"
                     applied: Učastní se
                     interested: Chce jet
                     participated: Účastnil se
@@ -55,7 +57,17 @@ events:
                         label: Pozvat účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited, .self)
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.invited, .self)
                     __init->spare:
+                        condition: role('admin')
+                        label: Pozvat náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.spare, .self)
+                    auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
@@ -85,7 +97,7 @@ events:
                         label: Zučastnil sa 
                     applied->missed:
                         condition: role('admin')
-                        label: Neprišiel
+                        label: Neprišiel 
 
                     invited|spare|applied|interested->cancelled:
                         condition: role('admin')
