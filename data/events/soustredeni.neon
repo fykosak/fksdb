@@ -33,6 +33,8 @@ events:
                 default: soustredeni@fykos.cz
             notifyFrom:
                 default: FYKOS <fykos@fykos.cz>
+            deadline1:
+                default: 1970-01-01 00:00:00
 
 
         baseMachines:
@@ -73,27 +75,27 @@ events:
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare, .self)
                     invited->applied:
-                        condition: param('before') 
+                        condition: before(param('deadline1')) 
                         label: Potrvrdit učast
                     spare->interested:
-                        condition: param('before') 
+                        condition: before(param('deadline1')) 
                         label: Chci jet
                     invited->rejected:
-                        condition: or(param('before'),and(role('admin'),neg(param('before'))))
+                        condition: or(before(param('deadline1')),and(role('admin'),neg(before(param('deadline1')))))
                         label: Odmietnuť učasť
                         dangerous: true
                     spare->spare:
-                        condition: and(role('admin'),param('before'))
+                        condition: and(role('admin'),before(param('deadline1')))
                         label: "Poslať upozornujúci email"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare, self)
                     invited->invited:
-                        condition: and(role('admin'),param('before'))
+                        condition: and(role('admin'),before(param('deadline1')))
                         label: "Poslať upozornujúci email"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited, self)
                     spare->rejected:
-                        condition: or(param('before'),and(role('admin'),neg(param('before'))))
+                        condition: or(before(param('deadline1')),and(role('admin'),neg(before(param('deadline1')))))
                         label: Odmietnuť učasť
                         dangerous: true
                     interested->applied:
