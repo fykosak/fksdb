@@ -113,7 +113,7 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Neprišiel 
 
-                    invited|spare|applied|interested->cancelled:
+                    invited|auto.invited|spare|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                     cancelled->__terminated:
