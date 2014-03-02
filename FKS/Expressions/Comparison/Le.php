@@ -2,14 +2,14 @@
 
 namespace FKS\Expressions\Comparison;
 
-use FKS\Expressions\FunctionExpression;
+use FKS\Expressions\EvaluatedExpression;
 
 /**
  * Less or equal.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Le extends FunctionExpression {
+class Le extends EvaluatedExpression {
 
     private $a;
     private $b;

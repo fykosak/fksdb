@@ -7,7 +7,7 @@ namespace FKS\Expressions;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class VariadicExpression extends FunctionExpression {
+abstract class VariadicExpression extends EvaluatedExpression {
 
     private $arguments;
 

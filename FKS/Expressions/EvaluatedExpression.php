@@ -9,7 +9,7 @@ use Nette\Object;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class FunctionExpression extends Object {
+abstract class EvaluatedExpression extends Object {
 
     protected function evalArg($evaluated, $args) {
         if (is_callable($evaluated)) {
