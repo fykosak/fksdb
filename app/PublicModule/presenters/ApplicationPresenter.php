@@ -201,7 +201,7 @@ class ApplicationPresenter extends BasePresenter {
 
     protected function createComponentApplication($name) {
         $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getEvent(), ApplicationHandler::ERROR_SINGLE, $logger);
+        $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
         $that = $this;
@@ -223,7 +223,10 @@ class ApplicationPresenter extends BasePresenter {
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
 
         $source = new RelatedPersonSource($person, $events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source);
+
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+
         $grid->setTemplate('myApplications');
 
         return $grid;
@@ -236,7 +239,8 @@ class ApplicationPresenter extends BasePresenter {
                 ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source);
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
         $grid->setTemplate('myApplications');
 
         return $grid;

@@ -29,8 +29,8 @@ class ApplicationHandlerFactory {
         $this->container = $container;
     }
 
-    public function create(ModelEvent $event, $errorMode, ILogger $logger) {
-        return new ApplicationHandler($event, $logger, $errorMode, $this->connection, $this->container);
+    public function create(ModelEvent $event, ILogger $logger) {
+        return new ApplicationHandler($event, $logger, $this->connection, $this->container);
     }
 
 }

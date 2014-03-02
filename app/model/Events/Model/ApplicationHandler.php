@@ -40,7 +40,7 @@ class ApplicationHandler {
     /**
      * @var int
      */
-    private $errorMode;
+    private $errorMode = self::ERROR_SINGLE;
 
     /**
      * @var Connection
@@ -57,12 +57,19 @@ class ApplicationHandler {
      */
     private $machine;
 
-    function __construct(ModelEvent $event, ILogger $logger, $errorMode, Connection $connection, SystemContainer $container) {
+    function __construct(ModelEvent $event, ILogger $logger, Connection $connection, SystemContainer $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->errorMode = $errorMode;
         $this->connection = $connection;
         $this->container = $container;
+    }
+
+    public function getErrorMode() {
+        return $this->errorMode;
+    }
+
+    public function setErrorMode($errorMode) {
+        $this->errorMode = $errorMode;
     }
 
     /**
@@ -72,12 +79,11 @@ class ApplicationHandler {
         $this->initializeMachine($holder);
         return $this->machine;
     }
-    
+
     public function getLogger() {
         return $this->logger;
     }
 
-    
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data

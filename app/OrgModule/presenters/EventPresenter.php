@@ -185,10 +185,8 @@ class EventPresenter extends EntityPresenter {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
 
-        $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getModel(), ApplicationHandler::ERROR_SINGLE, $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
-        $grid = new ApplicationsGrid($this->container, $source, $handler, $flashDump);
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
         $template = $this->layoutResolver->getTableLayout($this->getModel());
         $grid->setTemplate($template);
 
