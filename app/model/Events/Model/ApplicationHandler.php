@@ -1,0 +1,215 @@
+<?php
+
+namespace Events\Model;
+
+use Events\Machine\BaseMachine;
+use Events\Machine\Machine;
+use Events\MachineExecutionException;
+use Events\Model\Holder\Holder;
+use Events\SubmitProcessingException;
+use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKS\Logging\ILogger;
+use FormUtils;
+use ModelEvent;
+use Nette\ArrayHash;
+use Nette\Database\Connection;
+use Nette\Forms\Form;
+use RuntimeException;
+use SystemContainer;
+
+/**
+ * Due to author's laziness there's no class doc (or it's self explaining).
+ * 
+ * @author Michal Koutný <michal@fykos.cz>
+ */
+class ApplicationHandler {
+
+    const ERROR_BATCH = 0;
+    const ERROR_SINGLE = 1;
+
+    /**
+     * @var ModelEvent
+     */
+    private $event;
+
+    /**
+     * @var ILogger
+     */
+    private $logger;
+
+    /**
+     * @var int
+     */
+    private $errorMode;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var SystemContainer
+     */
+    private $container;
+
+    /**
+     * @var Machine
+     */
+    private $machine;
+
+    function __construct(ModelEvent $event, ILogger $logger, $errorMode, Connection $connection, SystemContainer $container) {
+        $this->event = $event;
+        $this->logger = $logger;
+        $this->errorMode = $errorMode;
+        $this->connection = $connection;
+        $this->container = $container;
+    }
+
+    /**
+     * @return Machine
+     */
+    public function getMachine(Holder $holder) {
+        $this->initializeMachine($holder);
+        return $this->machine;
+    }
+    
+    public function getLogger() {
+        return $this->logger;
+    }
+
+    
+    /**
+     * @param Holder $holder
+     * @param Form|ArrayHash|null $data
+     * @param type $explicitTransitionName
+     * @param type $explicitMachineName
+     */
+    public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null, $explicitMachineName = null) {
+        $this->initializeMachine($holder);
+
+        try {
+            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
+
+            $this->beginTransaction();
+
+            $transitions = array();
+            if ($explicitTransitionName !== null) {
+                $explicitMachine = $this->machine[$explicitMachineName];
+                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
+
+                $transitions[$explicitMachineName] = $explicitTransition;
+            }
+
+            if ($data) {
+                $transitions = $this->processData($data, $transitions, $holder);
+            }
+
+            foreach ($transitions as $transition) {
+                $transition->execute();
+            }
+
+            $holder->saveModels();
+
+            foreach ($transitions as $transition) {
+                $transition->executed(); //note the 'd', it only triggers onExecuted event
+            }
+
+            $this->commit();
+
+            if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
+                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+            } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
+                $this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+            } else if (isset($transitions[$explicitMachineName])) {
+                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+            }
+            if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
+                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+            }
+        } catch (ModelDataConflictException $e) {
+            $container = $e->getReferencedId()->getReferencedContainer();
+            $container->setConflicts($e->getConflicts());
+
+            $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
+            $this->logger->log($message, ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (MachineExecutionException $e) {
+            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (SubmitProcessingException $e) {
+            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        }
+    }
+
+    private function processData($data, $transitions, Holder $holder) {
+        if ($data instanceof Form) {
+            $values = FormUtils::emptyStrToNull($data->getValues());
+            $form = $data;
+        } else {
+            $values = $data;
+            $form = null;
+        }
+
+        // Find out transitions
+        $newStates = $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form);
+        foreach ($newStates as $name => $newState) {
+            $transition = $this->machine[$name]->getTransitionByTarget($newState);
+            if ($transition) {
+                $transitions[$name] = $transition;
+            } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
+                throw new MachineExecutionException(sprintf($msg, $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+            }
+        }
+        return $transitions;
+    }
+
+    private function initializeMachine(Holder $holder) {
+        if (!$this->machine) {
+            $this->machine = $this->container->createEventMachine($this->event);
+        }
+        if ($this->machine->getHolder() !== $holder) {
+            $this->machine->setHolder($holder);
+        }
+    }
+
+    private function formRollback($data) {
+        if ($data instanceof Form) {
+            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+                $referencedId->rollback();
+            }
+        }
+        $this->rollback();
+    }
+
+    private function beginTransaction() {
+        if (!$this->connection->inTransaction()) {
+            $this->connection->beginTransaction();
+        }
+    }
+
+    private function rollback() {
+        $this->connection->rollBack();
+    }
+
+    private function commit() {
+        if ($this->errorMode == self::ERROR_SINGLE) {
+            $this->connection->commit();
+        }
+    }
+
+    private function reraise(Exception $e) {
+        if ($this->errorMode == self::ERROR_BATCH) {
+            throw $e;
+        }
+    }
+
+}
+
+class ApplicationHandlerException extends RuntimeException {
+    
+}

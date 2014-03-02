@@ -2,8 +2,11 @@
 
 namespace OrgModule;
 
+use Events\Model\ApplicationHandler;
+use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKS\Config\NeonScheme;
+use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
@@ -12,6 +15,7 @@ use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -65,6 +69,16 @@ class EventPresenter extends EntityPresenter {
      */
     private $expressionPrinter;
 
+    /**
+     * @var ApplicationHandlerFactory
+     */
+    private $handlerFactory;
+
+    /**
+     * @var FlashDumpFactory
+     */
+    private $flashDumpFactory;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -83,6 +97,14 @@ class EventPresenter extends EntityPresenter {
 
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
+    }
+
+    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
+        $this->handlerFactory = $handlerFactory;
+    }
+
+    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     public function authorizedModel($id) {
@@ -163,7 +185,10 @@ class EventPresenter extends EntityPresenter {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
 
-        $grid = new ApplicationsGrid($this->container, $source);
+        $logger = new MemoryLogger();
+        $handler = $this->handlerFactory->create($this->getModel(), ApplicationHandler::ERROR_SINGLE, $logger);
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $handler, $flashDump);
         $template = $this->layoutResolver->getTableLayout($this->getModel());
         $grid->setTemplate($template);
 

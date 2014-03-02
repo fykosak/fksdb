@@ -7,8 +7,9 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
-use Nette\Application\UI\Form;
+use FKS\Logging\ILogger;
 use Nette\ArrayHash;
+use Nette\Forms\Form;
 use YearCalculator;
 
 /**
@@ -28,7 +29,7 @@ class CategoryProcessing extends AbstractProcessing {
         $this->yearCalculator = $yearCalculator;
     }
 
-    protected function _process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
         }
@@ -62,9 +63,8 @@ class CategoryProcessing extends AbstractProcessing {
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $form->getPresenter()->flashMessage(sprintf(_('Tým zařazen do kategorie %s.'), $result));
+            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
         }
-
     }
 
     private function getCategory($participants) {
