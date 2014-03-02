@@ -3,8 +3,10 @@
 namespace FKSDB\Components\Events;
 
 use Events\Machine\Machine;
+use Events\Model\ApplicationHandler;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
+use FKS\Logging\FlashMessageDump;
 use ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -47,14 +49,26 @@ class ApplicationsGrid extends Control {
     private $eventApplications;
 
     /**
+     * @var ApplicationHandler
+     */
+    private $handler;
+
+    /**
+     * @var FlashMessageDump
+     */
+    private $flashDump;
+
+    /**
      * @var string
      */
     private $templateFile;
 
-    function __construct(SystemContainer $container, IHolderSource $source) {
+    function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandler $handler, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->container = $container;
         $this->source = $source;
+        $this->handler = $handler;
+        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
@@ -87,7 +101,8 @@ class ApplicationsGrid extends Control {
             parent::createComponent($name);
         }
 
-        $component = new ApplicationComponent($this->machines[$key], $this->holders[$key]);
+
+        $component = new ApplicationComponent($this->handler, $this->holders[$key], $this->flashDump);
         return $component;
     }
 

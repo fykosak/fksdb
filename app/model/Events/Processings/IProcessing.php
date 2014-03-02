@@ -4,9 +4,10 @@ namespace Events\Processings;
 
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
-use Events\SubmitProcessingException;
-use Nette\Application\UI\Form;
+use FKS\Logging\ILogger;
 use Nette\ArrayHash;
+use Nette\Forms\Form;
+use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,14 +17,8 @@ use Nette\ArrayHash;
 interface IProcessing {
 
     /**
-     * @param array $states
-     * @param Form $form
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return null|array[machineName] => new state
-     * @throws SubmitProcessingException
+     * @throws ProcessingException
      */
-    public function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder);
+    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 }
 

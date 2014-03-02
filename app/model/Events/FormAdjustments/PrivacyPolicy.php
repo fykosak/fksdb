@@ -6,9 +6,9 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
+use FKS\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FormUtils;
-use Nette\Application\UI\Form as AppForm;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
@@ -52,7 +52,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process($states, AppForm $form, ArrayHash $values, Machine $machine, Holder $holder) {
+    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->trySetAgreed($values);
     }
 

@@ -5,9 +5,10 @@ namespace Events\Processings;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
-use Nette\Application\UI\Form;
+use FKS\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\ComponentModel\Component;
+use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Object;
 
@@ -27,15 +28,15 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     private $holder;
     private $values;
 
-    public final function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
+    public final function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->_process($states, $form, $values, $machine, $holder);
+        $this->_process($states, $values, $machine, $holder, $logger, $form);
     }
 
-    abstract protected function _process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder);
+    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
@@ -118,6 +119,9 @@ abstract class AbstractProcessing extends Object implements IProcessing {
 
     private function setForm($form) {
         $this->formPathCache = array();
+        if (!$form) {
+            return;
+        }
         foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
             $path = $control->lookupPath('Nette\Forms\Form');
             $path = str_replace('_1', '', $path);

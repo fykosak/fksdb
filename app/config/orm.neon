@@ -26,10 +26,12 @@ services:
     ServiceTaskContribution: ServiceTaskContribution
 
     event.ServiceEventParticipant:          ServiceEventParticipant
+    event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
+    event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
     event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam
     event.ServiceFyziklaniParticipant:      ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
-    event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
-    event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
+    event.ServiceSousParticipant:           ORM\Services\Events\ServiceSousParticipant
+    event.ServiceMSousParticipant:          ORM\ServicesMulti\Events\ServiceMSousParticipant
     event.ServiceVikendParticipant:         ORM\Services\Events\ServiceVikendParticipant
     event.ServiceMVikendParticipant:        ORM\ServicesMulti\Events\ServiceMVikendParticipant

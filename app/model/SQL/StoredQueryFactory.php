@@ -61,6 +61,7 @@ class StoredQueryFactory {
     public function createQueryFromSQL($sql, $parameters) {
         $patternQuery = $this->serviceStoredQuery->createNew(array(
             'sql' => $sql,
+            'php_post_proc' => 0,
         ));
 
         $patternQuery->setParameters($parameters);

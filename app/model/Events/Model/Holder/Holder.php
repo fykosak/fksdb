@@ -7,15 +7,17 @@ use ArrayIterator;
 use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Machine\Transition;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKS\Config\NeonScheme;
+use FKS\Logging\ILogger;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
+use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
-use Nette\Application\UI\Form;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -208,19 +210,20 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /**
      * Apply processings to the values and sets them to the ORM model.
      * 
-     * @parem Form $form
      * @param ArrayHash $values
      * @param \Events\Model\Machine $machine
      * @param Transition[] $transitions
+     * @param ILogger $logger
+     * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(Form $form, ArrayHash $values, Machine $machine, $transitions) {
+    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null) {
         $newStates = array();
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
         }
         foreach ($this->processings as $processing) {
-            $result = $processing->process($newStates, $form, $values, $machine, $this);
+            $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
             if ($result) {
                 $newStates = array_merge($newStates, $result);
             }

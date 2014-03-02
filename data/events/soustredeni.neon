@@ -13,12 +13,14 @@ parameters:
                     birthplace: true
                     phone:
                         required: true
-                        description: "Telefon, jež budete mít s sebou."
+                        description: "Telefon, jež budeš mít s sebou."
                 post_contact:
                     type: P
                     address: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
+                        description: "Pokud nelze školu nalézt, napiš správci."
 
 events:
     soustredeni:
@@ -35,11 +37,13 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceEventParticipant
+                service: @event.ServiceMSousParticipant
                 
-                states:
+                states:                    
                     invited: Pozvaný
+                    auto.invited: "Pozvaný (auto)"
                     spare: Nahradník
+                    auto.spare: "Náhradník (auto)"
                     applied: Učastní se
                     interested: Chce jet
                     participated: Účastnil se
@@ -53,7 +57,17 @@ events:
                         label: Pozvat účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited, .self)
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.invited, .self)
                     __init->spare:
+                        condition: role('admin')
+                        label: Pozvat náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(sous.spare, .self)
+                    auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
@@ -93,7 +107,7 @@ events:
                         label: Zučastnil sa 
                     applied->missed:
                         condition: role('admin')
-                        label: Neprišiel
+                        label: Neprišiel 
 
                     invited|spare|applied|interested->cancelled:
                         condition: role('admin')
@@ -109,10 +123,12 @@ events:
                         modifiable: %events.soustredeni.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
-                    note:
-                        label: Jídlo a zdraví
-                        description: "Uveďte speciální stravovací návyky nebo zdravotní omezení."
-                        modifiable: true
+                    diet:
+                        label: Jídlo
+                        description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
+                    health_restrictions:
+                        label: Zdravotní omezení
+                        description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
 
 
         #
@@ -128,5 +144,7 @@ events:
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")      
+                - @events.privacyPolicy
                 
-            processings: []
+            processings:
+                - @events.privacyPolicy

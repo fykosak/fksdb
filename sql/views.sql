@@ -67,4 +67,11 @@ create or replace view v_school as (
 	from school s
 );
 
+create or replace view v_series_points as (
+	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id, sum(s.calc_points) as points
+	from submit s
+	left join contestant_base ct on ct.ct_id = s.ct_id
+	left join task t on t.task_id = s.task_id
+	group by ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id
+);
 
