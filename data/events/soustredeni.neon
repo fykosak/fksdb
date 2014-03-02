@@ -81,21 +81,21 @@ events:
                         condition: before(param('deadline1')) 
                         label: Chci jet
                     invited->rejected:
-                        condition: or(before(param('deadline1')),and(role('admin'),neg(before(param('deadline1')))))
+                        condition: or(before(param('deadline1')),role('admin'))
                         label: Odmietnuť učasť
                         dangerous: true
                     spare->spare:
-                        condition: and(role('admin'),before(param('deadline1')))
+                        condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať upozornujúci email"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare, self)
                     invited->invited:
-                        condition: and(role('admin'),before(param('deadline1')))
+                        condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať upozornujúci email"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited, self)
                     spare->rejected:
-                        condition: or(before(param('deadline1')),and(role('admin'),neg(before(param('deadline1')))))
+                        condition: or(before(param('deadline1')),role('admin'))
                         label: Odmietnuť učasť
                         dangerous: true
                     interested->applied:
@@ -108,7 +108,7 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Zučastnil sa 
                     applied->missed:
-                        condition: role('admin')
+                        condition: and(role('admin'),eventWas())
                         label: Neprišiel 
 
                     invited|spare|applied|interested->cancelled:
