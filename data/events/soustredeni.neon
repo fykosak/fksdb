@@ -83,15 +83,15 @@ events:
                         label: Odmietnuť učasť
                         dangerous: true
                     spare->spare:
-                        condition:and(role('admin'),param('before'))
-                        label: poslať upozornujúci email
+                        condition: and(role('admin'),param('before'))
+                        label: "Poslať upozornujúci email"
                         onExecuted:
-                           - Events\Transitions\MailSender(sous.spare, self)
+                            - Events\Transitions\MailSender(sous.spare, self)
                     invited->invited:
-                        condition:and(role('admin'),param('before'))
-                        label: poslať upozornujúci email
+                        condition: and(role('admin'),param('before'))
+                        label: "Poslať upozornujúci email"
                         onExecuted:
-                           - Events\Transitions\MailSender(sous.invited, self)
+                            - Events\Transitions\MailSender(sous.invited, self)
                     spare->rejected:
                         condition: or(param('before'),and(role('admin'),neg(param('before'))))
                         label: Odmietnuť učasť
