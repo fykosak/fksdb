@@ -99,6 +99,10 @@ class BaseHolder extends FreezableObject {
         $this->fields[$name] = $field;
     }
 
+    public function getFields() {
+        return $this->fields;
+    }
+
     public function getHolder() {
         return $this->holder;
     }

@@ -2,7 +2,6 @@
 
 namespace OrgModule;
 
-use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKS\Config\NeonScheme;
@@ -10,6 +9,7 @@ use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
+use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
@@ -191,6 +191,17 @@ class EventPresenter extends EntityPresenter {
         $grid->setTemplate($template);
 
         return $grid;
+    }
+
+    protected function createComponentApplicationsImport($name) {
+        $source = new SingleEventSource($this->getModel(), $this->container);
+        $logger = new MemoryLogger(); //TODO log to file?
+        $machine = $this->container->createEventMachine($this->getModel());
+        $handler = $this->handlerFactory->create($this->getModel(), $logger);
+
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $component = new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
+        return $component;
     }
 
     protected function createComponentGraphComponent($name) {

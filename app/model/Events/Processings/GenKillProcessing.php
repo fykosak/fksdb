@@ -4,6 +4,7 @@ namespace Events\Processings;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
 use FKS\Logging\ILogger;
@@ -40,15 +41,19 @@ class GenKillProcessing extends Object implements IProcessing {
             if (!$isFilled) {
                 $result[$name] = BaseMachine::STATE_TERMINATED;
             } elseif ($baseMachine->getState() == BaseMachine::STATE_INIT) {
-                $transitions = $baseMachine->getAvailableTransitions();
-                if (count($transitions) == 0) {
-                    throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
-                } else if (isset($states[$name])) {
-                    $result[$name] = $states[$name]; // propagate already set state
-                } else if (count($transitions) > 1) {
-                    throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
+                if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
+                    $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
-                    $result[$name] = reset($transitions)->getTarget();
+                    $transitions = $baseMachine->getAvailableTransitions();
+                    if (count($transitions) == 0) {
+                        throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
+                    } else if (isset($states[$name])) {
+                        $result[$name] = $states[$name]; // propagate already set state
+                    } else if (count($transitions) > 1) {
+                        throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
+                    } else {
+                        $result[$name] = reset($transitions)->getTarget();
+                    }
                 }
             }
         }

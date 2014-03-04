@@ -5,8 +5,10 @@ namespace Events\Model;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\MachineExecutionException;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
+use Exception;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Logging\ILogger;
 use FormUtils;
@@ -24,8 +26,10 @@ use SystemContainer;
  */
 class ApplicationHandler {
 
-    const ERROR_BATCH = 0;
-    const ERROR_SINGLE = 1;
+    const ERROR_ROLLBACK = 'rollback';
+    const ERROR_SKIP = 'skip';
+    const STATE_TRANSITION = 'transition';
+    const STATE_OVERWRITE = 'overwrite';
 
     /**
      * @var ModelEvent
@@ -40,7 +44,7 @@ class ApplicationHandler {
     /**
      * @var int
      */
-    private $errorMode = self::ERROR_SINGLE;
+    private $errorMode = self::ERROR_ROLLBACK;
 
     /**
      * @var Connection
@@ -84,6 +88,10 @@ class ApplicationHandler {
         return $this->logger;
     }
 
+    public final function store(Holder $holder, $data) {
+        $this->_storeAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
+    }
+
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
@@ -91,6 +99,10 @@ class ApplicationHandler {
      * @param type $explicitMachineName
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null, $explicitMachineName = null) {
+        $this->_storeAndExecute($holder, $data, $explicitTransitionName, $explicitMachineName, self::STATE_TRANSITION);
+    }
+
+    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $explicitMachineName, $execute) {
         $this->initializeMachine($holder);
 
         try {
@@ -107,7 +119,15 @@ class ApplicationHandler {
             }
 
             if ($data) {
-                $transitions = $this->processData($data, $transitions, $holder);
+                $transitions = $this->processData($data, $transitions, $holder, $execute);
+            }
+
+            if ($execute == self::STATE_OVERWRITE) {
+                foreach ($holder as $name => $baseHolder) {
+                    if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
+                        $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
+                    }
+                }
             }
 
             foreach ($transitions as $transition) {
@@ -151,7 +171,7 @@ class ApplicationHandler {
         }
     }
 
-    private function processData($data, $transitions, Holder $holder) {
+    private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
             $values = FormUtils::emptyStrToNull($data->getValues());
             $form = $data;
@@ -160,15 +180,22 @@ class ApplicationHandler {
             $form = null;
         }
 
+        $primaryName = $holder->getPrimaryHolder()->getName();
+        $newStates = array();
+        if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
+            $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
+        }
         // Find out transitions
-        $newStates = $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form);
-        foreach ($newStates as $name => $newState) {
-            $transition = $this->machine[$name]->getTransitionByTarget($newState);
-            if ($transition) {
-                $transitions[$name] = $transition;
-            } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
-                throw new MachineExecutionException(sprintf($msg, $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+        $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
+        if ($execute == self::STATE_TRANSITION) {
+            foreach ($newStates as $name => $newState) {
+                $transition = $this->machine[$name]->getTransitionByTarget($newState);
+                if ($transition) {
+                    $transitions[$name] = $transition;
+                } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                    $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
+                    throw new MachineExecutionException(sprintf($msg, $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                }
             }
         }
         return $transitions;
@@ -192,26 +219,26 @@ class ApplicationHandler {
         $this->rollback();
     }
 
-    private function beginTransaction() {
+    public function beginTransaction() {
         if (!$this->connection->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
 
     private function rollback() {
-        $this->connection->rollBack();
+        if ($this->errorMode == self::ERROR_ROLLBACK) {
+            $this->connection->rollBack();
+        }
     }
 
-    private function commit() {
-        if ($this->errorMode == self::ERROR_SINGLE) {
+    public function commit($final = false) {
+        if ($this->errorMode == self::ERROR_ROLLBACK || $final) {
             $this->connection->commit();
         }
     }
 
     private function reraise(Exception $e) {
-        if ($this->errorMode == self::ERROR_BATCH) {
-            throw $e;
-        }
+        throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
 
 }
