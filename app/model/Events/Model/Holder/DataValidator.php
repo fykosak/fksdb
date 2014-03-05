@@ -30,10 +30,12 @@ class DataValidator extends Object {
 
     private function validateFields(BaseHolder $baseHolder) {
         foreach ($baseHolder->getFields() as $field) {
-            if (!$field->isSatisfied()) {
-                $this->validationErrors[] = sprintf(_('Pole %s je povinné.'), $field->getLabel()); // TODO satisfiability != required (design more general mechanism)
-            }
+            $field->validate($this);
         }
+    }
+    
+    public function addError($error) {
+        $this->validationErrors[] = $error;
     }
 
     private function pushState(BaseHolder $baseHolder, $state) {

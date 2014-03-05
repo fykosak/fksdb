@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
+use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -37,5 +38,5 @@ interface IFieldFactory {
      * 
      * @return bool
      */
-    public function isFieldSatisfied(Field $field);
+    public function validate(Field $field, DataValidator $validator);
 }

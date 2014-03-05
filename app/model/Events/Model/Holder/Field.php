@@ -180,8 +180,8 @@ class Field extends FreezableObject {
         return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
 
-    public function isSatisfied() {
-        return $this->factory->isFieldSatisfied($this);
+    public function validate(DataValidator $validator) {
+        return $this->factory->validate($this, $validator);
     }
 
     public function getValue() {

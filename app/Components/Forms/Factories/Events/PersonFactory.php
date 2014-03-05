@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use Events\EventsExtension;
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
+use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
 use FKS\Config\Expressions\Helpers;
@@ -12,6 +14,7 @@ use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\Security\User;
 use Persons\SelfResolver;
+use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -48,7 +51,12 @@ class PersonFactory extends AbstractFactory {
      */
     private $user;
 
-    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user) {
+    /**
+     * @var ServicePerson
+     */
+    private $servicePerson;
+
+    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -58,6 +66,7 @@ class PersonFactory extends AbstractFactory {
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
+        $this->servicePerson = $servicePerson;
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
@@ -69,7 +78,7 @@ class PersonFactory extends AbstractFactory {
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
-        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition);
+        $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
         $components[1]->setOption('label', $field->getLabel());
         $components[1]->setOption('description', $field->getDescription());
@@ -97,6 +106,50 @@ class PersonFactory extends AbstractFactory {
 
     public function getMainControl(Component $component) {
         return $component;
+    }
+
+    public function validate(Field $field, DataValidator $validator) {
+        // check person ID itself
+        parent::validate($field, $validator);
+
+        $fieldsDefinition = $this->evaluateFieldsDefinition($field);
+        $event = $field->getBaseHolder()->getHolder()->getEvent();
+        $acYear = $event->getAcYear();
+        $personId = $field->getValue();
+        $person = $personId ? $this->servicePerson->findByPrimary($personId) : null;
+
+        if (!$person) {
+            return;
+        }
+
+        foreach ($fieldsDefinition as $subName => $sub) {
+            foreach ($sub as $fieldName => $metadata) {
+                if (!is_array($metadata)) {
+                    $metadata = array('required' => $metadata);
+                }
+                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                    $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel() . '.' . $fieldName)); //TODO better GUI name than DB identifier
+                }
+            }
+        }
+    }
+
+    private function evaluateFieldsDefinition(Field $field) {
+        Helpers::registerSemantic(EventsExtension::$semanticMap);
+        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition);
+
+        foreach ($fieldsDefinition as &$sub) {
+            foreach ($sub as &$metadata) {
+                if (!is_array($metadata)) {
+                    $metadata = array('required' => $metadata);
+                }
+                foreach ($metadata as &$value) {
+                    $value = $this->evaluator->evaluate($value, $field);
+                }
+            }
+        }
+
+        return $fieldsDefinition;
     }
 
 }

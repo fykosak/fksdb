@@ -249,6 +249,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
+    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+        return (bool) $this->getPersonValue($person, $sub, $field, $acYear);
+    }
+
     private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear) {
         if (!$person) {
             return null;

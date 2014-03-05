@@ -219,6 +219,9 @@ class ApplicationComponent extends Control {
         } catch (ApplicationHandlerException $e) {
             /* handled elsewhere, here it's to just prevent redirect */
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            if (!$form) { // w/out form we don't want to show anything with the same GET params
+                $this->finalRedirect();
+            }
         }
     }
 
