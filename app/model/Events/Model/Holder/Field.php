@@ -173,19 +173,27 @@ class Field extends FreezableObject {
     }
 
     public function isRequired() {
-        return $this->evaluator->evaluate($this->required, $this, false);
+        return $this->evaluator->evaluate($this->required, $this);
     }
 
     public function isModifiable() {
         return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
 
+    public function isSatisfied() {
+        return $this->factory->isFieldSatisfied($this);
+    }
+
     public function getValue() {
-        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
-            return $this->getDefault();
+        $model = $this->getBaseHolder()->getModel();
+        if (!isset($model[$this->name])) {
+            if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+                return $this->getDefault();
+            } else {
+                return null;
+            }
         } else {
-            $model = $this->getBaseHolder()->getModel();
-            return $model ? $model[$this->name] : null;
+            return $model[$this->name];
         }
     }
 

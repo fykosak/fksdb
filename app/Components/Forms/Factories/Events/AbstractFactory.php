@@ -44,6 +44,10 @@ abstract class AbstractFactory implements IFieldFactory {
         }
     }
 
+    public function isFieldSatisfied(Field $field) {
+        return !$field->isRequired() || (bool) $field->getValue();
+    }
+
     abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
 
     abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);

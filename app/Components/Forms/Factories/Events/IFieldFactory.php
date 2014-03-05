@@ -30,4 +30,12 @@ interface IFieldFactory {
      * @return IControl
      */
     public function getMainControl(Component $component);
+    
+    /**
+     * Checks whether data are filled correctly (more than form validation as the validity
+     * can depend on the machine state).
+     * 
+     * @return bool
+     */
+    public function isFieldSatisfied(Field $field);
 }
