@@ -1,9 +1,6 @@
-<p>
-    Potvrzujeme přijetí přihlášky na <em>{$event}</em>. {* TODO tohle tu asi nemá být *}
-</p> 
-
 <p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    jelikož tvé působení při řešení našeho semináře bylo v prví polovině posledního ročníku
+    jelikož tvé působení při řešení našeho semináře bylo v posledním půlroce
+
     velmi úspěšné, je nám ctí Tě pozvat na jarní soustředění, které se tentokrát koná 
 {$event->begin|date:'j.n. Y'}&ndash;{$event->end|date:'j.n. Y'} {$holder->getParameter('whereLetter')}. {* TODO nastavit správné parametry *}
     Rozhodně se můžeš těšit na mnoho kamarádů stejně zapálených do fyziky. Absolvovat budeš
@@ -13,16 +10,17 @@
     chybět.
 </p>
 <p>
-    Své rozhodnutí, zda přijedeš nám oznám čo najrýchlejšie prosterdníctvom 
-    aplikacie v FKSDB. Nejlépe ihned, nejpozději
+    Své rozhodnutí, zda přijedeš, nám co nejrychleji oznam prostřednictvím
+    aplikace v FKSDB.[1] Nejlépe ihned, nejpozději
+
     však do {$holder->getParameter('deadline1')|date:'j.n. Y'}.
-    Všetky dalšie informácie ti prídu v dalšiom emaily. Dozvíš se tam,
-    co si vzít sebou, nejlepší spojení na místo a podobné informace.
+    Všechny další informace ti přijdou v dalším emailu. Dozvíš se tam,
+    co si vzít sebou, doporučené spojení na místo a podobné informace.
+
 </p>
 
 <p>
-    Za organizátory FYKOSu se na tebe těší <br/>
-    Michal Červeňák
+    {include 'inc/closing.cs.latte'} 
 </p>
-{include 'inc/eventEdit.cs.latte' event => $event, token => $token} {* TODO tady je odkaz na přihlášku: a) upravit text, aby pasoval na tento, b) udělat vlastní nebo *}
-{include 'inc/closing.cs.latte'} {* TODO Tohle tu nemusí být je tam druhý pozdrav *}
+ [1]{include 'inc/eventEdit.cs.latte' event => $event, token => $token}{* TODO tady je odkaz na přihlášku: a) upravit text, aby pasoval na tento, b) udělat vlastní nebo *}
+{* TODO Tohle tu nemusí být je tam druhý pozdrav *}
