@@ -28,6 +28,28 @@ class TransitionConditionFailedException extends MachineExecutionException {
 
 }
 
+class TransitionUnsatisfiedTargetException extends MachineExecutionException {
+
+    /**
+     * @var Traversable|array
+     */
+    private $validationResult;
+
+    public function __construct($validationResult, $code = null, $previous = null) {
+        $message = '';
+        foreach ($validationResult as $result) {
+            $message .= $result;
+        }
+        parent::__construct($message, $code, $previous);
+        $this->validationResult = $validationResult;
+    }
+
+    public function getValidationResult() {
+        return $this->validationResult;
+    }
+
+}
+
 class SubmitProcessingException extends RuntimeException {
     
 }

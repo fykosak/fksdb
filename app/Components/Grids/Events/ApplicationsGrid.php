@@ -3,8 +3,12 @@
 namespace FKSDB\Components\Events;
 
 use Events\Machine\Machine;
+use Events\Model\ApplicationHandler;
+use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
+use FKS\Logging\FlashMessageDump;
+use FKS\Logging\MemoryLogger;
 use ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -34,27 +38,44 @@ class ApplicationsGrid extends Control {
     /**
      * @var Holder[]
      */
-    private $holders;
+    private $holders = array();
 
     /**
      * @var Machine[]
      */
-    private $machines;
+    private $machines = array();
 
     /**
      * @var ModelEvent[]
      */
-    private $eventApplications;
+    private $eventApplications = array();
+
+    /**
+     * @var ApplicationHandler[]
+     */
+    private $handlers = array();
+
+    /**
+     * @var ApplicationHandlerFactory
+     */
+    private $handlerFactory;
+
+    /**
+     * @var FlashMessageDump
+     */
+    private $flashDump;
 
     /**
      * @var string
      */
     private $templateFile;
 
-    function __construct(SystemContainer $container, IHolderSource $source) {
+    function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->container = $container;
         $this->source = $source;
+        $this->handlerFactory = $handlerFactory;
+        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
@@ -75,6 +96,7 @@ class ApplicationsGrid extends Control {
             $this->eventApplications[$key] = $holder->getEvent();
             $this->holders[$key] = $holder;
             $this->machines[$key] = $this->container->createEventMachine($holder->getEvent());
+            $this->handlers[$key] = $this->handlerFactory->create($holder->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }
 
@@ -87,7 +109,8 @@ class ApplicationsGrid extends Control {
             parent::createComponent($name);
         }
 
-        $component = new ApplicationComponent($this->machines[$key], $this->holders[$key]);
+
+        $component = new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
         return $component;
     }
 

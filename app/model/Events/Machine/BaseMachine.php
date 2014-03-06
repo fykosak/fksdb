@@ -94,6 +94,10 @@ class BaseMachine extends FreezableObject {
         $this->state = $state;
     }
 
+    public function getStates() {
+        return $this->states;
+    }
+
     /**
      * @param string state identification
      * @return string
@@ -110,6 +114,10 @@ class BaseMachine extends FreezableObject {
             default:
                 return $this->states[$state];
         }
+    }
+
+    public function getTransitions() {
+        return $this->transitions;
     }
 
     public function getAvailableTransitions() {

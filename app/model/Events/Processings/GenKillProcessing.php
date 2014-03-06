@@ -4,10 +4,12 @@ namespace Events\Processings;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
-use Nette\Application\UI\Form;
+use FKS\Logging\ILogger;
 use Nette\ArrayHash;
+use Nette\Forms\Form;
 use Nette\Object;
 
 /**
@@ -21,7 +23,7 @@ use Nette\Object;
  */
 class GenKillProcessing extends Object implements IProcessing {
 
-    public function process($states, Form $form, ArrayHash $values, Machine $machine, Holder $holder) {
+    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $result = array();
         foreach ($holder as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
@@ -39,15 +41,19 @@ class GenKillProcessing extends Object implements IProcessing {
             if (!$isFilled) {
                 $result[$name] = BaseMachine::STATE_TERMINATED;
             } elseif ($baseMachine->getState() == BaseMachine::STATE_INIT) {
-                $transitions = $baseMachine->getAvailableTransitions();
-                if (count($transitions) == 0) {
-                    throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
-                } else if (isset($states[$name])) {
-                    $result[$name] = $states[$name]; // propagate already set state
-                } else if (count($transitions) > 1) {
-                    throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
+                if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
+                    $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
-                    $result[$name] = reset($transitions)->getTarget();
+                    $transitions = $baseMachine->getAvailableTransitions();
+                    if (count($transitions) == 0) {
+                        throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
+                    } else if (isset($states[$name])) {
+                        $result[$name] = $states[$name]; // propagate already set state
+                    } else if (count($transitions) > 1) {
+                        throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
+                    } else {
+                        $result[$name] = reset($transitions)->getTarget();
+                    }
                 }
             }
         }

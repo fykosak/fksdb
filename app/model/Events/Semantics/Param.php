@@ -23,5 +23,9 @@ class Parameter extends Object {
         $holder = $this->getHolder($obj);
         return $holder->getParameter($this->parameter);
     }
+    
+    public function __toString() {
+        return "param({$this->parameter})";
+    }
 
 }

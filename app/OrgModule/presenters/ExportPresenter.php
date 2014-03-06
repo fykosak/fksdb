@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use DbNames;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
@@ -202,6 +203,9 @@ class ExportPresenter extends SeriesPresenter {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS_META][] = $paramData;
+            }
+            if ($this->getPatternQuery()->getPostProcessing()) {
+                $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
 

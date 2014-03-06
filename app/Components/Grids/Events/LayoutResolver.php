@@ -17,16 +17,16 @@ class LayoutResolver extends Object {
     /**
      * @var array
      */
-    private $data;
+    private $definitions;
 
     /**
      * @var string
      */
     private $templateDir;
 
-    function __construct($templateDir, $data) {
+    function __construct($templateDir, $definitions) {
         $this->templateDir = $templateDir;
-        $this->data = $data;
+        $this->definitions = $definitions;
     }
 
     public function getTableLayout(ModelEvent $event) {
@@ -40,13 +40,11 @@ class LayoutResolver extends Object {
     private function getTemplate(ModelEvent $event, $type) {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;
-        $definitions = $this->data[$eventTypeId];
         $result = null;
-        foreach ($definitions as $definition) {
-            if ($definition['years'] === true) {
-                $result = $definition[$type];
-            }
-            if (is_array($definition['years']) && in_array($eventYear, $definition['years'])) {
+        foreach ($this->definitions as $definition) {
+            $yearCond = ($definition['years'] === true) || in_array($eventYear, $definition['years']);
+            $eventTypeCond = ($definition['eventTypes'] == $eventTypeId) || in_array($eventTypeId, $definition['eventTypes']);
+            if ($yearCond && $eventTypeCond) {
                 $result = $definition[$type];
                 break;
             }

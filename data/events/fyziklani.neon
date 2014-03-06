@@ -86,8 +86,8 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    *->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                    pending|spare|approved->cancelled:
+                        condition: role('admin')
                         label: Zrušit tým
                         dangerous: true
                     cancelled->__terminated:

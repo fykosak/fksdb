@@ -18,4 +18,9 @@ parameters:
             10: warning
             20: success
             30: info
+        application:
+            0: danger
+            10: warning
+            20: success
+            30: info
 

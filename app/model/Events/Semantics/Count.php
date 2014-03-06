@@ -27,5 +27,9 @@ class Count extends Object {
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }
+    
+    public function __toString() {
+        return "count({$this->state})";
+    }
 
 }

@@ -1,0 +1,23 @@
+<p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    jelikož tvé působení při řešení našeho semináře bylo v posledním půlroce
+    velmi úspěšné, je nám ctí Tě pozvat na jarní soustředění, které se tentokrát koná
+{$event->begin|date:'j.n. Y'}&ndash;{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
+    Rozhodně se můžeš těšit na mnoho kamarádů stejně zapálených do fyziky. Absolvovat budeš
+    moci zajímavé přednášky i experimenty, nejen přímo z fyziky. Protože mi fyzici jsme hraví,
+    tak si jistě užiješ i mnoho her, které připravíme. Na našem diskuzním fóru na stránkách
+    FYKOSu můžeš prezentovat svá přání a nápady ohledně toho, co by na soustředění nemělo
+    chybět.
+</p>
+<p>
+    Své rozhodnutí, zda přijedeš, nám co nejrychleji oznam prostřednictvím
+    aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
+    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a>.<br/>
+    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline1')|date:'j.n. Y'}.
+    Všechny další informace ti přijdou v dalším emailu. Dozvíš se tam,
+    co si vzít sebou, doporučené spojení na místo a podobné informace.
+</p>
+
+<p>
+    Za organizátory FYKOSu se na tebe těší <br/>
+    {$holder->getParameter('letterSignature')}
+</p>

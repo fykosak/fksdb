@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
+use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
@@ -30,4 +31,12 @@ interface IFieldFactory {
      * @return IControl
      */
     public function getMainControl(Component $component);
+    
+    /**
+     * Checks whether data are filled correctly (more than form validation as the validity
+     * can depend on the machine state).
+     * 
+     * @return bool
+     */
+    public function validate(Field $field, DataValidator $validator);
 }

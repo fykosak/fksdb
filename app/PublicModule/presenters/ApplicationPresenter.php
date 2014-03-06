@@ -5,13 +5,17 @@ namespace PublicModule;
 use Authorization\RelatedPersonAuthorizator;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\ApplicationHandler;
+use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder\Holder;
+use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use Logging\FlashDumpFactory;
 use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -71,6 +75,16 @@ class ApplicationPresenter extends BasePresenter {
      */
     private $layoutResolver;
 
+    /**
+     * @var ApplicationHandlerFactory
+     */
+    private $handlerFactory;
+
+    /**
+     * @var FlashDumpFactory
+     */
+    private $flashDumpFactory;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -85,6 +99,14 @@ class ApplicationPresenter extends BasePresenter {
 
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
+    }
+
+    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
+        $this->handlerFactory = $handlerFactory;
+    }
+
+    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     public function authorizedDefault($eventId, $id) {
@@ -178,7 +200,10 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     protected function createComponentApplication($name) {
-        $component = new ApplicationComponent($this->getMachine(), $this->getHolder());
+        $logger = new MemoryLogger();
+        $handler = $this->handlerFactory->create($this->getEvent(), $logger);
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
         $that = $this;
         $component->setRedirectCallback(function($modelId, $eventId) use($that) {
                     $that->backlinkRedirect();
@@ -198,7 +223,10 @@ class ApplicationPresenter extends BasePresenter {
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
 
         $source = new RelatedPersonSource($person, $events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source);
+
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
+
         $grid->setTemplate('myApplications');
 
         return $grid;
@@ -211,7 +239,8 @@ class ApplicationPresenter extends BasePresenter {
                 ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source);
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
         $grid->setTemplate('myApplications');
 
         return $grid;

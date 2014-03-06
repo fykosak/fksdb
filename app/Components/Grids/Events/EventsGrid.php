@@ -52,6 +52,11 @@ class EventsGrid extends BaseGrid {
         // operations
         //
         $that = $this;
+        $this->addButton('model', _('Model'))
+                ->setText('Model') //todo i18n
+                ->setLink(function($row) use ($that) {
+                            return $that->getPresenter()->link("model", $row->event_id);
+                        });
         $this->addButton('edit', _('Upravit'))
                 ->setText('Upravit') //todo i18n
                 ->setLink(function($row) use ($that) {

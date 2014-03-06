@@ -3,7 +3,10 @@
 {block content}
 <div class="btn-toolbar">
     <a n:href=":Public:Application:default eventId => $event->getPrimary()" class="btn btn-sm btn-primary">{_'Nová přihláška'}</a> 
+    <a href="#import" class="btn btn-sm btn-default">{_'Import přihlášek'}</a> 
 </div>
 {control applicationsGrid}
 
+<h2 id="import">Import přihlášek</h2>
+{control applicationsImport}
 {/block}

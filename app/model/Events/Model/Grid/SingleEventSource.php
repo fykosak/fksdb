@@ -69,6 +69,10 @@ class SingleEventSource extends Object implements IHolderSource {
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 
+    public function getEvent() {
+        return $this->event;
+    }
+
     public function getDummyHolder() {
         return $this->dummyHolder;
     }

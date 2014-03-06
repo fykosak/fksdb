@@ -47,13 +47,15 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		if ($this->disabled) {
 			return;
 		}
-		$source = NULL;
+		$source = array();
+                $depth = 3;
 		foreach (debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
-				$source = array($row['file'], (int) $row['line']);
-				break;
+				$source[] = array($row['file'], (int) $row['line']);
+                                if(!$depth--) break;
+				
 			}
 		}
 		$this->totalTime += $result->getTime();
@@ -127,8 +129,8 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				}
 				$s .= "</table>";
 			}
-			if ($source) {
-				$s .= Nette\Diagnostics\Helpers::editorLink($source[0], $source[1])->class('nette-DbConnectionPanel-source');
+			foreach($source as $sline) {
+				$s .= Nette\Diagnostics\Helpers::editorLink($sline[0], $sline[1])->class('nette-DbConnectionPanel-source');
 			}
 
 			$s .= '</td><td>';
