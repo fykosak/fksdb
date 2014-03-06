@@ -151,6 +151,10 @@ events:
                         label: "Jaké triko nosíš?"
                         required: %events.soustredeni.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.soustredeni.tshirt%))
+                    price:
+                        label: "Cena soustředění (CZK)"
+                        modifiable: false
+                        description: "Cena v spočtená dle pravidel (http://fykos.cz/sous_cena)."
 
 
         #
