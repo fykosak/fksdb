@@ -67,7 +67,7 @@ class ImportHandler extends Object {
             $values = $this->rowToValues($row);
             $keyValue = $values[$baseHolderName][$this->keyName];
 
-            if (isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) && !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
+            if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } else if ($stateless == self::STATELESS_KEEP) {
