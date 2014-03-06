@@ -2,9 +2,11 @@
 
 namespace FKS\Config\Expressions;
 
+use Nette\DI\Container;
+use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
+use Nette\Reflection\ClassType;
 use Nette\Utils\Arrays;
-use ReflectionClass;
 use stdClass;
 use Traversable;
 
@@ -61,7 +63,7 @@ class Helpers {
      * @param mixed $expression
      * @return mixed
      */
-    public static function evalExpression($expression) {
+    public static function evalExpression($expression, Container $container) {
         if (!$expression instanceof stdClass) {
             return $expression;
         }
@@ -71,27 +73,27 @@ class Helpers {
             if ($attribute === '...') {
                 continue;
             }
-            $arguments[] = self::evalExpression($attribute);
+            $arguments[] = self::evalExpression($attribute, $container);
         }
 
         $entity = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
         if (function_exists($entity)) {
             return call_user_func_array($entity, $arguments);
         } else {
-            $rc = new ReflectionClass($entity);
-            return $rc->newInstanceArgs($arguments);
+            $rc = ClassType::from($entity);
+            return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
         }
     }
 
-    public static function evalExpressionArray($expressionArray) {
+    public static function evalExpressionArray($expressionArray, Container $container) {
         if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
             $result = array();
             foreach ($expressionArray as $key => $expression) {
-                $result[$key] = self::evalExpressionArray($expression);
+                $result[$key] = self::evalExpressionArray($expression, $container);
             }
             return $result;
         } else {
-            return self::evalExpression($expressionArray);
+            return self::evalExpression($expressionArray, $container);
         }
     }
 
