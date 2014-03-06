@@ -233,8 +233,7 @@ class ApplicationComponent extends Control {
     }
 
     private function canEdit() {
-        //TODO display this button in dependence on modifiable
-        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT;
+        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect() {

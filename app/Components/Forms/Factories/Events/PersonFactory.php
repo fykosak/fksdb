@@ -11,6 +11,7 @@ use Events\Model\PersonContainerResolver;
 use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
+use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Security\User;
 use Persons\SelfResolver;
@@ -56,7 +57,12 @@ class PersonFactory extends AbstractFactory {
      */
     private $servicePerson;
 
-    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson) {
+    /**
+     * @var DIContainer
+     */
+    private $container;
+
+    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -67,6 +73,7 @@ class PersonFactory extends AbstractFactory {
         $this->evaluator = $evaluator;
         $this->user = $user;
         $this->servicePerson = $servicePerson;
+        $this->container = $container;
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
@@ -136,7 +143,7 @@ class PersonFactory extends AbstractFactory {
 
     private function evaluateFieldsDefinition(Field $field) {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
-        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition);
+        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {
