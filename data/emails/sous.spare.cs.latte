@@ -1,11 +1,7 @@
-<p>
-    Potvrzujeme přijetí přihlášky na <em>{$event}</em>. {* TODO tohle tu asi nemá být *}
-</p> 
-
 <p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    jelikož tvé působení při řešení našeho semináře bylo v prví polovině posledního ročníku
-    velmi úspěšné, je nám ctí Tě pozvat na jarní soustředění, které se tentokrát koná 
-{$event->begin|date:'j.n. Y'}&ndash;{$event->end|date:'j.n. Y'} {$holder->getParameter('whereLetter')}. {* TODO nastavit správné parametry *}
+    jelikož tvé působení při řešení našeho semináře bylo v posledním půlroce
+    velmi úspěšné, je nám ctí Tě pozvat jako <b>náhradníka</b> na jarní soustředění, které se tentokrát koná
+{$event->begin|date:'j.n. Y'}&ndash;{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
     Rozhodně se můžeš těšit na mnoho kamarádů stejně zapálených do fyziky. Absolvovat budeš
     moci zajímavé přednášky i experimenty, nejen přímo z fyziky. Protože mi fyzici jsme hraví,
     tak si jistě užiješ i mnoho her, které připravíme. Na našem diskuzním fóru na stránkách
@@ -13,15 +9,14 @@
     chybět.
 </p>
 <p>
-    Své rozhodnutí, zda přijedeš zda chceš čo najrýchlejšie. Nejlépe ihned, nejpozději
-    však do {$holder->getParameter('deadline1')|date:'j.n. Y'}.
-    Všetky dalšie informácie ti prídu v dalšiom emaily. Dozvíš se tam,
-    co si vzít sebou, nejlepší spojení na místo a podobné informace.
-</p>
+    Své rozhodnutí, zdali bys chtěl přijet, nám oznam co nejrychleji prostřednictvím aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
+    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a>.<br/>
+    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline1')|date:'j.n. Y'}.
+    Všechny další informace ti přijdou v dalším emailu. V případě, že se na soustředění dostaneš
+    dozvíš se tam, co si vzít sebou, doporučené spojení na místo a podobné informace.
 
+</p>
 <p>
     Za organizátory FYKOSu se na tebe těší <br/>
-    Michal Červeňák
+    {$holder->getParameter('letterSignature')}
 </p>
-{include 'inc/eventEdit.cs.latte' event => $event, token => $token} {* TODO tady je odkaz na přihlášku: a) upravit text, aby pasoval na tento, b) udělat vlastní nebo *}
-{include 'inc/closing.cs.latte'} {* TODO Tohle tu nemusí být je tam druhý pozdrav *}

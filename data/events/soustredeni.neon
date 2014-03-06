@@ -36,8 +36,10 @@ events:
                 default: FYKOS <fykos@fykos.cz>
             deadline1:
                 default: 1970-01-01 00:00:00
-            whereLetter:
+            letterWhere:
                 default: nikde
+            letterSignature:
+                default: Student Pilný
 
 
         baseMachines:
@@ -91,12 +93,12 @@ events:
                         condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať upozornujúci email"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous.spare, self) # TODO template
+                            - Events\Transitions\MailSender(sous.spare, self)
                     invited->invited:
                         condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať upozornujúci email"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous.invited, self) # TODO template
+                            - Events\Transitions\MailSender(sous.invited, self)
                     spare->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Odmietnuť učasť
