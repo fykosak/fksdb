@@ -77,7 +77,7 @@ class StoredQueryFactory {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $storedQuery->setImplicitParameters($parameters); // treat all parameters as implicit (better API for web service)
+        $storedQuery->setImplicitParameters($parameters, false); // treat all parameters as implicit (better API for web service)
 
         return $storedQuery;
     }
