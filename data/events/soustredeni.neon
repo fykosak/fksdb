@@ -2,24 +2,25 @@ parameters:
     events:
         soustredeni:
             appCond: or(regOpen(), role('admin'))
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
             person:
                 person:
                     other_name: true
                     family_name: true
                 person_info:
                     born_id: 
-                        required: true
+                        required: %events.soustredeni.requiredCond%
                         description: "Kvůli pojišťovně."
-                    birthplace: true
+                    birthplace: %events.soustredeni.requiredCond%
                     phone:
-                        required: true
+                        required: %events.soustredeni.requiredCond%
                         description: "Telefon, jež budeš mít s sebou."
                 post_contact:
                     type: P
-                    address: true
+                    address: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:
-                        required: true
+                        required: %events.soustredeni.requiredCond%
                         description: "Pokud nelze školu nalézt, napiš správci."
 
 events:
@@ -146,6 +147,7 @@ events:
                     label: Účastník
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
+                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")      
                 - @events.privacyPolicy
