@@ -116,13 +116,13 @@ class ImportHandler extends Object {
     private function createHoldersMap() {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
-        $fields = $primaryBaseHolder->getFields();
 
         $result = array();
         foreach ($this->source as $pkValue => $holder) {
             if ($this->keyName == $pkName) {
                 $keyValue = $pkValue;
             } else {
+                $fields = $holder->getPrimaryHolder()->getFields();
                 $keyValue = $fields[$this->keyName]->getValue();
             }
             $result[$keyValue] = $holder;
