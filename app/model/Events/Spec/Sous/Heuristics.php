@@ -15,6 +15,7 @@ class Heuristics extends StoredQueryPostProcessing {
     const RESERVE_1 = 8;
     const ABS_INV = 3;
     const CAT_COUNT = 4;
+    const P_4 = 1; // o kolik méně se pozývá čtvrťáků než ostatních
     const RULE_1 = 1;
     const RULE_2 = 2;
     const RULE_3M = '3M';
@@ -46,7 +47,7 @@ class Heuristics extends StoredQueryPostProcessing {
             if (!$this->checkInvMin($row)) {
                 break;
             }
-            if ($row['cat_rank'] <= $P) {
+            if ($this->inviting($row, $P)) {
                 $row['invited'] = self::RULE_1;
                 $Y += 1;
                 $K += ($row['gender'] == 'M') ? 1 : 0;
@@ -202,12 +203,16 @@ class Heuristics extends StoredQueryPostProcessing {
             $Y = 0;
             $P -= 1;
             foreach ($data as $row) {
-                if ($row['cat_rank'] <= $P && $this->checkInvMin($row)) {
+                if ($this->inviting($row, $P) && $this->checkInvMin($row)) {
                     $Y += 1;
                 }
             }
         } while ($Y > $Z - self::RESERVE_1);
         return $P;
+    }
+
+    private function inviting($row, $P) {
+        return $row['category'] == 4 ? ($row['cat_rank'] <= $P - self::P_4) : ($row['cat_rank'] <= $P);
     }
 
     private function checkInvMin($row) {
