@@ -96,6 +96,8 @@ class ImportHandler extends Object {
     private function rowToValues($row) {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = new ArrayHash();
+        $fieldExists = false;
+        $fieldNames = array_keys($primaryBaseHolder->getFields());
         foreach ($row as $columnName => $value) {
             $parts = explode('.', $columnName);
             if (count($parts) == 1) {
@@ -108,6 +110,12 @@ class ImportHandler extends Object {
                 $values[$baseHolderName] = new ArrayHash();
             }
             $values[$baseHolderName][$fieldName] = $value;
+            if (in_array($fieldName, $fieldNames)) {
+                $fieldExists = true;
+            }
+        }
+        if (!$fieldExists) {
+            throw new ImportHandlerException(_('CSV soubor neobsahuje platnou hlavičku.'));
         }
 
         return $values;
