@@ -44,6 +44,7 @@ class EventsExtension extends CompilerExtension {
     public static $semanticMap = array(
         'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
         'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
+        'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
         'role' => 'Events\Semantics\Role',
         'regOpen' => 'Events\Semantics\RegOpen',
         'eventWas' => 'Events\Semantics\EventWas',

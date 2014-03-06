@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace Events\Spec\Dsef;
 
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;

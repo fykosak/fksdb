@@ -11,7 +11,6 @@ use Mail\MailTemplateFactory;
 use ModelAuthToken;
 use ModelEvent;
 use ModelLogin;
-use Nette\Diagnostics\Debugger;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
