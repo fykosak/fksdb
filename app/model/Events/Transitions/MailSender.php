@@ -166,7 +166,7 @@ class MailSender extends Object {
     }
 
     private function getUntil(ModelEvent $event) {
-        return $event->registration_end; //TODO extension point
+        return $event->registration_end ? : $event->end; //TODO extension point
     }
 
     private function hasBcc() {
