@@ -212,7 +212,11 @@ class WebServiceModel {
             }
         }
 
-        $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
+        try {
+            $storedQuery = $this->storedQueryFactory->createQueryFromQid($qid, $parameters);
+        } catch (InvalidArgumentException $e) {
+            throw new SoapFault('Sender', $e->getMessage(), $e);
+        }
 
         // authorization
         if (!$this->isAuthorizedExport($storedQuery)) {
