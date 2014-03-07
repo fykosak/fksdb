@@ -232,7 +232,7 @@ class ApplicationHandler {
     }
 
     public function commit($final = false) {
-        if ($this->errorMode == self::ERROR_ROLLBACK || $final) {
+        if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
     }

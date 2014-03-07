@@ -219,6 +219,9 @@ class ApplicationComponent extends Control {
         } catch (ApplicationHandlerException $e) {
             /* handled elsewhere, here it's to just prevent redirect */
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            if (!$form) { // w/out form we don't want to show anything with the same GET params
+                $this->finalRedirect();
+            }
         }
     }
 
@@ -230,8 +233,7 @@ class ApplicationComponent extends Control {
     }
 
     private function canEdit() {
-        //TODO display this button in dependence on modifiable
-        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT;
+        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect() {

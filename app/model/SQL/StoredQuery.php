@@ -90,10 +90,10 @@ class StoredQuery implements IDataSource, IResource {
         $this->postProcessing = $this->queryPattern->getPostProcessing();
     }
 
-    public function setImplicitParameters($parameters) {
+    public function setImplicitParameters($parameters, $strict = true) {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
-            if (in_array($key, $parameterNames)) {
+            if ($strict && in_array($key, $parameterNames)) {
                 throw new InvalidArgumentException("Implicit parameter name '$key' collides with an explicit parameter.");
             }
             if (!array_key_exists($key, $this->implicitParameterValues) || $this->implicitParameterValues[$key] != $value) {
@@ -178,6 +178,7 @@ class StoredQuery implements IDataSource, IResource {
                 continue;
             }
             $statement->bindValue($key, $value);
+            $this->parameterValues[$key] = $value; // to propagate the implicit value of explicit parameter
             if ($this->postProcessing) {
                 $this->postProcessing->bindValue($key, $value);
             }

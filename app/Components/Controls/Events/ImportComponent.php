@@ -14,6 +14,7 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -121,13 +122,16 @@ class ImportComponent extends Control {
             $importHandler->setInput($parser, $keyName);
             $importHandler->setSource($this->source);
 
+            Debugger::timer();
             $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
+            $elapsedTime = Debugger::timer();
+            
 
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(_('Import úspěšně proběhl.'), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
-                $this->getPresenter()->flashMessage(_('Import proběhl s chybami.'), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
             }
 
             $this->redirect('this');

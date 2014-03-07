@@ -1,0 +1,11 @@
+<p>
+    {if $application->price !== null}
+        {if $application->price == 0}
+        Dle pravidel (<a href="http://fykos.cz/sous_cena">http://fykos.cz/sous_cena</a>) máš soustředění zadarmo.
+        {else}
+        Tvoje cena soustředění dle pravidel (<a href="http://fykos.cz/sous_cena">http://fykos.cz/sous_cena</a>) vychází na {$application->price} CZK.
+        {/if}
+    {else}
+    Cena soustředění se určuje ze získaných bodů dle pravidel (<a href="http://fykos.cz/sous_cena">http://fykos.cz/sous_cena</a>).
+    {/if}
+</p>

@@ -5,9 +5,9 @@ namespace Events\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\TransitionConditionFailedException;
 use Events\TransitionOnExecutedException;
+use Events\TransitionUnsatisfiedTargetException;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -192,6 +192,19 @@ class Transition extends FreezableObject {
         return $this->evaluator->evaluate($this->condition, $this);
     }
 
+    private function validateTarget() {
+        foreach ($this->getInducedTransitions() as $inducedTransition) {
+            if (($result = $inducedTransition->validateTarget()) !== true) { // intentionally =
+                return $result;
+            }
+        }
+
+        $baseHolder = $this->getBaseHolder();
+        $validator = $baseHolder->getValidator();
+        $validator->validate($baseHolder, $this->getTarget());
+        return $validator->getValidationResult();
+    }
+
     public final function canExecute() {
         return !$this->getBlockingTransition();
     }
@@ -208,6 +221,11 @@ class Transition extends FreezableObject {
     public final function execute() {
         if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =
             throw new TransitionConditionFailedException($blockingTransition);
+        }
+
+        $validationResult = $this->validateTarget();
+        if ($validationResult !== true) {
+            throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 
         foreach ($this->getInducedTransitions() as $inducedTransition) {

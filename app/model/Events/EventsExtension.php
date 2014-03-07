@@ -41,6 +41,18 @@ class EventsExtension extends CompilerExtension {
     /** @const Maximum length of state identifier. */
     const STATE_SIZE = 20;
 
+    public static $semanticMap = array(
+        'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
+        'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
+        'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
+        'role' => 'Events\Semantics\Role',
+        'regOpen' => 'Events\Semantics\RegOpen',
+        'eventWas' => 'Events\Semantics\EventWas',
+        'state' => 'Events\Semantics\State',
+        'param' => 'Events\Semantics\Parameter',
+        'parameter' => 'Events\Semantics\Parameter',
+        'count' => 'Events\Semantics\Count',
+    );
     private $scheme;
 
     /**
@@ -56,17 +68,7 @@ class EventsExtension extends CompilerExtension {
 
     function __construct($schemaFile) {
         $this->schemeFile = $schemaFile;
-        Helpers::registerSemantic(array(
-            'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
-            'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
-            'role' => 'Events\Semantics\Role',
-            'regOpen' => 'Events\Semantics\RegOpen',
-            'eventWas' => 'Events\Semantics\EventWas',
-            'state' => 'Events\Semantics\State',
-            'param' => 'Events\Semantics\Parameter',
-            'parameter' => 'Events\Semantics\Parameter',
-            'count' => 'Events\Semantics\Count',
-        ));
+        Helpers::registerSemantic(self::$semanticMap);
     }
 
     /*
@@ -420,6 +422,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setPersonIds', array($definition['personIds'])); // must be set after setService
         $factory->addSetup('setEventId', array($definition['eventId'])); // must be set after setService
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
+        $factory->addSetup('setValidator', '@events.dataValidator');
 
         foreach (Arrays::grep($parameters, '/^modifiable|visible|label|description$/') as $parameter) {
             $factory->addSetup('set' . ucfirst($parameter), "%$parameter%");

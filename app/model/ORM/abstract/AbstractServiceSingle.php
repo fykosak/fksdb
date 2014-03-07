@@ -68,7 +68,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     public function createFromArray(array $data) {
         $className = $this->modelClassName;
         $data = $this->filterData($data);
-        $result = new $className($data, $this->getTable());
+        $result = new $className($data, $this);
         return $result;
     }
 

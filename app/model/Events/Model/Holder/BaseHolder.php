@@ -86,6 +86,11 @@ class BaseHolder extends FreezableObject {
      */
     private $evaluator;
 
+    /**
+     * @var DataValidator
+     */
+    private $validator;
+
     function __construct($name) {
         $this->name = $name;
     }
@@ -128,6 +133,15 @@ class BaseHolder extends FreezableObject {
 
     public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
+    }
+
+    public function getValidator() {
+        return $this->validator;
+    }
+
+    public function setValidator(DataValidator $validator) {
+        $this->updating();
+        $this->validator = $validator;
     }
 
     public function isVisible() {

@@ -74,7 +74,7 @@ events:
                         label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Fyziklani\GroupOptions())
+                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
                         description: %events.dsef.accomodation%
