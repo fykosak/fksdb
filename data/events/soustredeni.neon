@@ -131,23 +131,13 @@ events:
                         condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať last call"
                         onExecuted:
-<<<<<<< HEAD
                             - Events\Transitions\MailSender(sous.spare3, self) # TODO template
                     invited2->invited3:
-=======
-                            - Events\Transitions\MailSender(sous.spare, self)
-                    invited->invited:
->>>>>>> 264491fcf2f79aee39c9eb9c6dd0deb3378cd49c
                         condition: and(before(param('deadline1')),role('admin'))
                         label: "Poslať last call"
                         onExecuted:
-<<<<<<< HEAD
                             - Events\Transitions\MailSender(sous.invited3, self) # TODO template
                     spare|spare1|spare2|spare3->rejected:
-=======
-                            - Events\Transitions\MailSender(sous.invited, self)
-                    spare->rejected:
->>>>>>> 264491fcf2f79aee39c9eb9c6dd0deb3378cd49c
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Odmietnuť učasť
                         dangerous: true
