@@ -59,14 +59,14 @@ events:
                 
                 states:                    
                     invited: Pozvaný
-                    invited1: Pozvaný prvé upozornenie
-                    invited2: Pozvaný druhé upozornenie
-                    invited3: Pozvaný last call
+                    invited1: "Pozvaný I. upomínka"
+                    invited2: "Pozvaný II. upomínka"
+                    invited3: "Pozvaný last call"
                     auto.invited: "Pozvaný (auto)"
                     spare: Nahradník
-                    spare1: Nahradník prvé upozornenie
-                    spare2: Nahradník druhé upozornenie
-                    spare3: Nahradník last call
+                    spare1: "Nahradník I. upomínka"
+                    spare2: "Nahradník II. upomínka"
+                    spare3: "Nahradník last call"
                     auto.spare: "Náhradník (auto)"
                     applied: Učastní se
                     interested: Chce jet
@@ -104,55 +104,55 @@ events:
                         label: Chci jet
                     invited|invited1|invited2|invited3->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
-                        label: Odmietnuť učasť
+                        label: Odmítnout účast
                         dangerous: true
 
                     spare->spare1:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať prvý upozornujúci email"
+                        label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare1, self) # TODO template
                     invited->invited1:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať  prvý upozornujúci email"
+                        label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited1, self) # TODO template
                     spare1->spare2:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať druhý uhupozornujúci email"
+                        label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare2, self) # TODO template
                     invited1->invited2:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať druhý upozornujúci email"
+                        label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited2, self) # TODO template
                     spare2->spare3:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať last call"
+                        label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare3, self) # TODO template
                     invited2->invited3:
                         condition: and(before(param('deadline1')),role('admin'))
-                        label: "Poslať last call"
+                        label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited3, self) # TODO template
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
-                        label: Odmietnuť učasť
+                        label: Odmítnout účast
                         dangerous: true
                     interested->applied:
                         condition: role('admin')
-                        label: Presunuť do učastnikov
+                        label: Schválit jako účastníka
                     spare|spare1|spare2|spare3->invited:
                         condition: role('admin')
-                        label: Pozvať ako učstnika
+                        label: Pozvat jako účastníka
                     applied->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Zučastnil sa 
+                        label: Zúčastnil se
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Neprišiel 
+                        label: Nepřijel
 
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
