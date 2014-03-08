@@ -3,8 +3,11 @@
 {block content}
 {if !$control->isEventAdmin()}
 <ul>
-    <li n:if="$event->registration_end">
-        Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+    <li>
+        Potvrzením přihlášky se přihlašuješ <strong>na celé soustředění</strong>.
+    </li>
+    <li n:if="$holder->getParameter('deadline1')">
+        Uzávěrka pro vyjádření <strong>{$holder->getParameter('deadline1')|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
 
