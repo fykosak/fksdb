@@ -60,7 +60,7 @@ parameters:
     # Settings for global session used for SSO (single sign on)
     globalSession:
         # How long inactivity is allowed until globalSession expires.
-        expiration: '+20 minutes'
+        expiration: '+120 minutes'
 
 
     # Submits by contestats
