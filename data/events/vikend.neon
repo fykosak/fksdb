@@ -90,9 +90,6 @@ events:
                     wants_lecture:
                         label: Jakou přednášku bys chtěl slyšet?
                         modifiable: %events.vikend.appCond%
-                    note:
-                        label: Vzkazy organizátorům
-                        modifiable: %events.vikend.appCond%
 
 
         #

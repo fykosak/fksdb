@@ -79,9 +79,6 @@ events:
                         label: Ubytování
                         description: %events.dsef.accomodation%
                         modifiable: %events.dsef.appCond%
-                    arrival_time:
-                        label: Očekávaný příjezd
-                        modifiable: %events.dsef.appCond%
                     lunch_count:
                         label:  Počet baget k obědu                        
                         modifiable: %events.dsef.appCond%
@@ -89,9 +86,6 @@ events:
                     message:
                         label: Vzkaz ostatním
                         modifiable: true
-                    note:
-                        label: Poznámka
-                        modifiable: %events.dsef.appCond%
 
 
         #
