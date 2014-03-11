@@ -14,7 +14,7 @@ parameters:
                     birthplace: %events.soustredeni.requiredCond%
                     phone:
                         required: %events.soustredeni.requiredCond%
-                        description: "Telefon, jež budeš mít s sebou."
+                        description: "Telefon (i s předvolbou štátu), jež budeš mít s sebou."
                 post_contact:
                     type: P
                     address: %events.soustredeni.requiredCond%
@@ -46,6 +46,12 @@ events:
             notifyFrom:
                 default: soustredeni@fykos.cz
             deadline1:
+                default: 1970-01-01 00:00:00
+            deadline2:
+                default: 1970-01-01 00:00:00
+            deadline3:
+                default: 1970-01-01 00:00:00
+            deadline4:
                 default: 1970-01-01 00:00:00
             letterWhere:
                 default: nikde
@@ -101,7 +107,7 @@ events:
                     invited|invited1|invited2|invited3->applied:
                         condition: before(param('deadline1')) 
                         label: Potrvrdit učast
-                    spare->interested:
+                    spare|spare1|spare2|spare3->interested:
                         condition: before(param('deadline1')) 
                         label: Chci jet
                     invited|invited1|invited2|invited3->rejected:
@@ -110,32 +116,32 @@ events:
                         dangerous: true
 
                     spare->spare1:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline2'))),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare1, self) # TODO template
                     invited->invited1:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline2'))),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited1, self) # TODO template
                     spare1->spare2:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline3'))),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare2, self) # TODO template
                     invited1->invited2:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline3'))),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited2, self) # TODO template
                     spare2->spare3:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline4'))),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare3, self) # TODO template
                     invited2->invited3:
-                        condition: and(before(param('deadline1')),role('admin'))
+                        condition: and(not(before(param('deadline4'))),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited3, self) # TODO template

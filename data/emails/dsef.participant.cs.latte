@@ -1,1 +1,17 @@
-participant.cs.latte
+<p>
+Potvrzujeme přijetí Vaší přihlášky na akci {$event}, která se koná {$event->begin|date:'j.n. Y'}.
+</p>
+<p>
+Pro kontrolu následují údaje vyplněné do přihlášky:<br/>
+jméno: {$person->getFullname()}<br/>
+datum narození: {$person->getInfo()->born|date: 'j.n. Y'}<br/>
+adresa trvalého bydliště:{var $address => $person->getPermanentAddress()}<br/>
+ulice: {$address->target}<br/>
+obec: {$address->city}<br/>
+PSČ: {$address->postal_code}<br/>
+číslo OP: {$person->getInfo()->id_number}<br/>
+počet baget k obědu: {$application->lunch_count}<br/>
+vzkaz pro ostatní řešitele: {$application->message}<br/>
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}
