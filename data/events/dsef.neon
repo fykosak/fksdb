@@ -89,9 +89,6 @@ events:
                     message:
                         label: Vzkaz ostatním
                         modifiable: true
-                    note:
-                        label: Poznámka
-                        modifiable: %events.dsef.appCond%
 
 
         #

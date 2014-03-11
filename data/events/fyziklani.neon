@@ -125,10 +125,6 @@ events:
                         visible: true
                         description: %events.fyziklani.accomodation%
                         modifiable: %events.fyziklani.appCond%
-                    note:
-                        label: Poznámka
-                        visible: true
-                        modifiable: %events.fyziklani.appCond%
 
             #
             #   PARTICIPANT
