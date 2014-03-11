@@ -116,32 +116,32 @@ events:
                         dangerous: true
 
                     spare->spare1:
-                        condition: and(not(before(param('deadline2'))),role('admin'))
+                        condition: and(after(param('deadline2')),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare1, self) # TODO template
                     invited->invited1:
-                        condition: and(not(before(param('deadline2'))),role('admin'))
+                        condition: and(after(param('deadline2')),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited1, self) # TODO template
                     spare1->spare2:
-                        condition: and(not(before(param('deadline3'))),role('admin'))
+                        condition: and(after(param('deadline3')),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare2, self) # TODO template
                     invited1->invited2:
-                        condition: and(not(before(param('deadline3'))),role('admin'))
+                        condition: and(after(param('deadline3')),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited2, self) # TODO template
                     spare2->spare3:
-                        condition: and(not(before(param('deadline4'))),role('admin'))
+                        condition: and(after(param('deadline4')),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.spare3, self) # TODO template
                     invited2->invited3:
-                        condition: and(not(before(param('deadline4'))),role('admin'))
+                        condition: and(after(param('deadline4')),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
                             - Events\Transitions\MailSender(sous.invited3, self) # TODO template
