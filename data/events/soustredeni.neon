@@ -57,6 +57,8 @@ events:
                 default: nikde
             letterSignature:
                 default: Student Pilný
+            letterResolutionTime:
+                default: až naprší a uschne
 
 
         baseMachines:

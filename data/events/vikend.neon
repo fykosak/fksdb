@@ -60,7 +60,7 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    *->cancelled:
+                    spare|applied->cancelled:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: Zrušit přihlášku
                         dangerous: true
