@@ -4,9 +4,9 @@ namespace OrgModule;
 
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Pipeline\PipelineException;
 use SeriesCalculator;
 use Tasks\DownloaderFactory;
 use Tasks\DownloadException;
@@ -98,6 +98,9 @@ class TasksPresenter extends BasePresenter {
                 $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně staženy.', $language), self::FLASH_SUCCESS);
             } catch (DownloadException $e) {
                 $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), self::FLASH_WARNING);
+            } catch (PipelineException $e) {
+                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě. %s', $language, $e->getMessage()), self::FLASH_ERROR);
+                Debugger::log($e);
             } catch (ModelException $e) {
                 $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), self::FLASH_ERROR);
                 Debugger::log($e);
