@@ -79,7 +79,7 @@ class DeadlineFromXML extends Stage {
         }
 
         if (!$datetime) {
-            throw new PipelineException("Cannot parse date '$compactString'.");
+            throw new PipelineException("Cannot parse date '$string'.");
         }
 
         return $datetime;
