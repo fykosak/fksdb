@@ -24,7 +24,7 @@ class Before extends EvaluatedExpression {
     }
 
     public function __toString() {
-        return "now >= {$this->datetime}";
+        return "now <= {$this->datetime}";
     }
 
 }
