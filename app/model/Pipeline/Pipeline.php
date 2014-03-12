@@ -3,6 +3,7 @@
 namespace Pipeline;
 
 use Nette\InvalidStateException;
+use RuntimeException;
 
 /**
  * Represents a simple pipeline where each stage has its input and output and they
@@ -92,4 +93,8 @@ class Pipeline {
         return $this->log;
     }
 
+}
+
+class PipelineException extends RuntimeException {
+    
 }
