@@ -7,6 +7,7 @@ use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
+use FKS\Application\IJavaScriptCollector;
 use FKS\Logging\FlashMessageDump;
 use FKS\Logging\MemoryLogger;
 use ModelEvent;
@@ -70,13 +71,29 @@ class ApplicationsGrid extends Control {
      */
     private $templateFile;
 
+    /**
+     * @var boolean
+     */
+    private $searchable = false;
+
     function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
+        $this->monitor('FKS\Application\IJavaScriptCollector');
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->flashDump = $flashDump;
         $this->processSource();
+    }
+
+    private $attachedJS = false;
+
+    protected function attached($obj) {
+        parent::attached($obj);
+        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
+            $this->attachedJS = true;
+            $obj->registerJSFile('js/searchTable.js');
+        }
     }
 
     /**
@@ -88,6 +105,14 @@ class ApplicationsGrid extends Control {
         } else {
             $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationsGrid.$template.latte";
         }
+    }
+
+    public function isSearchable() {
+        return $this->searchable;
+    }
+
+    public function setSearchable($searchable) {
+        $this->searchable = $searchable;
     }
 
     private function processSource() {
@@ -128,6 +153,7 @@ class ApplicationsGrid extends Control {
         $this->template->eventApplications = $this->eventApplications;
         $this->template->holders = $this->holders;
         $this->template->machines = $this->machines;
+        $this->template->htmlId = $this->lookupPath('Nette\Application\UI\Presenter');
 
         $this->template->setFile($this->templateFile);
         $this->template->render();

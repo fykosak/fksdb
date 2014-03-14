@@ -189,6 +189,7 @@ class EventPresenter extends EntityPresenter {
         $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
         $template = $this->layoutResolver->getTableLayout($this->getModel());
         $grid->setTemplate($template);
+        $grid->setSearchable(true);
 
         return $grid;
     }

@@ -1,5 +1,18 @@
 {if}
-<table class="table table-condensed table-hover">
+<div class="row">
+    <div class="col-sm-8 col-md-8 pull-left">
+    </div>
+    <div class="col-sm-4 col-md-4 pull-right text-right">
+        {_'celkem'} <span id="{$htmlId}-count">{=count($eventApplications)}</span> {_'záznamů'}
+    </div>
+</div>
+<div class="row" n:if="$control->isSearchable()">
+    <div class="col-sm-3 col-md-3 pull-right">
+        <input type="text" class="form-control" placeholder="{_'Vyhledat'}" id="{$htmlId}-search"/>
+    </div>
+</div>
+
+<table class="table table-condensed table-hover" data-st="true" data-st-search-input="#{$htmlId}-search" data-st-count="#{$htmlId}-count">
     <thead n:block="header">
     <th>{_'Účastník'}</th>
         {block menuHeader}
@@ -11,7 +24,7 @@
 <tbody>
         {foreach $eventApplications as $key => $event}
         {var $holder = $holders[$key]}
-    <tr n:block="row">
+    <tr n:block="row" data-st-data="{$holder->getPrimaryHolder()->getModel()->__toString()|strip};{$machines[$key]->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState())|strip};">
         <td>{$holder->getPrimaryHolder()->getModel()->__toString()}</td>
         {block menuRow}
         <td>
