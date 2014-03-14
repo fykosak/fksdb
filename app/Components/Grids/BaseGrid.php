@@ -18,6 +18,12 @@ abstract class BaseGrid extends Grid {
         $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
+    protected function createTemplate($class = NULL) {
+        $template = parent::createTemplate($class);
+        $template->setTranslator($this->presenter->getTranslator());
+        return $template;
+    }
+
     /*     * *****************************
      * Extended rendering for the paginator
      * ***************************** */
