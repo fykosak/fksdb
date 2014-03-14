@@ -71,12 +71,12 @@ events:
                     invited2: "Pozvaný II. upomínka"
                     invited3: "Pozvaný last call"
                     auto.invited: "Pozvaný (auto)"
-                    spare: Nahradník
+                    spare: Náhradník
                     spare1: "Nahradník I. upomínka"
                     spare2: "Nahradník II. upomínka"
                     spare3: "Nahradník last call"
                     auto.spare: "Náhradník (auto)"
-                    applied: Učastní se
+                    applied: Účastní se
                     interested: Chce jet
                     participated: Účastnil se
                     rejected: Odmítl
