@@ -18,4 +18,8 @@ class EventWas extends Object {
         return $event->begin->getTimestamp() <= time();
     }
 
+    public function __toString() {
+        return 'eventWas';
+    }
+
 }

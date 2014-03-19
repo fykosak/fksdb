@@ -18,7 +18,7 @@ create or replace view v_contestant as (
 CREATE OR REPLACE VIEW v_gooddata as (
 -- Reseni;Rocnik;Serie;CisloUlohy;Uloha;MaxBodu;Bodu;Resitel;Rokmaturity;Pohlavi;Skola;Mesto;Stat
 
-select s.submit_id AS Reseni, t.year AS Rocnik, t.series AS Serie, t.tasknr AS CisloUlohy, t.label AS Uloha, t.points AS MaxBodu, s.raw_points AS Bodu,
+select s.submit_id AS Reseni, t.year AS Rocnik, t.series AS Serie, t.tasknr AS CisloUlohy, t.label AS Uloha, t.points AS MaxBodu, s.calc_points AS Bodu,
 IF(p.display_name is null, concat(p.other_name, ' ', p.family_name), p.display_name) AS Resitel, 
 (IF(ct.contest_id = 1, 1991 + ct.year, 2015 + ct.year) - IF(ct.study_year between 1 and 4, ct.study_year, ct.study_year - 9) ) AS RokMaturity,
 p.gender AS Pohlavi, sch.name_abbrev AS Skola, scha.city AS Mesto, reg.country_iso AS Stat, cst.name AS Seminar
@@ -66,5 +66,35 @@ create or replace view v_school as (
 	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic
 	from school s
 );
+
+create or replace view v_series_points as (
+	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id, sum(s.calc_points) as points
+	from submit s
+	left join contestant_base ct on ct.ct_id = s.ct_id
+	left join task t on t.task_id = s.task_id
+	group by ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id
+);
+
+create or replace view v_dokuwiki_user as (
+    select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
+    from login l
+    left join v_person p on p.person_id = l.person_id
+    where exists (select 1 from org o where o.person_id = l.person_id) or l.person_id is null
+);
+
+create or replace view v_dokuwiki_group as (
+	select role_id, name
+	from role
+);
+
+create or replace view v_dokuwiki_user_group as (
+	select login_id, role_id, contest_id
+	from `grant`
+	union
+	select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
+	from org o
+	inner join login l on l.person_id = o.person_id;
+);
+
 
 

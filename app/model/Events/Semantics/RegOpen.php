@@ -10,11 +10,16 @@ use Nette\Object;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegOpen extends Object {
+
     use WithEventTrait;
 
     public function __invoke($obj) {
         $event = $this->getEvent($obj);
         return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time()) && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
+    }
+
+    public function __toString() {
+        return 'regOpen';
     }
 
 }

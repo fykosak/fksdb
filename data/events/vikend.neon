@@ -60,7 +60,7 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    *->cancelled:
+                    spare|applied->cancelled:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: Zrušit přihlášku
                         dangerous: true
@@ -89,9 +89,6 @@ events:
                         modifiable: %events.vikend.appCond%
                     wants_lecture:
                         label: Jakou přednášku bys chtěl slyšet?
-                        modifiable: %events.vikend.appCond%
-                    note:
-                        label: Vzkazy organizátorům
                         modifiable: %events.vikend.appCond%
 
 

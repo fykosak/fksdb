@@ -74,13 +74,10 @@ events:
                         label: Preferovaná skupina
                         required: true
                         modifiable: %events.dsef.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Fyziklani\GroupOptions())
+                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
                         description: %events.dsef.accomodation%
-                        modifiable: %events.dsef.appCond%
-                    arrival_time:
-                        label: Očekávaný příjezd
                         modifiable: %events.dsef.appCond%
                     lunch_count:
                         label:  Počet baget k obědu                        
@@ -89,9 +86,6 @@ events:
                     message:
                         label: Vzkaz ostatním
                         modifiable: true
-                    note:
-                        label: Poznámka
-                        modifiable: %events.dsef.appCond%
 
 
         #

@@ -2,15 +2,22 @@
 
 namespace OrgModule;
 
+use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKS\Config\NeonScheme;
+use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
+use FKSDB\Components\Events\ExpressionPrinter;
+use FKSDB\Components\Events\GraphComponent;
+use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Logging\FlashDumpFactory;
 use ModelException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -57,6 +64,21 @@ class EventPresenter extends EntityPresenter {
      */
     private $container;
 
+    /**
+     * @var ExpressionPrinter
+     */
+    private $expressionPrinter;
+
+    /**
+     * @var ApplicationHandlerFactory
+     */
+    private $handlerFactory;
+
+    /**
+     * @var FlashDumpFactory
+     */
+    private $flashDumpFactory;
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -71,6 +93,30 @@ class EventPresenter extends EntityPresenter {
 
     public function injectContainer(Container $container) {
         $this->container = $container;
+    }
+
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+        $this->expressionPrinter = $expressionPrinter;
+    }
+
+    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
+        $this->handlerFactory = $handlerFactory;
+    }
+
+    public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
+    }
+
+    public function authorizedModel($id) {
+        $model = $this->getModel();
+        if (!$model) {
+            throw new BadRequestException('Neexistující model.', 404);
+        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
+    }
+
+    public function actionModel($id) {
+        
     }
 
     public function titleList() {
@@ -89,6 +135,11 @@ class EventPresenter extends EntityPresenter {
     public function titleApplications($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+    }
+
+    public function titleModel($id) {
+        $model = $this->getModel();
+        $this->setTitle(sprintf(_('Model akce %s'), $model->name));
     }
 
     public function actionDelete($id) {
@@ -134,11 +185,31 @@ class EventPresenter extends EntityPresenter {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
 
-        $grid = new ApplicationsGrid($this->container, $source);
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
         $template = $this->layoutResolver->getTableLayout($this->getModel());
         $grid->setTemplate($template);
 
         return $grid;
+    }
+
+    protected function createComponentApplicationsImport($name) {
+        $source = new SingleEventSource($this->getModel(), $this->container);
+        $logger = new MemoryLogger(); //TODO log to file?
+        $machine = $this->container->createEventMachine($this->getModel());
+        $handler = $this->handlerFactory->create($this->getModel(), $logger);
+
+        $flashDump = $this->flashDumpFactory->createApplication();
+        $component = new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
+        return $component;
+    }
+
+    protected function createComponentGraphComponent($name) {
+        $event = $this->getModel();
+        $machine = $this->container->createEventMachine($event);
+
+        $component = new GraphComponent($machine->getPrimaryMachine(), $this->expressionPrinter);
+        return $component;
     }
 
     private function createForm() {

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use Events\Machine\BaseMachine;
+use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
@@ -41,6 +42,12 @@ abstract class AbstractFactory implements IFieldFactory {
                 $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
             }
             $conditioned->addRule(Form::FILLED, sprintf(_('%s je povinná položka.'), $field->getLabel()));
+        }
+    }
+
+    public function validate(Field $field, DataValidator $validator) {
+        if ($field->isRequired() && !$field->getValue()) {
+            $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
         }
     }
 

@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
 use ModelContest;
 use ModelPerson;
+use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
@@ -73,6 +74,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private $handlerFactory;
 
+    /**
+     * @var Container
+     */
+    private $container;
+
     /** @var ModelContest|null */
     private $selectedContest;
 
@@ -86,6 +92,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
+    }
+
+    public function injectContainer(Container $container) {
+        $this->container = $container;
     }
 
     protected function createComponentContestChooser($name) {
@@ -171,7 +181,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant']);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->container);
     }
 
     public function createComponentContestantForm($name) {

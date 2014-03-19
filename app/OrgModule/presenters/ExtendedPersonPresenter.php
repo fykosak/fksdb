@@ -7,6 +7,7 @@ use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use OrgModule\EntityPresenter;
 use ORM\IModel;
@@ -27,12 +28,21 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      */
     private $handlerFactory;
 
+    /**
+     * @var Container
+     */
+    private $container;
+
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
+    }
+
+    public function injectContainer(Container $container) {
+        $this->container = $container;
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -48,7 +58,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition]);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->container);
     }
 
     abstract protected function appendExtendedContainer(Form $form);

@@ -3,19 +3,16 @@
 namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\MachineExecutionException;
+use Events\Model\ApplicationHandler;
+use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
-use Events\SubmitProcessingException;
 use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
-use FormUtils;
+use FKS\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use PublicModule\BasePresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,14 +22,19 @@ use PublicModule\BasePresenter;
 class ApplicationComponent extends Control {
 
     /**
-     * @var Machine
+     * @var ApplicationHandler
      */
-    private $machine;
+    private $handler;
 
     /**
      * @var Holder
      */
     private $holder;
+
+    /**
+     * @var FlashMessageDump
+     */
+    private $flashDump;
 
     /**
      * @var Callback($primaryModelId, $eventId)
@@ -44,10 +46,11 @@ class ApplicationComponent extends Control {
      */
     private $templateFile;
 
-    function __construct(Machine $machine, Holder $holder) {
+    function __construct(ApplicationHandler $handler, Holder $holder, FlashMessageDump $flashDump) {
         parent::__construct();
-        $this->machine = $machine;
+        $this->handler = $handler;
         $this->holder = $holder;
+        $this->flashDump = $flashDump;
     }
 
     /**
@@ -92,23 +95,19 @@ class ApplicationComponent extends Control {
             throw new InvalidStateException('Must set template for the application form.');
         }
 
-        $this->initializeMachine();
-
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->getEvent();
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->machine->getPrimaryMachine();
+        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->render();
     }
 
     public function renderInline($mode) {
-        $this->initializeMachine();
-
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->machine->getPrimaryMachine();
+        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
@@ -116,7 +115,6 @@ class ApplicationComponent extends Control {
     }
 
     protected function createComponentForm($name) {
-        $this->initializeMachine();
         $result = new FormControl();
         $result->setGroupMode(FormControl::GROUP_CONTAINER);
         $form = $result['form'];
@@ -125,7 +123,7 @@ class ApplicationComponent extends Control {
          * Create containers
          */
         foreach ($this->holder as $name => $baseHolder) {
-            $baseMachine = $this->machine[$name];
+            $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible($baseMachine)) {
                 continue;
             }
@@ -149,7 +147,7 @@ class ApplicationComponent extends Control {
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->machine->getPrimaryMachine();
+        $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
         foreach ($primaryMachine->getAvailableTransitions() as $transition) {
             $transitionName = $transition->getName();
@@ -188,14 +186,13 @@ class ApplicationComponent extends Control {
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-link');
         $submit->onClick[] = function(SubmitButton $button) use($that) {
-                    $that->initializeMachine();
                     $that->finalRedirect();
                 };
 
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form, $this->machine);
+        $this->holder->adjustForm($form, $this->getMachine());
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
@@ -215,107 +212,28 @@ class ApplicationComponent extends Control {
     }
 
     private function execute(Form $form = null, $explicitTransitionName = null, $explicitMachineName = null) {
-        $this->initializeMachine();
-        $connection = $this->holder->getConnection();
         try {
-            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
-
-            $connection->beginTransaction();
-
-            $transitions = array();
-            if ($explicitTransitionName !== null) {
-                $explicitMachine = $this->machine[$explicitMachineName];
-                $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
-
-                $transitions[$explicitMachineName] = $explicitTransition;
-            }
-
-            if ($form) {
-                $transitions = $this->processValues($form, $transitions);
-            }
-
-
-            foreach ($transitions as $transition) {
-                $transition->execute();
-            }
-
-            $this->holder->saveModels();
-
-            foreach ($transitions as $transition) {
-                $transition->executed(); //note the 'd', it only triggers onExecuted event
-            }
-
-            $connection->commit();
-
-            if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' vytvořena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
-            } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
-                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' smazána."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
-            } else if (isset($transitions[$explicitMachineName])) {
-                $this->presenter->flashMessage(sprintf(_("Stav přihlášky '%s' změněn."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_INFO);
-            }
-            if ($form && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->presenter->flashMessage(sprintf(_("Přihláška '%s' uložena."), (string) $this->holder->getPrimaryHolder()->getModel()), BasePresenter::FLASH_SUCCESS);
-            }
-
-
+            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName, $explicitMachineName);
+            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
-        } catch (ModelDataConflictException $e) {
-            $container = $e->getReferencedId()->getReferencedContainer();
-            $container->setConflicts($e->getConflicts());
-
-            $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
-            $this->presenter->flashMessage($message, BasePresenter::FLASH_ERROR);
-
-            if ($form) {
-                $this->rollbackReferencedId($form);
+        } catch (ApplicationHandlerException $e) {
+            /* handled elsewhere, here it's to just prevent redirect */
+            $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
+            if (!$form) { // w/out form we don't want to show anything with the same GET params
+                $this->finalRedirect();
             }
-            $connection->rollBack();
-        } catch (MachineExecutionException $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
-            if ($form) {
-                $this->rollbackReferencedId($form);
-            }
-            $connection->rollBack();
-        } catch (SubmitProcessingException $e) {
-            $this->presenter->flashMessage($e->getMessage(), BasePresenter::FLASH_ERROR);
-            if ($form) {
-                $this->rollbackReferencedId($form);
-            }
-            $connection->rollBack();
         }
     }
 
-    private function processValues(Form $form, $transitions) {
-        $values = FormUtils::emptyStrToNull($form->getValues());
-
-        // Find out transitions
-        $newStates = $this->holder->processFormValues($form, $values, $this->machine, $transitions);
-        foreach ($newStates as $name => $newState) {
-            $transition = $this->machine[$name]->getTransitionByTarget($newState);
-            if ($transition) {
-                $transitions[$name] = $transition;
-            } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
-                throw new MachineExecutionException(sprintf($msg, $this->holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
-            }
-        }
-        return $transitions;
-    }
-
-    private function rollbackReferencedId(Form $form) {
-        foreach ($form->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
-            $referencedId->rollback();
-        }
-    }
-
-    private function initializeMachine() {
-        $this->machine->setHolder($this->holder);
+    /**
+     * @return Machine
+     */
+    private function getMachine() {
+        return $this->handler->getMachine($this->holder);
     }
 
     private function canEdit() {
-        //TODO display this button in dependence on modifiable
-        return $this->machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT;
+        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect() {

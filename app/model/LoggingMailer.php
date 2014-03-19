@@ -1,9 +1,10 @@
 <?php
 
-use Nette\Diagnostics\Debugger;
+use FKS\Config\GlobalParameters;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
+use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,11 +17,17 @@ class LoggingMailer extends Object implements IMailer {
      * @var IMailer
      */
     private $mailer;
+
+    /**
+     * @var GlobalParameters
+     */
+    private $parameters;
     private $logPath;
     private $logging = true;
 
-    function __construct(IMailer $mailer) {
+    function __construct(IMailer $mailer, GlobalParameters $parameters) {
         $this->mailer = $mailer;
+        $this->parameters = $parameters;
     }
 
     public function getLogPath() {
@@ -42,7 +49,7 @@ class LoggingMailer extends Object implements IMailer {
 
     public function send(Message $mail) {
         try {
-            if (!Debugger::isEnabled()) { // do not really send emails when debugging
+            if (!Arrays::get($this->parameters['email'], 'disabled', false)) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
