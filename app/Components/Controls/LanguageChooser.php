@@ -2,12 +2,9 @@
 
 namespace FKSDB\Components\Controls;
 
-use ModelContest;
-use ModelRole;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
-use FKS\Localization\GettextTranslator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,8 +12,8 @@ use FKS\Localization\GettextTranslator;
  * @author Jakub Šafin <xellos@fykos.cz>
  */
 class LanguageChooser extends Control {
-
 //    const SESSION_PREFIX = 'contestPreset';
+
     const ALL_LANGS = '__*';
     const DEFAULT_FIRST = 'cs';
     const DEFAULT_NULL = 'null';
@@ -35,8 +32,7 @@ class LanguageChooser extends Control {
      * @var ModelLanguage
      */
     private $language;
-    
-    private $languageNames =array('cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina');
+    private $languageNames = array('cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina');
 
     /**
      * @var boolean
@@ -63,7 +59,7 @@ class LanguageChooser extends Control {
      * @param mixed $languageDefinition role enum|ALL_LANGUAGES|array of languages
      */
     public function setLanguages($languages) {
-        $this->languages =$languages;
+        $this->languages = $languages;
     }
 
     public function getLanguages() {
@@ -79,9 +75,9 @@ class LanguageChooser extends Control {
     }
 
     public function isLanguage($language) {
-        return in_array($language,$this->languages);
+        return in_array($language, $this->languages);
     }
-    
+
     public function isValid() {
         $this->init();
         return $this->valid;
@@ -111,7 +107,7 @@ class LanguageChooser extends Control {
             return;
         }
         $this->initialized = true;
-        
+
         $this->setLanguages($this->getSupportedLanguages());
 
         $languageIds = array_keys($this->getLanguages());
@@ -125,12 +121,12 @@ class LanguageChooser extends Control {
 
         /* LANGUAGE */
 
-        $this->language =$this->defaultLanguage;
+        $this->language = $this->defaultLanguage;
 
         if ($presenter->getParameter('lang') != null) {
-            if(!$this->isLanguage($presenter->getParameter('lang')))
-                throw new BadRequestException('Bad language in URL.',403);
-            $this->language =$presenter->getParameter('lang');
+            if (!$this->isLanguage($presenter->getParameter('lang')))
+                throw new BadRequestException('Bad language in URL.', 404);
+            $this->language = $presenter->getParameter('lang');
         }
     }
 
@@ -138,11 +134,18 @@ class LanguageChooser extends Control {
      * @return array of existing languages
      */
     private function getSupportedLanguages() {
-        return $this->getPresenter()->getTranslator()->getSupportedLanguages();}
+        return $this->getPresenter()->getTranslator()->getSupportedLanguages();
+    }
+    
+    protected function createTemplate($class = NULL) {
+        $template = parent::createTemplate($class);
+        $template->setTranslator($this->getPresenter()->getTranslator());
+        return $template;
+    }
 
     public function render($class) {
         if (!$this->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
+            throw new BadRequestException('No languages available.', 404);
         }
         $this->template->languages = $this->getLanguages();
         $this->template->languageNames = $this->languageNames;
@@ -155,10 +158,10 @@ class LanguageChooser extends Control {
 
     public function handleChangeLang($language) {
         $presenter = $this->getPresenter();
-        $translator =$presenter->getTranslator();
+        $translator = $presenter->getTranslator();
 
         $translator->setLang($language);
-        
+
         $presenter->redirect('this', array('lang' => $language));
     }
 
