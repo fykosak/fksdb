@@ -6,6 +6,7 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
@@ -71,6 +72,11 @@ final class AuthenticationPresenter extends BasePresenter {
      * @var MailTemplateFactory
      */
     private $mailTemplateFactory;
+
+    protected function createComponentLanguageChooser($name) {
+        $control = new LanguageChooser($this->session);
+        return $control;
+    }
 
     public function injectFacebook(Facebook $facebook) {
         $this->facebook = $facebook;

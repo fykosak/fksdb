@@ -4,6 +4,7 @@ namespace PublicModule;
 
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
 use ModelContestant;
 use ModelRole;
@@ -25,9 +26,19 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
      */
     public $contestId;
 
+    /**
+     * @persistent
+     */
+    public $lang;
+
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ModelRole::CONTESTANT);
+        return $control;
+    }
+
+    protected function createComponentLanguageChooser($name) {
+        $control = new LanguageChooser($this->session);
         return $control;
     }
 
@@ -52,6 +63,14 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
 
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
+    public function getSelectedLanguage() {
+        $languageChooser = $this['languageChooser'];
+        if (!$languageChooser->isValid()) {
+            throw new BadRequestException('No languages available.', 403);
+        }
+        return $languageChooser->getLanguage();
     }
 
     public function getContestant() {

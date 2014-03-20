@@ -9,6 +9,7 @@ use FKS\Components\Forms\Controls\CaptchaBox;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
 use ModelContest;
@@ -101,6 +102,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ContestChooser::ALL_CONTESTS);
         $control->setDefaultContest(ContestChooser::DEFAULT_NULL);
+        return $control;
+    }
+
+    protected function createComponentLanguageChooser($name) {
+        $control = new LanguageChooser($this->session);
         return $control;
     }
 
