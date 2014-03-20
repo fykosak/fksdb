@@ -12,6 +12,7 @@ use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder\Holder;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;

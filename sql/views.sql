@@ -75,3 +75,26 @@ create or replace view v_series_points as (
 	group by ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id
 );
 
+create or replace view v_dokuwiki_user as (
+    select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
+    from login l
+    left join v_person p on p.person_id = l.person_id
+    where exists (select 1 from org o where o.person_id = l.person_id) or l.person_id is null
+);
+
+create or replace view v_dokuwiki_group as (
+	select role_id, name
+	from role
+);
+
+create or replace view v_dokuwiki_user_group as (
+	select login_id, role_id, contest_id
+	from `grant`
+	union
+	select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
+	from org o
+	inner join login l on l.person_id = o.person_id;
+);
+
+
+
