@@ -1,5 +1,3 @@
-set names 'utf8';
-
 CREATE OR REPLACE VIEW v_task_stats as
 (SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count from task 
   LEFT JOIN submit ON submit.task_id=task.task_id
@@ -87,14 +85,61 @@ create or replace view v_dokuwiki_group as (
 	from role
 );
 
-create or replace view v_dokuwiki_user_group as (
+create or replace view v_dokuwiki_user_group as
 	select login_id, role_id, contest_id
 	from `grant`
 	union
 	select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
 	from org o
-	inner join login l on l.person_id = o.person_id;
+	inner join login l on l.person_id = o.person_id
+;
+
+create or replace view v_aesop_person as (
+    select
+            p.person_id,
+            ph.ac_year,
+            p.other_name as name,
+            p.family_name as surname,
+            a.target as street,
+            a.city as town,
+            a.postal_code as postcode,
+            r.country_iso as country,
+            p.display_name as fullname,
+            if(sar.country_iso = 'cz', concat('izo:', s.izo), null) as school_izo,
+            if(sar.country_iso = 'sk', concat('sk:', s.izo), null) as school_sk,
+            null as school_aesop,
+            if(ph.study_year between 1 and 4, ph.ac_year + 5 - ph.study_year,
+            if(ph.study_year between 5 and 9, ph.ac_year + 14 - ph.study_year,
+            null)) as end_year,
+            pi.email as email,
+            null as spam_flag,
+            null as spam_date
+    from person p
+    left join v_post_contact pc on pc.person_id = p.person_id
+    left join address a on a.address_id = pc.address_id
+    left join region r on r.region_id = a.region_id
+    left join person_history ph on ph.person_id = p.person_id
+    left join school s on s.school_id = ph.school_id
+    left join address sa on sa.address_id = s.address_id
+    left join region sar on sar.region_id = sa.region_id
+    left join person_info pi on pi.person_id = p.person_id
 );
 
+create or replace view v_aesop_points as (
+	select
+		sp.contest_id,
+		cy.ac_year,
+		sp.person_id,
+		sum(sp.points) as points,
+		null as rank
+	from v_series_points sp
+	left join contest_year cy on cy.year = sp.year and cy.contest_id = sp.contest_id
+	group by sp.contest_id, sp.year, sp.ct_id, sp.person_id, cy.ac_year
+);
 
+create or replace view v_aesop_contestant as (
+	select p.*, res.points, res.rank, res.contest_id
+	from v_aesop_person p
+	right join v_aesop_points res on res.person_id = p.person_id and res.ac_year = p.ac_year
+);	
 
