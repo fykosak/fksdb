@@ -174,14 +174,14 @@ class StoredQuery implements IDataSource, IResource {
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
+            if ($this->postProcessing) {
+                $this->postProcessing->bindValue($key, $value);
+            }
             if (!preg_match("/:$key/", $sql)) { // this ain't foolproof
                 continue;
             }
             $statement->bindValue($key, $value);
             $this->parameterValues[$key] = $value; // to propagate the implicit value of explicit parameter
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
-            }
         }
 
         // bind explicit parameters
