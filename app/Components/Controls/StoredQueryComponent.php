@@ -11,8 +11,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use PDOException;
 use PePa\CSVResponse;
-use SQL\StoredQuery;
-use SQL\StoredQueryFactory as StoredQueryFactorySQL;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

@@ -20,8 +20,8 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
-use SQL\StoredQuery;
-use SQL\StoredQueryFactory;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory;
 
 class ExportPresenter extends SeriesPresenter {
 

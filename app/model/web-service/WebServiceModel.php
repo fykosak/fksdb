@@ -4,8 +4,8 @@ use Authorization\ContestAuthorizator;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
-use SQL\StoredQuery;
-use SQL\StoredQueryFactory;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory;
 
 /**
  * Web service provider for fksdb.wdsl

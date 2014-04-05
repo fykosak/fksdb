@@ -3,7 +3,7 @@
 namespace Events\Spec\Sous;
 
 use ORM\ModelsMulti\Events\ModelMSousParticipant;
-use SQL\StoredQueryPostProcessing;
+use Exports\StoredQueryPostProcessing;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

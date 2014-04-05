@@ -12,7 +12,7 @@ services:
     breadcrumbFactory:
         class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
-        class: SQL\StoredQueryFactory(@readOnlyConnection,...)
+        class: Exports\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:

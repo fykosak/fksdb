@@ -1,6 +1,6 @@
 <?php
 
-namespace SQL;
+namespace Exports;
 
 use BasePresenter;
 use ISeriesPresenter;
@@ -10,7 +10,7 @@ use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
-use SQL\StoredQuery;
+use Exports\StoredQuery;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,6 +22,7 @@ class StoredQueryFactory {
     const PARAM_CONTEST = 'contest';
     const PARAM_YEAR = 'year';
     const PARAM_SERIES = 'series';
+    const PARAM_AC_YEAR = 'ac_year';
 
     /**
      * @var Connection
@@ -101,6 +102,7 @@ class StoredQueryFactory {
         $storedQuery->setImplicitParameters(array(
             self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
             self::PARAM_YEAR => $presenter->getSelectedYear(),
+            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
             self::PARAM_SERIES => $series,
         ));
     }

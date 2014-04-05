@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use PDOException;
 use \BasePresenter;
-use SQL\StoredQuery;
+use Exports\StoredQuery;
 
 /**
  *

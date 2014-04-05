@@ -1,7 +1,7 @@
 <?php
 
 use Nette\Security\IResource;
-use SQL\StoredQueryPostProcessing;
+use Exports\StoredQueryPostProcessing;
 
 /**
  * @todo Better (general) support for related collection setter.

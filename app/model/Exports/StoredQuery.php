@@ -1,6 +1,6 @@
 <?php
 
-namespace SQL;
+namespace Exports;
 
 use ModelStoredQuery;
 use Nette\Database\Connection;
