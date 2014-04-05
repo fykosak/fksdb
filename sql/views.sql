@@ -110,10 +110,10 @@ create or replace view v_aesop_person as (
             null as school_aesop,
             if(ph.study_year between 1 and 4, ph.ac_year + 5 - ph.study_year,
             if(ph.study_year between 5 and 9, ph.ac_year + 14 - ph.study_year,
-            null)) as end_year,
+            null)) as `end-year`,
             pi.email as email,
-            null as spam_flag,
-            null as spam_date
+            null as `spam-flag`,
+            null as `spam-date`
     from person p
     left join v_post_contact pc on pc.person_id = p.person_id
     left join address a on a.address_id = pc.address_id
