@@ -22,11 +22,11 @@ abstract class StoredQueryPostProcessing {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 
-    public function processCount($count) {
-        return $count;
+    public function keepsCount() {
+        return true;
     }
 
-    abstract public function processData($data, $orderColumns, $offset, $limit);
+    abstract public function processData($data);
 
     abstract public function getDescription();
 }

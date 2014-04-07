@@ -3,7 +3,7 @@
 namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
-use ModelContest;
+use Nette\Database\Statement;
 use ResultsModelFactory;
 
 /**
@@ -13,15 +13,25 @@ use ResultsModelFactory;
  */
 class AESOPContestant extends StoredQueryPostProcessing {
 
+    const END_YEAR = 'end-year';
+    const RANK = 'rank';
+    const POINTS = 'points';
+
     public function getDescription() {
         return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
     }
-    
-    public function processCount($count) {
-        return parent::processCount($count); //TODO
+
+    public function keepsCount() {
+        return false;
     }
 
-    public function processData($data, $orderColumns, $offset, $limit) {        
+    public function processData($data) {
+        $filtered = $this->filterCategory($data);
+        $ranked = $this->calculateRank($filtered);
+        return $ranked;
+    }
+
+    private function filterCategory($data) {
         $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
 
         $studyYears = array();
@@ -38,13 +48,37 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
         $result = array();
         foreach ($data as $row) {
-            if (!in_array($row['end-year'], $graduationYears)) {
+            if (!in_array($row[self::END_YEAR], $graduationYears)) {
                 continue;
             }
             $result[] = $row;
         }
-        
         return $result;
+    }
+
+    private function calculateRank($data) {
+        $points = array();
+        foreach ($data as $row) {
+            if (!isset($points[$row[self::POINTS]])) {
+                $points[$row[self::POINTS]] = 1;
+            } else {
+                $points[$row[self::POINTS]] += 1;
+            }
+        }
+
+        krsort($points);
+        $ranks = array();
+        $cumsum = 0;
+        foreach ($points as $pointsValue => $count) {
+            $ranks[$pointsValue] = $cumsum + 1;
+            $cumsum += $count;
+        }
+
+        foreach ($data as $row) {
+            $row[self::RANK] = $ranks[$row[self::POINTS]];
+        }
+
+        return $data;
     }
 
     private function studyYearToGraduation($studyYear, $acYear) {

@@ -32,7 +32,7 @@ class Heuristics extends StoredQueryPostProcessing {
 ';
     }
 
-    public function processData($data, $orderColumns, $offset, $limit) {
+    public function processData($data) {
         $result = iterator_to_array($data);
         $P = $this->findP($result);
 

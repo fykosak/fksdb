@@ -227,7 +227,9 @@ class StoredQuery implements IDataSource, IResource {
             $statement->execute();
             $this->count = $statement->fetchField();
             if ($this->postProcessing) {
-                $this->count = $this->postProcessing->processCount($this->count);
+                if (!$this->postProcessing->keepsCount()) {
+                    $this->count = count($this->getData());
+                }
             }
         }
         return $this->count;
@@ -250,7 +252,7 @@ class StoredQuery implements IDataSource, IResource {
             $statement->execute();
             $this->data = $statement;
             if ($this->postProcessing) {
-                $this->data = $this->postProcessing->processData($this->data, $this->orders, $this->offset, $this->limit);
+                $this->data = $this->postProcessing->processData($this->data);
             }
         }
         return $this->data; // lazy load during iteration?
