@@ -3,6 +3,9 @@
 namespace Exports;
 
 use BasePresenter;
+use DOMDocument;
+use DOMNode;
+use Exports\StoredQuery;
 use ISeriesPresenter;
 use ModelStoredQuery;
 use Nette\Application\BadRequestException;
@@ -10,14 +13,14 @@ use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
-use Exports\StoredQuery;
+use WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQueryFactory {
+class StoredQueryFactory implements IXMLNodeSerializer {
 
     const PARAM_CONTEST = 'contest';
     const PARAM_YEAR = 'year';
@@ -105,6 +108,41 @@ class StoredQueryFactory {
             self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
             self::PARAM_SERIES => $series,
         ));
+    }
+
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
+        if ($dataSource instanceof StoredQuery) {
+            throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
+        }
+        // parameters
+        $parametersNode = $doc->createElement('parameters');
+        $node->appendChild($parametersNode);
+        foreach ($dataSource->getImplicitParameters() as $name => $value) {
+            $parameterNode = $doc->createElement('parameters', $value);
+            $parameterNode->setAttribute('name', $name);
+            $parametersNode->appendChild($parameterNode);
+        }
+
+        // column definitions
+        $columnDefinitionsNode = $doc->createElement('column-definitions');
+        $node->appendChild($columnDefinitionsNode);
+        foreach ($dataSource->getColumnNames() as $column) {
+            $columnDefinitionNode = $doc->createElement('column-definition');
+            $columnDefinitionNode->setAttribute('name', $column);
+            $columnDefinitionsNode->appendChild($columnDefinitionNode);
+        }
+
+        // data
+        $dataNode = $doc->createElement('data');
+        $node->appendChild($dataNode);
+        foreach ($dataSource->getData() as $row) {
+            $rowNode = $doc->createElement('row');
+            $dataNode->appendChild($rowNode);
+            foreach ($row as $col) {
+                $colNode = $doc->createElement('col', $col);
+                $rowNode->appendChild($colNode);
+            }
+        }
     }
 
 }

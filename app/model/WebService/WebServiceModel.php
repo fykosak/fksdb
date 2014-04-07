@@ -230,7 +230,7 @@ class WebServiceModel {
         $exportNode->setAttribute('qid', $qid);
         $doc->appendChild($exportNode);
 
-        $this->fillExportNode($storedQuery, $exportNode, $doc);
+        $this->storedQueryFactory->fillNode($storedQuery, $exportNode, $doc);
 
         $doc->formatOutput = true;
 
@@ -268,7 +268,7 @@ class WebServiceModel {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
-        $this->fillNodeWithCategories($resultsModel, $detailNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc);
         return $detailNode;
     }
 
@@ -276,7 +276,7 @@ class WebServiceModel {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
-        $this->fillNodeWithCategories($resultsModel, $cumulativeNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc);
         return $cumulativeNode;
     }
 
@@ -285,92 +285,12 @@ class WebServiceModel {
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
 
-        $this->fillNodeWithCategories($resultsModel, $brojureNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc);
         return $brojureNode;
     }
 
-    private function fillNodeWithCategories(IResultsModel $resultsModel, DOMElement $node, DOMDocument $doc) {
-        try {
-            foreach ($resultsModel->getCategories() as $category) {
-                // category node
-                $categoryNode = $doc->createElement('category');
-                $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->id);
-
-                $columnDefsNode = $doc->createElement('column-definitions');
-                $categoryNode->appendChild($columnDefsNode);
-
-                // columns definitions
-                foreach ($resultsModel->getDataColumns($category) as $column) {
-                    $columnDefNode = $doc->createElement('column-definition');
-                    $columnDefsNode->appendChild($columnDefNode);
-
-                    $columnDefNode->setAttribute('label', $column[IResultsModel::COL_DEF_LABEL]);
-                    $columnDefNode->setAttribute('limit', $column[IResultsModel::COL_DEF_LIMIT]);
-                }
-
-                // data
-                $dataNode = $doc->createElement('data');
-                $categoryNode->appendChild($dataNode);
-
-                // data for each contestant
-                foreach ($resultsModel->getData($category) as $row) {
-                    $contestantNode = $doc->createElement('contestant');
-                    $dataNode->appendChild($contestantNode);
-
-                    $contestantNode->setAttribute('name', $row[IResultsModel::DATA_NAME]);
-                    $contestantNode->setAttribute('school', $row[IResultsModel::DATA_SCHOOL]);
-                    // rank
-                    $rankNode = $doc->createElement('rank');
-                    $contestantNode->appendChild($rankNode);
-                    $rankNode->setAttribute('from', $row[IResultsModel::DATA_RANK_FROM]);
-                    if (isset($row[IResultsModel::DATA_RANK_TO]) && $row[IResultsModel::DATA_RANK_FROM] != $row[IResultsModel::DATA_RANK_TO]) {
-                        $rankNode->setAttribute('to', $row[IResultsModel::DATA_RANK_TO]);
-                    }
-
-                    // data columns
-                    foreach ($resultsModel->getDataColumns($category) as $column) {
-                        $columnNode = $doc->createElement('column', $row[$column[IResultsModel::COL_ALIAS]]);
-                        $contestantNode->appendChild($columnNode);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            Debugger::log($e);
-            throw new SoapFault('Receiver', 'Internal error.');
-        }
-    }
-
     private function fillExportNode(StoredQuery $storedQuery, DOMElement $exportNode, DOMDocument $doc) {
-        // parameters
-        $parametersNode = $doc->createElement('parameters');
-        $exportNode->appendChild($parametersNode);
-        foreach ($storedQuery->getImplicitParameters() as $name => $value) {
-            $parameterNode = $doc->createElement('parameters', $value);
-            $parameterNode->setAttribute('name', $name);
-            $parametersNode->appendChild($parameterNode);
-        }
 
-        // column definitions
-        $columnDefinitionsNode = $doc->createElement('column-definitions');
-        $exportNode->appendChild($columnDefinitionsNode);
-        foreach ($storedQuery->getColumnNames() as $column) {
-            $columnDefinitionNode = $doc->createElement('column-definition');
-            $columnDefinitionNode->setAttribute('name', $column);
-            $columnDefinitionsNode->appendChild($columnDefinitionNode);
-        }
-
-        // data
-        $dataNode = $doc->createElement('data');
-        $exportNode->appendChild($dataNode);
-        foreach ($storedQuery->getData() as $row) {
-            $rowNode = $doc->createElement('row');
-            $dataNode->appendChild($rowNode);
-            foreach ($row as $col) {
-                $colNode = $doc->createElement('col', $col);
-                $rowNode->appendChild($colNode);
-            }
-        }
     }
 
 }
