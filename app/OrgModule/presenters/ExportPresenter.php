@@ -3,9 +3,12 @@
 namespace OrgModule;
 
 use DbNames;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\Components\Grids\StoredQueryGrid;
 use FormUtils;
 use IResultsModel;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -18,10 +21,9 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\Strings;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
-use Exports\StoredQuery;
-use Exports\StoredQueryFactory;
 
 class ExportPresenter extends SeriesPresenter {
 
@@ -179,11 +181,21 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        if ($query && $this->getParameter('qid')) {
-            $this->redirect('this', $query->getPrimary());
-        }
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
+
+        if ($query && $this->getParameter('qid')) {
+            $parameters = array();
+            foreach ($this->getParameter() as $key => $value) {
+                if (Strings::startsWith($key, StoredQueryGrid::PARAMETER_URL_PREFIX)) {
+                    $parameters[substr($key, strlen(StoredQueryGrid::PARAMETER_URL_PREFIX))] = $value;
+                }
+            }
+
+            $this->getComponent('resultsComponent')->setParameters($parameters);
+
+            $this->redirect('this', $query->getPrimary());
+        }
     }
 
     public function titleEdit($id) {

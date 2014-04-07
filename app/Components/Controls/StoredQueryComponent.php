@@ -68,6 +68,10 @@ class StoredQueryComponent extends Control {
         $this->showParametrize = $showParametrize;
     }
 
+    public function setParameters($parameters) {
+        $this->parameters = $parameters;
+    }
+
     protected function createComponentGrid($name) {
         $grid = new StoredQueryGrid($this->storedQuery);
         return $grid;

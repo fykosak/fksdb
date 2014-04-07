@@ -151,7 +151,7 @@ class StoredQuery implements IDataSource, IResource {
         return $this->columnNames;
     }
 
-    private function getParameterNames() {
+    public function getParameterNames() {
         if ($this->parameterNames === null) {
             $this->parameterNames = array();
             foreach ($this->queryPattern->getParameters() as $parameter) {
