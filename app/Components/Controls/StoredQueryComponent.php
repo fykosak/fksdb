@@ -3,16 +3,19 @@
 namespace FKSDB\Components\Controls;
 
 use Authorization\ContestAuthorizator;
+use Exports\ExportFormatFactory;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\InvalidArgumentException;
 use PDOException;
 use PePa\CSVResponse;
-use Exports\StoredQuery;
-use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,6 +25,7 @@ use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 class StoredQueryComponent extends Control {
 
     const CONT_PARAMS = 'params';
+    const PARAMETER_URL_PREFIX = 'p_';
 
     /**
      * @persistent
@@ -45,6 +49,12 @@ class StoredQueryComponent extends Control {
     private $storedQueryFormFactory;
 
     /**
+     *
+     * @var ExportFormatFactory
+     */
+    private $exportFormatFactory;
+
+    /**
      * @var null|bool|string
      */
     private $error;
@@ -54,10 +64,11 @@ class StoredQueryComponent extends Control {
      */
     private $showParametrize = true;
 
-    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory) {
+    function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
+        $this->exportFormatFactory = $exportFormatFactory;
     }
 
     public function getShowParametrize() {
@@ -73,7 +84,7 @@ class StoredQueryComponent extends Control {
     }
 
     protected function createComponentGrid($name) {
-        $grid = new StoredQueryGrid($this->storedQuery);
+        $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
         return $grid;
     }
 
@@ -130,6 +141,12 @@ class StoredQueryComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @deprecated Use format instead.
+     * 
+     * @param bool $header
+     * @throws ForbiddenRequestException
+     */
     public function handleCSV($header = true) {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
@@ -145,13 +162,29 @@ class StoredQueryComponent extends Control {
 
         $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
         $name .= '.csv';
-        //TODO move to configuration
+//TODO move to configuration
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($header);
         $response->setQuotes(false);
         $response->setGlue(';');
 
         $this->presenter->sendResponse($response);
+    }
+
+    public function handleFormat($format) {
+        if ($this->parameters) {
+            $this->storedQuery->setParameters($this->parameters);
+        }
+        if (!$this->isAuthorized()) {
+            throw new ForbiddenRequestException();
+        }
+        try {
+            $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
+            $response = $exportFormat->getResponse();
+            $this->presenter->sendResponse($response);
+        } catch (InvalidArgumentException $e) {
+            throw new BadRequestException(sprintf('Neznámý formát \'%s\'.', $format), 404, $e);
+        }
     }
 
     private function isAuthorized() {

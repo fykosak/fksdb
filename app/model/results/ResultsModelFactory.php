@@ -93,7 +93,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
-        if ($dataSource instanceof IResultsModel) {
+        if (!$dataSource instanceof IResultsModel) {
             throw new InvalidArgumentException('Expected IResultsModel, got ' . get_class($dataSource) . '.');
         }
 

@@ -68,7 +68,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $parameterNames;
+    private $parameterDefaults;
 
     /**
      * @var array
@@ -120,8 +120,12 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    public function getParameters() {
-        return $this->parameterValues;
+    public function getParameters($all = false) {
+        if ($all) {
+            return array_merge($this->parameterDefaults, $this->parameterValues, $this->implicitParameterValues);
+        } else {
+            return $this->parameterValues;
+        }
     }
 
     public function getQueryPattern() {
@@ -152,13 +156,13 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     public function getParameterNames() {
-        if ($this->parameterNames === null) {
-            $this->parameterNames = array();
+        if ($this->parameterDefaults === null) {
+            $this->parameterDefaults = array();
             foreach ($this->queryPattern->getParameters() as $parameter) {
-                $this->parameterNames[] = $parameter->name;
+                $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
             }
         }
-        return $this->parameterNames;
+        return array_keys($this->parameterDefaults);
     }
 
     /**

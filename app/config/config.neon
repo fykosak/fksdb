@@ -12,6 +12,9 @@ parameters:
     # Various logs
     logDir: %appDir%/../log
 
+    # Auxiliar data (templates etc.)
+    dataDir: %appDir%/../data
+
     # WDSL file defining provided services.
     wsdlUrl: http://db.fykos.cz/FKSDBWebServices.wsdl
 
@@ -32,7 +35,7 @@ parameters:
 
     # Configuration of sent emails.
     email:
-        templatesDir: %appDir%/../data/emails
+        templatesDir: %dataDir%/emails
         from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
@@ -128,7 +131,7 @@ parameters:
     # Events
     events:
         # where locale files are stored
-        templateDir: %appDir%/../data/events
+        templateDir: %dataDir%/events
 
 php:
     date.timezone: Europe/Prague
@@ -155,3 +158,4 @@ includes:
     - factories.neon
     - navigation.neon
     - contests.neon
+    - exports.neon

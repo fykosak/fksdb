@@ -111,7 +111,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
-        if ($dataSource instanceof StoredQuery) {
+        if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }
         // parameters
