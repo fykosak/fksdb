@@ -96,24 +96,28 @@ create or replace view v_dokuwiki_user_group as
 
 create or replace view v_aesop_person as (
     select
-            p.person_id,
-            ph.ac_year,
-            p.other_name as name,
+            p.other_name as `name`,
             p.family_name as surname,
             a.target as street,
             a.city as town,
             a.postal_code as postcode,
             r.country_iso as country,
             p.display_name as fullname,
-            if(sar.country_iso = 'cz', concat('izo:', s.izo), null) as school_izo,
-            if(sar.country_iso = 'sk', concat('sk:', s.izo), null) as school_sk,
-            null as school_aesop,
+            coalesce(
+                if(sar.country_iso = 'cz', concat('izo:', s.izo), null),
+                if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
+                null, -- TODO AESOP id
+                if(s.school_id is null, null, 'ufo')
+            ) as school,
+            s.name_abbrev as `school-name`,
             if(ph.study_year between 1 and 4, ph.ac_year + 5 - ph.study_year,
             if(ph.study_year between 5 and 9, ph.ac_year + 14 - ph.study_year,
             null)) as `end-year`,
             pi.email as email,
-            null as `spam-flag`,
-            null as `spam-date`
+            if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null)) as `spam-flag`,
+            date(phf.created) as `spam-date`,
+            p.person_id as `x-person_id`,
+            ph.ac_year as `x-ac_year`
     from person p
     left join v_post_contact pc on pc.person_id = p.person_id
     left join address a on a.address_id = pc.address_id
@@ -123,6 +127,8 @@ create or replace view v_aesop_person as (
     left join address sa on sa.address_id = s.address_id
     left join region sar on sar.region_id = sa.region_id
     left join person_info pi on pi.person_id = p.person_id
+    left join flag f on f.fid = 'spam.mff'
+    left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id
 );
 
 create or replace view v_aesop_points as (
@@ -139,8 +145,8 @@ create or replace view v_aesop_points as (
 );
 
 create or replace view v_aesop_contestant as (
-	select p.*, res.points, res.rank, res.contest_id
+	select p.*, res.points, res.rank, res.contest_id as `x-contest_id`
 	from v_aesop_person p
-	right join v_aesop_points res on res.person_id = p.person_id and res.ac_year = p.ac_year
+	right join v_aesop_points res on res.person_id = p.`x-person_id` and res.ac_year = p.`x-ac_year`
 );	
 

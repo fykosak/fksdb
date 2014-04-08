@@ -16,6 +16,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     const END_YEAR = 'end-year';
     const RANK = 'rank';
     const POINTS = 'points';
+    const SPAM_DATE = 'spam-date';
 
     public function getDescription() {
         return 'Profiltruje jenom na kategorii zadanou v parametru \'category\' a spočítá rank v rámci kategorie.';
@@ -28,7 +29,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     public function processData($data) {
         $filtered = $this->filterCategory($data);
         $ranked = $this->calculateRank($filtered);
-        return $ranked;
+        $formated = $this->formatDate($ranked);
+        return $formated;
     }
 
     private function filterCategory($data) {
@@ -76,6 +78,16 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
         foreach ($data as $row) {
             $row[self::RANK] = $ranks[$row[self::POINTS]];
+        }
+
+        return $data;
+    }
+
+    private function formatDate($data) {
+        foreach ($data as $row) {
+            if ($row[self::SPAM_DATE]) {
+                $row[self::SPAM_DATE] = $row[self::SPAM_DATE]->format('Y-m-d');
+            }
         }
 
         return $data;
