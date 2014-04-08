@@ -21,10 +21,6 @@ class AESOPFormat extends XSLFormat {
         ));
     }
 
-    public function getDescription() {
-        return _('AESOP importní formát získaný XSL transformací.');
-    }
-
     public function getResponse() {
         $response = parent::getResponse();
 

@@ -54,10 +54,6 @@ class XSLFormat extends Object implements IExportFormat {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    public function getDescription() {
-        return _('Aplikuje předem danou XSL transformaci na XML tvar exportu.');
-    }
-
     public function getResponse() {
         // Prepare XSLT processor
         $xsl = new DOMDocument();
@@ -76,7 +72,6 @@ class XSLFormat extends Object implements IExportFormat {
         $doc->appendChild($export);
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc);
 
-        //echo $doc->saveXML();
         // Prepare response
         $response = new PlainTextResponse($proc->transformToXml($doc));
         return $response;
