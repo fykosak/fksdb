@@ -26,7 +26,7 @@ class ExportFormatFactory extends Object {
      * @var Container
      */
     private $container;
-    
+
     /**
      * @var StoredQueryFactory
      */
@@ -38,7 +38,7 @@ class ExportFormatFactory extends Object {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-        /**
+    /**
      * 
      * @param type $name
      * @param \Exports\StoredQuery $storedQuery
@@ -68,13 +68,15 @@ class ExportFormatFactory extends Object {
         $queryParameters = $storedQuery->getParameters(true);
 
         $xslFile = $parameters['template'];
+        $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
-        $eventId = sprintf($parameters['idMask'], $this->globalParameters['contestMapping'][$queryParameters['contest']], $queryParameters['year'], $queryParameters['category']);
+        $eventId = sprintf($parameters['idMask'], $contestName, $queryParameters['year'], $queryParameters['category']);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
             'errors-to' => $maintainer,
             'event' => $eventId,
+            'year' => $queryParameters['ac_year'],
         ));
 
         return $format;
