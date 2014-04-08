@@ -1,6 +1,6 @@
 <?php
 
-namespace SQL;
+namespace Exports;
 
 use ModelStoredQuery;
 use Nette\Database\Connection;
@@ -68,7 +68,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $parameterNames;
+    private $parameterDefaults;
 
     /**
      * @var array
@@ -120,8 +120,12 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    public function getParameters() {
-        return $this->parameterValues;
+    public function getParameters($all = false) {
+        if ($all) {
+            return array_merge($this->parameterDefaults, $this->parameterValues, $this->implicitParameterValues);
+        } else {
+            return $this->parameterValues;
+        }
     }
 
     public function getQueryPattern() {
@@ -151,14 +155,14 @@ class StoredQuery implements IDataSource, IResource {
         return $this->columnNames;
     }
 
-    private function getParameterNames() {
-        if ($this->parameterNames === null) {
-            $this->parameterNames = array();
+    public function getParameterNames() {
+        if ($this->parameterDefaults === null) {
+            $this->parameterDefaults = array();
             foreach ($this->queryPattern->getParameters() as $parameter) {
-                $this->parameterNames[] = $parameter->name;
+                $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
             }
         }
-        return $this->parameterNames;
+        return array_keys($this->parameterDefaults);
     }
 
     /**
@@ -174,14 +178,14 @@ class StoredQuery implements IDataSource, IResource {
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
+            if ($this->postProcessing) {
+                $this->postProcessing->bindValue($key, $value);
+            }
             if (!preg_match("/:$key/", $sql)) { // this ain't foolproof
                 continue;
             }
             $statement->bindValue($key, $value);
             $this->parameterValues[$key] = $value; // to propagate the implicit value of explicit parameter
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
-            }
         }
 
         // bind explicit parameters
@@ -227,7 +231,9 @@ class StoredQuery implements IDataSource, IResource {
             $statement->execute();
             $this->count = $statement->fetchField();
             if ($this->postProcessing) {
-                $this->count = $this->postProcessing->processCount($this->count);
+                if (!$this->postProcessing->keepsCount()) {
+                    $this->count = count($this->getData());
+                }
             }
         }
         return $this->count;
@@ -250,7 +256,7 @@ class StoredQuery implements IDataSource, IResource {
             $statement->execute();
             $this->data = $statement;
             if ($this->postProcessing) {
-                $this->data = $this->postProcessing->processData($this->data, $this->orders, $this->offset, $this->limit);
+                $this->data = $this->postProcessing->processData($this->data);
             }
         }
         return $this->data; // lazy load during iteration?

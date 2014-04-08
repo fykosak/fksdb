@@ -1,0 +1,15 @@
+#
+# Export configuration
+#
+
+parameters:
+    exports:
+        maintainer: webmaster@fykos.cz
+
+        specialFormats:
+            aesop.ct: # QID
+                aesop: _(Uložit AESOP) # format name -> GUI label
+        formats: # format name -> various parameters
+            aesop:
+                template: %dataDir%/exports/aesop.xsl
+                idMask: '%%s.%%d.%%s' # sprintf mask: contestName, year, category

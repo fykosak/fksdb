@@ -49,7 +49,7 @@ fksrouter:
             flags: ONE_WAY
 
         # Cool URL
-        '%path%<contestId %contests%><year [0-9]+>/q/<qid>':
+        '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Org

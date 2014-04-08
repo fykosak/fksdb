@@ -3,7 +3,7 @@
 namespace Events\Spec\Sous;
 
 use ORM\ModelsMulti\Events\ModelMSousParticipant;
-use SQL\StoredQueryPostProcessing;
+use Exports\StoredQueryPostProcessing;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -32,7 +32,7 @@ class Heuristics extends StoredQueryPostProcessing {
 ';
     }
 
-    public function processData($data, $orderColumns, $offset, $limit) {
+    public function processData($data) {
         $result = iterator_to_array($data);
         $P = $this->findP($result);
 

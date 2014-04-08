@@ -3,6 +3,9 @@
 namespace OrgModule;
 
 use DbNames;
+use Exports\ExportFormatFactory;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
@@ -18,10 +21,9 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\Strings;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
-use SQL\StoredQuery;
-use SQL\StoredQueryFactory;
 
 class ExportPresenter extends SeriesPresenter {
 
@@ -56,6 +58,11 @@ class ExportPresenter extends SeriesPresenter {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
+
+    /**
+     * @var ExportFormatFactory
+     */
+    private $exportFormatFactory;
     private $storedQuery;
 
     /**
@@ -79,7 +86,12 @@ class ExportPresenter extends SeriesPresenter {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->storedQueryFactory->setPresenter($this);
     }
+    
+    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
+        $this->exportFormatFactory = $exportFormatFactory;
+    }
 
+    
     /**
      * @return StoredQuery
      */
@@ -179,11 +191,23 @@ class ExportPresenter extends SeriesPresenter {
 
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
-        if ($query && $this->getParameter('qid')) {
-            $this->redirect('this', $query->getPrimary());
-        }
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
+
+        if ($query && $this->getParameter('qid')) {
+            $parameters = array();
+            foreach ($this->getParameter() as $key => $value) {
+                if (Strings::startsWith($key, StoredQueryComponent::PARAMETER_URL_PREFIX)) {
+                    $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
+                }
+            }
+            $storedQueryComponent = $this->getComponent('resultsComponent');
+            $storedQueryComponent->setParameters($parameters);
+
+            // TODO employ format parameter
+
+            $this->redirect('this', $query->getPrimary());
+        }
     }
 
     public function titleEdit($id) {
@@ -252,14 +276,14 @@ class ExportPresenter extends SeriesPresenter {
 
     protected function createComponentAdhocResultsComponent($name) {
         $storedQuery = $this->getStoredQuery();
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory);
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         $grid->setShowParametrize(false);
         return $grid;
     }
 
     protected function createComponentResultsComponent($name) {
         $storedQuery = $this->getStoredQuery();
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory);
+        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         return $grid;
     }
 

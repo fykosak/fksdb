@@ -92,7 +92,7 @@ class LanguageChooser extends Control {
         $presenter = $this->getPresenter();
 
         $language = $this->language;
-        if ($language != $presenter->lang) {
+        if ($language != $presenter->lang && $language != self::DEFAULT_FIRST) {
             $presenter->redirect('this', array('lang' => $language));
         }
     }
@@ -136,7 +136,7 @@ class LanguageChooser extends Control {
     private function getSupportedLanguages() {
         return $this->getPresenter()->getTranslator()->getSupportedLanguages();
     }
-    
+
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getPresenter()->getTranslator());

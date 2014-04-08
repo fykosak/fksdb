@@ -2,9 +2,10 @@
 
 namespace FKSDB\Components\Grids;
 
+use Exports\ExportFormatFactory;
+use Exports\StoredQuery;
+use FKSDB\Components\Controls\StoredQueryComponent;
 use PDOException;
-use \BasePresenter;
-use SQL\StoredQuery;
 
 /**
  *
@@ -17,8 +18,14 @@ class StoredQueryGrid extends BaseGrid {
      */
     private $storedQuery;
 
-    function __construct(StoredQuery $storedQuery) {
+    /**
+     * @var ExportFormatFactory
+     */
+    private $exportFormatFactory;
+
+    function __construct(StoredQuery $storedQuery, ExportFormatFactory $exportFormatFactory) {
         $this->storedQuery = $storedQuery;
+        $this->exportFormatFactory = $exportFormatFactory;
     }
 
     protected function configure($presenter) {
@@ -49,6 +56,7 @@ class StoredQueryGrid extends BaseGrid {
         //
         $this->paginate = false;
 
+        // TODO remove this CSV formats and supersede them with general formats
         $this->addGlobalButton('csv')
                 ->setLabel('Uložit CSV')
                 ->setLink($this->getParent()->link('csv!'));
@@ -57,16 +65,30 @@ class StoredQueryGrid extends BaseGrid {
                 ->setLabel('Uložit CSV (bez hlavičky)')
                 ->setLink($this->getParent()->link('csv!', array('header' => false)));
 
+        foreach ($this->exportFormatFactory->getFormats($this->storedQuery) as $formatName => $label) {
+            $this->addGlobalButton('format')
+                    ->setLabel($label)
+                    ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
+        }
+
+
         if (!$this->storedQuery->getQueryPattern()->isNew()) {
             $this->addGlobalButton('show')
                     ->setLabel(_('Podrobnosti dotazu'))
                     ->setClass('btn btn-sm btn-default')
                     ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
-            if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally qid
+            if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
+                $parameters = array('qid' => $qid, 'bc' => null);
+                $queryParameters = $this->storedQuery->getParameters();
+                foreach ($this->storedQuery->getParameterNames() as $key) {
+                    if (array_key_exists($key, $queryParameters)) {
+                        $parameters[StoredQueryComponent::PARAMETER_URL_PREFIX . $key] = $queryParameters[$key];
+                    }
+                }
                 $this->addGlobalButton('qid')
                         ->setLabel(_('Odkaz'))
                         ->setClass('btn btn-sm btn-default')
-                        ->setLink($this->getPresenter()->link('Export:execute', array('qid' => $qid, 'bc' => null)));
+                        ->setLink($this->getPresenter()->link('Export:execute', $parameters));
             }
         }
     }
