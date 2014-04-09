@@ -189,6 +189,9 @@ class StoredQueryComponent extends Control {
 
     private function isAuthorized() {
         $implicitParameters = $this->storedQuery->getImplicitParameters();
+        /*
+         * Beware, that when export doesn't depend on contest_id directly further checks has to be done!
+         */
         if (!isset($implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST])) {
             return false;
         }

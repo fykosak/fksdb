@@ -14,6 +14,9 @@ class ACLExtension extends CompilerExtension {
 
     public static $semanticMap = array(
         'qid' => 'Authorization\Assertions\QIDAssertion',
+        'isEventOrg' => 'Authorization\Assertions\EventOrgAssertion',
+        'isEventOrgById' => 'Authorization\Assertions\EventOrgByIdAssertion',
+        'isEventOrgByYear' => 'Authorization\Assertions\EventOrgByYearAssertion',
     );
 
     public function __construct() {

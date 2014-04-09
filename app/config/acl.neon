@@ -54,6 +54,10 @@ acl:
     - allow(org, org, list)
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
+    - allow(org, storedQuery, show)
+    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(ModelEventType::FYZIKLANI))))
+    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(ModelEventType::XXX))))
+    # TODO - allow(org, event, application, isEventOrgBy())))
 
     - allow(webmaster, task, insert) # stahování úloh
 
@@ -78,9 +82,8 @@ acl:
     - allow(exportDesigner, export, ::constant(Nette\Security\Permission::ALL))
     - allow(exportDesigner, export.adhoc, ::constant(Nette\Security\Permission::ALL))
 
-    - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilefies to organizers too
+    - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, storedQuery, show) # TODO TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))

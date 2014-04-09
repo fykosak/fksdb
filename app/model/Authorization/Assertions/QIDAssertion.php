@@ -17,6 +17,9 @@ class QIDAssertion extends Object {
     private $qids;
 
     function __construct($qids) {
+        if (!is_array($qids)) {
+            $qids = array($qids);
+        }
         $this->qids = $qids;
     }
 
@@ -25,7 +28,7 @@ class QIDAssertion extends Object {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        $qid = $storedQuery->getQueryPattern()->qid;        
+        $qid = $storedQuery->getQueryPattern()->qid;
 
         return (bool) $qid && in_array($qid, $this->qids);
     }
