@@ -86,12 +86,11 @@ class ExportPresenter extends SeriesPresenter {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->storedQueryFactory->setPresenter($this);
     }
-    
+
     public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    
     /**
      * @return StoredQuery
      */
@@ -254,7 +253,12 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function titleShow($id) {
-        $this->setTitle(sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name));
+        $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
+        if ($qid = $this->getPatternQuery()->qid) { // intentionally =
+            $title .= " ($qid)";
+        }
+
+        $this->setTitle($title);
     }
 
     public function renderShow($id) {

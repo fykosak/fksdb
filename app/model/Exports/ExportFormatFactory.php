@@ -59,7 +59,8 @@ class ExportFormatFactory extends Object {
         if (!$qid) {
             return array();
         } else {
-            return Helpers::evalExpressionArray($this->globalParameters['exports']['specialFormats'][$qid], $this->container);
+            $formats = Arrays::get($this->globalParameters['exports']['specialFormats'], $qid, array());
+            return Helpers::evalExpressionArray($formats, $this->container);
         }
     }
 

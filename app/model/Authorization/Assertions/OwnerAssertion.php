@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace Authorization\Assertions;
 
 use Nette\InvalidStateException;
 use Nette\Security\Permission;

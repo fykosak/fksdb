@@ -1,5 +1,3 @@
-{block title}{$storedQuery->name}{if $storedQuery->qid} ({$storedQuery->qid}){/if} &ndash; definice{/block}
-
 {block content}
 {? $presenter->registerJSFile('js/codemirror.min.js')}
 {? $presenter->registerJSFile('js/sqlconsole.js')}
@@ -7,7 +5,7 @@
 
 <div class="btn-toolbar">
     <a n:href="execute $storedQuery->getPrimary()" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
-    <a n:href="edit $storedQuery->getPrimary()" class="btn btn-sm btn-default" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+    <a n:if="$presenter->authorized('edit', array('id' => $storedQuery->getPrimary()))" n:href="edit $storedQuery->getPrimary()" class="btn btn-sm btn-default" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
 </div>
 
 <p>{!$storedQuery->description|escape|nl2br}</p>

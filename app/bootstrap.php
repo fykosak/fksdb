@@ -1,5 +1,6 @@
 <?php
 
+use Authorization\ACLExtension;
 use Events\EventsExtension;
 use FKS\Config\Extensions\NavigationExtension;
 use FKS\Config\Extensions\RouterExtension;
@@ -18,6 +19,7 @@ define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 $configurator = new Configurator();
 $configurator->onCompile[] = function ($configurator, $compiler) {
             $compiler->addExtension('fksrouter', new RouterExtension());
+            $compiler->addExtension('acl', new ACLExtension());
             $compiler->addExtension('navigation', new NavigationExtension());
             $compiler->addExtension('events', new EventsExtension(CONFIG_DIR . '/events.neon'));
         };
