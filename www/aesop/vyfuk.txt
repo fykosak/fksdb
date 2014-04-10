@@ -1,0 +1,5 @@
+../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=1
+../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=2
+../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=3
+../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=4
+../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=UNK
