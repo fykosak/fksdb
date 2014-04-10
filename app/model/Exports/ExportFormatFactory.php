@@ -55,7 +55,8 @@ class ExportFormatFactory extends Object {
     }
 
     public function getFormats(StoredQuery $storedQuery) {
-        $qid = $storedQuery->getQueryPattern()->qid;
+        $queryPattern = $storedQuery->getQueryPattern();
+        $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
         if (!$qid) {
             return array();
         } else {
