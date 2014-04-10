@@ -83,6 +83,13 @@ class StoredQueryComponent extends Control {
         $this->parameters = $parameters;
     }
 
+    public function updateParameters($parameters) {
+        if(!$this->parameters) {
+            $this->parameters = array();
+        }
+        $this->parameters = array_merge($this->parameters, $parameters);
+    }
+
     protected function createComponentGrid($name) {
         $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
         return $grid;

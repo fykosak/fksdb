@@ -33,11 +33,17 @@ class ExportPresenter extends SeriesPresenter {
     const SESSION_NS = 'sql';
     const PARAM_PREFIX = 'p-';
     const PARAM_LOAD_FROM_SESSION = 'lfs';
+    const PARAM_HTTP_AUTH = 'ha';
 
     /**
      * @persistent
      */
     public $lfs;
+
+    /**
+     * @persistent
+     */
+    public $qid;
 
     /**
      * @var ServiceStoredQuery
@@ -188,6 +194,14 @@ class ExportPresenter extends SeriesPresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
 
+    public function isHttpAuthAllowed() {
+        if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
+            return 'FKSDB-export';
+        } else {
+            return false;
+        }
+    }
+
     public function actionExecute($id) {
         $query = $this->getPatternQuery();
         $storedQuery = $this->storedQueryFactory->createQuery($query);
@@ -201,11 +215,12 @@ class ExportPresenter extends SeriesPresenter {
                 }
             }
             $storedQueryComponent = $this->getComponent('resultsComponent');
-            $storedQueryComponent->setParameters($parameters);
+            $storedQueryComponent->updateParameters($parameters);
 
-            // TODO employ format parameter
-
-            $this->redirect('this', $query->getPrimary());
+            if ($this->getParameter('format')) {
+                $this->createRequest($storedQueryComponent, 'format!', array('format' => $this->getParameter('format')), 'forward');
+                $this->forward($this->lastCreatedRequest);
+            }
         }
     }
 

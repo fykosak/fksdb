@@ -1,5 +1,6 @@
 <?php
 
+use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Nette\Application\ForbiddenRequestException;
@@ -13,6 +14,8 @@ use Nette\Security\AuthenticationException;
  * User can be authenticated in the session (after successful login)
  * or via an authentication token. It's responsibility of the particular
  * operation to dispose the token after use (if it should be so).
+ * 
+ * @see http://www.php.net/manual/en/features.http-auth.php
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
@@ -22,12 +25,21 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     private $tokenAuthenticator;
 
     /**
+     * @var PasswordAuthenticator
+     */
+    private $passwordAuthenticator;
+
+    /**
      * @var ContestAuthorizator
      */
     protected $contestAuthorizator;
 
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
+    }
+
+    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
+        $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
@@ -68,6 +80,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         // successfull token authentication overwrites the user identity (if any)
         $this->tryAuthToken();
 
+        if ($this->isHttpAuthAllowed()) {
+            $this->tryHttpAuth();
+        }
+
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
             $this->loginRedirect();
@@ -100,6 +116,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return true;
     }
 
+    /**
+     * It may be overriden (should return realm).
+     * @return boolean|string
+     */
+    public function isHttpAuthAllowed() {
+        return false;
+    }
+
     protected function unauthorizedAccess() {
         throw new ForbiddenRequestException();
     }
@@ -124,6 +148,39 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->redirect('this');
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+        }
+    }
+
+    private function tryHttpAuth() {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            $this->httpAuthPrompt();
+            return;
+        }
+        try {
+            $credentials = array(
+                PasswordAuthenticator::USERNAME => $_SERVER['PHP_AUTH_USER'],
+                PasswordAuthenticator::PASSWORD => $_SERVER['PHP_AUTH_PW'],
+            );
+            $login = $this->passwordAuthenticator->authenticate($credentials);
+
+            Debugger::log("$login signed in using HTTP authentication.");
+
+            $this->getUser()->login($login);
+
+            $method = $this->formatAuthorizedMethod($this->getAction());
+            $this->tryCall($method, $this->getParameter());
+        } catch (AuthenticationException $e) {
+            $this->httpAuthPrompt();
+        }
+    }
+
+    private function httpAuthPrompt() {
+        $realm = $this->isHttpAuthAllowed();
+        if ($realm && $this->requiresLogin()) {
+            header('WWW-Authenticate: Basic realm="' . $realm . '"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo '<h1>Unauthorized</h1>';
+            exit;
         }
     }
 

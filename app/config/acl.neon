@@ -27,6 +27,7 @@ acl:
     - addRole(eventManager, org)        # správce přihlášek
     - addRole(inboxManager, org)        # příjemce řešení
     - addRole(boss, org)                # šéf
+    - addRole(aesop)                    # AESOPový stahovač dat
     - addRole(superuser, [org, webmaster, taskManager, dispatcher, dataManager, exportDesigner, eventManager, inboxManager, boss])
     - addRole(cartesian)
 
@@ -88,6 +89,8 @@ acl:
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
+
+    - allow(aesop, export, execute, qid('aesop.ct'))
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
