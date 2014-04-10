@@ -2,12 +2,14 @@
 
 namespace Exports;
 
+use Nette\Object;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class StoredQueryPostProcessing {
+abstract class StoredQueryPostProcessing extends Object {
 
     /**
      * @var array

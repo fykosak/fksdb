@@ -3,8 +3,10 @@
 namespace Exports\Processings;
 
 use Exports\StoredQueryPostProcessing;
-use Nette\Database\Statement;
+use IEvaluationStrategy;
+use ModelCategory;
 use ResultsModelFactory;
+use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -33,16 +35,38 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $formated;
     }
 
+    /**
+     * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
+     * 
+     * @param ServiceTask $serviceTask
+     * @return int|double
+     */
+    public function getMaxPoints(ServiceTask $serviceTask) {
+        $evalutationStrategy = $this->getEvaluationStrategy();
+        $category = $this->getCategory();
+        if (!$category) {
+            return null;
+        }
+        $tasks = $serviceTask->getTable()
+                ->where('contest_id', $this->parameters['contest'])
+                ->where('year', $this->parameters['year']);
+        $sum = 0;
+        foreach ($tasks as $task) {
+            $sum += $evalutationStrategy->getTaskPoints($task, $category);
+        }
+        return $sum;
+    }
+
     private function filterCategory($data) {
-        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
+        $evaluationStrategy = $this->getEvaluationStrategy();
 
         $studyYears = array();
-        foreach ($evalutationStrategy->getCategories() as $category) {
-            if ($category->id == $this->parameters['category']) {
-                $studyYears = $evalutationStrategy->categoryToStudyYears($category);
-                $studyYears = is_array($studyYears) ? $studyYears : array($studyYears);
-            }
+        $category = $this->getCategory();
+        if ($category) {
+            $studyYears = $evaluationStrategy->categoryToStudyYears($category);
+            $studyYears = is_array($studyYears) ? $studyYears : array($studyYears);
         }
+
         $graduationYears = array();
         foreach ($studyYears as $studyYear) {
             $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->parameters['ac_year']);
@@ -101,6 +125,27 @@ class AESOPContestant extends StoredQueryPostProcessing {
         } else {
             return null;
         }
+    }
+
+    /**
+     * @return IEvaluationStrategy
+     */
+    private function getEvaluationStrategy() {
+        return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
+    }
+
+    /**
+     * 
+     * @return ModelCategory|null
+     */
+    private function getCategory() {
+        $evaluationStrategy = $this->getEvaluationStrategy();
+        foreach ($evaluationStrategy->getCategories() as $category) {
+            if ($category->id == $this->parameters['category']) {
+                return $category;
+            }
+        }
+        return null;
     }
 
 }

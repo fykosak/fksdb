@@ -2,6 +2,7 @@
 
 namespace Exports;
 
+use CSVFormat;
 use Exports\Formats\AESOPFormat;
 use FKS\Config\Expressions\Helpers;
 use FKS\Config\GlobalParameters;
@@ -31,11 +32,16 @@ class ExportFormatFactory extends Object {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
+    private $defaultFormats;
 
     function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
+        $this->defaultFormats = array(
+            'csvh' => _('Uložit CSV'),
+            'csv' => _('Uložit CSV (bez hlavičky)'),
+        );
     }
 
     /**
@@ -48,7 +54,10 @@ class ExportFormatFactory extends Object {
         switch (strtolower($name)) {
             case 'aesop':
                 return $this->createAesop($name, $storedQuery);
-                break;
+            case 'csv':
+                return $this->createCSV($storedQuery, false);
+            case 'csvh':
+                return $this->createCSV($storedQuery, true);
             default:
                 throw new InvalidArgumentException('Unknown format \'' . $name . '\'.');
         }
@@ -58,10 +67,10 @@ class ExportFormatFactory extends Object {
         $queryPattern = $storedQuery->getQueryPattern();
         $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
         if (!$qid) {
-            return array();
+            return $this->defaultFormats;
         } else {
             $formats = Arrays::get($this->globalParameters['exports']['specialFormats'], $qid, array());
-            return Helpers::evalExpressionArray($formats, $this->container);
+            return $this->defaultFormats + Helpers::evalExpressionArray($formats, $this->container);
         }
     }
 
@@ -74,13 +83,23 @@ class ExportFormatFactory extends Object {
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
         $eventId = sprintf($parameters['idMask'], $contestName, $queryParameters['year'], $queryParameters['category']);
 
+
+
+
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
+            'max-rank' => $storedQuery->getCount(),
+            'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
         ));
 
+        return $format;
+    }
+
+    private function createCSV(StoredQuery $storedQuery, $header) {
+        $format = new CSVFormat($storedQuery, $header);
         return $format;
     }
 

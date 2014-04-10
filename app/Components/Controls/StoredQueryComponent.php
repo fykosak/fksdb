@@ -15,7 +15,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\InvalidArgumentException;
 use PDOException;
-use PePa\CSVResponse;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -83,6 +82,13 @@ class StoredQueryComponent extends Control {
         $this->parameters = $parameters;
     }
 
+    public function updateParameters($parameters) {
+        if (!$this->parameters) {
+            $this->parameters = array();
+        }
+        $this->parameters = array_merge($this->parameters, $parameters);
+    }
+
     protected function createComponentGrid($name) {
         $grid = new StoredQueryGrid($this->storedQuery, $this->exportFormatFactory);
         return $grid;
@@ -139,36 +145,6 @@ class StoredQueryComponent extends Control {
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryComponent.latte');
         $this->template->render();
-    }
-
-    /**
-     * @deprecated Use format instead.
-     * 
-     * @param bool $header
-     * @throws ForbiddenRequestException
-     */
-    public function handleCSV($header = true) {
-        if ($this->parameters) {
-            $this->storedQuery->setParameters($this->parameters);
-        }
-        if (!$this->isAuthorized()) {
-            throw new ForbiddenRequestException();
-        }
-
-        $data = array();
-        foreach ($this->storedQuery->getData() as $row) {
-            $data[] = $row;
-        }
-
-        $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
-        $name .= '.csv';
-//TODO move to configuration
-        $response = new CSVResponse($data, $name);
-        $response->setAddHeading($header);
-        $response->setQuotes(false);
-        $response->setGlue(';');
-
-        $this->presenter->sendResponse($response);
     }
 
     public function handleFormat($format) {

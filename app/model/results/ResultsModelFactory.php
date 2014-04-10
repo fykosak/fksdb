@@ -70,6 +70,12 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
     }
 
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     * @return \IEvaluationStrategy|null
+     */
     public static function findEvaluationStrategy($contest, $year) {
         if ($contest instanceof ModelContest) {
             $contestId = $contest->contest_id;
