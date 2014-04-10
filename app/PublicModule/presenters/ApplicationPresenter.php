@@ -115,7 +115,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedList() {
-        return $this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson();
+        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
     public function titleDefault($eventId, $id) {
