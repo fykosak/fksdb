@@ -15,9 +15,4 @@ interface IExportFormat {
      * @return IResponse
      */
     public function getResponse();
-    
-    /**
-     * @return string
-     */
-    public function getDescription();
 }

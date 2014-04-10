@@ -15,16 +15,10 @@ class AESOPFormat extends XSLFormat {
     function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 
-        $queryParameters = $storedQuery->getParameters(true);
         $this->setParameters(array(
             'version' => 1,
-            'year' => $queryParameters['ac_year'],
             'date' => date('Y-m-d H:i:s'),
         ));
-    }
-
-    public function getDescription() {
-        return _('AESOP importní formát získaný XSL transformací.');
     }
 
     public function getResponse() {
