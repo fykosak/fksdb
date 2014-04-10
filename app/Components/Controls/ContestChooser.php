@@ -19,6 +19,7 @@ class ContestChooser extends Control {
 
     const SESSION_PREFIX = 'contestPreset';
     const ALL_CONTESTS = '__*';
+    const ALL_YEARS = '__*';
     const DEFAULT_FIRST = 'first';
     const DEFAULT_NULL = 'null';
 
@@ -26,6 +27,11 @@ class ContestChooser extends Control {
      * @var mixed
      */
     private $contestsDefinition;
+
+    /**
+     * @var mixed
+     */
+    private $yearDefinition;
 
     /**
      * @var ModelContest[]
@@ -86,6 +92,14 @@ class ContestChooser extends Control {
      */
     public function setContests($contestsDefinition) {
         $this->contestsDefinition = $contestsDefinition;
+    }
+
+    /**
+     * 
+     * @param mixed $yearDefinition enum|ALL_YEARS
+     */
+    public function setYears($yearDefinition) {
+        $this->yearDefinition = $yearDefinition;
     }
 
     public function getDefaultContest() {
@@ -229,7 +243,11 @@ class ContestChooser extends Control {
     }
 
     private function isAllowedYear() {
-        return $this->contestsDefinition == ModelRole::ORG;
+        if ($this->yearDefinition === self::ALL_YEARS) {
+            return true;
+        } else {
+            return $this->contestsDefinition == ModelRole::ORG;
+        }
     }
 
     private function getLogin() {
