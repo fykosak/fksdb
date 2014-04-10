@@ -191,7 +191,7 @@ class ExportPresenter extends SeriesPresenter {
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
+        // proper authorization is done in StoredQueryComponent
     }
 
     public function isHttpAuthAllowed() {
