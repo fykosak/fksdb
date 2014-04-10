@@ -6,10 +6,13 @@ parameters:
     exports:
         maintainer: webmaster@fykos.cz
 
+        # Specifies which special are available per QIDed export
         specialFormats:
             aesop.ct: # QID
                 aesop: _(Uložit AESOP) # format name -> GUI label
-        formats: # format name -> various parameters
+
+        # Specifies parameters per each format in general
+        formats:
             aesop:
                 template: %dataDir%/exports/aesop.xsl
                 idMask: '%%s.rocnik.%3$d' # sprintf mask: contestName, year, category

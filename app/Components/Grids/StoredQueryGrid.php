@@ -56,17 +56,8 @@ class StoredQueryGrid extends BaseGrid {
         //
         $this->paginate = false;
 
-        // TODO remove this CSV formats and supersede them with general formats
-        $this->addGlobalButton('csv')
-                ->setLabel('Uložit CSV')
-                ->setLink($this->getParent()->link('csv!'));
-
-        $this->addGlobalButton('csvh')
-                ->setLabel('Uložit CSV (bez hlavičky)')
-                ->setLink($this->getParent()->link('csv!', array('header' => false)));
-
         foreach ($this->exportFormatFactory->getFormats($this->storedQuery) as $formatName => $label) {
-            $this->addGlobalButton('format')
+            $this->addGlobalButton('format_' . $formatName)
                     ->setLabel($label)
                     ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
         }
