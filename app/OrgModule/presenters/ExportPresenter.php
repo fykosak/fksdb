@@ -6,6 +6,7 @@ use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
+use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
@@ -286,6 +287,15 @@ class ExportPresenter extends SeriesPresenter {
 
     public function renderExecute($id) {
         $this->template->storedQuery = $this->getPatternQuery();
+    }
+
+    protected function createComponentContestChooser($name) {
+        $component = parent::createComponentContestChooser($name);
+        if ($this->getAction() == 'execute') {
+            // Contest check is done in StoredQueryComponent
+            $component->setContests(ContestChooser::ALL_CONTESTS);
+        }
+        return $component;
     }
 
     protected function createComponentGrid($name) {
