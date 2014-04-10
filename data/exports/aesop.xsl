@@ -13,7 +13,7 @@
 
 
     <template match="/">
-        <!-- this allows nesting stats element arbitrarily -->
+        <!-- this allows nesting export element arbitrarily -->
         <apply-templates select="//export"/>
     </template>
 	

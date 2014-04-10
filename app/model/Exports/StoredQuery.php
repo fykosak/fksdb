@@ -103,6 +103,10 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
+    public function getPostProcessing() {
+        return $this->postProcessing;
+    }
+
     public function getImplicitParameters() {
         return $this->implicitParameterValues;
     }
