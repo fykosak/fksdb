@@ -35,6 +35,7 @@ parameters:
                 email: true
                 born: false
                 birthplace: false
+                id_number: false
                 note: false
                 origin: false
                 agreed: false
