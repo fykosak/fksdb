@@ -105,7 +105,7 @@ events:
                         onExecuted:
                             - Events\Transitions\MailSender(sous/spare, .self)
                     invited|invited1|invited2|invited3->applied:
-                        condition: before(param('deadline1')) 
+                        condition: or(before(param('deadline1')),role('admin'))
                         label: Potrvrdit učast
                     spare|spare1|spare2|spare3->interested:
                         condition: before(param('deadline1')) 
