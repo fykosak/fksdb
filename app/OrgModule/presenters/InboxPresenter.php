@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use DbNames;
-use FKS\Config\GlobalParameters;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -13,6 +12,7 @@ use ModelSubmit;
 use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Caching\Cache;
 use Nette\Security\Permission;
 use ServiceContestant;
 use ServicePerson;
@@ -115,6 +115,13 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
+    }
+
+    public function actionHandout() {
+        // This workaround fixes inproper caching of referenced tables.
+        $connection = $this->servicePerson->getConnection();
+        $connection->getCache()->clean(array(Cache::ALL => true));
+        $connection->getDatabaseReflection()->setConnection($connection);
     }
 
     public function renderHandout() {
