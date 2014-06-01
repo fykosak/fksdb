@@ -77,7 +77,16 @@ create or replace view v_dokuwiki_user as (
     select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
     from login l
     left join v_person p on p.person_id = l.person_id
-    where exists (select 1 from org o where o.person_id = l.person_id) or l.person_id is null
+    where exists (
+        select 1
+        from org o
+        inner join contest_year cy
+            on cy.contest_id = o.contest_id
+            and cy.ac_year = IF(month(NOW()) >= 9, year(NOW()), year(NOW()) - 1)
+            and (o.until is null or cy.year between o.since and o.until)
+        where o.person_id = l.person_id
+        
+    ) or l.person_id is null
 );
 
 create or replace view v_dokuwiki_group as (
