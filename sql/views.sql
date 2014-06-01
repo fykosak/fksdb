@@ -98,6 +98,7 @@ create or replace view v_aesop_person as (
     select
             p.other_name as `name`,
             p.family_name as surname,
+            p.person_id as `id`,
             a.target as street,
             a.city as town,
             a.postal_code as postcode,
