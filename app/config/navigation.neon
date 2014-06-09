@@ -8,7 +8,7 @@ navigation:
 
         vyfuk:
             title: Web Výfuku
-            link: http://vyfuk.%domain.cz%/
+            link: http://vyfuk.mff.cuni.cz/
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
