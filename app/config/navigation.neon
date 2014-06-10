@@ -18,7 +18,7 @@ navigation:
             - org.inbox.default
             - org.inbox.handout
             - org.points.default
-            - org.tasks.pull
+            - org.tasks.import
             - org.contestant.list
             - org.school.list
             - org.export.list
