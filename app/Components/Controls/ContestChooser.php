@@ -231,11 +231,11 @@ class ContestChooser extends Control {
             foreach ($contests as $id) {
                 $contest = $this->serviceContest->findByPrimary($id);
                 $min = $this->yearCalculator->getFirstYear($contest);
-                $max = $this->yearCalculator->getCurrentYear($contest);
+                $max = $this->yearCalculator->getLastYear($contest);
                 $this->contests[$id] = (object) array(
                             'contest' => $contest,
                             'years' => array_reverse(range($min, $max)),
-                            'currentYear' => $max,
+                            'currentYear' => $this->yearCalculator->getCurrentYear($contest),
                 );
             }
         }

@@ -61,7 +61,7 @@ class YearCalculator extends Object {
         return $years[0];
     }
 
-    private function getLastYear(ModelContest $contest) {
+    public function getLastYear(ModelContest $contest) {
         $years = array_keys($this->cache[$contest->contest_id]);
         return $years[count($years) - 1];
     }
