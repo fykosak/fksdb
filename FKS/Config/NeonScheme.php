@@ -20,6 +20,9 @@ class NeonScheme {
     const QUALIFIER_ARRAY = 'array';
 
     public static function readSection($section, $sectionScheme) {
+        if (!is_array($section)) {
+            throw new NeonSchemaException('Expected array got \'' . (string) $section . '\'.');
+        }
         $result = array();
         foreach ($sectionScheme as $key => $metadata) {
             if ($metadata === null || !array_key_exists('default', $metadata)) {
