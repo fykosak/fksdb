@@ -127,6 +127,7 @@ create or replace view v_aesop_person as (
             if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null)) as `spam-flag`,
             date(phf.created) as `spam-date`,
             p.person_id as `x-person_id`,
+            p.gender as `x-gender`,
             ph.ac_year as `x-ac_year`
     from person p
     left join v_post_contact pc on pc.person_id = p.person_id
