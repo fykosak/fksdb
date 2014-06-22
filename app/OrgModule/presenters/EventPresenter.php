@@ -228,7 +228,12 @@ class EventPresenter extends EntityPresenter {
             $paramControl->addRule(function(BaseControl $control) use($scheme) {
                         $parameters = $control->getValue();
                         try {
-                            $parameters = Neon::decode($parameters);
+                            if ($parameters) {
+                                $parameters = Neon::decode($parameters);
+                            } else {
+                                $parameters = array();
+                            }
+
                             NeonScheme::readSection($parameters, $scheme);
                             return true;
                         } catch (NeonException $e) {
