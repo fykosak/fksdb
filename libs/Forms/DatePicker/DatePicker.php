@@ -51,7 +51,6 @@ class DatePicker extends Forms\Controls\BaseControl
 	{
 		parent::__construct($label);
                 $this->monitor('FKS\Application\IJavaScriptCollector');
-		$this->control->type = 'date';
 	}
         
 	protected function attached($component)
