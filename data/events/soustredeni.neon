@@ -11,7 +11,7 @@ parameters:
                     born_id: 
                         required: %events.soustredeni.requiredCond%
                         description: "Kvůli pojišťovně."
-                    birthplace: %events.soustredeni.requiredCond%
+                    birthplace: state('participated')
                     phone:
                         required: %events.soustredeni.requiredCond%
                         description: "Telefon (i s předvolbou státu), jež budeš mít s sebou."
@@ -20,7 +20,7 @@ parameters:
                     address: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:
-                        required: %events.soustredeni.requiredCond%
+                        required: state('participated')
                         description: "Pokud nelze školu nalézt, napiš správci."
             tshirt:
                 M_S: S pánské
@@ -152,7 +152,16 @@ events:
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka
-                    spare|spare1|spare2|spare3->invited:
+                    spare->invited:
+                        condition: role('admin')
+                        label: Pozvat jako účastníka
+                    spare1->invited1:
+                        condition: role('admin')
+                        label: Pozvat jako účastníka
+                    spare2->invited2:
+                        condition: role('admin')
+                        label: Pozvat jako účastníka
+                    spare3->invited3:
                         condition: role('admin')
                         label: Pozvat jako účastníka
                     applied->participated:
