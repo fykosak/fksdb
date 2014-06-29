@@ -148,7 +148,7 @@
 
 	<wsdl:service name="FKSDBService">
 		<wsdl:port name="FKSDBPort" binding="tns:FKSDBBinding">
-			<soap:address location="http://db.fykos.cz/web-service/default"/>
+			<soap:address location="https://db.fykos.cz/web-service/default"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
