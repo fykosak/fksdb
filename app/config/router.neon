@@ -39,14 +39,14 @@ fksrouter:
             module: Public
             presenter: Dashboard
             action: default
-            flags: ONE_WAY
+            flags: [ONE_WAY, SECURED]
 
         # Backward compatibility
         'web-service/<action>':
             module: Org
             presenter: WebService
             action: default
-            flags: ONE_WAY
+            flags: [ONE_WAY, SECURED]
 
         # Cool URL
         '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>':
@@ -56,16 +56,19 @@ fksrouter:
             presenter: Export
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
                        
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
+            flags: SECURED
         '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>':
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
+            flags: SECURED
 
         # Registration must be at the same domain as central authentication.
         '//%subdomain.auth%.%domain.cz%%path%[<contestId %contests%>/]<presenter register>/<action=default>':
@@ -73,23 +76,26 @@ fksrouter:
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
         '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: ONE_WAY
+            flags: [ONE_WAY, SECURED]
 
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][<module %modules%>/]<presenter>/<action=default>[/<id>]':
             module: Public
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
 
 
