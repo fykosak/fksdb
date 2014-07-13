@@ -123,7 +123,7 @@ class ContestChooser extends Control {
 
         $presenter = $this->getPresenter();
 
-        $contestId = $this->contest->contest_id;
+        $contestId = isset($this->contest) ? $this->contest->contest_id : null;
         if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
             $presenter->redirect('this', array(
                 'contestId' => $contestId,
