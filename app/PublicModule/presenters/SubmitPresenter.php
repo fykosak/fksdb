@@ -73,12 +73,15 @@ class SubmitPresenter extends BasePresenter {
     public function renderDefault() {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
+        $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
             $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
             $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
+
+            $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 

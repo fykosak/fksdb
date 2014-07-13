@@ -12,6 +12,10 @@
 <p>
     <a class="btn btn-primary" n:href=":Public:Register:contestant">{_'Registrovat se do dalšího ročníku'}</a>
 </p>
+{elseif $hasForward}
+<p>
+    <a class="btn btn-primary" n:href="this, year => $presenter->year + 1">{_'Další ročník'}</a>
+</p>
 {/if}
 {/if}
 
