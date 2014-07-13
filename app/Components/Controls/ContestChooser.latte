@@ -1,7 +1,7 @@
 <ul n:if="$contests" class="{$class}">
     {foreach $contests as $contestId => $contest}
     <li{if $contestId==$currentContest} class="active"{/if}><a href="{link change! $contestId}">{$contest->contest->name}{if $contestId==$currentContest} {$currentYear}{/if}</a></li>
-    <li n:if="count($contest->years)" class="dropdown{if $contestId==$currentContest && $contest->currentYear != $currentYear} alert-danger{/if}">
+    <li n:if="count($contest->years) > 1" class="dropdown{if $contestId==$currentContest && $contest->currentYear != $currentYear} alert-danger{/if}">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="caret"></b></a>
         <ul class="dropdown-menu">
             <li n:foreach="$contest->years as $year"{if $contestId==$currentContest && $year == $currentYear} class="active"{/if}><a href="{link changeYear! $contestId, $year}">{$contest->contest->name} {$year}</a></li>
