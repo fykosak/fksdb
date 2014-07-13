@@ -47,18 +47,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param int $acYear
      * @return null
      */
-    public function getHistory($acYear) {
+    public function getHistory($acYear, $extrapolated = false) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
                 ->where('ac_year', $acYear);
-        $histories->rewind();
-        if (!$histories->valid()) {
+        $history = $histories->fetch();
+        if (!$history && $extrapolated) {
+            $lastHistory = $this->getLastHistory();
+            if ($lastHistory) {
+                return $lastHistory->extrapolate($acYear);
+            } else {
+                return null;
+            }
+        } else {
             return null;
         }
 
-        return ModelPersonHistory::createFromTableRow($histories->current());
+        return ModelPersonHistory::createFromTableRow($history);
     }
 
     /**
@@ -171,7 +178,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
-    public function getLastHistory() {
+    private function getLastHistory() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
