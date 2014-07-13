@@ -1,8 +1,19 @@
 
 
 {block content}
-
+{if $hasTasks}
 {control uploadForm}
+{else}
+<p class="alert alert-info">
+    {_'Žádné úlohy k odevzdávání.'}
+</p>
+
+{if $canRegister}
+<p>
+    <a class="btn btn-primary" n:href=":Public:Register:contestant">{_'Registrovat se do dalšího ročníku'}</a>
+</p>
+{/if}
+{/if}
 
 <h2>{_'Odevzdaná řešení'}</h2>
 

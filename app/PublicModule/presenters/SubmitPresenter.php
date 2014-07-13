@@ -70,6 +70,18 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    public function renderDefault() {
+        $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
+        $this->template->canRegister = false;
+        if (!$this->template->hasTasks) {
+            $person = $this->getUser()->getIdentity()->getPerson();
+            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestant = $contestants[$this->getSelectedContest()->contest_id];
+            $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
+            $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
+        }
+    }
+
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -114,13 +126,15 @@ class SubmitPresenter extends BasePresenter {
             $taskIds[] = $task->task_id;
         }
 
-        $form->addHidden('tasks', implode(',', $taskIds));
+        if ($taskIds) {
+            $form->addHidden('tasks', implode(',', $taskIds));
 
-        $form->setCurrentGroup();
-        $form->addSubmit('upload', _('Odeslat'));
-        $form->onSuccess[] = array($this, 'handleUploadFormSuccess');
+            $form->setCurrentGroup();
+            $form->addSubmit('upload', _('Odeslat'));
+            $form->onSuccess[] = array($this, 'handleUploadFormSuccess');
 
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+            $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        }
 
         return $form;
     }
