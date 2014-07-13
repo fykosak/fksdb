@@ -42,7 +42,7 @@ use ServiceContestant;
  *     - if exists use last contestant from the provided contest
  *     - otherwise use last contestant from any contest (Vyfuk <= FYKOS)
  * 
- * Just proof of concept.
+ * Just proof of concept (obsoleted due to ReferencedPerson).
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -79,9 +79,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private $container;
 
-    /** @var ModelContest|null */
-    private $selectedContest;
-
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -112,20 +109,15 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function getSelectedContest() {
         return $this['contestChooser']->getContest();
-        if ($this->selectedContest === null) {
-            $this->selectedContest = $this->serviceContest->findByPrimary($this->contestId);
-        }
-        return $this->selectedContest;
     }
 
     public function getSelectedYear() {
-        return $this['contestChooser']->getYear();
-        return $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+        return $this['contestChooser']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
     public function getSelectedAcademicYear() {
         if (!$this->getSelectedContest()) {
-            return $this->yearCalculator->getCurrentAcademicYear();
+            throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
@@ -151,9 +143,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             }
 
             if ($this->getSelectedContest()) {
-                $contestnats = $person->getActiveContestants($this->yearCalculator);
+                $contestants = $person->getActiveContestants($this->yearCalculator);
                 $contest = $this->getSelectedContest();
-                if (isset($contestnats[$contest->contest_id])) {
+                $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
+                if ($contestant && $contestant->year == $this->getSelectedYear()) {
                     $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
                     $this->redirect(':Public:Dashboard:default');
                 }
@@ -165,7 +158,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleContestant() {
-        $this->setTitle(_('Registrace řešitele'));
+        $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear()));
     }
 
     public function renderContestant() {

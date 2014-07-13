@@ -37,6 +37,11 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
      * @persistent
      */
     public $lang;
+    
+    protected function startup() {
+        parent::startup();
+        $this['contestChooser']->syncRedirect();
+    }
 
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);

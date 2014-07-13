@@ -116,7 +116,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * Redirect to corrrect address accorging to the resolved values.
+     * Redirect to corrrect address according to the resolved values.
      */
     public function syncRedirect() {
         $this->init();
@@ -325,8 +325,15 @@ class ContestChooser extends Control {
         }
 
 
-        if (!$this->yearCalculator->isValidYear($contest, $year)) {
-            $year = $this->yearCalculator->getCurrentYear($contest);
+        $allowedYears = $this->getYears($contest);
+        if (!$this->yearCalculator->isValidYear($contest, $year) || !in_array($year, $allowedYears)) {
+            $currentYear = $this->yearCalculator->getCurrentYear($contest);
+            $forwardYear = $currentYear + $this->yearCalculator->getForwardShift($contest);
+            if (in_array($forwardYear, $allowedYears)) {
+                $year = $forwardYear;
+            } else {
+                $year = $currentYear;
+            }
         }
         return $year;
     }

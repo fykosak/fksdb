@@ -26,7 +26,6 @@ class YearCalculator extends Object {
 
     public function getAcademicYear(ActiveRow $contest, $year) {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
-            // TODO possibly allow creatiom
             throw new InvalidArgumentException("No academic year defined for $key.");
         }
         return $this->cache[$contest->contest_id][$year];
@@ -72,6 +71,21 @@ class YearCalculator extends Object {
 
     public function isValidYear(ModelContest $contest, $year) {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
+    }
+
+    /**
+     * @see getCurrentAcademicYear
+     * @param ModelContest $contest
+     * @return int
+     */
+    public function getForwardShift(ModelContest $contest) {
+        $calMonth = date('m');
+        if ($calMonth < 9) {
+            $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
+            return $this->globalParameters[$contestName]['forwardRegistration'] ? 1 : 0;
+        } else {
+            return 0;
+        }
     }
 
     private function preloadCache() {

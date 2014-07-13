@@ -26,6 +26,14 @@ parameters:
         dsn: 'mysql:host=localhost;dbname=newfks'
         user: 
         password: 
+
+# Contest specific parameters
+    fykos:
+        # Allow forward registrations
+        forwardRegistration: true
+    vyfuk:
+        forwardRegistration: %fykos.forwardRegistration%
+
 nette:
     database:
         dsn: 'mysql:host=localhost;dbname=newfks'
