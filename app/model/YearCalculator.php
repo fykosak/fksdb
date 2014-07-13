@@ -1,22 +1,26 @@
 <?php
 
+use FKS\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
 use Nette\Object;
 
 class YearCalculator extends Object {
 
-    const YEAR = 31557600; //365.25*24*3600
-
     /**
      * @var ServiceContestYear
      */
-
     private $serviceContestYear;
+
+    /**
+     * @var GlobalParameters
+     */
+    private $globalParameters;
     private $cache = null;
     private $revCache = null;
 
-    function __construct(ServiceContestYear $serviceContestYear) {
+    function __construct(ServiceContestYear $serviceContestYear, GlobalParameters $globalParameters) {
         $this->serviceContestYear = $serviceContestYear;
+        $this->globalParameters = $globalParameters;
         $this->preloadCache();
     }
 

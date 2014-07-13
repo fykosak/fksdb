@@ -4,8 +4,6 @@ use Nette\Object;
 
 class SeriesCalculator extends Object {
 
-    const YEAR = 31557600; //365.25*24*3600
-
     /**
      * @var ServiceTask
      */

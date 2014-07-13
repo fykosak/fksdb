@@ -293,8 +293,8 @@ class ExportPresenter extends SeriesPresenter {
         $component = parent::createComponentContestChooser($name);
         if ($this->getAction() == 'execute') {
             // Contest and year check is done in StoredQueryComponent
-            $component->setContests(ContestChooser::ALL_CONTESTS);
-            $component->setYears(ContestChooser::ALL_YEARS);
+            $component->setContests(ContestChooser::CONTESTS_ALL);
+            $component->setYears(ContestChooser::YEARS_ALL);
         }
         return $component;
     }

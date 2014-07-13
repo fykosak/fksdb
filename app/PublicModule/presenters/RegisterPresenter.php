@@ -100,7 +100,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
-        $control->setContests(ContestChooser::ALL_CONTESTS);
+        $control->setContests(ContestChooser::CONTESTS_ALL);
         $control->setDefaultContest(ContestChooser::DEFAULT_NULL);
         return $control;
     }

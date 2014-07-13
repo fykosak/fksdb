@@ -195,7 +195,7 @@ class ApplicationPresenter extends BasePresenter {
                 $this->getEvent()->getEventType()->contest_id,
             ));
         } else if ($this->getAction() == 'list') {
-            $component->setContests(ContestChooser::ALL_CONTESTS);
+            $component->setContests(ContestChooser::CONTESTS_ALL);
         }
         return $component;
     }

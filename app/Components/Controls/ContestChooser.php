@@ -18,8 +18,8 @@ use YearCalculator;
 class ContestChooser extends Control {
 
     const SESSION_PREFIX = 'contestPreset';
-    const ALL_CONTESTS = '__*';
-    const ALL_YEARS = '__*';
+    const CONTESTS_ALL = '__*';
+    const YEARS_ALL = '__*';
     const DEFAULT_FIRST = 'first';
     const DEFAULT_NULL = 'null';
 
@@ -88,7 +88,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * @param mixed $contestsDefinition role enum|ALL_CONTESTS|array of contests
+     * @param mixed $contestsDefinition role enum|CONTESTS_ALL|array of contests
      */
     public function setContests($contestsDefinition) {
         $this->contestsDefinition = $contestsDefinition;
@@ -96,7 +96,7 @@ class ContestChooser extends Control {
 
     /**
      * 
-     * @param mixed $yearDefinition enum|ALL_YEARS
+     * @param mixed $yearDefinition enum
      */
     public function setYears($yearDefinition) {
         $this->yearDefinition = $yearDefinition;
@@ -207,7 +207,7 @@ class ContestChooser extends Control {
                 $contests = array_map(function($contest) {
                             return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
                         }, $this->contestsDefinition);
-            } else if ($this->contestsDefinition === self::ALL_CONTESTS) { // all
+            } else if ($this->contestsDefinition === self::CONTESTS_ALL) { // all
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
@@ -230,11 +230,10 @@ class ContestChooser extends Control {
             $this->contests = array();
             foreach ($contests as $id) {
                 $contest = $this->serviceContest->findByPrimary($id);
-                $min = $this->yearCalculator->getFirstYear($contest);
-                $max = $this->yearCalculator->getLastYear($contest);
+                $years = $this->getYears($contest);
                 $this->contests[$id] = (object) array(
                             'contest' => $contest,
-                            'years' => array_reverse(range($min, $max)),
+                            'years' => $years,
                             'currentYear' => $this->yearCalculator->getCurrentYear($contest),
                 );
             }
@@ -242,11 +241,25 @@ class ContestChooser extends Control {
         return $this->contests;
     }
 
-    private function isAllowedYear() {
-        if ($this->yearDefinition === self::ALL_YEARS) {
-            return true;
+    private function getYears(ModelContest $contest) {
+        if ($this->yearDefinition === self::YEARS_ALL || $this->contestsDefinition == ModelRole::ORG) {
+            $min = $this->yearCalculator->getFirstYear($contest);
+            $max = $this->yearCalculator->getLastYear($contest);
+            return array_reverse(range($min, $max));
         } else {
-            return $this->contestsDefinition == ModelRole::ORG;
+            $login = $this->getLogin();
+            $currentYear = $this->yearCalculator->getCurrentYear($contest);
+            if (!$login || !$login->getPerson()) {
+                return array($currentYear);
+            }
+            $contestants = $login->getPerson()->getContestants($contest->contest_id);
+            $years = array();
+            foreach ($contestants as $contestant) {
+                $years[] = $contestant->year;
+            }
+
+            sort($years);
+            return $years;
         }
     }
 
@@ -259,7 +272,6 @@ class ContestChooser extends Control {
             throw new BadRequestException('No contests available.', 403);
         }
         $this->template->contests = $this->getContests();
-        $this->template->isAllowedYear = $this->isAllowedYear();
         $this->template->currentContest = $this->getContest() ? $this->getContest()->contest_id : null;
         $this->template->currentYear = $this->getYear();
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
@@ -299,20 +311,19 @@ class ContestChooser extends Control {
     private function calculateYear($session, $contest, $override = null) {
         $presenter = $this->getPresenter();
         $year = null;
-        if ($this->isAllowedYear()) {
-            // session
-            if (isset($session->year)) {
-                $year = $session->year;
-            }
-            // URL
-            if ($presenter->year) {
-                $year = $presenter->year;
-            }
-            // override
-            if ($override) {
-                $year = $override;
-            }
+        // session
+        if (isset($session->year)) {
+            $year = $session->year;
         }
+        // URL
+        if (isset($presenter->year)) {
+            $year = $presenter->year;
+        }
+        // override
+        if ($override) {
+            $year = $override;
+        }
+
 
         if (!$this->yearCalculator->isValidYear($contest, $year)) {
             $year = $this->yearCalculator->getCurrentYear($contest);
