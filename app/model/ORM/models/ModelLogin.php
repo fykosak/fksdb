@@ -21,11 +21,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     private $person = false;
 
-    /**
-     * @var array
-     */
-    private $availableContests = array();
-
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
@@ -64,23 +59,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-    public function getAvailableContests($role, $serviceContest) {
-        if (!array_key_exists($role, $this->availableContests)) {
-            $this->availableContests[$role] = array();
-            $result = & $this->availableContests[$role];
-            if ($role == ModelRole::ORG) {
-                foreach ($this->getActiveOrgs($this->yearCalculator) as $contestId => $_) {
-                    $result[] = $serviceContest->findByPrimary($contestId);
-                }
-            } else if ($role == ModelRole::CONTESTANT && $this->getPerson()) {
-                foreach ($this->getPerson()->getActiveContestants($this->yearCalculator) as $contestId => $_) {
-                    $result[] = $serviceContest->findByPrimary($contestId);
-                }
-            }
-        }
-        return $this->availableContests[$role];
-    }
-
+  
     public function isOrg($yearCalculator) {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }

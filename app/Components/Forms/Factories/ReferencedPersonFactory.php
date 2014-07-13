@@ -152,7 +152,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             }
 
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear);
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, true);
 
                 $controlModifiable = $value ? $modifiable : true;
                 $controlVisible = $this->isWriteonly($component) ? $visible : true;
@@ -253,7 +253,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         return (bool) $this->getPersonValue($person, $sub, $field, $acYear);
     }
 
-    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear) {
+    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $extrapolate = false) {
         if (!$person) {
             return null;
         }
@@ -267,7 +267,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear)) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear, $extrapolate)) ? $history[$field] : null;
             case 'post_contact':
                 if ($field == 'type') {
                     return ModelPostContact::TYPE_PERMANENT; //TODO distinquish delivery and permanent address

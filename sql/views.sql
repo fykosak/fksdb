@@ -66,10 +66,10 @@ create or replace view v_school as (
 );
 
 create or replace view v_series_points as (
-	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id, sum(s.calc_points) as points
-	from submit s
-	left join contestant_base ct on ct.ct_id = s.ct_id
-	left join task t on t.task_id = s.task_id
+	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id, sum(s.calc_points) as points, sum(t.points) as max_points
+    from task t
+	right join contestant_base ct on ct.contest_id = t.contest_id and ct.year = t.year
+	left join submit s on s.task_id = t.task_id and s.ct_id = ct.ct_id
 	group by ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id
 );
 
@@ -113,6 +113,9 @@ create or replace view v_aesop_person as (
             a.postal_code as postcode,
             r.country_iso as country,
             p.display_name as fullname,
+            p.gender as gender,
+            if(pi.born is null, null, concat(year(pi.born), '-', lpad(month(pi.born), 2, '0'), '-', lpad(day(pi.born), 2, '0'))) as born,
+
             coalesce(
                 if(sar.country_iso = 'cz', concat('izo:', s.izo), null),
                 if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
@@ -127,7 +130,7 @@ create or replace view v_aesop_person as (
             if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null)) as `spam-flag`,
             date(phf.created) as `spam-date`,
             p.person_id as `x-person_id`,
-            p.gender as `x-gender`,
+            pi.birthplace as `x-birthplace`,
             ph.ac_year as `x-ac_year`
     from person p
     left join v_post_contact pc on pc.person_id = p.person_id
@@ -148,6 +151,7 @@ create or replace view v_aesop_points as (
 		cy.ac_year,
 		sp.person_id,
 		sum(sp.points) as points,
+                sum(sp.points) / sum(sp.max_points) as points_ratio,
 		null as rank
 	from v_series_points sp
 	left join contest_year cy on cy.year = sp.year and cy.contest_id = sp.contest_id
@@ -156,7 +160,7 @@ create or replace view v_aesop_points as (
 );
 
 create or replace view v_aesop_contestant as (
-	select p.*, res.points, res.rank, res.contest_id as `x-contest_id`
+	select p.*, res.points, res.points_ratio as `x-points_ratio`, res.rank, res.contest_id as `x-contest_id`
 	from v_aesop_person p
 	right join v_aesop_points res on res.person_id = p.`x-person_id` and res.ac_year = p.`x-ac_year`
 );	

@@ -3,6 +3,7 @@
 namespace PublicModule;
 
 use AuthenticatedPresenter;
+use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
@@ -27,9 +28,20 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     public $contestId;
 
     /**
+     * @var int
+     * @persistent
+     */
+    public $year;
+
+    /**
      * @persistent
      */
     public $lang;
+    
+    protected function startup() {
+        parent::startup();
+        $this['contestChooser']->syncRedirect();
+    }
 
     protected function createComponentContestChooser($name) {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
@@ -76,8 +88,12 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     public function getContestant() {
         if ($this->contestant === false) {
             $person = $this->user->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->yearCalculator);
-            $this->contestant = $contestants[$this->getSelectedContest()->contest_id];
+            $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(
+                        'contest_id' => $this->getSelectedContest()->contest_id,
+                        'year' => $this->getSelectedYear()
+                    ))->fetch();
+
+            $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
         }
 
         return $this->contestant;

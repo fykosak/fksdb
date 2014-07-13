@@ -51,7 +51,7 @@ for file in `find $NEON_FILES -iname "*.neon"` ; do
 	neon2php "$file"
 done
 
-find $NEON_FILES -iname "*.$NEON_SUFFIX" | xargs xgettext -L PHP --from-code=utf-8 -o $POT_FILE
+find $NEON_FILES -iname "*.$NEON_SUFFIX" | xargs xgettext -L PHP --from-code=utf-8 -j -o $POT_FILE
 find $NEON_FILES -iname "*.$NEON_SUFFIX" | xargs rm
 
 #

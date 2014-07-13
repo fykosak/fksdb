@@ -47,18 +47,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param int $acYear
      * @return null
      */
-    public function getHistory($acYear) {
+    public function getHistory($acYear, $extrapolated = false) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
                 ->where('ac_year', $acYear);
-        $histories->rewind();
-        if (!$histories->valid()) {
+        $history = $histories->fetch();
+        if (!$history && $extrapolated) {
+            $lastHistory = $this->getLastHistory();
+            if ($lastHistory) {
+                return $lastHistory->extrapolate($acYear);
+            } else {
+                return null;
+            }
+        } else {
             return null;
         }
 
-        return ModelPersonHistory::createFromTableRow($histories->current());
+        return ModelPersonHistory::createFromTableRow($history);
     }
 
     /**
@@ -114,7 +121,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
-                    ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
+                            ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
             );
         }
         return $result;
@@ -171,7 +178,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
-    public function getLastHistory() {
+    private function getLastHistory() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -210,6 +217,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * Active contestant := contestant in the highest year but not older than the current year.
      * 
      * @param YearCalculator $yearCalculator
      * @return array of ModelContestant indexed by contest_id
@@ -218,9 +226,15 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $result = array();
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromTableRow($contestant);
-            $year = $yearCalculator->getCurrentYear($contestant->getContest());
-            if ($contestant->year == $year) {
-                $result[$contestant->contest_id] = $contestant;
+            $currentYear = $yearCalculator->getCurrentYear($contestant->getContest());
+            if ($contestant->year >= $currentYear) { // forward contestant
+                if (isset($result[$contestant->contest_id])) {
+                    if ($contestant->year > $result[$contestant->contest_id]->year) {
+                        $result[$contestant->contest_id] = $contestant;
+                    }
+                } else {
+                    $result[$contestant->contest_id] = $contestant;
+                }
             }
         }
         return $result;
