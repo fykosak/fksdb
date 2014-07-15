@@ -25,7 +25,10 @@ class ModelPersonHistory extends AbstractModelSingle {
             'class' => $this->extrapolateClass($this->class, $diff),
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
         );
-        $result = new self($data, $this->getTable());
+        $result = new self(array(), $this->getTable());
+        foreach($data as $key => $value){
+            $result->$key = $value; // this is workaround to properly set modfified flag
+        }
         return $result;
     }
 
