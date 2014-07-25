@@ -26,7 +26,7 @@ class YearCalculator extends Object {
 
     public function getAcademicYear(ActiveRow $contest, $year) {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
-            throw new InvalidArgumentException("No academic year defined for $key.");
+            throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
         return $this->cache[$contest->contest_id][$year];
     }
