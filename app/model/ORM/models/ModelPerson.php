@@ -54,7 +54,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
                 ->where('ac_year', $acYear);
         $history = $histories->fetch();
-        if (!$history && $extrapolated) {
+        if ($history) {
+            return ModelPersonHistory::createFromTableRow($history);
+        }
+        if ($extrapolated) {
             $lastHistory = $this->getLastHistory();
             if ($lastHistory) {
                 return $lastHistory->extrapolate($acYear);
@@ -64,8 +67,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         } else {
             return null;
         }
-
-        return ModelPersonHistory::createFromTableRow($history);
     }
 
     /**
