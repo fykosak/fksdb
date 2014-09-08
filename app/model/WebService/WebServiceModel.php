@@ -170,6 +170,7 @@ class WebServiceModel {
 
                     $taskNode->setAttribute('series', $seriesNo);
                     $taskNode->setAttribute('label', $task['label']);
+                    $taskNode->setAttribute('tasknr', $task['tasknr']);
 
                     $node = $doc->createElement('points', $task['points']);
                     $taskNode->appendChild($node);
