@@ -310,7 +310,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	protected function accessColumn($key, $selectColumn = TRUE)
 	{
-		if (isset($this->modified[$key])) {
+		if (array_key_exists($key, $this->modified)) {
 			return;
 		}
 
