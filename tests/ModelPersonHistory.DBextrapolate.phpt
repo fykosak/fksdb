@@ -12,15 +12,10 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
      */
     private $service;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
 
     function __construct(ServicePerson $service, Connection $connection) {
         parent::__construct($connection);
         $this->service = $service;
-        $this->connection = $connection;
     }
 
     public function testNull() {

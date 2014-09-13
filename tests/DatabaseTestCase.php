@@ -9,7 +9,7 @@ abstract class DatabaseTestCase extends TestCase {
     /**
      * @var Connection
      */
-    private $connection;
+    protected $connection;
 
     function __construct(Connection $connection) {
         $this->connection = $connection;
