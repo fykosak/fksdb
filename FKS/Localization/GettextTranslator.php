@@ -42,6 +42,7 @@ class GettextTranslator implements ITranslator {
         $this->lang = $lang;
         $locale = $this->locales[$lang];
 
+        putenv("LANGUAGE=$locale"); // for the sake of CLI tests
         setlocale(LC_MESSAGES, $locale);
         bindtextdomain('messages', $this->localeDir);
         bind_textdomain_codeset('messages', "utf-8");
