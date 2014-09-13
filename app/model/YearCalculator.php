@@ -2,7 +2,9 @@
 
 use FKS\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidStateException;
 use Nette\Object;
+use Nette\Utils\Arrays;
 
 class YearCalculator extends Object {
 
@@ -12,15 +14,23 @@ class YearCalculator extends Object {
     private $serviceContestYear;
 
     /**
+     * @var ServiceContest
+     */
+    private $serviceContest;
+
+    /**
      * @var GlobalParameters
      */
     private $globalParameters;
     private $cache = null;
     private $revCache = null;
+    private $acYear;
 
-    function __construct(ServiceContestYear $serviceContestYear, GlobalParameters $globalParameters) {
+    function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
         $this->serviceContestYear = $serviceContestYear;
+        $this->serviceContest = $serviceContest;
         $this->globalParameters = $globalParameters;
+        $this->acYear = Arrays::get($this->globalParameters['tester'], 'acYear', null);
         $this->preloadCache();
     }
 
@@ -36,6 +46,9 @@ class YearCalculator extends Object {
      * @return int
      */
     public function getCurrentAcademicYear() {
+        if ($this->acYear !== null) {
+            return $this->acYear;
+        }
         $calYear = date('Y');
         $calMonth = date('m');
         if ($calMonth < 9) {
@@ -98,6 +111,21 @@ class YearCalculator extends Object {
             }
             $this->cache[$row->contest_id][$row->year] = $row->ac_year;
             $this->revCache[$row->contest_id][$row->ac_year] = $row->year;
+        }
+
+        if (!$this->cache) {
+            throw new InvalidStateException('YearCalculator cannot be initalized, table contest_year is probably empty.');
+        }
+
+        $pk = $this->serviceContest->getPrimary();
+        $contests = $this->serviceContest->fetchPairs($pk, $pk);
+        foreach ($contests as $contestId) {
+            if (!array_key_exists($contestId, $this->revCache)) {
+                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify any years at all for contest %s.', $contestId));
+            }
+            if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
+                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
+            }
         }
     }
 

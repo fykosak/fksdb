@@ -7,8 +7,10 @@ use FKS\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
+use Tester\Environment;
 
 // absolute filesystem path to this web root
 define('TESTS_DIR', dirname(__FILE__));
@@ -21,6 +23,9 @@ define('LIBS_DIR', TESTS_DIR . '/../libs');
 
 define('TEMP_DIR', TESTS_DIR . '/../temp/tester');
 @mkdir(TEMP_DIR);
+
+define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
+@mkdir(LOG_DIR);
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
@@ -38,6 +43,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 };
 
 $configurator->setDebugMode(false);
+Debugger::$logDirectory = LOG_DIR;
 
 
 // Enable RobotLoader - this will load all classes automatically
@@ -45,6 +51,7 @@ $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
 $configurator->createRobotLoader()
         ->addDirectory(APP_DIR)
         ->addDirectory(LIBS_DIR)
+        ->addDirectory(TESTS_DIR)
         ->register();
 
 // Create Dependency Injection container from config.neon file
@@ -70,6 +77,7 @@ Container::extensionMethod('addDatePicker', function (Container $container, $nam
     return $container[$name] = new DatePicker($label);
 });
 
+Environment::setup();
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 return $container;
 

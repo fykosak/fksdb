@@ -6,6 +6,8 @@
 #
 
 parameters:
+    tester:
+        acYear: 2000
     ro-database:
         dsn: 'mysql:host=localhost;dbname=fksdb_test'
 
