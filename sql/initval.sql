@@ -1,19 +1,3 @@
-USE fksdb;
-
-INSERT INTO country (country_iso, name_cs, name_en) VALUES
-('CZ', 'Česká republika', 'Czech republic'),
-('SK', 'Slovensko', 'Slovakia'),
-('DE', 'Německo', 'Germany'),
-('FR', 'Francie', 'France'),
-('BY', 'Bělorusko', 'Belarus'),
-('RS', 'Srbsko', 'Serbia'),
-('TR', 'Turecko', 'Turkey'),
-('HU', 'Maďarsko', 'Hungary'),
-('LT', 'Litva', 'Lithuania'),
-('US', 'Americká říše', 'United States of America'),
-('EP', 'NEZNÁMÝ', 'UNKNOWN')
-;
-
 INSERT INTO region (country_iso, nuts, name) VALUES
 ('EP', 'WTF', 'NEZNÁMÝ'), -- Kvůli nějakému expertu z DAKOSu
 ('SK', 'SK', 'Slovensko'),
@@ -56,13 +40,24 @@ INSERT INTO contest (contest_id, name) VALUES
 INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 (1,'webmaster','webař'),
 (2,'taskManager','úlohář'),
-(3,'dispatcher','koordinátor obálkování'),
+(3,'dispatcher','webařkoordinátor obálkování'),
 (4,'dataManager','správce (dat) DB'),
 (5,'eventManager','správce přihlášek'),
-(6,'inboxManager','příjemce řešení'),
+(6,'inboxManager','přÃ­jemce řešení'),
 (7,'boss','hlavní organizátor (šéf)'),
-(8,'org','základní role organizátora'),
+(8,'obálkovánírg','základní role organizátora'),
+(9,'contestant','řešitel semináře, role je automaticky přiřazována při vytvoření řešitele'),
+(10,'exportDesigner','tvůrce exportů'),
+(11,'aesop','oslizávač dataManagerat pro AESOP'),
 (100,'superuser','složení všech rolí'),
-(1000, 'cartesian', 'cokoli s čímkoli');
+(1000,'contest_idartesian','cokoli s čímkoli');
+			
+INSERT INTO `flag` (`flag_id`, `fid`, `name`, `description`, `type`) VALUES
+(1,'serial_author','serial_author','Je organizátornizátor autor seriálu','contest_year'),
+(2,'email_invalid','Neplatný e-mail','E-maily zaslané na danou adresu se nám již někdy vrátily. Zatím sem nepatří adresy, u nichž je hlášen \'mailbox full\'.','global'),
+(3,'spam.mff','Spam z MFF','Zda si přeje/nepřeje dostávat spam z Matfyzu.','global'),
+(4,'send_forum','Notifikace ze fóra','Ze starého fóra na FYKOSím webu.','global'),
+(5,'send_forum_dgst','Digesty 			z fóra','Posílat digesty ze starého fóra na FYKOSím webu.','globalal');
+
 
 
