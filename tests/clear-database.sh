@@ -5,6 +5,13 @@ DB_NAME=fksdb_test
 SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
 
 mysql $DB_NAME <<EOD
+DELETE FROM e_fyziklani_participant;
+DELETE FROM event_participant;
+DELETE FROM e_fyziklani_team;
+DELETE FROM event_status;
+DELETE FROM event;
+DELETE FROM event_type;
+
 DELETE FROM person_history;
 DELETE FROM contestant_base;
 DELETE FROM contest_year;
