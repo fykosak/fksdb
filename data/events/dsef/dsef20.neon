@@ -33,7 +33,7 @@ events:
                 default: 0
 
         baseMachines:
-            PARTICIPANT:
+            PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
                 
                 states:
@@ -95,7 +95,7 @@ events:
         machine:
             baseMachines:
                 participant:
-                    bmName: PARTICIPANT
+                    bmName: PARTICIPANT_DSEF
                     label: Účastník
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine

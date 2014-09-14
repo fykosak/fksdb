@@ -31,6 +31,9 @@ machine:
         default: []
 
 baseMachine:
+    # Reference to base machine from different configuration that is used as pattern for the baseMachine/baseHolder
+    prototype:
+        default: null
     states:
         type: expression array
     transitions:
@@ -40,12 +43,21 @@ baseMachine:
     # When used as secondary model, specify column that is FK to the primary model.
     joinOn:
         default: null
+    # When used as secondary model, specify column that is bound via joinOn from the primary model. (null is PK.)
+    joinTo:
+        default: null
     # Specify columns that store person_id of anyhow involved persons.
     personIds:
         default: [event_participant.person_id]
     # Specify column that stores FK to the event. (For primary models only.)
     eventId:
         default: event_participant.event_id
+    # IEventRelation implementation that returns the event for the base holder derived from the event of the primary holder (null is identity.)
+    eventRelation:
+        default: null
+    # Parameter (Neon) scheme for the baseHolder
+    paramScheme:
+        default: null
     
 
 transition:

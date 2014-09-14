@@ -46,7 +46,7 @@ abstract class AbstractFactory implements IFieldFactory {
     }
 
     public function validate(Field $field, DataValidator $validator) {
-        if ($field->isRequired() && !$field->getValue()) {
+        if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
         }
     }

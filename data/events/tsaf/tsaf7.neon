@@ -43,7 +43,7 @@ events:
                 default: 0
 
         baseMachines:
-            PARTICIPANT:
+            PARTICIPANT_TSAF:
                 service: @event.ServiceMTsafParticipant
                 
                 states:
@@ -105,6 +105,16 @@ events:
                         label: "Cena zájezdu (CZK)"
                         modifiable: false
                         description: "Cena v spočtená dle pravidel (http://fykos.cz/archiv/rocnik28/tsaf-pozvanka)."
+            
+            PARTICIPANT_DSEF:
+                prototype: dsef20.PARTICIPANT_DSEF
+                joinOn: person_id
+                joinTo: person_id
+                fields:
+                    person_id:
+                        modifiable: false
+                        visible: false
+                        required: false
 
 
         #
@@ -113,11 +123,15 @@ events:
         #
         machine:
             baseMachines:
-                participant:
-                    bmName: PARTICIPANT
-                    label: Účastník
+                participantTsaf:
+                    bmName: PARTICIPANT_TSAF
+                    label: TSAF
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
+                participantDsef:
+                    bmName: PARTICIPANT_DSEF
+                    label: DSEF
+
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 # TODO bind to DSEF
@@ -127,3 +141,7 @@ events:
                 
             processings:
                 - @events.privacyPolicy
+            joins:
+                participantTsaf:
+                    *->applied:
+                        participantDsef: applied
