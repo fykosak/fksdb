@@ -23,6 +23,8 @@ class ResourceAvailability extends AbstractAdjustment {
      * @var string Name of event parameter that hold overall capacity.
      */
     private $paramCapacity;
+    private $includeStates;
+    private $excludeStates;
     private $message;
 
     private function setFields($fields) {
@@ -37,11 +39,15 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
+     * @param string $includeStates SQL like-operator mask applications included
+     * @param string $excludeStates SQL like-operator mask applications included
      */
-    function __construct($fields, $paramCapacity, $message) {
+    function __construct($fields, $paramCapacity, $message, $includeStates = '%', $excludeStates = 'cancelled') {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
+        $this->includeStates = $includeStates;
+        $this->excludeStates = $excludeStates;
     }
 
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
@@ -86,20 +92,26 @@ class ResourceAvailability extends AbstractAdjustment {
             $firstHolder = reset($serviceData['holders']);
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
+            $table->where(BaseHolder::STATE_COLUMN . ' LIKE', $this->includeStates);
+            $table->where('NOT ' . BaseHolder::STATE_COLUMN . ' LIKE', $this->excludeStates);
+            
             $primaries = array_map(function(BaseHolder $baseHolder) {
-                        return $baseHolder->getModel()->getPrimary(false);
-                    }, $serviceData['holders']);
+                return $baseHolder->getModel()->getPrimary(false);
+            }, $serviceData['holders']);
             $primaries = array_filter($primaries, function($primary) {
-                        return (bool) $primary;
-                    });
+                return (bool) $primary;
+            });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
-            $table->where("NOT $pk IN", $primaries);
+            if ($primaries) {
+                $table->where("NOT $pk IN", $primaries);
+            }
             $usage += $table->sum($column);
         }
 
         $capacity = $holder->getParameter($this->paramCapacity, 0);
+
         if ($capacity <= $usage) {
             foreach ($controls as $control) {
                 $control->setDisabled();
@@ -107,15 +119,15 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $form->onValidate[] = function(Form $form) use($capacity, $usage, $controls) {
-                    $controlsUsage = 0;
-                    foreach ($controls as $control) {
-                        $controlsUsage += (int) $control->getValue();
-                    }
-                    if ($capacity < $usage + $controlsUsage) {
-                        $message = str_replace('%avail', $capacity - $usage, $this->message);
-                        $form->addError($message);
-                    }
-                };
+            $controlsUsage = 0;
+            foreach ($controls as $control) {
+                $controlsUsage += (int) $control->getValue();
+            }
+            if ($capacity < $usage + $controlsUsage) {
+                $message = str_replace('%avail', $capacity - $usage, $this->message);
+                $form->addError($message);
+            }
+        };
     }
 
 }
