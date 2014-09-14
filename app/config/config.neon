@@ -133,6 +133,10 @@ parameters:
         # where locale files are stored
         templateDir: %dataDir%/events
 
+    # Parameters used for automated testing
+    tester: []
+
+
 php:
     date.timezone: Europe/Prague
     session.gc_maxlifetime: 1213200

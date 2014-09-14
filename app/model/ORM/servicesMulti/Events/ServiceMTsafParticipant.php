@@ -4,25 +4,24 @@ namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
 use ORM\IModel;
-use ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use ORM\Services\Events\ServiceDsefParticipant;
+use ORM\ModelsMulti\Events\ModelMTsafParticipant;
+use ORM\Services\Events\ServiceTsafParticipant;
 use ServiceEventParticipant;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceMDsefParticipant extends AbstractServiceMulti {
+class ServiceMTsafParticipant extends AbstractServiceMulti {
 
-    protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMDsefParticipant';
+    protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMTsafParticipant';
     protected $joiningColumn = 'event_participant_id';
 
-    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceTsafParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
 
     /**
-     * Delete post contact including the address.
-     * @param ModelMDsefParticipant $model
+     * @param ModelMTsafParticipant $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
@@ -30,3 +29,4 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
     }
 
 }
+

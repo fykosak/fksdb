@@ -1,8 +1,8 @@
 parameters:
     events:
-        dsef:
+        dsef20:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc před akcí (tj. z 12.2. na 13.2.).'
+            accomodation: 'Noc před akcí (tj. z 10.11. na 11.11.).'
             person:
                 person:
                     other_name: true
@@ -16,9 +16,9 @@ parameters:
                     address: true
 
 events:
-    dsef:
+    dsef20:
         event_type_id: 2
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        eventYears: [20]
         tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
@@ -44,7 +44,7 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.dsef.appCond%
+                        condition: %events.dsef20.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(dsef.participant, .self)
@@ -67,21 +67,21 @@ events:
                     person_id:
                         label: Osoba
                         required: true
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef20.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.dsef.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: RefPerson(%events.dsef20.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
                         label: Preferovaná skupina
                         required: true
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef20.appCond%
                         factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
-                        description: %events.dsef.accomodation%
-                        modifiable: %events.dsef.appCond%
+                        description: %events.dsef20.accomodation%
+                        modifiable: %events.dsef20.appCond%
                     lunch_count:
                         label:  Počet baget k obědu                        
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef20.appCond%
                         description:  à 30 Kč
                     message:
                         label: Vzkaz ostatním

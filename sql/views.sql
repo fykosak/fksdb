@@ -1,3 +1,14 @@
+CREATE OR REPLACE VIEW v_person as (
+	select p.person_id, concat(family_name, other_name) AS name_lex, IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name, gender, email
+	from person p
+	left join person_info pi on pi.person_id = p.person_id
+);
+
+create or replace view v_school as (
+	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic
+	from school s
+);
+
 CREATE OR REPLACE VIEW v_task_stats as
 (SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count from task 
   LEFT JOIN submit ON submit.task_id=task.task_id
@@ -31,12 +42,6 @@ left join region reg on scha.region_id = reg.region_id
 left join contest cst on cst.contest_id = ct.contest_id
 );
 
-CREATE OR REPLACE VIEW v_person as (
-	select p.person_id, concat(family_name, other_name) AS name_lex, IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name, gender, email
-	from person p
-	left join person_info pi on pi.person_id = p.person_id
-);
-
 CREATE OR REPLACE VIEW v_post_contact as (
 	select p.person_id, IF(ad.address_id is null, ap.address_id, ad.address_id) AS address_id
 	from person p
@@ -58,11 +63,6 @@ CREATE OR REPLACE VIEW v_person_envelope as (
 	inner join v_person p on p.person_id = pc.person_id
 	inner join address a on pc.address_id = a.address_id
 	inner join region r on a.region_id = r.region_id and r.country_iso in ('CZ', 'SK')
-);
-
-create or replace view v_school as (
-	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic
-	from school s
 );
 
 create or replace view v_series_points as (

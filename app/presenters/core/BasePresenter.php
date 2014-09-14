@@ -260,6 +260,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     protected function createComponentNavigation($name) {
+        $this->navigationControl->setParent();
         return $this->navigationControl;
     }
 
