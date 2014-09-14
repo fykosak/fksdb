@@ -2,7 +2,7 @@ parameters:
     events:
         tsaf7:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc před akcí (tj. z 10.11. na 11.11.).'
+            accomodation: 'Noc po akci (tj. z 10.11. na 11.11.).' # TODO
             person:
                 person:
                     other_name: true
@@ -37,8 +37,6 @@ events:
                 default: tsaf@fykos.cz
             notifyFrom:
                 default: Týden s experimentální fyzikou <tsaf@fykos.cz>
-            accomodationCapacity: # TODO implement check together with DSEF
-                default: 0
             capacity: # TODO implement check
                 default: 0
 
@@ -89,10 +87,10 @@ events:
                         modifiable: %events.tsaf7.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.tsaf7.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    accomodation:
-                        label: Ubytování
-                        description: %events.tsaf7.accomodation%
-                        modifiable: %events.tsaf7.appCond%
+#                    accomodation:
+#                        label: Ubytování
+#                        description: %events.tsaf7.accomodation%
+#                        modifiable: %events.tsaf7.appCond%
                     tshirt_size:
                         label: "Jaké triko nosíš?"
                         required: true
@@ -134,8 +132,7 @@ events:
 
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                # TODO bind to DSEF
-                - Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
                 
