@@ -145,7 +145,8 @@ class ApplicationHandler {
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
-                $this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(_("Přihláška smazána."), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
