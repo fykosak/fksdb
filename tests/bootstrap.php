@@ -60,7 +60,7 @@ $configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
 $configurator->addConfig(CONFIG_DIR . '/config.tester.neon', Configurator::NONE);
 
 // Load all .neon files in events data directory
-foreach (Finder::findFiles('*.neon')->in(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
     $configurator->addConfig($filename, Configurator::NONE);
 };
 
@@ -77,7 +77,6 @@ Container::extensionMethod('addDatePicker', function (Container $container, $nam
     return $container[$name] = new DatePicker($label);
 });
 
-Environment::setup();
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 return $container;
 
