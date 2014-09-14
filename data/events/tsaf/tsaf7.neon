@@ -1,0 +1,129 @@
+parameters:
+    events:
+        tsaf7:
+            appCond: or(regOpen(), role('admin'))
+            accomodation: 'Noc před akcí (tj. z 10.11. na 11.11.).'
+            person:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    phone: true
+                    id_number: true
+                    born: true
+                post_contact: # TODO delivery address
+                    type: P
+                    address: true
+            clothes:
+                M_S: S pánské
+                M_M: M pánské
+                M_L: L pánské
+                M_XL: XL pánské
+                M_XXL: XXL pánské
+                F_S: S dámské
+                F_M: M dámské
+                F_L: L dámské
+                F_XL: XL dámské
+
+events:
+    tsaf7:
+        event_type_id: 7
+        eventYears: [7]
+        tableLayout: event.grid
+        formLayout: tsaf.form
+        paramScheme:
+            notifyBcc:
+                default: tsaf@fykos.cz
+            notifyFrom:
+                default: Týden s experimentální fyzikou <tsaf@fykos.cz>
+            accomodationCapacity: # TODO implement check together with DSEF
+                default: 0
+            capacity: # TODO implement check
+                default: 0
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceMTsafParticipant
+                
+                states:
+                    applied: Přihlášen
+                    spare: Náhradník
+                    participated: Účastnil se
+                    missed: Nepřijel
+                    cancelled: Zrušen
+
+                transitions:
+                    __init->applied:
+                        condition: %events.tsaf7.appCond%
+                        label: Přihlásit účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(participant, .self) # TODO
+                    __init->spare: # TODO capacity condition
+                        condition: %events.tsaf7.appCond%
+                        label: Přihlásit náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(participant, .self) # TODO
+                    spare->applied:
+                        condition: role('admin')
+                        label: Potvrdit účastníka
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: Nepřijel
+                        dangerous: true
+                    applied|spare->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
+                        dangerous: true
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat přihlášku
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        required: true
+                        modifiable: %events.tsaf7.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.tsaf7.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    accomodation:
+                        label: Ubytování
+                        description: %events.tsaf7.accomodation%
+                        modifiable: %events.tsaf7.appCond%
+                    tshirt_size:
+                        label: "Jaké triko nosíš?"
+                        required: true
+                        factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
+                    jumper_size:
+                        label: "Jakou mikinu nosíš?"
+                        required: true
+                        factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
+                    price:
+                        label: "Cena zájezdu (CZK)"
+                        modifiable: false
+                        description: "Cena v spočtená dle pravidel (http://fykos.cz/archiv/rocnik28/tsaf-pozvanka)."
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: Účastník
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                # TODO bind to DSEF
+                - Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - @events.privacyPolicy
+                - @events.captcha
+                
+            processings:
+                - @events.privacyPolicy

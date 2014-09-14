@@ -2,7 +2,7 @@ parameters:
     events:
         dsef20:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc před akcí (tj. z 12.2. na 13.2.).' # TODO
+            accomodation: 'Noc před akcí (tj. z 10.11. na 11.11.).'
             person:
                 person:
                     other_name: true

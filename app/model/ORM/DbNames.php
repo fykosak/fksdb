@@ -39,6 +39,7 @@ class DbNames {
     const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
     const TAB_E_SOUS_PARTICIPANT = 'e_sous_participant';
+    const TAB_E_TSAF_PARTICIPANT = 'e_tsaf_participant';
     const TAB_E_VIKEND_PARTICIPANT = 'e_vikend_participant';
 
 }
