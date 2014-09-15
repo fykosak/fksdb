@@ -15,8 +15,8 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use Tester\Assert;
 
-
 class ApplicationHandlerTest extends EventTestCase {
+
     use MockApplicationTrait;
 
     /**
@@ -79,12 +79,12 @@ class ApplicationHandlerTest extends EventTestCase {
      * @throws Events\Model\ApplicationHandlerException
      */
     public function testNewApplication() {
-        $id1 = $this->createPerson('Karel', 'Kolář', 'k.kolar@email.cz');
+        $id1 = $this->createPerson('Karel', 'Kolář', array('email' => 'k.kolar@email.cz'));
 
-        $id2 = $this->createPerson('Michal', 'Koutný', 'michal@fykos.cz');
-        $this->createPersonHistory($id2, 2000, 1, null, 1);
-        $id3 = $this->createPerson('Kristína', 'Nešporová', 'kiki@fykos.cz');
-        $this->createPersonHistory($id3, 2000, 1, null, 1);
+        $id2 = $this->createPerson('Michal', 'Koutný', array('email' => 'michal@fykos.cz'));
+        $this->createPersonHistory($id2, 2000, 1, 1);
+        $id3 = $this->createPerson('Kristína', 'Nešporová', array('email' => 'kiki@fykos.cz'));
+        $this->createPersonHistory($id3, 2000, 1, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 
@@ -219,7 +219,6 @@ class ApplicationHandlerTest extends EventTestCase {
     }
 
 }
-
 
 $testCase = new ApplicationHandlerTest($container);
 $testCase->run();

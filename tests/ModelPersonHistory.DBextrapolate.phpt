@@ -12,14 +12,16 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
      */
     private $service;
 
-
     function __construct(ServicePerson $service, Connection $connection) {
         parent::__construct($connection);
         $this->service = $service;
     }
 
     public function testNull() {
-        $person = $this->service->findByPrimary(1);
+        $personId = $this->createPerson('Student', 'Pilný');
+        $this->createPersonHistory($personId, 2000, 1, 1);
+
+        $person = $this->service->findByPrimary($personId);
         $extrapolated = $person->getHistory(2001, true);
 
         Assert::same(2001, $extrapolated->ac_year);

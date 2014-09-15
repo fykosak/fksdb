@@ -35,11 +35,10 @@ abstract class EventTestCase extends DatabaseTestCase {
         $this->connection->query("DELETE FROM event");
         $this->connection->query("DELETE FROM event_type");
         $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
 
         parent::tearDown();
     }
-
+    
     protected function createEvent($data) {
         if (!isset($data['year'])) {
             $data['year'] = 1;

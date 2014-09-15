@@ -18,6 +18,7 @@ DELETE FROM contestant_base;
 DELETE FROM contest_year;
 DELETE FROM school;
 DELETE FROM address;
+DELETE FROM global_session;
 DELETE FROM auth_token;
 DELETE FROM login;
 DELETE FROM person;
