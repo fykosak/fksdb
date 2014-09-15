@@ -194,8 +194,8 @@ class ApplicationHandler {
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                    $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
-                    throw new MachineExecutionException(sprintf($msg, $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                    $msg = _("Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'.");
+                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName(), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
         }

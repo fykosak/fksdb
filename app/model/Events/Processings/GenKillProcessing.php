@@ -29,6 +29,9 @@ class GenKillProcessing extends Object implements IProcessing {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
                 continue;
             }
+            if (!$baseHolder->getDeterminingFields()) { // no way how to determine (non)existence of secondary models
+                continue;
+            }
             $isFilled = true;
             foreach ($baseHolder->getDeterminingFields() as $field) {
                 if (!isset($values[$name][$field->getName()]) || !$values[$name][$field->getName()]) {

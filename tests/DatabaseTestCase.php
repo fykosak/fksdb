@@ -68,5 +68,10 @@ abstract class DatabaseTestCase extends TestCase {
 
         return $personHistoryId;
     }
+    
+    protected function insert($table, $data) {
+        $this->connection->query("INSERT INTO `$table`", $data);
+        return $this->connection->lastInsertId();
+    }
 
 }

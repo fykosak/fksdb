@@ -5,6 +5,7 @@ namespace Events;
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
+use Nette\Config\Helpers;
 use Nette\Database\Row;
 use Tester\Assert;
 
@@ -24,6 +25,7 @@ abstract class EventTestCase extends DatabaseTestCase {
             ('participated'),             
             ('missed'), 
             ('cancelled'), 
+            ('invited'),
             ('applied'),
             ('applied.tsaf'),
             ('applied.notsaf')");
@@ -38,7 +40,7 @@ abstract class EventTestCase extends DatabaseTestCase {
 
         parent::tearDown();
     }
-    
+
     protected function createEvent($data) {
         if (!isset($data['year'])) {
             $data['year'] = 1;
@@ -47,15 +49,17 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $this->connection->lastInsertId();
     }
 
-    protected function createPostRequest($postData) {
-        $request = new Request('Public:Application', 'POST', array(
-            'action' => 'default',
-            'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-            'do' => 'application-form-form-submit',
-                ), $postData);
+    protected function createPostRequest($postData, $post = array()) {
+        $post = Helpers::merge($post, array(
+                    'action' => 'default',
+                    'lang' => 'cs',
+                    'contestId' => 1,
+                    'year' => 1,
+                    'eventId' => $this->eventId,
+                    'do' => 'application-form-form-submit',
+        ));
+
+        $request = new Request('Public:Application', 'POST', $post, $postData);
         return $request;
     }
 

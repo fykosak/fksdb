@@ -49,6 +49,27 @@ class ApplicationPresenterTest extends EventTestCase {
                 }, 'Nette\Application\BadRequestException', 'Neexistující akce.', 404);
     }
 
+    public function test404Application() {
+        $fixture = $this->fixture;
+        $eventId = $this->createEvent(array(
+            'event_type_id' => 2,
+            'event_year' => 19,
+            'registration_begin' => DateTime::from(time() + DateTime::DAY),
+        ));
+        Assert::exception(function() use ($fixture, $eventId) {
+                    $request = new Request('Public:Register', 'GET', array(
+                        'action' => 'default',
+                        'lang' => 'cs',
+                        'id' => 666,
+                        'eventId' => $eventId,
+                        'contestId' => 1,
+                        'year' => 1,
+                    ));
+
+                    $fixture->run($request);
+                }, 'Nette\Application\BadRequestException', 'Neexistující přihláška.', 404);
+    }
+
     public function testClosed() {
         $eventId = $this->createEvent(array(
             'event_type_id' => 2,

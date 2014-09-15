@@ -961,6 +961,25 @@ CREATE TABLE IF NOT EXISTS `e_sous_participant` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `e_tsaf_participant`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `e_tsaf_participant` ;
+
+CREATE TABLE IF NOT EXISTS `e_tsaf_participant` (
+  `event_participant_id` INT NOT NULL,
+  `price` DECIMAL(6,2) NULL,
+  `tshirt_size` VARCHAR(20) NULL,
+  `jumper_size` VARCHAR(20) NULL,
+  PRIMARY KEY (`event_participant_id`),
+  CONSTRAINT `fk_e_tsaf_participant_event_participant1`
+    FOREIGN KEY (`event_participant_id`)
+    REFERENCES `event_participant` (`event_participant_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
