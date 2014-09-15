@@ -38,8 +38,13 @@ abstract class AbstractFactory implements IFieldFactory {
                     $conditioned = $element;
                     break;
                 }
-                $control = $determiningField->getMainControl($container[$name]); // existence is ensured via check in EventsExtension
-                $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
+                /*
+                 * NOTE: If the control doesn't exists, it's hidden and as such cannot condition further requirements.
+                 */
+                if (isset($container[$name])) {
+                    $control = $determiningField->getMainControl($container[$name]);
+                    $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
+                }
             }
             $conditioned->addRule(Form::FILLED, sprintf(_('%s je povinná položka.'), $field->getLabel()));
         }

@@ -66,6 +66,9 @@ class ResourceAvailability extends AbstractAdjustment {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
+                    if (!$foundControls) {
+                        continue;
+                    }
                     if (isset($foundControls[$name])) {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
@@ -94,13 +97,13 @@ class ResourceAvailability extends AbstractAdjustment {
             $table->where($firstHolder->getEventId(), $event->getPrimary());
             $table->where(BaseHolder::STATE_COLUMN . ' LIKE', $this->includeStates);
             $table->where('NOT ' . BaseHolder::STATE_COLUMN . ' LIKE', $this->excludeStates);
-            
+
             $primaries = array_map(function(BaseHolder $baseHolder) {
-                return $baseHolder->getModel()->getPrimary(false);
-            }, $serviceData['holders']);
+                        return $baseHolder->getModel()->getPrimary(false);
+                    }, $serviceData['holders']);
             $primaries = array_filter($primaries, function($primary) {
-                return (bool) $primary;
-            });
+                        return (bool) $primary;
+                    });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
@@ -110,7 +113,7 @@ class ResourceAvailability extends AbstractAdjustment {
             $usage += $table->sum($column);
         }
 
-        $capacity = $holder->getParameter($this->paramCapacity, 0);
+        $capacity = $holder->getParameter($this->paramCapacity);
 
         if ($capacity <= $usage) {
             foreach ($controls as $control) {
@@ -119,15 +122,15 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $form->onValidate[] = function(Form $form) use($capacity, $usage, $controls) {
-            $controlsUsage = 0;
-            foreach ($controls as $control) {
-                $controlsUsage += (int) $control->getValue();
-            }
-            if ($capacity < $usage + $controlsUsage) {
-                $message = str_replace('%avail', $capacity - $usage, $this->message);
-                $form->addError($message);
-            }
-        };
+                    $controlsUsage = 0;
+                    foreach ($controls as $control) {
+                        $controlsUsage += (int) $control->getValue();
+                    }
+                    if ($capacity < $usage + $controlsUsage) {
+                        $message = str_replace('%avail', $capacity - $usage, $this->message);
+                        $form->addError($message);
+                    }
+                };
     }
 
 }

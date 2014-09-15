@@ -441,6 +441,7 @@ class EventsExtension extends CompilerExtension {
             throw new MachineDefinitionException('No primary machine defined.');
         }
         $factory->addSetup('setPrimaryHolder', $primaryName);
+        $factory->addSetup('setSecondaryModelStrategy', array($machineDef['secondaryModelStrategy']));
 
         foreach ($machineDef['processings'] as $processing) {
             $factory->addSetup('addProcessing', $processing);

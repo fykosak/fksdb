@@ -49,6 +49,7 @@ class BaseHolder extends FreezableObject {
      * @var string
      */
     private $joinOn;
+
     /**
      * @var string
      */
@@ -95,6 +96,11 @@ class BaseHolder extends FreezableObject {
      * @var IEventRelation|null
      */
     private $eventRelation;
+
+    /**
+     * @var ISecondaryResolutionStrategy
+     */
+    private $secondaryResolution;
 
     /**
      * @var ModelEvent
@@ -262,6 +268,13 @@ class BaseHolder extends FreezableObject {
         $this->getService()->updateModel($this->getModel(), $values);
     }
 
+    public function resolveMultipleSecondaries($conflicts) {
+        if(!$this->secondaryResolution) {
+            throw new SecondaryModelConflictException($this->getModel(), $conflicts);
+        }
+        $this->secondaryResolution->resolve($this->getModel(), $conflicts);
+    }
+
     public function getName() {
         return $this->name;
     }
@@ -301,7 +314,7 @@ class BaseHolder extends FreezableObject {
         $this->updating();
         $this->joinOn = $joinOn;
     }
-    
+
     public function getJoinTo() {
         return $this->joinTo;
     }
@@ -310,8 +323,6 @@ class BaseHolder extends FreezableObject {
         $this->updating();
         $this->joinTo = $joinTo;
     }
-    
-    
 
     public function getPersonIds() {
         return $this->personIds;
@@ -355,8 +366,8 @@ class BaseHolder extends FreezableObject {
      */
     public function getDeterminingFields() {
         return array_filter($this->fields, function(Field $field) {
-            return $field->isDetermining();
-        });
+                    return $field->isDetermining();
+                });
     }
 
     /**

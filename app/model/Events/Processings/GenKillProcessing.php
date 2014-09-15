@@ -31,7 +31,7 @@ class GenKillProcessing extends Object implements IProcessing {
             }
             $isFilled = true;
             foreach ($baseHolder->getDeterminingFields() as $field) {
-                if (!$values[$name][$field->getName()]) {
+                if (!isset($values[$name][$field->getName()]) || !$values[$name][$field->getName()]) {
                     $isFilled = false;
                     break;
                 }

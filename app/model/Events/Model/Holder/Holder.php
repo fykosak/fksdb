@@ -8,19 +8,19 @@ use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
+use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKS\Logging\ILogger;
 use IteratorAggregate;
 use LogicException;
+use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use ORM\IModel;
-use ORM\IService;
 
 /**
  * A bit bloated class.
@@ -66,6 +66,11 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
     private $machine;
 
+    /**
+     * @var SecondaryModelStrategy
+     */
+    private $secondaryModelStrategy;
+
     function __construct(Connection $connection) {
         $this->connection = $connection;
 
@@ -84,8 +89,8 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function(BaseHolder $baseHolder) use($primaryHolder) {
-            return $baseHolder !== $primaryHolder;
-        });
+                    return $baseHolder !== $primaryHolder;
+                });
     }
 
     public function getPrimaryHolder() {
@@ -141,12 +146,21 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
     }
 
+    public function getSecondaryModelStrategy() {
+        return $this->secondaryModelStrategy;
+    }
+
+    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
+        $this->updating();
+        $this->secondaryModelStrategy = $secondaryModelStrategy;
+    }
+
     public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
-                $this->setSecondaryModels($group['holders'], $secondaryModels[$key]);
+                $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
             } else {
-                $this->loadSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
+                $this->secondaryModelStrategy->loadSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
             }
         }
         $this->primaryHolder->setModel($primaryModel);
@@ -163,13 +177,13 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             $this->primaryHolder->saveModel();
         } else {
             /*
-             * When creating/updating primary model, propagate its PK to referencinf secondary models.
+             * When creating/updating primary model, propagate its PK to referencing secondary models.
              */
             $this->primaryHolder->saveModel();
             $primaryModel = $this->primaryHolder->getModel();
 
             foreach ($this->getGroupedSecondaryHolders() as $group) {
-                $this->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
+                $this->secondaryModelStrategy->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
             }
 
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
@@ -252,37 +266,6 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         return $this->groupedHolders;
     }
 
-    private function setSecondaryModels($holders, $models) {
-        $filledHolders = 0;
-        foreach ($models as $secondaryModel) {
-            $holders[$filledHolders]->setModel($secondaryModel);
-            if (++$filledHolders > count($holders)) {
-                throw new InvalidStateException('More than expected secondary models supplied.');
-            }
-        }
-        for (; $filledHolders < count($holders); ++$filledHolders) {
-            $holders[$filledHolders]->setModel(null);
-        }
-    }
-
-    private function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
-        $table = $service->getTable();
-        if ($primaryModel) {
-            $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $table->where($joinOn, $joinValue);
-        } else {
-            $secondary = array();
-        }
-        $this->setSecondaryModels($holders, $secondary);
-    }
-
-    private function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
-        $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-        foreach ($holders as $holder) {
-            $service->updateModel($holder->getModel(), array($joinOn => $joinValue));
-        }
-    }
-
     /*
      * Parameters
      */
@@ -292,7 +275,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         if (count($parts) == 1) {
             return $this->primaryHolder->getParameter($name);
         } else if (isset($this->baseHolders[$parts[0]])) {
-            $this->baseHolders[$parts[0]]->getParameter($parts[1]);
+            return $this->baseHolders[$parts[0]]->getParameter($parts[1]);
         } else {
             throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");
         }

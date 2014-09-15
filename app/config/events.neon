@@ -17,6 +17,10 @@ definition:
     machine:
 
 machine:
+    # Strategy for handling secondary models
+    secondaryModelStrategy:
+        default: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite()
+        type: expression
     baseMachines:
     # processing checks invariants/calculates data on edit form submit, before transitions
     processings:

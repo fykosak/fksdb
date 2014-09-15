@@ -45,34 +45,64 @@ events:
                 service: @event.ServiceMTsafParticipant
                 
                 states:
+                    auto.invited: "Pozvaný (auto)"
+                    invited: Pozvaný
                     applied: Přihlášen
+                    applied.nodsef: "Přihlášen (bez DSEFu)" # is not accessible via transitions, only state rewriting
                     spare: Náhradník
                     participated: Účastnil se
+                    rejected: Odmítl
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
-                    __init->applied:
-                        condition: %events.tsaf7.appCond%
-                        label: Přihlásit účastníka
+                    # to invited
+                    __init->invited:
+                        condition: role('admin')
+                        label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(participant, .self) # TODO
-                    __init->spare: # TODO capacity condition
+                            - Events\Transitions\MailSender(tsaf/invited, .self) # TODO
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(tsaf/invited, .self) # TODO
+                    # to spare
+                    __init->spare:
                         condition: %events.tsaf7.appCond%
                         label: Přihlásit náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(participant, .self) # TODO
+                    # to applied
+                    __init->applied:
+                        condition: role('admin')
+                        label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(participant, .self) # TODO
                     spare->applied:
                         condition: role('admin')
                         label: Potvrdit účastníka
-                    applied->participated:
+                        onExecuted:
+                            - Events\Transitions\MailSender(participant, .self) # TODO
+                    invited->applied:
+                        condition: %events.tsaf7.appCond%
+                        label: Potvrdit účast
+                        onExecuted:
+                            - Events\Transitions\MailSender(participant, .self) # TODO
+                    # to end-states
+                    applied|applied.nodsef->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
-                    applied->missed:
+                    applied|applied.nodsef->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    applied|spare->cancelled:
+                    invited->rejected:
+                        condition: %events.tsaf7.appCond%
+                        label: Odmítnout účast
+                        dangerous: true      
+                    # to cancelled/termination
+                    auto.invited|invited|spare|applied|applied.nodsef->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                         dangerous: true
@@ -113,6 +143,7 @@ events:
                         modifiable: false
                         visible: false
                         required: false
+                        determining: true
 
 
         #
@@ -120,6 +151,7 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
+            secondaryModelStrategy: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
             baseMachines:
                 participantTsaf:
                     bmName: PARTICIPANT_TSAF
@@ -141,4 +173,6 @@ events:
             joins:
                 participantTsaf:
                     *->applied:
-                        participantDsef: applied
+                        participantDsef: applied.tsaf
+                    *->cancelled:
+                        participantDsef: applied.notsaf

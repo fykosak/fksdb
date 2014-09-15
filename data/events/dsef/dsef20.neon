@@ -38,24 +38,40 @@ events:
                 
                 states:
                     applied: Přihlášen
+                    applied.tsaf: "Přihlášen (TSAF)"
+                    applied.notsaf: "Přihlášen (zůstal z TSAFu)"
                     participated: Účastnil se
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
+                    # to applied
                     __init->applied:
                         condition: %events.dsef20.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(dsef.participant, .self)
-                    applied->participated:
+                    __init->applied.tsaf:
+                        condition: %events.dsef20.appCond%
+                        label: "TODO ->applied.tsaf"
+                        onExecuted:
+                            - Events\Transitions\MailSender(dsef.participant, .self) # TODO check
+                    applied.tsaf->applied.notsaf:
+                        condition: role('admin')
+                        label: "TODO ->applied.notsaf"
+                    applied->applied.tsaf:
+                        condition: %events.dsef20.appCond%
+                        label: "TODO ->applied.tsaf"
+                    # to end-states
+                    applied|applied.tsaf|applied.notsaf->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
-                    applied->missed:
+                    applied|applied.tsaf|applied.notsaf->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    applied->cancelled:
+                    # cancel and termination
+                    applied|applied.notsaf->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                         dangerous: true

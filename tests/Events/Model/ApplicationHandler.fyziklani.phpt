@@ -217,7 +217,7 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         $data = ArrayHash::from($data);
         $this->fixture->storeAndExecute($this->holder, $data);
 
-        Assert::true(true);
+        
         $result = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
         Assert::notEqual(false, $result);
 
@@ -225,7 +225,7 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         Assert::equal($teamName, $team->name);
 
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
-        Assert::equal(2, $count);
+        Assert::equal(2, $count);       
     }
 
 }
