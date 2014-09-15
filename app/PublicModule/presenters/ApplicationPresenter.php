@@ -189,6 +189,9 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentContestChooser($name) {
         $component = parent::createComponentContestChooser($name);
         if ($this->getAction() == 'default') {
+            if (!$this->getEvent()) {
+                throw new BadRequestException(_('Neexistující akce.'), 404);
+            }
             $component->setContests(array(
                 $this->getEvent()->getEventType()->contest_id,
             ));

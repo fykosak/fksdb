@@ -4,10 +4,10 @@ namespace Events\Model;
 
 $container = require '../../bootstrap.php';
 
-use BasePresenter;
-use DatabaseTestCase;
+use Events\EventTestCase;
 use Events\Model\Holder\Holder;
 use FKS\Logging\DevNullLogger;
+use MockEnvironment\MockApplicationTrait;
 use Nette\ArrayHash;
 use Nette\DI\Container;
 use ORM\Models\Events\ModelFyziklaniTeam;
@@ -15,7 +15,9 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use Tester\Assert;
 
-class ApplicationHandlerTest extends DatabaseTestCase {
+
+class ApplicationHandlerTest extends EventTestCase {
+    use MockApplicationTrait;
 
     /**
      * @var Container
@@ -49,10 +51,9 @@ class ApplicationHandlerTest extends DatabaseTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (1, 1, 'Fyziklání')");
+
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
                 . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
-        $this->connection->query("INSERT INTO event_status (status) VALUES ('pending'), ('spare'), ('approved'), ('participated'), ('cancelled'), ('missed'), ('applied')");
 
         $this->serviceTeam = $this->container->getService('event.ServiceFyziklaniTeam');
         $this->serviceEvent = $this->container->getService('ServiceEvent');
@@ -63,23 +64,12 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         $this->holder = $this->container->createEventHolder($event);
         $this->fixture = $handlerFactory->create($event, new DevNullLogger());
 
-        $mockPresenter = new MockPresenter($this->container);
-        $this->container->callMethod(array($mockPresenter, 'injectTranslator'));
-        $application = new MockApplication($mockPresenter);
-
-        $mailFactory = $this->container->getByType('Mail\MailTemplateFactory');
-        $mailFactory->injectApplication($application);
+        $this->mockApplication($this->container);
     }
 
     protected function tearDown() {
         $this->connection->query("DELETE FROM e_fyziklani_participant");
-        $this->connection->query("DELETE FROM event_participant");
         $this->connection->query("DELETE FROM e_fyziklani_team");
-        $this->connection->query("DELETE FROM event_status");
-        $this->connection->query("DELETE FROM event");
-        $this->connection->query("DELETE FROM event_type");
-        $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
 
         parent::tearDown();
     }
@@ -97,7 +87,7 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         $this->createPersonHistory($id3, 2000, 1, null, 1);
 
         $teamName = '\'); DROP TABLE student; --';
-        
+
         $data = array(
             'team' =>
             array(
@@ -217,7 +207,7 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         $data = ArrayHash::from($data);
         $this->fixture->storeAndExecute($this->holder, $data);
 
-        
+
         $result = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
         Assert::notEqual(false, $result);
 
@@ -225,43 +215,11 @@ class ApplicationHandlerTest extends DatabaseTestCase {
         Assert::equal($teamName, $team->name);
 
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
-        Assert::equal(2, $count);       
+        Assert::equal(2, $count);
     }
 
 }
 
-/*
- * Mock classes
- */
-
-class MockApplication {
-
-    /**
-     * @var BasePresenter
-     */
-    private $presenter;
-
-    public function __construct(BasePresenter $presenter) {
-        $this->presenter = $presenter;
-    }
-
-    public function getPresenter() {
-        return $this->presenter;
-    }
-
-}
-
-class MockPresenter extends BasePresenter {
-
-    public function link($destination, $args = array()) {
-        return '';
-    }
-
-    public function getLang() {
-        return 'cs';
-    }
-
-}
 
 $testCase = new ApplicationHandlerTest($container);
 $testCase->run();
