@@ -20,11 +20,6 @@ class ApplicationHandlerTest extends EventTestCase {
     use MockApplicationTrait;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var ApplicationHandler
      */
     private $fixture;
@@ -46,7 +41,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     function __construct(Container $container) {
         parent::__construct($container->getService('nette.database.default'));
-        $this->container = $container;
+        $this->setContainer($container);
     }
 
     protected function setUp() {
@@ -55,16 +50,16 @@ class ApplicationHandlerTest extends EventTestCase {
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
                 . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
-        $this->serviceTeam = $this->container->getService('event.ServiceFyziklaniTeam');
-        $this->serviceEvent = $this->container->getService('ServiceEvent');
+        $this->serviceTeam = $this->getContainer()->getService('event.ServiceFyziklaniTeam');
+        $this->serviceEvent = $this->getContainer()->getService('ServiceEvent');
 
 
-        $handlerFactory = $this->container->getByType('Events\Model\ApplicationHandlerFactory');
+        $handlerFactory = $this->getContainer()->getByType('Events\Model\ApplicationHandlerFactory');
         $event = $this->serviceEvent->findByPrimary(1);
-        $this->holder = $this->container->createEventHolder($event);
+        $this->holder = $this->getContainer()->createEventHolder($event);
         $this->fixture = $handlerFactory->create($event, new DevNullLogger());
 
-        $this->mockApplication($this->container);
+        $this->mockApplication();
     }
 
     protected function tearDown() {

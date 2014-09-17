@@ -1,5 +1,4 @@
 <?php
-
 $container = require '../bootstrap.php';
 
 use Nette\Application\Request;

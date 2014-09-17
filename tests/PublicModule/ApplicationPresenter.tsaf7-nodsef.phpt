@@ -10,7 +10,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->authenticate($this->container, $this->personId);
+        $this->authenticate($this->personId);
 
         $this->tsafAppId = $this->insert('event_participant', array(
             'person_id' => $this->personId,

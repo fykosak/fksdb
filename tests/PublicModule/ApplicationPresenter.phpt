@@ -12,28 +12,18 @@ use Tester\Assert;
 class ApplicationPresenterTest extends EventTestCase {
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var RegisterPresenter
+     * @var ApplicationPresenter
      */
     private $fixture;
 
     function __construct(Container $container) {
         parent::__construct($container->getService('nette.database.default'));
-        $this->container = $container;
+        $this->setContainer($container);
     }
 
     protected function setUp() {
         parent::setUp();
-
-        $presenterFactory = $this->container->getByType('Nette\Application\IPresenterFactory');
-        $this->fixture = $presenterFactory->createPresenter('Public:Application');
-        $this->fixture->autoCanonicalize = false;
-
-        $this->container->getByType('Authentication\LoginUserStorage')->setPresenter($this->fixture);
+        $this->fixture = $this->createPresenter('Public:Application');
     }
 
     public function test404() {

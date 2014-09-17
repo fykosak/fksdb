@@ -18,7 +18,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             'role_id' => 5,
             'contest_id' => 1,
         ));
-        $this->authenticate($this->container, $adminId);
+        $this->authenticate($adminId);
 
         $this->tsafAppId = $this->insert('event_participant', array(
             'person_id' => $this->personId,

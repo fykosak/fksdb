@@ -13,7 +13,18 @@ use Tester\Assert;
  */
 trait MockApplicationTrait {
 
-    protected function mockApplication(Container $container) {
+    private $container;
+
+    protected function setContainer(Container $container) {
+        $this->container = $container;
+    }
+
+    protected function getContainer() {
+        return $this->container;
+    }
+
+    protected function mockApplication() {
+        $container = $this->getContainer();
         $mockPresenter = new MockPresenter($container);
         $container->callMethod(array($mockPresenter, 'injectTranslator'));
         $application = new MockApplication($mockPresenter);
@@ -22,7 +33,8 @@ trait MockApplicationTrait {
         $mailFactory->injectApplication($application);
     }
 
-    protected function authenticate(Container $container, $login) {
+    protected function authenticate($login) {
+        $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getService('ServiceLogin')->findByPrimary($login);
             Assert::type('ModelLogin', $login);
@@ -30,6 +42,15 @@ trait MockApplicationTrait {
         $storage = $container->getByType('Authentication\LoginUserStorage');
         $storage->setIdentity($login);
         $storage->setAuthenticated(true);
+    }
+
+    protected function createPresenter($presenterName) {
+        $presenterFactory = $this->getContainer()->getByType('Nette\Application\IPresenterFactory');
+        $presenter = $presenterFactory->createPresenter($presenterName);
+        $presenter->autoCanonicalize = false;
+
+        $this->getContainer()->getByType('Authentication\LoginUserStorage')->setPresenter($presenter);
+        return $presenter;
     }
 
 }

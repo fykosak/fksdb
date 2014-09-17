@@ -11,8 +11,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
     protected function setUp() {
         parent::setUp();
 
-
-        $this->authenticate($this->container, $this->personId);
+        $this->authenticate($this->personId);
     }
 
     public function testDisplay() {
