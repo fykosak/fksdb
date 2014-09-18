@@ -13,6 +13,9 @@ class ModelMPostContact extends AbstractModelMulti {
         return $this->getMainModel();
     }
 
+    /**
+     * @return ModelPostContact
+     */
     public function getPostContact() {
         return $this->getJoinedModel();
     }

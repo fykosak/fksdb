@@ -92,6 +92,11 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
+            if ($sub == 'post_contact') {
+                $subcontainer->setOption('showGroup', true);
+                $subcontainer->setOption('label', 'Adresa');
+            }
+
             foreach ($fields as $fieldName => $metadata) {
                 if (is_scalar($metadata)) {
                     $metadata = array(

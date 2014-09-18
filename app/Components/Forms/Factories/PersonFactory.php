@@ -364,8 +364,8 @@ class PersonFactory {
                 return new HiddenField($required);
             } else if ($fieldName == 'address') {
                 //TODO required, support for multiple addresses?
-                //TODO insert into group
-                return $this->addressFactory->createAddress();
+                $container = $this->addressFactory->createAddress();
+                return $container;
             }
         } else {
             $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));

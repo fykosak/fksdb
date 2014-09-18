@@ -43,7 +43,19 @@ html, body {
     border-style: none;
     border-width: 0;
     font-size: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
+    position: absolute;
+    top: -2em;
+    z-index: 2;
+}
+fieldset .well {
+    margin-top: 2em;
+}
+.clear-referenced {
+    position: absolute;
+    right: 1em;
+    top: -3em;
+    z-index: 3;
 }
 
 .right-inner-addon {
