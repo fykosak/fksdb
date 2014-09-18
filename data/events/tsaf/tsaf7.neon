@@ -148,6 +148,8 @@ events:
                         modifiable: false
                         visible: false
                         required: false
+                    e_dsef_group_id:
+                        required: %events.tsaf7.requiredCond%
 
 
         #
