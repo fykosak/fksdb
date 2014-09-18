@@ -12,11 +12,11 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
-                    phone: true
-                    id_number: true
-                    born: true
+                    phone: %events.tsaf7.requiredCond%
+                    id_number: %events.tsaf7.requiredCond%
+                    born: %events.tsaf7.requiredCond%
                 post_contact_d:
-                    address: true
+                    address: %events.tsaf7.requiredCond%
                 post_contact_p:
                     address: false
             clothes:
