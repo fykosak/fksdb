@@ -22,8 +22,10 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
+use Persons\ReferencedPersonHandler;
 use ServicePerson;
 use YearCalculator;
 
@@ -112,9 +114,9 @@ class PersonFactory {
      * 
      * @deprecated
      * @param type $options
-     * @param \Nette\Forms\ControlGroup $group
+     * @param ControlGroup $group
      * @param array $requiredCondition
-     * @return \FKSDB\Components\Forms\Containers\ModelContainer
+     * @return ModelContainer
      */
     public function createPerson($options = 0, ControlGroup $group = null, array $requiredCondition = null) {
         $disabled = (bool) ($options & self::DISABLED);
@@ -172,9 +174,9 @@ class PersonFactory {
     /**
      * @deprecated
      * @param type $options
-     * @param \Nette\Forms\ControlGroup $group
+     * @param ControlGroup $group
      * @param type $emailRule
-     * @return \FKSDB\Components\Forms\Containers\PersonInfoContainer
+     * @return PersonInfoContainer
      */
     public function createPersonInfo($options = 0, ControlGroup $group = null, $emailRule = null) {
         $container = new PersonInfoContainer();
@@ -242,7 +244,7 @@ class PersonFactory {
 
     /**
      * @deprecated Logins are created by default.
-     * @param \Nette\Forms\Container $container
+     * @param Container $container
      * @param ModelPerson $person
      */
     public function appendEmailWithLogin(Container $container, callable $emailRule = null, $options = 0) {
@@ -279,7 +281,7 @@ class PersonFactory {
 
     /**
      * @deprecated Logins are created by default.
-     * @param \Nette\Forms\Container $container
+     * @param Container $container
      * @param ModelPerson $person
      */
     public function modifyLoginContainer(Container $container, ModelPerson $person) {
@@ -326,9 +328,9 @@ class PersonFactory {
     /**
      * @deprecated
      * @param type $options
-     * @param \Nette\Forms\ControlGroup $group
+     * @param ControlGroup $group
      * @param type $acYear
-     * @return \FKSDB\Components\Forms\Containers\ModelContainer
+     * @return ModelContainer
      */
     public function createPersonHistory($options = 0, ControlGroup $group = null, $acYear) {
         $container = new ModelContainer();
@@ -358,14 +360,21 @@ class PersonFactory {
     }
 
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
-        if ($sub == 'post_contact') {
-            if ($fieldName == 'type') {
+        if (in_array($sub, array(
+                    ReferencedPersonHandler::POST_CONTACT_DELIVERY,
+                    ReferencedPersonHandler::POST_CONTACT_PERMANENT,
+                ))) {
+            if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
-                return new HiddenField($required);
-            } else if ($fieldName == 'address') {
-                //TODO required, support for multiple addresses?
-                //TODO insert into group
-                return $this->addressFactory->createAddress();
+                if($required) {
+                    $options = AddressFactory::REQUIRED;
+                } else {
+                    $options = 0;
+                }
+                $container = $this->addressFactory->createAddress($options, $hiddenField);
+                return $container;
+            } else {
+                throw new InvalidArgumentException("Only 'address' field is supported.");
             }
         } else {
             $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));

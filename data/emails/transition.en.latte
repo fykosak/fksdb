@@ -1,0 +1,7 @@
+{* General template for any event. *}
+<p>
+    {$person->getFullname()}'s application for <em>{$event}</em> state updated.
+    New state <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
+</p>
+{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/closing.en.latte'}

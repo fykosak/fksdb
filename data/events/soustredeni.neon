@@ -15,8 +15,7 @@ parameters:
                     phone:
                         required: %events.soustredeni.requiredCond%
                         description: "Telefon (i s předvolbou státu), jež budeš mít s sebou."
-                post_contact:
-                    type: P
+                post_contact_p:
                     address: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:

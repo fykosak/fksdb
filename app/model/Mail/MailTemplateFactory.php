@@ -32,6 +32,14 @@ class MailTemplateFactory {
     }
 
     /**
+     * @internal For automated testing only.
+     * @param $application
+     */
+    public function injectApplication($application) {
+        $this->application = $application;
+    }
+
+    /**
      * @param string $lang ISO 639-1
      */
     public function createLoginInvitation(Control $control = null, $lang = null) {
@@ -47,7 +55,7 @@ class MailTemplateFactory {
 
     public final function createFromFile($filename, $lang = null, Control $control = null) {
         $presenter = $this->application->getPresenter();
-        if (!$presenter instanceof BasePresenter) {
+        if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string) $presenter));
         }
         if ($lang === null) {

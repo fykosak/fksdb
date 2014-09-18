@@ -12,9 +12,8 @@ parameters:
                 school_id: true
                 study_year: true
                 class: false
-            post_contact:
+            post_contact_d:
                 address: true
-                type: P
             person_info:
                 email: true
                 origin: false
@@ -28,9 +27,10 @@ parameters:
             person_history:
                 school_id: true
                 study_year: true
-            post_contact:
+            post_contact_d:
                 address: true
-                type: P
+            post_contact_p:
+                address: false
             person_info:
                 email: true
                 born: false

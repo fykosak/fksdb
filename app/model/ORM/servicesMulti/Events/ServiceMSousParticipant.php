@@ -30,5 +30,3 @@ class ServiceMSousParticipant extends AbstractServiceMulti {
     }
 
 }
-
-?>

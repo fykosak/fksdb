@@ -114,8 +114,9 @@ class MailSender extends Object {
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();
         $holder = $machine->getHolder();
+        $baseHolder = $holder[$baseMachine->getName()];
         $person = $login->getPerson();
-        $event = $holder->getEvent();
+        $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
         $application = $holder->getPrimaryHolder()->getModel();
 
@@ -132,7 +133,7 @@ class MailSender extends Object {
         $template->holder = $holder;
         $template->machine = $machine;
         $template->baseMachine = $baseMachine;
-        // TODO baseHolder
+        $template->baseHolder = $baseHolder;
 
 
         $message = new Message();

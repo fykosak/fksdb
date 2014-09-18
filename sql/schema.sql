@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 
 
 -- -----------------------------------------------------
@@ -378,17 +378,17 @@ DROP TABLE IF EXISTS `grant` ;
 
 CREATE TABLE IF NOT EXISTS `grant` (
   `grant_id` INT(11) NULL AUTO_INCREMENT,
-  `person_id` INT(11) NOT NULL,
+  `login_id` INT(11) NOT NULL,
   `role_id` INT(11) NOT NULL,
   `contest_id` INT NOT NULL,
-  UNIQUE INDEX `person_id` (`person_id` ASC, `role_id` ASC),
   INDEX `right_id` (`role_id` ASC),
   PRIMARY KEY (`grant_id`),
-  UNIQUE INDEX `grant_UNIQUE` (`role_id` ASC, `person_id` ASC, `contest_id` ASC),
+  UNIQUE INDEX `grant_UNIQUE` (`role_id` ASC, `login_id` ASC, `contest_id` ASC),
   INDEX `fk_grant_contest1_idx` (`contest_id` ASC),
+  INDEX `permission_ibfk_1_idx` (`login_id` ASC),
   CONSTRAINT `permission_ibfk_1`
-    FOREIGN KEY (`person_id`)
-    REFERENCES `login` (`person_id`)
+    FOREIGN KEY (`login_id`)
+    REFERENCES `login` (`login_id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `permission_ibfk_2`
@@ -494,15 +494,16 @@ COMMENT = 'mapování českých a slovenských PSČ na evidovaný region';
 
 
 -- -----------------------------------------------------
--- Table `mail_type`
+-- Table `mail_batch`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mail_type` ;
+DROP TABLE IF EXISTS `mail_batch` ;
 
-CREATE TABLE IF NOT EXISTS `mail_type` (
-  `type_id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(60) NOT NULL,
-  `description` VARCHAR(255) NULL COMMENT 'druh rozesílané pošty (brožurka, pozvánka, etc.)',
-  PRIMARY KEY (`type_id`))
+CREATE TABLE IF NOT EXISTS `mail_batch` (
+  `mail_batch_id` INT NOT NULL AUTO_INCREMENT,
+  `flag_id` INT(11) NULL,
+  `description` TEXT NULL COMMENT 'druh rozesílané pošty (brožurka, pozvánka, etc.)',
+  `ts` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`mail_batch_id`))
 ENGINE = InnoDB;
 
 
@@ -513,49 +514,31 @@ DROP TABLE IF EXISTS `mail_log` ;
 
 CREATE TABLE IF NOT EXISTS `mail_log` (
   `person_id` INT(11) NOT NULL,
-  `type_id` INT NOT NULL,
-  `note` VARCHAR(128) NULL DEFAULT NULL COMMENT '„24-1“… ',
-  `time` DATETIME NOT NULL,
+  `ts` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `address_id` INT NULL,
+  `email` VARCHAR(255) NULL,
+  `mail_batch_id` INT(11) NOT NULL,
   INDEX `person_id` (`person_id` ASC),
-  INDEX `fk_si_log_si_type1_idx` (`type_id` ASC),
-  PRIMARY KEY (`person_id`, `type_id`),
+  PRIMARY KEY (`person_id`),
+  INDEX `fk_mail_log_mail_batch1_idx` (`mail_batch_id` ASC),
+  INDEX `fk_mail_log_address1_idx` (`address_id` ASC),
   CONSTRAINT `si_log_ibfk_1`
     FOREIGN KEY (`person_id`)
     REFERENCES `person` (`person_id`)
     ON DELETE CASCADE,
-  CONSTRAINT `fk_si_log_si_type1`
-    FOREIGN KEY (`type_id`)
-    REFERENCES `mail_type` (`type_id`)
+  CONSTRAINT `fk_mail_log_mail_batch1`
+    FOREIGN KEY (`mail_batch_id`)
+    REFERENCES `mail_batch` (`mail_batch_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_mail_log_address1`
+    FOREIGN KEY (`address_id`)
+    REFERENCES `address` (`address_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
-COMMENT = 'Skript si podle logu dává pozor, aby někoho nespamoval dvakr';
-
-
--- -----------------------------------------------------
--- Table `mail_settings`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mail_settings` ;
-
-CREATE TABLE IF NOT EXISTS `mail_settings` (
-  `person_id` INT(11) NOT NULL,
-  `type_id` INT NOT NULL,
-  `value` ENUM('yes', 'no', 'auto-yes', 'auto-no') NULL,
-  INDEX `person_id` (`person_id` ASC),
-  INDEX `fk_si_settings_si_type1_idx` (`type_id` ASC),
-  PRIMARY KEY (`person_id`, `type_id`),
-  CONSTRAINT `si_settings_ibfk_1`
-    FOREIGN KEY (`person_id`)
-    REFERENCES `person` (`person_id`)
-    ON DELETE CASCADE,
-  CONSTRAINT `fk_si_settings_si_type1`
-    FOREIGN KEY (`type_id`)
-    REFERENCES `mail_type` (`type_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+COMMENT = 'v tabulce se loguje historická hodnota adresy nebo emailu, k /* comment truncated */ /*am se posílalo*/';
 
 
 -- -----------------------------------------------------
@@ -747,6 +730,7 @@ CREATE TABLE IF NOT EXISTS `stored_query` (
   `name` VARCHAR(32) NOT NULL COMMENT 'název dotazu, identifikace pro človkěka',
   `description` TEXT NULL,
   `sql` TEXT NOT NULL,
+  `php_post_proc` VARCHAR(255) NULL,
   PRIMARY KEY (`query_id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   UNIQUE INDEX `qid_UNIQUE` (`qid` ASC))
@@ -787,7 +771,7 @@ CREATE TABLE IF NOT EXISTS `global_session` (
   `session_id` CHAR(32) NOT NULL,
   `login_id` INT(11) NOT NULL COMMENT 'the only data\nfield of the session',
   `since` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `until` TIMESTAMP NOT NULL,
+  `until` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   `remote_ip` VARCHAR(45) NULL COMMENT 'IP adresa klienta',
   PRIMARY KEY (`session_id`),
   INDEX `fk_auth_token_login1_idx` (`login_id` ASC),
@@ -802,46 +786,21 @@ COMMENT = 'Stores global sessions for SSO (single sign-on/off)';
 
 
 -- -----------------------------------------------------
--- Table `person_flag`
+-- Table `flag`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `person_flag` ;
+DROP TABLE IF EXISTS `flag` ;
 
-CREATE TABLE IF NOT EXISTS `person_flag` (
+CREATE TABLE IF NOT EXISTS `flag` (
   `flag_id` INT NOT NULL,
-  `name` VARCHAR(16) NOT NULL,
+  `fid` VARCHAR(16) NOT NULL,
+  `name` VARCHAR(64) NOT NULL,
+  `description` TEXT NULL,
+  `type` ENUM('global','contest','ac_year','contest_year') NOT NULL COMMENT 'rozsah platnosti flagu',
   PRIMARY KEY (`flag_id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+  UNIQUE INDEX `name_UNIQUE` (`fid` ASC))
 ENGINE = InnoDB
 COMMENT = 'general purpose flag for the person (for presentation layer) /* comment truncated */ /*
 */';
-
-
--- -----------------------------------------------------
--- Table `person_has_flag`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `person_has_flag` ;
-
-CREATE TABLE IF NOT EXISTS `person_has_flag` (
-  `person_flag_id` INT NOT NULL,
-  `person_id` INT NOT NULL,
-  `flag_id` INT NOT NULL,
-  `contest_id` INT NOT NULL,
-  `year` TINYINT(4) NOT NULL,
-  PRIMARY KEY (`person_flag_id`),
-  UNIQUE INDEX `person_flag_year_ct_UQ` (`person_id` ASC, `flag_id` ASC, `contest_id` ASC, `year` ASC),
-  INDEX `fk_person_has_flag_person_flag1_idx` (`flag_id` ASC),
-  CONSTRAINT `fk_person_has_flag_person1`
-    FOREIGN KEY (`person_id`)
-    REFERENCES `person` (`person_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_person_has_flag_person_flag1`
-    FOREIGN KEY (`flag_id`)
-    REFERENCES `person_flag` (`flag_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'person\'s flags are per year';
 
 
 -- -----------------------------------------------------
@@ -862,6 +821,48 @@ CREATE TABLE IF NOT EXISTS `contest_year` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'mapování ročníků semináře na akademické roky';
+
+
+-- -----------------------------------------------------
+-- Table `person_has_flag`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `person_has_flag` ;
+
+CREATE TABLE IF NOT EXISTS `person_has_flag` (
+  `person_flag_id` INT NOT NULL,
+  `person_id` INT NOT NULL,
+  `flag_id` INT NOT NULL,
+  `contest_id` INT NULL,
+  `ac_year` SMALLINT(4) NULL,
+  `value` TINYINT NOT NULL DEFAULT 1,
+  `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`person_flag_id`),
+  UNIQUE INDEX `person_flag_year_ct_UQ` (`person_id` ASC, `flag_id` ASC, `contest_id` ASC, `ac_year` ASC),
+  INDEX `fk_person_has_flag_person_flag1_idx` (`flag_id` ASC),
+  INDEX `fk_person_has_flag_contest1_idx` (`contest_id` ASC),
+  INDEX `fk_person_has_flag_contest_year1_idx` (`ac_year` ASC),
+  CONSTRAINT `fk_person_has_flag_person1`
+    FOREIGN KEY (`person_id`)
+    REFERENCES `person` (`person_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_person_has_flag_person_flag1`
+    FOREIGN KEY (`flag_id`)
+    REFERENCES `flag` (`flag_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_person_has_flag_contest1`
+    FOREIGN KEY (`contest_id`)
+    REFERENCES `contest` (`contest_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_person_has_flag_contest_year1`
+    FOREIGN KEY (`ac_year`)
+    REFERENCES `contest_year` (`ac_year`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'person\'s flags are per year';
 
 
 -- -----------------------------------------------------
@@ -932,6 +933,46 @@ CREATE TABLE IF NOT EXISTS `e_vikend_participant` (
   `wants_lecture` VARCHAR(64) NULL,
   PRIMARY KEY (`event_participant_id`),
   CONSTRAINT `fk_e_vikend_participant_event_participant1`
+    FOREIGN KEY (`event_participant_id`)
+    REFERENCES `event_participant` (`event_participant_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_sous_participant`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `e_sous_participant` ;
+
+CREATE TABLE IF NOT EXISTS `e_sous_participant` (
+  `event_participant_id` INT NOT NULL,
+  `diet` TEXT NULL,
+  `special_diet` TINYINT(1) NOT NULL,
+  `health_restrictions` TEXT NULL,
+  `tshirt_size` VARCHAR(20) NULL,
+  `price` DECIMAL(6,2) NULL,
+  PRIMARY KEY (`event_participant_id`),
+  CONSTRAINT `fk_e_sous_participant_event_participant1`
+    FOREIGN KEY (`event_participant_id`)
+    REFERENCES `event_participant` (`event_participant_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_tsaf_participant`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `e_tsaf_participant` ;
+
+CREATE TABLE IF NOT EXISTS `e_tsaf_participant` (
+  `event_participant_id` INT NOT NULL,
+  `price` DECIMAL(6,2) NULL,
+  `tshirt_size` VARCHAR(20) NULL,
+  `jumper_size` VARCHAR(20) NULL,
+  PRIMARY KEY (`event_participant_id`),
+  CONSTRAINT `fk_e_tsaf_participant_event_participant1`
     FOREIGN KEY (`event_participant_id`)
     REFERENCES `event_participant` (`event_participant_id`)
     ON DELETE NO ACTION

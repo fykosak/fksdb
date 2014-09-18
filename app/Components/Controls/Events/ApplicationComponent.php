@@ -149,7 +149,7 @@ class ApplicationComponent extends Control {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        foreach ($primaryMachine->getAvailableTransitions() as $transition) {
+        foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 

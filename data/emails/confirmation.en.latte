@@ -1,0 +1,12 @@
+{* General template for any event. *}
+<p>
+    We confirm receiving {$person->getFullname()}'s application for event <em>{$event}</em>
+    that takes place on
+    {if $event->end && $event->end->getTimestamp() !== $event->begin->getTimestamp()}
+    {$event->begin|date:'Y-m-d'} to {$event->end|date:'Y-m-d'}.
+    {else}
+    {$event->begin|date:'Y-m-d'}.
+    {/if}
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}

@@ -30,5 +30,3 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
     }
 
 }
-
-?>

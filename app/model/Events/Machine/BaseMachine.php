@@ -16,6 +16,8 @@ class BaseMachine extends FreezableObject {
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
     const STATE_ANY = '*';
+    const EXECUTABLE = 0x1;
+    const VISIBLE = 0x2;
 
     /**
      * @var string
@@ -120,9 +122,10 @@ class BaseMachine extends FreezableObject {
         return $this->transitions;
     }
 
-    public function getAvailableTransitions() {
-        return array_filter($this->getMatchingTransitions(), function(Transition $transition) {
-                    return $transition->canExecute();
+    public function getAvailableTransitions($mode = self::EXECUTABLE) {
+        return array_filter($this->getMatchingTransitions(), function(Transition $transition) use($mode) {
+                    return
+                            (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
                 });
     }
 

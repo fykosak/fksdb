@@ -5,9 +5,13 @@ namespace Events\Model\Holder;
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKS\Config\NeonScheme;
+use ModelEvent;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\Utils\Neon;
 use ORM\IModel;
 use ORM\IService;
 
@@ -47,6 +51,11 @@ class BaseHolder extends FreezableObject {
     private $joinOn;
 
     /**
+     * @var string
+     */
+    private $joinTo;
+
+    /**
      * @var string[]
      */
     private $personIds;
@@ -80,6 +89,33 @@ class BaseHolder extends FreezableObject {
      * @var IModel 
      */
     private $model;
+
+    /**
+     * Relation to the primary holder's event.
+     * 
+     * @var IEventRelation|null
+     */
+    private $eventRelation;
+
+    /**
+     * @var ISecondaryResolutionStrategy
+     */
+    private $secondaryResolution;
+
+    /**
+     * @var ModelEvent
+     */
+    private $event;
+
+    /**
+     * @var array
+     */
+    private $paramScheme;
+
+    /**
+     * @var array
+     */
+    private $parameters;
 
     /**
      * @var ExpressionEvaluator
@@ -125,6 +161,37 @@ class BaseHolder extends FreezableObject {
     public function setVisible($visible) {
         $this->updating();
         $this->visible = $visible;
+    }
+
+    public function setEventRelation(IEventRelation $eventRelation = null) {
+        $this->eventRelation = $eventRelation;
+    }
+
+    public function getEvent() {
+        return $this->event;
+    }
+
+    private function setEvent(ModelEvent $event) {
+        $this->updating();
+        $this->event = $event;
+        $this->cacheParameters();
+    }
+
+    public function inferEvent(ModelEvent $event) {
+        if ($this->eventRelation instanceof IEventRelation) {
+            $this->setEvent($this->eventRelation->getEvent($event));
+        } else {
+            $this->setEvent($event);
+        }
+    }
+
+    public function getParamScheme() {
+        return $this->paramScheme;
+    }
+
+    public function setParamScheme($paramScheme) {
+        $this->updating();
+        $this->paramScheme = $paramScheme;
     }
 
     public function getEvaluator() {
@@ -197,8 +264,15 @@ class BaseHolder extends FreezableObject {
     }
 
     public function updateModel($values) {
-        $values[self::EVENT_COLUMN] = $this->getHolder()->getEvent()->getPrimary();
+        $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values);
+    }
+
+    public function resolveMultipleSecondaries($conflicts) {
+        if(!$this->secondaryResolution) {
+            throw new SecondaryModelConflictException($this->getModel(), $conflicts);
+        }
+        $this->secondaryResolution->resolve($this->getModel(), $conflicts);
     }
 
     public function getName() {
@@ -239,6 +313,15 @@ class BaseHolder extends FreezableObject {
     public function setJoinOn($joinOn) {
         $this->updating();
         $this->joinOn = $joinOn;
+    }
+
+    public function getJoinTo() {
+        return $this->joinTo;
+    }
+
+    public function setJoinTo($joinTo) {
+        $this->updating();
+        $this->joinTo = $joinTo;
     }
 
     public function getPersonIds() {
@@ -330,6 +413,27 @@ class BaseHolder extends FreezableObject {
 
     public function __toString() {
         return $this->name;
+    }
+
+    /*
+     * Parameter handling
+     */
+
+    private function cacheParameters() {
+        $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
+        $parameters = $parameters ? Neon::decode($parameters) : array();
+        $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
+    }
+
+    public function getParameter($name, $default = null) {
+        $args = func_get_args();
+        array_unshift($args, $this->parameters);
+        try {
+            $result = call_user_func_array('Nette\Utils\Arrays::get', $args);
+            return $result;
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $e);
+        }
     }
 
 }

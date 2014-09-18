@@ -1,5 +1,7 @@
 <?php
 
+use Nette\InvalidStateException;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -21,6 +23,10 @@ class ModelEventParticipant extends AbstractModelSingle {
     }
 
     public function __toString() {
+        if (!$this->getPerson()) {
+            trigger_error("Missing person in application ID '" . $this->getPrimary(false) . "'.");
+            //throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
+        }
         return $this->getPerson()->getFullname();
     }
 

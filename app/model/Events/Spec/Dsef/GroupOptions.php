@@ -42,10 +42,10 @@ class GroupOptions extends Object implements IOptionsProvider {
     }
 
     public function getOptions(Field $field) {
-        $holder = $field->getBaseHolder()->getHolder();
-        $event = $holder->getEvent();
-        $application = $field->getBaseHolder()->getModel();
-        $groups = $this->transformGroups($holder->getParameter(self::PARAM_GROUPS));
+        $baseHolder = $field->getBaseHolder();
+        $event = $baseHolder->getEvent();
+        $application = $baseHolder->getModel();
+        $groups = $this->transformGroups($baseHolder->getParameter(self::PARAM_GROUPS));
 
         $groupOccupied = $this->serviceMParticipant->getTable()
                 ->getConnection()->table(\DbNames::TAB_E_DSEF_PARTICIPANT)

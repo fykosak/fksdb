@@ -30,5 +30,3 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
     }
 
 }
-
-?>

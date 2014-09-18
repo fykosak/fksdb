@@ -130,14 +130,15 @@ class ApplicationHandler {
                 }
             }
 
-            foreach ($transitions as $transition) {
-                $transition->execute();
+            $induced = array(); // cache induced transition as they won't match after execution
+            foreach ($transitions as $key => $transition) {
+                $induced[$key] = $transition->execute();
             }
 
             $holder->saveModels();
 
-            foreach ($transitions as $transition) {
-                $transition->executed(); //note the 'd', it only triggers onExecuted event
+            foreach ($transitions as $key => $transition) {
+                $transition->executed($induced[$key]); //note the 'd', it only triggers onExecuted event
             }
 
             $this->commit();
@@ -145,7 +146,8 @@ class ApplicationHandler {
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
-                $this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(_("Přihláška smazána."), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
@@ -193,8 +195,8 @@ class ApplicationHandler {
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                    $msg = _("Ze stavu automatu '%s' neexistuje přechod do stavu '%s'.");
-                    throw new MachineExecutionException(sprintf($msg, $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                    $msg = _("Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'.");
+                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName(), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
         }

@@ -3,9 +3,11 @@
 namespace Events\Model\Grid;
 
 use ArrayIterator;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use ModelEvent;
 use Nette\Database\Table\Selection;
+use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
 use SystemContainer;
@@ -78,15 +80,28 @@ class SingleEventSource extends Object implements IHolderSource {
     }
 
     private function loadData() {
+        $joinToCheck = false;
+        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+            if ($joinToCheck === false) {
+                $joinToCheck = $group['joinTo'];
+            } else if ($group['joinTo'] !== $joinToCheck) {
+                throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
+            }
+        }
         // load primaries
-        $primaryPK = $this->primarySelection->getPrimary();
-        $this->primaryModels = $this->primarySelection->fetchPairs($primaryPK);
+        $joinTo = $joinToCheck ? : $this->primarySelection->getPrimary();
+        $this->primaryModels = $this->primarySelection->fetchPairs($joinTo);
 
-        $keys = array_keys($this->primaryModels);
+        $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $keys);
+            $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
+            if ($joinToCheck) {
+                $event = reset($group['holders'])->getEvent();
+                $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
+            }
+
             $secondaryPK = $secondarySelection->getPrimary();
             if (!isset($this->secondaryModels[$key])) {
                 $this->secondaryModels[$key] = array();
@@ -125,14 +140,14 @@ class SingleEventSource extends Object implements IHolderSource {
      * @staticvar array $delegated
      * @param string $name
      * @param array $args
-     * @return \Events\Model\Grid\SingleEventSource
+     * @return SingleEventSource
      */
     public function __call($name, $args) {
         static $delegated = array(
-    'where' => false,
-    'order' => false,
-    'limit' => false,
-    'count' => true,
+            'where' => false,
+            'order' => false,
+            'limit' => false,
+            'count' => true,
         );
         if (!isset($delegated[$name])) {
             return parent::__call($name, $args);

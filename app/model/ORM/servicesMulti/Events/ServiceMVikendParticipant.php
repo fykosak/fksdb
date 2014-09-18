@@ -30,5 +30,3 @@ class ServiceMVikendParticipant extends AbstractServiceMulti {
     }
 
 }
-
-?>

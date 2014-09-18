@@ -1,6 +1,6 @@
 parameters:
     events:
-        dsef:
+        dsef19:
             appCond: or(regOpen(), role('admin'))
             accomodation: 'Noc před akcí (tj. z 12.2. na 13.2.).'
             person:
@@ -11,14 +11,13 @@ parameters:
                     email: true
                     id_number: true
                     born: true
-                post_contact:
-                    type: P
+                post_contact_p:
                     address: true
 
 events:
-    dsef:
+    dsef19:
         event_type_id: 2
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        eventYears: [19]
         tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
@@ -44,10 +43,10 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.dsef.appCond%
+                        condition: %events.dsef19.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(dsef.participant, .self)
+                            - Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
@@ -67,21 +66,21 @@ events:
                     person_id:
                         label: Osoba
                         required: true
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef19.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.dsef.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: RefPerson(%events.dsef19.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
                         label: Preferovaná skupina
                         required: true
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef19.appCond%
                         factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
-                        description: %events.dsef.accomodation%
-                        modifiable: %events.dsef.appCond%
+                        description: %events.dsef19.accomodation%
+                        modifiable: %events.dsef19.appCond%
                     lunch_count:
                         label:  Počet baget k obědu                        
-                        modifiable: %events.dsef.appCond%
+                        modifiable: %events.dsef19.appCond%
                         description:  à 30 Kč
                     message:
                         label: Vzkaz ostatním

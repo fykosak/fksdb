@@ -1,0 +1,196 @@
+parameters:
+    events:
+        tsaf7:
+            appCond: or(regOpen(), role('admin'))
+            # see soustredeni.neon
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('applied.nodsef'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+
+            accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
+            person:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    phone: true
+                    id_number: true
+                    born: true
+                post_contact_d:
+                    address: true
+                post_contact_p:
+                    address: false
+            clothes:
+                M_S: S pánské
+                M_M: M pánské
+                M_L: L pánské
+                M_XL: XL pánské
+                M_XXL: XXL pánské
+                F_S: S dámské
+                F_M: M dámské
+                F_L: L dámské
+                F_XL: XL dámské
+
+events:
+    tsaf7:
+        event_type_id: 7
+        eventYears: [7]
+        tableLayout: event.grid
+        formLayout: tsaf.form
+        paramScheme:
+            notifyBcc:
+                default: tsaf@fykos.cz
+            notifyFrom:
+                default: Týden s experimentální fyzikou <tsaf@fykos.cz>
+            capacity:
+                default: 0
+            accomodationCapacity:
+                default: 0
+
+        baseMachines:
+            PARTICIPANT_TSAF:
+                service: @event.ServiceMTsafParticipant
+                
+                states:
+                    auto.invited: "Pozvaný (auto)"
+                    invited: Pozvaný
+                    applied: Přihlášen
+                    applied.nodsef: "Přihlášen (bez DSEFu)" # is not accessible via transitions, only state rewriting
+                    spare: Náhradník
+                    participated: Účastnil se
+                    rejected: Odmítl
+                    missed: Nepřijel
+                    cancelled: Zrušen
+
+                transitions:
+                    # to invited
+                    __init->invited:
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: Pozvat účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                    # to spare
+                    __init->spare:
+                        condition: %events.tsaf7.appCond%
+                        label: Přihlásit náhradníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(confirmation, .self)
+                    # to applied
+                    __init->applied:
+                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
+                        label: Přihlásit účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(confirmation, .self)
+                    spare->applied:
+                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
+                        label: Potvrdit účastníka
+                        onExecuted:
+                            - Events\Transitions\MailSender(transition, self)
+                    invited->applied:
+                        condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
+                        label: Potvrdit účast
+                        onExecuted:
+                            - Events\Transitions\MailSender(transition, self)
+                    # to end-states
+                    applied|applied.nodsef->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: Prezentovat
+                    applied|applied.nodsef->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: Nepřijel
+                        dangerous: true
+                    invited->rejected:
+                        condition: %events.tsaf7.appCond%
+                        label: Odmítnout účast
+                        dangerous: true      
+                    # to cancelled/termination
+                    auto.invited|invited|applied|applied.nodsef->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
+                        dangerous: true
+                    spare->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
+                        dangerous: true
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat přihlášku
+
+                fields:
+                    person_id:
+                        label: Osoba
+                        required: true
+                        modifiable: %events.tsaf7.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.tsaf7.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    accomodation:
+                        label: Ubytování
+                        description: %events.tsaf7.accomodation%
+                        modifiable: %events.tsaf7.appCond%
+                    tshirt_size:
+                        label: "Jaké triko nosíš?"
+                        required: %events.tsaf7.requiredCond%
+                        factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
+                    jumper_size:
+                        label: "Jakou mikinu nosíš?"
+                        required: %events.tsaf7.requiredCond%
+                        factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
+                    price:
+                        label: "Cena zájezdu (CZK)"
+                        modifiable: false
+                        description: "Cena v spočtená dle pravidel (http://fykos.cz/archiv/rocnik28/tsaf-pozvanka)."
+            
+            PARTICIPANT_DSEF:
+                prototype: dsef20.PARTICIPANT_DSEF
+                joinOn: person_id
+                joinTo: person_id
+                fields:
+                    person_id:
+                        modifiable: false
+                        visible: false
+                        required: false
+                    e_dsef_group_id:
+                        required: or(state('applied'),state('spare')) # state of the TSAF machine
+
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            secondaryModelStrategy: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
+            baseMachines:
+                participantTsaf:
+                    bmName: PARTICIPANT_TSAF
+                    label: TSAF
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                participantDsef:
+                    bmName: PARTICIPANT_DSEF
+                    label: DSEF
+
+            formAdjustments:
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - Events\FormAdjustments\ResourceAvailability('participantTsaf.accomodation', participantTsaf.accomodationCapacity, 'Kapacita ubytování po akci je již vyčerpána.')
+                - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování před akcí je již vyčerpána.')
+                - @events.privacyPolicy
+                - @events.captcha
+                
+            processings:
+                - @events.privacyPolicy
+            joins:
+                participantTsaf:
+                    *->applied:
+                        participantDsef: applied.tsaf
+                    *->spare:
+                        participantDsef: spare.tsaf
+                    applied|applied.nodsef->cancelled:
+                        participantDsef: applied.notsaf
+                    spare->cancelled:
+                        participantDsef: __terminated
+

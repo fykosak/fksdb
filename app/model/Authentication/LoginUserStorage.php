@@ -1,11 +1,14 @@
 <?php
+
 namespace Authentication;
 
 use AuthenticatedPresenter;
+use Authentication\LoginUserStorage;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use ModelLogin;
 use Nette\Application\Application;
+use Nette\Application\IPresenter;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
@@ -20,11 +23,13 @@ use YearCalculator;
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
  */
 class LoginUserStorage extends UserStorage {
-    /** @const HTTP GET parameter holding control information for the SSO */
 
+    /** @const HTTP GET parameter holding control information for the SSO */
     const PARAM_SSO = 'sso';
+
     /** @const Value meaning the user is not centally authneticated. */
     const SSO_AUTHENTICATED = 'a';
+
     /** @const Value meaning the user is not centally authneticated. */
     const SSO_UNAUTHENTICATED = 'ua';
 
@@ -40,9 +45,15 @@ class LoginUserStorage extends UserStorage {
     private $globalSession;
 
     /**
+
      * @var Application
      */
     private $application;
+
+    /**
+     * @var IPresenter
+     */
+    private $presenter;
 
     /**
      * @var Request
@@ -56,6 +67,23 @@ class LoginUserStorage extends UserStorage {
         $this->globalSession = $globalSession;
         $this->application = $application;
         $this->request = $request;
+    }
+
+    public function getPresenter() {
+        if ($this->application->getPresenter()) {
+            return $this->application->getPresenter();
+        } else {
+            return $this->presenter;
+        }
+    }
+
+    /**
+     * @internal Used internally or for testing purposes only.
+     * 
+     * @param IPresenter $presenter
+     */
+    public function setPresenter(IPresenter $presenter) {
+        $this->presenter = $presenter;
     }
 
     public function setAuthenticated($state) {
@@ -88,7 +116,7 @@ class LoginUserStorage extends UserStorage {
              */
             //parent::setAuthenticated(false);
 
-            $presenter = $this->application->getPresenter();
+            $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
             /* If this is the first try, we redirect to the central login page,
@@ -139,4 +167,3 @@ class LoginUserStorage extends UserStorage {
     }
 
 }
-

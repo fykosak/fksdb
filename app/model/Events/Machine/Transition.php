@@ -62,6 +62,11 @@ class Transition extends FreezableObject {
     private $dangerous;
 
     /**
+     * @var boolean|callable
+     */
+    private $visible;
+
+    /**
      * @var ExpressionEvaluator
      */
     private $evaluator;
@@ -131,6 +136,10 @@ class Transition extends FreezableObject {
         return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
     }
 
+    public function isVisible() {
+        return $this->evaluator->evaluate($this->visible, $this);
+    }
+
     public function setCondition($condition) {
         $this->updating();
         $this->condition = $condition;
@@ -139,6 +148,11 @@ class Transition extends FreezableObject {
     public function setDangerous($dangerous) {
         $this->updating();
         $this->dangerous = $dangerous;
+    }
+
+    public function setVisible($visible) {
+        $this->updating();
+        $this->visible = $visible;
     }
 
     public function getEvaluator() {
@@ -155,7 +169,7 @@ class Transition extends FreezableObject {
         }
         $targetName = $targetMachine->getName();
         if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException("Induced transition for machine $targetName already defined.");
+            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . ".");
         }
         $this->inducedTransitions[$targetName] = $targetState;
     }
@@ -192,9 +206,9 @@ class Transition extends FreezableObject {
         return $this->evaluator->evaluate($this->condition, $this);
     }
 
-    private function validateTarget() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget()) !== true) { // intentionally =
+    private function validateTarget($inducedTransitions) {
+        foreach ($inducedTransitions as $inducedTransition) {
+            if (($result = $inducedTransition->validateTarget(array())) !== true) { // intentionally =
                 return $result;
             }
         }
@@ -216,6 +230,7 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      * 
+     * @todo Induction work only for one level.     * 
      * @throws TransitionConditionFailedException
      */
     public final function execute() {
@@ -223,26 +238,32 @@ class Transition extends FreezableObject {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
-        $validationResult = $this->validateTarget();
+
+        $inducedTransitions = array();
+        foreach ($this->getInducedTransitions() as $inducedTransition) {
+            $inducedTransition->_execute();
+            $inducedTransitions[] = $inducedTransition;
+        }
+
+        $this->_execute();
+
+        $validationResult = $this->validateTarget($inducedTransitions);
         if ($validationResult !== true) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            $inducedTransition->_execute();
-        }
-
-        $this->_execute();
+        return $inducedTransitions;
     }
 
     /**
      * Triggers onExecuted event.
      * 
+     * @param Transition[] $induced
      * @throws TransitionOnExecutedException
      */
-    public final function executed() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            $inducedTransition->executed();
+    public final function executed($inducedTransitions) {
+        foreach ($inducedTransitions as $inducedTransition) {
+            $inducedTransition->executed(array());
         }
         try {
             $this->onExecuted($this);
