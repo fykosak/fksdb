@@ -135,7 +135,7 @@ $(function() {
 
             function compactifyContainer() {
                 if (compacted === null) {
-                    var label = elContainer.find('legend').text();
+                    var label = elContainer.find('> fieldset > legend').text();
                     var value = elCompactValue.val();
                     compacted = createCompactField(label, value); //TODO clear button
                     compacted.insertAfter(elContainer);
@@ -148,8 +148,8 @@ $(function() {
             }
 
             function decorateClearButton() {
-                var well = elContainer.find('.well');
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning pull-right" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
+                var well = elContainer.children('.well');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
                 });

@@ -17,12 +17,12 @@
     $left = $level > 1 ? $subLeft : $fullLeft,
     $right = $level > 1 ? $subRight : $fullRight,
     $withOptions = $container instanceof FKS\Components\Forms\Containers\ContainerWithOptions,
-    $id = $level > 1 ? $container->getOption('id') : $container->getName()
+    $id = $level > 1 ? $container->getOption('id') : $container->getName(),
+    $wellClass = "well well-sm col-lg-" . $subWidth . " col-lg-offset-" . $subOffset
     }
 
 <div n:if="!$withOptions || $container->getOption('visible', true)" n:snippet="group-$id" n:attr="class => ($level > 1) ? row, data => $withOptions ? $container->getOption('data') : null">
-    <div n:tag-if="$level > 1" class="well well-sm col-lg-{$subWidth} col-lg-offset-{$subOffset}">
-        <fieldset n:tag-if="$level > 0">
+        <fieldset n:tag-if="$level > 0" n:attr="class => ($level > 1) ? $wellClass">
             <legend n:if="$level > 0 && $container->getOption('label')">{$container->getOption('label')}</legend>
             <p n:if="$level > 0 && $container->getOption('description')">{$container->getOption('description')}</p>    
 {var $controls = array()}
@@ -32,7 +32,7 @@
         {include #controls controls => $controls, left => $left, right => $right}
         {var $controls = array()}
         {/if}
-        {if $level < 2}
+        {if $level < 2 || $component->getOption('showGroup')}
             {include #group container => $component, level => $level + 1}
         {else}
             {include #controls controls => $component->getControls(), left => $left, right => $right}
@@ -46,7 +46,6 @@
 {var $controls = array()}
 {/if}
         </fieldset>
-    </div>
 </div>
 {/block}
 
