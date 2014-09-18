@@ -150,7 +150,8 @@ events:
                         visible: false
                         required: false
                     e_dsef_group_id:
-                        required: %events.tsaf7.requiredCond%
+                        required: state('applied') # state of the DSEF machine
+
 
 
         #

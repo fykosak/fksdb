@@ -206,9 +206,9 @@ class Transition extends FreezableObject {
         return $this->evaluator->evaluate($this->condition, $this);
     }
 
-    private function validateTarget() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget()) !== true) { // intentionally =
+    private function validateTarget($inducedTransitions) {
+        foreach ($inducedTransitions as $inducedTransition) {
+            if (($result = $inducedTransition->validateTarget(array())) !== true) { // intentionally =
                 return $result;
             }
         }
@@ -238,10 +238,6 @@ class Transition extends FreezableObject {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
-        $validationResult = $this->validateTarget();
-        if ($validationResult !== true) {
-            throw new TransitionUnsatisfiedTargetException($validationResult);
-        }
 
         $inducedTransitions = array();
         foreach ($this->getInducedTransitions() as $inducedTransition) {
@@ -250,6 +246,12 @@ class Transition extends FreezableObject {
         }
 
         $this->_execute();
+
+        $validationResult = $this->validateTarget($inducedTransitions);
+        if ($validationResult !== true) {
+            throw new TransitionUnsatisfiedTargetException($validationResult);
+        }
+
         return $inducedTransitions;
     }
 
