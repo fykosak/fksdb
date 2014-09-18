@@ -97,9 +97,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
-            if ($sub == ReferencedPersonHandler::POST_CONTACT_DYNAMIC) {
-                throw new DeprecatedException('Use explicit post_contact instead of dynamic.');
-            }
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
                 $subcontainer->setOption('label', _('Doručovací adresa'));

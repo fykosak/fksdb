@@ -23,9 +23,7 @@ use ServicePersonInfo;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonHandler extends Object implements IReferencedHandler {
-    /** @deprecated */
 
-    const POST_CONTACT_DYNAMIC = 'post_contact';
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';
 
@@ -116,6 +114,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             );
 
+            $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
 
             $data = FormUtils::emptyStrToNull($data);
@@ -188,28 +187,16 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         return $result;
     }
 
-    private function resolvePostContacts(ArrayHash $data) {
-        if (isset($data[self::POST_CONTACT_DYNAMIC])) {
-            if (!isset($data[self::POST_CONTACT_DYNAMIC]['address'])) {
-                $data[self::POST_CONTACT_DYNAMIC]['address'] = new ArrayHash();
-            }
-            if (!isset($data[self::POST_CONTACT_DYNAMIC]['type'])) {
-                throw new InvalidArgumentException("Dynamic post contact must specify its type.");
-            }
-            switch ($data[self::POST_CONTACT_DYNAMIC]['type']) {
-                case ModelPostContact::TYPE_DELIVERY:
-                    $data[self::POST_CONTACT_DELIVERY] = $data[self::POST_CONTACT_DYNAMIC];
-                    break;
-                case ModelPostContact::TYPE_PERMANENT:
-                    $data[self::POST_CONTACT_PERMANENT] = $data[self::POST_CONTACT_DYNAMIC];
-                    break;
-                default:
-                    throw new InvalidArgumentException("Unsupported post contact type '" . $data[self::POST_CONTACT_DYNAMIC]['type'] . "'.");
-                    break;
-            }
-            unset($data[self::POST_CONTACT_DYNAMIC]);
+    private function preparePostContactModels(&$models) {
+        if($models[self::POST_CONTACT_PERMANENT]->isNew()) {
+            $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
+            unset($data['post_contact_id']);
+            unset($data['address_id']);
+            unset($data['type']);
+            $this->serviceMPostContact->updateModel($models[self::POST_CONTACT_PERMANENT], $data);
         }
-
+    }
+    private function resolvePostContacts(ArrayHash $data) {
         foreach (array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT) as $type) {
             if (!isset($data[$type])) {
                 continue;
