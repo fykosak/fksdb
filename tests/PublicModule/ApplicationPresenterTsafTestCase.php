@@ -13,6 +13,7 @@ abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsef
             'event_type_id' => 7,
             'event_year' => 7,
             'parameters' => <<<EOT
+capacity: 5
 EOT
         ));
     }

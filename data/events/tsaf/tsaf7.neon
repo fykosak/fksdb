@@ -2,7 +2,7 @@ parameters:
     events:
         tsaf7:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc po akci (tj. z 10.11. na 11.11.).' # TODO
+            accomodation: 'Noc po příjezdu (tj. ze 17.11. na 17.11.).'
             person:
                 person:
                     other_name: true
@@ -38,7 +38,9 @@ events:
                 default: tsaf@fykos.cz
             notifyFrom:
                 default: Týden s experimentální fyzikou <tsaf@fykos.cz>
-            capacity: # TODO implement check
+            capacity:
+                default: 0
+            accomodationCapacity:
                 default: 0
 
         baseMachines:
@@ -62,34 +64,34 @@ events:
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self) # TODO
+                            - Events\Transitions\MailSender(tsaf/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self) # TODO
+                            - Events\Transitions\MailSender(tsaf/invited, .self)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf7.appCond%
                         label: Přihlásit náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(participant, .self) # TODO
+                            - Events\Transitions\MailSender(confirmation, .self)
                     # to applied
                     __init->applied:
-                        condition: role('admin')
+                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(participant, .self) # TODO
+                            - Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
-                        condition: role('admin')
+                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: Potvrdit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(participant, .self) # TODO
+                            - Events\Transitions\MailSender(transition, self)
                     invited->applied:
-                        condition: %events.tsaf7.appCond%
+                        condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
                         label: Potvrdit účast
                         onExecuted:
-                            - Events\Transitions\MailSender(participant, .self) # TODO
+                            - Events\Transitions\MailSender(transition, self)
                     # to end-states
                     applied|applied.nodsef->participated:
                         condition: and(role('admin'),eventWas())
@@ -118,10 +120,10 @@ events:
                         modifiable: %events.tsaf7.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.tsaf7.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-#                    accomodation:
-#                        label: Ubytování
-#                        description: %events.tsaf7.accomodation%
-#                        modifiable: %events.tsaf7.appCond%
+                    accomodation:
+                        label: Ubytování
+                        description: %events.tsaf7.accomodation%
+                        modifiable: %events.tsaf7.appCond%
                     tshirt_size:
                         label: "Jaké triko nosíš?"
                         required: true
@@ -164,7 +166,8 @@ events:
 
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - Events\FormAdjustments\ResourceAvailability('participantTsaf.accomodation', participantTsaf.accomodationCapacity, 'Kapacita ubytování po akci je již vyčerpána.')
+                - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování před akcí je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
                 

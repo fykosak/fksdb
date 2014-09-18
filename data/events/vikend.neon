@@ -44,12 +44,12 @@ events:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(vikend.participant, .self)
+                            - Events\Transitions\MailSender(confirmation, .self)
                     __init->spare:
                         condition: or(and(regOpen(),neg(le(count('applied'),param('capacity')))), role('admin'))
                         label: Přihlásit náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(vikend.participant, .self)
+                            - Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: role('admin')
                         label: Nasadit náhradníka

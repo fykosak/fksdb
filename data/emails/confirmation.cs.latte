@@ -1,0 +1,12 @@
+{* General template for any event. *}
+<p>
+    Potvrzujeme přijetí přihlášky osoby {$person->getFullname()} na <em>{$event}</em>,
+    která se koná
+    {if $event->end && $event->end->getTimestamp() !== $event->end->getTimestamp()}
+    {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'}.
+    {else}
+    {$event->begin|date:'j.n. Y'}.
+    {/if}
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}

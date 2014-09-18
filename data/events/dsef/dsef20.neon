@@ -49,12 +49,12 @@ events:
                         condition: %events.dsef20.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(dsef.participant, .self)
+                            - Events\Transitions\MailSender(confirmation, .self)
                     __init->applied.tsaf:
                         condition: %events.dsef20.appCond%
                         visible: false
                         onExecuted:
-                            - Events\Transitions\MailSender(dsef.participant, .self) # TODO check
+                            - Events\Transitions\MailSender(confirmation, .self)
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
                         visible: false

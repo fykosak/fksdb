@@ -1,0 +1,13 @@
+<p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    zveme Tě jako účastníka FYKOSu k účasti na Týdnu s aplikovanou fyzikou,
+    který letos bude probíhat formou poznávacího zájezdu do zahraničí ve dnech {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'}.
+    Podrobnosti o akci nalezneš na webu akce<br/>
+    <a href="http://tsaf.cz/">http://tsaf.cz/</a>.
+</p>
+<p>
+    Své rozhodnutí, zda se hodláš zúčastnit, nám co nejrychleji oznam prostřednictvím
+    aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
+    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a><br/>
+    Nejpozději do {$event->registration_end|date:'j.n. Y'}, ale čím dřív tím líp, abychom v případě Tvé neúčasti mohli pozvat náhradníky.
+</p>
+{include '../inc/closing.cs.latte'}
