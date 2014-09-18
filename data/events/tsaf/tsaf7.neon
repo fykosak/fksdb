@@ -128,11 +128,11 @@ events:
                         modifiable: %events.tsaf7.appCond%
                     tshirt_size:
                         label: "Jaké triko nosíš?"
-                        required: true
+                        required: %events.tsaf7.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
                     jumper_size:
                         label: "Jakou mikinu nosíš?"
-                        required: true
+                        required: %events.tsaf7.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
                     price:
                         label: "Cena zájezdu (CZK)"
