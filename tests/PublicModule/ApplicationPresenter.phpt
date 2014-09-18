@@ -6,7 +6,7 @@ use Events\EventTestCase;
 use Nette\Application\Request;
 use Nette\DateTime;
 use Nette\DI\Container;
-use PublicModule\RegisterPresenter;
+use PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends EventTestCase {
@@ -17,7 +17,7 @@ class ApplicationPresenterTest extends EventTestCase {
     private $fixture;
 
     function __construct(Container $container) {
-        parent::__construct($container->getService('nette.database.default'));
+        parent::__construct($container);
         $this->setContainer($container);
     }
 

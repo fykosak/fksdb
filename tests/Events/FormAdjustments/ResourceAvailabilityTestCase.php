@@ -16,7 +16,7 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
     protected $persons;
 
     function __construct(Container $container) {
-        parent::__construct($container->getService('nette.database.default'));
+        parent::__construct($container);
         $this->setContainer($container);
     }
 

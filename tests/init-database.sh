@@ -3,14 +3,22 @@
 DB_NAME=fksdb_test
 
 SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+COUNT=4
 
-mysql -e "DROP DATABASE \`$DB_NAME\`" 2>/dev/null
+if [ "x$1" != "x" ] ; then
+	COUNT=$1
+fi
 
-mysql -e "CREATE DATABASE \`$DB_NAME\`"
+for i in `seq 1 $COUNT` ; do
+	INS_NAME=$DB_NAME$i
+	mysql -e "DROP DATABASE \`$INS_NAME\`" 2>/dev/null
 
-mysql $DB_NAME <${SCRIPT_PATH}/../sql/schema.sql && echo "Created schema"
+	mysql -e "CREATE DATABASE \`$INS_NAME\`"
 
-mysql $DB_NAME <${SCRIPT_PATH}/../sql/views.sql && echo "Created views"
+	mysql $INS_NAME <${SCRIPT_PATH}/../sql/schema.sql && echo "Created schema $INS_NAME"
 
-mysql $DB_NAME <${SCRIPT_PATH}/../sql/initval.sql && echo "Initialized data"
+	mysql $INS_NAME <${SCRIPT_PATH}/../sql/views.sql && echo "Created views $INS_NAME"
+
+	mysql $INS_NAME <${SCRIPT_PATH}/../sql/initval.sql && echo "Initialized data $INS_NAME"
+done
 

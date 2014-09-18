@@ -2,7 +2,7 @@
 
 $container = require 'bootstrap.php';
 
-use Nette\Database\Connection;
+use Nette\DI\Container;
 use Tester\Assert;
 
 class ModelPersonHistoryTest extends DatabaseTestCase {
@@ -12,8 +12,8 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
      */
     private $service;
 
-    function __construct(ServicePerson $service, Connection $connection) {
-        parent::__construct($connection);
+    function __construct(ServicePerson $service, Container $container) {
+        parent::__construct($container);
         $this->service = $service;
     }
 
@@ -32,5 +32,5 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('ServicePerson'), $container->getService('nette.database.default'));
+$testCase = new ModelPersonHistoryTest($container->getService('ServicePerson'), $container);
 $testCase->run();

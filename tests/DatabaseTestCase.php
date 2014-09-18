@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Database\Connection;
+use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
 use Tester\TestCase;
@@ -11,13 +12,17 @@ abstract class DatabaseTestCase extends TestCase {
      * @var Connection
      */
     protected $connection;
+    private $instanceNo;
 
-    function __construct(Connection $connection) {
-        $this->connection = $connection;
+    function __construct(Container $container) {
+        $this->connection = $container->getService('nette.database.default');
+        $max = $container->parameters['tester']['dbInstances'];
+        $this->instanceNo = (getmypid() % $max) + 1;
+        $this->connection->exec('USE fksdb_test' . $this->instanceNo);
     }
 
     protected function setUp() {
-        Environment::lock(LOCK_DB, TEMP_DIR);
+        Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->connection->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
         $this->connection->query("INSERT INTO school (school_id, address_id) VALUES(1, 1)");
         $this->connection->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, 2000)");
@@ -68,7 +73,7 @@ abstract class DatabaseTestCase extends TestCase {
 
         return $personHistoryId;
     }
-    
+
     protected function insert($table, $data) {
         $this->connection->query("INSERT INTO `$table`", $data);
         return $this->connection->lastInsertId();

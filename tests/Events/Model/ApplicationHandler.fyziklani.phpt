@@ -40,7 +40,7 @@ class ApplicationHandlerTest extends EventTestCase {
     private $holder;
 
     function __construct(Container $container) {
-        parent::__construct($container->getService('nette.database.default'));
+        parent::__construct($container);
         $this->setContainer($container);
     }
 

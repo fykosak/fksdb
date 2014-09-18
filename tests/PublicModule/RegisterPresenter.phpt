@@ -20,7 +20,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
     private $fixture;
 
     function __construct(Container $container) {
-        parent::__construct($container->getService('nette.database.default'));
+        parent::__construct($container);
         $this->container = $container;
     }
 
