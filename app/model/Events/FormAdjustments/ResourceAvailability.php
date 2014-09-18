@@ -89,10 +89,10 @@ class ResourceAvailability extends AbstractAdjustment {
             }
         }
 
-        $event = $holder->getEvent();
         $usage = 0;
         foreach ($services as $serviceData) {
             $firstHolder = reset($serviceData['holders']);
+            $event = $firstHolder->getEvent();
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
             $table->where(BaseHolder::STATE_COLUMN . ' LIKE', $this->includeStates);
