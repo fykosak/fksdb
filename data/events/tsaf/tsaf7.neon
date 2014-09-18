@@ -2,8 +2,9 @@ parameters:
     events:
         tsaf7:
             appCond: or(regOpen(), role('admin'))
-            # povinné pro všechny v 'participated', nepovinné pro všechy v: 'rejected', 'cancelled'
-            requiredCond: or(neg(or(role('admin'),or(state('rejected'),state('cancelled'))),state('participated')) )
+            # see soustredeni.neon
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('applied.nodsef'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+
             accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
             person:
                 person:
