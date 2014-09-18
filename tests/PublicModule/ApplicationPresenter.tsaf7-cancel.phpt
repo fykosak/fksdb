@@ -78,7 +78,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             ),
             'privacy' => "on",
             'c_a_p_t_cha' => "pqrt",
-            'auto_invited_or_invited_or_spare_or_applied_or_applied_nodsef__cancelled' => "Zrušit přihlášku",
+            'auto_invited_or_invited_or_applied_or_applied_nodsef__cancelled' => "Zrušit přihlášku",
                 ), array(
             'eventId' => $this->tsafEventId,
             'id' => $this->tsafAppId,

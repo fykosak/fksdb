@@ -169,7 +169,7 @@ class Transition extends FreezableObject {
         }
         $targetName = $targetMachine->getName();
         if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException("Induced transition for machine $targetName already defined.");
+            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . ".");
         }
         $this->inducedTransitions[$targetName] = $targetState;
     }

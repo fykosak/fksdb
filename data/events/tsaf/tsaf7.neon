@@ -108,7 +108,11 @@ events:
                         label: Odmítnout účast
                         dangerous: true      
                     # to cancelled/termination
-                    auto.invited|invited|spare|applied|applied.nodsef->cancelled:
+                    auto.invited|invited|applied|applied.nodsef->cancelled:
+                        condition: role('admin')
+                        label: Zrušit přihlášku
+                        dangerous: true
+                    spare->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                         dangerous: true
@@ -150,7 +154,7 @@ events:
                         visible: false
                         required: false
                     e_dsef_group_id:
-                        required: state('applied') # state of the DSEF machine
+                        required: or(state('applied'),state('spare')) # state of the TSAF machine
 
 
 
@@ -183,5 +187,10 @@ events:
                 participantTsaf:
                     *->applied:
                         participantDsef: applied.tsaf
-                    *->cancelled:
+                    *->spare:
+                        participantDsef: spare.tsaf
+                    applied|applied.nodsef->cancelled:
                         participantDsef: applied.notsaf
+                    spare->cancelled:
+                        participantDsef: __terminated
+

@@ -39,18 +39,23 @@ events:
                     applied: Přihlášen
                     applied.tsaf: "Přihlášen (TSAF)"
                     applied.notsaf: "Přihlášen (zůstal z TSAFu)"
+                    spare.tsaf: "Náhradník pro TSAF"
                     participated: Účastnil se
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
+                    # to spare
+                    __init->spare.tsaf:
+                        condition: %events.dsef20.appCond%
+                        visible: false
                     # to applied
                     __init->applied:
                         condition: %events.dsef20.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(confirmation, .self)
-                    __init->applied.tsaf:
+                    __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef20.appCond%
                         visible: false
                         onExecuted:
