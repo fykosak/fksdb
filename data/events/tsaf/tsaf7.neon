@@ -12,9 +12,10 @@ parameters:
                     phone: true
                     id_number: true
                     born: true
-                post_contact: # TODO delivery address
-                    type: P
+                post_contact_d:
                     address: true
+                post_contact_p:
+                    address: false
             clothes:
                 M_S: S pánské
                 M_M: M pánské

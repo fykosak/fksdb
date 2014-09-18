@@ -59,7 +59,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                         'born' => "15. 09. 2014",
                         'phone' => '987654321'
                     ),
-                    'post_contact' => array(
+                    'post_contact_d' => array(
                         'address' => array(
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",

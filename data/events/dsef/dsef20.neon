@@ -11,8 +11,7 @@ parameters:
                     email: true
                     id_number: true
                     born: true
-                post_contact:
-                    type: P
+                post_contact_p:
                     address: true
 
 events:

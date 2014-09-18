@@ -5,7 +5,7 @@ DB_NAME=fksdb_test
 SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
 
 
-COUNT=4
+COUNT=8
 
 if [ "x$1" != "x" ] ; then
 	COUNT=$1

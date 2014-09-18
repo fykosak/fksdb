@@ -8,13 +8,14 @@ use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
 use ModelPostContact;
+use Nette\DeprecatedException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
@@ -34,6 +35,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';
     const SEARCH_NONE = 'none';
+    const TARGET_FORM = 0x1;
+    const TARGET_VALIDATION = 0x2;
+    const EXTRAPOLATE = 0x4;
+    const HAS_DELIVERY = 0x8;
 
     /**
      * @var ServicePerson
@@ -92,9 +97,19 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
-            if ($sub == 'post_contact') {
+            if ($sub == ReferencedPersonHandler::POST_CONTACT_DYNAMIC) {
+                throw new DeprecatedException('Use explicit post_contact instead of dynamic.');
+            }
+            if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subcontainer->setOption('showGroup', true);
-                $subcontainer->setOption('label', 'Adresa');
+                $subcontainer->setOption('label', _('Doručovací adresa'));
+            } else if ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+                $subcontainer->setOption('showGroup', true);
+                $label = _('Trvalá adresa');
+                if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
+                    $label .= ' ' . _('(je-li odlišná od doručovací)');
+                }
+                $subcontainer->setOption('label', $label);
             }
 
             foreach ($fields as $fieldName => $metadata) {
@@ -157,7 +172,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             }
 
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, true);
+                if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
+                    $options = self::TARGET_FORM | self::EXTRAPOLATE | self::HAS_DELIVERY;
+                } else {
+                    $options = self::TARGET_FORM | self::EXTRAPOLATE;
+                }
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options);
 
                 $controlModifiable = $value ? $modifiable : true;
                 $controlVisible = $this->isWriteonly($component) ? $visible : true;
@@ -255,10 +275,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
-        return (bool) $this->getPersonValue($person, $sub, $field, $acYear);
+        return (bool) $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
     }
 
-    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $extrapolate = false) {
+    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
@@ -272,13 +292,18 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, $extrapolate)) ? $history[$field] : null;
-            case 'post_contact':
-                if ($field == 'type') {
-                    return ModelPostContact::TYPE_PERMANENT; //TODO distinquish delivery and permanent address
-                } else if ($field == 'address') {
-                    return $person->getPermanentAddress(); //TODO distinquish delivery and permanent address
+                return ($history = $person->getHistory($acYear, (bool) ($options & self::EXTRAPOLATE))) ? $history[$field] : null;
+            case 'post_contact_d':
+                return $person->getDeliveryAddress();
+                break;
+            case 'post_contact_p':
+                if (($options & self::TARGET_VALIDATION) || !($options & self::HAS_DELIVERY)) {
+                    return $person->getPermanentAddress();
                 }
+                return $person->getPermanentAddress(true);
+                break;
+            default:
+                throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
 

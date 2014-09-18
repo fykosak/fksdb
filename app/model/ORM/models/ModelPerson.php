@@ -133,12 +133,12 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * 
      * @return MPostContact|null
      */
-    public function getDeliveryAddress() {
+    public function getDeliveryAddress($noFallback = false) {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
         if (count($dAddresses)) {
             return reset($dAddresses);
         } else {
-            return $this->getPermanentAddress();
+            return null;
         }
     }
 
@@ -147,10 +147,12 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * 
      * @return MPostContact|null
      */
-    public function getPermanentAddress() {
+    public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
+        } else if (!$noFallback) {
+            return $this->getDeliveryAddress();
         } else {
             return null;
         }

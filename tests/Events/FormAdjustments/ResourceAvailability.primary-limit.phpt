@@ -45,7 +45,7 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
                         'id_number' => "1231354",
                         'born' => "15. 09. 2014",
                     ),
-                    'post_contact' => array(
+                    'post_contact_p' => array(
                         'address' => array(
                             'target' => "jkljhkjh",
                             'city' => "jkhlkjh",
