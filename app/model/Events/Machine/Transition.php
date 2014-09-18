@@ -62,6 +62,11 @@ class Transition extends FreezableObject {
     private $dangerous;
 
     /**
+     * @var boolean|callable
+     */
+    private $visible;
+
+    /**
      * @var ExpressionEvaluator
      */
     private $evaluator;
@@ -131,6 +136,10 @@ class Transition extends FreezableObject {
         return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
     }
 
+    public function isVisible() {
+        return $this->evaluator->evaluate($this->visible, $this);
+    }
+
     public function setCondition($condition) {
         $this->updating();
         $this->condition = $condition;
@@ -139,6 +148,11 @@ class Transition extends FreezableObject {
     public function setDangerous($dangerous) {
         $this->updating();
         $this->dangerous = $dangerous;
+    }
+
+    public function setVisible($visible) {
+        $this->updating();
+        $this->visible = $visible;
     }
 
     public function getEvaluator() {

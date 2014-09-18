@@ -53,15 +53,15 @@ events:
                             - Events\Transitions\MailSender(dsef.participant, .self)
                     __init->applied.tsaf:
                         condition: %events.dsef20.appCond%
-                        label: "TODO ->applied.tsaf"
+                        visible: false
                         onExecuted:
                             - Events\Transitions\MailSender(dsef.participant, .self) # TODO check
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
-                        label: "TODO ->applied.notsaf"
+                        visible: false
                     applied->applied.tsaf:
                         condition: %events.dsef20.appCond%
-                        label: "TODO ->applied.tsaf"
+                        visible: false
                     # to end-states
                     applied|applied.tsaf|applied.notsaf->participated:
                         condition: and(role('admin'),eventWas())

@@ -285,6 +285,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setEvaluator', '@events.expressionEvaluator');
         $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', '%onExecuted%');
         $factory->addSetup('setDangerous', '%dangerous%');
+        $factory->addSetup('setVisible', '%visible%');
 
         $this->transtionFactory = $factory;
     }
@@ -389,6 +390,9 @@ class EventsExtension extends CompilerExtension {
                 throw new MachineDefinitionException("Invalid transition $mask for base machine $name.$baseName.");
             }
             $transitionDef = NeonScheme::readSection($transitionDef, $this->scheme['transition']);
+            if (!$transitionDef['label'] && $transitionDef['visible'] !== false) {
+                throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
+            }
 
             array_unshift($transitionDef, $mask);
             $defka = $this->transtionFactory;
@@ -480,7 +484,7 @@ class EventsExtension extends CompilerExtension {
 
         $config = $this->getConfig();
         $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$definitionName]['paramScheme'];
-        foreach(array_keys($paramScheme) as $paramKey) {
+        foreach (array_keys($paramScheme) as $paramKey) {
             $this->validateConfigName($paramKey);
         }
         $factory->addSetup('setParamScheme', array($paramScheme));

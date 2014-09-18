@@ -69,12 +69,18 @@ transition:
         default: true
         type: expression
     label:
+        default: null
         type: expression
     onExecuted:
         default: []
         type: expression array
+    # Requires confirmation in the GUI
     dangerous:
         default: false
+        type: expression
+    # Cannot be executed from the GUI (event when it's condition == true)
+    visible:
+        default: true
         type: expression
 
 field:
