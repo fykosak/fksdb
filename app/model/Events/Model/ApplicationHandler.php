@@ -130,14 +130,15 @@ class ApplicationHandler {
                 }
             }
 
-            foreach ($transitions as $transition) {
-                $transition->execute();
+            $induced = array(); // cache induced transition as they won't match after execution
+            foreach ($transitions as $key => $transition) {
+                $induced[$key] = $transition->execute();
             }
 
             $holder->saveModels();
 
-            foreach ($transitions as $transition) {
-                $transition->executed(); //note the 'd', it only triggers onExecuted event
+            foreach ($transitions as $key => $transition) {
+                $transition->executed($induced[$key]); //note the 'd', it only triggers onExecuted event
             }
 
             $this->commit();

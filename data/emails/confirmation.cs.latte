@@ -1,8 +1,8 @@
 {* General template for any event. *}
 <p>
-    Potvrzujeme přijetí přihlášky osoby {$person->getFullname()} na <em>{$event}</em>,
+    Potvrzujeme přijetí přihlášky osoby {$person->getFullname()} na akci <em>{$event}</em>,
     která se koná
-    {if $event->end && $event->end->getTimestamp() !== $event->end->getTimestamp()}
+    {if $event->end && $event->end->getTimestamp() !== $event->begin->getTimestamp()}
     {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'}.
     {else}
     {$event->begin|date:'j.n. Y'}.

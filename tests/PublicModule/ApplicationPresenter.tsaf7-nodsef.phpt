@@ -64,8 +64,10 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             'id' => $this->tsafAppId,
         ));
 
+        $mailer = $this->getContainer()->getService('nette.mailer');
+        $before = $mailer->getSentMessages();
         $response = $this->fixture->run($request);
-        
+
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
 
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
@@ -81,6 +83,8 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
+
+        Assert::equal($before + 2, $mailer->getSentMessages());
     }
 
 }

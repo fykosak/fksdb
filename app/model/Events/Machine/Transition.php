@@ -230,6 +230,7 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      * 
+     * @todo Induction work only for one level.     * 
      * @throws TransitionConditionFailedException
      */
     public final function execute() {
@@ -242,21 +243,25 @@ class Transition extends FreezableObject {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 
+        $inducedTransitions = array();
         foreach ($this->getInducedTransitions() as $inducedTransition) {
             $inducedTransition->_execute();
+            $inducedTransitions[] = $inducedTransition;
         }
 
         $this->_execute();
+        return $inducedTransitions;
     }
 
     /**
      * Triggers onExecuted event.
      * 
+     * @param Transition[] $induced
      * @throws TransitionOnExecutedException
      */
-    public final function executed() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            $inducedTransition->executed();
+    public final function executed($inducedTransitions) {
+        foreach ($inducedTransitions as $inducedTransition) {
+            $inducedTransition->executed(array());
         }
         try {
             $this->onExecuted($this);

@@ -2,7 +2,7 @@ parameters:
     events:
         tsaf7:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc po příjezdu (tj. ze 17.11. na 17.11.).'
+            accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
             person:
                 person:
                     other_name: true
