@@ -4,7 +4,7 @@
 {if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
 <ul>
     <li>
-        Podrobné informace naleznente na stránce <a href="http://tsaf.cz/">Týdne s experimentální fyzikou</a>.
+        Podrobné informace jsou k nalezení na stránce <a href="http://tsaf.cz/">Týdne s experimentální fyzikou</a>.
     </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->storeRequest()}
