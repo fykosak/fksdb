@@ -12,6 +12,9 @@ navigation:
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
+        upload:
+            title: 'Odevdat řešení'
+            link: /submit
 
     structure:
         org.dashboard.default:
@@ -26,7 +29,7 @@ navigation:
             - org.event.list
             - org.deduplicate.person
         public.dashboard.default:
-            - public.submit.default
+            - upload
             - public.application.list
             - fykos
             - vyfuk
