@@ -130,7 +130,6 @@ class ContestantSubmits extends BaseControl {
 
         $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
-        $control->addStyle('width:600px');
 
         $control->data['contestant'] = $this->contestant->ct_id;
         foreach ($this->getClientData() as $key => $value) {
