@@ -17,7 +17,7 @@ services:
     resultsModelFactory: ResultsModelFactory
     statsModelFactory: StatsModelFactory
     pipelineFactory:
-        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, ...)
+        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     downloaderFactory:
         class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
     flashDumpFactory:

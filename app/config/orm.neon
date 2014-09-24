@@ -22,8 +22,10 @@ services:
     ServiceSchool:           ServiceSchool
     ServiceStoredQuery:      ServiceStoredQuery
     ServiceStoredQueryParameter: ServiceStoredQueryParameter
+    ServiceStudyYear:        ServiceStudyYear
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
+    ServiceTaskStudyYear:    ServiceTaskStudyYear
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant

@@ -17,7 +17,7 @@ class ModelTask extends AbstractModelSingle {
 
     /**
      * @param enum $type ModelTaskContribution::TYPE_*
-     * @return array of ModelTaskContribution indexed by contribution_id
+     * @return ModelTaskContribution[] indexed by contribution_id
      */
     public function getContributions($type = null) {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
@@ -29,6 +29,20 @@ class ModelTask extends AbstractModelSingle {
         foreach ($contributions as $contribution) {
             $contribution = ModelTaskContribution::createFromTableRow($contribution);
             $result[$contribution->contribution_id] = $contribution;
+        }
+        return $result;
+    }
+
+    /**
+     * @return ModelTaskStudyYear[] indexed by study_year
+     */
+    public function getStudyYears() {
+        $studyYears = $this->related(DbNames::TAB_TASK_STUDY_YEAR, 'task_id');
+
+        $result = array();
+        foreach ($studyYears as $studyYear) {
+            $studyYear = ModelTaskStudyYear::createFromTableRow($studyYear);
+            $result[$studyYear->study_year] = $studyYear;
         }
         return $result;
     }

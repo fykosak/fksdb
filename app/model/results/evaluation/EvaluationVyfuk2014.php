@@ -40,18 +40,42 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
     }
 
     public function getPointsColumn($task) {
-        return "s.raw_points";
+        if ($task->label == '1') {
+            return "IF(ct.study_year NOT IN (6,7), null, s.raw_points)";
+        } else {
+            return "s.raw_points";
+        }
     }
 
     public function getSumColumn() {
-        return "s.raw_points";
+        return "IF(t.label IN ('1'), IF(ct.study_year NOT IN (6,7), null, s.raw_points), s.raw_points)";
     }
 
     public function getTaskPoints($task, \ModelCategory $category) {
-        return $task->points;
+        if ($task->label == '1') {
+            if (in_array($category->id, array(
+                        ModelCategory::CAT_ES_6,
+                        ModelCategory::CAT_ES_7,
+                    ))) {
+                return $task->points;
+            } else {
+                return null;
+            }
+        } else {
+            return $task->points;
+        }
     }
-    
+
     public function getTaskPointsColumn(\ModelCategory $category) {
-        return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+        switch ($category->id) {
+            case ModelCategory::CAT_ES_6:
+            case ModelCategory::CAT_ES_7:
+                return "IF(s.raw_points IS NOT NULL, t.points, NULL)";
+                break;
+            default:
+                return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1'), NULL, t.points), NULL)";
+        }
     }
+
 }
+

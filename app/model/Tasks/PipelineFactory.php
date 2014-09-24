@@ -5,8 +5,10 @@ namespace Tasks;
 use Nette\InvalidStateException;
 use Pipeline\Pipeline;
 use ServicePerson;
+use ServiceStudyYear;
 use ServiceTask;
 use ServiceTaskContribution;
+use ServiceTaskStudyYear;
 
 /**
  * This is not real factory, it's only used as an internode for defining
@@ -29,25 +31,44 @@ class PipelineFactory {
     private $contributionMappings;
 
     /**
+     * @see StudyYearsFromXML
+     * @var array
+     */
+    private $defaultStudyYears;
+
+    /**
      * @var ServiceTask
      */
-    private $taskService;
+    private $serviceTask;
 
     /**
      * @var ServiceTaskContribution
      */
-    private $taskContributionService;
+    private $serviceTaskContribution;
+
+    /**
+     * @var ServiceTaskStudyYear
+     */
+    private $serviceTaskStudyYear;
+
+    /**
+     * @var ServiceStudyYear
+     */
+    private $serviceStudyYear;
 
     /**
      * @var ServicePerson
      */
     private $servicePerson;
 
-    public function __construct($columnMappings, $contributionMappings, ServiceTask $taskService, ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServicePerson $servicePerson) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
-        $this->taskService = $taskService;
-        $this->taskContributionService = $taskContributionService;
+        $this->defaultStudyYears = $defaultStudyYears;
+        $this->serviceTask = $serviceTask;
+        $this->serviceTaskContribution = $serviceTaskContribution;
+        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
+        $this->serviceStudyYear = $serviceStudyYear;
         $this->servicePerson = $servicePerson;
     }
 
@@ -65,10 +86,10 @@ class PipelineFactory {
         $pipeline = new Pipeline();
 
         // common stages
-        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->taskService);
+        $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);
         $pipeline->addStage($metadataStage);
 
-        //TODO data stage (content of the tasks)
+        // NOTE: There's no need to store content of the tasks in the database.
         // language customizations
         switch ($language) {
             case 'cs':
@@ -82,11 +103,14 @@ class PipelineFactory {
     }
 
     protected function appendCzech(Pipeline $pipeline) {
-        $deadlineStage = new DeadlineFromXML($this->taskService);
+        $deadlineStage = new DeadlineFromXML($this->serviceTask);
         $pipeline->addStage($deadlineStage);
 
-        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->taskContributionService, $this->servicePerson);
+        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->servicePerson);
         $pipeline->addStage($contributionStage);
+
+        $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
+        $pipeline->addStage($studyYearStage);
     }
 
 }

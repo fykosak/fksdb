@@ -12,6 +12,7 @@ use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
+use ServiceTaskStudyYear;
 use Traversable;
 
 /**
@@ -39,9 +40,19 @@ class ContestantSubmits extends BaseControl {
     private $submitService;
 
     /**
+     * @var ServiceTaskStudyYear
+     */
+    private $serviceTaskStudyYear;
+
+    /**
      * @var ModelContestant
      */
     private $contestant;
+
+    /**
+     * @var int
+     */
+    private $acYear;
 
     /**
      * @var string
@@ -54,13 +65,15 @@ class ContestantSubmits extends BaseControl {
      * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
      * @param string|null $label
      */
-    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $label = null) {
+    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, ServiceTaskStudyYear $serviceTaskStudyYear, $acYear, $label = null) {
         parent::__construct($label);
         $this->monitor('FKS\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
+        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
+        $this->acYear = $acYear;
     }
 
     protected function attached($component) {
@@ -94,6 +107,21 @@ class ContestantSubmits extends BaseControl {
         return null;
     }
 
+    private function isTaskDisabled($taskId) {
+        return false;
+        // TODO loading person history took too long, implement better study_year detection
+//        $history = $this->contestant->getPerson()->getHistory($this->acYear);
+//        $studyYear = ($history && isset($history->study_year)) ? $history->study_year : null;
+//        if ($studyYear === null) {
+//            return false;
+//        }
+//        $taskStudyYear = $this->serviceTaskStudyYear->findByPrimary(array(
+//            'task_id' => $taskId,
+//            'study_year' => $studyYear,
+//        ));
+//        return $taskStudyYear === null;
+    }
+
     /**
      * @return   Html
      */
@@ -102,7 +130,6 @@ class ContestantSubmits extends BaseControl {
 
         $control->addClass($this->getClassName());
         $control->value = $this->rawValue;
-        $control->addStyle('width:600px');
 
         $control->data['contestant'] = $this->contestant->ct_id;
         foreach ($this->getClientData() as $key => $value) {
@@ -188,7 +215,10 @@ class ContestantSubmits extends BaseControl {
         $data = $submit->toArray();
         $format = $this->sourceToFormat($submit->source);
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
-        $data['task'] = array('label' => $this->getTask($submit->task_id)->label); // ORM workaround
+        $data['task'] = array(
+            'label' => $this->getTask($submit->task_id)->label,
+            'disabled' => $this->isTaskDisabled($submit->task_id),
+        ); // ORM workaround
         return $data;
     }
 

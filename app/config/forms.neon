@@ -3,7 +3,6 @@
 #
 services:
     AddressFactory:     FKSDB\Components\Forms\Factories\AddressFactory
-    ContestantFactory:  FKSDB\Components\Forms\Factories\ContestantFactory
     EventFactory:       FKSDB\Components\Forms\Factories\EventFactory
     LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
     OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory

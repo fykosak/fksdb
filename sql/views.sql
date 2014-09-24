@@ -66,42 +66,20 @@ CREATE OR REPLACE VIEW v_person_envelope as (
 );
 
 create or replace view v_series_points as (
-	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id, sum(s.calc_points) as points, sum(t.points) as max_points
+	select ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id,
+	sum(s.calc_points) as points,
+	sum(IF(t.contest_id = 2,
+		IF(t.year >= 4,
+			IF(t.label = '1' AND ct.study_year NOT IN (6, 7), NULL, t.points),
+			t.points
+		),
+		t.points
+	)) as max_points
     from task t
-	right join contestant_base ct on ct.contest_id = t.contest_id and ct.year = t.year
+	right join v_contestant ct on ct.contest_id = t.contest_id and ct.year = t.year
 	left join submit s on s.task_id = t.task_id and s.ct_id = ct.ct_id
 	group by ct.contest_id, ct.year, t.series, ct.ct_id, ct.person_id
 );
-
-create or replace view v_dokuwiki_user as (
-    select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
-    from login l
-    left join v_person p on p.person_id = l.person_id
-    where exists (
-        select 1
-        from org o
-        inner join contest_year cy
-            on cy.contest_id = o.contest_id
-            and cy.ac_year = IF(month(NOW()) >= 9, year(NOW()), year(NOW()) - 1)
-            and (o.until is null or cy.year between o.since and o.until)
-        where o.person_id = l.person_id
-        
-    ) or l.person_id is null
-);
-
-create or replace view v_dokuwiki_group as (
-	select role_id, name
-	from role
-);
-
-create or replace view v_dokuwiki_user_group as
-	select login_id, role_id, contest_id
-	from `grant`
-	union
-	select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
-	from org o
-	inner join login l on l.person_id = o.person_id
-;
 
 create or replace view v_aesop_person as (
     select
@@ -165,3 +143,32 @@ create or replace view v_aesop_contestant as (
 	right join v_aesop_points res on res.person_id = p.`x-person_id` and res.ac_year = p.`x-ac_year`
 );	
 
+create or replace view v_dokuwiki_user as (
+    select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
+    from login l
+    left join v_person p on p.person_id = l.person_id
+    where exists (
+        select 1
+        from org o
+        inner join contest_year cy
+            on cy.contest_id = o.contest_id
+            and cy.ac_year = IF(month(NOW()) >= 9, year(NOW()), year(NOW()) - 1)
+            and (o.until is null or cy.year between o.since and o.until)
+        where o.person_id = l.person_id
+        
+    ) or l.person_id is null
+);
+
+create or replace view v_dokuwiki_group as (
+	select role_id, name
+	from role
+);
+
+create or replace view v_dokuwiki_user_group as
+	select login_id, role_id, contest_id
+	from `grant`
+	union
+	select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
+	from org o
+	inner join login l on l.person_id = o.person_id
+;

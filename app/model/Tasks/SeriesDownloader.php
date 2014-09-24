@@ -68,10 +68,10 @@ class SeriesDownloader {
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 
         $path = sprintf($this->pathMask, $contestName, $year, $series);
-        $src = "http://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
+        $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
 
-        if (!@copy($src, $dst)) {
+        if (!@copy($src, $dst)) {            
             throw new DownloadException("Cannot copy file '$src'.");
         }
 

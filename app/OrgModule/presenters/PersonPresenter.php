@@ -27,7 +27,9 @@ use ServicePersonInfo;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
- * @deprecated It's better to used ReferencedId and ReferencedContainer inside the form.
+ * @deprecated Do not use this presenter to create/modify persons.
+ *             It's better to use ReferencedId and ReferencedContainer
+ *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonPresenter extends EntityPresenter {
@@ -265,34 +267,6 @@ class PersonPresenter extends EntityPresenter {
             }
         }
         $this->registerJSFile('js/mergeForm.js');
-    }
-
-    protected function setDefaults(IModel $person = null, Form $form) {
-        if (!$model) {
-            return;
-        }
-        $defaults = array();
-
-        $defaults[self::CONT_PERSON] = $person;
-
-        $addresses = array();
-        foreach ($person->getMPostContacts() as $mPostContact) {
-            $addresses[] = $mPostContact;
-        }
-        $defaults[self::CONT_ADDRESSES] = $addresses;
-
-        $history = $person->getHistory($this->getSelectedAcademicYear());
-        if ($history) {
-            $defaults[self::CONT_PERSON_HISTORY] = $history;
-        }
-
-        $info = $person->getInfo();
-        if ($info) {
-            $defaults[self::CONT_PERSON_INFO] = $info;
-            $this->personFactory->modifyLoginContainer($form[self::CONT_PERSON_INFO], $person);
-        }
-
-        $form->setDefaults($defaults);
     }
 
     public function handleMergeFormSuccess(Form $form) {

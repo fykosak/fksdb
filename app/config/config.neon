@@ -98,6 +98,14 @@ parameters:
         contributionMapping:
             author: authors
             solution: solution-authors
+
+        # List of study years that are used for imported tasks when no explicit
+        # study years are specified.
+        defaultStudyYears:
+            # FYKOS
+            1: [8,9,1,2,3,4]
+            # Výfuk
+            2: [6,7,8,9]
         
         # Paths for search of XML files, including trailing slash.
         # Arguments: contestName, year, series
