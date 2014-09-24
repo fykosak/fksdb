@@ -104,6 +104,11 @@ class SubmitPresenter extends BasePresenter {
 
         $prevDeadline = null;
         $taskIds = array();
+        $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
+        $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
+        if ($studyYear === null) {
+            $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
+        }
 
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline != $prevDeadline) {
@@ -115,13 +120,19 @@ class SubmitPresenter extends BasePresenter {
             }
 
             $container = $form->addContainer('task' . $task->task_id);
-            $upload = $container->addUpload('file', $task->getFQName())
+            $upload = $container->addUpload('file', $task->getFQName());
+            $conditionedUpload = $upload
                     ->addCondition(Form::FILLED)
                     ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
+            if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                $upload->setDisabled();
+            }
+
             if ($submit && $this->submitStorage->existsFile($submit)) {
                 $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                $upload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
             }
 
 
