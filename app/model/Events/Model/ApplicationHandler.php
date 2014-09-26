@@ -7,6 +7,7 @@ use Events\Machine\Machine;
 use Events\MachineExecutionException;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
+use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use Events\SubmitProcessingException;
 use Exception;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
@@ -159,6 +160,11 @@ class ApplicationHandler {
             $container->setConflicts($e->getConflicts());
 
             $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
+            $this->logger->log($message, ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (SecondaryModelDataConflictException $e) {
+            $message = sprintf(_("Data ve skupině '%s' kolidují s již existující přihláškou."), $e->getBaseHolder()->getLabel());
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);

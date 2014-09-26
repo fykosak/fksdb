@@ -3,7 +3,6 @@
 namespace Events\Model\Holder\SecondaryModelStrategies;
 
 use Events\Model\Holder\BaseHolder;
-use Nette\NotImplementedException;
 use ORM\IModel;
 use ORM\IService;
 
@@ -30,7 +29,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $conflicts = $this->getConflicts($currentModel, $foundModel, $joinData, $holder->getService());
 
         if ($conflicts) {
-            throw new SecondaryModelDataConflictException($conflicts, $holder->getModel(), $secondaries);
+            throw new SecondaryModelDataConflictException($conflicts, $holder, $secondaries);
         }
 
         $this->updateFoundModel($currentModel, $foundModel, $joinData, $holder->getService());
@@ -74,8 +73,8 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
 
     private $conflictData;
 
-    function __construct($conflictData, IModel $model, $conflicts, $code = null, $previous = null) {
-        parent::__construct($model, $conflicts, $code, $previous);
+    function __construct($conflictData,  BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+        parent::__construct($baseHolder, $conflicts, $code, $previous);
         $this->conflictData = $conflictData;
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));
     }

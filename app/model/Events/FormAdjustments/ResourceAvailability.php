@@ -2,6 +2,7 @@
 
 namespace Events\FormAdjustments;
 
+use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
@@ -39,10 +40,10 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param string $includeStates SQL like-operator mask applications included
-     * @param string $excludeStates SQL like-operator mask applications included
+     * @param string|array $includeStates any state or array of state
+     * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, $includeStates = '%', $excludeStates = 'cancelled') {
+    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -95,8 +96,15 @@ class ResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
-            $table->where(BaseHolder::STATE_COLUMN . ' LIKE', $this->includeStates);
-            $table->where('NOT ' . BaseHolder::STATE_COLUMN . ' LIKE', $this->excludeStates);
+            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+                $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
+            }
+            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+                $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
+            } else {
+                $table->where('1=0');
+            }
+
 
             $primaries = array_map(function(BaseHolder $baseHolder) {
                         return $baseHolder->getModel()->getPrimary(false);
