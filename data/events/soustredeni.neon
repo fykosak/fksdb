@@ -182,7 +182,7 @@ events:
                         label: Osoba
                         required: true
                         modifiable: %events.soustredeni.appCond%
-                        default: fromLogin
+                        default: null
                         factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
                     diet:
                         label: Jídlo
