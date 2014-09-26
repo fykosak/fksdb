@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKS\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use ModelContest;
 use Nette\Forms\ControlGroup;
@@ -49,20 +50,23 @@ class EventFactory {
                 ->addRule(Form::MAX_LENGTH, null, 255)
                 ->setOption('description', _('U soustředka místo.'));
 
-        $container->addDatePicker('begin', 'Začátek akce')
+        $container->addDatePicker('begin', _('Začátek akce'))
                 ->addRule(Form::FILLED, _('%label je povinný.'));
 
-        $container->addDatePicker('end', 'Konec akce')
+        $container->addDatePicker('end', _('Konec akce'))
                 ->addRule(Form::FILLED, _('%label je povinný.'))
                 ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
 
-        $container->addDatePicker('registration_begin', 'Začátek registrace');
+        $control = new DateTimeBox(_('Začátek registrace'));
+        $container->addComponent($control, 'registration_begin');
 
-        $container->addDatePicker('registration_end', 'Konec registrace');
+        $control = new DateTimeBox(_('Konec registrace'));
+        $container->addComponent($control, 'registration_end');
+
 
         $container->addTextArea('report', _('Text'))
                 ->setOption('description', _('Shrnující text k akci.'));
-        
+
         $container->addTextArea('parameters', _('Parametry'))
                 ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
 
