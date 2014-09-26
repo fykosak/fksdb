@@ -45,7 +45,7 @@ parameters:
                 other_name: true
                 family_name: true
             person_info:
-                email: true
+                email: false
                 career: false
                 uk_login: false
                 account: false
