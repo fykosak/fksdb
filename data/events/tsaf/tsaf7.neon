@@ -192,5 +192,7 @@ events:
                     applied|applied.nodsef->cancelled:
                         participantDsef: applied.notsaf
                     spare->cancelled:
+                        participantDsef: cancelled
+                    *->__terminated:
                         participantDsef: __terminated
 

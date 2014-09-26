@@ -82,6 +82,9 @@ events:
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
+                    spare.tsaf->cancelled:
+                        condition: role('admin')
+                        visible: false
 
                 fields:
                     person_id:

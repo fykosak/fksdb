@@ -70,18 +70,18 @@ abstract class SecondaryModelStrategy {
 class SecondaryModelConflictException extends RuntimeException {
 
     /**
-     * @var IModel
+     * @var BaseHolder
      */
-    private $model;
+    private $baseHolder;
 
     /**
      * @var IModel[]
      */
     private $conflicts;
 
-    function __construct(IModel $model, $conflicts, $code = null, $previous = null) {
-        parent::__construct($this->createMessage($model, $conflicts), $code, $previous);
-        $this->model = $model;
+    function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+        parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
+        $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;
     }
 
@@ -93,8 +93,8 @@ class SecondaryModelConflictException extends RuntimeException {
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 
-    public function getModel() {
-        return $this->model;
+    public function getBaseHolder() {
+        return $this->baseHolder;
     }
 
     public function getConflicts() {
