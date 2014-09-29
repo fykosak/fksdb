@@ -33,6 +33,14 @@ trait MockApplicationTrait {
         $mailFactory->injectApplication($application);
     }
 
+    protected function fakeProtection($token, $timeout = null) {
+        $container = $this->getContainer();
+        $session = $container->getService('session');
+        $section = $session->getSection('Nette.Forms.Form/CSRF');
+        $key = "key$timeout";
+        $section->$key = $token;
+    }
+
     protected function authenticate($login) {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
