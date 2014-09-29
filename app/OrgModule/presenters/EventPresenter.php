@@ -222,7 +222,7 @@ class EventPresenter extends EntityPresenter {
 
         if ($event = $this->getModel()) { // intentionally =
             $holder = $this->container->createEventHolder($event);
-            $scheme = $holder->getParamScheme();
+            $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $paramControl = $eventContainer->getComponent('parameters');
             $paramControl->setOption('description', $this->createParamDescription($scheme));
             $paramControl->addRule(function(BaseControl $control) use($scheme) {

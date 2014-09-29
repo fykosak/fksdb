@@ -9,16 +9,11 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FormUtils;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Kdyby\Extension\Forms\Replicator\Replicator;
 use Logging\FlashDumpFactory;
 use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
-use ModelException;
 use ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
 use ORM\IModel;
@@ -32,7 +27,9 @@ use ServicePersonInfo;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
- * @deprecated It's better to used ReferencedId and ReferencedContainer inside the form.
+ * @deprecated Do not use this presenter to create/modify persons.
+ *             It's better to use ReferencedId and ReferencedContainer
+ *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonPresenter extends EntityPresenter {
@@ -190,83 +187,14 @@ class PersonPresenter extends EntityPresenter {
         $this->setTitle(_('Založit osobu'));
     }
 
-    public function titleEdit($id) {
-        $person = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava osoby %s'), $person->getFullname()));
-    }
-
     protected function createComponentCreateComponent($name) {
         // So far, there's no use case that creates bare person.
         throw new NotImplementedException();
     }
 
     protected function createComponentEditComponent($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
-
-        $person = $this->getModel();
-
-        /*
-         * Person
-         */
-        $group = $form->addGroup(_('Osoba'));
-        $personContainer = $this->personFactory->createPerson(PersonFactory::SHOW_DISPLAY_NAME | PersonFactory::SHOW_GENDER, $group);
-        $form->addComponent($personContainer, self::CONT_PERSON);
-
-        /**
-         * Addresses
-         */
-        $group = $form->addGroup(_('Adresy'));
-        $factory = $this->addressFactory;
-        if (count($person->getContestants())) {
-            $defaultAddresses = 1;
-        } else {
-            $defaultAddresses = 0;
-        }
-        $replicator = new Replicator(function($replContainer) use($factory, $group) {
-                    $factory->buildAddress($replContainer, AddressFactory::SHOW_EXTENDED_ROWS, $group);
-                    $replContainer->addComponent($factory->createTypeElement(), 'type');
-
-                    $replContainer->addSubmit('remove', _('Odebrat adresu'))->addRemoveOnClick();
-                }, $defaultAddresses, true);
-        $replicator->containerClass = 'FKSDB\Components\Forms\Containers\AddressContainer';
-
-        $form->addComponent($replicator, self::CONT_ADDRESSES);
-
-        $replicator->addSubmit('add', _('Přidat adresu'))->addCreateOnClick();
-
-        /**
-         * Person history
-         */
-        $group = $form->addGroup(_('Proměnlivé informace'));
-
-        $options = 0;
-        $historyContainer = $this->personFactory->createPersonHistory($options, $group, $this->getSelectedAcademicYear());
-        $form->addComponent($historyContainer, self::CONT_PERSON_HISTORY);
-
-        /**
-         * Personal information
-         */
-        $group = $form->addGroup(_('Osobní informace'));
-        $login = $person->getLogin();
-        $rule = $this->uniqueEmailFactory->create($person);
-
-        $options = PersonFactory::SHOW_EMAIL | PersonFactory::SHOW_LOGIN_CREATION;
-        if (count($person->getOrgs()) > 0) {
-            $options |= PersonFactory::SHOW_ORG_INFO;
-        }
-        $infoContainer = $this->personFactory->createPersonInfo($options, $group, $rule);
-        $form->addComponent($infoContainer, self::CONT_PERSON_INFO);
-
-        $form->setCurrentGroup();
-
-        $submit = $form->addSubmit('send', _('Uložit'));
-        $submit->onClick[] = array($this, 'handleEditFormSuccess');
-
-        $form->getElementPrototype()->data['submit-on'] = 'enter';
-        $submit->getControlPrototype()->data['submit-on'] = 'this';
-
-        return $form;
+        // Persons are edited via referenced person containers.
+        throw new NotImplementedException();
     }
 
     protected function createComponentMergeForm($name) {
@@ -339,144 +267,6 @@ class PersonPresenter extends EntityPresenter {
             }
         }
         $this->registerJSFile('js/mergeForm.js');
-    }
-
-    protected function setDefaults(IModel $person = null, Form $form) {
-        if (!$model) {
-            return;
-        }
-        $defaults = array();
-
-        $defaults[self::CONT_PERSON] = $person;
-
-        $addresses = array();
-        foreach ($person->getMPostContacts() as $mPostContact) {
-            $addresses[] = $mPostContact;
-        }
-        $defaults[self::CONT_ADDRESSES] = $addresses;
-
-        $history = $person->getHistory($this->getSelectedAcademicYear());
-        if ($history) {
-            $defaults[self::CONT_PERSON_HISTORY] = $history;
-        }
-
-        $info = $person->getInfo();
-        if ($info) {
-            $defaults[self::CONT_PERSON_INFO] = $info;
-            $this->personFactory->modifyLoginContainer($form[self::CONT_PERSON_INFO], $person);
-        }
-
-        $form->setDefaults($defaults);
-    }
-
-    /**
-     * @internal
-     * @param SubmitButton $button
-     */
-    public function handleEditFormSuccess(SubmitButton $button) {
-        $form = $button->getForm();
-        $connection = $this->servicePerson->getConnection();
-        $values = $form->getValues();
-        $person = $this->getModel();
-
-        try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-
-            /*
-             * Person
-             */
-            $dataPerson = FormUtils::emptyStrToNull($values[self::CONT_PERSON]);
-            $this->servicePerson->updateModel($person, $dataPerson);
-            $this->servicePerson->save($person);
-
-
-
-            /*
-             * Post contacts
-             */
-            foreach ($person->getMPostContacts() as $mPostContact) {
-                $this->serviceMPostContact->dispose($mPostContact);
-            }
-
-            $dataPostContacts = $values[self::CONT_ADDRESSES];
-            foreach ($dataPostContacts as $dataPostContact) {
-                $dataPostContact = FormUtils::emptyStrToNull((array) $dataPostContact);
-                $mPostContact = $this->serviceMPostContact->createNew($dataPostContact);
-                $mPostContact->getPostContact()->person_id = $person->person_id;
-
-                $this->serviceMPostContact->save($mPostContact);
-            }
-
-            // load data common to login & person_info
-            $personInfoData = $values[self::CONT_PERSON_INFO];
-            $personInfoData = FormUtils::emptyStrToNull($personInfoData);
-
-            /*
-             * Login
-             */
-            $email = $personInfoData['email'];
-            $createLogin = $personInfoData[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN];
-
-            if ($email && !$person->getLogin() && $createLogin) {
-                $lang = $personInfoData[PersonFactory::CONT_LOGIN][PersonFactory::EL_CREATE_LOGIN_LANG];
-                $template = $this->mailTemplateFactory->createLoginInvitation($this, $lang);
-                try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
-                    $this->flashMessage(_('Zvací e-mail odeslán.'), self::FLASH_INFO);
-                } catch (SendFailedException $e) {
-                    $this->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), self::FLASH_ERROR);
-                }
-            }
-
-            /*
-             * Person history
-             */
-            $personHistoryData = $values[self::CONT_PERSON_HISTORY];
-            $personHistoryData = FormUtils::emptyStrToNull($personHistoryData);
-
-            $personHistory = $person->getHistory($this->getSelectedAcademicYear());
-            if (!$personHistory) {
-                $personHistory = $this->servicePersonHistory->createNew($personHistoryData);
-                $personHistory->person_id = $person->person_id;
-                $personHistory->ac_year = $this->getSelectedAcademicYear();
-            } else {
-                $this->servicePersonHistory->updateModel($personHistory, $personHistoryData);
-            }
-
-            $this->servicePersonHistory->save($personHistory);
-
-            /*
-             * Personal info
-             */
-            $personInfo = $person->getInfo();
-            if (!$personInfo) {
-                $personInfo = $this->servicePersonInfo->createNew($personInfoData);
-                $personInfo->person_id = $person->person_id;
-            } else {
-                unset($personInfoData['agreed']); // not to overwrite existing confirmation
-                $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
-            }
-
-            $this->servicePersonInfo->save($personInfo);
-
-            /*
-             * Finalize
-             */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
-
-            $this->flashMessage(sprintf('Údaje osoby %s upraveny.', $person->getFullname()), self::FLASH_SUCCESS);
-
-            $this->backlinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (ModelException $e) {
-            $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
-            $this->flashMessage(_('Chyba při úpravě osoby.'), self::FLASH_ERROR);
-        }
     }
 
     public function handleMergeFormSuccess(Form $form) {

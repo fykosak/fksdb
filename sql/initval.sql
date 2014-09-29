@@ -37,6 +37,16 @@ INSERT INTO contest (contest_id, name) VALUES
 (1, 'FYKOS'),
 (2, 'VÝFUK');
 
+INSERT INTO study_year (study_year) VALUES 
+(1),
+(2),
+(3),
+(4),
+(6),
+(7),
+(8),
+(9);
+
 INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 (1,'webmaster','webař'),
 (2,'taskManager','úlohář'),

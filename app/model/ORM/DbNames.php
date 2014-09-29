@@ -29,9 +29,11 @@ class DbNames {
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
+    const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
+    const TAB_TASK_STUDY_YEAR = 'task_study_year';
     const VIEW_CONTESTANT = 'v_contestant';
 
     /* Specified tables for events */

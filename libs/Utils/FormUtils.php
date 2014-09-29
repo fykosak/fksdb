@@ -13,7 +13,7 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      * 
-     * @todo Mode to general utils.
+     * @todo Move to general utils.
      * @param string|array|Traversable $values
      * @return array
      */
@@ -32,21 +32,19 @@ class FormUtils {
     }
 
     /**
-     * Convert empty strings to nulls.
-     * 
-     * @todo Mode to general utils.
+     * @todo Move to general utils.
      * @param string|array|Traversable $values
      * @return array
      */
-    public static function removeEmptyHashes(ArrayHash $values) {
+    public static function removeEmptyHashes(ArrayHash $values, $ignoreNulls = false) {
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
-                $clear = self::removeEmptyHashes($value);
+                $clear = self::removeEmptyHashes($value, $ignoreNulls);
                 if (count($clear)) {
                     $result[$key] = $clear;
                 }
-            } else {
+            } else if (!$ignoreNulls || $value !== null) {
                 $result[$key] = $value;
             }
         }

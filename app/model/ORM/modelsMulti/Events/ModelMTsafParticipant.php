@@ -3,6 +3,7 @@
 namespace ORM\ModelsMulti\Events;
 
 use AbstractModelMulti;
+use Nette\InvalidStateException;
 
 /**
  *
@@ -11,6 +12,10 @@ use AbstractModelMulti;
 class ModelMTsafParticipant extends AbstractModelMulti {
 
     public function __toString() {
+        if (!$this->getMainModel()->getPerson()) {
+            trigger_error("Missing person in '" . $this->getMainModel() . "'.");
+            //throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
+        }
         return $this->getMainModel()->getPerson()->getFullname();
     }
 

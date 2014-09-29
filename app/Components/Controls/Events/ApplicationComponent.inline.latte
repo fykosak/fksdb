@@ -6,7 +6,7 @@
     {/if}
 {elseif  $mode == 'transitions'}
     {if}
-    {foreach $primaryMachine->getAvailableTransitions() as  $transition}
+    {foreach $primaryMachine->getAvailableTransitions(Events\Machine\BaseMachine::EXECUTABLE | Events\Machine\BaseMachine::VISIBLE) as $transition}
 {if $transition->isCreating()}
 <a href="{plink :Public:Application:default eventId => $holder->getEvent()->event_id}" class="btn btn-xs btn-success">{$transition->getLabel()}</a>    
 {elseif $transition->isDangerous()}

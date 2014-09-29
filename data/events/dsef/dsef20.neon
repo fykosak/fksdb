@@ -11,8 +11,7 @@ parameters:
                     email: true
                     id_number: true
                     born: true
-                post_contact:
-                    type: P
+                post_contact_p:
                     address: true
 
 events:
@@ -33,35 +32,59 @@ events:
                 default: 0
 
         baseMachines:
-            PARTICIPANT:
+            PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
                 
                 states:
                     applied: Přihlášen
+                    applied.tsaf: "Přihlášen (TSAF)"
+                    applied.notsaf: "Přihlášen (zůstal z TSAFu)"
+                    spare.tsaf: "Náhradník pro TSAF"
                     participated: Účastnil se
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
+                    # to spare
+                    __init->spare.tsaf:
+                        condition: %events.dsef20.appCond%
+                        visible: false
+                    # to applied
                     __init->applied:
                         condition: %events.dsef20.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(dsef.participant, .self)
-                    applied->participated:
+                            - Events\Transitions\MailSender(confirmation, .self)
+                    __init|spare.tsaf->applied.tsaf:
+                        condition: %events.dsef20.appCond%
+                        visible: false
+                        onExecuted:
+                            - Events\Transitions\MailSender(confirmation, .self)
+                    applied.tsaf->applied.notsaf:
+                        condition: role('admin')
+                        visible: false
+                    applied->applied.tsaf:
+                        condition: %events.dsef20.appCond%
+                        visible: false
+                    # to end-states
+                    applied|applied.tsaf|applied.notsaf->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
-                    applied->missed:
+                    applied|applied.tsaf|applied.notsaf->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    applied->cancelled:
+                    # cancel and termination
+                    applied|applied.notsaf->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                         dangerous: true
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
+                    spare.tsaf->cancelled:
+                        condition: role('admin')
+                        visible: false
 
                 fields:
                     person_id:
@@ -95,7 +118,7 @@ events:
         machine:
             baseMachines:
                 participant:
-                    bmName: PARTICIPANT
+                    bmName: PARTICIPANT_DSEF
                     label: Účastník
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine

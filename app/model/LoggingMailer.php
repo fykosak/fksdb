@@ -24,6 +24,7 @@ class LoggingMailer extends Object implements IMailer {
     private $parameters;
     private $logPath;
     private $logging = true;
+    private $sentMessages = 0;
 
     function __construct(IMailer $mailer, GlobalParameters $parameters) {
         $this->mailer = $mailer;
@@ -59,6 +60,10 @@ class LoggingMailer extends Object implements IMailer {
         }
     }
 
+    public function getSentMessages() {
+        return $this->sentMessages;
+    }
+
     private function logMessage(Message $mail, Exception $e = null) {
         if (!$this->logging) {
             return;
@@ -73,6 +78,8 @@ class LoggingMailer extends Object implements IMailer {
         fwrite($f, $mail->generateMessage());
 
         fclose($f);
+
+        $this->sentMessages += 1;
     }
 
 }

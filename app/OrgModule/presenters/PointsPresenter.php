@@ -13,6 +13,7 @@ use Nette\InvalidArgumentException;
 use ServiceSubmit;
 use ServiceTask;
 use ServiceTaskContribution;
+use ServiceTaskStudyYear;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
@@ -50,6 +51,11 @@ class PointsPresenter extends SeriesPresenter {
      */
     private $serviceTaskContribution;
 
+    /**
+     * @var ServiceTaskStudyYear
+     */
+    private $serviceTaskStudyYear;
+
     public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
         $this->SQLResultsCache = $SQLResultsCache;
     }
@@ -68,6 +74,10 @@ class PointsPresenter extends SeriesPresenter {
 
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
+    }
+
+    public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
+        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
     }
 
     protected function startup() {
@@ -116,7 +126,7 @@ class PointsPresenter extends SeriesPresenter {
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $contestant->getPerson()->getFullname());
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
             $control->setClassName('points');
 
             $namingContainer = $container->addContainer($contestant->ct_id);

@@ -11,8 +11,7 @@ parameters:
                     email: true
                     id_number: true
                     born: true
-                post_contact:
-                    type: P
+                post_contact_p:
                     address: true
 
 events:
@@ -47,7 +46,7 @@ events:
                         condition: %events.dsef19.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(dsef.participant, .self)
+                            - Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat

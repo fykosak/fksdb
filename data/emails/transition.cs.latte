@@ -1,0 +1,7 @@
+{* General template for any event. *}
+<p>
+    Změna stavu přihlášky osoby {$person->getFullname()} na akci <em>{$event}</em>.
+    Nový stav <em>{$machine->getPrimaryMachine()->getStateName()}</em>.
+</p>
+{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/closing.cs.latte'}

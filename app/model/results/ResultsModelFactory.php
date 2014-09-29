@@ -89,7 +89,9 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
                 return new EvaluationFykos2001();
             }
         } else if ($contestId == ModelContest::ID_VYFUK) {
-            if ($year >= 2) {
+            if ($year >= 4) {
+                return new EvaluationVyfuk2014();
+            } else if ($year >= 2) {
                 return new EvaluationVyfuk2012();
             } else {
                 return new EvaluationVyfuk2011();

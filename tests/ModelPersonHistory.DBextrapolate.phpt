@@ -2,7 +2,7 @@
 
 $container = require 'bootstrap.php';
 
-use Nette\Database\Connection;
+use Nette\DI\Container;
 use Tester\Assert;
 
 class ModelPersonHistoryTest extends DatabaseTestCase {
@@ -12,14 +12,16 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
      */
     private $service;
 
-
-    function __construct(ServicePerson $service, Connection $connection) {
-        parent::__construct($connection);
+    function __construct(ServicePerson $service, Container $container) {
+        parent::__construct($container);
         $this->service = $service;
     }
 
     public function testNull() {
-        $person = $this->service->findByPrimary(1);
+        $personId = $this->createPerson('Student', 'Pilný');
+        $this->createPersonHistory($personId, 2000, 1, 1);
+
+        $person = $this->service->findByPrimary($personId);
         $extrapolated = $person->getHistory(2001, true);
 
         Assert::same(2001, $extrapolated->ac_year);
@@ -30,5 +32,5 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
 
 }
 
-$testCase = new ModelPersonHistoryTest($container->getService('ServicePerson'), $container->getService('nette.database.default'));
+$testCase = new ModelPersonHistoryTest($container->getService('ServicePerson'), $container);
 $testCase->run();

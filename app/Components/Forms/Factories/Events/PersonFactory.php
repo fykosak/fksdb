@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
+use Nette\InvalidArgumentException;
 use Nette\Security\User;
 use Persons\SelfResolver;
 use ServicePerson;
@@ -120,7 +121,7 @@ class PersonFactory extends AbstractFactory {
         parent::validate($field, $validator);
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->getBaseHolder()->getHolder()->getEvent();
+        $event = $field->getBaseHolder()->getEvent();
         $acYear = $event->getAcYear();
         $personId = $field->getValue();
         $person = $personId ? $this->servicePerson->findByPrimary($personId) : null;
@@ -135,7 +136,7 @@ class PersonFactory extends AbstractFactory {
                     $metadata = array('required' => $metadata);
                 }
                 if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
-                    $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel() . '.' . $fieldName)); //TODO better GUI name than DB identifier
+                    $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }
         }

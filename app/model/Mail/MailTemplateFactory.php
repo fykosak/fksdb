@@ -32,6 +32,14 @@ class MailTemplateFactory {
     }
 
     /**
+     * @internal For automated testing only.
+     * @param $application
+     */
+    public function injectApplication($application) {
+        $this->application = $application;
+    }
+
+    /**
      * @param string $lang ISO 639-1
      */
     public function createLoginInvitation(Control $control = null, $lang = null) {

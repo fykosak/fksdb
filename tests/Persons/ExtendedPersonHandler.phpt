@@ -34,7 +34,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     private $referencedPersonFactory;
 
     function __construct(Container $container) {
-        parent::__construct($container->getService('nette.database.default'));
+        parent::__construct($container);
         $this->container = $container;
     }
 
@@ -75,9 +75,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                 'study_year' => true,
                 'class' => false,
             ),
-            'post_contact' => array(
+            'post_contact_p' => array(
                 'address' => true,
-                'type' => 'P',
             ),
             'person_info' => array(
                 'email' => true,
@@ -104,7 +103,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                         'study_year' => "2",
                         'class' => "2.F",
                     ),
-                    'post_contact' => array(
+                    'post_contact_p' => array(
                         'address' => array(
                             'target' => "Krtkova 12",
                             'city' => "Pohádky",
@@ -137,6 +136,11 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
+        
+        $address = $person->getPermanentAddress();
+        Assert::same('Krtkova 12', $address->target);
+        Assert::same('43243', $address->postal_code);
+        Assert::notEqual(null, $address->region_id);
     }    
 
     private function createForm($fieldsDefinition, $acYear) {

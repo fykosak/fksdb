@@ -5,14 +5,12 @@ namespace PublicModule;
 use Authorization\RelatedPersonAuthorizator;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder\Holder;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
@@ -163,10 +161,13 @@ class ApplicationPresenter extends BasePresenter {
             }
         }
 
-        if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
-            if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
+
+        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
+            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
+            } else {
+                $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
             }
         }
 
@@ -191,6 +192,9 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentContestChooser($name) {
         $component = parent::createComponentContestChooser($name);
         if ($this->getAction() == 'default') {
+            if (!$this->getEvent()) {
+                throw new BadRequestException(_('Neexistující akce.'), 404);
+            }
             $component->setContests(array(
                 $this->getEvent()->getEventType()->contest_id,
             ));

@@ -12,6 +12,8 @@ navigation:
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
+        public.submit.default:
+            visible: true
 
     structure:
         org.dashboard.default:
