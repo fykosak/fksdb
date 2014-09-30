@@ -14,6 +14,9 @@ fi
 for i in `seq 1 $COUNT` ; do
 
 mysql $DB_NAME$i <<EOD
+DELETE FROM submit;
+DELETE FROM task;
+
 DELETE FROM e_tsaf_participant;
 DELETE FROM e_dsef_participant;
 DELETE FROM e_fyziklani_participant;

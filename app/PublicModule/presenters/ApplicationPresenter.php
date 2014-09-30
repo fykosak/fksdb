@@ -166,7 +166,7 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
-            } else {
+            } else if (!$this->getParameter(self::PARAM_AFTER, false)) {
                 $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
             }
         }

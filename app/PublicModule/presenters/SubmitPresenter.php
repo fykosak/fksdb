@@ -184,6 +184,9 @@ class SubmitPresenter extends BasePresenter {
 
                 $taskValues = $values['task' . $task->task_id];
 
+                if (!isset($taskValues['file'])) { // upload field was disabled
+                    continue;
+                }
                 if (!$taskValues['file']->isOk()) {
                     Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
                     continue;

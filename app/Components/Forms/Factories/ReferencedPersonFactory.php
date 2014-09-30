@@ -170,13 +170,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($subcontainer->getComponents() as $fieldName => $component) {
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $options = self::TARGET_FORM | self::EXTRAPOLATE | self::HAS_DELIVERY;
+                    $options = self::TARGET_FORM | self::HAS_DELIVERY;
                 } else {
-                    $options = self::TARGET_FORM | self::EXTRAPOLATE;
+                    $options = self::TARGET_FORM;
                 }
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
-                $controlModifiable = $value ? $modifiable : true;
+                $controlModifiable = $realValue ? $modifiable : true;
                 $controlVisible = $this->isWriteonly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
@@ -197,7 +198,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     } else {
                         $component->setDefaultValue($value);
                     }
-                    if ($value && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                    if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
