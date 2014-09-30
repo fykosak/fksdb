@@ -38,12 +38,16 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
-        $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
-        $count += count($primaryPersonIds);
+        if ($primaryPersonIds) {
+            $subconditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
+            $count += count($primaryPersonIds);
+        }
 
         foreach ($eventSource->getDummyHolder()->getGroupedSecondaryHolders() as $group) {
-            $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
-            $count += count($group['personIds']);
+            if ($group['personIds']) {
+                $subconditions[] = implode(' = ?  OR ', $group['personIds']) . ' = ?';
+                $count += count($group['personIds']);
+            }
         }
 
         if ($count == 1) {
