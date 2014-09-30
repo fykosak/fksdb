@@ -27,7 +27,7 @@ function latte2php {
 
 function neon2php {
 	sed "s/_(\(['\"].*\))[^)]*\$/<?php _(\1) ?>/" $1 | \
-	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" $1 >$1.$NEON_SUFFIX
+	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`

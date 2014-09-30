@@ -37,10 +37,10 @@ events:
                 eventId: e_fyziklani_team.event_id
                 
                 states:
-                    applied: Přihlášen
-                    cancelled: Zrušen
-                    participated: Účastnil se
-                    missed: Nezúčastnil se
+                    applied: _('Přihlášen')
+                    cancelled: _('Zrušen')
+                    participated: _('Účastnil se')
+                    missed: _('Nezúčastnil se')
 
                 transitions:
                     __init->applied:
@@ -97,9 +97,9 @@ events:
                 personIds: [e_fyziklani_participant:event_participant.person_id]
 
                 states:
-                    applied: Přihlášen
-                    participated: Účastnil se
-                    missed: Nepřijel
+                    applied: _('Přihlášen')
+                    participated: _('Účastnil se')
+                    missed: _('Nezúčastnil se')
 
                 transitions:
                     __init->applied:
