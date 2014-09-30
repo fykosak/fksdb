@@ -1,0 +1,188 @@
+parameters:
+    events:
+        fol:
+            appCond: or(regOpen(), role('admin'))
+            participant:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                person_history:
+                    school_id: true
+                    study_year:
+                        required: false
+                        description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
+
+
+events:
+    fol:
+        event_type_id: 9
+        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklani.grid
+        formLayout: fol.form
+        paramScheme:
+            notifyBcc:
+                default: online@fyziklani.cz
+            notifyFrom:
+                default: Fyziklání online <online@fyziklani.cz>
+
+        baseMachines:
+            #
+            #   TEAM
+            #    
+            TEAM:
+                service: @event.ServiceFyziklaniTeam
+                personIds: []
+                eventId: e_fyziklani_team.event_id
+                
+                states:
+                    applied: Přihlášen
+                    cancelled: Zrušen
+                    participated: Účastnil se
+                    missed: Nezúčastnil se
+
+                transitions:
+                    __init->applied:
+                        condition: %events.fol.appCond%
+                        label: _('Přihlásit tým')
+                        onExecuted:
+                            - Events\Transitions\MailSender(team, .*)
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: Zúčastnil se
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: Nezúčastnil se
+                        dangerous: true
+                    applied->cancelled:
+                        condition: role('admin')
+                        label: Zrušit tým
+                        dangerous: true
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: Smazat tým
+
+                fields:
+                    name:
+                        label: _('Název týmu') # i18n
+                        required: true
+                        visible: true # or condition
+                        modifiable: %events.fol.appCond%
+                    category:
+                        label: _('Kategorie') # i18n
+                        required: true
+                        visible: neg(state('__init'))
+                        modifiable: false
+                    note:
+                        label: _('Kontaktní adresa')
+                        required: false
+                        visible: true
+                        modifiable: true
+                        description: _('Pro zaslání případné odměny.')
+                    password:
+                        label: _('Herní heslo') # i18n
+                        required: state('__init')
+                        visible: true
+                        modifiable: true
+                        description: _('Slouží k přihlášení do herního systému.')
+                        factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
+
+            #
+            #   PARTICIPANT
+            #    
+            PARTICIPANT:
+                service: @event.ServiceMFyziklaniParticipant
+                joinOn: e_fyziklani_team_id
+                personIds: [e_fyziklani_participant:event_participant.person_id]
+
+                states:
+                    applied: Přihlášen
+                    participated: Účastnil se
+                    missed: Nepřijel
+
+                transitions:
+                    __init->applied:
+                        condition: neg(eventWas())
+                        visible: false
+                        onExecuted:
+                            - Events\Transitions\MailSender(member,self)
+                    applied->participated:
+                        condition: role('admin')
+                        visible: false
+                    applied->missed:
+                        condition: role('admin')
+                        visible: false
+                    applied->__terminated:
+                        condition: neg(eventWas())
+                        visible: false
+
+                fields:
+                    person_id:
+                        label: _('Osoba')
+                        visible: true
+                        modifiable: neg(eventWas())
+                        determining: true
+                        factory: RefPerson(%events.fol.participant%, email, true, role('admin'), false)
+
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                team:
+                    bmName: TEAM 
+                    label: _('Tým')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                p1:
+                    bmName: PARTICIPANT
+                    label: _('1. člen')
+                    required: true
+                p2:
+                    bmName: PARTICIPANT
+                    label: _('2. člen')
+                p3:
+                    bmName: PARTICIPANT
+                    label: _('3. člen')
+                p4:
+                    bmName: PARTICIPANT
+                    label: _('4. člen')
+                p5:
+                    bmName: PARTICIPANT
+                    label: _('5. člen')
+            formAdjustments:
+                - @events.privacyPolicy
+                - @events.captcha
+                - Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
+                - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
+
+
+            processings:
+                - Events\Spec\Fol\CategoryProcessing()
+                - Events\Spec\Fol\PasswordProcessing()
+                - @events.privacyPolicy
+
+            joins:
+                team:
+                    *->participated:
+                        p1: participated
+                        p2: participated
+                        p3: participated
+                        p4: participated
+                        p5: participated
+                    *->missed:
+                        p1: missed
+                        p2: missed
+                        p3: missed
+                        p4: missed
+                        p5: missed
+                    *->__terminated:
+                        p1: __terminated
+                        p2: __terminated
+                        p3: __terminated
+                        p4: __terminated
+                        p5: __terminated

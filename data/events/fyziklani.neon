@@ -70,12 +70,12 @@ events:
                         condition: %events.fyziklani.appCond%
                         label: Přihlásit tým
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.team, .*)
+                            - Events\Transitions\MailSender(team, .*)
                     pending->approved:
                         condition: role('admin')
                         label: Schválit účast
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.team, *)
+                            - Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: Potvrdit jako náhradníka
@@ -144,7 +144,7 @@ events:
                         condition: %events.fyziklani.appCond%
                         label: Přihlásit člena
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani.member,self)
+                            - Events\Transitions\MailSender(member,self)
                     applied->participated:
                         condition: role('admin')
                         label: Potvrdit účast # name is not necessary due to join to team machine

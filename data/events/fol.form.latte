@@ -1,0 +1,24 @@
+{layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
+
+{block content}
+{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
+<ul>
+    <li>Systém přihlašování &ndash; po vyplnění formuláře
+        a&nbsp;přihlášení týmu web automaticky přijímá týmy jako náhradníky,
+        odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
+        kontrole organizátorem se stává tým účastníkem.
+        Není tedy třeba psát emailem dotaz, jestli bude váš tým přijat, pokud váš
+        tým splňuje podmínky. Stačí počkat a&nbsp;brzy se status vašeho týmu změní
+        na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.</li>
+    <li>
+        Podrobné informace naleznente na stránce <a href="http://fyziklani.cz/">FYKOSího Fyziklání</a>
+    </li>
+    <li>
+        Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+    </li>
+</ul>
+
+{/if}
+
+
+{control form}
