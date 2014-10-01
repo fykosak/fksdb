@@ -86,16 +86,20 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn()) {
-            $this->loginRedirect();
+            $this->optionalLoginRedirect();
         } else if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }
 
-    private function loginRedirect() {
+    private function optionalLoginRedirect() {
         if (!$this->requiresLogin()) {
             return;
         }
+        $this->loginRedirect();
+    }
+
+    protected final function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
