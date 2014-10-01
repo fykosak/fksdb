@@ -74,6 +74,7 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
+                        factory: Chooser(_('Category'), Events\Spec\Fol\CategoryProcessing())
                     note:
                         label: _('Kontaktní adresa')
                         required: false

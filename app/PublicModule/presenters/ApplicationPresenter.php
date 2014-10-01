@@ -175,7 +175,7 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                throw new ForbiddenRequestException(_('Cizí přihláška.'));
+                $this->loginRedirect();
             }
         }
     }

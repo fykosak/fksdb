@@ -10,8 +10,8 @@ parameters:
         acYear: 2000
         dbInstances: 8
     ro-database:
-        dsn: 'mysql:host=localhost;dbname=fksdb_test'
+        dsn: 'mysql:host=localhost;dbname=fksdb_test1'
 
 nette:
     database:
-        dsn: "mysql:host=localhost;dbname=fksdb_test"
+        dsn: "mysql:host=localhost;dbname=fksdb_test1"

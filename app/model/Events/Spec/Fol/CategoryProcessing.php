@@ -4,15 +4,17 @@ namespace Events\Spec\Fol;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use FKS\Logging\ILogger;
+use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use ServiceSchool;
 use YearCalculator;
 
-class CategoryProcessing extends AbstractProcessing {
+class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
     const HIGH_SCHOOL_A = 'A';
     const HIGH_SCHOOL_B = 'B';
@@ -146,6 +148,10 @@ class CategoryProcessing extends AbstractProcessing {
                 return self::HIGH_SCHOOL_A;
             }
         }
+    }
+
+    public function getOptions(Field $field) {
+        return $this->categoryNames;
     }
 
 }

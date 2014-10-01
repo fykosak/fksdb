@@ -139,6 +139,9 @@ events:
                         label: "Jakou mikinu nosíš?"
                         required: %events.tsaf7.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tsaf7.clothes%))
+                    health_restrictions:
+                        label: Zdravotní omezení
+                        description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v průběhu akce nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných aktivit? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
                     price:
                         label: "Cena zájezdu (CZK)"
                         modifiable: false
