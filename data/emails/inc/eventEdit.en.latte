@@ -1,5 +1,5 @@
 <p>
-    Changes are possible until {$event->registration_end} after <a n:href="//:Authentication:login">sign in</a>
+    Changes are possible until {$event->registration_end|date:'%B %e, %Y %k:%M %Z'} after <a n:href="//:Authentication:login">sign in</a>
     or by accessing via the private link below:<br/>
     <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a>
 </p>
