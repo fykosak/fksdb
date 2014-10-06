@@ -19,7 +19,7 @@ $(function() {
             this.transformContainer(elContainer, $('#' + elContainer.data('referenced-id')));
         },
         transformContainer: function(elContainer, elRefId) {
-            var elSearch = elContainer.find("input[name*='" + this.options.searchMask + "']");
+            var elSearch = elContainer.find("input[name*='" + this.options.searchMask + "'][type!='hidden']");
             var elCompactValue = elContainer.find("input[name*='" + this.options.compactValueMask + "']");
             var elSubmitSearch = elContainer.find("input[type='submit'][name*='" + this.options.submitSearchMask + "']");
             var elClear = elContainer.find("input[type='submit'][name*='" + this.options.clearMask + "']");
@@ -37,8 +37,23 @@ $(function() {
                 });
 
                 var searchInputGroup = $('<div class="input-group"/>');
-                elSearch.replaceWith(searchInputGroup);
+                var elToReplace = elSearch;
+                if(elSearch.data('uiElement')) {
+                    elToReplace = elSearch.data('uiElement');
+                }
+                
+                // Workaround for broken replaceWith()
+                //elToReplace.replaceWith(searchInputGroup);
+                var par = elToReplace.parent();
+                var prev = elToReplace.prev();
+                if(prev.length) {
+                    searchInputGroup.insertAfter(prev);
+                } else {
+                    searchInputGroup.prependTo(par);
+                }
+                
                 searchInputGroup.append(elSearch);
+                searchInputGroup.append(elToReplace);
                 searchInputGroup.append(searchButton);
 
                 // append handler

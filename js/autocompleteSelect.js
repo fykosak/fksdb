@@ -26,6 +26,7 @@ $(function() {
             elVal.replaceWith(el);
             elVal.hide();
             elVal.insertAfter(el);
+            elVal.data('uiElement', el);
 
             // element to detect enabled JavaScript
             var metaEl = $('<input type="hidden" value="JS" />');
