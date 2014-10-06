@@ -148,16 +148,16 @@ parameters:
     deduplication:
         finder:
             # Threshold on overall similarity score to show person in duplicates.
-            threshold: 0.84
+            threshold: 0.9
 
             # Weight for family name similarity [0, 1].
-            familyWeight: 0.45
+            familyWeight: 0.48
 
             # Weight for other name similarity [0, 1].
-            otherWeight: 0.35
+            otherWeight: 0.48
 
             # Weight for email address similarity [0, 1].
-            emailWeight: 0.2
+            emailWeight: 0.04
 
 
 php:
