@@ -102,6 +102,7 @@ $(function() {
                 options.select = function(e, ui) {
                     elVal.val(ui.item.value);
                     el.val(ui.item.label);
+                    elVal.change();
                     return false;
                 };
                 options.focus = function(e, ui) {
