@@ -17,6 +17,7 @@ class DuplicateFinder {
 
     const IDX_PERSON = 'person';
     const IDX_SCORE = 'score';
+    const DIFFERENT_PATTERN = '/not[-_]same\(([0-9]+)\)/i';
 
     /**
      * @var ServicePerson
@@ -80,11 +81,23 @@ class DuplicateFinder {
      * @return float
      */
     private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
+        $piA = $a->getInfo();
+        $piB = $b->getInfo();
+
+        /*
+         * Check explixit difference
+         */
+        if (in_array($a->getPrimary(), $this->getDifferentPersons($piB))) {
+            return 0;
+        }
+        if (in_array($b->getPrimary(), $this->getDifferentPersons($piA))) {
+            return 0;
+        }
+
         /*
          * Email check
          */
-        $piA = $a->getInfo();
-        $piB = $b->getInfo();
+
         if (!$piA || !$piB) {
             $emailScore = 0.5; // cannot say anything
         } else if (!$piA->email || !$piB->email) {
@@ -98,6 +111,15 @@ class DuplicateFinder {
 
 
         return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
+    }
+
+    private function getDifferentPersons(ActiveRow $personInfo = null) {
+        if ($personInfo === null || !isset($personInfo->note)) {
+            return array();
+        }
+        $matches = array();
+        preg_match_all(self::DIFFERENT_PATTERN, $personInfo->note, $matches);
+        return $matches[1];
     }
 
     private function stringScore($a, $b) {
