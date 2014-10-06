@@ -211,19 +211,16 @@ class ContestChooser extends Control {
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
-                $login = $this->getLogin();
-
-                if (!$login) {
-                    $contests = array();
-                }
-
                 $contests = array();
-                if ($this->contestsDefinition == ModelRole::ORG) {
-                    $contests = array_keys($this->getLogin()->getActiveOrgs($this->yearCalculator));
-                } else if ($this->contestsDefinition == ModelRole::CONTESTANT) {
-                    $person = $this->getLogin()->getPerson();
-                    if ($person) {
-                        $contests = array_keys($person->getActiveContestants($this->yearCalculator));
+                $login = $this->getLogin();
+                if ($login) {
+                    if ($this->contestsDefinition == ModelRole::ORG) {
+                        $contests = array_keys($login->getActiveOrgs($this->yearCalculator));
+                    } else if ($this->contestsDefinition == ModelRole::CONTESTANT) {
+                        $person = $login->getPerson();
+                        if ($person) {
+                            $contests = array_keys($person->getActiveContestants($this->yearCalculator));
+                        }
                     }
                 }
             }
