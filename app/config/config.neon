@@ -144,6 +144,21 @@ parameters:
     # Parameters used for automated testing
     tester: []
 
+    # Deduplication
+    deduplication:
+        finder:
+            # Threshold on overall similarity score to show person in duplicates.
+            threshold: 0.84
+
+            # Weight for family name similarity [0, 1].
+            familyWeight: 0.45
+
+            # Weight for other name similarity [0, 1].
+            otherWeight: 0.35
+
+            # Weight for email address similarity [0, 1].
+            emailWeight: 0.2
+
 
 php:
     date.timezone: Europe/Prague
