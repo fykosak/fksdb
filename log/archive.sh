@@ -13,5 +13,5 @@ mkdir -p $DIR/mail
 mv *.log exception-* -t $DIR
 mv mail/*.txt -t $DIR/mail
 
-tar -czf ${DIR}.tgz $DIR && rm -r $DIR
+tar -cjf ${DIR}.tgz $DIR && rm -r $DIR
 
