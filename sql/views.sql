@@ -5,8 +5,10 @@ CREATE OR REPLACE VIEW v_person as (
 );
 
 create or replace view v_school as (
-	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic
+	select s.school_id, s.address_id, coalesce(s.name_abbrev, s.name, s.name_full) as name, s.email, s.izo, s.ic, a.target, a.city, r.country_iso
 	from school s
+        left join address a on a.address_id = s.address_id
+        left join region r on r.region_id = a.region_id
 );
 
 CREATE OR REPLACE VIEW v_task_stats as
