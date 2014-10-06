@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
 use ModelPerson;
+use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Tables\TypedTableSelection;
 use Persons\Deduplication\DuplicateFinder;
@@ -99,7 +100,10 @@ class PersonsGrid extends BaseGrid {
     }
 
     private function renderPerson(ModelPerson $person) {
-        return $person->getFullname() . ' (' . $person->person_id . ')';
+        $el = Html::el('span');
+        $el->title('person.created ' . $person->created);
+        $el->setText($person->getFullname() . ' (' . $person->person_id . ')');
+        return $el;        
     }
 
 }
