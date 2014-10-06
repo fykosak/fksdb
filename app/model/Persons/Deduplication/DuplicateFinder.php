@@ -2,6 +2,7 @@
 
 namespace Persons\Deduplication;
 
+use FKS\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
@@ -23,12 +24,13 @@ class DuplicateFinder {
     private $servicePerson;
 
     /**
-     * @var double [0,1) threshold for similarity score to consider two recrods equal persons
+     * @var array
      */
-    private $threshold = 0.84;
+    private $parameters;
 
-    function __construct(ServicePerson $servicePerson) {
+    function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
+        $this->parameters = $parameters['deduplication']['finder'];
     }
 
     public function getPairs() {
@@ -51,7 +53,7 @@ class DuplicateFinder {
                         continue;
                     }
                     $score = $this->getSimilarityScore($personA, $personB);
-                    if ($score > $this->threshold) {
+                    if ($score > $this->parameters['threshold']) {
                         $pairs[$personA->person_id] = array(
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
@@ -95,7 +97,7 @@ class DuplicateFinder {
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
 
-        return 0.45 * $familyScore + 0.2 * $otherScore + 0.35 * $emailScore;
+        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
     }
 
     private function stringScore($a, $b) {

@@ -83,7 +83,7 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     protected function createPersonDuplicateFinder() {
-        return new DuplicateFinder($this->servicePerson);
+        return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }
 
 }
