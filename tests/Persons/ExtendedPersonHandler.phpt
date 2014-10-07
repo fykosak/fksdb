@@ -125,7 +125,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
          * Check
          */
         $result = $this->fixture->handleForm($form, $presenter);
-        Assert::true($result);
+        Assert::same(ExtendedPersonHandler::RESULT_OK_NEW_LOGIN, $result);
 
         $person = $this->fixture->getPerson();
         Assert::same('Jana', $person->other_name);
