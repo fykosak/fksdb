@@ -12,10 +12,10 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
-use ModelContest;
 use ModelPerson;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
@@ -209,8 +209,12 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $that = $this;
         $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
                     $form = $button->getForm();
-                    if ($handler->handleForm($form, $that)) {
-                        if (!$that->getPerson()) {
+                    if ($result = $handler->handleForm($form, $that)) { // intentionally =
+                        /*
+                         * Do not automatically log in user with existing logins for security reasons.
+                         * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
+                         */
+                        if (!$that->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
                             $login = $handler->getPerson()->getLogin();
                             $that->getUser()->login($login);
                         }
