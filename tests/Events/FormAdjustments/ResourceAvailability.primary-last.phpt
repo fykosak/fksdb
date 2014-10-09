@@ -25,6 +25,7 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         ));
         $this->insert('e_dsef_participant', array(
             'event_participant_id' => $this->appId,
+            'e_dsef_group_id' => 1,
         ));
         $this->authenticate($personId);
     }

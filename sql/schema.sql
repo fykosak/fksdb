@@ -920,6 +920,26 @@ COMMENT = 'atributy osoby řezané dle akademického roku';
 
 
 -- -----------------------------------------------------
+-- Table `e_dsef_group`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `e_dsef_group` ;
+
+CREATE TABLE IF NOT EXISTS `e_dsef_group` (
+  `e_dsef_group_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `event_id` INT(11) NOT NULL,
+  `name` VARCHAR(32) NOT NULL,
+  `capacity` TINYINT(2) NOT NULL,
+  INDEX `fk_e_dsef_group_event1_idx` (`event_id` ASC),
+  PRIMARY KEY (`e_dsef_group_id`),
+  CONSTRAINT `fk_e_dsef_group_event1`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `e_dsef_participant`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `e_dsef_participant` ;
@@ -931,9 +951,15 @@ CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   `lunch_count` TINYINT(2) NULL DEFAULT 0,
   `message` VARCHAR(255) NULL,
   PRIMARY KEY (`event_participant_id`),
+  INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
   CONSTRAINT `fk_e_dsef_participant_event_participant1`
     FOREIGN KEY (`event_participant_id`)
     REFERENCES `event_participant` (`event_participant_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
+    FOREIGN KEY (`e_dsef_group_id`)
+    REFERENCES `e_dsef_group` (`e_dsef_group_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
