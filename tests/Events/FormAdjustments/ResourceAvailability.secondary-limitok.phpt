@@ -54,9 +54,6 @@ EOT
         Assert::equal('2', $this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchColumn());
 
         $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
-groups:
-    Alpha: 2
-    Bravo: 2
 accomodationCapacity: $capacity                
 EOT
                 , $this->eventId);

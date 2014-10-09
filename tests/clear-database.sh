@@ -19,6 +19,7 @@ DELETE FROM task;
 
 DELETE FROM e_tsaf_participant;
 DELETE FROM e_dsef_participant;
+DELETE FROM e_dsef_group;
 DELETE FROM e_fyziklani_participant;
 DELETE FROM event_participant;
 DELETE FROM e_fyziklani_team;
