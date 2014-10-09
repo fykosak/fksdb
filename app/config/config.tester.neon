@@ -11,6 +11,9 @@ parameters:
         dbInstances: 8
     ro-database:
         dsn: 'mysql:host=localhost;dbname=fksdb_test1'
+    upload:
+        # Path to storage directory
+        root: %appDir%/../tmp/upload
 
 nette:
     database:
