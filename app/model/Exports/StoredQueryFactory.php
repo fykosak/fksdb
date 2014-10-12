@@ -144,12 +144,13 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             $dataNode->appendChild($rowNode);
             foreach ($row as $colName => $value) {
                 if ($format == self::EXPORT_FORMAT_1) {
-                    $colNode = $doc->createElement('col', $value);
-                    $rowNode->appendChild($colNode);
+                    $colNode = $doc->createElement('col');
                 } elseif ($format == self::EXPORT_FORMAT_2) {
-                    $colNode = $doc->createElement(Utils::xmlName($colName), $value);
-                    $rowNode->appendChild($colNode);
+                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 }
+                $textNode = $doc->createTextNode($value);
+                $colNode->appendChild($textNode);
+                $rowNode->appendChild($colNode);
             }
         }
     }
