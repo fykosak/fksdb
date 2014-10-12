@@ -100,9 +100,13 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         return null;
     }
 
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof IResultsModel) {
             throw new InvalidArgumentException('Expected IResultsModel, got ' . get_class($dataSource) . '.');
+        }
+
+        if ($format !== self::EXPORT_FORMAT_1) {
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
         }
 
         try {
