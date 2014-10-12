@@ -308,7 +308,8 @@ final class AuthenticationPresenter extends BasePresenter {
             return;
         }
         $this->restoreRequest($this->backlink);
-
+        
+        /* If it was't valid backlink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
 

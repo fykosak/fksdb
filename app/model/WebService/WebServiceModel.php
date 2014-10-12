@@ -1,11 +1,12 @@
 <?php
 
 use Authorization\ContestAuthorizator;
+use Exports\StoredQuery;
+use Exports\StoredQueryFactory;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
-use Exports\StoredQuery;
-use Exports\StoredQueryFactory;
+use WebService\IXMLNodeSerializer;
 
 /**
  * Web service provider for fksdb.wdsl
@@ -82,7 +83,7 @@ class WebServiceModel {
 
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
-            $this->log(" Successfully authenticated for web service request.");
+            $this->log("Successfully authenticated for web service request.");
         } catch (AuthenticationException $e) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
@@ -191,11 +192,12 @@ class WebServiceModel {
     }
 
     public function GetExport($args) {
-        $this->checkAuthentication(__FUNCTION__);
-
         // parse arguments
         $qid = $args->qid;
+        $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = array();
+        
+        $this->checkAuthentication(__FUNCTION__, $qid);
 
         // stupid PHP deserialization
         if (!is_array($args->parameter)) {
@@ -231,17 +233,19 @@ class WebServiceModel {
         $exportNode->setAttribute('qid', $qid);
         $doc->appendChild($exportNode);
 
-        $this->storedQueryFactory->fillNode($storedQuery, $exportNode, $doc);
+        $this->storedQueryFactory->fillNode($storedQuery, $exportNode, $doc, $format);
 
         $doc->formatOutput = true;
 
         return new SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
     }
 
-    private function checkAuthentication($serviceName) {
+    private function checkAuthentication($serviceName, $arg = null) {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
+        } else if($arg !== null) {
+            $this->log("Called $serviceName($arg).");
         } else {
             $this->log("Called $serviceName.");
         }
@@ -259,7 +263,7 @@ class WebServiceModel {
         if (!$this->authenticatedLogin) {
             $message = "unauthenticated@";
         } else {
-            $message = $this->authenticatedLogin->__toString() . ")@";
+            $message = $this->authenticatedLogin->__toString() . "@";
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);
@@ -288,10 +292,6 @@ class WebServiceModel {
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc);
         return $brojureNode;
-    }
-
-    private function fillExportNode(StoredQuery $storedQuery, DOMElement $exportNode, DOMDocument $doc) {
-
     }
 
 }

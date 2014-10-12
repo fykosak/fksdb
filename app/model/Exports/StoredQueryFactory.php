@@ -13,6 +13,7 @@ use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
+use Utils;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -110,9 +111,12 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         ));
     }
 
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
+        }
+        if ($format !== self::EXPORT_FORMAT_1 && $format !== self::EXPORT_FORMAT_2) {
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
         }
         // parameters
         $parametersNode = $doc->createElement('parameters');
@@ -138,9 +142,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         foreach ($dataSource->getData() as $row) {
             $rowNode = $doc->createElement('row');
             $dataNode->appendChild($rowNode);
-            foreach ($row as $col) {
-                $colNode = $doc->createElement('col', $col);
-                $rowNode->appendChild($colNode);
+            foreach ($row as $colName => $value) {
+                if ($format == self::EXPORT_FORMAT_1) {
+                    $colNode = $doc->createElement('col', $value);
+                    $rowNode->appendChild($colNode);
+                } elseif ($format == self::EXPORT_FORMAT_2) {
+                    $colNode = $doc->createElement(Utils::xmlName($colName), $value);
+                    $rowNode->appendChild($colNode);
+                }
             }
         }
     }
