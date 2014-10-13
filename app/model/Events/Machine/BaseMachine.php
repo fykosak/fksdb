@@ -37,7 +37,7 @@ class BaseMachine extends FreezableObject {
     /**
      * @var Transition[$transitionMask]
      */
-    private $transitions;
+    private $transitions = array();
 
     /**
      * @var Machine
