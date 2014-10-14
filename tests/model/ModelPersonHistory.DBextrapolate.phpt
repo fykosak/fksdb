@@ -1,6 +1,6 @@
 <?php
 
-$container = require 'bootstrap.php';
+$container = require '../bootstrap.php';
 
 use Nette\DI\Container;
 use Tester\Assert;

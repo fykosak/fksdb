@@ -1,10 +1,8 @@
 <?php
 
-$container = require 'bootstrap.php';
+$container = require '../bootstrap.php';
 
-use Nette\Database\Connection;
 use Tester\Assert;
-use Tester\Environment;
 use Tester\TestCase;
 
 class ModelPersonHistoryTest extends TestCase {

@@ -1,5 +1,6 @@
 <?php
 
+use Authentication\PasswordAuthenticator;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -39,7 +40,15 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query("DELETE FROM person");
     }
 
-    protected function createPerson($name, $surname, $info = array(), $withLogin = false) {
+    /**
+     * 
+     * @param string $name
+     * @param string $surname
+     * @param array $info
+     * @param boolean|array $loginData Login credentials
+     * @return int
+     */
+    protected function createPerson($name, $surname, $info = array(), $loginData = false) {
         $this->connection->query("INSERT INTO person (other_name, family_name) VALUES(?, ?)", $name, $surname);
         $personId = $this->connection->lastInsertId();
 
@@ -48,13 +57,26 @@ abstract class DatabaseTestCase extends TestCase {
             $this->connection->query("INSERT INTO person_info", $info);
         }
 
-        if ($withLogin) {
-            $login = array(
+        if ($loginData) {
+            $data = array(
                 'login_id' => $personId,
                 'person_id' => $personId,
                 'active' => 1
             );
-            $this->connection->query("INSERT INTO login", $login);
+
+            if (is_array($loginData)) {
+                $loginData = array_merge($data, $loginData);
+            } else {
+                $loginData = $data;
+            }
+
+            $this->connection->query("INSERT INTO login", $loginData);
+
+            if (isset($loginData['hash'])) {
+                $pseudoLogin = (object) $loginData;
+                $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
+                $this->connection->query("UPDATE login SET `hash` = ? WHERE person_id = ?", $hash, $personId);
+            }
         }
 
         return $personId;
