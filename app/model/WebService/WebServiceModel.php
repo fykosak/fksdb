@@ -273,7 +273,7 @@ class WebServiceModel {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
-        $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
     }
 
@@ -281,7 +281,7 @@ class WebServiceModel {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
-        $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
 
@@ -290,7 +290,7 @@ class WebServiceModel {
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
 
-        $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc);
+        $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
     }
 
