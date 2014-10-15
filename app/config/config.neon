@@ -4,7 +4,7 @@
 
 parameters:
     # Flag marking the beta version
-    beta: true
+    beta: false
 
     # Temporary directory for various purposes.
     tempDir: %appDir%/../temp
