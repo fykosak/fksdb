@@ -63,11 +63,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    public function createQueryFromSQL($sql, $parameters) {
-        $patternQuery = $this->serviceStoredQuery->createNew(array(
+    public function createQueryFromSQL($sql, $parameters, $queryData = array()) {
+        $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
             'sql' => $sql,
             'php_post_proc' => 0,
-        ));
+                        ), $queryData));
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
