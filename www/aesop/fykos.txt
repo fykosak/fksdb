@@ -2,3 +2,7 @@
 ../fykos27/q/aesop.ct?ha=1&format=aesop&p_category=2
 ../fykos27/q/aesop.ct?ha=1&format=aesop&p_category=3
 ../fykos27/q/aesop.ct?ha=1&format=aesop&p_category=4
+../fykos28/q/aesop.ct?ha=1&format=aesop&p_category=1
+../fykos28/q/aesop.ct?ha=1&format=aesop&p_category=2
+../fykos28/q/aesop.ct?ha=1&format=aesop&p_category=3
+../fykos28/q/aesop.ct?ha=1&format=aesop&p_category=4
