@@ -125,6 +125,7 @@ create or replace view v_aesop_person as (
     left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id
 );
 
+-- Note: selects also contestant with no points.
 create or replace view v_aesop_points as (
 	select
 		sp.contest_id,
@@ -136,7 +137,6 @@ create or replace view v_aesop_points as (
 	from v_series_points sp
 	left join contest_year cy on cy.year = sp.year and cy.contest_id = sp.contest_id
 	group by sp.contest_id, sp.year, sp.ct_id, sp.person_id, cy.ac_year
-        having points is not null
 );
 
 create or replace view v_aesop_contestant as (

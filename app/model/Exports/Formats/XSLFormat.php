@@ -70,7 +70,7 @@ class XSLFormat extends Object implements IExportFormat {
         $doc = new DOMDocument();
         $export = $doc->createElement('export');
         $doc->appendChild($export);
-        $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc);
+        $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
         $response = new PlainTextResponse($proc->transformToXml($doc));
