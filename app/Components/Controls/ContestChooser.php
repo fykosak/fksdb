@@ -24,6 +24,7 @@ class ContestChooser extends Control {
     const YEARS_ALL = '__*';
     /** @obsolete (no first contest anymore) */
     const DEFAULT_FIRST = 'first';
+    const DEFAULT_SMART_FIRST = 'smfirst';
     const DEFAULT_NULL = 'null';
 
     /**
@@ -75,7 +76,7 @@ class ContestChooser extends Control {
     /**
      * @var enum DEFAULT_*
      */
-    private $defaultContest = self::DEFAULT_NULL;
+    private $defaultContest = self::DEFAULT_SMART_FIRST;
 
     /**
      * @var int bitmask of what "sources" are used to infer selected contest
@@ -191,6 +192,17 @@ class ContestChooser extends Control {
             switch ($this->defaultContest) {
                 case self::DEFAULT_FIRST:
                     $contestId = reset($contestIds);
+                    break;
+                case self::DEFAULT_SMART_FIRST:
+                    /* No contest is not prioritized when all should be shown.
+                     * On the other hand, usually declarative definition leads to only one contest
+                     * available, so use the first available.
+                     */
+                    if ($this->contestsDefinition === self::CONTESTS_ALL) {
+                        return null;
+                    } else {
+                        $contestId = reset($contestIds);
+                    }
                     break;
                 case self::DEFAULT_NULL:
                     $contestId = null;
