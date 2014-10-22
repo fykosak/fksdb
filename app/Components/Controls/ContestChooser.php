@@ -17,9 +17,12 @@ use YearCalculator;
  */
 class ContestChooser extends Control {
 
+    const SOURCE_SESSION = 0x1;
+    const SOURCE_URL = 0x2;
     const SESSION_PREFIX = 'contestPreset';
     const CONTESTS_ALL = '__*';
     const YEARS_ALL = '__*';
+    /** @obsolete (no first contest anymore) */
     const DEFAULT_FIRST = 'first';
     const DEFAULT_NULL = 'null';
 
@@ -72,7 +75,12 @@ class ContestChooser extends Control {
     /**
      * @var enum DEFAULT_*
      */
-    private $defaultContest = self::DEFAULT_FIRST;
+    private $defaultContest = self::DEFAULT_NULL;
+
+    /**
+     * @var int bitmask of what "sources" are used to infer selected contest
+     */
+    private $contestSource = 0xffffffff;
 
     /**
      * 
@@ -108,6 +116,14 @@ class ContestChooser extends Control {
 
     public function setDefaultContest($defaultContest) {
         $this->defaultContest = $defaultContest;
+    }
+
+    public function getContestSource() {
+        return $this->contestSource;
+    }
+
+    public function setContestSource($contestSource) {
+        $this->contestSource = $contestSource;
     }
 
     public function isValid() {
@@ -162,11 +178,11 @@ class ContestChooser extends Control {
 
         $contestId = null;
         // session
-        if (isset($session->contestId)) {
+        if (($this->contestSource & self::SOURCE_SESSION) && isset($session->contestId)) {
             $contestId = $session->contestId;
         }
         // URL
-        if ($presenter->contestId) {
+        if (($this->contestSource & self::SOURCE_URL) && $presenter->contestId) {
             $contestId = $presenter->contestId;
         }
 
