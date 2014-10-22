@@ -18,7 +18,6 @@ use Logging\FlashDumpFactory;
 use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -125,7 +124,12 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function titleList() {
-        $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $this->getSelectedContest()->name));
+        $contest = $this->getSelectedContest();
+        if ($contest) {
+            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name));
+        } else {
+            $this->setTitle(_('Moje přihlášky'));
+        }
     }
 
     protected function unauthorizedAccess() {
@@ -181,7 +185,9 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function actionList() {
-        
+        if (!$this->getSelectedContest()) {
+            $this->setView('contestChooser');
+        }
     }
 
     private function initializeMachine() {

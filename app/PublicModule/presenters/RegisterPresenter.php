@@ -99,6 +99,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ContestChooser::CONTESTS_ALL);
         $control->setDefaultContest(ContestChooser::DEFAULT_NULL);
+        $control->setContestSource(ContestChooser::SOURCE_URL);
         return $control;
     }
 
