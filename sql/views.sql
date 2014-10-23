@@ -136,6 +136,11 @@ create or replace view v_aesop_points as (
 		null as rank
 	from v_series_points sp
 	left join contest_year cy on cy.year = sp.year and cy.contest_id = sp.contest_id
+        where exists (
+                select 1
+                from submit s
+                left join task t on t.task_id = s.task_id
+                where s.ct_id = sp.ct_id and t.contest_id = sp.contest_id and s.year = sp.year) -- only contestants with any relevant submits
 	group by sp.contest_id, sp.year, sp.ct_id, sp.person_id, cy.ac_year
 );
 
