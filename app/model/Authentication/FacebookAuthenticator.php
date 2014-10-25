@@ -3,6 +3,7 @@
 namespace Authentication;
 
 use ModelPerson;
+use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use ServiceLogin;
@@ -110,6 +111,15 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);
+        /* If we have e-mail that is different from FB's one, don't modify it,
+         * however, mark it to the log.
+         */
+        if (isset($personInfo->email)) {
+            if (isset($personInfoData['email']) && $personInfoData['email'] !== $personInfo->email) {
+                Debugger::log(sprintf('Our email: %s, FB email %s', $personInfo->email, $personInfoData['email']));
+            }
+            unset($personInfoData['email']);
+        }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
         $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
 
