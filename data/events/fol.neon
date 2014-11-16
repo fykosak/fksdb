@@ -47,7 +47,7 @@ events:
                         condition: %events.fol.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, .*)
+                            - Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Zúčastnil se
