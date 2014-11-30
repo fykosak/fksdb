@@ -1,9 +1,9 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
+<ul>
 {if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
 {if $presenter->getLang() == 'cs'}
-<ul>
     <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání online.
         Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.</li>
     <li>
@@ -18,9 +18,7 @@
     <li>
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
-</ul>
 {else}
-<ul>
     <li>You can apply a team for <strong>Online Physics Brawl</strong> using this form.
         Each member of the team will receive an e-mail with link to edit the application.
     </li>
@@ -36,9 +34,19 @@
     <li>
         Registration is open until <strong>{$event->registration_end|date:'r'}</strong>.
     </li>
+{/if}
+{else}
+    {if $presenter->getLang() == 'cs'}
+    <li>
+        Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
+    </li>
+    {else}
+    <li>
+        If you want to exchange a member of your team, delete the old one, store the application and add a new one.
+    </li>
+    {/if}
+{/if}
 </ul>
-{/if}
-{/if}
 
 
 {control form}

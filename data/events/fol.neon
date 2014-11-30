@@ -86,7 +86,7 @@ events:
                         required: state('__init')
                         visible: true
                         modifiable: true
-                        description: _('Slouží k přihlášení do herního systému.')
+                        description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
                         factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
 
             #

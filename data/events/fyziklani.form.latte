@@ -1,8 +1,8 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
-{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
 <ul>
+{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
     <li>Systém přihlašování &ndash; po vyplnění formuláře
         a&nbsp;přihlášení týmu web automaticky přijímá týmy jako náhradníky,
         odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
@@ -16,9 +16,13 @@
     <li>
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
+{else}
+    <li>
+        Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
+    </li>
+{/if}
 </ul>
 
-{/if}
 
 
 {control form}
