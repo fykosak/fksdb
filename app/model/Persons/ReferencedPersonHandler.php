@@ -135,7 +135,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 if (!isset($data[$t])) {
                     continue;
                 }
-                $data[$t]['person_id'] = $models ['person']->person_id; // this works even for person itself
+                $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
                 $services[$t]->updateModel($model, $data[$t]);
                 $services[$t]->save($model);
             }

@@ -61,20 +61,20 @@ class AddressFactory {
                     ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
-        $control = new WriteonlyInput(_('Místo'));
-        $container->addComponent($control, 'target');
-        $control->setOption('description', _('Typicky ulice a číslo popisné.'));
+        $target = new WriteonlyInput(_('Místo'));
+        $container->addComponent($target, 'target');
+        $target->setOption('description', _('Typicky ulice a číslo popisné.'));
         if ($options & self::REQUIRED) {
-            $conditioned = $conditioningField ? $control->addConditionOn($conditioningField, Form::FILLED) : $control;
+            $conditioned = $conditioningField ? $target->addConditionOn($conditioningField, Form::FILLED) : $target;
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'));
         }
 
-        $control = new WriteonlyInput(_('Město'));
-        $container->addComponent($control, 'city');
+        $city = new WriteonlyInput(_('Město'));
+        $container->addComponent($city, 'city');
         if ($options & self::REQUIRED) {
-            $conditioned = $conditioningField ? $control->addConditionOn($conditioningField, Form::FILLED) : $control;
+            $conditioned = $conditioningField ? $city->addConditionOn($conditioningField, Form::FILLED) : $city;
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
-        }
+        }        
 
 
         $postalCode = $container->addText('postal_code', _('PSČ'))
@@ -86,6 +86,11 @@ class AddressFactory {
         $country = $container->addSelect('country_iso', _('Stát'));
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
         $country->setPrompt(_('Určit stát dle PSČ'));
+        
+        // check valid address structure
+        $target->addConditionOn($city, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném městě musí mít adresa vyplněno i místo.'));
+        $target->addConditionOn($postalCode, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném PSČ musí mít adresa vyplněno i místo.'));
+        $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
 
         /* Country + postal code validation */
         $addressService = $this->serviceAddress;

@@ -13,13 +13,18 @@ use Nette\Forms\Form;
 class PasswordProcessing extends AbstractProcessing {
 
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
-        if (!isset($values['team']) || !$values['team']['password']) {
+        if (!isset($values['team'])) {
             return;
         }
 
-        $result = $values['team']['password'] = $this->hash($values['team']['password']);
-
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
+
+        if (!$values['team']['password']) {
+            $result = $values['team']['password'] = $original;
+        } else {
+            $result = $values['team']['password'] = $this->hash($values['team']['password']);
+        }
+
         if ($original !== null && $original != $result) {
             $logger->log(_('Nastaveno nové herní heslo.'), ILogger::INFO);
         }

@@ -135,11 +135,11 @@ class ExtendedPersonHandler extends Object {
             // create login
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
-            $hasLogin = (bool)$login;
+            $hasLogin = (bool) $login;
             if ($email && !$login) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);                    
+                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $e) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
@@ -169,8 +169,13 @@ class ExtendedPersonHandler extends Object {
             }
         } catch (ModelException $e) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
-            $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
+                $presenter->flashMessage(_('Řešitel už existuje.'), ContestantPresenter::FLASH_ERROR);
+            } else {
+                Debugger::log($e, Debugger::ERROR);
+                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+            }
+
             return self::RESULT_ERROR;
         } catch (ModelDataConflictException $e) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
