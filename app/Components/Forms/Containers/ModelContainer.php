@@ -20,9 +20,9 @@ class ModelContainer extends ContainerWithOptions {
         parent::setValues($values, $erase);
     }
 
-    public function setDisabled() {
+    public function setDisabled($value = true) {
         foreach ($this->getComponents() as $component) {
-            $component->setDisabled();
+            $component->setDisabled($value);
         }
     }
 
