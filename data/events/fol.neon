@@ -9,7 +9,9 @@ parameters:
                 person_info:
                     email: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
+                        description: _('Pokud nelze školu nalézt, napište správci, reaguje rychle.')
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
@@ -86,7 +88,7 @@ events:
                         required: state('__init')
                         visible: true
                         modifiable: true
-                        description: _('Slouží k přihlášení do herního systému.')
+                        description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
                         factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
 
             #

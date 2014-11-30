@@ -2,6 +2,7 @@
 
 namespace Events\Model;
 
+use DuplicateApplicationException;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\MachineExecutionException;
@@ -165,6 +166,11 @@ class ApplicationHandler {
             $this->reraise($e);
         } catch (SecondaryModelDataConflictException $e) {
             $message = sprintf(_("Data ve skupině '%s' kolidují s již existující přihláškou."), $e->getBaseHolder()->getLabel());
+            $this->logger->log($message, ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (DuplicateApplicationException $e) {
+            $message = $e->getMessage();
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);
