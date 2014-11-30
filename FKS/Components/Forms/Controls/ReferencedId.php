@@ -130,6 +130,13 @@ class ReferencedId extends HiddenField {
         parent::setValue($value);
     }
 
+    /**
+     * If you are calling this method out of transaction, set $fullfilPromise to
+     * false. This is the case for event form adjustments.
+     * 
+     * @param boolean $fullfilPromise
+     * @return mixed
+     */
     public function getValue($fullfilPromise = true) {
         if ($fullfilPromise && $this->promise) {
             return $this->promise->getValue();
