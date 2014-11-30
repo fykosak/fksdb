@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-30 19:14+0100\n"
-"PO-Revision-Date: 2014-11-30 19:14+0100\n"
+"POT-Creation-Date: 2014-11-30 19:18+0100\n"
+"PO-Revision-Date: 2014-11-30 19:18+0100\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: English\n"
@@ -1260,7 +1260,7 @@ msgid "Osobu je třeba zadat."
 msgstr "Person is required."
 
 #: ../app/OrgModule/presenters/ExtendedPersonPresenter.php:99
-#: ../data/events/fol.neon.neon2php:123
+#: ../data/events/fol.neon.neon2php:125
 msgid "Osoba"
 msgstr "Person"
 
@@ -1732,90 +1732,95 @@ msgstr "Import applications"
 msgid "Uložit AESOP"
 msgstr "Save AESOP"
 
-#: ../data/events/fol.neon.neon2php:15
+#: ../data/events/fol.neon.neon2php:14
+msgid "Pokud nelze školu nalézt, napište správci, reaguje rychle."
+msgstr ""
+"If you cannot find the school, e-mail the administrator. He replies quickly."
+
+#: ../data/events/fol.neon.neon2php:17
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 "To calculate category. Leave empty if you are not a high school student."
 
-#: ../data/events/fol.neon.neon2php:40 ../data/events/fol.neon.neon2php:101
+#: ../data/events/fol.neon.neon2php:42 ../data/events/fol.neon.neon2php:103
 msgid "Přihlášen"
 msgstr "Applied"
 
-#: ../data/events/fol.neon.neon2php:41
+#: ../data/events/fol.neon.neon2php:43
 msgid "Zrušen"
 msgstr "Cancelled"
 
-#: ../data/events/fol.neon.neon2php:42 ../data/events/fol.neon.neon2php:102
+#: ../data/events/fol.neon.neon2php:44 ../data/events/fol.neon.neon2php:104
 msgid "Účastnil se"
 msgstr "Participated"
 
-#: ../data/events/fol.neon.neon2php:43 ../data/events/fol.neon.neon2php:103
+#: ../data/events/fol.neon.neon2php:45 ../data/events/fol.neon.neon2php:105
 msgid "Nezúčastnil se"
 msgstr "Not participated"
 
-#: ../data/events/fol.neon.neon2php:48
+#: ../data/events/fol.neon.neon2php:50
 msgid "Přihlásit tým"
 msgstr "Apply team"
 
-#: ../data/events/fol.neon.neon2php:68
+#: ../data/events/fol.neon.neon2php:70
 msgid "Název týmu"
 msgstr "Team name"
 
-#: ../data/events/fol.neon.neon2php:73
+#: ../data/events/fol.neon.neon2php:75
 msgid "Kategorie"
 msgstr "Category"
 
-#: ../data/events/fol.neon.neon2php:77
+#: ../data/events/fol.neon.neon2php:79
 #, fuzzy
 msgid "Category"
 msgstr "Category"
 
-#: ../data/events/fol.neon.neon2php:79
+#: ../data/events/fol.neon.neon2php:81
 msgid "Kontaktní adresa"
 msgstr "Contact address"
 
-#: ../data/events/fol.neon.neon2php:83
+#: ../data/events/fol.neon.neon2php:85
 msgid "Pro zaslání případné odměny."
 msgstr "To send potential prize. (CR/SR only.)"
 
-#: ../data/events/fol.neon.neon2php:85
+#: ../data/events/fol.neon.neon2php:87
 msgid "Herní heslo"
 msgstr "Game password"
 
-#: ../data/events/fol.neon.neon2php:89
+#: ../data/events/fol.neon.neon2php:91
 msgid ""
 "Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo."
 msgstr "To log in to the game system. Empty field will keep original password."
 
-#: ../data/events/fol.neon.neon2php:139
+#: ../data/events/fol.neon.neon2php:141
 msgid "Tým"
 msgstr "Team"
 
-#: ../data/events/fol.neon.neon2php:144
+#: ../data/events/fol.neon.neon2php:146
 msgid "1. člen"
 msgstr "Member 1"
 
-#: ../data/events/fol.neon.neon2php:148
+#: ../data/events/fol.neon.neon2php:150
 msgid "2. člen"
 msgstr "Member 2"
 
-#: ../data/events/fol.neon.neon2php:151
+#: ../data/events/fol.neon.neon2php:153
 msgid "3. člen"
 msgstr "Member 3"
 
-#: ../data/events/fol.neon.neon2php:154
+#: ../data/events/fol.neon.neon2php:156
 msgid "4. člen"
 msgstr "Member 4"
 
-#: ../data/events/fol.neon.neon2php:157
+#: ../data/events/fol.neon.neon2php:159
 msgid "5. člen"
 msgstr "Member 5"
 
-#: ../data/events/fol.neon.neon2php:161
+#: ../data/events/fol.neon.neon2php:163
 msgid "Tým s názvem '%value' již existuje."
 msgstr "Team with name '%value' already exists."
 
-#: ../data/events/fol.neon.neon2php:162
+#: ../data/events/fol.neon.neon2php:164
 msgid "Osoba je již na Fyziklání online přihlášena."
 msgstr "Person is already applied to Online Physics Brawl."
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-30 19:14+0100\n"
+"POT-Creation-Date: 2014-11-30 19:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1257,7 +1257,7 @@ msgid "Osobu je třeba zadat."
 msgstr ""
 
 #: ../app/OrgModule/presenters/ExtendedPersonPresenter.php:99
-#: ../data/events/fol.neon.neon2php:123
+#: ../data/events/fol.neon.neon2php:125
 msgid "Osoba"
 msgstr ""
 
@@ -1728,87 +1728,91 @@ msgstr ""
 msgid "Uložit AESOP"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:15
+#: ../data/events/fol.neon.neon2php:14
+msgid "Pokud nelze školu nalézt, napište správci, reaguje rychle."
+msgstr ""
+
+#: ../data/events/fol.neon.neon2php:17
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:40 ../data/events/fol.neon.neon2php:101
+#: ../data/events/fol.neon.neon2php:42 ../data/events/fol.neon.neon2php:103
 msgid "Přihlášen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:41
+#: ../data/events/fol.neon.neon2php:43
 msgid "Zrušen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:42 ../data/events/fol.neon.neon2php:102
+#: ../data/events/fol.neon.neon2php:44 ../data/events/fol.neon.neon2php:104
 msgid "Účastnil se"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:43 ../data/events/fol.neon.neon2php:103
+#: ../data/events/fol.neon.neon2php:45 ../data/events/fol.neon.neon2php:105
 msgid "Nezúčastnil se"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:48
+#: ../data/events/fol.neon.neon2php:50
 msgid "Přihlásit tým"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:68
+#: ../data/events/fol.neon.neon2php:70
 msgid "Název týmu"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:73
+#: ../data/events/fol.neon.neon2php:75
 msgid "Kategorie"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:77
+#: ../data/events/fol.neon.neon2php:79
 msgid "Category"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:79
+#: ../data/events/fol.neon.neon2php:81
 msgid "Kontaktní adresa"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:83
+#: ../data/events/fol.neon.neon2php:85
 msgid "Pro zaslání případné odměny."
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:85
+#: ../data/events/fol.neon.neon2php:87
 msgid "Herní heslo"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:89
+#: ../data/events/fol.neon.neon2php:91
 msgid ""
 "Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo."
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:139
+#: ../data/events/fol.neon.neon2php:141
 msgid "Tým"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:144
+#: ../data/events/fol.neon.neon2php:146
 msgid "1. člen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:148
+#: ../data/events/fol.neon.neon2php:150
 msgid "2. člen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:151
+#: ../data/events/fol.neon.neon2php:153
 msgid "3. člen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:154
+#: ../data/events/fol.neon.neon2php:156
 msgid "4. člen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:157
+#: ../data/events/fol.neon.neon2php:159
 msgid "5. člen"
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:161
+#: ../data/events/fol.neon.neon2php:163
 msgid "Tým s názvem '%value' již existuje."
 msgstr ""
 
-#: ../data/events/fol.neon.neon2php:162
+#: ../data/events/fol.neon.neon2php:164
 msgid "Osoba je již na Fyziklání online přihlášena."
 msgstr ""
