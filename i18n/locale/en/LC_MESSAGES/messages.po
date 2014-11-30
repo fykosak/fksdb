@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-30 17:58+0100\n"
-"PO-Revision-Date: 2014-11-30 17:59+0100\n"
+"POT-Creation-Date: 2014-11-30 19:14+0100\n"
+"PO-Revision-Date: 2014-11-30 19:14+0100\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: English\n"
@@ -863,6 +863,11 @@ msgstr ""
 msgid "Osoba '%s' není org."
 msgstr "Person '%s' is not an organizer."
 
+#: ../app/model/ORM/services/ServiceEventParticipant.php:32
+#, php-format
+msgid "Osoba %s je na akci již přihlášena."
+msgstr "Person %s is already applied to the event."
+
 #: ../app/model/Authentication/AuthenticationException.php:16
 msgid "Neaktivní účet."
 msgstr "Inactive account."
@@ -920,41 +925,41 @@ msgstr "Import failed."
 msgid "CSV soubor neobsahuje platnou hlavičku."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:148
+#: ../app/model/Events/Model/ApplicationHandler.php:149
 #, php-format
 msgid "Přihláška '%s' vytvořena."
 msgstr "Application '%s' created."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:151
+#: ../app/model/Events/Model/ApplicationHandler.php:152
 msgid "Přihláška smazána."
 msgstr "Application deleted."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:153
+#: ../app/model/Events/Model/ApplicationHandler.php:154
 #, php-format
 msgid "Stav přihlášky '%s' změněn."
 msgstr "State of application '%s' changed."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:156
+#: ../app/model/Events/Model/ApplicationHandler.php:157
 #, php-format
 msgid "Přihláška '%s' uložena."
 msgstr "Application '%s' saved."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:162
+#: ../app/model/Events/Model/ApplicationHandler.php:163
 #, php-format
 msgid "Některá pole skupiny '%s' neodpovídají existujícímu záznamu."
 msgstr "Some field of group '%s' don't match an existing record."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:167
+#: ../app/model/Events/Model/ApplicationHandler.php:168
 #, php-format
 msgid "Data ve skupině '%s' kolidují s již existující přihláškou."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:204
+#: ../app/model/Events/Model/ApplicationHandler.php:210
 #, php-format
 msgid "Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'."
 msgstr "There is on transition from state '%s' of machine '%s' to state '%s'."
 
-#: ../app/model/Events/Model/ApplicationHandler.php:249
+#: ../app/model/Events/Model/ApplicationHandler.php:255
 msgid "Chyba při ukládání přihlášky."
 msgstr "Error while saving the application."
 
@@ -1034,9 +1039,8 @@ msgid "Moje přihlášky (%s)"
 msgstr "My applications (%s)"
 
 #: ../app/PublicModule/presenters/ApplicationPresenter.php:131
-#, fuzzy
 msgid "Moje přihlášky"
-msgstr "My applications (%s)"
+msgstr "My applications"
 
 #: ../app/PublicModule/presenters/ApplicationPresenter.php:152
 #: ../app/PublicModule/presenters/ApplicationPresenter.php:202

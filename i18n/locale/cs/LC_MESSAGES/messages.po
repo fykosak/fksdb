@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-30 17:58+0100\n"
+"POT-Creation-Date: 2014-11-30 19:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -860,6 +860,11 @@ msgstr ""
 msgid "Osoba '%s' není org."
 msgstr ""
 
+#: ../app/model/ORM/services/ServiceEventParticipant.php:32
+#, php-format
+msgid "Osoba %s je na akci již přihlášena."
+msgstr ""
+
 #: ../app/model/Authentication/AuthenticationException.php:16
 msgid "Neaktivní účet."
 msgstr ""
@@ -917,41 +922,41 @@ msgstr ""
 msgid "CSV soubor neobsahuje platnou hlavičku."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:148
+#: ../app/model/Events/Model/ApplicationHandler.php:149
 #, php-format
 msgid "Přihláška '%s' vytvořena."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:151
+#: ../app/model/Events/Model/ApplicationHandler.php:152
 msgid "Přihláška smazána."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:153
+#: ../app/model/Events/Model/ApplicationHandler.php:154
 #, php-format
 msgid "Stav přihlášky '%s' změněn."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:156
+#: ../app/model/Events/Model/ApplicationHandler.php:157
 #, php-format
 msgid "Přihláška '%s' uložena."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:162
+#: ../app/model/Events/Model/ApplicationHandler.php:163
 #, php-format
 msgid "Některá pole skupiny '%s' neodpovídají existujícímu záznamu."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:167
+#: ../app/model/Events/Model/ApplicationHandler.php:168
 #, php-format
 msgid "Data ve skupině '%s' kolidují s již existující přihláškou."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:204
+#: ../app/model/Events/Model/ApplicationHandler.php:210
 #, php-format
 msgid "Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'."
 msgstr ""
 
-#: ../app/model/Events/Model/ApplicationHandler.php:249
+#: ../app/model/Events/Model/ApplicationHandler.php:255
 msgid "Chyba při ukládání přihlášky."
 msgstr ""
 

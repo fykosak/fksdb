@@ -40,6 +40,9 @@ class UniqueCheck extends AbstractAdjustment {
                         $table = $baseHolder->getService()->getTable();
                         $column = BaseHolder::getBareColumn($field);
                         if ($control instanceof ReferencedId) {
+                            /* We don't want to fullfil potential promise
+                             * as it would be out of transaction here.
+                             */
                             $value = $control->getValue(false);
                         } else {
                             $value = $control->getValue();
