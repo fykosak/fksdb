@@ -129,7 +129,7 @@ class DuplicateFinder {
     private function relativeDistance($a, $b) {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
-            throw new InvalidArgumentException('Distance not defined.');
+            return 0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }
