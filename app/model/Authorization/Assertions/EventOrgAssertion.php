@@ -46,7 +46,8 @@ abstract class AbstractEventOrgAssertion extends Object {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
 
-        $person = $this->user->getIdentity()->getPerson();
+        $identity = $this->user->getIdentity();
+        $person = $identity ? $identity->getPerson() : null;
         if (!$person) {
             return false;
         }
