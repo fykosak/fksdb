@@ -140,7 +140,8 @@ create or replace view v_aesop_points as (
                 select 1
                 from submit s
                 left join task t on t.task_id = s.task_id
-                where s.ct_id = sp.ct_id and t.contest_id = sp.contest_id and t.year = sp.year) -- only contestants with any relevant submits
+                where s.ct_id = sp.ct_id and t.contest_id = sp.contest_id and t.year = sp.year
+                    and t.series between 1 and 6) -- only contestants with any relevant submits
 	group by sp.contest_id, sp.year, sp.ct_id, sp.person_id, cy.ac_year
 );
 
