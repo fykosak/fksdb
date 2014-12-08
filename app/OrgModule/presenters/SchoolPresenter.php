@@ -123,7 +123,7 @@ class SchoolPresenter extends EntityPresenter {
         $schoolContainer = $this->schoolFactory->createSchool();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
-        $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED);
+        $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
 
         return $form;

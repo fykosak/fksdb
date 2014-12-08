@@ -9,6 +9,8 @@ use ORM\IModel;
  */
 class ServiceAddress extends AbstractServiceSingle {
 
+    const PATTERN = '/[0-9]{5}/';
+
     protected $tableName = DbNames::TAB_ADDRESS;
     protected $modelClassName = 'ModelAddress';
 
@@ -30,6 +32,10 @@ class ServiceAddress extends AbstractServiceSingle {
      */
     public function inferRegion($postalCode) {
         if (!$postalCode) {
+            throw new InvalidPostalCode($postalCode);
+        }
+
+        if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
 

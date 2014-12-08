@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Utils\Strings;
+
 /**
  * Description of Utils
  *
@@ -149,6 +151,24 @@ class Utils {
             $e = substr($user, -1);
             return "{$b}…{$e}@$host";
         }
+    }
+
+    /**
+     * Converts string to (hopefully) valid XML element name.
+     * 
+     * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
+     * 
+     * @param string $string
+     * @param string $prefix
+     * @return string
+     */
+    public static function xmlName($string, $prefix = '_') {
+        if (preg_match('/^[0-9\.-]/', $string)) {
+            $string = $prefix . $string;
+        }
+
+        $string = preg_replace('/ /', '-', $string);
+        return $string;
     }
 
 }

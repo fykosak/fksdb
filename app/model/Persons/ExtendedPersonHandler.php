@@ -31,6 +31,9 @@ class ExtendedPersonHandler extends Object {
     const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
     const EL_PERSON = 'person_id';
+    const RESULT_OK_EXISTING_LOGIN = 1;
+    const RESULT_OK_NEW_LOGIN = 2;
+    const RESULT_ERROR = false;
 
     /**
      * @var IService
@@ -132,6 +135,7 @@ class ExtendedPersonHandler extends Object {
             // create login
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
+            $hasLogin = (bool) $login;
             if ($email && !$login) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
@@ -157,18 +161,28 @@ class ExtendedPersonHandler extends Object {
                 $msg = $presenter->messageEdit();
             }
             $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
-            return true;
+
+            if (!$hasLogin) {
+                return self::RESULT_OK_NEW_LOGIN;
+            } else {
+                return self::RESULT_OK_EXISTING_LOGIN;
+            }
         } catch (ModelException $e) {
             $connection->rollBack();
-            Debugger::log($e, Debugger::ERROR);
-            $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
-            return false;
+            if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
+                $presenter->flashMessage(_('Řešitel už existuje.'), ContestantPresenter::FLASH_ERROR);
+            } else {
+                Debugger::log($e, Debugger::ERROR);
+                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+            }
+
+            return self::RESULT_ERROR;
         } catch (ModelDataConflictException $e) {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $e->getReferencedId()->getReferencedContainer()->setConflicts($e->getConflicts());
             $e->getReferencedId()->rollback();
             $connection->rollBack();
-            return false;
+            return self::RESULT_ERROR;
         }
     }
 

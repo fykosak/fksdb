@@ -20,6 +20,7 @@ class AddressFactory {
 
     const SHOW_EXTENDED_ROWS = 0x1;
     const REQUIRED = 0x2;
+    const NOT_WRITEONLY = 0x4;
 
     /**
      * @var ServiceAddress
@@ -61,19 +62,25 @@ class AddressFactory {
                     ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
-        $control = new WriteonlyInput(_('Místo'));
-        $container->addComponent($control, 'target');
-        $control->setOption('description', _('Typicky ulice a číslo popisné.'));
+        $target = new WriteonlyInput(_('Místo'));
+        $container->addComponent($target, 'target');
+        $target->setOption('description', _('Typicky ulice a číslo popisné.'));
         if ($options & self::REQUIRED) {
-            $conditioned = $conditioningField ? $control->addConditionOn($conditioningField, Form::FILLED) : $control;
+            $conditioned = $conditioningField ? $target->addConditionOn($conditioningField, Form::FILLED) : $target;
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'));
         }
+        if ($options & self::NOT_WRITEONLY) {
+            $target->setWriteonly(false);
+        }
 
-        $control = new WriteonlyInput(_('Město'));
-        $container->addComponent($control, 'city');
+        $city = new WriteonlyInput(_('Město'));
+        $container->addComponent($city, 'city');
         if ($options & self::REQUIRED) {
-            $conditioned = $conditioningField ? $control->addConditionOn($conditioningField, Form::FILLED) : $control;
+            $conditioned = $conditioningField ? $city->addConditionOn($conditioningField, Form::FILLED) : $city;
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+        }
+        if ($options & self::NOT_WRITEONLY) {
+            $city->setWriteonly(false);
         }
 
 
@@ -87,35 +94,40 @@ class AddressFactory {
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
         $country->setPrompt(_('Určit stát dle PSČ'));
 
+        // check valid address structure
+        $target->addConditionOn($city, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném městě musí mít adresa vyplněno i místo.'));
+        $target->addConditionOn($postalCode, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném PSČ musí mít adresa vyplněno i místo.'));
+        $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
+
         /* Country + postal code validation */
         $addressService = $this->serviceAddress;
         $regionService = $this->serviceRegion;
         $validPostalCode = function(BaseControl $control) use($addressService) {
-                    return $addressService->tryInferRegion($control->getValue());
-                };
+            return $addressService->tryInferRegion($control->getValue());
+        };
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
             $conditioned->addConditionOn($country, function(BaseControl $control) {
-                        $value = $control->getValue();
-                        return in_array($value, array('CZ', 'SK'));
-                    })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
+                $value = $control->getValue();
+                return in_array($value, array('CZ', 'SK'));
+            })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
         }
         $postalCode->addCondition(Form::FILLED)
                 ->addRule($validPostalCode, _('Neplatný formát PSČ.'));
-        
+
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
             $conditioned->addConditionOn($postalCode, function(BaseControl $control) use($addressService) {
-                        return !$addressService->tryInferRegion($control->getValue());
-                    })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
+                return !$addressService->tryInferRegion($control->getValue());
+            })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
         }
         $country->addCondition(Form::FILLED)
                 ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use($regionService, $addressService, $postalCode) {
-                    $regionId = $addressService->inferRegion($postalCode->getValue());
-                    $region = $regionService->findByPrimary($regionId);
-                    return $region->country_iso == $control->getValue();
-                }, _('Zvolený stát neodpovídá zadanému PSČ.'));
+            $regionId = $addressService->inferRegion($postalCode->getValue());
+            $region = $regionService->findByPrimary($regionId);
+            return $region->country_iso == $control->getValue();
+        }, _('Zvolený stát neodpovídá zadanému PSČ.'));
     }
 
 }

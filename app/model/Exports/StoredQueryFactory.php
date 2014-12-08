@@ -13,6 +13,7 @@ use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use ServiceStoredQuery;
+use Utils;
 use WebService\IXMLNodeSerializer;
 
 /**
@@ -62,11 +63,11 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    public function createQueryFromSQL($sql, $parameters) {
-        $patternQuery = $this->serviceStoredQuery->createNew(array(
+    public function createQueryFromSQL($sql, $parameters, $queryData = array()) {
+        $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
             'sql' => $sql,
             'php_post_proc' => 0,
-        ));
+                        ), $queryData));
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
@@ -110,9 +111,12 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         ));
     }
 
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
+        }
+        if ($format !== self::EXPORT_FORMAT_1 && $format !== self::EXPORT_FORMAT_2) {
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
         }
         // parameters
         $parametersNode = $doc->createElement('parameters');
@@ -138,8 +142,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         foreach ($dataSource->getData() as $row) {
             $rowNode = $doc->createElement('row');
             $dataNode->appendChild($rowNode);
-            foreach ($row as $col) {
-                $colNode = $doc->createElement('col', $col);
+            foreach ($row as $colName => $value) {
+                if ($format == self::EXPORT_FORMAT_1) {
+                    $colNode = $doc->createElement('col');
+                } elseif ($format == self::EXPORT_FORMAT_2) {
+                    $colNode = $doc->createElement(Utils::xmlName($colName));
+                }
+                $textNode = $doc->createTextNode($value);
+                $colNode->appendChild($textNode);
                 $rowNode->appendChild($colNode);
             }
         }

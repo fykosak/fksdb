@@ -28,6 +28,7 @@ services:
     ServiceTaskStudyYear:    ServiceTaskStudyYear
 
     event.ServiceEventParticipant:          ServiceEventParticipant
+    event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup
     event.ServiceDsefParticipant:           ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          ORM\ServicesMulti\Events\ServiceMDsefParticipant
     event.ServiceFyziklaniTeam:             ORM\Services\Events\ServiceFyziklaniTeam

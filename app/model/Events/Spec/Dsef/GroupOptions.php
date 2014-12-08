@@ -7,39 +7,45 @@ use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use Nette\Object;
+use ORM\Services\Events\ServiceDsefGroup;
 use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of GroupOptions
  *
  * @author michal
  */
 class GroupOptions extends Object implements IOptionsProvider {
 
-    const PARAM_GROUPS = 'groups';
-
     /**
      * @var ServiceMDsefParticipant
      */
     private $serviceMParticipant;
+
+    /**
+     * @var ServiceDsefGroup
+     */
+    private $serviceDsefGroup;
     private $includeStates;
     private $excludeStates;
 
     /**
+     * @var array  eventId => groups cache 
+     */
+    private $groups = array();
+
+    /**
+     * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      * 
      * @param ServiceMDsefParticipant $serviceMParticipant
+     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct(ServiceMDsefParticipant $serviceMParticipant, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
-        $this->serviceMParticipant = $serviceMParticipant;
+    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
+        $this->serviceMParticipant = $serviceMParticipant;
+        $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
     private function transformGroups($groups) {
@@ -53,11 +59,21 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $result;
     }
 
+    private function getGroups($eventId) {
+        if (!isset($this->groups[$eventId])) {
+            $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
+                    ->select('*')
+                    ->where('event_id', $eventId)
+                    ->fetchPairs('e_dsef_group_id');
+        }
+        return $this->groups[$eventId];
+    }
+
     public function getOptions(Field $field) {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         $application = $baseHolder->getModel();
-        $groups = $this->transformGroups($baseHolder->getParameter(self::PARAM_GROUPS));
+        $groups = $this->getGroups($event->getPrimary());
 
         $selection = $this->serviceMParticipant->getTable()
                 ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
@@ -77,15 +93,15 @@ class GroupOptions extends Object implements IOptionsProvider {
 
         $selfGroup = $application->e_dsef_group_id;
         $result = array();
-        foreach ($groups as $key => $data) {
+        foreach ($groups as $key => $group) {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
-            if ($data['capacity'] > $occupied) {
-                $remains = $data['capacity'] - $occupied;
+            if ($group->capacity > $occupied) {
+                $remains = $group->capacity - $occupied;
                 if ($selfGroup === $key) {
                     $remains -= 1;
                 }
                 $info = sprintf(_('(%d volných míst)'), $remains);
-                $result[$key] = $data['label'] . ' ' . $info;
+                $result[$key] = $group->name . ' ' . $info;
             }
         }
 

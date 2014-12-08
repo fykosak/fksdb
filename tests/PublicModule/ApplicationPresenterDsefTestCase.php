@@ -25,11 +25,15 @@ abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
             'event_type_id' => 2,
             'event_year' => 20,
             'parameters' => <<<EOT
-groups:
-    Alpha: 2
-    Bravo: 2
 EOT
         ));
+        
+        $this->insert('e_dsef_group', array(
+            'e_dsef_group_id' => 1,
+            'event_id' => $this->eventId,
+            'name' => 'Alpha',
+            'capacity' => 4
+        ));        
 
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
@@ -39,6 +43,7 @@ EOT
 
     protected function tearDown() {
         $this->connection->query("DELETE FROM e_dsef_participant");
+        $this->connection->query("DELETE FROM e_dsef_group");
         parent::tearDown();
     }
 

@@ -18,7 +18,6 @@ use Logging\FlashDumpFactory;
 use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -125,7 +124,12 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function titleList() {
-        $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $this->getSelectedContest()->name));
+        $contest = $this->getSelectedContest();
+        if ($contest) {
+            $this->setTitle(sprintf(_('Moje přihlášky (%s)'), $contest->name));
+        } else {
+            $this->setTitle(_('Moje přihlášky'));
+        }
     }
 
     protected function unauthorizedAccess() {
@@ -166,7 +170,7 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
-            } else {
+            } else if (!$this->getParameter(self::PARAM_AFTER, false)) {
                 $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
             }
         }
@@ -175,13 +179,15 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                throw new ForbiddenRequestException(_('Cizí přihláška.'));
+                $this->loginRedirect();
             }
         }
     }
 
     public function actionList() {
-        
+        if (!$this->getSelectedContest()) {
+            $this->setView('contestChooser');
+        }
     }
 
     private function initializeMachine() {

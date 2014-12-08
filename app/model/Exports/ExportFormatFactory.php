@@ -18,6 +18,10 @@ use Nette\Utils\Arrays;
  */
 class ExportFormatFactory extends Object {
 
+    const AESOP = 'aesop';
+    const CSV_HEADLESS = 'csv';
+    const CSV_HEAD = 'csvh';
+
     /**
      * @var GlobalParameters
      */
@@ -39,8 +43,8 @@ class ExportFormatFactory extends Object {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->defaultFormats = array(
-            'csvh' => _('Uložit CSV'),
-            'csv' => _('Uložit CSV (bez hlavičky)'),
+            self::CSV_HEAD => _('Uložit CSV'),
+            self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
         );
     }
 
@@ -52,11 +56,11 @@ class ExportFormatFactory extends Object {
      */
     public function createFormat($name, StoredQuery $storedQuery) {
         switch (strtolower($name)) {
-            case 'aesop':
+            case self::AESOP:
                 return $this->createAesop($name, $storedQuery);
-            case 'csv':
+            case self::CSV_HEADLESS:
                 return $this->createCSV($storedQuery, false);
-            case 'csvh':
+            case self::CSV_HEAD:
                 return $this->createCSV($storedQuery, true);
             default:
                 throw new InvalidArgumentException('Unknown format \'' . $name . '\'.');

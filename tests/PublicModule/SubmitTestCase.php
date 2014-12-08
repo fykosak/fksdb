@@ -7,6 +7,7 @@ use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Config\Helpers;
 use Nette\Http\FileUpload;
+use Nette\Utils\Finder;
 use Tester\Assert;
 
 abstract class SubmitTestCase extends DatabaseTestCase {
@@ -84,6 +85,16 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->connection->query('DELETE FROM submit');
         $this->connection->query('DELETE FROM task');
         $this->connection->query('DELETE FROM contestant_base');
+        $params = $this->getContainer()->getParameters();
+        $dir = $params['upload']['root'];
+        foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
+            if ($f->isDir()) {
+                @rmdir($f->getPathname());
+            } else {
+                @unlink($f->getPathname());
+            }
+        }
+        rmdir($dir);
         parent::tearDown();
     }
 

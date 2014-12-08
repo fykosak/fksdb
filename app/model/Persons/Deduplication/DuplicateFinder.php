@@ -2,6 +2,7 @@
 
 namespace Persons\Deduplication;
 
+use FKS\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
@@ -16,6 +17,7 @@ class DuplicateFinder {
 
     const IDX_PERSON = 'person';
     const IDX_SCORE = 'score';
+    const DIFFERENT_PATTERN = '/not[-_]same\(([0-9]+)\)/i';
 
     /**
      * @var ServicePerson
@@ -23,12 +25,13 @@ class DuplicateFinder {
     private $servicePerson;
 
     /**
-     * @var double [0,1) threshold for similarity score to consider two recrods equal persons
+     * @var array
      */
-    private $threshold = 0.84;
+    private $parameters;
 
-    function __construct(ServicePerson $servicePerson) {
+    function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
+        $this->parameters = $parameters['deduplication']['finder'];
     }
 
     public function getPairs() {
@@ -51,7 +54,7 @@ class DuplicateFinder {
                         continue;
                     }
                     $score = $this->getSimilarityScore($personA, $personB);
-                    if ($score > $this->threshold) {
+                    if ($score > $this->parameters['threshold']) {
                         $pairs[$personA->person_id] = array(
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
@@ -78,11 +81,23 @@ class DuplicateFinder {
      * @return float
      */
     private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
+        $piA = $a->getInfo();
+        $piB = $b->getInfo();
+
+        /*
+         * Check explixit difference
+         */
+        if (in_array($a->getPrimary(), $this->getDifferentPersons($piB))) {
+            return 0;
+        }
+        if (in_array($b->getPrimary(), $this->getDifferentPersons($piA))) {
+            return 0;
+        }
+
         /*
          * Email check
          */
-        $piA = $a->getInfo();
-        $piB = $b->getInfo();
+
         if (!$piA || !$piB) {
             $emailScore = 0.5; // cannot say anything
         } else if (!$piA->email || !$piB->email) {
@@ -95,7 +110,16 @@ class DuplicateFinder {
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
 
-        return 0.45 * $familyScore + 0.2 * $otherScore + 0.35 * $emailScore;
+        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
+    }
+
+    private function getDifferentPersons(ActiveRow $personInfo = null) {
+        if ($personInfo === null || !isset($personInfo->note)) {
+            return array();
+        }
+        $matches = array();
+        preg_match_all(self::DIFFERENT_PATTERN, $personInfo->note, $matches);
+        return $matches[1];
     }
 
     private function stringScore($a, $b) {
@@ -105,7 +129,7 @@ class DuplicateFinder {
     private function relativeDistance($a, $b) {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
-            throw new InvalidArgumentException('Distance not defined.');
+            return 0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }

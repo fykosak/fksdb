@@ -55,11 +55,12 @@ class DeduplicatePresenter extends BasePresenter {
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
         $table = $this->servicePerson->getTable()->getName();
 
-        foreach ($pairs as $trunkId => $mergedRow) {
+        foreach ($pairs as $trunkId => $mergedData) {
             if (!isset($trunkPersons[$trunkId])) {
                 continue; // the trunk can be already merged somewhere else as merged
             }
             $trunkRow = $trunkPersons[$trunkId];
+            $mergedRow = $mergedData[DuplicateFinder::IDX_PERSON];
             $this->merger->setMergedPair($trunkRow, $mergedRow);
 
             if ($this->merger->merge()) {
@@ -83,7 +84,7 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     protected function createPersonDuplicateFinder() {
-        return new DuplicateFinder($this->servicePerson);
+        return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }
 
 }

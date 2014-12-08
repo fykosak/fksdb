@@ -26,7 +26,7 @@ class ModelPersonHistory extends AbstractModelSingle {
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
         );
         $result = new self(array(), $this->getTable());
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $result->$key = $value; // this is workaround to properly set modfified flag
         }
         return $result;
@@ -65,9 +65,15 @@ class ModelPersonHistory extends AbstractModelSingle {
             $result = $studyYear + $diff;
             if ($result > 9) {
                 $result -= 9;
+                if ($result > 4) {
+                    $result = null;
+                }
             }
         } else if ($studyYear >= 1 && $studyYear <= 4) {
             $result = $studyYear + $diff;
+            if ($result > 4) {
+                $result = null;
+            }
         }
 
         return $result;

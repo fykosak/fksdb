@@ -2,6 +2,7 @@
 nbproject
 log/*
 !log/.htaccess
+!log/archive.sh
 temp/*
 !temp/.htaccess
 upload/*

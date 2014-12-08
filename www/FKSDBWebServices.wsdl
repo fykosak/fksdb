@@ -54,6 +54,7 @@
 			<xsd:complexType name="GetExportRequestType">
 				<xsd:sequence>
 					<xsd:element name="qid" minOccurs="1" maxOccures="1" type="fksex:qid-type"/>
+                                        <xsd:element name="format-version" minOccurs="0" maxOccures="1" type="fksex:format-version-type"/>
 					<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="fksex:parameter-type"/>
 				</xsd:sequence>
 			</xsd:complexType>							

@@ -4,7 +4,7 @@
 
 parameters:
     # Flag marking the beta version
-    beta: true
+    beta: false
 
     # Temporary directory for various purposes.
     tempDir: %appDir%/../temp
@@ -143,6 +143,21 @@ parameters:
 
     # Parameters used for automated testing
     tester: []
+
+    # Deduplication
+    deduplication:
+        finder:
+            # Threshold on overall similarity score to show person in duplicates.
+            threshold: 0.9
+
+            # Weight for family name similarity [0, 1].
+            familyWeight: 0.48
+
+            # Weight for other name similarity [0, 1].
+            otherWeight: 0.48
+
+            # Weight for email address similarity [0, 1].
+            emailWeight: 0.04
 
 
 php:

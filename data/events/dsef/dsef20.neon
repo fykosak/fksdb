@@ -21,9 +21,6 @@ events:
         tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
-            groups:
-                default:
-                    Alpha: 10
             notifyBcc:
                 default: dsef@fykos.cz
             notifyFrom:

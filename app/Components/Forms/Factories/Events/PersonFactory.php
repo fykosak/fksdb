@@ -136,7 +136,7 @@ class PersonFactory extends AbstractFactory {
                     $metadata = array('required' => $metadata);
                 }
                 if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
-                    $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
+                    $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }
         }

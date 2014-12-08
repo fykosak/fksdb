@@ -306,6 +306,9 @@ class ExportPresenter extends SeriesPresenter {
 
     protected function createComponentAdhocResultsComponent($name) {
         $storedQuery = $this->getStoredQuery();
+        if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
+            return null;
+        }
         $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         $grid->setShowParametrize(false);
         return $grid;
@@ -313,6 +316,9 @@ class ExportPresenter extends SeriesPresenter {
 
     protected function createComponentResultsComponent($name) {
         $storedQuery = $this->getStoredQuery();
+        if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
+            return null;
+        }
         $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         return $grid;
     }

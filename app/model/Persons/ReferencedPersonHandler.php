@@ -114,6 +114,8 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             );
 
+            $originalModels = array_keys(iterator_to_array($data));
+
             $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
 
@@ -133,9 +135,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
             foreach ($models as $t => & $model) {
                 if (!isset($data[$t])) {
+                    if (in_array($t, $originalModels) && in_array($t, array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT))) {
+                        // delete only post contacts, other "children" could be left all-nulls
+                        $services[$t]->dispose($model);
+                    }
                     continue;
                 }
-                $data[$t]['person_id'] = $models ['person']->person_id; // this works even for person itself
+                $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
                 $services[$t]->updateModel($model, $data[$t]);
                 $services[$t]->save($model);
             }
@@ -188,7 +194,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     }
 
     private function preparePostContactModels(&$models) {
-        if($models[self::POST_CONTACT_PERMANENT]->isNew()) {
+        if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
             $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
             unset($data['post_contact_id']);
             unset($data['address_id']);
@@ -196,6 +202,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             $this->serviceMPostContact->updateModel($models[self::POST_CONTACT_PERMANENT], $data);
         }
     }
+
     private function resolvePostContacts(ArrayHash $data) {
         foreach (array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT) as $type) {
             if (!isset($data[$type])) {
@@ -254,4 +261,3 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     }
 
 }
-

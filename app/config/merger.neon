@@ -15,6 +15,7 @@ parameters:
             post_contact: [person_id, type]
             event_participant: [person_id, event_id]
             e_dsef_participant: [event_participant_id]
+            e_tsaf_participant: [event_participant_id]
             e_fyziklani_participant: [event_participant_id]
             e_sous_participant: [event_participant_id]
             e_vikend_participant: [event_participant_id]
