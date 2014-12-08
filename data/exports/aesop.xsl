@@ -54,6 +54,12 @@
             <text>&#10;</text>
         </if>
         <!-- -->
+        <if test="$id-scope">
+            <text>id-scope&#x9;</text>
+            <value-of select="$id-scope"/>
+            <text>&#10;</text>
+        </if>
+        <!-- -->
         <text>&#10;</text>
         <apply-templates select="column-definitions/column-definition"/>
         <text>&#10;</text>
