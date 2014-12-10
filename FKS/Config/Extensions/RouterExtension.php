@@ -2,6 +2,7 @@
 
 namespace FKS\Config\Extensions;
 
+use Nette\Application\Routers\Route;
 use Nette\Config\CompilerExtension;
 
 /**
@@ -17,10 +18,11 @@ class RouterExtension extends CompilerExtension {
         $container = $this->getContainerBuilder();
         $config = $this->getConfig(array(
             'routes' => array(),
+            'disableSecured' => false,
         ));
 
         $router = $container->getDefinition('router');
-
+        $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $mask => $action) {
             $flagsBin = 0;
@@ -30,7 +32,11 @@ class RouterExtension extends CompilerExtension {
                     $flags = array($flags);
                 }
                 foreach ($flags as $flag) {
-                    $flagsBin |= constant("Nette\Application\Routers\Route::$flag");
+                    $binFlag = constant("Nette\Application\Routers\Route::$flag");
+                    if ($disableSecured && $binFlag === Route::SECURED) {
+                        continue;
+                    }
+                    $flagsBin |= $binFlag;
                 }
                 unset($action['flags']);
             }
