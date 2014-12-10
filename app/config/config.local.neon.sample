@@ -39,3 +39,8 @@ nette:
         dsn: 'mysql:host=localhost;dbname=newfks'
         user: 
         password: 
+
+
+# DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
+#fksrouter:
+#    disableSecured: true
