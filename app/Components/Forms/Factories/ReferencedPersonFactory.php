@@ -184,10 +184,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
                     $this->setWriteonly($component, true);
+                    $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                 } else if ($controlVisible && $controlModifiable) {
                     $this->setWriteonly($component, false);
+                    $component->setDisabled(false);
                 }
                 if ($mode == self::MODE_ROLLBACK) {
                     $component->setDisabled(false);

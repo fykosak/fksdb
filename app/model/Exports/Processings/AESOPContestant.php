@@ -49,7 +49,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
         }
         $tasks = $serviceTask->getTable()
                 ->where('contest_id', $this->parameters['contest'])
-                ->where('year', $this->parameters['year']);
+                ->where('year', $this->parameters['year'])
+                ->where('series BETWEEN 1 AND 6');
         $sum = 0;
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $category);

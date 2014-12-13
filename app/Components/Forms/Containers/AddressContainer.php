@@ -50,6 +50,9 @@ class AddressContainer extends ModelContainer {
 
             $values = $address->toArray();
             $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
+        } else if (is_array($values) && isset($values['region_id'])) {
+            $region = $this->serviceRegion->findByPrimary($values['region_id']);
+            $values['country_iso'] = $region->country_iso;
         }
 
         parent::setValues($values, $erase);

@@ -23,8 +23,8 @@ use YearCalculator;
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
  */
 class LoginUserStorage extends UserStorage {
-
     /** @const HTTP GET parameter holding control information for the SSO */
+
     const PARAM_SSO = 'sso';
 
     /** @const Value meaning the user is not centally authneticated. */
@@ -161,6 +161,9 @@ class LoginUserStorage extends UserStorage {
 
         // Find login
         $login = $this->loginService->findByPrimary($identity->getId());
+        if (!$login) {
+            return null;
+        }
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

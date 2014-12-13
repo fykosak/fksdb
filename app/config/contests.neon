@@ -28,7 +28,7 @@ parameters:
                 school_id: true
                 study_year: true
             post_contact_d:
-                address: true
+                address: false
             post_contact_p:
                 address: false
             person_info:

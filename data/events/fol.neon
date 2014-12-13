@@ -2,6 +2,7 @@ parameters:
     events:
         fol:
             appCond: or(regOpen(), role('admin'))
+            modCond: or(neg(param('migrated')), role('admin'))   
             participant:
                 person:
                     other_name: true
@@ -9,7 +10,9 @@ parameters:
                 person_info:
                     email: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
+                        description: _('Pokud nelze školu nalézt, napište správci, reaguje rychle.')
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
@@ -26,6 +29,8 @@ events:
                 default: online@fyziklani.cz
             notifyFrom:
                 default: Fyziklání online <online@fyziklani.cz>
+            migrated:
+                default: false
 
         baseMachines:
             #
@@ -47,7 +52,7 @@ events:
                         condition: %events.fol.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(team, .*)
+                            - Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Zúčastnil se
@@ -79,14 +84,14 @@ events:
                         label: _('Kontaktní adresa')
                         required: false
                         visible: true
-                        modifiable: true
+                        modifiable: %events.fol.modCond%
                         description: _('Pro zaslání případné odměny.')
                     password:
                         label: _('Herní heslo') # i18n
                         required: state('__init')
                         visible: true
-                        modifiable: true
-                        description: _('Slouží k přihlášení do herního systému.')
+                        modifiable: %events.fol.modCond%
+                        description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
                         factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
 
             #
@@ -104,8 +109,9 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: neg(eventWas())
+                        condition: %events.fol.modCond%
                         visible: false
+                        label: _('Přidat člena')
                         onExecuted:
                             - Events\Transitions\MailSender(member,self)
                     applied->participated:
@@ -115,14 +121,15 @@ events:
                         condition: role('admin')
                         visible: false
                     applied->__terminated:
-                        condition: neg(eventWas())
+                        condition: %events.fol.modCond%
+                        label: _('Smazat člena')
                         visible: false
 
                 fields:
                     person_id:
                         label: _('Osoba')
                         visible: true
-                        modifiable: neg(eventWas())
+                        modifiable: %events.fol.modCond%
                         determining: true
                         factory: RefPerson(%events.fol.participant%, email, true, role('admin'), false)
 
