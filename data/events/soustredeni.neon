@@ -14,7 +14,7 @@ parameters:
                     birthplace: state('participated')
                     phone:
                         required: %events.soustredeni.requiredCond%
-                        description: "Telefon (i s předvolbou státu), jež budeš mít s sebou."
+                        description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
                 post_contact_p:
                     address: %events.soustredeni.requiredCond%
                 person_history:
