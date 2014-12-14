@@ -90,6 +90,10 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání organizátora.');
     }
+    
+    public function messageExists() {
+        return _('Organizátor již existuje.');
+    }
 
 }
 

@@ -64,6 +64,10 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání řešitele.');
     }
+    
+    public function messageExists() {
+        return _('Řešitel už existuje.');
+    }
 
 
 }

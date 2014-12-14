@@ -244,5 +244,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function messageError() {
         return _('Chyba při registraci.');
     }
+    
+    public function messageExists() {
+        return _('Řešitel je již registrován.');
+    }
 
 }
