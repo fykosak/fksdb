@@ -170,7 +170,7 @@ class ExtendedPersonHandler extends Object {
         } catch (ModelException $e) {
             $connection->rollBack();
             if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage(_('Řešitel už existuje.'), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
                 Debugger::log($e, Debugger::ERROR);
                 $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);

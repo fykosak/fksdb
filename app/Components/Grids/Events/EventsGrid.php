@@ -39,6 +39,7 @@ class EventsGrid extends BaseGrid {
                         $table->where('event.name LIKE CONCAT(\'%\', ? , \'%\') OR event_type.name LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
                     }
                 });
+        $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
         //

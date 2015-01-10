@@ -18,7 +18,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
             parent::save($model);
         } catch (ModelException $e) {
             if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
-                throw new DuplicateApplicationException($model->getPerson());
+                throw new DuplicateApplicationException($model->getPerson(), $e);
             }
             throw $e;
         }
