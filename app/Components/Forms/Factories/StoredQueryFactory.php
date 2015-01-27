@@ -93,6 +93,7 @@ class StoredQueryFactory {
                 ->setItems(array(
                     ModelStoredQueryParameter::TYPE_INT => 'integer',
                     ModelStoredQueryParameter::TYPE_STR => 'string',
+                    ModelStoredQueryParameter::TYPE_BOOL => 'bool',
         ));
 
         $container->addText('default', _('Výchozí hodnota'));
@@ -106,13 +107,23 @@ class StoredQueryFactory {
             $name = $parameter->name;
             $subcontainer = $container->addContainer($name);
 
-            $valueElement = $subcontainer->addText('value', $name);
-            $valueElement->setOption('description', $parameter->description);
-            if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
-                $valueElement->addRule(Form::INTEGER, _('Parametr %label je číselný.'));
-            }
+            switch ($parameter->type) {
+                case ModelStoredQueryParameter::TYPE_INT:
+                case ModelStoredQueryParameter::TYPE_STR:
+                    $valueElement = $subcontainer->addText('value', $name);
+                    $valueElement->setOption('description', $parameter->description);
+                    if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
+                        $valueElement->addRule(Form::INTEGER, _('Parametr %label je číselný.'));
+                    }
 
-            $valueElement->setDefaultValue($parameter->getDefaultValue());
+                    $valueElement->setDefaultValue($parameter->getDefaultValue());
+                    break;
+                case ModelStoredQueryParameter::TYPE_BOOL:
+                    $valueElement = $subcontainer->addCheckbox('value', $name);
+                    $valueElement->setOption('description', $parameter->description);
+                    $valueElement->setDefaultValue((bool) $parameter->getDefaultValue());
+                    break;
+            }
         }
 
         return $container;
