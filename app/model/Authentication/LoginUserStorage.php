@@ -154,13 +154,19 @@ class LoginUserStorage extends UserStorage {
      * @return IIdentity|NULL
      */
     public function getIdentity() {
-        $identity = parent::getIdentity();
-        if (!$identity || !isset($this->globalSession[GlobalSession::UID])) {
+        $local = parent::getIdentity();
+        $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
+        /* 
+         * Note that case when $global == true && $local != true should be resolved,
+         * i.e. update local session from global. However, this is already done
+         * int isAuthenticated method. Thus we can omit this case here.
+         */
+        if (!$local || !$global) {
             return NULL;
         }
 
         // Find login
-        $login = $this->loginService->findByPrimary($identity->getId());
+        $login = $this->loginService->findByPrimary($local->getId());
         if (!$login) {
             return null;
         }
