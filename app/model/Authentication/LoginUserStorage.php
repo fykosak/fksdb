@@ -155,7 +155,7 @@ class LoginUserStorage extends UserStorage {
      */
     public function getIdentity() {
         $identity = parent::getIdentity();
-        if (!$identity) {
+        if (!$identity || !isset($this->globalSession[GlobalSession::UID])) {
             return NULL;
         }
 
