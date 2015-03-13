@@ -81,14 +81,13 @@ class ExportFormatFactory extends Object {
     private function createAesop($name, StoredQuery $storedQuery) {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
-
+        
+        $qid = $storedQuery->getQueryPattern()->qid;
+        
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
-        $eventId = sprintf($parameters['idMask'], $contestName, $queryParameters['year'], $queryParameters['category']);
-
-
-
+        $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $queryParameters['category']);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
@@ -96,8 +95,13 @@ class ExportFormatFactory extends Object {
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
             'max-rank' => $storedQuery->getCount(),
-            'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
         ));
+                
+        if ($qid == 'aesop.ct') {            
+            $format->addParameters(array(
+                'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
+            ));
+        }
 
         return $format;
     }
