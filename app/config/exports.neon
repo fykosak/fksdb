@@ -31,7 +31,6 @@ parameters:
         formats:
             aesop:
                 template: %dataDir%/exports/aesop.xsl
-                idMask: '%%s.rocnik.%3$s' # sprintf mask: contestName, year, category
                 aesop.ct:
                     idMask: '%%s.rocnik.%3$s' # sprintf mask: contestName, year, category
                 aesop.fol:
