@@ -10,9 +10,42 @@ parameters:
         specialFormats:
             aesop.ct: # QID
                 aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.fol:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.dsef:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.tsaf:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.vaf:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.sous.j:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.sous.p:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.klani.ct:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.klani.uc:
+                aesop: _(Uložit AESOP) # format name -> GUI label
 
         # Specifies parameters per each format in general
         formats:
             aesop:
                 template: %dataDir%/exports/aesop.xsl
-                idMask: '%%s.rocnik.%3$s' # sprintf mask: contestName, year, category
+                aesop.ct:
+                    idMask: '%%s.rocnik.%3$s' # sprintf mask: contestName, year, category
+                aesop.fol:
+                    idMask: '%%s.FoL.%3$s' # sprintf mask: contestName, year, category
+                aesop.dsef:
+                    idMask: '%%s.dsef' # sprintf mask: contestName, year, category
+                aesop.tsaf:
+                    idMask: '%%s.tsaf' # sprintf mask: contestName, year, category
+                aesop.vaf:
+                    idMask: '%%s.vaf' # sprintf mask: contestName, year, category
+                aesop.sous.j:
+                    idMask: '%%s.sous.jaro' # sprintf mask: contestName, year, category
+                aesop.sous.p:
+                    idMask: '%%s.sous.podzim' # sprintf mask: contestName, year, category
+                aesop.klani.ct:
+                    idMask: '%%s.fyziklani.%3$s' # sprintf mask: contestName, year, category
+                aesop.klani.uc:
+                    idMask: '%%s.fyziklani.ucitele' # sprintf mask: contestName, year, category
