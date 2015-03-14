@@ -13,7 +13,7 @@ use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExportFormatFactory extends Object {
@@ -49,7 +49,7 @@ class ExportFormatFactory extends Object {
     }
 
     /**
-     * 
+     *
      * @param type $name
      * @param \Exports\StoredQuery $storedQuery
      * @return IExportFormat
@@ -81,13 +81,14 @@ class ExportFormatFactory extends Object {
     private function createAesop($name, StoredQuery $storedQuery) {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
-        
+
         $qid = $storedQuery->getQueryPattern()->qid;
-        
+
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
-        $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $queryParameters['category']);
+        $category = Arrays::get($queryParameters, 'category', null);
+        $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
@@ -96,8 +97,8 @@ class ExportFormatFactory extends Object {
             'year' => $queryParameters['ac_year'],
             'max-rank' => $storedQuery->getCount(),
         ));
-                
-        if ($qid == 'aesop.ct') {            
+
+        if ($qid == 'aesop.ct') {
             $format->addParameters(array(
                 'max-points' => $storedQuery->getPostProcessing()->getMaxPoints($this->container->getByType('ServiceTask')),
             ));
