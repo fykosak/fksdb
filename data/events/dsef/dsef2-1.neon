@@ -1,6 +1,6 @@
 parameters:
     events:
-        dsef2-1:
+        dsef2_1:
             appCond: or(regOpen(), role('admin'))
             accomodation: 'Noc před akcí (tj. z 12. 5. na 13. 5.).'
             person:
@@ -15,7 +15,7 @@ parameters:
                     address: true
 
 events:
-    dsef2-1:
+    dsef2_1:
         event_type_id: 14
         eventYears: [1]
         tableLayout: event.grid
@@ -40,7 +40,7 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.dsef2-1.appCond%
+                        condition: %events.dsef2_1.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(confirmation, .self)
@@ -63,22 +63,22 @@ events:
                     person_id:
                         label: Osoba
                         required: true
-                        modifiable: %events.dsef2-1.appCond%
+                        modifiable: %events.dsef2_1.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.dsef2-1.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: RefPerson(%events.dsef2_1.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
                         label: Preferovaná skupina
                         required: true
-                        modifiable: %events.dsef2-1.appCond%
+                        modifiable: %events.dsef2_1.appCond%
                         factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: Ubytování
-                        description: %events.dsef2-1.accomodation%
-                        modifiable: %events.dsef2-1.appCond%
+                        description: %events.dsef2_1.accomodation%
+                        modifiable: %events.dsef2_1.appCond%
                     lunch_count:
                         label:  Počet baget k obědu                        
-                        modifiable: %events.dsef2-1.appCond%
-                        description:  2 zdarma, další à 40 Kč
+                        modifiable: %events.dsef2_1.appCond%
+                        description:  "2 zdarma, další à 40 Kč"
                     message:
                         label: Vzkaz ostatním
                         modifiable: true
