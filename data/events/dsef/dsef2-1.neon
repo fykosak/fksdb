@@ -82,6 +82,9 @@ events:
                     message:
                         label: Vzkaz ostatním
                         modifiable: true
+                    note:
+                        label: "Jaké další semináře a olympiády řešíš?"
+                        description: "Uveď další fyzikální, matematické či informatické vzdělávací či soutěžní akce, kterých se účastníš (stačí zkratky)."
 
 
         #
