@@ -13,6 +13,11 @@ parameters:
                     born: true
                 post_contact_p:
                     address: true
+                person_history:
+                    school_id: true
+                    study_year:
+                        required: true
+                        description: " "
 
 events:
     dsef2_1:
