@@ -275,7 +275,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
-        return (bool) $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
+        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
+        return !($value === null || $value === '');
     }
 
     private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
@@ -288,7 +289,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case 'person_info':
                 $result = ($info = $person->getInfo()) ? $info[$field] : null;
                 if ($field == 'agreed') {
-                    $result = (bool) $result;
+                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
+                    $result = $result ? true : null;
                 }
                 return $result;
             case 'person_history':
