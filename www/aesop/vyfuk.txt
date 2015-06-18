@@ -1,3 +1,12 @@
+../vyfuk1/q/aesop.ct?ha=1&format=aesop&p_category=6
+../vyfuk1/q/aesop.ct?ha=1&format=aesop&p_category=7
+../vyfuk1/q/aesop.ct?ha=1&format=aesop&p_category=8
+../vyfuk1/q/aesop.ct?ha=1&format=aesop&p_category=9
+../vyfuk2/q/aesop.ct?ha=1&format=aesop&p_category=6
+../vyfuk2/q/aesop.ct?ha=1&format=aesop&p_category=7
+../vyfuk2/q/aesop.ct?ha=1&format=aesop&p_category=8
+../vyfuk2/q/aesop.ct?ha=1&format=aesop&p_category=9
+../vyfuk2/q/aesop.ct?ha=1&format=aesop&p_category=UNK
 ../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=6
 ../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=7
 ../vyfuk3/q/aesop.ct?ha=1&format=aesop&p_category=8
