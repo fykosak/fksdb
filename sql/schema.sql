@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `auth_token` (
   `token_id` INT(11) NOT NULL AUTO_INCREMENT,
   `login_id` INT(11) NOT NULL,
   `token` VARCHAR(255) NOT NULL,
-  `type` VARCHAR(31) NOT NULL COMMENT 'type of token (from programmer\'s POV)',
+  `type` VARCHAR(31) NOT NULL COMMENT 'type of token (from programmer\s POV)',
   `data` VARCHAR(255) NULL COMMENT 'various purpose data',
   `since` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `until` TIMESTAMP NULL DEFAULT NULL,
@@ -439,6 +439,8 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   `homepage` VARCHAR(255) NULL COMMENT 'URL osobní homepage',
   `fb_id` VARCHAR(255) NULL,
   `linkedin_id` VARCHAR(255) NULL,
+  `phone_parent_d`VARCHAR(32) NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
+  `phone_parent_m` VARCHAR(32) NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),
@@ -874,7 +876,7 @@ CREATE TABLE IF NOT EXISTS `person_has_flag` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'person\'s flags are per year';
+COMMENT = 'person\ s flags are per year';
 
 
 -- -----------------------------------------------------
@@ -1050,6 +1052,26 @@ CREATE TABLE IF NOT EXISTS `task_study_year` (
     REFERENCES `study_year` (`study_year`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
+ENGINE = InnoDB
+COMMENT = 'specification of allowed study years for a task';
+
+-- -----------------------------------------------------
+-- Table `event_org`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `event_org` ;
+
+CREATE TABLE IF NOT EXISTS `event_org` (
+  `e_org_id` INT(11) NOT NULL,
+  PRIMARY KEY (e_org_id),
+  INDEX `fk_task_study_year_study_year1_idx` (`study_year` ASC),
+  CONSTRAINT `event_id`
+    FOREIGN KEY (`event_id`)
+    REFERENCES `event` (`event_id`)
+    ,
+  CONSTRAINT `person_id`
+    FOREIGN KEY (`person_id`)
+    REFERENCES `person` (`person_id`)
+    )
 ENGINE = InnoDB
 COMMENT = 'specification of allowed study years for a task';
 

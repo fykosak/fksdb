@@ -211,6 +211,18 @@ class PersonFactory {
         return $control;
     }
 
+   
+    
+    public function createPhoneParentM($acYear = null) {
+        return (new WriteonlyInput(_('Telefonní číslo na rodiče (Mama)')))
+                        ->addRule(Form::MAX_LENGTH, null, 32);
+    }
+    
+    public function createPhoneParentD($acYear = null) {
+        return (new WriteonlyInput(_('Telefonní číslo na rodiče (Otec)')))
+                        ->addRule(Form::MAX_LENGTH, null, 32);
+    }
+    
     public function createPhone($acYear = null) {
         return (new WriteonlyInput(_('Telefonní číslo')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
