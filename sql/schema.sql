@@ -1062,8 +1062,11 @@ DROP TABLE IF EXISTS `event_org` ;
 
 CREATE TABLE IF NOT EXISTS `event_org` (
   `e_org_id` INT(11) NOT NULL,
+`pozn` TEXT(32),
+`event_id` INT(11) NOT NULL,
+`person_id` INT (11) NOT NULL,
   PRIMARY KEY (e_org_id),
-  INDEX `fk_task_study_year_study_year1_idx` (`study_year` ASC),
+  
   CONSTRAINT `event_id`
     FOREIGN KEY (`event_id`)
     REFERENCES `event` (`event_id`)
@@ -1071,9 +1074,10 @@ CREATE TABLE IF NOT EXISTS `event_org` (
   CONSTRAINT `person_id`
     FOREIGN KEY (`person_id`)
     REFERENCES `person` (`person_id`)
+   
     )
 ENGINE = InnoDB
-COMMENT = 'specification of allowed study years for a task';
+COMMENT = '';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
