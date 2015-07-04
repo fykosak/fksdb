@@ -31,7 +31,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory {
@@ -214,12 +214,12 @@ class PersonFactory {
    
     
     public function createPhoneParentM($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo na rodiče (Mama)')))
+        return (new WriteonlyInput(_('Telefonní číslo (matka)')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
     
     public function createPhoneParentD($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo na rodiče (Otec)')))
+        return (new WriteonlyInput(_('Telefonní číslo (otec)')))
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
     
