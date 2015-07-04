@@ -67,10 +67,10 @@ parameters:
                 address: true
             person_info:
                 email: true
-                origin: false
-                agreed: true
                 phone_parent_m: false
                 phone_parent_d: false  
+                origin: false
+                agreed: true
         adminContestant:
             person:
                 other_name: true
@@ -90,10 +90,10 @@ parameters:
                 birthplace: false
                 id_number: false
                 note: false
-                origin: false
-                agreed: false
                 phone_parent_m: false
                 phone_parent_d: false  
+                origin: false
+                agreed: false
         adminOrg:
             person:
                 other_name: true
