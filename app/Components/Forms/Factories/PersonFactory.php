@@ -214,18 +214,15 @@ class PersonFactory {
    
     
     public function createPhoneParentM($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo (matka)')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+        return $this->rawPhone(_('Telefonní číslo (matka)'), $acYear);
     }
     
     public function createPhoneParentD($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo (otec)')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+        return $this->rawPhone(_('Telefonní číslo (otec)'), $acYear);
     }
     
     public function createPhone($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+        return $this->rawPhone(_('Telefonní číslo'), $acYear);
     }
 
     public function createIm($acYear = null) {
@@ -296,6 +293,14 @@ class PersonFactory {
         $control->addCondition(Form::FILLED)
                 ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         return $control;
+    }
+
+    private function rawPhone($label, $acYear = null) {
+        $control = new WriteonlyInput($label);
+        $control->addRule(Form::MAX_LENGTH, null, 32)
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice.'), '/(\+?\d{1,3} )?(\d{3} ?){3}/');
+	return $control;
     }
 
     /*
