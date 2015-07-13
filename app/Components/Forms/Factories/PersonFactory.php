@@ -31,7 +31,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory {
@@ -211,9 +211,18 @@ class PersonFactory {
         return $control;
     }
 
+   
+    
+    public function createPhoneParentM($acYear = null) {
+        return $this->rawPhone(_('Telefonní číslo (matka)'), $acYear);
+    }
+    
+    public function createPhoneParentD($acYear = null) {
+        return $this->rawPhone(_('Telefonní číslo (otec)'), $acYear);
+    }
+    
     public function createPhone($acYear = null) {
-        return (new WriteonlyInput(_('Telefonní číslo')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+        return $this->rawPhone(_('Telefonní číslo'), $acYear);
     }
 
     public function createIm($acYear = null) {
@@ -284,6 +293,15 @@ class PersonFactory {
         $control->addCondition(Form::FILLED)
                 ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         return $control;
+    }
+
+    private function rawPhone($label, $acYear = null) {
+        $control = new WriteonlyInput($label);
+        $control->addRule(Form::MAX_LENGTH, null, 32)
+                ->addCondition(Form::FILLED)
+                //->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice.'), '/(\+?\d{1,3} )?(\d{3} ?){3}/')
+                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v medzinárodim tvaru začínajíci +421 nebo +420'),'/(\+42[01])?(\s?\d{3}){3}/');
+	return $control;
     }
 
     /*
