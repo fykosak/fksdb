@@ -299,8 +299,7 @@ class PersonFactory {
         $control = new WriteonlyInput($label);
         $control->addRule(Form::MAX_LENGTH, null, 32)
                 ->addCondition(Form::FILLED)
-                //->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice.'), '/(\+?\d{1,3} )?(\d{3} ?){3}/')
-                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v medzinárodim tvaru začínajíci +421 nebo +420'),'/(\+42[01])?(\s?\d{3}){3}/');
+                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/(\+42[01])?(\s?\d{3}){3}/');
 	return $control;
     }
 
