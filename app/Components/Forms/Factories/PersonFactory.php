@@ -337,6 +337,10 @@ class PersonFactory {
         return (new TextInput(_('Třída')))
                         ->addRule(Form::MAX_LENGTH, null, 16);
     }
+    
+    public function createSpamMff($acYear = null) {
+        return (new Checkbox(_('Chci zasílat spam.')));
+    }
 
 }
 

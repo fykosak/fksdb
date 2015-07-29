@@ -16,6 +16,8 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
+use ServicePersonHasFlag;
+use ServiceFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -46,6 +48,16 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @var ServiceMPostContact
      */
     private $serviceMPostContact;
+    
+    /**
+     * @var ServicePersonHasFlag
+     */
+    private $servicePersonHasFlag;
+    
+    /**
+     * @var ServiceFlag
+     */
+    private $serviceFlag;
 
     /**
      * @var int
@@ -57,11 +69,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $resolution;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, $acYear, $resolution) {
+    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServicePersonHasFlag $servicePersonHasFlag, ServiceFlag $serviceFlag, $acYear, $resolution) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
+        $this->servicePersonHasFlag = $servicePersonHasFlag;
+        $this->serviceFlag = $serviceFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
     }
@@ -99,10 +113,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
              * Person & its extensions
              */
 
+            $flagId = $this->serviceFlag->findByFid('spam.mff')->flag_id;
+            
             $models = array(
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ? : $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
+                'person_has_flag' => ($flag = $person->getFlag($flagId)) ? : $this->servicePersonHasFlag->createNew(array('flag_id' => $flagId)),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
             );
@@ -110,6 +127,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
                 'person_history' => $this->servicePersonHistory,
+                'person_has_flag' => $this->servicePersonHasFlag,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             );

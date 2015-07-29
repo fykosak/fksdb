@@ -9,11 +9,13 @@ services:
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventType:        ServiceEventType
+    ServiceFlag:             ServiceFlag
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson
+    ServicePersonHasFlag:    ServicePersonHasFlag
     ServicePersonHistory:    ServicePersonHistory
     ServicePersonInfo:       ServicePersonInfo
     ServicePostContact:      ServicePostContact

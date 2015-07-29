@@ -24,6 +24,7 @@ use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
 use ServicePerson;
+use ServiceFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -59,12 +60,18 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @var PersonProvider
      */
     private $personProvider;
+    
+    /**
+     * @var ServiceFlag
+     */
+    private $serviceFlag;
 
-    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider) {
+    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
+        $this->serviceFlag = $serviceFlag;
     }
 
     /**
@@ -304,6 +311,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 return $person->getPermanentAddress(true);
                 break;
+            case 'person_has_flag':
+                return ($flag = $person->getFlag($this->serviceFlag->findByFid($field)->flag_id)) ? (bool) $flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }

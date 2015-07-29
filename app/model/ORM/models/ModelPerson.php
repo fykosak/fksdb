@@ -26,6 +26,21 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
         return ModelLogin::createFromTableRow($logins->current());
     }
+    
+    public function getFlag($flagId) {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        
+        $flags = $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id')
+                ->where('flag_id', $flagId);
+        $flags->rewind();
+        if (!$flags->valid()) {
+            return null;
+        }
+        
+        return ModelPersonHasFlag::createFromTableRow($flags->current());
+    }
 
     /**
      * @return ModelPersonInfo|null
