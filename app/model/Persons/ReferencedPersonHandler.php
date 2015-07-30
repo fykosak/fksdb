@@ -125,7 +125,8 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             
             $originalModels = array_keys(iterator_to_array($data));
             
-            $this->prepareFlags($person, $data, $models, $services);
+            $this->prepareFlagServices($data, $services);
+            $this->prepareFlagModels($person, $data, $models);
 
             $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
@@ -236,17 +237,28 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         }
     }
     
-    private function prepareFlags(ModelPerson &$person, ArrayHash &$data, &$models, &$services) {
+    private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
+        if (!isset($data['person_has_flag'])) {
+            return;
+        }
+        
         foreach ($data['person_has_flag'] as $fid => $value) {
-            //$flagId = $this->serviceFlag->findByFid($fid)->flag_id;
             $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
-            $services[$fid] = $this->serviceMPersonHasFlag;
             
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;
-            $data[$fid]['modified'] = new DateTime();
         }
         unset($data['person_has_flag']);
+    }
+    
+    private function prepareFlagServices(ArrayHash &$data, &$services) {
+        if (!isset($data['person_has_flag'])) {
+            return;
+        }
+        
+        foreach ($data['person_has_flag'] as $fid => $value) {
+            $services[$fid] = $this->serviceMPersonHasFlag;
+        }        
     }
 
     private function beginTransaction() {
