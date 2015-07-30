@@ -65,7 +65,7 @@ INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 INSERT INTO `flag` (`flag_id`, `fid`, `name`, `description`, `type`) VALUES
 (1,'serial_author','serial_author','Je organizátornizátor autor seriálu','contest_year'),
 (2,'email_invalid','Neplatný e-mail','E-maily zaslané na danou adresu se nám již někdy vrátily. Zatím sem nepatří adresy, u nichž je hlášen \'mailbox full\'.','global'),
-(3,'spam.mff','Spam z MFF','Zda si přeje/nepřeje dostávat spam z Matfyzu.','global'),
+(3,'spam_mff','Spam z MFF','Zda si přeje/nepřeje dostávat spam z Matfyzu.','global'),
 (4,'send_forum','Notifikace ze fóra','Ze starého fóra na FYKOSím webu.','global'),
 (5,'send_forum_dgst','Digesty 			z fóra','Posílat digesty ze starého fóra na FYKOSím webu.','globalal');
 

@@ -12,6 +12,7 @@ services:
     ServiceFlag:             ServiceFlag
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
+    ServiceMPersonHasFlag:   ServiceMPersonHasFlag
     ServiceMPostContact:     ServiceMPostContact
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson

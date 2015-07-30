@@ -312,7 +312,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 return $person->getPermanentAddress(true);
                 break;
             case 'person_has_flag':
-                return ($flag = $person->getFlag($this->serviceFlag->findByFid($field)->flag_id)) ? (bool) $flag['value'] : null;
+                return ($flag = $person->getMPersonHasFlag($field)) ? (bool) $flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }

@@ -7,8 +7,7 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
-use ServicePersonHasFlag;
-use ServiceFlag;
+use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -38,27 +37,21 @@ class ReferencedPersonHandlerFactory extends Object {
     private $serviceMPostContact;
     
     /**
-     * @var ServicePersonHasFlag
+     * @var ServiceMPersonHasFlag
      */
-    private $servicePersonHasFlag;
-    
-    /**
-     * @var ServiceFlag
-     */
-    private $serviceFlag;
+    private $serviceMPersonHasFlag;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServicePersonHasFlag $servicePersonHasFlag, ServiceFlag $serviceFlag) {
+    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
-        $this->servicePersonHasFlag = $servicePersonHasFlag;
-        $this->serviceFlag = $serviceFlag;
+        $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
     }
 
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
         return new ReferencedPersonHandler(
-                $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->servicePersonHasFlag, $this->serviceFlag, $acYear, $resolution
+                $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
         );
     }
 

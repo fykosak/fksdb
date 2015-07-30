@@ -26,21 +26,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
         return ModelLogin::createFromTableRow($logins->current());
     }
-    
-    public function getFlag($flagId) {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
-        
-        $flags = $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id')
-                ->where('flag_id', $flagId);
-        $flags->rewind();
-        if (!$flags->valid()) {
-            return null;
-        }
-        
-        return ModelPersonHasFlag::createFromTableRow($flags->current());
-    }
 
     /**
      * @return ModelPersonInfo|null
@@ -110,6 +95,52 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $related->where('contest_id', $contestId);
         }
         return $related;
+    }
+    
+    public function getFlags() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
+    }
+    
+    /**
+     * @return ModelMPersonHasFlag[]
+     */
+    public function getMPersonHasFlags() {
+        $personFlags = $this->getFlags();
+        
+        if (!$personFlags || count($personFlags) == 0) {
+            return null;
+        }
+        
+        $result = array();
+        foreach ($personFlags as $personFlag) {
+            $personFlag->flag_id; // stupid touch
+            $flag = $personFlag->ref(DbNames::TAB_FLAG, 'flag_id');
+            $result[] = ModelMPersonHasFlag::createFromExistingModels(
+                ModelFlag::createFromTableRow($flag), ModelPersonHasFlag::createFromTableRow($personFlag)
+            );
+        }
+        return $result;
+    }
+    
+    /**
+     * @return ModelMPersonHasFlag|null
+     */
+    public function getMPersonHasFlag($fid) {
+        $flags = $this->getMPersonHasFlags();
+        
+        if (!$flags || count($flags) == 0) {
+            return null;
+        }
+        
+        foreach ($flags as $flag) {
+            if ($flag->getFlag()->fid == $fid) {
+                return $flag;
+            }
+        }
+        return null;
     }
 
     public function getPostContacts() {
