@@ -118,7 +118,7 @@ abstract class AbstractResultsModel implements IResultsModel {
      */
     protected function getTasks($series) {
         return $this->serviceTask->getTable()
-                        ->select('task_id, label, points')
+                        ->select('task_id, label, points,series')
                         ->where(array(
                             'contest_id' => $this->contest->contest_id,
                             'year' => $this->year,

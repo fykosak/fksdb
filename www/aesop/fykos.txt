@@ -58,7 +58,6 @@
 ../fykos28/q/aesop.fol?ha=1&format=aesop&p_category=B
 ../fykos28/q/aesop.fol?ha=1&format=aesop&p_category=C
 ../fykos28/q/aesop.fol?ha=1&format=aesop&p_category=zahranicni
-../fykos28/q/aesop.fol?ha=1&format=aesop&p_category=open
 ../fykos28/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
 ../fykos28/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
 ../fykos28/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
