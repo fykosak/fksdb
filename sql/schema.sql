@@ -849,6 +849,7 @@ CREATE TABLE IF NOT EXISTS `person_has_flag` (
   `contest_id` INT NULL,
   `ac_year` SMALLINT(4) NULL,
   `value` TINYINT NOT NULL DEFAULT 1,
+  `modified` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`person_flag_id`),
   UNIQUE INDEX `person_flag_year_ct_UQ` (`person_id` ASC, `flag_id` ASC, `contest_id` ASC, `ac_year` ASC),

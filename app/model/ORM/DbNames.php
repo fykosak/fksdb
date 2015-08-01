@@ -15,11 +15,13 @@ class DbNames {
     const TAB_EVENT_HAS_ORG = 'event_has_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_EVENT_TYPE = 'event_type';
+    const TAB_FLAG = 'flag';
     const TAB_GLOBAL_SESSION = 'global_session';
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
     const TAB_PERSON = 'person';
+    const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
     const TAB_PERSON_INFO = 'person_info';
     const TAB_POST_CONTACT = 'post_contact';
