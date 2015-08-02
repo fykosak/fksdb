@@ -16,6 +16,10 @@ parameters:
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
+                person_has_flag:
+                    spam_mff: 
+                        required: false
+                        description: _('Pouze pro české a slovenské studenty.')
 
 
 events:
@@ -167,11 +171,13 @@ events:
                 - @events.captcha
                 - Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
                 - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
+#                - Events\Spec\Fol\CategoryVisibility(%events.fol.dep.visible%)
 
 
             processings:
                 - Events\Spec\Fol\CategoryProcessing()
                 - Events\Spec\Fol\PasswordProcessing()
+                - Events\Spec\Fol\FlagProcessing()
                 - @events.privacyPolicy
 
             joins:
