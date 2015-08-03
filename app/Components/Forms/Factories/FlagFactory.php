@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Utils\Arrays;
@@ -33,8 +33,17 @@ class FlagFactory {
         return $control;
     }
     
+//    public function createSpamMff($acYear = null) {
+//        return (new Checkbox(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme')));
+//    }
+    
     public function createSpamMff($acYear = null) {
-        return (new Checkbox(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme')));
+        $control = new SelectBox(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
+        $items = array('1' => _('Ano'),
+                       '0' => _('Ne')
+            );
+        $control->setItems($items)->setPrompt(_('Vyberte možnost'));
+        return $control;
     }
     
 }
