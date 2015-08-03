@@ -94,6 +94,11 @@ class PersonFactory {
      * @var AddressFactory
      */
     private $addressFactory;
+    
+    /**
+     * @var FlagFactory
+     */
+    private $flagFactory;
 
     /**
      *
@@ -101,12 +106,13 @@ class PersonFactory {
      */
     private $yearCalculator;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, YearCalculator $yearCalculator) {
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, YearCalculator $yearCalculator) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
         $this->servicePerson = $servicePerson;
         $this->addressFactory = $addressFactory;
+        $this->flagFactory = $flagFactory;
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -138,6 +144,10 @@ class PersonFactory {
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
+        } 
+        else if ($sub == 'person_has_flag') {
+            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+            return $control;
         } else {
             $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
             $control = call_user_func(array($this, $methodName), $acYear);
