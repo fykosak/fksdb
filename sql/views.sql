@@ -108,7 +108,7 @@ create or replace view v_aesop_person as (
             null)) as `end-year`,
             pi.email as email,
             if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null)) as `spam-flag`,
-            date(phf.modified) as `spam-date`,
+            DATE_FORMAT(phf.modified, '%Y-%m-%d') as `spam-date`, -- returns varchar instead of function date()
             p.person_id as `x-person_id`,
             pi.birthplace as `x-birthplace`,
             ph.ac_year as `x-ac_year`
