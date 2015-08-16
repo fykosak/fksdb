@@ -42,7 +42,7 @@ parameters:
                 origin: false
                 agreed: false
             person_has_flag:
-                spam_mff: false
+                spam_mff: true
 
         adminOrg:
             person:
