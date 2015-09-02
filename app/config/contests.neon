@@ -18,6 +18,8 @@ parameters:
                 email: true
                 origin: false
                 agreed: true
+            person_has_flag:
+                spam_mff: false
         adminContestant:
             person:
                 other_name: true
@@ -71,6 +73,8 @@ parameters:
                 phone_parent_d: false  
                 origin: false
                 agreed: true
+            person_has_flag:
+                spam_mff: false
         adminContestant:
             person:
                 other_name: true

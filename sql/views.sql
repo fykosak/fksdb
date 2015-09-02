@@ -108,7 +108,7 @@ create or replace view v_aesop_person as (
             null)) as `end-year`,
             pi.email as email,
             if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null)) as `spam-flag`,
-            date(phf.created) as `spam-date`,
+            DATE_FORMAT(phf.modified, '%Y-%m-%d') as `spam-date`, -- returns varchar instead of function date()
             p.person_id as `x-person_id`,
             pi.birthplace as `x-birthplace`,
             ph.ac_year as `x-ac_year`
@@ -121,7 +121,7 @@ create or replace view v_aesop_person as (
     left join address sa on sa.address_id = s.address_id
     left join region sar on sar.region_id = sa.region_id
     left join person_info pi on pi.person_id = p.person_id
-    left join flag f on f.fid = 'spam.mff'
+    left join flag f on f.fid = 'spam_mff'
     left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id
 );
 

@@ -5,6 +5,7 @@ namespace Authorization\Assertions;
 use Nette\InvalidStateException;
 use Nette\Security\Permission;
 use Nette\Security\User;
+use Nette\Security\IResource;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -37,6 +38,10 @@ class OwnerAssertion {
         }
 
         $submit = $acl->getQueriedResource();
+        
+        if (!$submit instanceof IResource) {
+            return false;
+        }
         return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getId();
     }
 
