@@ -4,6 +4,7 @@
 services:
     AddressFactory:     FKSDB\Components\Forms\Factories\AddressFactory
     EventFactory:       FKSDB\Components\Forms\Factories\EventFactory
+    FlagFactory:        FKSDB\Components\Forms\Factories\FlagFactory
     LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
     OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory

@@ -2,6 +2,7 @@
 
 namespace Persons;
 
+use Nette\DateTime;
 use FKS\Components\Forms\Controls\IReferencedHandler;
 use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
@@ -16,6 +17,7 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
+use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -46,6 +48,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @var ServiceMPostContact
      */
     private $serviceMPostContact;
+    
+    /**
+     * @var ServiceMPersonHasFlag
+     */
+    private $serviceMPersonHasFlag;
 
     /**
      * @var int
@@ -57,11 +64,12 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $resolution;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, $acYear, $resolution) {
+    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag, $acYear, $resolution) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
+        $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
     }
@@ -99,6 +107,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
              * Person & its extensions
              */
 
+            
             $models = array(
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
@@ -113,8 +122,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             );
-
+            
             $originalModels = array_keys(iterator_to_array($data));
+            
+            $this->prepareFlagServices($data, $services);
+            $this->prepareFlagModels($person, $data, $models);
 
             $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
@@ -223,6 +235,30 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     break;
             }
         }
+    }
+    
+    private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
+        if (!isset($data['person_has_flag'])) {
+            return;
+        }
+        
+        foreach ($data['person_has_flag'] as $fid => $value) {
+            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
+            
+            $data[$fid] = new ArrayHash();
+            $data[$fid]['value'] = $value;
+        }
+        unset($data['person_has_flag']);
+    }
+    
+    private function prepareFlagServices(ArrayHash &$data, &$services) {
+        if (!isset($data['person_has_flag'])) {
+            return;
+        }
+        
+        foreach ($data['person_has_flag'] as $fid => $value) {
+            $services[$fid] = $this->serviceMPersonHasFlag;
+        }        
     }
 
     private function beginTransaction() {

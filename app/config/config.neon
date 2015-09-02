@@ -129,6 +129,7 @@ parameters:
         locales:
             cs: cs_CZ.utf-8
             en: en_US.utf-8
+            sk: sk_SK.utf-8
 
         # where locale files are stored
         localeDir: %appDir%/../i18n/locale
