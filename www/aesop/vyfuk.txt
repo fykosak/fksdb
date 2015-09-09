@@ -16,3 +16,4 @@
 ../vyfuk4/q/aesop.ct?ha=1&format=aesop&p_category=7
 ../vyfuk4/q/aesop.ct?ha=1&format=aesop&p_category=8
 ../vyfuk4/q/aesop.ct?ha=1&format=aesop&p_category=9
+../vyfuk4/q/aesop.tabor?ha=1&format=aesop
