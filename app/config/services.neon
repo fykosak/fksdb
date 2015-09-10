@@ -18,6 +18,7 @@ services:
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     - FKS\Config\GlobalParameters
     yearCalculator: YearCalculator
+    news: News
     seriesCalculator: SeriesCalculator
     - SQLResultsCache
     - Submits\SeriesTable

@@ -31,6 +31,15 @@ parameters:
     fykos:
         # Allow forward registrations
         forwardRegistration: true
+        # Temporary messages to dashboard
+	# news:
+	#     - cs:
+	#         - msg1
+	#         - msg2
+	#     - sk:
+	#         - dfads
+	#     - en:
+	#         - dfsadfsd
     vyfuk:
         forwardRegistration: %fykos.forwardRegistration%
 
