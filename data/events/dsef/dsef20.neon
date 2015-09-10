@@ -17,7 +17,7 @@ parameters:
 events:
     dsef20:
         event_type_id: 2
-        eventYears: [20,21]
+        eventYears: [20]
         tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
