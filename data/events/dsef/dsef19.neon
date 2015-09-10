@@ -2,7 +2,7 @@ parameters:
     events:
         dsef19:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc před akcí (tj. z 12.2. na 13.2.).'
+            accomodation: 'Noc před akcí (tj. z 8. 11. 2015 na 9. 11. 2015). Cena ubytovaní je stanovena na 100 Kč.'
             person:
                 person:
                     other_name: true
@@ -17,7 +17,7 @@ parameters:
 events:
     dsef19:
         event_type_id: 2
-        eventYears: [19]
+        eventYears: [19,21]
         tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
