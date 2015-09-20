@@ -211,7 +211,7 @@ class EventsExtension extends CompilerExtension {
             $method->addBody($indent . 'break;');
         }
         $method->addBody('default:');
-        $method->addBody('throw new Nette\InvalidArgumentException("Unknown event_type_id $eventTypeId for event year $eventYear.");');
+        $method->addBody('throw new Events\UndeclaredEventException("Unknown event_type_id $eventTypeId for event year $eventYear.");');
         $method->addBody($indent . '}');
         $method->addBody('}');
     }
