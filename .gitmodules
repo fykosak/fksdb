@@ -18,4 +18,4 @@
 	url = https://github.com/strathausen/dracula.git
 [submodule "tester"]
 	path = tester
-	url = git@github.com:nette/tester.git
+	url = https://github.com/nette/tester.git

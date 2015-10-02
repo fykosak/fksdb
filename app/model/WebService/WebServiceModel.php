@@ -66,7 +66,7 @@ class WebServiceModel {
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
-     * 
+     *
      * @param stdClass $args
      * @throws SoapFault
      */
@@ -126,6 +126,8 @@ class WebServiceModel {
             }
         }
 
+        // This type of call is deprecated (2015-10-02), when all possible callers
+        // are notified about it, change it to SoapFault exception.
         if (isset($args->brojure)) {
             $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
 
@@ -133,6 +135,22 @@ class WebServiceModel {
             foreach ($series as $seriesSingle) {
                 $resultsModel->setListedSeries($seriesSingle);
                 $resultsModel->setSeries(range(1, $seriesSingle));
+                $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
+            }
+        }
+
+        if (isset($args->brojures)) {
+            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
+
+            if (!is_array($args->brojures->brojure)) {
+                $args->brojures->brojure = array($args->brojures->brojure);
+            }
+
+            foreach ($args->brojures->brojure as $brojure) {
+                $series = explode(' ', $brojure);
+                $listedSeries = $series[count($series) - 1];
+                $resultsModel->setListedSeries($listedSeries);
+                $resultsModel->setSeries($series);
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
             }
         }
