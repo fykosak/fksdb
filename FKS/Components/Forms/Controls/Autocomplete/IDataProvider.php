@@ -20,6 +20,13 @@ interface IDataProvider {
      * @param mixed $id
      */
     public function getItemLabel($id);
+
+    /**
+     * Provider may or may not use knowledge of this update.
+     * 
+     * @param mixed id
+     */
+    public function setDefaultValue($id);
 }
 
 ?>

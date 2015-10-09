@@ -48,5 +48,10 @@ class ArrayProvider implements IFilteredDataProvider {
         return $this->data;
     }
 
+    public function setDefaultValue($id) {
+        /* intentionally blank */
+    }
+
+
 //put your code here
 }

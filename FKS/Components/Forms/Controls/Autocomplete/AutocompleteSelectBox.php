@@ -105,6 +105,7 @@ class AutocompleteSelectBox extends TextBase {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
         $this->dataProvider = $dataProvider;
+	$this->dataProvider->setDefaultValue($this->getValue());
     }
 
     public function getControl() {
@@ -174,6 +175,9 @@ class AutocompleteSelectBox extends TextBase {
                 $this->value = $value;
             }
         }
+	if ($this->dataProvider) {
+            $this->dataProvider->setDefaultValue($this->value);
+	}
     }
 
     public function getValue() {
