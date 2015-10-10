@@ -17,6 +17,7 @@ $(function() {
 
             var ajax = elVal.data('ac-ajax');
             var multiselect = elVal.data('ac-multiselect');
+	    var defaultValue = elVal.val();
             var defaultText = elVal.data('ac-default-value');
             var renderMethod = elVal.data('ac-render-method');
 
@@ -52,6 +53,26 @@ $(function() {
             var termFunction = function(arg) {
                 return arg;
             };
+	    // ensures default value is always suggested (needed for AJAX)
+	    var conservationFunction = function(data) {
+               if (!defaultText) {
+                   return data;
+	       }
+               var found = false;
+               for (var i in data) {
+                   if (data[i].value == defaultValue) {
+                       found = true;
+		       break;
+		   }
+	       } 
+	       if (!found) {
+                   data.push({
+                       label: defaultText,
+		       value: defaultValue
+		   });
+	       }
+	       return data;
+	    }
             if (multiselect) {
                 termFunction = extractLast;
             }
@@ -66,6 +87,7 @@ $(function() {
                         return;
                     }
                     $.getJSON(elVal.data('ac-ajax-url'), {acQ: term}, function(data, status, xhr) {
+                        data = conservationFunction(data);
                         cache[ term ] = data;
                         response(data);
                     });

@@ -180,6 +180,13 @@ class AutocompleteSelectBox extends TextBase {
 	}
     }
 
+    public function setDefaultValue($value) {
+    	if ($this->dataProvider) {
+            $this->dataProvider->setDefaultValue($value);
+	}
+	return parent::setDefaultValue($value);
+    }
+
     public function getValue() {
         return $this->value;
     }
