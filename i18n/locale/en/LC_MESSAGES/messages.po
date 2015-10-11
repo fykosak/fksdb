@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-08-23 22:05+0200\n"
-"PO-Revision-Date: 2014-11-30 19:18+0100\n"
+"PO-Revision-Date: 2015-10-11 21:23+0100\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
-"Language: English\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:161
@@ -1820,7 +1820,7 @@ msgstr "Contact address"
 
 #: ../data/events/fol.neon.neon2php:88
 msgid "Pro zaslání případné odměny."
-msgstr "To send potential prize. (CR/SR only.)"
+msgstr "To send potential prize. (For Czechs and Slovaks only.)"
 
 #: ../data/events/fol.neon.neon2php:90
 msgid "Herní heslo"
