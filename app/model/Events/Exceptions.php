@@ -3,7 +3,9 @@
 namespace Events;
 
 use Events\Machine\Transition;
+use Nette\InvalidArgumentException;
 use RuntimeException;
+use Traversable;
 
 class MachineExecutionException extends RuntimeException {
     
@@ -56,4 +58,8 @@ class SubmitProcessingException extends RuntimeException {
 
 class TransitionOnExecutedException extends MachineExecutionException {
     
+}
+
+class UndeclaredEventException extends InvalidArgumentException {
+	
 }

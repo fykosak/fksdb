@@ -63,6 +63,7 @@
 ../fykos28/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
 ../fykos28/q/aesop.klani.uc?ha=1&format=aesop
 ../fykos28/q/aesop.dsef?ha=1&format=aesop
+../fykos28/q/aesop.dsef2?ha=1&format=aesop
 ../fykos28/q/aesop.tsaf?ha=1&format=aesop
 ../fykos28/q/aesop.vaf?ha=1&format=aesop
 ../fykos28/q/aesop.sous.j?ha=1&format=aesop

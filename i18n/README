@@ -3,7 +3,7 @@ Workflow
 
 1) Write source code with _, gettext and other recognized functions.
 2) Run extract.sh, it will create/update messages.po files per each language.
-3) Translate messages.po files
+3) Translate messages.po files (e.g. with poedit)
 4) Run compile.sh to build messages.mo files
 5) Goto 1)
 

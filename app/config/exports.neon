@@ -14,6 +14,8 @@ parameters:
                 aesop: _(Uložit AESOP) # format name -> GUI label
             aesop.dsef:
                 aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.dsef2:
+                aesop: _(Uložit AESOP) # format name -> GUI label
             aesop.tsaf:
                 aesop: _(Uložit AESOP) # format name -> GUI label
             aesop.vaf:
@@ -26,6 +28,12 @@ parameters:
                 aesop: _(Uložit AESOP) # format name -> GUI label
             aesop.klani.uc:
                 aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.tabor:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.setkani.j:
+                aesop: _(Uložit AESOP) # format name -> GUI label
+            aesop.setkani.p:
+                aesop: _(Uložit AESOP) # format name -> GUI label
 
         # Specifies parameters per each format in general
         formats:
@@ -37,6 +45,8 @@ parameters:
                     idMask: '%%s.FoL.%3$s' # sprintf mask: contestName, year, category
                 aesop.dsef:
                     idMask: '%%s.dsef' # sprintf mask: contestName, year, category
+                aesop.dsef2:
+                    idMask: '%%s.dsef2' # sprintf mask: contestName, year, category
                 aesop.tsaf:
                     idMask: '%%s.tsaf' # sprintf mask: contestName, year, category
                 aesop.vaf:
@@ -49,3 +59,9 @@ parameters:
                     idMask: '%%s.fyziklani.%3$s' # sprintf mask: contestName, year, category
                 aesop.klani.uc:
                     idMask: '%%s.fyziklani.ucitele' # sprintf mask: contestName, year, category
+                aesop.tabor:
+                    idMask: '%%s.tabor' # sprintf mask: contestName, year, category
+                aesop.setkani.j:
+                    idMask: '%%s.setkani.jaro' # sprintf mask: contestName, year, category
+                aesop.setkani.p:
+                    idMask: '%%s.setkani.podzim' # sprintf mask: contestName, year, category

@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-23 22:05+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2015-08-23 22:10+0200\n"
+"PO-Revision-Date: 2015-08-23 22:20+0100\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.7.5\n"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:161
 msgid "Bez souhlasu nelze bohužel pokračovat."
@@ -32,15 +32,15 @@ msgstr ""
 #: ../app/Components/Grids/OrgsGrid.php:50
 #: ../app/Components/Grids/ContestantsGrid.php:41
 msgid "Jméno"
-msgstr ""
+msgstr "Meno"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:189
 msgid "Příjmení"
-msgstr ""
+msgstr "Priezvisko"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:193
 msgid "Zobrazované jméno"
-msgstr ""
+msgstr "Zobrazované meno"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:194
 msgid "Pouze pokud je odlišené od \"jméno příjmení\"."
@@ -48,11 +48,11 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:198
 msgid "Pohlaví"
-msgstr ""
+msgstr "Pohlavie"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:207
 msgid "Datum narození"
-msgstr ""
+msgstr "Dátum narodenia"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:211
 msgid "Číslo OP"
@@ -142,11 +142,11 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:289
 msgid "Jak jsi se o nás dozvěděl(a)?"
-msgstr ""
+msgstr "Ako si sa o nás dozvedel(a)?"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:294
 msgid "Text souhlasu"
-msgstr ""
+msgstr "Text súhlasu"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:295
 msgid "http://fykos.cz/doc/souhlas.pdf"
@@ -154,7 +154,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:297
 msgid "Souhlasím se zpracováním osobních údajů"
-msgstr ""
+msgstr "Súhlasím so spracovaním osobných údajov"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:302
 #: ../app/Components/Forms/Factories/ReferencedPersonFactory.php:243
@@ -199,11 +199,11 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:337
 msgid "Zvolit ročník"
-msgstr ""
+msgstr "Zvoliť ročník"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:347
 msgid "Třída"
-msgstr ""
+msgstr "Trieda"
 
 #: ../app/Components/Forms/Factories/ReferencedPersonFactory.php:109
 msgid "Doručovací adresa"
@@ -305,7 +305,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/EventFactory.php:81
 msgid "Zvolit typ"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:36
 msgid "Název dotazu je třeba vyplnit."
@@ -446,7 +446,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:65
 msgid "Místo"
-msgstr ""
+msgstr "Miesto"
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:67
 msgid "Typicky ulice a číslo popisné."
@@ -459,7 +459,7 @@ msgstr ""
 #: ../app/Components/Forms/Factories/AddressFactory.php:76
 #: ../app/Components/Grids/SchoolsGrid.php:47
 msgid "Město"
-msgstr ""
+msgstr "Město"
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:80
 msgid "Adresa musí mít vyplněné město."
@@ -475,7 +475,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:93
 msgid "Stát"
-msgstr ""
+msgstr "Štát"
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:95
 msgid "Určit stát dle PSČ"
@@ -512,6 +512,7 @@ msgstr ""
 #: ../app/Components/Forms/Factories/FlagFactory.php:37
 msgid "Přeji si dostávat informace o dění na MFF a akcích, které pořádáme"
 msgstr ""
+"Prajem si dostávať informácie o dianí na MFF a akciách, ktoré usporadúvame"
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:31
 msgid "Přihlašovací jméno"
@@ -1087,7 +1088,7 @@ msgstr ""
 #: ../app/PublicModule/presenters/RegisterPresenter.php:162
 #, php-format
 msgid "%s – registrace řešitele (%s. ročník)"
-msgstr ""
+msgstr "%s – registrácia rešiteľa (%s. ročník)"
 
 #: ../app/PublicModule/presenters/RegisterPresenter.php:209
 msgid "Registrovat"
@@ -1525,7 +1526,7 @@ msgstr ""
 
 #: ../app/presenters/AuthenticationPresenter.php:160
 msgid "Stránka požaduje přihlášení."
-msgstr ""
+msgstr "Stránka požaduje prihlásenie."
 
 #: ../app/presenters/AuthenticationPresenter.php:192
 msgid "Login"
@@ -1547,7 +1548,7 @@ msgstr ""
 
 #: ../app/presenters/AuthenticationPresenter.php:241
 msgid "Přihlásit"
-msgstr ""
+msgstr "Prihlásiť"
 
 #: ../app/presenters/AuthenticationPresenter.php:260
 msgid "Pokračovat"
@@ -1594,15 +1595,15 @@ msgstr ""
 
 #: ../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:19
 msgid "Jsi robot?"
-msgstr ""
+msgstr "Si robot?"
 
 #: ../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:20
 msgid "ne"
-msgstr ""
+msgstr "nie"
 
 #: ../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:21
 msgid "ano"
-msgstr ""
+msgstr "áno"
 
 #: ../libs/libfks/FKS/Components/Forms/Controls/CaptchaBox.php:26
 msgid "Tento formulář je jenom pro lidi."
@@ -1656,7 +1657,7 @@ msgstr ""
 #: ../app/PublicModule/templates/Application/contestChooser.latte.latte2php:2
 #: ../app/PublicModule/templates/Register/contestChooser.latte.latte2php:2
 msgid "Zvolit seminář"
-msgstr ""
+msgstr "Zvoliť seminár"
 
 #: ../app/PublicModule/templates/Register/languageChooser.latte.latte2php:2
 msgid "Zvolit jazyk"
@@ -1684,7 +1685,7 @@ msgstr ""
 
 #: ../app/templates/@layout.latte.latte2php:50
 msgid "Odhlásit"
-msgstr ""
+msgstr "Odhlásiť"
 
 #: ../app/templates/@layout.latte.latte2php:78
 msgid "Správce systému"
@@ -1692,11 +1693,11 @@ msgstr ""
 
 #: ../app/templates/Authentication/login.latte.latte2php:25
 msgid "Registrace"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/templates/Authentication/login.latte.latte2php:27
 msgid "Zapomenuté heslo"
-msgstr ""
+msgstr "Zabudnuté heslo"
 
 #: ../app/templates/Error/404.latte.latte2php:5
 msgid "Požadovaná stránka neexistuje."
