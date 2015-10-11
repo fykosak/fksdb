@@ -22,6 +22,14 @@ class SchoolProvider implements IFilteredDataProvider {
      */
     private $serviceSchool;
 
+    /**
+     * School with school_id equal to defaulValue is suggested even when it's not
+     * active.
+     * 
+     * @var int
+     */
+    private $defaultValue;
+
     function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -40,6 +48,12 @@ class SchoolProvider implements IFilteredDataProvider {
         foreach ($tokens as $token) {
             $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
         }
+	// For backwards compatibility consider NULLs active
+	if ($this->defaultValue != null) {
+	    $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
+	} else {
+	    $schools->where('active IS NULL OR active = 1');
+	}
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
@@ -70,6 +84,10 @@ class SchoolProvider implements IFilteredDataProvider {
             self::LABEL => $school->name_abbrev,
             self::VALUE => $school->school_id,
         );
+    }
+
+    public function setDefaultValue($id) {
+        $this->defaultValue = $id;
     }
 
 }
