@@ -184,7 +184,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
-                $controlModifiable = $realValue ? $modifiable : true;
+                $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteonly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
