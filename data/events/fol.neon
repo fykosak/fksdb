@@ -9,6 +9,9 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
+                    born:
+                        required: false
+                        description: _('Pouze pro české a slovenské studenty.')
                 person_history:
                     school_id:
                         required: true
@@ -171,13 +174,13 @@ events:
                 - @events.captcha
                 - Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
                 - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
-#                - Events\Spec\Fol\CategoryVisibility(%events.fol.dep.visible%)
+                - Events\Spec\Fol\FlagCheck()
+                - Events\Spec\Fol\BornCheck()
 
 
             processings:
                 - Events\Spec\Fol\CategoryProcessing()
                 - Events\Spec\Fol\PasswordProcessing()
-                - Events\Spec\Fol\FlagProcessing()
                 - @events.privacyPolicy
 
             joins:
