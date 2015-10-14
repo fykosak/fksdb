@@ -91,4 +91,8 @@ class PersonProvider implements IFilteredDataProvider {
         );
     }
 
+    public function setDefaultValue($id) {
+        /* intentionally blank */
+    }
+
 }

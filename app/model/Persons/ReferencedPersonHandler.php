@@ -243,6 +243,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         }
         
         foreach ($data['person_has_flag'] as $fid => $value) {
+            if ($value === null) {
+                continue;
+            }
+            
             $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
             
             $data[$fid] = new ArrayHash();
