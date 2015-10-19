@@ -11,6 +11,9 @@ use PePa\CSVResponse;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CSVFormat extends Object implements IExportFormat {
+    
+    const DEFAULT_DELIMITER = ';';
+    const DEFAULT_QUOTE = false;
 
     /**
      * @var StoredQuery
@@ -20,7 +23,7 @@ class CSVFormat extends Object implements IExportFormat {
     private $quote;
     private $header;
 
-    function __construct(StoredQuery $storedQuery, $header, $delimiter = ';', $quote = false) {
+    function __construct(StoredQuery $storedQuery, $header, $delimiter = self::DEFAULT_DELIMITER, $quote = self::DEFAULT_QUOTE) {
         $this->storedQuery = $storedQuery;
         $this->delimiter = $delimiter;
         $this->quote = $quote;

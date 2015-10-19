@@ -108,7 +108,11 @@ class ExportFormatFactory extends Object {
     }
 
     private function createCSV(StoredQuery $storedQuery, $header) {
-        $format = new CSVFormat($storedQuery, $header);
+        $queryParameters = $storedQuery->getParameters(true);
+        $quote = Arrays::get($queryParameters, 'csv_quote', CSVFormat::DEFAULT_QUOTE);
+        $delimiter = Arrays::get($queryParameters, 'csv_delimiter', CSVFormat::DEFAULT_DELIMITER);
+        
+        $format = new CSVFormat($storedQuery, $header, $delimiter, $quote);
         return $format;
     }
 
