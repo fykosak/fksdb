@@ -21,6 +21,7 @@ class ExportFormatFactory extends Object {
     const AESOP = 'aesop';
     const CSV_HEADLESS = 'csv';
     const CSV_HEAD = 'csvh';
+    const CSV_QUOTE_HEAD = 'csvqh';
 
     /**
      * @var GlobalParameters
@@ -45,6 +46,7 @@ class ExportFormatFactory extends Object {
         $this->defaultFormats = array(
             self::CSV_HEAD => _('Uložit CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
+            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami')
         );
     }
 
@@ -62,6 +64,8 @@ class ExportFormatFactory extends Object {
                 return $this->createCSV($storedQuery, false);
             case self::CSV_HEAD:
                 return $this->createCSV($storedQuery, true);
+            case self::CSV_QUOTE_HEAD:
+                return $this->createCSV($storedQuery, true, true);
             default:
                 throw new InvalidArgumentException('Unknown format \'' . $name . '\'.');
         }
@@ -107,12 +111,8 @@ class ExportFormatFactory extends Object {
         return $format;
     }
 
-    private function createCSV(StoredQuery $storedQuery, $header) {
-        $queryParameters = $storedQuery->getParameters(true);
-        $quote = Arrays::get($queryParameters, 'csv_quote', CSVFormat::DEFAULT_QUOTE);
-        $delimiter = Arrays::get($queryParameters, 'csv_delimiter', CSVFormat::DEFAULT_DELIMITER);
-        
-        $format = new CSVFormat($storedQuery, $header, $delimiter, $quote);
+    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {        
+        $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
         return $format;
     }
 
