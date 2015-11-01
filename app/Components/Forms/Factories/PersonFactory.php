@@ -256,21 +256,7 @@ class PersonFactory {
                         ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
-    public function createTexSignature($acYear = null) {
-        $control = new TextInput(_('TeX identifikátor'));
-        $control->addRule(Form::MAX_LENGTH, null, 32)
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
-        return $control;
-    }
-
-    public function createDomainAlias($acYear = null) {
-        $control = new TextInput(_('Jméno v doméně fykos.cz'));
-        $control->addRule(Form::MAX_LENGTH, null, 32)
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
-        return $control;
-    }
+   
 
     public function createCareer($acYear = null) {
         return (new TextArea(_('Co právě dělá')))

@@ -51,8 +51,6 @@ parameters:
                 career: false
                 uk_login: false
                 account: false
-                tex_signature: false
-                domain_alias: false
                 homepage: false
                 note: false
 
@@ -107,8 +105,6 @@ parameters:
                 career: false
                 uk_login: false
                 account: false
-                tex_signature: false
-                domain_alias: false
                 homepage: false
                 note: false
                 phone_parent_m: false
