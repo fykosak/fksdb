@@ -14,17 +14,23 @@ parameters:
                     email: true
                     id_number: true
                     born: true
+                    
                     born_id: 
-                        required: %events.soustredeni.requiredCond%
+                        required: false
                         description: "Kvůli pojišťovně."
 #                    birthplace:
 #                        required: state('participated')
 #                        description: "..." TODO substitute default message (because of dimplomas)
                     phone:
-                        required: %events.soustredeni.requiredCond%
+                        required: true
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-                phone_parent_m: true
-                phone_parent_d: true 
+                    phone_parent_m: 
+                        required: true
+                        description: "Telefon na rodiče (i s předvolbou státu)."
+                    phone_parent_d: 
+                        required: false
+                        description: "Telefon na rodiče (i s předvolbou státu)."
+                
 events:
     setkani:
         event_type_id: [11,12]
