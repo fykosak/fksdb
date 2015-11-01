@@ -19,7 +19,7 @@ parameters:
                 origin: false
                 agreed: true
             person_has_flag:
-                spam_mff: false
+                spam_mff: true
         adminContestant:
             person:
                 other_name: true
@@ -41,6 +41,8 @@ parameters:
                 note: false
                 origin: false
                 agreed: false
+            person_has_flag:
+                spam_mff: false
 
         adminOrg:
             person:
@@ -51,8 +53,6 @@ parameters:
                 career: false
                 uk_login: false
                 account: false
-                tex_signature: false
-                domain_alias: false
                 homepage: false
                 note: false
 
@@ -74,7 +74,7 @@ parameters:
                 origin: false
                 agreed: true
             person_has_flag:
-                spam_mff: false
+                spam_mff: true
         adminContestant:
             person:
                 other_name: true
@@ -98,6 +98,8 @@ parameters:
                 phone_parent_d: false  
                 origin: false
                 agreed: false
+            person_has_flag:
+                spam_mff: false
         adminOrg:
             person:
                 other_name: true
@@ -107,8 +109,6 @@ parameters:
                 career: false
                 uk_login: false
                 account: false
-                tex_signature: false
-                domain_alias: false
                 homepage: false
                 note: false
                 phone_parent_m: false

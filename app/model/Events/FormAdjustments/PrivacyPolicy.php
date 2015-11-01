@@ -66,6 +66,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
                     $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                     if ($personInfo) {
                         $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
+			// This is done in ApplicationHandler transaction, still can be rolled back.
                         $this->servicePersonInfo->save($personInfo);
                         $values[$key . '_1']['person_info']['agreed'] = 1;
                     }

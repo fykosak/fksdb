@@ -9,6 +9,9 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
+                    born:
+                        required: false
+                        description: _('Pouze pro české a slovenské studenty.')
                 person_history:
                     school_id:
                         required: true
@@ -16,6 +19,10 @@ parameters:
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
+                person_has_flag:
+                    spam_mff: 
+                        required: false
+                        description: _('Pouze pro české a slovenské studenty.')
 
 
 events:
@@ -167,6 +174,8 @@ events:
                 - @events.captcha
                 - Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
                 - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
+                - Events\Spec\Fol\FlagCheck()
+                - Events\Spec\Fol\BornCheck()
 
 
             processings:

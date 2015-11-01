@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use Nette\Forms\Controls\Checkbox;
+use FKSDB\Components\Forms\Controls\PersonFlag;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Utils\Arrays;
@@ -12,7 +12,7 @@ use Nette\Utils\Arrays;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class FlagFactory {
-    
+
     public function createFlag($fid, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
         $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fid)));
         $control = call_user_func(array($this, $methodName), $acYear);
@@ -34,7 +34,8 @@ class FlagFactory {
     }
     
     public function createSpamMff($acYear = null) {
-        return (new Checkbox(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme')));
+        $control = new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
+        return $control;
     }
     
 }

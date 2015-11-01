@@ -24,8 +24,9 @@ jQuery(function($) {
 
 /* Enable in forms */
 $(document).ready(function() {
-    $("input.date").each(function() { // input[type=date] does not work in IE
+    $("input.date").not('.datepicker-obslouzen').each(function() { // input[type=date] does not work in IE
         var el = $(this);
+        $(this).addClass('datepicker-obslouzen');
 
         var minDate = el.attr("min") || null;
         if (minDate)

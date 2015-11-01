@@ -2,6 +2,7 @@
 
 namespace Events\Model\Grid;
 
+use Events\UndeclaredEventException;
 use ModelEvent;
 use ModelPerson;
 use ORM\Tables\TypedTableSelection;
@@ -32,7 +33,12 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 
-        $eventSource = new SingleEventSource($event, $this->container);
+	try {
+            $eventSource = new SingleEventSource($event, $this->container);
+	} catch (UndeclaredEventException $e) {
+	    return null;
+	}
+
 
         $subconditions = array();
         $count = 0;
