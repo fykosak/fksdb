@@ -12,7 +12,6 @@ parameters:
                     school_id: true
                 person_info:
                     email: true
-                    id_number: true
                     born: true
                     phone_parent_m: false
                     phone_parent_d: false 
