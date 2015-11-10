@@ -14,22 +14,30 @@ parameters:
                     email: true
                     id_number: true
                     born: true
-                    
-                    born_id: 
-                        required: false
-                        description: "Kvůli pojišťovně."
-#                    birthplace:
-#                        required: state('participated')
-#                        description: "..." TODO substitute default message (because of dimplomas)
+                    phone_parent_m: false
+                    phone_parent_d: false 
                     phone:
                         required: true
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-                    phone_parent_m: 
-                        required: true
-                        description: "Telefon na rodiče (i s předvolbou státu)."
-                    phone_parent_d: 
-                        required: false
-                        description: "Telefon na rodiče (i s předvolbou státu)."
+            tshirt:
+                size:
+                    M_S: S pánské
+                    M_M: M pánské
+                    M_L: L pánské
+                    M_XL: XL pánské
+                    M_XXL: XXL pánské
+                    F_S: S dámské
+                    F_M: M dámské
+                    F_L: L dámské
+                    F_XL: XL dámské
+                color:
+                    red: Červené
+                    green: Zelené
+                    blue: Modré
+                    orange: Oranžové
+                    black: Černé
+                   
+                    
                 
 events:
     setkani:
@@ -51,20 +59,16 @@ events:
                 
                 states:
                     applied: Přihlášen
-                    spare: Náhradník
                     participated: Účastnil se
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
-                    __init->spare:
+                    __init->applied:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
-                        label: Přihlásit náhradníka
+                        label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(confirmation, .self)
-                    spare->applied:
-                        condition: role('admin')
-                        label: Nasadit náhradníka
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
@@ -72,7 +76,7 @@ events:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    spare|applied->cancelled:
+                    applied->cancelled:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: Zrušit přihlášku
                         dangerous: true
@@ -91,6 +95,14 @@ events:
                         label: 'Jakou barvu má Výfuček?'
                         required: true
                         modifiable: %events.setkani.appCond%
+                    tshirt_size:
+                        label: "Jaké triko nosíš?"
+                        required: true
+                        factory: Chooser("Zvolit velikost", Options(%events.setkani.tshirt.size%))
+                    tshirt_color:
+                        label: "Jakou barvu trika bys chtel?"
+                        required: false
+                        factory: Chooser("Zvolit barvu", Options(%events.setkani.tshirt.color%))
                     diet:
                         label: Jídlo
                         description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
