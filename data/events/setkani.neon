@@ -34,7 +34,15 @@ parameters:
                     green: Zelené
                     blue: Modré
                     orange: Oranžové
-                    black: Černé
+                    pink: Ružové
+            arrival:
+                destination:
+                    uan: "ÚAN Florenc"
+                    hln: "Hlavní nádraží"
+                    obj: "Objekt"
+                time:
+                    start: 16:00
+                    end: 18:00
                    
                     
                 
@@ -94,6 +102,20 @@ events:
                         label: 'Jakou barvu má Výfuček?'
                         required: true
                         modifiable: %events.setkani.appCond%
+                    arrival_destination:
+                       label: "Na jaké místo příjedeš?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                    arrival_time:
+                       label: "Predpokladaný přijezd"
+                       description: "Čas prijezdu" 
+                    departure_destination:
+                       label: "Z jakého místa chceš odjiždet?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                    departure_time:
+                       label: "Predpokladaný odjezd"
+                       description: "Čas odjezdu" 
                     tshirt_size:
                         label: "Jaké triko nosíš?"
                         required: true
