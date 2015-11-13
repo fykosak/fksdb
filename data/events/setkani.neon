@@ -17,7 +17,7 @@ parameters:
                     phone_parent_d: false 
                     phone:
                         required: true
-                        description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
+                        description: "Telefon (i s předvolbou státu), který budeš mít s sebou."
             tshirt:
                 size:
                     M_S: S pánské
@@ -103,27 +103,27 @@ events:
                         required: true
                         modifiable: %events.setkani.appCond%
                     arrival_destination:
-                       label: "Na jaké místo příjedeš?"
+                       label: "Na jaké místo přIjedeš?"
                        required: true
                        factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     arrival_time:
-                       label: "Predpokladaný přijezd"
-                       description: "Čas prijezdu" 
+                       label: "Předpokládaný přijezd"
+                       description: "Čas přijezdu" 
                     departure_destination:
-                       label: "Z jakého místa chceš odjiždet?"
+                       label: "Z jakého místa chceš odjíždět?"
                        required: true
                        factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     departure_time:
-                       label: "Predpokladaný odjezd"
+                       label: "Předpokládaný odjezd"
                        description: "Čas odjezdu" 
                     tshirt_size:
-                        label: "Jaké triko nosíš?"
+                        label: "Jaké tričko nosíš?"
                         required: true
-                        factory: Chooser("Zvolit velikost", Options(%events.setkani.tshirt.size%))
+                        factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
                     tshirt_color:
-                        label: "Jakou barvu trika bys chtel?"
+                        label: "Jakou barvu trička bys chtěl?"
                         required: false
-                        factory: Chooser("Zvolit barvu", Options(%events.setkani.tshirt.color%))
+                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
                     diet:
                         label: Jídlo
                         description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
