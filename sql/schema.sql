@@ -641,6 +641,7 @@ CREATE TABLE IF NOT EXISTS `task_contribution` (
   `person_id` INT(11) NOT NULL,
   `type` ENUM('author', 'solution', 'grade') NOT NULL,
   PRIMARY KEY (`contribution_id`),
+  UNIQUE INDEX `person_id_task_id_type` (`person_id`,`task_id`,`type`),
   INDEX `fk_org_task_contribution_task1_idx` (`task_id` ASC),
   INDEX `fk_task_contribution_person1_idx` (`person_id` ASC),
   CONSTRAINT `fk_org_task_contribution_task1`
@@ -674,6 +675,9 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `phone` VARCHAR(30) NULL,
   `note` TEXT NULL,
   `password` CHAR(40) NULL,
+  `points` INT(11) NULL,
+  `rank_category` INT(11) NULL,
+  `rank_total` INT(11) NULL,
   PRIMARY KEY (`e_fyziklani_team_id`),
   INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
   INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),
