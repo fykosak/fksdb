@@ -97,7 +97,7 @@ create or replace view v_aesop_person as (
             if(pi.born is null, null, concat(year(pi.born), '-', lpad(month(pi.born), 2, '0'), '-', lpad(day(pi.born), 2, '0'))) as born,
 
             coalesce(
-                if(sar.country_iso = 'cz', concat('izo:', s.izo), null),
+                if(sar.country_iso = 'cz', concat('red-izo:', s.izo), null),
                 if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
                 null, -- TODO AESOP id
                 if(s.school_id is null, null, 'ufo')
