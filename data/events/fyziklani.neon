@@ -2,7 +2,7 @@ parameters:
     events:
         fyziklani:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Noc před soutěží (tj. z 12.2. na 13.2.).'
+            accomodation: 'Hostel Elf -- Noc před soutěží (tj. z 11.2. na 12.2.).'
             teacher:
                 person:
                     other_name: true
