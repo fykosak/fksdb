@@ -9,6 +9,16 @@ use Nette\Utils\Arrays;
 class YearCalculator extends Object {
 
     /**
+     * @const No. of years of shift for forward registration.
+     */
+    const FORWARD_SHIFT = 1;
+
+    /**
+     * @const First month of the academic year (for high schoolers).
+     */
+    const FIRST_AC_MONTH = 9;
+
+    /**
      * @var ServiceContestYear
      */
     private $serviceContestYear;
@@ -42,7 +52,7 @@ class YearCalculator extends Object {
     }
 
     /**
-     * The academic year starts at September 1. (for high schoolers)
+     * The academic year starts at 1st day of self::FIRST_AC_MONTH.
      * @return int
      */
     public function getCurrentAcademicYear() {
@@ -51,7 +61,7 @@ class YearCalculator extends Object {
         }
         $calYear = date('Y');
         $calMonth = date('m');
-        if ($calMonth < 9) {
+        if ($calMonth < self::FIRST_AC_MONTH) {
             $calYear -= 1;
         }
         return $calYear;
@@ -93,9 +103,17 @@ class YearCalculator extends Object {
      */
     public function getForwardShift(ModelContest $contest) {
         $calMonth = date('m');
-        if ($calMonth < 9) {
+        if ($calMonth < self::FIRST_AC_MONTH) {
             $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
-            return $this->globalParameters[$contestName]['forwardRegistration'] ? 1 : 0;
+            $forwardYear = $this->getCurrentYear($contest) + self::FORWARD_SHIFT;
+            $hasForwardYear = isset($this->cache[$contest->contest_id]) && isset($this->cache[$contest->contest_id][$forwardYear]);
+
+            /* Apply the forward shift only when the appropriate year is defined in the database */
+            if ($this->globalParameters[$contestName]['forwardRegistration'] && $hasForwardYear) {
+                return self::FORWARD_SHIFT;
+            } else {
+                return 0;
+            }
         } else {
             return 0;
         }
