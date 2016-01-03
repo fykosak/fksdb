@@ -48,13 +48,20 @@ parameters:
             person:
                 other_name: true
                 family_name: true
+            post_contact_d:
+                address: false
+            post_contact_p:
+                address: false
             person_info:
                 email: false
+                phone: false
                 career: false
                 uk_login: false
                 account: false
                 homepage: false
                 note: false
+                born_id: false
+                id_number: false
 
      vyfuk:
         registerContestant:

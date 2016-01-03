@@ -12,7 +12,10 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-
+    
+    /** @persistent string */
+    public $searchTerm;
+    
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
@@ -30,8 +33,11 @@ abstract class BaseGrid extends Grid {
 
     public function render() {
         $paginator = $this->getPaginator();
-
+        
         // this has to be done already here (and in the parent call again :-( )
+        if($this->searchTerm) {
+            $this->dataSource->applyFilter($this->searchTerm);
+        }
         $count = $this->getCount();
         $this->getPaginator()->itemCount = $count;
         /*
@@ -71,11 +77,12 @@ abstract class BaseGrid extends Grid {
 
         $form = new Form();
         $form->setMethod(Form::GET);
-        $form->addText('term');
-
+        $form->addText('term')->setDefaultValue($this->searchTerm);
+        
         $that = $this;
         $form->onSuccess[] = function(Form $form) use($that) {
                     $values = $form->getValues();
+                    $that->searchTerm=$values['term'];
                     $that->dataSource->applyFilter($values['term']);
                     // TODO is this vv needed? vv
                     $count = $that->dataSource->getCount();
