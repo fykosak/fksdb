@@ -2,7 +2,7 @@ parameters:
     events:
         fyziklani:
             appCond: or(regOpen(), role('admin'))
-            accomodation: 'Hostel Elf -- Noc před soutěží (tj. z 11.2. na 12.2.).'
+            accomodation: 'Hostel Elf — Noc před soutěží (tj. z 11.2. na 12.2.).'
             teacher:
                 person:
                     other_name: true
@@ -10,6 +10,8 @@ parameters:
                 person_info:
                     email: true
                     id_number: false
+                person_has_flag:
+                    spam_mff: true
             participant:
                 person:
                     other_name: true
@@ -20,6 +22,8 @@ parameters:
                 person_history:
                     school_id: true
                     study_year: true
+                person_has_flag:
+                    spam_mff: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_accomodation
