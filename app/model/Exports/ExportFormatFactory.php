@@ -99,8 +99,14 @@ class ExportFormatFactory extends Object {
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
-            'max-rank' => $storedQuery->getCount(),
         ));
+        
+        // temporary 'bugfix' for team competition max-rank computation
+        if ($qid != 'aesop.fol' && $qid != 'aesop.klani.ct' && $qid != 'aesop.klani.uc') {
+            $format->addParameters(array(
+                'max-rank' => $storedQuery->getCount(),
+            ));
+        }
 
         if ($qid == 'aesop.ct') {
             $format->addParameters(array(
