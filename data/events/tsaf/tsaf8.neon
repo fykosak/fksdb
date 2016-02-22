@@ -33,7 +33,7 @@ parameters:
 events:
     tsaf8:
         event_type_id: 7
-        eventYears: [8]
+        eventYears: [5,6,8]
         tableLayout: event.grid
         formLayout: tsaf.form
         paramScheme:
