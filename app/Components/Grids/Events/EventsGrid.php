@@ -45,6 +45,7 @@ class EventsGrid extends BaseGrid {
         //
         // columns
         //
+        $this->addColumn('event_id', _('ID akce'));
         $this->addColumn('type_name', _('Typ akce'));
         $this->addColumn('name', _('Název'));
         $this->addColumn('year', _('Ročník semináře'));
