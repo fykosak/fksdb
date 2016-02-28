@@ -4,7 +4,7 @@
 {if !$control->isEventAdmin()}
 <ul>
     <li>
-        Potvrzením přihlášky se přihlašuješ <strong>na celý tábor</strong>.
+        Potvrzením přihlášky se závazně přihlašuješ <strong>na celý tábor</strong>.
     </li>
     <li n:if="$holder->getParameter('deadline1')">
         Uzávěrka pro vyjádření <strong>{$holder->getParameter('deadline1')|date:'j. n. Y H:i:s'}</strong>.
