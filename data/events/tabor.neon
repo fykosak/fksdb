@@ -9,7 +9,8 @@ parameters:
                     family_name: true
                 person_info:
                     email: true
-                    born: required: %events.tabor.requiredCond%                   
+                    born: 
+                        required: %events.tabor.requiredCond%                   
                     born_id: 
                         required: %events.tabor.requiredCond%
                         description: "Kvůli pojišťovně."
