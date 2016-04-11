@@ -37,9 +37,9 @@ parameters:
                     pink: Ružové
             arrival:
                 destination:
-                    uan: "ÚAN Florenc"
-                    hln: "Hlavní nádraží"
-                    obj: "Objekt"
+                    aut: "Autobusovy terminál"
+                    phl: "Hlavní nádraží"
+                    
                 time:
                     start: 16:00
                     end: 18:00
