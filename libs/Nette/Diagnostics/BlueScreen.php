@@ -41,10 +41,10 @@ class BlueScreen extends Nette\Object
 
 	/**
 	 * Renders blue screen.
-	 * @param  \Exception
+	 * @param  \Throwable (not enforced due to PHP < 7.0 compatibility
 	 * @return void
 	 */
-	public function render(\Exception $exception)
+	public function render($exception)
 	{
 		$panels = $this->panels;
 		require __DIR__ . '/templates/bluescreen.phtml';

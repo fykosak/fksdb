@@ -384,11 +384,11 @@ final class Debugger
 
 	/**
 	 * Handler to catch uncaught exception.
-	 * @param  \Exception
+	 * @param  \Throwable (not enforced due to PHP < 7.0 compatibility
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(\Exception $exception)
+	public static function _exceptionHandler($exception)
 	{
 		if (!headers_sent()) { // for PHP < 5.2.4
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
