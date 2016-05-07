@@ -22,346 +22,367 @@ use Nette\Application\UI\Presenter;
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
-    const FLASH_SUCCESS = 'success';
-    const FLASH_INFO = 'info';
-    const FLASH_WARNING = 'warning';
-    const FLASH_ERROR = 'danger';
+	const FLASH_SUCCESS = 'success';
 
-    /** @persistent  */
-    public $tld;
+	const FLASH_INFO = 'info';
 
-    /** @persistent */
-    public $lang;
+	const FLASH_WARNING = 'warning';
 
-    /**
-     * Backlink for tree construction for breadcrumbs.
-     * 
-     * @persistent
-     */
-    public $bc;
+	const FLASH_ERROR = 'danger';
 
-    /** @var YearCalculator  */
-    protected $yearCalculator;
+	/** @persistent  */
+	public $tld;
 
-    /** @var ServiceContest */
-    protected $serviceContest;
+	/** @persistent */
+	public $lang;
 
-    /** @var GlobalParameters     */
-    protected $globalParameters;
+	/**
+	 * Backlink for tree construction for breadcrumbs.
+	 *
+	 * @persistent
+	 */
+	public $bc;
 
-    /** @var BreadcrumbsFactory */
-    private $breadcrumbsFactory;
+	/** @var YearCalculator  */
+	protected $yearCalculator;
 
-    /** @var Navigation */
-    private $navigationControl;
+	/** @var ServiceContest */
+	protected $serviceContest;
 
-    /** @var PresenterBuilder */
-    private $presenterBuilder;
+	/** @var GlobalParameters     */
+	protected $globalParameters;
 
-    /**
-     * @var GettextTranslator
-     */
-    protected $translator;
+	/** @var BreadcrumbsFactory */
+	private $breadcrumbsFactory;
 
-    /**
-     * @var string|null
-     */
-    private $title = false;
+	/** @var Navigation */
+	private $navigationControl;
 
-    /**
-     * @var boolean
-     */
-    private $authorized = true;
+	/** @var PresenterBuilder */
+	private $presenterBuilder;
 
-    /**
-     * @var array[string] => bool
-     */
-    private $authorizedCache = array();
+	/**
+	 * @var GettextTranslator
+	 */
+	protected $translator;
 
-    /**
-     * @var string cache
-     */
-    private $_lang;
+	/**
+	 * @var string|null
+	 */
+	private $title = false;
 
-    public function getYearCalculator() {
-        return $this->yearCalculator;
-    }
+	/**
+	 * @var boolean
+	 */
+	private $authorized = true;
 
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-    }
+	/**
+	 * @var array[string] => bool
+	 */
+	private $authorizedCache = array();
 
-    public function getServiceContest() {
-        return $this->serviceContest;
-    }
+	/**
+	 * @var string cache
+	 */
+	private $_lang;
 
-    public function injectServiceContest(ServiceContest $serviceContest) {
-        $this->serviceContest = $serviceContest;
-    }
+	/**
+	 * @var FullHttpRequest
+	 */
+	private $fullRequest;
 
-    public function injectGlobalParameters(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
-    }
+	public function getYearCalculator() {
+		return $this->yearCalculator;
+	}
 
-    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
-        $this->breadcrumbsFactory = $breadcrumbsFactory;
-    }
+	public function injectYearCalculator(YearCalculator $yearCalculator) {
+		$this->yearCalculator = $yearCalculator;
+	}
 
-    public function injectNavigationControl(Navigation $navigationControl) {
-        $this->navigationControl = $navigationControl;
-    }
+	public function getServiceContest() {
+		return $this->serviceContest;
+	}
 
-    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
-        $this->presenterBuilder = $presenterBuilder;
-    }
+	public function injectServiceContest(ServiceContest $serviceContest) {
+		$this->serviceContest = $serviceContest;
+	}
 
-    public function injectTranslator(GettextTranslator $translator) {
-        $this->translator = $translator;
-    }
+	public function injectGlobalParameters(GlobalParameters $globalParameters) {
+		$this->globalParameters = $globalParameters;
+	}
 
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->translator);
-        $template->beta = $this->globalParameters['beta'];
-        return $template;
-    }
+	public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
+		$this->breadcrumbsFactory = $breadcrumbsFactory;
+	}
 
-    protected function startup() {
-        parent::startup();
-        $this->translator->setLang($this->getLang());
-    }
+	public function injectNavigationControl(Navigation $navigationControl) {
+		$this->navigationControl = $navigationControl;
+	}
 
-    /*     * ******************************
-     * Loading assets
-     * ****************************** */
+	public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
+		$this->presenterBuilder = $presenterBuilder;
+	}
 
-    protected function createComponentJsLoader($name) {
-        $component = new JavaScriptLoader();
-        return $component;
-    }
+	public function injectTranslator(GettextTranslator $translator) {
+		$this->translator = $translator;
+	}
 
-    protected function createComponentCssLoader($name) {
-        $component = new StylesheetLoader();
-        return $component;
-    }
+	protected function createTemplate($class = NULL) {
+		$template = parent::createTemplate($class);
+		$template->setTranslator($this->translator);
+		$template->beta = $this->globalParameters['beta'];
+		return $template;
+	}
 
-    /*     * ******************************
-     * IJavaScriptCollector
-     * ****************************** */
+	protected function startup() {
+		parent::startup();
+		$this->translator->setLang($this->getLang());
+	}
 
-    public function registerJSFile($file) {
-        $this['jsLoader']->addFile($file);
-    }
+	/*	 * ******************************
+	 * Loading assets
+	 * ****************************** */
 
-    public function registerJSCode($code, $tag = null) {
-        $this['jsLoader']->addInline($code, $tag);
-    }
+	protected function createComponentJsLoader($name) {
+		$component = new JavaScriptLoader();
+		return $component;
+	}
 
-    public function unregisterJSCode($tag) {
-        $this['jsLoader']->removeInline($tag);
-    }
+	protected function createComponentCssLoader($name) {
+		$component = new StylesheetLoader();
+		return $component;
+	}
 
-    public function unregisterJSFile($file) {
-        $this['jsLoader']->removeFile($file);
-    }
+	/*	 * ******************************
+	 * IJavaScriptCollector
+	 * ****************************** */
 
-    /*     * ******************************
-     * IStylesheetCollector
-     * ****************************** */
+	public function registerJSFile($file) {
+		$this['jsLoader']->addFile($file);
+	}
 
-    public function registerStylesheetFile($file, $media = array()) {
-        $this['cssLoader']->addFile($file, $media);
-    }
+	public function registerJSCode($code, $tag = null) {
+		$this['jsLoader']->addInline($code, $tag);
+	}
 
-    public function unregisterStylesheetFile($file, $media = array()) {
-        $this['cssLoader']->removeFile($file, $media);
-    }
+	public function unregisterJSCode($tag) {
+		$this['jsLoader']->removeInline($tag);
+	}
 
-    /*     * ******************************
-     * IJSONProvider
-     * ****************************** */
+	public function unregisterJSFile($file) {
+		$this['jsLoader']->removeFile($file);
+	}
 
-    public function handleAutocomplete($acName, $acQ) {
-        if (!$this->isAjax()) {
-            throw new BadRequestException('Can be called only by AJAX.');
-        }
-        $component = $this->getComponent($acName);
-        if (!($component instanceof AutocompleteSelectBox)) {
-            throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
-        } else {
-            $data = $component->getDataProvider()->getFilteredItems($acQ);
-            $response = new JsonResponse($data);
-            $this->sendResponse($response);
-        }
-    }
+	/*	 * ******************************
+	 * IStylesheetCollector
+	 * ****************************** */
 
-    /*     * *******************************
-     * Nette extension for navigation 
-     * ****************************** */
+	public function registerStylesheetFile($file, $media = array()) {
+		$this['cssLoader']->addFile($file, $media);
+	}
 
-    /**
-     * Formats title method name.
-     * Method should set the title of the page using setTitle method.
-     * 
-     * @param  string
-     * @return string
-     */
-    protected static function formatTitleMethod($view) {
-        return 'title' . $view;
-    }
+	public function unregisterStylesheetFile($file, $media = array()) {
+		$this['cssLoader']->removeFile($file, $media);
+	}
 
-    public function setView($view) {
-        parent::setView($view);
-        $method = $this->formatTitleMethod($this->getView());
-        if (!$this->tryCall($method, $this->getParameter())) {
-            $this->title = null;
-        }
-    }
+	/*	 * ******************************
+	 * IJSONProvider
+	 * ****************************** */
 
-    public function getTitle() {
-        return $this->title;
-    }
+	public function handleAutocomplete($acName, $acQ) {
+		if (!$this->isAjax()) {
+			throw new BadRequestException('Can be called only by AJAX.');
+		}
+		$component = $this->getComponent($acName);
+		if (!($component instanceof AutocompleteSelectBox)) {
+			throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
+		} else {
+			$data = $component->getDataProvider()->getFilteredItems($acQ);
+			$response = new JsonResponse($data);
+			$this->sendResponse($response);
+		}
+	}
 
-    protected function setTitle($title) {
-        $this->title = $title;
-    }
+	/*	 * *******************************
+	 * Nette extension for navigation
+	 * ****************************** */
 
-    public function setBacklink($backlink) {
-        $old = $this->bc;
-        $this->bc = $backlink;
-        return $old;
-    }
+	/**
+	 * Formats title method name.
+	 * Method should set the title of the page using setTitle method.
+	 *
+	 * @param  string
+	 * @return string
+	 */
+	protected static function formatTitleMethod($view) {
+		return 'title' . $view;
+	}
 
-    public static function publicFormatActionMethod($action) {
-        return static::formatActionMethod($action);
-    }
+	public function setView($view) {
+		parent::setView($view);
+		$method = $this->formatTitleMethod($this->getView());
+		if (!$this->tryCall($method, $this->getParameter())) {
+			$this->title = null;
+		}
+	}
 
-    public static function getBacklinkParamName() {
-        return 'bc';
-    }
+	public function getTitle() {
+		return $this->title;
+	}
 
-    protected function beforeRender() {
-        parent::beforeRender();
+	protected function setTitle($title) {
+		$this->title = $title;
+	}
 
-        $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
-        $this->template->title = $this->getTitle();
+	public function setBacklink($backlink) {
+		$old = $this->bc;
+		$this->bc = $backlink;
+		return $old;
+	}
 
-        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
-        $this->putIntoBreadcrumbs();
-    }
+	public static function publicFormatActionMethod($action) {
+		return static::formatActionMethod($action);
+	}
 
-    protected function putIntoBreadcrumbs() {
-        $this['breadcrumbs']->setBacklink($this->getRequest());
-    }
+	public static function getBacklinkParamName() {
+		return 'bc';
+	}
 
-    protected function createComponentBreadcrumbs($name) {
-        $component = $this->breadcrumbsFactory->create();
-        return $component;
-    }
+	protected function beforeRender() {
+		parent::beforeRender();
 
-    protected function createComponentNavigation($name) {
-        $this->navigationControl->setParent();
-        return $this->navigationControl;
-    }
+		$this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
+		$this->template->title = $this->getTitle();
 
-    public final function backlinkRedirect($need = false) {
-        $this->putIntoBreadcrumbs();
-        $backlink = $this['breadcrumbs']->getBacklinkUrl();
-        if ($backlink) {
-            $this->redirectUrl($backlink);
-        } else if ($need) {
-            $this->redirect(':Authentication:login'); // will cause dispatch
-        }
-    }
+		// this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
+		$this->putIntoBreadcrumbs();
+	}
 
-    /*     * *******************************
-     * Extension of Nette ACL
-     *      * ****************************** */
+	protected function putIntoBreadcrumbs() {
+		$this['breadcrumbs']->setBacklink($this->getRequest());
+	}
 
-    public function isAuthorized() {
-        return $this->authorized;
-    }
+	protected function createComponentBreadcrumbs($name) {
+		$component = $this->breadcrumbsFactory->create();
+		return $component;
+	}
 
-    public function setAuthorized($access) {
-        $this->authorized = $access;
-    }
+	protected function createComponentNavigation($name) {
+		$this->navigationControl->setParent();
+		return $this->navigationControl;
+	}
 
-    public function checkRequirements($element) {
-        parent::checkRequirements($element);
-        $this->setAuthorized(true);
-    }
+	public final function backlinkRedirect($need = false) {
+		$this->putIntoBreadcrumbs();
+		$backlink = $this['breadcrumbs']->getBacklinkUrl();
+		if ($backlink) {
+			$this->redirectUrl($backlink);
+		} else if ($need) {
+			$this->redirect(':Authentication:login'); // will cause dispatch
+		}
+	}
 
-    public function authorized($destination, $args = null) {
-        if (substr($destination, -1) === '!' || $destination === 'this') {
-            $destination = $this->getAction(true);
-        }
+	/*	 * *******************************
+	 * Extension of Nette ACL
+	 *      * ****************************** */
 
-        $key = $destination . Utils::getFingerprint($args);
-        if (!isset($this->authorizedCache[$key])) {
-            /*
-             * This part is extracted from Presenter::createRequest
-             */
-            $a = strrpos($destination, ':');
-            if ($a === false) {
-                $action = $destination;
-                $presenter = $this->getName();
-            } else {
-                $action = (string) substr($destination, $a + 1);
-                if ($destination[0] === ':') { // absolute
-                    if ($a < 2) {
-                        throw new InvalidLinkException("Missing presenter name in '$destination'.");
-                    }
-                    $presenter = substr($destination, 1, $a - 1);
-                } else { // relative
-                    $presenter = $this->getName();
-                    $b = strrpos($presenter, ':');
-                    if ($b === FALSE) { // no module
-                        $presenter = substr($destination, 0, $a);
-                    } else { // with module
-                        $presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
-                    }
-                }
-            }
+	public function isAuthorized() {
+		return $this->authorized;
+	}
 
-            /*
-             * Now create a mock presenter and evaluate accessibility.
-             */
-            $baseParams = $this->getParameter();
-            $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
-            try {
-                $testedPresenter->checkRequirements($testedPresenter->getReflection());
-                $this->authorizedCache[$key] = $testedPresenter->isAuthorized();
-            } catch (BadRequestException $e) {
-                $this->authorizedCache[$key] = false;
-            }
-        }
-        return $this->authorizedCache[$key];
-    }
+	public function setAuthorized($access) {
+		$this->authorized = $access;
+	}
 
-    /*     * *******************************
-     * I18n
-     *      * ****************************** */
+	public function checkRequirements($element) {
+		parent::checkRequirements($element);
+		$this->setAuthorized(true);
+	}
 
-    /**
-     * 
-     * @return string ISO 639-1
-     */
-    public function getLang() {
-        if (!$this->_lang) {
-            $this->_lang = $this->lang;
-            $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
-                $this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
-            }
-            if (!$this->_lang) {
-                $this->_lang = $this->globalParameters['localization']['defaultLanguage'];
-            }
-        }
-        return $this->_lang;
-    }
+	public function authorized($destination, $args = null) {
+		if (substr($destination, -1) === '!' || $destination === 'this') {
+			$destination = $this->getAction(true);
+		}
 
-    public function getTranslator() {
-        return $this->translator;
-    }
+		$key = $destination . Utils::getFingerprint($args);
+		if (!isset($this->authorizedCache[$key])) {
+			/*
+			 * This part is extracted from Presenter::createRequest
+			 */
+			$a = strrpos($destination, ':');
+			if ($a === false) {
+				$action = $destination;
+				$presenter = $this->getName();
+			} else {
+				$action = (string) substr($destination, $a + 1);
+				if ($destination[0] === ':') { // absolute
+					if ($a < 2) {
+						throw new InvalidLinkException("Missing presenter name in '$destination'.");
+					}
+					$presenter = substr($destination, 1, $a - 1);
+				} else { // relative
+					$presenter = $this->getName();
+					$b = strrpos($presenter, ':');
+					if ($b === FALSE) { // no module
+						$presenter = substr($destination, 0, $a);
+					} else { // with module
+						$presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
+					}
+				}
+			}
+
+			/*
+			 * Now create a mock presenter and evaluate accessibility.
+			 */
+			$baseParams = $this->getParameter();
+			$testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+			try {
+				$testedPresenter->checkRequirements($testedPresenter->getReflection());
+				$this->authorizedCache[$key] = $testedPresenter->isAuthorized();
+			} catch (BadRequestException $e) {
+				$this->authorizedCache[$key] = false;
+			}
+		}
+		return $this->authorizedCache[$key];
+	}
+
+	/*	 * *******************************
+	 * I18n
+	 *      * ****************************** */
+
+	/**
+	 * Preferred language of the page
+	 *
+	 * @return string ISO 639-1
+	 */
+	public function getLang() {
+		if (!$this->_lang) {
+			$this->_lang = $this->lang;
+			$supportedLanguages = $this->translator->getSupportedLanguages();
+			if (!$this->_lang || !in_array($this->_lang, $supportedLanguages)) {
+				$this->_lang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+			}
+			if (!$this->_lang) {
+				$this->_lang = $this->globalParameters['localization']['defaultLanguage'];
+			}
+		}
+		return $this->_lang;
+	}
+
+	public function getTranslator() {
+		return $this->translator;
+	}
+
+	/*	 * *******************************
+	 * Nette workaround
+	 *      * ****************************** */
+	function getFullHttpRequest() {
+		if ($this->fullRequest === null) {
+        	$payload = file_get_contents('php://input');
+			$this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
+		}
+		return $this->fullRequest;
+	}
+
 
 }

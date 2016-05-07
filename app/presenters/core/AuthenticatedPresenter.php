@@ -1,8 +1,10 @@
 <?php
 
+use Authentication\GithubAuthenticator;
 use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Http\UserStorage;
@@ -22,6 +24,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     const AUTH_ALLOW_LOGIN = 0x1;
     const AUTH_ALLOW_HTTP = 0x2;
     const AUTH_ALLOW_TOKEN = 0x4;
+    const AUTH_ALLOW_GITHUB = 0x8;
 
     /**
      * @var TokenAuthenticator
@@ -34,20 +37,29 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     private $passwordAuthenticator;
 
     /**
+     * @var GithubAuthenticator
+     */
+    private $githubAuthenticator;
+
+    /**
      * @var ContestAuthorizator
      */
     protected $contestAuthorizator;
 
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
-        $this->contestAuthorizator = $contestAuthorizator;
+    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+        $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
-        $this->tokenAuthenticator = $tokenAuthenticator;
+    public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
+        $this->githubAuthenticator = $githubAuthenticator;
+    }
+
+    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     public function getContestAuthorizator() {
@@ -92,6 +104,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->tryHttpAuth();
         }
 
+        if ($methods & self::AUTH_ALLOW_GITHUB) {
+            $this->tryGithub();
+        }
         // if token did nod succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods & self::AUTH_ALLOW_LOGIN)) {
             $this->optionalLoginRedirect();
@@ -200,6 +215,25 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             header('HTTP/1.0 401 Unauthorized');
             echo '<h1>Unauthorized</h1>';
             exit;
+        }
+    }
+
+    private function tryGithub() {
+        if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
+            return;
+        }
+
+        try {
+            $login = $this->githubAuthenticator->authenticate($this->getFullHttpRequest());
+
+            Debugger::log("$login signed in using Github authentication.");
+
+            $this->getUser()->login($login);
+
+            $method = $this->formatAuthorizedMethod($this->getAction());
+            $this->tryCall($method, $this->getParameter());
+        } catch (AuthenticationException $e) {
+            throw new BadRequestException(_('Chyba autentizace.'), 403, $e);
         }
     }
 

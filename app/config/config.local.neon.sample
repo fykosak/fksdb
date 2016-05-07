@@ -26,6 +26,11 @@ parameters:
         dsn: 'mysql:host=localhost;dbname=newfks'
         user: 
         password: 
+    github:
+        # login name in fksdb of Github webhook user
+        login: github
+        # API secret key
+        secret:
 
 # Contest specific parameters
     fykos:
