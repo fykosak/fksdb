@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use AuthenticatedPresenter;
 use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
@@ -195,12 +196,16 @@ class ExportPresenter extends SeriesPresenter {
         // proper authorization is done in StoredQueryComponent
     }
 
-    public function isHttpAuthAllowed() {
+    public function getAllowedAuthMethods() {
+        $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            return 'FKSDB-export';
-        } else {
-            return false;
+            $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
         }
+        return $methods;
+    }
+
+    protected function getHttpRealm() {
+        return 'FKSDB-export';
     }
 
     public function actionExecute($id) {

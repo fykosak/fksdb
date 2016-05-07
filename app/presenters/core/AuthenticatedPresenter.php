@@ -19,6 +19,10 @@ use Nette\Security\AuthenticationException;
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
+    const AUTH_ALLOW_LOGIN = 0x1;
+    const AUTH_ALLOW_HTTP = 0x2;
+    const AUTH_ALLOW_TOKEN = 0x4;
+
     /**
      * @var TokenAuthenticator
      */
@@ -77,15 +81,19 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     protected function startup() {
         parent::startup();
 
-        // successfull token authentication overwrites the user identity (if any)
-        $this->tryAuthToken();
+        $methods = $this->getAllowedAuthMethods();
 
-        if ($this->isHttpAuthAllowed()) {
+        if ($methods & self::AUTH_ALLOW_TOKEN) {
+            // successfull token authentication overwrites the user identity (if any)
+            $this->tryAuthToken();
+        }
+
+        if ($methods & self::AUTH_ALLOW_HTTP) {
             $this->tryHttpAuth();
         }
 
         // if token did nod succeed redirect to login credentials page
-        if (!$this->getUser()->isLoggedIn()) {
+        if (!$this->getUser()->isLoggedIn() && ($methods & self::AUTH_ALLOW_LOGIN)) {
             $this->optionalLoginRedirect();
         } else if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
@@ -124,8 +132,15 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * It may be overriden (should return realm).
      * @return boolean|string
      */
-    public function isHttpAuthAllowed() {
-        return false;
+    public function getAllowedAuthMethods() {
+        return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHttpRealm() {
+        return null;
     }
 
     protected function unauthorizedAccess() {
@@ -179,7 +194,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     private function httpAuthPrompt() {
-        $realm = $this->isHttpAuthAllowed();
+        $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
             header('WWW-Authenticate: Basic realm="' . $realm . '"');
             header('HTTP/1.0 401 Unauthorized');
