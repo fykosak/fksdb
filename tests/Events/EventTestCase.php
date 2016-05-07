@@ -18,13 +18,13 @@ abstract class EventTestCase extends DatabaseTestCase {
     protected function setUp() {
         parent::setUp();
         $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (1, 1, 'Fyziklání'), (2, 1, 'DSEF'), (7, 1, 'TSAF'), (9, 1, 'FoL')");
-        $this->connection->query("INSERT INTO event_status (status) VALUES 
+        $this->connection->query("INSERT INTO event_status (status) VALUES
             ('pending'),
-            ('spare'), 
-            ('approved'), 
-            ('participated'),             
-            ('missed'), 
-            ('cancelled'), 
+            ('spare'),
+            ('approved'),
+            ('participated'),
+            ('missed'),
+            ('cancelled'),
             ('invited'),
             ('applied'),
             ('applied.tsaf'),
@@ -44,6 +44,15 @@ abstract class EventTestCase extends DatabaseTestCase {
     protected function createEvent($data) {
         if (!isset($data['year'])) {
             $data['year'] = 1;
+        }
+        if (!isset($data['name'])) {
+            $data['name'] = 'Dummy event';
+        }
+        if (!isset($data['begin'])) {
+            $data['begin'] = '2016-01-01';
+        }
+        if (!isset($data['end'])) {
+            $data['end'] = '2016-01-01';
         }
         $this->connection->query('INSERT INTO event', $data);
         return $this->connection->lastInsertId();
