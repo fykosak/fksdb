@@ -387,7 +387,7 @@ DEFAULT CHARACTER SET = utf8;
 DROP TABLE IF EXISTS `grant` ;
 
 CREATE TABLE IF NOT EXISTS `grant` (
-  `grant_id` INT(11) NULL AUTO_INCREMENT,
+  `grant_id` INT(11) NOT NULL AUTO_INCREMENT,
   `login_id` INT(11) NOT NULL,
   `role_id` INT(11) NOT NULL,
   `contest_id` INT NOT NULL,

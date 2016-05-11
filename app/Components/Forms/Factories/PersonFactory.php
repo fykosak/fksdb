@@ -144,7 +144,7 @@ class PersonFactory {
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        } 
+        }
         else if ($sub == 'person_has_flag') {
             $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
             return $control;
@@ -260,7 +260,7 @@ class PersonFactory {
 
     public function createCareer($acYear = null) {
         return (new TextArea(_('Co právě dělá')))
-                        ->setOption('description', _('Zobrazeno v síni slávy'));
+                        ->setOption('description', _('Zobrazeno v seznamu organizátorů'));
     }
 
     public function createHomepage($acYear = null) {

@@ -25,7 +25,7 @@ abstract class DatabaseTestCase extends TestCase {
     protected function setUp() {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->connection->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
-        $this->connection->query("INSERT INTO school (school_id, address_id) VALUES(1, 1)");
+        $this->connection->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
         $this->connection->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, 2000)");
         $this->connection->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
     }
@@ -41,7 +41,7 @@ abstract class DatabaseTestCase extends TestCase {
     }
 
     /**
-     * 
+     *
      * @param string $name
      * @param string $surname
      * @param array $info

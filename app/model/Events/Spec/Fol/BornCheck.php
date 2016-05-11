@@ -13,7 +13,7 @@ use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
@@ -97,7 +97,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $personHistory = $this->servicePersonHistory->getTable()
                 ->where('person_id', $personId)
                 ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
-        return $personHistory->study_year;
+        return $personHistory ? $personHistory->study_year : null;
     }
     
     private function getSchoolId($schoolControl, $personControl) {
