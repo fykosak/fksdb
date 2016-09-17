@@ -53,8 +53,6 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                         ->where('fyziklani_submit_id = ?',$this->submit_id)->fetch();
         \Nette\Diagnostics\Debugger::barDump($submit);
         if(!$submit){
-            $this->flashMessage('Submit neexistuje');
-
             return;
         }
 
