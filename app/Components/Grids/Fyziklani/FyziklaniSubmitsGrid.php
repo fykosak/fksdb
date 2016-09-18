@@ -41,7 +41,7 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-default')
                 ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Org:Fyziklani:edit',array('id' => $row->fyziklani_submit_id));
+                    return $presenter->link(':Org:Fyziklani:edit',['id' => $row->fyziklani_submit_id]);
                 })
                 ->setText(_('Upraviť'));
 
@@ -50,8 +50,8 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                 ->setLink(function($row) use ($that) {
                     return $that->link("delete!",$row->fyziklani_submit_id);
                 })
-                ->setConfirmationDialog(function($row) {
-                    return _("Opravdu vzít řešení úlohy zpět?"); //todo i18n
+                ->setConfirmationDialog(function() {
+                    return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
                 })
                 ->setText(_('Zmazať'));
 

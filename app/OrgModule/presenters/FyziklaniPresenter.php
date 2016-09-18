@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use \ServiceFyziklaniSubmit;
 
 class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
@@ -11,8 +10,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     const TABLE_FYZIKLANI_TASK = 'fyziklani_task';
     const TABLE_FYZIKLANI_SUBMIT = 'fyziklani_submit';
 
-    private $ServiceFyziklaniSubmit;
-    private $submit_id;
+    private $submit;
 
     /**
      *
@@ -36,48 +34,49 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         
     }
 
-    public function renderEdit($id) {
-        $this->submit_id = $id;
+    public function renderEdit() {
+        
     }
 
     public function createComponentSubmitsGrid() {
         $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid($this->database);
-
-
         return $grid;
     }
 
     public function createComponentFyziklaniEditForm() {
-        $submit = $this->database->table('fyziklani_submit')
-                        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')
-                        ->where('fyziklani_submit_id = ?',$this->submit_id)->fetch();
-        \Nette\Diagnostics\Debugger::barDump($submit);
-        if(!$submit){
-            return;
-        }
-
         $form = new \Nette\Application\UI\Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addHidden('submit_id',$this->submit_id);
-
+        $form->addHidden('submit_id',0);
         $form->addText('team',_('Tým'))
-                ->setValue($submit->name)
                 ->setDisabled(true);
         $form->addText('team_id',_('Tým ID'))
-                ->setValue($submit->e_fyziklani_team_id)
                 ->setDisabled(true);
         $form->addText('task',_('Úloha'))
-                ->setValue($submit->label)
                 ->setDisabled(true);
-        $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1))->setDefaultValue($submit->points);
+        $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1));
+
         $form->addSubmit('send','Uložit');
-        // $form->onSuccess[] = [$this,'entryFormSucceeded'];
+        $form->onSuccess[] = [$this,'editFormSucceeded'];
         return $form;
     }
 
-    public function createComponentFyziklaniEntryForm($id) {
-        \Nette\Diagnostics\Debugger::barDump($id);
+    public function actionEdit($id) {
 
+        $this->submit = $this->database->table('fyziklani_submit')
+                        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')
+                        ->where('fyziklani_submit_id = ?',$id)->fetch();
+
+        $this->template->fyziklani_submit_id = $this->submit ? true : false;
+        $this['fyziklaniEditForm']->setDefaults([
+            'team_id' => $this->submit->e_fyziklani_team_id,
+            'task' => $this->submit->label,
+            'points' => $this->submit->points,
+            'team' => $this->submit->name,
+            'submit_id' => $this->submit->fyziklani_submit_id
+        ]);
+    }
+
+    public function createComponentFyziklaniEntryForm($id) {
         $form = new \Nette\Application\UI\Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addText('taskCode',_('Kód úlohy'))
@@ -130,15 +129,32 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             $this->flashMessage('Úloha '.$taskLabel.' už bola zadaná','warning');
             return;
         }
-        $this->database->query('INSERT INTO '.self::TABLE_FYZIKLANI_SUBMIT,[
-            'points' => $values->points,
-            'fyziklani_task_id' => $taksID,
-            'e_fyziklani_team_id' => $teamID
-        ]);
+        if($this->database->query('INSERT INTO '.self::TABLE_FYZIKLANI_SUBMIT,[
+                    'points' => $values->points,
+                    'fyziklani_task_id' => $taksID,
+                    'e_fyziklani_team_id' => $teamID
+                ])){
+            $this->flashMessage(_('body boli uložené'),'success');
+            $this->redirect('this');
+        }else{
+            $this->flashMessage('Vyskytla sa chyba','danger');
+        }
+    }
+
+    public function editFormSucceeded(\Nette\Application\UI\Form $form) {
+        $values = $form->getValues();
+        if($this->database->query('UPDATE '.self::TABLE_FYZIKLANI_SUBMIT.' SET ? where fyziklani_submit_id=?',[
+                    'points' => $values->points
+                        ],$values->submit_id)){
+            $this->flashMessage('Body boli zmenene','success');
+        }else{
+            $this->flashMessage('ops','danger');
+        }
+
         $this->redirect('this');
     }
 
-    public function submitExist($taksID,$teamID,$year) {
+    public function submitExist($taksID,$teamID) {
         return (bool) $this->database->table(self::TABLE_FYZIKLANI_SUBMIT)
                         ->where('fyziklani_task_id=?',$taksID)
                         ->where('e_fyziklani_team_id=?',$teamID)
@@ -158,11 +174,15 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function taskLabetToTaskID($taskLabel,$year) {
-        return $this->database->table(self::TABLE_FYZIKLANI_TASK)
-                        ->where('label = ?',$taskLabel)
-                        ->where('event_id = ?',$this->getCurrentEventID($year))
-                        ->fetch()
-                ->fyziklani_task_id;
+        $row = $this->database->table(self::TABLE_FYZIKLANI_TASK)
+                ->where('label = ?',$taskLabel)
+                ->where('event_id = ?',$this->getCurrentEventID($year))
+                ->fetch();
+        if($row){
+            return $row->fyziklani_task_id;
+        }
+
+        return false;
     }
 
     public function teamExist($teamID,$year) {
@@ -170,9 +190,21 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                         ->get($teamID)->event_id == $this->getCurrentEventID($year);
     }
 
-    public function getCurrentEventID($year) {
-        return 95;
+    public function getCurrentEventID() {
+        \Nette\Diagnostics\Debugger::barDump($this);
+        $event = $this->getActualEvent();
+        if($event){
+            return $event->event_id;
+        }
+        return false;
     }
 
-//put your code here
+    public function getActualEvent() {
+        return $this->database->table('event')->where('year=?',$this->year)->where('event_type_id=?',1)->fetch();
+    }
+
+    public function eventExist() {
+        return $this->getActualEvent() ? true : false;
+    }
+
 }
