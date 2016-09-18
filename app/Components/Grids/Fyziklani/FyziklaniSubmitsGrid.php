@@ -8,6 +8,8 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use \NiftyGrid\DataSource\NDataSource;
+
 /**
  * Description of SubmitsGrid
  *
@@ -54,17 +56,17 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                     return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
                 })
                 ->setText(_('Zmazať'));
-
         $submits = $this->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
-        \Nette\Diagnostics\Debugger::barDump($submits);
-        $this->setDataSource(new \NiftyGrid\DataSource\NDataSource($submits));
+        $this->setDataSource(new NDataSource($submits));
     }
 
     public function handleDelete($id) {
-        $r = $this->database->queryArgs('DELETE from fyziklani_submit WHERE fyziklani_submit_id=?',[$id]);
-        \Nette\Diagnostics\Debugger::barDump($r);
-
-        $this->redirect('this');
+        if($this->database->queryArgs('DELETE from fyziklani_submit WHERE fyziklani_submit_id=?',[$id])){
+            $this->flashMessage('Úloha bola zmazaná','success');
+            $this->redirect('this');
+        }else{
+            $this->flashMessage('Vykytla sa chyba','danger');
+        }
     }
 
 }

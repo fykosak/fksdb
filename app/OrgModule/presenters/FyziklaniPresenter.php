@@ -3,6 +3,8 @@
 namespace OrgModule;
 
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use \Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 
 class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
@@ -11,6 +13,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     const TABLE_FYZIKLANI_SUBMIT = 'fyziklani_submit';
 
     private $submit;
+    private $closeSubmitStragegy;
 
     /**
      *
@@ -18,8 +21,8 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
      */
     private $database;
 
-    public function __construct(\Nette\Database\Connection $database) {
-
+    public function __construct(\Nette\Database\Connection $database/* ,\Fyziklani\CloseSubmitStragegy $closeSubmitStragegy */) {
+        // $this->closeSubmitStragegy = $closeSubmitStragegy;
         $this->database = $database;
 
 
@@ -38,13 +41,64 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         
     }
 
+    public function renderClose($id) {
+        $this->template->id = $id;
+        if($id){
+
+            $this->template->submits = $this->database->table(self::TABLE_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id',$id);
+        }
+    }
+
     public function createComponentSubmitsGrid() {
         $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid($this->database);
         return $grid;
     }
 
+    public function createComponentCloseGrid() {
+        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid($this->database);
+        // $grid->setSearchable(true);
+
+        return $grid;
+    }
+
+    public function createComponentFyziklaniCloseForm() {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        $form->addHidden('e_fyziklani_team_id',0);
+        $form->addText('next_task',_('Úloha u vydávačov'))->setDisabled();
+        $form->addCheckbox('next_task_correct',_('Úloha u vydávačov sa zhaduje'))
+                ->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
+        $form->addCheckbox('submit_task_correct',_('Úlohy a počty bodov sú správne'))
+                ->setRequired(_('Skontrolujte prosím správnosť zadania bodov!'));
+
+        $form->addSubmit('send','Potvrdiť spravnosť');
+        $form->onSuccess[] = [$this,'closeFormSucceeded'];
+        return $form;
+    }
+
+    public function closeFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        $submits = $this->database->table(self::TABLE_FYZIKLANI_SUBMIT)
+                ->select('*')
+                ->where('e_fyziklani_team_id',$values->e_fyziklani_team_id);
+        \Nette\Diagnostics\Debugger::barDump($submits);
+        $sum = 0;
+        foreach ($submits as $submit) {
+            $sum += $submit->points;
+        }
+        if($this->database->query('UPDATE '.self::TABLE_FYZIKLANI_TEAM.' SET ? WHERE e_fyziklani_team_id=? ',['points' => $sum],$values->e_fyziklani_team_id)){
+            $this->redirect(':Org:Fyziklani:close');
+        };
+    }
+
+    public function actionClose($id) {
+        if($id){
+            $this['fyziklaniCloseForm']->setDefaults(['e_fyziklani_team_id' => $id,'next_task' => 'AB']);
+        }
+    }
+
     public function createComponentFyziklaniEditForm() {
-        $form = new \Nette\Application\UI\Form();
+        $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('submit_id',0);
         $form->addText('team',_('Tým'))
@@ -102,6 +156,10 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     public function titleDafault() {
         $this->setTitle(_('Pultik Fyzikláni'));
+    }
+    
+     public function titleClose() {
+        $this->setTitle(_('Uzavierka bodovania'));
     }
 
     public function entryFormSucceeded(\Nette\Application\UI\Form $form) {
