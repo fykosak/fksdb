@@ -23,6 +23,7 @@ acl:
     - addRole(taskManager, org)         # úlohář
     - addRole(dispatcher, org)          # koordinátor obálkování
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
+    - addRole(fyziklaniOrg)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
     - addRole(inboxManager, org)        # příjemce řešení
@@ -42,6 +43,7 @@ acl:
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
+    - addResource(fyziklani)
 
     # ACL
     - allow(contestant, submit, upload)
@@ -91,6 +93,9 @@ acl:
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
 
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
+
+    - allow(fyziklaniOrg, fyziklani, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL))
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 
