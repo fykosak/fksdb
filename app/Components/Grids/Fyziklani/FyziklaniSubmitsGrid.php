@@ -17,11 +17,11 @@ use \NiftyGrid\DataSource\NDataSource;
  */
 class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
 
-    private $database;
+    private $presenter;
     protected $searchable;
 
-    public function __construct(\Nette\Database\Connection $database) {
-        $this->database = $database;
+    public function __construct(\OrgModule\FyziklaniPresenter $presenter) {
+        $this->presenter = $presenter;
         parent::__construct();
     }
 
@@ -56,12 +56,17 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                     return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
                 })
                 ->setText(_('Zmazať'));
-        $submits = $this->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
+        $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
         $this->setDataSource(new NDataSource($submits));
     }
 
     public function handleDelete($id) {
-        if($this->database->queryArgs('DELETE from fyziklani_submit WHERE fyziklani_submit_id=?',[$id])){
+        $teamID = $this->presenter->submitToTeam($id);
+        if(!$this->presenter->isOpenSubmit($teamID)){
+
+            return;
+        }
+        if($this->presenter->database->queryArgs('DELETE from fyziklani_submit WHERE fyziklani_submit_id=?',[$id])){
             $this->flashMessage('Úloha bola zmazaná','success');
             $this->redirect('this');
         }else{

@@ -16,7 +16,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
      *
      * @var Nette\Database\Context 
      */
-    private $database;
+    public $database;
     public $event;
     public $eventID;
 
@@ -55,7 +55,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid($this->database);
+        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid($this);
         return $grid;
     }
 
@@ -226,6 +226,12 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
+        /* Uzatvorené bodovanie nejde editovať; */
+        $teamID = $this->submitToTeam($values->submit_id);
+        if(!$this->isOpenSubmit($teamID)){
+            $this->flashMessage('Bodovanie tohoto týmu je uzavreté','danger');
+            $this->redirect(':Org:Fyziklani:submits');
+        }
         if($this->database->query('UPDATE '.\DbNames::TAB_FYZIKLANI_SUBMIT.' SET ? where fyziklani_submit_id=?',[
                     'points' => $values->points
                         ],$values->submit_id)){
