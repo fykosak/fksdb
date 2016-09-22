@@ -11,6 +11,10 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     private $submit;
 
     const EVENT_TYPE_ID = 1;
+    const START_AT = '2016-09-22T16:00:00';
+    const END_AT = '2016-09-22T17:00:00';
+    const HIDDE_AT = '2016-09-22T19:55:00';
+    const DISPLAY_AT = '2016-09-22T20:00:00';
 
     /**
      *
@@ -19,6 +23,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     public $database;
     public $event;
     public $eventID;
+    public $eventYear;
 
     public function __construct(\Nette\Database\Connection $database) {
         parent::__construct();
@@ -31,6 +36,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             throw new \Nette\Application\BadRequestException('Pre tento ročník nebolo najduté Fyzikláni',404);
         }
         $this->event = $this->getActualEvent();
+        $this->eventYear = $this->event->event_year;
         $this->eventID = $this->getCurrentEventID();
         parent::startup();
     }
@@ -45,6 +51,43 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     public function renderEdit() {
         
+    }
+
+    public function renderResults() {
+        if($this->isAjax()){
+            $result = [];
+            $type = $this->getHttpRequest()->getQuery('type');
+            $isOrg = $this->getHttpRequest()->getQuery('org') ? true : false;
+
+            if($type == 'init'){
+                foreach ($this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id',$this->eventID)->order('label') as $row) {
+                    $result['tasks'][] = ['label' => $row->label,'name' => $row->name,'task_id' => $row->fyziklani_task_id];
+                }
+                foreach ($this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('event_id',$this->eventID) as $row) {
+                    $result['teams'][] = ['category' => $row->category,'room' => $row->room,'name' => $row->name,'team_id' => $row->e_fyziklani_team_id];
+                }
+            }elseif($type == 'refresh'){
+                $submits = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
+                        ->where('e_fyziklani_team.event_id',$this->eventID);
+                foreach ($submits as $submit) {
+                    $result['submits'][] = ['points' => $submit->points,'team_id' => $submit->e_fyziklani_team_id,'task_id' => $submit->fyziklani_task_id];
+                }
+            }else{
+                throw new \Nette\Application\BadRequestException('error',404);
+            }
+
+            $result['times'] = ['toStart' => strtotime(self::START_AT) - time(),'toEnd' => strtotime(self::END_AT) - time(),'visible' => $this->resultsOpen()];
+
+            $this->sendResponse(new \Nette\Application\Responses\JsonResponse($result));
+        }else{
+            $this->template->room = $this->getHttpRequest()->getQuery('room');
+            $this->template->category = $this->getHttpRequest()->getQuery('category');
+        }
+    }
+
+    private function resultsOpen() {
+
+        return (time() < strtotime(self::HIDDE_AT)) || (time() > strtotime(self::DISPLAY_AT));
     }
 
     public function renderClose($id) {
@@ -92,7 +135,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
         if($this->database->query('UPDATE '.\DbNames::TAB_E_FYZIKLANI_TEAM.' SET ? WHERE e_fyziklani_team_id=? ',['points' => $sum],$values->e_fyziklani_team_id)){
             $this->redirect(':Org:Fyziklani:close');
-        };
+        }
     }
 
     public function actionClose($id) {
@@ -144,7 +187,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         ]);
     }
 
-    public function createComponentFyziklaniEntryForm($id) {
+    public function createComponentFyziklaniEntryForm() {
         $form = new \Nette\Application\UI\Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addText('taskCode',_('Kód úlohy'))
@@ -174,6 +217,9 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Fykosí Fyzikláni'));
+    }
+    public function titleResults(){
+        $this->setTitle(_('Výsledky '.$this->eventYear.'. Fykosího Fyzikláni'));
     }
 
     public function entryFormSucceeded(Form $form) {
@@ -262,10 +308,10 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         return str_replace(array('A','B','C','D','E','F','G','H'),array(1,2,3,4,5,6,7,8),$teamTaskLabel);
     }
 
-    public function taskLabelToTaskID($taskLabel,$year) {
+    public function taskLabelToTaskID($taskLabel) {
         $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)
                 ->where('label = ?',$taskLabel)
-                ->where('event_id = ?',$this->getCurrentEventID($year))
+                ->where('event_id = ?',$this->eventID)
                 ->fetch();
         if($row){
             return $row->fyziklani_task_id;

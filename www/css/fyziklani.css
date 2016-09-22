@@ -1,0 +1,25 @@
+table.fyziklaniResults{
+    
+}
+.fyziklaniResults table tbody tr td[data-points="5"]{
+    background-color: aquamarine;
+}
+.fyziklaniResults table tbody tr td[data-points="3"]{
+    background-color: greenyellow;
+}
+.fyziklaniResults table tbody tr td[data-points="2"]{
+    background-color: orange;
+}
+.fyziklaniResults table tbody tr td[data-points="1"]{
+     background-color: red;
+}
+.fyziklaniResults table tbody tr td{
+     text-align: center;
+}
+
+.fyziklaniResults table tbody tr td{
+    border:solid 1px #ccc;
+    font-weight: bold;
+}
+
+

@@ -11,7 +11,8 @@
         'css/bootstrap.min.css' => [screen],
         'css/bootstrap-theme.min.css' => [screen],
         'css/style.css' => [screen],
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv]
+        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
+        'css/fyziklani.css' => [all]
         }
 
         {block head}{/block}
@@ -29,7 +30,7 @@
                     </button>
                     <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
                 </div>
-                
+
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">                
@@ -43,60 +44,62 @@
                                 <span class="glyphicon glyphicon-user"></span>
                                 {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
                                 {else}
-                                {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
-                                <li class="divider"></li>
-                                <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
-                            </ul>
-                        </li>
-                    </ul>                
+                                    {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                                    <li class="divider"></li>
+                                    <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                                </ul>
+                            </li>
+                        </ul>                
+                        {/block}
+
+                    </div><!-- /.navbar-collapse -->
+                </nav>
+
+                <div class="container">
+                    {control breadcrumbs}
+                    {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+
+
+                    {block flashes}
+                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                     {/block}
 
-                </div><!-- /.navbar-collapse -->
-            </nav>
+                    {include #content}
 
-            <div class="container">
-                {control breadcrumbs}
-                {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
-
-
-                {block flashes}
-                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-                {/block}
-
-                {include #content}
-
+                </div>
+                {/block body}
+            </div> <!-- wrap -->
+            <div id="footer" n:block="footer">
+                <div class="container text-center text-muted">
+                    <ul class="list-piped">
+                        <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
+                        <li><a href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
+                        <li>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></li>
+                    </ul>
+                </div>
             </div>
-            {/block body}
-        </div> <!-- wrap -->
-        <div id="footer" n:block="footer">
-            <div class="container text-center text-muted">
-                <ul class="list-piped">
-                    <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
-                    <li><a href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
-                    <li>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></li>
-                </ul>
-            </div>
-        </div>
 
-        <div id="spinner"></div>
-        {block scripts}
-        {control jsLoader 
+            <div id="spinner"></div>
+            {block scripts}
+            {control jsLoader 
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
         'js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
-        'js/main.js'
-        }
+        'js/main.js',
+        'js/tablesorter.min.js',
+        'js/fyziklaniResults.js'
+            }
 
-        {* CSS files are only collected at the end of rendering, so we use this
-        invalid workaround and link some CSS files at the end of the page
-        *}
-        {control jsLoader:inline}
-        {/block}
-        {control cssLoader}
-    </body>
-</html>
+            {* CSS files are only collected at the end of rendering, so we use this
+            invalid workaround and link some CSS files at the end of the page
+            *}
+            {control jsLoader:inline}
+            {/block}
+            {control cssLoader}
+        </body>
+    </html>
