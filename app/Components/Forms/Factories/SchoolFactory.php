@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolFactory {
@@ -71,7 +71,7 @@ class SchoolFactory {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
-            $schoolElement->setOption('description', _('Pokud nelze školu nalézt, napište správci.'));
+            $schoolElement->setOption('description', sprintf(_('Pokud nelze školu nalézt, napište na %s.'), 'schola.novum () fykos.cz'));
         }
 
         return $schoolElement;
