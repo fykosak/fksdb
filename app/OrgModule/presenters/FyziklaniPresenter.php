@@ -11,10 +11,10 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     private $submit;
 
     const EVENT_TYPE_ID = 1;
-    const START_AT = '2016-09-22T16:00:00';
-    const END_AT = '2016-09-22T17:00:00';
-    const HIDDE_AT = '2016-09-22T19:55:00';
-    const DISPLAY_AT = '2016-09-22T20:00:00';
+    const START_AT = '2016-09-25T02:00:00';
+    const END_AT = '2016-09-25T03:00:00';
+    const HIDDE_AT = '2016-09-25T02:40:00';
+    const DISPLAY_AT = '2016-09-25T02:02:00';
 
     /**
      *
@@ -80,14 +80,14 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
             $this->sendResponse(new \Nette\Application\Responses\JsonResponse($result));
         }else{
-            $this->template->room = $this->getHttpRequest()->getQuery('room');
+            $this->template->rooms = ['M1','M2','S1','S6','F1','F2'];
             $this->template->category = $this->getHttpRequest()->getQuery('category');
         }
     }
 
     private function resultsOpen() {
 
-        return (time() < strtotime(self::HIDDE_AT)) || (time() > strtotime(self::DISPLAY_AT));
+        return (time() < strtotime(self::HIDDE_AT)) && (time() > strtotime(self::DISPLAY_AT));
     }
 
     public function renderClose($id) {

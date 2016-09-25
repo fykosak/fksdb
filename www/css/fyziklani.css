@@ -1,5 +1,6 @@
-table.fyziklaniResults{
-    
+.fyziklaniResults{
+    margin-bottom: 2em;
+
 }
 .fyziklaniResults table tbody tr td[data-points="5"]{
     background-color: aquamarine;
@@ -11,15 +12,32 @@ table.fyziklaniResults{
     background-color: orange;
 }
 .fyziklaniResults table tbody tr td[data-points="1"]{
-     background-color: red;
+    background-color: red;
 }
 .fyziklaniResults table tbody tr td{
-     text-align: center;
+    text-align: center;
 }
 
 .fyziklaniResults table tbody tr td{
     border:solid 1px #ccc;
     font-weight: bold;
+}
+.clock{
+    position: fixed;
+    bottom: 0;
+    left:0;
+    padding: .25em;
+    font-size: 200%;
+}
+.clock.big{
+    text-align: center;
+    position: initial;
+    display: block;
+    font-size: 400%;
+
+}
+#imgeWP{
+    text-align: center;
 }
 
 
