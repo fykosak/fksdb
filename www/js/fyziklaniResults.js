@@ -2,10 +2,10 @@
 (function ($) {
 
 
-$('#resultsOptToogle').click(function(){
-   $('#resultsOpt').slideToggle();
-   $(this).toggleClass('active');
-});
+    $('#resultsOptToogle').click(function () {
+        $('#resultsOpt').slideToggle();
+        $(this).toggleClass('active');
+    });
 
 
     $('.fyziklaniResults').each(function () {
@@ -25,12 +25,6 @@ $('#resultsOptToogle').click(function(){
         $table.append($tBody);
         var $nav = $('.nav.nav-tabs');
 
-        var $toEnd = $('<div></div>').addClass('to_end');
-
-        var $toStart = $('<div></div>').addClass('to_start');
-
-        var $beforeStart = $('.before_start');
-        var $afterEnd = $('.after_end');
         var $form = $('form#resultsFrom');
 
         var toStart = false;
@@ -44,14 +38,23 @@ $('#resultsOptToogle').click(function(){
 
 
         var switchTRows = function () {
-            var fces = {};
-            fces.disableFilter = function () {
+            /**
+             * Zobrazí všetky riadky tabuľky;
+             * @returns {undefined}
+             */
+            var disableFilter = function () {
                 $nav.find('li').removeClass('active');
                 $nav.find('li[data-type="all"]').addClass('active');
                 $tBody.find('tr').show();
-            };
 
-            fces.aplyFilterByCategory = function (category) {
+            };
+            /**
+             * Zobrazí riadky tabuľky kde sa kategoria zhoduje so zadanou kategoriou;
+             * @param {String} category
+             * @author Michal Červeňák
+             * @returns {undefined}
+             */
+            var aplyFilterByCategory = function (category) {
                 $nav.find('li').removeClass('active');
                 $nav.find('li[data-category="' + category + '"]').addClass('active');
                 $tBody.find('tr').each(function () {
@@ -63,8 +66,13 @@ $('#resultsOptToogle').click(function(){
                 });
             };
 
-
-            fces.aplyFilterByRoom = function (room) {
+            /**
+             * Zobrazí riadky tabuľky kde sa miestnost zhoduje so zadanou miestnostou;
+             * @param {String} room
+             * @author Michal Červeňák
+             * @returns {undefined}
+             */
+            var aplyFilterByRoom = function (room) {
                 $nav.find('li').removeClass('active');
                 $nav.find('li[data-room="' + room + '"]').addClass('active');
                 $tBody.find('tr').each(function () {
@@ -80,13 +88,15 @@ $('#resultsOptToogle').click(function(){
             var i = 0;
             var applyNext = function (i) {
                 console.debug('filter' + i);
-                var t = 5000;
-                if ($form.find('#autoSwitch').is(':checked')) {
+                var t = 15000;
+                if ($form.find('#autoSwitch').is(':checked') && $table.is(':visible')) {
+                    $("html, body").animate({scrollTop: 0}, 0);
 
                     switch (i) {
                         case 0:
                         {
-                            fces.disableFilter();
+                            t = 30000;
+                            disableFilter();
                             break;
                         }
                         case 1:
@@ -94,9 +104,9 @@ $('#resultsOptToogle').click(function(){
                             var room = $form.find('#room').val();
                             console.debug(room);
                             if (room) {
-                                fces.aplyFilterByRoom(room);
+                                aplyFilterByRoom(room);
                             } else {
-                                t = 1000;
+                                t = 0;
                             }
                             break;
                         }
@@ -105,13 +115,19 @@ $('#resultsOptToogle').click(function(){
                             var category = $form.find('#category').val();
                             console.debug(category);
                             if (category) {
-                                fces.aplyFilterByCategory(category);
+                                aplyFilterByCategory(category);
                             } else {
-                                t = 1000;
+                                t = 0;
                             }
                             break;
                         }
                     }
+                    if (t > 1000) {
+
+                        $("html, body").delay(t / 3).animate({scrollTop: $(document).height()}, t / 3);
+                    }
+
+
                 }
                 setTimeout(function () {
                     i++;
@@ -130,7 +146,7 @@ $('#resultsOptToogle').click(function(){
             $outerDiv.show();
             $clock.removeClass('big');
             $imageWP.hide();
-             $('h1').show();
+            $('h1').show();
         };
         var resultsHidde = function () {
             $clock.addClass('big');
@@ -220,13 +236,17 @@ $('#resultsOptToogle').click(function(){
 
         };
 
-        $.nette.ajax({
-            data: {
-                type: 'init'
-            },
-            success: createTable
-        });
+
+        /**
+         * Zmena obrázku na základe času. 
+         * @returns {undefined}
+         */
         var switchImage = function () {
+            /* Ak nieje čas ešte nahodený*/
+            if (toStart === false || toEnd === false) {
+                return;
+            }
+
             var imgSRC = '/images/fyziklani/';
             if (toStart > 300) {
                 imgSRC += 'nezacalo.svg';
@@ -244,10 +264,15 @@ $('#resultsOptToogle').click(function(){
 
             }
             $imageWP.attr('src', imgSRC);
-      
+
         };
 
-
+        /**
+         * Pozmenená alešova funkcia na tikanie času
+         * @author Aleš Podolník
+         * @author Michal Červeňák
+         * @returns {undefined}
+         */
         var clockTick = function () {
             var timeStamp = false;
             toStart--;
@@ -270,25 +295,20 @@ $('#resultsOptToogle').click(function(){
             s = s < 10 ? "0" + s : "" + s;
             $clock.html(h + ":" + m + ":" + s);
         };
-
-
         setInterval(function () {
             clockTick();
             switchImage();
         }, 1000);
-
-
-
+        $.nette.ajax({
+            data: {
+                type: 'init'
+            },
+            success: createTable,
+            error: function () {
+                alert('error!');
+            }
+        });
     });
-
-
-
-
-
-
-
-
-
     return;
 }(jQuery));
 

@@ -34,9 +34,11 @@ navigation:
             - fykos
             - vyfuk
         org.fyziklani.default:
-            - org.fyziklani.submits
             - org.fyziklani.entry
             - org.fyziklani.close
+            - org.fyziklani.submits
             - org.fyziklani.results
+            - org.fyziklani.task
+            - org.fyziklani.taskimport
             
         

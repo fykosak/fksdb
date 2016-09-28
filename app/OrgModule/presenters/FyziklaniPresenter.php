@@ -4,17 +4,21 @@ namespace OrgModule;
 
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
+use \Nette\Diagnostics\Debugger;
+use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
 
 class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     private $submit;
 
     const EVENT_TYPE_ID = 1;
-    const START_AT = '2016-09-25T02:00:00';
-    const END_AT = '2016-09-25T03:00:00';
-    const HIDDE_AT = '2016-09-25T02:40:00';
-    const DISPLAY_AT = '2016-09-25T02:02:00';
+    const START_AT = '2016-09-27T13:30:00';
+    const END_AT = '2016-09-27T15:00:00';
+    const HIDDE_AT = '2016-09-27T14:40:00';
+    const DISPLAY_AT = '2016-09-27T14:02:00';
+    const IMPORT_STATE_UPDATE_N_INSERT = 1;
+    const IMPORT_STATE_REMOVE_N_INSERT = 2;
+    const IMPORT_STATE_INSERT = 3;
 
     /**
      *
@@ -25,9 +29,14 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     public $eventID;
     public $eventYear;
 
-    public function __construct(\Nette\Database\Connection $database) {
-        parent::__construct();
+    /**
+     * @var FyziklaniFactory
+     */
+    private $fyziklaniFactory;
 
+    public function __construct(\Nette\Database\Connection $database,FyziklaniFactory $pointsFactory) {
+        parent::__construct();
+        $this->fyziklaniFactory = $pointsFactory;
         $this->database = $database;
     }
 
@@ -41,23 +50,11 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         parent::startup();
     }
 
-    public function renderEntry() {
-        
-    }
-
-    public function renderDefault() {
-        
-    }
-
-    public function renderEdit() {
-        
-    }
-
     public function renderResults() {
         if($this->isAjax()){
             $result = [];
             $type = $this->getHttpRequest()->getQuery('type');
-            $isOrg = $this->getHttpRequest()->getQuery('org') ? true : false;
+
 
             if($type == 'init'){
                 foreach ($this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id',$this->eventID)->order('label') as $row) {
@@ -124,6 +121,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function closeFormSucceeded(Form $form) {
+
         $values = $form->getValues();
         $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
                 ->select('*')
@@ -154,7 +152,8 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                 ->setDisabled(true);
         $form->addText('task',_('Úloha'))
                 ->setDisabled(true);
-        $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1));
+        $form->addComponent($this->fyziklaniFactory->createPointsField(),'points');
+        // $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1));
 
         $form->addSubmit('send','Uložit');
         $form->onSuccess[] = [$this,'editFormSucceeded'];
@@ -188,13 +187,8 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function createComponentFyziklaniEntryForm() {
-        $form = new \Nette\Application\UI\Form();
+        $form = $this->fyziklaniFactory->createEntryForm();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('taskCode',_('Kód úlohy'))
-                ->setRequired()
-                ->addRule(\Nette\Forms\Form::PATTERN,'Nesprávyn tvar','[0-9]{5}[A-Z]{2}[0-9]');
-        $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1));
-        $form->addSubmit('send','Uložit');
         $form->onSuccess[] = [$this,'entryFormSucceeded'];
         return $form;
     }
@@ -203,26 +197,68 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         $this->setTitle(_('Zadávaní bodů'));
     }
 
+    public function authorizedEntry() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','entry',$this->getSelectedContest()));
+    }
+
     public function titleEdit() {
         $this->setTitle(_('Uprava bodovania'));
+    }
+
+    public function authorizedEdit() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','edit',$this->getSelectedContest()));
     }
 
     public function titleSubmits() {
         $this->setTitle(_('Submity'));
     }
 
+    public function authorizedSubmits() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','submits',$this->getSelectedContest()));
+    }
+
     public function titleClose() {
         $this->setTitle(_('Uzavierka bodovania'));
+    }
+
+    public function authorizedClose() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','close',$this->getSelectedContest()));
     }
 
     public function titleDefault() {
         $this->setTitle(_('Fykosí Fyzikláni'));
     }
-    public function titleResults(){
-        $this->setTitle(_('Výsledky '.$this->eventYear.'. Fykosího Fyzikláni'));
+
+    public function authorizedDefault() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','default',$this->getSelectedContest()));
+    }
+
+    public function titleResults() {
+        $this->setTitle(_('Výsledky Fykosího Fyzikláni'));
+    }
+
+    public function authorizedResults() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','results',$this->getSelectedContest()));
+    }
+
+    public function titleTask() {
+        $this->setTitle(_('Úlohy Fykosího Fyzikláni'));
+    }
+
+    public function authorizedTask() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','task',$this->getSelectedContest()));
+    }
+
+    public function titleTaskimport() {
+        $this->setTitle(_('Import úloh fykosího fyzikláni'));
+    }
+
+    public function authorizedTaskimport() {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani','taskimport',$this->getSelectedContest()));
     }
 
     public function entryFormSucceeded(Form $form) {
+        Debugger::timer();
         $values = $form->getValues();
         $numLabel = $this->getNumLabel($values->taskCode);
         /** @TODO */
@@ -258,12 +294,15 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             $this->redirect('this');
             return;
         }
-        if($this->database->query('INSERT INTO '.\DbNames::TAB_FYZIKLANI_SUBMIT,[
-                    'points' => $values->points,
-                    'fyziklani_task_id' => $taksID,
-                    'e_fyziklani_team_id' => $teamID
-                ])){
-            $this->flashMessage(_('body boli uložené'),'success');
+
+        $r = $this->database->query('INSERT INTO '.\DbNames::TAB_FYZIKLANI_SUBMIT,[
+            'points' => $values->points,
+            'fyziklani_task_id' => $taksID,
+            'e_fyziklani_team_id' => $teamID
+        ]);
+        $t = Debugger::timer();
+        if($r){
+            $this->flashMessage(_('Body boli uložené. ('.$values->points.' bodů, tým ID '.$teamID.', '.$t.'s)'),'success');
             $this->redirect('this');
         }else{
             $this->flashMessage('Vyskytla sa chyba','danger');
@@ -358,6 +397,63 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         Debugger::barDump($points);
         Debugger::barDump(is_numeric($points));
         return !is_numeric($points);
+    }
+
+    public function createComponentTaskImportForm() {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer);
+        $form->addUpload('csvfile')->setRequired();
+
+        $form->addSelect('state',_('Vyberte akciu'),[
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatnuť úlohy a pridať ak neexistuje'),
+            self::IMPORT_STATE_REMOVE_N_INSERT => _('Ostrániť všetky úlohy a nahrať nove'),
+            self::IMPORT_STATE_INSERT => _('Pridať ak neexistuje'),
+        ]);
+        $form->addSubmit('import',_('importovať'));
+        $form->onSuccess[] = [$this,'taskImportFormSucceeded'];
+        return $form;
+    }
+
+    public function taskImportFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        $filename = $values->csvfile->getTemporaryFile();
+        if($values->state == self::IMPORT_STATE_REMOVE_N_INSERT){
+            $this->database->query('DELETE FROM '.\DbNames::TAB_FYZIKLANI_TASK.' WHERE event_id=?',$this->eventID);
+        }
+        $parser = new \FKS\Utils\CSVParser($filename,\FKS\Utils\CSVParser::INDEX_FROM_HEADER);
+        foreach ($parser as $row) {
+            $taskID = $this->taskLabelToTaskID($row['label']);
+            if($taskID){
+                if($values->state == self::IMPORT_STATE_UPDATE_N_INSERT){
+                    if($this->database->query('UPDATE '.\DbNames::TAB_FYZIKLANI_TASK.' SET ? WHERE fyziklani_task_id =?',[
+                                'label' => $row['label'],
+                                'name' => $row['name']
+                                    ],$taskID)){
+                        $this->flashMessage('Úloha '.$row['label'].' "'.$row['name'].'" bola updatnuta','info');
+                    }else{
+                        $this->flashMessage('Vyskytal sa chyba','danger');
+                    }
+                }else{
+                    $this->flashMessage('Úloha '.$row['label'].' "'.$row['name'].'" nebola pozmenená','warning');
+                }
+            }else{
+                if($this->database->query('INSERT INTO '.\DbNames::TAB_FYZIKLANI_TASK,[
+                            'label' => $row['label'],
+                            'name' => $row['name'],
+                            'event_id' => $this->eventID
+                        ])){
+                    $this->flashMessage('Úloa '.$row['label'].' "'.$row['name'].'" bola vložená','success');
+                }else{
+                    $this->flashMessage('Vyskytal sa chyba','danger');
+                }
+            }
+        }
+        $this->redirect('this');
+    }
+
+    public function createComponentTaskGrid() {
+        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid($this);
+        return $grid;
     }
 
 }
