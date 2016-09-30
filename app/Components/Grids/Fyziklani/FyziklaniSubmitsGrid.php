@@ -26,15 +26,12 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
     }
 
     public function isSearchable() {
-        return $this->searchable;
-    }
-
-    public function setSearchable($searchable) {
-        $this->searchable = $searchable;
+        return false;
     }
 
     protected function configure($presenter) {
         parent::configure($presenter);
+        $this->paginate = false;
         $this->addColumn('name',_('Názov týmu'));
         $this->addColumn('e_fyziklani_team_id',_('Tým ID'));
         $that = $this;
@@ -56,21 +53,28 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                     return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
                 })
                 ->setText(_('Zmazať'));
+
         $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
         $this->setDataSource(new NDataSource($submits));
     }
 
     public function handleDelete($id) {
-        $teamID = $this->presenter->submitToTeam($id);
-        if(!$this->presenter->isOpenSubmit($teamID)){
 
+        $teamID = $this->presenter->submitToTeam($id);
+        if(!$teamID){
+            $this->flashMessage(_('Submit nenexistuje'),'danger');
             return;
         }
-        if($this->presenter->database->queryArgs('DELETE from fyziklani_submit WHERE fyziklani_submit_id=?',[$id])){
-            $this->flashMessage('Úloha bola zmazaná','success');
-            $this->redirect('this');
-        }else{
-            $this->flashMessage('Vykytla sa chyba','danger');
+        if(!$this->presenter->isOpenSubmit($teamID)){
+            $this->flashMessage('Tento tým má už uzavreté bodovanie','warning');
+            return;
+        }
+        try {
+            $this->presenter->database->queryArgs('DELETE FROM '.\DbNames::TAB_FYZIKLANI_SUBMIT.' WHERE fyziklani_submit_id=?',[$id]);
+            $this->flashMessage(_('Úloha bola zmazaná'),'success');
+        } catch (Exception $e) {
+            $this->flashMessage(_('Vykytla sa chyba'),'danger');
+            \Nette\Diagnostics\Debugger::log($e);
         }
     }
 

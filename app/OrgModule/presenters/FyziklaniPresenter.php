@@ -12,10 +12,6 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     private $submit;
 
     const EVENT_TYPE_ID = 1;
-    const START_AT = '2016-09-27T13:30:00';
-    const END_AT = '2016-09-27T15:00:00';
-    const HIDDE_AT = '2016-09-27T14:40:00';
-    const DISPLAY_AT = '2016-09-27T14:02:00';
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
     const IMPORT_STATE_REMOVE_N_INSERT = 2;
     const IMPORT_STATE_INSERT = 3;
@@ -34,13 +30,23 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
      */
     private $fyziklaniFactory;
 
-    public function __construct(\Nette\Database\Connection $database,FyziklaniFactory $pointsFactory) {
+    /**
+     *
+     * @var \Nette\DI\Container
+     */
+    public $container;
+
+    public function __construct(\Nette\Database\Connection $database,FyziklaniFactory $pointsFactory,\Nette\DI\Container $container) {
         parent::__construct();
+        $this->container = $container;
+        //Debugger::barDump($container->parameters['fyziklani']);
+
         $this->fyziklaniFactory = $pointsFactory;
         $this->database = $database;
     }
 
     public function startup() {
+
         if(!$this->eventExist()){
             throw new \Nette\Application\BadRequestException('Pre tento ročník nebolo najduté Fyzikláni',404);
         }
@@ -73,7 +79,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                 throw new \Nette\Application\BadRequestException('error',404);
             }
 
-            $result['times'] = ['toStart' => strtotime(self::START_AT) - time(),'toEnd' => strtotime(self::END_AT) - time(),'visible' => $this->resultsOpen()];
+            $result['times'] = ['toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(),'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(),'visible' => $this->resultsVisible()];
 
             $this->sendResponse(new \Nette\Application\Responses\JsonResponse($result));
         }else{
@@ -82,9 +88,8 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
     }
 
-    private function resultsOpen() {
-
-        return (time() < strtotime(self::HIDDE_AT)) && (time() > strtotime(self::DISPLAY_AT));
+    private function resultsVisible() {
+        return (time() < strtotime($this->container->parameters['fyziklani']['results']['hidde'])) && (time() > strtotime($this->container->parameters['fyziklani']['results']['display']));
     }
 
     public function renderClose($id) {
@@ -104,7 +109,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         return $grid;
     }
 
-    public function createComponentFyziklaniCloseForm() {
+    public function createComponentCloseForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('e_fyziklani_team_id',0);
@@ -136,24 +141,49 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
     }
 
+    /**
+     * @TODO ak je už uzavreté vyfakovať 
+     * @param type $id
+     */
     public function actionClose($id) {
+
         if($id){
-            $this['fyziklaniCloseForm']->setDefaults(['e_fyziklani_team_id' => $id,'next_task' => 'AB']);
+            if($this->isOpenSubmit($id)){
+                if(!$this->teamExist($id)){
+                    $this->flashMessage('Tým neexistuje','danger');
+                    $this->redirect(':org:fyziklani:close');
+                }
+                $this['closeForm']->setDefaults(['e_fyziklani_team_id' => $id,'next_task' => $this->getNextTask($id)->nextTask]);
+            }else{
+                $this->flashMessage('tento tým má už uzavreté bodovanie','danger');
+                $this->redirect(':org:fyziklani:close');
+            }
         }
     }
 
+    public function getNextTask($teamID) {
+
+        $return = [];
+        $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id=?',$teamID)->count();
+        $allTask = $this->database->query('SELECT * FROM '.\DbNames::TAB_FYZIKLANI_TASK.' WHERE event_id = ? ORDER BY label',$this->eventID)->fetchAll();
+        $lastID = $submits + $this->container->parameters['fyziklani']['taskOnBoard'] - 1;/** @because index start with 0; */
+        $nextID = $lastID + 1;
+        if(array_key_exists($nextID,$allTask)){
+            $return['nextTask'] = $allTask[$nextID]->label;
+        }else{
+            $return['nextTask'] = null;
+        }
+        if(array_key_exists($lastID,$allTask)){
+            $return['lastTask'] = $allTask[$lastID]->label;
+        }else{
+            $return['lastTask'] = null;
+        }
+        return (object) $return;
+    }
+
     public function createComponentFyziklaniEditForm() {
-        $form = new Form();
+        $form = $this->fyziklaniFactory->createEditForm();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addHidden('submit_id',0);
-        $form->addText('team',_('Tým'))
-                ->setDisabled(true);
-        $form->addText('team_id',_('Tým ID'))
-                ->setDisabled(true);
-        $form->addText('task',_('Úloha'))
-                ->setDisabled(true);
-        $form->addComponent($this->fyziklaniFactory->createPointsField(),'points');
-        // $form->addRadioList('points',_('Počet bodů'),array(5 => 5,3 => 3,2 => 2,1 => 1));
 
         $form->addSubmit('send','Uložit');
         $form->onSuccess[] = [$this,'editFormSucceeded'];
@@ -164,10 +194,15 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         if(!$id){
             throw new \Nette\Application\BadRequestException('ID je povinné',400);
         }
-        /* Uzatvorené bodovanie nejde editovať; */
+        /* Neexitujúci submit nejde editovať */
         $teamID = $this->submitToTeam($id);
+        if(!$teamID){
+            $this->flashMessage(_('Submit neexistuje'),'danger');
+            $this->redirect(':Org:Fyziklani:submits');
+        }
+        /* Uzatvorené bodovanie nejde editovať; */
         if(!$this->isOpenSubmit($teamID)){
-            $this->flashMessage('Bodovanie tohoto týmu je uzavreté','danger');
+            $this->flashMessage(_('Bodovaní tohto týmu je uzvřené'),'danger');
             $this->redirect(':Org:Fyziklani:submits');
         }
 
@@ -250,7 +285,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function titleTaskimport() {
-        $this->setTitle(_('Import úloh fykosího fyzikláni'));
+        $this->setTitle(_('Import úloh Fykosího Fyzikláni'));
     }
 
     public function authorizedTaskimport() {
@@ -260,11 +295,11 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     public function entryFormSucceeded(Form $form) {
         Debugger::timer();
         $values = $form->getValues();
-        $numLabel = $this->getNumLabel($values->taskCode);
-        /** @TODO */
-        if($this->checkContolNumber($numLabel)){
-            $this->flashMessage('Chybne zadaný kód úlohy.','danger');
-            $this->redirect('this');
+
+        /** skontroluje pratnosť kontrolu */
+        if(!$this->checkContolNumber($values->taskCode)){
+            $this->flashMessage(_('Chybne zadaný kód úlohy.'),'danger');
+            //  $this->redirect('this');
             return;
         }
         /* Existenica týmu */
@@ -276,7 +311,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
         /* otvorenie submitu */
         if(!$this->isOpenSubmit($teamID)){
-            $this->flashMessage('Bodovanie tohoto týmu je uzavreté','danger');
+            $this->flashMessage(_('Bodovanie tohoto týmu je uzavreté'),'danger');
             $this->redirect('this');
             return;
         }
@@ -285,13 +320,13 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         $taksID = $this->taskLabelToTaskID($taskLabel);
         if(!$taksID){
             $this->flashMessage('Úloha  '.$taskLabel.' nexistuje','danger');
-            $this->redirect('this');
+            //$this->redirect('this');
             return;
         }
         /* Nezadal sa duplicitne toto nieje editácia */
         if($this->submitExist($taksID,$teamID)){
             $this->flashMessage('Úloha '.$taskLabel.' už bola zadaná','warning');
-            $this->redirect('this');
+            //   $this->redirect('this');
             return;
         }
 
@@ -305,27 +340,34 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             $this->flashMessage(_('Body boli uložené. ('.$values->points.' bodů, tým ID '.$teamID.', '.$t.'s)'),'success');
             $this->redirect('this');
         }else{
-            $this->flashMessage('Vyskytla sa chyba','danger');
+            $this->flashMessage(_('Vyskytla sa chyba'),'danger');
         }
     }
 
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
-        /* Uzatvorené bodovanie nejde editovať; */
+
         $teamID = $this->submitToTeam($values->submit_id);
-        if(!$this->isOpenSubmit($teamID)){
-            $this->flashMessage('Bodovanie tohoto týmu je uzavreté','danger');
+        if(!$teamID){
+            $this->flashMessage(_('Submit neexistuje'),'danger');
             $this->redirect(':Org:Fyziklani:submits');
         }
-        if($this->database->query('UPDATE '.\DbNames::TAB_FYZIKLANI_SUBMIT.' SET ? where fyziklani_submit_id=?',[
-                    'points' => $values->points
-                        ],$values->submit_id)){
-            $this->flashMessage('Body boli zmenene','success');
-        }else{
-            $this->flashMessage('ops','danger');
-        }
 
-        $this->redirect('this');
+        /* Uzatvorené bodovanie nejde editovať; */
+        if(!$this->isOpenSubmit($teamID)){
+            $this->flashMessage(_('Bodovanie tohoto týmu je uzavreté'),'danger');
+            $this->redirect(':Org:Fyziklani:submits');
+        }
+        try {
+            $this->database->query('UPDATE '.\DbNames::TAB_FYZIKLANI_SUBMIT.' SET ? where fyziklani_submit_id=?',[
+                'points' => $values->points
+                    ],$values->submit_id);
+            $this->flashMessage(_('Body boli zmenené'),'success');
+            $this->redirect('this');
+        } catch (Exception $e) {
+            $this->flashMessage('ops','danger');
+            Debugger::log($e);
+        }
     }
 
     public function submitExist($taksID,$teamID) {
@@ -333,6 +375,16 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                         ->where('fyziklani_task_id=?',$taksID)
                         ->where('e_fyziklani_team_id=?',$teamID)
                         ->count();
+    }
+
+    public function teamExist($teamID) {
+        return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)
+                        ->get($teamID)->event_id == $this->eventID;
+    }
+
+    /** Vrati tru ak pre daný ročník existuje fyzikláni */
+    public function eventExist() {
+        return $this->getActualEvent() ? true : false;
     }
 
     public function extractTeamID($numLabel) {
@@ -347,6 +399,12 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         return str_replace(array('A','B','C','D','E','F','G','H'),array(1,2,3,4,5,6,7,8),$teamTaskLabel);
     }
 
+    private function checkContolNumber($taskCode) {
+        $subcode = $this->getNumLabel(substr($taskCode,0,-1));
+        $control = substr($taskCode,-1);
+        return ($subcode % 11) == str_replace('X',10,$control);
+    }
+
     public function taskLabelToTaskID($taskLabel) {
         $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)
                 ->where('label = ?',$taskLabel)
@@ -358,11 +416,6 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         return false;
     }
 
-    public function teamExist($teamID) {
-        return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)
-                        ->get($teamID)->event_id == $this->eventID;
-    }
-
     public function getCurrentEventID() {
         return $this->getActualEvent()->event_id;
     }
@@ -371,31 +424,25 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     public function getActualEvent() {
         return $this->database->table(\DbNames::TAB_EVENT)
                         ->where('year',$this->year)
-                        ->where('event_type_id',self::EVENT_TYPE_ID)
+                        ->where('event_type_id',$this->container->parameters['fyziklani']['eventTypeID'])
                         ->fetch();
     }
 
-    /** Vrati tru ak pre daný ročník existuje fyzikláni */
-    public function eventExist() {
-        return $this->getActualEvent() ? true : false;
-    }
-
-    private function checkContolNumber($numLabel) {
-        return $numLabel % 9;
+    private function getSubmit($submitID) {
+        return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
+                        ->where('fyziklani_submit_id',$submitID)
+                        ->fetch();
     }
 
     public function submitToTeam($submitID) {
-        return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
-                        ->where('fyziklani_submit_id',$submitID)
-                        ->fetch()->e_fyziklani_team_id;
+        $r = $this->getSubmit($submitID);
+        return $r ? $r->e_fyziklani_team_id : $r;
     }
 
     public function isOpenSubmit($teamID) {
         $points = $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)
                         ->where('e_fyziklani_team_id',$teamID)
                         ->fetch()->points;
-        Debugger::barDump($points);
-        Debugger::barDump(is_numeric($points));
         return !is_numeric($points);
     }
 
@@ -431,7 +478,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                                     ],$taskID)){
                         $this->flashMessage('Úloha '.$row['label'].' "'.$row['name'].'" bola updatnuta','info');
                     }else{
-                        $this->flashMessage('Vyskytal sa chyba','danger');
+                        $this->flashMessage(_('Vyskytal sa chyba'),'danger');
                     }
                 }else{
                     $this->flashMessage('Úloha '.$row['label'].' "'.$row['name'].'" nebola pozmenená','warning');
@@ -444,7 +491,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                         ])){
                     $this->flashMessage('Úloa '.$row['label'].' "'.$row['name'].'" bola vložená','success');
                 }else{
-                    $this->flashMessage('Vyskytal sa chyba','danger');
+                    $this->flashMessage(_('Vyskytal sa chyba'),'danger');
                 }
             }
         }

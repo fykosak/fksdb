@@ -30,7 +30,7 @@ navigation:
             - org.fyziklani.default
         public.dashboard.default:
             - public.submit.default
-            - public.application.list
+            - public.application.list           
             - fykos
             - vyfuk
         org.fyziklani.default:

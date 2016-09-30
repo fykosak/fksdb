@@ -23,7 +23,7 @@ acl:
     - addRole(taskManager, org)         # úlohář
     - addRole(dispatcher, org)          # koordinátor obálkování
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
-    - addRole(fyziklaniOrg)
+    - addRole(fyziklaniOrg, registered)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
     - addRole(eventManager, org)        # správce přihlášek
     - addRole(inboxManager, org)        # příjemce řešení
