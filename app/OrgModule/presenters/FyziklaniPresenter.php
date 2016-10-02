@@ -6,10 +6,11 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Application\UI\Form;
 use \Nette\Diagnostics\Debugger;
 use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
+use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
+use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
+use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
 class FyziklaniPresenter extends \OrgModule\BasePresenter {
-
-    private $submit;
 
     const EVENT_TYPE_ID = 1;
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
@@ -79,7 +80,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                 throw new \Nette\Application\BadRequestException('error',404);
             }
 
-            $result['times'] = ['toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(),'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(),'visible' => $this->resultsVisible()];
+            $result['times'] = ['toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(),'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(),'visible' => $this->isResultsVisible()];
 
             $this->sendResponse(new \Nette\Application\Responses\JsonResponse($result));
         }else{
@@ -88,7 +89,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
     }
 
-    private function resultsVisible() {
+    private function isResultsVisible() {
         return (time() < strtotime($this->container->parameters['fyziklani']['results']['hidde'])) && (time() > strtotime($this->container->parameters['fyziklani']['results']['display']));
     }
 
@@ -100,12 +101,12 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid($this);
+        $grid = new FyziklaniSubmitsGrid($this);
         return $grid;
     }
 
     public function createComponentCloseGrid() {
-        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid($this->database);
+        $grid = new FyziklaniTeamsGrid($this->database);
         return $grid;
     }
 
@@ -131,7 +132,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
                 ->select('*')
                 ->where('e_fyziklani_team_id',$values->e_fyziklani_team_id);
-        \Nette\Diagnostics\Debugger::barDump($submits);
+        Debugger::barDump($submits);
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
@@ -207,17 +208,17 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         }
 
 
-        $this->submit = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
+        $submit = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)
                         ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')
                         ->where('fyziklani_submit_id = ?',$id)->fetch();
 
-        $this->template->fyziklani_submit_id = $this->submit ? true : false;
+        $this->template->fyziklani_submit_id = $submit ? true : false;
         $this['fyziklaniEditForm']->setDefaults([
-            'team_id' => $this->submit->e_fyziklani_team_id,
-            'task' => $this->submit->label,
-            'points' => $this->submit->points,
-            'team' => $this->submit->name,
-            'submit_id' => $this->submit->fyziklani_submit_id
+            'team_id' => $submit->e_fyziklani_team_id,
+            'task' => $submit->label,
+            'points' => $submit->points,
+            'team' => $submit->name,
+            'submit_id' => $submit->fyziklani_submit_id
         ]);
     }
 
@@ -499,7 +500,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        $grid = new \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid($this);
+        $grid = new FyziklaniTaskGrid($this);
         return $grid;
     }
 

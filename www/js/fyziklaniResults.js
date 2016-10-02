@@ -1,7 +1,9 @@
 
 (function ($) {
 
-
+    /**
+     * toggle nastavení
+     */
     $('#resultsOptToogle').click(function () {
         $('#resultsOpt').slideToggle();
         $(this).toggleClass('active');
@@ -32,7 +34,9 @@
 
 
         var $clock = $('.clock');
-        var $imageWP = $('#imgeWP img');
+        var $imageWP = $('#imageWP img');
+        var basePath = $imageWP.data('basepath');
+        console.debug(basePath);
         //$outerDiv.append($clock);
 
 
@@ -54,7 +58,7 @@
              * @author Michal Červeňák
              * @returns {undefined}
              */
-            var aplyFilterByCategory = function (category) {
+            var applyFilterByCategory = function (category) {
                 $nav.find('li').removeClass('active');
                 $nav.find('li[data-category="' + category + '"]').addClass('active');
                 $tBody.find('tr').each(function () {
@@ -72,7 +76,7 @@
              * @author Michal Červeňák
              * @returns {undefined}
              */
-            var aplyFilterByRoom = function (room) {
+            var applyFilterByRoom = function (room) {
                 $nav.find('li').removeClass('active');
                 $nav.find('li[data-room="' + room + '"]').addClass('active');
                 $tBody.find('tr').each(function () {
@@ -84,10 +88,23 @@
                 });
             };
 
+            $nav.find('li').click(function () {
+                if ($form.find('#autoSwitch').is(':checked')) {
+                    return;
+                }
+
+                if ($(this).data('room')) {
+                    applyFilterByRoom($(this).data('room'));
+                } else if ($(this).data('category')) {
+                    applyFilterByCategory($(this).data('category'));
+                } else {
+                    disableFilter();
+                }
+            });
 
             var i = 0;
             var applyNext = function (i) {
-                console.debug('filter' + i);
+                //   console.debug('filter' + i);
                 var t = 15000;
                 if ($form.find('#autoSwitch').is(':checked') && $table.is(':visible')) {
                     $("html, body").animate({scrollTop: 0}, 0);
@@ -102,9 +119,9 @@
                         case 1:
                         {
                             var room = $form.find('#room').val();
-                            console.debug(room);
+                            //   console.debug(room);
                             if (room) {
-                                aplyFilterByRoom(room);
+                                applyFilterByRoom(room);
                             } else {
                                 t = 0;
                             }
@@ -113,9 +130,9 @@
                         case 2:
                         {
                             var category = $form.find('#category').val();
-                            console.debug(category);
+                            //      console.debug(category);
                             if (category) {
-                                aplyFilterByCategory(category);
+                                applyFilterByCategory(category);
                             } else {
                                 t = 0;
                             }
@@ -182,13 +199,14 @@
                         $table.find('tr[data-team_id="' + submit.team_id + '"]')
                                 .find('td[data-task_id="' + submit.task_id + '"]')
                                 .attr('data-points', submit.points)
+                                .data('points', submit.points)
                                 .text(submit.points);
                     });
                     $tBody.find('tr').each(function () {
                         var sum = 0;
 
                         $(this).find('td[data-points]').each(function () {
-                            sum += +$(this).data('points');
+                            sum += +$(this).attr('data-points');
                         });
 
                         $(this).find('td.sum').text(sum);
@@ -247,7 +265,7 @@
                 return;
             }
 
-            var imgSRC = '/images/fyziklani/';
+            var imgSRC = basePath+'/images/fyziklani/';
             if (toStart > 300) {
                 imgSRC += 'nezacalo.svg';
             } else if (toStart > 0) {
@@ -311,5 +329,4 @@
     });
     return;
 }(jQuery));
-
 
