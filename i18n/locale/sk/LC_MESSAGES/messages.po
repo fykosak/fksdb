@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-23 00:25+0200\n"
-"PO-Revision-Date: 2016-09-23 00:27+0200\n"
+"POT-Creation-Date: 2016-10-05 01:53+0200\n"
+"PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -1814,8 +1814,10 @@ msgid "Pouze pro české a slovenské studenty."
 msgstr ""
 
 #: i18n/../data/events/fol.neon.neon2php:18
-msgid "Pokud nelze školu nalézt, napište správci, reaguje rychle."
-msgstr ""
+msgid ""
+"Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje "
+"rychle."
+msgstr "Pokial nelze školu naist, pisajte na schola.novum () fykos.cz."
 
 #: i18n/../data/events/fol.neon.neon2php:21
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."

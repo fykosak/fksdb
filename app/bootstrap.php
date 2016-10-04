@@ -42,7 +42,10 @@ $configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
 // Load all .neon files in events data directory
 foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
     $configurator->addConfig($filename, Configurator::NONE);
-};
+}
+foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/fyziklani') as $filename => $file) {
+    $configurator->addConfig($filename, Configurator::NONE);
+}
 
 $container = $configurator->createContainer();
 
