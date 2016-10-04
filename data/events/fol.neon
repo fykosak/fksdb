@@ -15,7 +15,7 @@ parameters:
                 person_history:
                     school_id:
                         required: true
-                        description: _('Pokud nelze školu nalézt, napište správci, reaguje rychle.')
+                        description: _('Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje rychle.')
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
