@@ -27,10 +27,18 @@ navigation:
             - org.org.list
             - org.event.list
             - org.deduplicate.person
+            - org.fyziklani.default
         public.dashboard.default:
             - public.submit.default
-            - public.application.list
+            - public.application.list           
             - fykos
             - vyfuk
-
+        org.fyziklani.default:
+            - org.fyziklani.entry
+            - org.fyziklani.close
+            - org.fyziklani.submits
+            - org.fyziklani.results
+            - org.fyziklani.task
+            - org.fyziklani.taskimport
+            
         
