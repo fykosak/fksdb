@@ -59,6 +59,7 @@ INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 (9,'contestant','řešitel semináře, role je automaticky přiřazována při vytvoření řešitele'),
 (10,'exportDesigner','tvůrce exportů'),
 (11,'aesop','oslizávač dat pro AESOP'),
+(12,'schoolManager','správce dat škol'),
 (100,'superuser','složení všech rolí'),
 (1000,'cartesian','cokoli s čímkoli');
 			
