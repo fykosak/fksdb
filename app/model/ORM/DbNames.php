@@ -46,5 +46,8 @@ class DbNames {
     const TAB_E_SOUS_PARTICIPANT = 'e_sous_participant';
     const TAB_E_TSAF_PARTICIPANT = 'e_tsaf_participant';
     const TAB_E_VIKEND_PARTICIPANT = 'e_vikend_participant';
+    /* For fyziklani */
+    const TAB_FYZIKLANI_TASK = 'fyziklani_task';
+    const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
 
 }
