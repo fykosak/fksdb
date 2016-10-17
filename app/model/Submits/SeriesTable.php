@@ -103,7 +103,7 @@ class SeriesTable {
         return $this->serviceContestant->getTable()->where(array(
                     'contest_id' => $this->getContest()->contest_id,
                     'year' => $this->getYear(),
-                ))->order('person.family_name, person.other_name');
+                ))->order('person.family_name, person.other_name, person.person_id');
         //TODO series
     }
 
