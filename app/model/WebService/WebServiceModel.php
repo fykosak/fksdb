@@ -125,6 +125,19 @@ class WebServiceModel {
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
+      
+        if (isset($args->schoolcumulatives)) {
+            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
+
+            if (!is_array($args->schoolcumulatives->schoolcumulative)) {
+                $args->schoolcumulatives->schoolcumulative = array($args->schoolcumulatives->schoolcumulative);
+            }
+
+            foreach ($args->schoolcumulatives->schoolcumulative as $cumulative) {
+                $resultsModel->setSeries(explode(' ', $cumulative));
+                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
+            }
+        }
 
         // This type of call is deprecated (2015-10-02), when all possible callers
         // are notified about it, change it to SoapFault exception.
@@ -302,6 +315,14 @@ class WebServiceModel {
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
+    
+    private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
+        $schoolNode = $doc->createElement('school-cumulative');
+        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+
+        $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        return $schoolNode;
+    }
 
     private function createBrojureNode(IResultsModel $resultsModel, DOMDocument $doc) {
         $brojureNode = $doc->createElement('brojure');
@@ -313,5 +334,3 @@ class WebServiceModel {
     }
 
 }
-
-?>
