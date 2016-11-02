@@ -77,11 +77,8 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
      * @return IResultsModel
      */
     public function createSchoolCumulativeResultsModel(ModelContest $contest, $year) {
-        //$evaluationStrategy = self::findEvaluationStrategy($contest, $year);
-        //if ($evaluationStrategy === null) {
-            //throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
-        //}
-        return new SchoolCumulativeResultsModel($this, $contest, $this->serviceTask, $this->connection, $year);
+        $cumulativeResultsModel = $this->createCumulativeResultsModel($contest, $year);
+        return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contest, $this->serviceTask, $this->connection, $year);
     }
 
     /**
