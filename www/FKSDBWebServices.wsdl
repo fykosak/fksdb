@@ -33,10 +33,10 @@
 							</xsd:sequence>
 						</xsd:complexType>
 					</xsd:element>
-                                        <xsd:element name="schoolcumulatives" minOccurs="0" maxOccurs="1">
+                                        <xsd:element name="school-cumulatives" minOccurs="0" maxOccurs="1">
 						<xsd:complexType>
 							<xsd:sequence>
-								<xsd:element name="schoolcumulative" type="fksres:series-list-type" minOccurs="1" maxOccurs="unbounded"/>
+								<xsd:element name="school-cumulative" type="fksres:series-list-type" minOccurs="1" maxOccurs="unbounded"/>
 							</xsd:sequence>
 						</xsd:complexType>
 					</xsd:element>

@@ -126,14 +126,14 @@ class WebServiceModel {
             }
         }
       
-        if (isset($args->schoolcumulatives)) {
+        if (isset($args->{'school-cumulatives'})) {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
 
-            if (!is_array($args->schoolcumulatives->schoolcumulative)) {
-                $args->schoolcumulatives->schoolcumulative = array($args->schoolcumulatives->schoolcumulative);
+            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
+                $args->{'school-cumulatives'}->{'school-cumulative'} = array($args->{'school-cumulatives'}->{'school-cumulative'});
             }
 
-            foreach ($args->schoolcumulatives->schoolcumulative as $cumulative) {
+            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
                 $resultsModel->setSeries(explode(' ', $cumulative));
                 $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
             }
