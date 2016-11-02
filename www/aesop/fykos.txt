@@ -58,6 +58,10 @@
 ../fykos29/q/aesop.ct?ha=1&format=aesop&p_category=2
 ../fykos29/q/aesop.ct?ha=1&format=aesop&p_category=3
 ../fykos29/q/aesop.ct?ha=1&format=aesop&p_category=4
+../fykos30/q/aesop.ct?ha=1&format=aesop&p_category=1
+../fykos30/q/aesop.ct?ha=1&format=aesop&p_category=2
+../fykos30/q/aesop.ct?ha=1&format=aesop&p_category=3
+../fykos30/q/aesop.ct?ha=1&format=aesop&p_category=4
 ../fykos27/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
 ../fykos27/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
 ../fykos27/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
@@ -89,3 +93,5 @@
 ../fykos29/q/aesop.dsef?ha=1&format=aesop
 ../fykos29/q/aesop.tsaf?ha=1&format=aesop
 ../fykos29/q/aesop.sous.j?ha=1&format=aesop
+../fykos29/q/aesop.sous.p?ha=1&format=aesop
+../fykos30/q/aesop.sous.p?ha=1&format=aesop

@@ -18,6 +18,12 @@ interface IResultsModel {
     const LABEL_PERCETAGE = 'percent';
     const ALIAS_PERCENTAGE = 'percent';
     
+    /* for use in School Results */
+    const LABEL_UNWEIGHTED_SUM = 'unweighted-sum';
+    const ALIAS_UNWEIGHTED_SUM = 'unweighted-sum';
+    const LABEL_CONTESTANTS_COUNT = 'contestants-count';
+    const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
+    
     const COL_ALIAS = 'alias';
     const DATA_PREFIX = 'd';
 

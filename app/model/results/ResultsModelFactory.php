@@ -69,6 +69,20 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         }
         return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
     }
+    
+    /**
+     * 
+     * @param ModelContest $contest
+     * @param int $year
+     * @return IResultsModel
+     */
+    public function createSchoolCumulativeResultsModel(ModelContest $contest, $year) {
+        //$evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+        //if ($evaluationStrategy === null) {
+            //throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+        //}
+        return new SchoolCumulativeResultsModel($this, $contest, $this->serviceTask, $this->connection, $year);
+    }
 
     /**
      * 
