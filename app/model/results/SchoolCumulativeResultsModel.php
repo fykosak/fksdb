@@ -24,9 +24,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      */
     private $cumulativeResultsModel;
     
-    public function __construct(ResultsModelFactory $factory, \ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, \ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
-        $this->cumulativeResultsModel = $factory->createCumulativeResultsModel($this->contest, $this->year);
+        $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
     /**
@@ -182,6 +182,11 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             $resultRow[self::ALIAS_UNWEIGHTED_SUM] += $schoolContestants[$i][self::ALIAS_SUM];
         }
         $resultRow[self::ALIAS_PERCENTAGE] = round($resultRow[self::ALIAS_PERCENTAGE] / (float) count($schoolContestants));
+        foreach($resultRow as $key => $value){
+            if($resultRow[$key] === 0){
+                $resultRow[$key] = null;
+            }
+        }
         return $resultRow;
     }
 
