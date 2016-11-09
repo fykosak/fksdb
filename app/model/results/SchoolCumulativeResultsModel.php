@@ -166,9 +166,12 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             $resultRow[$column[self::COL_ALIAS]] = 0;
         }
         
-        $resultRow[self::ALIAS_CONTESTANTS_COUNT] = count($schoolContestants);
+        $resultRow[self::ALIAS_CONTESTANTS_COUNT] = 0;
         
         for($i=0; $i<count($schoolContestants); $i++){
+            if($schoolContestants[$i][self::ALIAS_SUM] != 0){
+                $resultRow[self::ALIAS_CONTESTANTS_COUNT]++;
+            }
             foreach($schoolContestants[$i] as $column => $value){
                 switch ($column) {
                     case self::ALIAS_PERCENTAGE:
@@ -181,9 +184,12 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             }
             $resultRow[self::ALIAS_UNWEIGHTED_SUM] += $schoolContestants[$i][self::ALIAS_SUM];
         }
-        $resultRow[self::ALIAS_PERCENTAGE] = round($resultRow[self::ALIAS_PERCENTAGE] / (float) count($schoolContestants));
+        $resultRow[self::ALIAS_PERCENTAGE] = round($resultRow[self::ALIAS_PERCENTAGE] / (float) $resultRow[self::ALIAS_CONTESTANTS_COUNT]);
         foreach($resultRow as $key => $value){
-            if($resultRow[$key] === 0){
+            if(is_float($value)){
+                $resultRow[$key] = round($value);
+            }
+            if($value == 0){
                 $resultRow[$key] = null;
             }
         }
