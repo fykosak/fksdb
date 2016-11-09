@@ -95,3 +95,4 @@
 ../fykos29/q/aesop.sous.j?ha=1&format=aesop
 ../fykos29/q/aesop.sous.p?ha=1&format=aesop
 ../fykos30/q/aesop.sous.p?ha=1&format=aesop
+../fykos30/q/aesop.dsef?ha=1&format=aesop
