@@ -12,6 +12,8 @@ use Github\Events\Event;
  */
 class PushEvent extends Event {
 
+	const REFS_HEADS = 'refs/heads/';
+
 	/** @var string */
 	public $ref;
 

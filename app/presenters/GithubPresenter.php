@@ -2,8 +2,9 @@
 
 use Github\EventFactory;
 use Github\Events\Event;
+use Github\Events\PushEvent;
+use Maintenance\Updater;
 use Nette\Application\Responses\TextResponse;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,8 +13,8 @@ use Nette\Diagnostics\Debugger;
  */
 class GithubPresenter extends AuthenticatedPresenter {
 
-	/** @var $parsedEvent Event */
-	private $parsedEvent;
+	/** @var Updater */
+	private $updater;
 
 	/** @var EventFactory */
 	private $eventFactory;
@@ -22,10 +23,8 @@ class GithubPresenter extends AuthenticatedPresenter {
 		$this->eventFactory = $eventFactory;
 	}
 
-	private function getEvent() {
-		if ($this->parsedEvent === null) {
-			$this->parsedEvent = Event::createFromRequest($request);
-		}
+	public function injectUpdater(Updater $updater) {
+		$this->updater = $updater;
 	}
 
 	public function getAllowedAuthMethods() {
@@ -33,7 +32,7 @@ class GithubPresenter extends AuthenticatedPresenter {
 	}
 
 	public function authorizedApi() {
-		//TODO check authorization
+		/* Already authenticated user has ultimate access to this presenter. */
 		$this->setAuthorized(true);
 	}
 
@@ -41,14 +40,19 @@ class GithubPresenter extends AuthenticatedPresenter {
 		$type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
 		$payload = $this->getFullHttpRequest()->getPayload();
 		$data = json_decode($payload, true);
-		Debugger::log(var_export($data, true));
 
 		$event = $this->eventFactory->createEvent($type, $data);
-		Debugger::log(var_export($event, true));
+		if ($event instanceof PushEvent) {
+			if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {
+				return;
+			}
+			$branch = substr($event->ref, strlen(PushEvent::REFS_HEADS));
+			$this->updater->installBranch($branch);
+		}
 	}
 
 	public function renderApi() {
-		$response = new TextResponse("DONE");
+		$response = new TextResponse("Thank you, Github.");
 		$this->sendResponse($response);
 	}
 

@@ -31,6 +31,7 @@ services:
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKS\Components\Controls\PresenterBuilder
     - Github\EventFactory
+    - Maintenance\Updater
     globalSession:
         class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:

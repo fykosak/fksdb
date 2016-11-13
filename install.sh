@@ -64,6 +64,10 @@ function post_update {
 # End of functions, begin work
 #
 
+# If we call this from own instance of FKSDB wait for PHP script to finish
+# before we start the update.
+sleep 1
+
 fksdb_dir="$1"
 branch="$2"
 remote="${3:-origin}"

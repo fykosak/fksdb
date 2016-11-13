@@ -31,6 +31,11 @@ parameters:
         login: github
         # API secret key
         secret:
+    updater:
+		# definition of install instances
+		# deployment:
+		# 	/path/to/fksdb/instance: branch-name
+		# 	/path/to/another/fksdb/instance: branch-name
 
 # Contest specific parameters
     fykos:
