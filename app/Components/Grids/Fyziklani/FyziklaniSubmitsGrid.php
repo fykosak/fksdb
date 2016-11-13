@@ -37,6 +37,8 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
         $that = $this;
         $this->addColumn('label',_('Úloha'));
         $this->addColumn('points',_('počet bodů'));
+        $this->addColumn('room',_('Room'));
+        $this->addColumn('submitted_on',_('Submited on'));
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-default')
                 ->setLink(function($row)use($presenter) {
@@ -54,7 +56,7 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                 })
                 ->setText(_('Zmazať'));
 
-        $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
+        $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
         $this->setDataSource(new NDataSource($submits));
     }
 
