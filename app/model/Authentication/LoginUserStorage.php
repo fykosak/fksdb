@@ -124,8 +124,9 @@ class LoginUserStorage extends UserStorage {
              * redirection to the login page will be done in the startup method.
              */
             if (!$ssoData && $presenter instanceof AuthenticatedPresenter) {
-                $allowedHttp = ($presenter->getAllowedAuthMethods() & AuthenticatedPresenter::AUTH_ALLOW_HTTP);
-                if ($presenter->requiresLogin() && !$allowedHttp) {
+                $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
+                        (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
+                if ($presenter->requiresLogin() && !$allowedNonlogin) {
                     $params = array(
                         'backlink' => (string) $this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
@@ -157,7 +158,7 @@ class LoginUserStorage extends UserStorage {
     public function getIdentity() {
         $local = parent::getIdentity();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
-        /* 
+        /*
          * Note that case when $global == true && $local != true should be resolved,
          * i.e. update local session from global. However, this is already done
          * int isAuthenticated method. Thus we can omit this case here.

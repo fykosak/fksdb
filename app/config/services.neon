@@ -10,6 +10,7 @@ services:
             - setRecoveryExpiration(%recovery.expiration%)
             - setEmailFrom(%email.from%)
     - Authentication\FacebookAuthenticator
+    - Authentication\GithubAuthenticator
     - Authentication\PasswordAuthenticator
     - Authentication\TokenAuthenticator    
     - Authorization\ContestAuthorizator
@@ -29,6 +30,8 @@ services:
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKS\Components\Controls\PresenterBuilder
+    - Github\EventFactory
+    - Maintenance\Updater
     globalSession:
         class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:

@@ -160,6 +160,15 @@ parameters:
             # Weight for email address similarity [0, 1].
             emailWeight: 0.04
 
+    # Maintenance
+    updater:
+		# absolute path to install script
+        installScript: %appDir%/../install.sh
+
+		# system user who should run the install script
+        installUser: fksdb-updater
+
+
 
 php:
     date.timezone: Europe/Prague
