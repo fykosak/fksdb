@@ -9,30 +9,36 @@ use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKS\Logging\ILogger;
 use Nette\ArrayHash;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use YearCalculator;
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
- * 
+ *
  * @author Aleš Podolník <ales@fykos.cz>
  * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
-class CategoryProcessing extends AbstractProcessing {
+class CategoryProcessing extends AbstractProcessing
+{
 
     /**
      * @var YearCalculator
      */
     private $yearCalculator;
 
-    function __construct(YearCalculator $yearCalculator) {
+    function __construct(YearCalculator $yearCalculator)
+    {
         $this->yearCalculator = $yearCalculator;
     }
 
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null)
+    {
+
         if (!isset($values['team'])) {
             return;
         }
+
 
         $event = $holder->getEvent();
         $contest = $event->getEventType()->contest;
@@ -60,15 +66,17 @@ class CategoryProcessing extends AbstractProcessing {
             $participants[] = $studyYear;
         }
 
-        $result = $values['team']['category'] = $this->getCategory($participants);
-
+        Debugger::barDump($form->getValues());
+        $result = $values['team']['category'] = $form->getValues()->team->force_a ? "A" : $this->getCategory($participants);
+        Debugger::barDump($values);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
             $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
         }
     }
 
-    private function getCategory($participants) {
+    private function getCategory($participants)
+    {
         $coefficient_sum = 0;
         $count_4 = 0;
         $count_3 = 0;
