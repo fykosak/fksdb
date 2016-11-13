@@ -17,12 +17,12 @@ function check_args {
 	fi
 }
 
-function mark_unavailabe {
+function mark_unavailable {
 	sed "s#^// require '\.main#require '.main#" -i "$fksdb_dir/www/index.php"
 	echo `date` "Website marked unavailable."
 }
 
-function mark_availabe {
+function mark_available {
 	sed "s#^require '\.main#// require '.main#" -i "$fksdb_dir/www/index.php"
 	echo `date` "Website marked available."
 }
@@ -41,12 +41,12 @@ function update_files {
 		cd -
 		return 1
 	else
-		mark_unavailabe
+		mark_unavailable
 		git merge --ff-only $remote/$branch || return 1
 		git submodule init || return 1
 		git submodule update || return 1
 		echo "Merged data from $remote/$branch into $branch"
-		mark_availabe
+		mark_available
 		rev=`git rev-parse HEAD`
 		echo "Installed revision $rev"
 
