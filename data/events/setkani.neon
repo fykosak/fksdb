@@ -34,14 +34,15 @@ parameters:
                     green: Zelené
                     blue: Modré
                     orange: Oranžové
-                    pink: Ružové
+                    pink: Růžové
+                    black: Černé
             arrival:
                 destination:
-                    aut: "Autobusovy terminál"
+                    aut: "ÚAN Florenc"
                     phl: "Hlavní nádraží"
                     
                 time:
-                    start: 16:00
+                    start: 17:30
                     end: 18:00
                    
                     
@@ -103,12 +104,12 @@ events:
                         required: true
                         modifiable: %events.setkani.appCond%
                     arrival_destination:
-                       label: "Na jaké místo přIjedeš?"
+                       label: "Na jaké místo přijedeš?"
                        required: true
                        factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     arrival_time:
-                       label: "Předpokládaný přijezd"
-                       description: "Čas přijezdu" 
+                       label: "Předpokládaný příjezd"
+                       description: "Čas příjezdu" 
                     departure_destination:
                        label: "Z jakého místa chceš odjíždět?"
                        required: true
@@ -130,7 +131,8 @@ events:
                     health_restrictions:
                         label: Zdravotní omezení
                         description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
-
+                    note:
+                       label: "Další poznámky"
 
         #
         #   MACHINE
