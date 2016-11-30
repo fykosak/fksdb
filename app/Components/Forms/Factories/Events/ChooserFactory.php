@@ -29,29 +29,38 @@ class ChooserFactory extends AbstractFactory {
      */
     private $optionsProvider;
 
-    function __construct($prompt, IOptionsProvider $optionsProvider) {
+    function __construct($prompt,IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
 
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field,BaseMachine $machine,Container $container) {
 
         $component = new SelectBox($field->getLabel());
-        $component->setOption('description', $field->getDescription());
+        $component->setOption('description',$field->getDescription());
 
         $component->setPrompt($this->prompt);
 
         $options = $this->optionsProvider->getOptions($field);
-        $component->setItems($options);
+        $opts = [];
+        foreach ($options as $key => $option) {
+            if(is_array($option)){
+                $opts[$option['value']] = $option['label'];
+            }else{
+                $opts[$key] = $option;
+            }
+        }
+
+        $component->setItems($opts);
 
         return $component;
     }
 
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component,Field $field,BaseMachine $machine,Container $container) {
         $component->setDefaultValue($field->getValue());
     }
 
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component,Field $field,BaseMachine $machine,Container $container) {
         $component->setDisabled();
     }
 
@@ -60,4 +69,3 @@ class ChooserFactory extends AbstractFactory {
     }
 
 }
-

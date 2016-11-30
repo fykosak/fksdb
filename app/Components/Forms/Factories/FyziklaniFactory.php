@@ -35,8 +35,8 @@ class FyziklaniFactory {
     private function createTaskCodeField() {
         $field = new TextInput(_('Kód úlohy'));
         $field->setRequired();
-        $field->addRule(\Nette\Forms\Form::PATTERN,_('Nesprávyn tvar'),'[0-9]{5}[A-Z]{2}[0-9X]');
-        $field->setAttribute('placeholder','00000XX0');
+        $field->addRule(\Nette\Forms\Form::PATTERN,_('Nesprávyn tvar'),'[0-9]{6}[A-Z]{2}[0-9]');
+        $field->setAttribute('placeholder','000000XX0');
         return $field;
     }
 

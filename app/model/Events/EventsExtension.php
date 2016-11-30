@@ -18,7 +18,7 @@ use Nette\Utils\PhpGenerator\Method;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
@@ -49,6 +49,7 @@ class EventsExtension extends CompilerExtension {
     public static $semanticMap = array(
         'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
         'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
+        'Checkbox'=> 'FKSDB\Components\Forms\Factories\Events\CheckboxFactory',
         'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
         'role' => 'Events\Semantics\Role',
         'regOpen' => 'Events\Semantics\RegOpen',
@@ -62,7 +63,7 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * Global registry of available events definitions.
-     * 
+     *
      * @var array[definitionName] => definition[] where definition (eventTypes =>, years =>, tableLayout =>, formLayout =>)
      */
     private $definitionsMap = array();
@@ -553,5 +554,5 @@ class EventsExtension extends CompilerExtension {
 }
 
 class MachineDefinitionException extends InvalidStateException {
-    
+
 }
