@@ -8,7 +8,9 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use \NiftyGrid\DataSource\NDataSource;
+use FKSDB\Components\Grids\BaseGrid;
+use Nette\Database\Table\Selection;
+use SQL\SearchableDataSource;
 
 /**
  * Description of SubmitsGrid
@@ -32,7 +34,14 @@ class FyziklanitaskGrid extends \FKSDB\Components\Grids\BaseGrid {
         $this->addColumn('name',_('Názov ǔlohy'));
 
         $submits = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id = ?',$presenter->eventID);
-        $this->setDataSource(new NDataSource($submits));
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function(Selection $table, $value) {
+                    $tokens = preg_split('/\s+/', $value);
+                    foreach ($tokens as $token) {
+                        $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+                    }
+                });
+        $this->setDataSource($dataSource);
     }
 
 }

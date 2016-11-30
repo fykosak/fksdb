@@ -103,7 +103,7 @@
             });
 
             var i = 0;
-            var applyNext = function (i) {
+            var applyNext = function () {
                 //   console.debug('filter' + i);
                 var t = 15000;
                 if ($form.find('#autoSwitch').is(':checked') && $table.is(':visible')) {
@@ -148,15 +148,12 @@
                 }
                 setTimeout(function () {
                     i++;
-                    applyNext(i % 3);
+                    i = i % 3;
+                    applyNext();
                 }, t);
             };
-            applyNext(i);
-//            setInterval(function () {
-//                fces[i]();
-//                i = ++i % 3;
-//                console.debug(i);
-//            }, 15000);
+            applyNext();
+
 
         };
         var resultsShow = function () {
