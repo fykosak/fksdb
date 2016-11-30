@@ -135,7 +135,7 @@ events:
                     force_a:
                         label: "Chceme se účastnit v kategorii A"
                         visible: true
-                        description: "Budete zařazeni do nejvyšší kategorie bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
+                        description: "Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
 
                     phone:
                         label: Kontaktní telefon
@@ -156,7 +156,7 @@ events:
                         label: Ubytování pro učitele
                         visible: true
                         modifiable: %events.fyziklani.appCond%
-                        factory: Chooser("Ubytovani noc", Options(%events.fyziklani.accomodation%))
+                        factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani.accomodation%))
                         required: false
 
 
@@ -204,7 +204,7 @@ events:
                         label: Ubytování
                         visible: true
                         modifiable: %events.fyziklani.appCond%
-                        factory: Chooser("Ubytovani noc", Options(%events.fyziklani.accomodation%))
+                        factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani.accomodation%))
                         required: false
 
 
