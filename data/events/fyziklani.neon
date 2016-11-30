@@ -13,12 +13,20 @@ parameters:
             accomodation:
                 - 
                     value: 1
-                    capacity: 0
+                    capacity: 64
                     label: "Hostel Elf"                
                 - 
                     value: 2
-                    capacity: 10
-                    label: "Inde"                
+                    capacity: 25
+                    label: "Beta Pension"
+                -
+                    value: 3
+                    capacity: 24
+                    label: "Wellness Hotel Step"
+                -
+                    value: 4
+                    capacity: 70
+                    label: "Hostel Kolbenka"
             teacher:
                 person:
                     other_name: true
