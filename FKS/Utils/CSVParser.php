@@ -15,6 +15,7 @@ class CSVParser extends Object implements Iterator {
 
     const INDEX_NUMERIC = 0;
     const INDEX_FROM_HEADER = 1;
+    const BOM = '\xEF\xBB\xBF';
 
     private $file;
     private $delimiter;
@@ -57,6 +58,11 @@ class CSVParser extends Object implements Iterator {
         $this->rowNumber = 0;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $this->header = fgetcsv($this->file, 0, $this->delimiter);
+            $first = reset($this->header);
+            if ($first !== false) {
+                $first = preg_replace('/' . self::BOM . '/', '', $first);
+                $this->header[0] = $first;
+            }
         }
         if ($this->valid()) {
             $this->next();
