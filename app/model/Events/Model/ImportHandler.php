@@ -97,7 +97,10 @@ class ImportHandler extends Object {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = new ArrayHash();
         $fieldExists = false;
+        $pkExists = false;
         $fieldNames = array_keys($primaryBaseHolder->getFields());
+        $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
+
         foreach ($row as $columnName => $value) {
             $parts = explode('.', $columnName);
             if (count($parts) == 1) {
@@ -110,11 +113,16 @@ class ImportHandler extends Object {
                 $values[$baseHolderName] = new ArrayHash();
             }
             $values[$baseHolderName][$fieldName] = $value;
-            if (in_array($fieldName, $fieldNames)) {
+            /* $keyName can also be primary key, consider it an implicit field too */
+            if (in_array($fieldName, $fieldNames) || $fieldName === $pkName) {
                 $fieldExists = true;
             }
+            if ($fieldName === $pkName && $pkName === $this->keyName) {
+                $pkExists = true;
+            }
         }
-        if (!$fieldExists) {
+
+        if (!$fieldExists || !$pkExists) {
             throw new ImportHandlerException(_('CSV soubor neobsahuje platnou hlavičku.'));
         }
 
@@ -132,6 +140,9 @@ class ImportHandler extends Object {
             } else {
                 $fields = $holder->getPrimaryHolder()->getFields();
                 $keyValue = $fields[$this->keyName]->getValue();
+            }
+            if (array_key_exists($keyValue, $result)) {
+                throw new ImportHandlerException(sprintf(_('Sloupec %s není (unikátní) klíč.'), $this->keyName));
             }
             $result[$keyValue] = $holder;
         }
