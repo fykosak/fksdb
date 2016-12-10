@@ -10,6 +10,9 @@
     <param name="errors-to"/>
     <param name="max-rank"/>
     <param name="max-points"/>
+    <param name="id-scope"/>
+    <param name="start-date"/>
+    <param name="end-date"/>
 
 
     <template match="/">
@@ -57,6 +60,18 @@
         <if test="$id-scope">
             <text>id-scope&#x9;</text>
             <value-of select="$id-scope"/>
+            <text>&#10;</text>
+        </if>
+        <!-- -->
+        <if test="$start-date">
+            <text>start-date&#x9;</text>
+            <value-of select="$start-date"/>
+            <text>&#10;</text>
+        </if>
+        <!-- -->
+        <if test="$end-date">
+            <text>end-date&#x9;</text>
+            <value-of select="$end-date"/>
             <text>&#10;</text>
         </if>
         <!-- -->
