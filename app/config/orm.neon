@@ -14,6 +14,7 @@ services:
     ServiceLogin:            ServiceLogin
     ServiceMPersonHasFlag:   ServiceMPersonHasFlag
     ServiceMPostContact:     ServiceMPostContact
+    ServiceMStoredQueryTag:  ServiceMStoredQueryTag
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson
     ServicePersonHasFlag:    ServicePersonHasFlag
@@ -25,6 +26,8 @@ services:
     ServiceSchool:           ServiceSchool
     ServiceStoredQuery:      ServiceStoredQuery
     ServiceStoredQueryParameter: ServiceStoredQueryParameter
+    ServiceStoredQueryTag:   ServiceStoredQueryTag
+    ServiceStoredQueryTagType: ServiceStoredQueryTagType
     ServiceStudyYear:        ServiceStudyYear
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution

@@ -31,6 +31,8 @@ class DbNames {
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
+    const TAB_STORED_QUERY_TAG = 'stored_query_tag';
+    const TAB_STORED_QUERY_TAG_TYPE = 'stored_query_tag_type';
     const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';

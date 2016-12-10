@@ -11,6 +11,7 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FormUtils;
 use IResultsModel;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -26,6 +27,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
+use ServiceMStoredQueryTag;
 
 class ExportPresenter extends SeriesPresenter {
 
@@ -56,6 +58,11 @@ class ExportPresenter extends SeriesPresenter {
      * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
+    
+    /**
+     * @var ServiceMStoredQueryTag
+     */
+    private $serviceMStoredQueryTag;
 
     /**
      * @var StoredQueryFormFactory
@@ -88,6 +95,10 @@ class ExportPresenter extends SeriesPresenter {
 
     public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+    }
+    
+    public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
 
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
@@ -326,6 +337,18 @@ class ExportPresenter extends SeriesPresenter {
         }
         $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         return $grid;
+    }
+    
+    protected function createComponentTagCloudList($name) {
+        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
+        $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
+        return $tagCloud;
+    }
+    
+    protected function createComponentTagCloudDetail($name) {
+        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
+        $tagCloud->setModelStoredQuery($this->getPatternQuery());
+        return $tagCloud;
     }
 
     protected function createComponentComposeForm($name) {
