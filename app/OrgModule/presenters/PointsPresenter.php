@@ -10,6 +10,7 @@ use ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
+use Nette\Utils\Html;
 use ServiceSubmit;
 use ServiceTask;
 use ServiceTaskContribution;
@@ -126,7 +127,16 @@ class PointsPresenter extends SeriesPresenter {
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
+            $fullname = $contestant->getPerson()->getFullname();
+            $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
+            $schoolLabel = Html::el('small');
+            $schoolLabel->setText('('.$schoolAbbrev.')');
+            $schoolLabel->class = 'text-muted';
+            $label = Html::el()
+                    ->setText($fullname)
+                    ->add(Html::el('br'))
+                    ->add($schoolLabel);
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
