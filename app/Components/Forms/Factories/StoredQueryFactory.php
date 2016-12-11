@@ -10,6 +10,10 @@ use ModelStoredQueryParameter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use ServiceStoredQueryTagType;
+use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
+use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,6 +21,15 @@ use Nette\Forms\ControlGroup;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory {
+    
+    /**
+     * @var ServiceStoredQueryTagType
+     */
+    private $serviceStoredQueryTagType;
+    
+    function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
+    }
 
     public function createConsole($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
@@ -41,6 +54,8 @@ class StoredQueryFactory {
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
                 ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
+        
+        $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
         $container->addTextArea('description', _('Popis dotazu'));
 
@@ -127,6 +142,18 @@ class StoredQueryFactory {
         }
 
         return $container;
+    }
+    
+    private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
+        if ($renderMethod === null) {
+            $renderMethod = '$("<li>")
+                        .append("<a>" + item.label + "<br>" + item.description + ", ID: " + item.value + "</a>")
+                        .appendTo(ul);';
+        }
+        $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
+        $select->setDataProvider($dataProvider);
+        $select->setMultiselect(true);
+        return $select;
     }
 
 }

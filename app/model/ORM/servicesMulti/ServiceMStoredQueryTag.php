@@ -11,4 +11,15 @@ class ServiceMStoredQueryTag extends AbstractServiceMulti {
     public function __construct(ServiceStoredQueryTagType $mainService, ServiceStoredQueryTag $joinedService) {
         parent::__construct($mainService, $joinedService);
     }
+    
+    public function createNew($data = null) {
+        $mainModel = $this->getMainService()->findByPrimary($data['tag_type_id']);
+        if ($mainModel === null) {
+            throw new \Nette\InvalidArgumentException;
+        }
+        $joinedModel = $this->getJoinedService()->createNew($data);
+        
+        $result = new ModelMStoredQueryTag($this, $mainModel, $joinedModel);
+        return $result;
+    }
 }

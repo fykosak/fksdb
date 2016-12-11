@@ -252,7 +252,8 @@ class ExportPresenter extends SeriesPresenter {
         if (!$values) {
             $values = array();
             $values[self::CONT_CONSOLE] = $this->getPatternQuery();
-            $values[self::CONT_META] = $this->getPatternQuery();
+            $values[self::CONT_META] = $this->getPatternQuery()->toArray();
+            $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = array();
             foreach ($query->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
@@ -263,7 +264,7 @@ class ExportPresenter extends SeriesPresenter {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
-
+        
         $this['editForm']->setDefaults($values);
     }
 
@@ -457,11 +458,23 @@ class ExportPresenter extends SeriesPresenter {
         $metadata = $values[self::CONT_META];
         $metadata = FormUtils::emptyStrToNull($metadata);
         $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
-
+        
         $sqlData = $values[self::CONT_CONSOLE];
         $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
 
         $this->serviceStoredQuery->save($storedQuery);
+        
+        $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where(array(
+            'query_id' => $storedQuery->query_id,
+        ))->delete();
+        foreach ($metadata['tags'] as $tagTypeId) {
+            $data = array(
+                'query_id' => $storedQuery->query_id,
+                'tag_type_id' => $tagTypeId,
+            );
+            $tag = $this->serviceMStoredQueryTag->createNew($data);
+            $this->serviceMStoredQueryTag->save($tag);
+        }
 
         $this->serviceStoredQueryParameter->getTable()
                 ->where(array('query_id' => $storedQuery->query_id))->delete();
