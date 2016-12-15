@@ -77,10 +77,6 @@ class StoredQueryTagCloud extends Control {
         $this->template->render();
     }
     
-    public function getStyle(){
-        
-    }
-    
     private function createNextActiveTagIds(){
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = array();

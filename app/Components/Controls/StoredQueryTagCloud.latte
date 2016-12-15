@@ -1,13 +1,9 @@
 <p>
-Štítky:
+{var $isListMode = ($mode == \FKSDB\Components\Controls\StoredQueryTagCloud::MODE_LIST)}
 {foreach $tags as $tag}
-    <a class="label label-default" 
-       {if $mode == \FKSDB\Components\Controls\StoredQueryTagCloud::MODE_LIST && array_key_exists($tag->tag_type_id, $activeTagIds)}
-           style="background-color: blue"
-       {else}
-           style="background-color: red"
-       {/if}
-       {if $mode == \FKSDB\Components\Controls\StoredQueryTagCloud::MODE_LIST}
+    {var $active = ($isListMode && array_key_exists($tag->tag_type_id, $activeTagIds))?'storedQueryTag-active':''}
+    <a class="label storedQueryTag storedQueryTag-{$tag->color} {$active}"
+       {if $isListMode}
            href="{link onClick! $nextActiveTagIds[$tag->tag_type_id]}"
        {/if}
         title="{$tag->description}">{$tag->name}</a>
