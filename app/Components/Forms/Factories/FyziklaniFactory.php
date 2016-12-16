@@ -26,7 +26,6 @@ class FyziklaniFactory {
         foreach ($this->container->parameters['fyziklani']['availablePionts'] as $v) {
             $items[$v] = $v;
         }
-
         $field->setItems($items);
         $field->setRequired();
         return $field;
@@ -73,8 +72,6 @@ class FyziklaniFactory {
         $form->addComponent($this->createTeamIDField(),'team_id');
         $form->addComponent($this->createTaskField(),'task');
         $form->addComponent($this->createPointsField(),'points');
-
         return $form;
     }
-
 }

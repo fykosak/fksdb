@@ -17,7 +17,7 @@ use SQL\SearchableDataSource;
  *
  * @author miso
  */
-class FyziklanitaskGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniTaskGrid extends \FKSDB\Components\Grids\BaseGrid {
 
     private $presenter;
     protected $searchable;

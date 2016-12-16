@@ -1,75 +1,56 @@
-{* Latte template *}
-{block content}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
 
-<div class="fyziklaniResults" >
-    <div>
-
-    </div>
-    <ul class="nav nav-tabs" >
-        <li role="presentation" data-type="all"><a>Všetky</a></li>
-        <li role="presentation" data-category="A"><a>A</a></li>
-        <li role="presentation" data-category="B"><a>B</a></li>
-        <li role="presentation" data-category="C"><a>C</a></li>
-            {foreach $rooms as $room}
-            <li role="presentation" data-room="{$room}">
-                <a>{$room}</a>
-            </li>
-        {/foreach}
-    </ul>
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-</div>
-<div id="imageWP"><img alt src data-basepath="{$basePath}"/></div>
-<div class="clock"></div>
-<button id="resultsOptToogle" class="btn btn-default"><span class="glyphicon glyphicon-cog" type="button"></span>Nastavenia</button>
-<div id="resultsOpt" style="display:none">
-    <form id="resultsFrom" >
-        <div class="form-group">
-            <label class="sr-only">
-                <span>Místnost</span>
-            </label>
-            <select id="room" class="form-control">
-                <option value>--vyberte miestnosť-</option>
-                {foreach $rooms as $room}
-                    <option value="{$room}">{$room}</option>                    
-                {/foreach}
-            </select>
-        </div>
+    {control cssLoader
+        'css/bootstrap.min.css' => [screen],
+        'css/bootstrap-theme.min.css' => [screen],
+        'css/style.css' => [screen],
+        'css/fyziklani.css' => [all]
+        }
 
-        <div class="form-group">
-            <label class="sr-only">
-                <span>Categorie</span>
-            </label>
-            <select id="category" class="form-control">
-                <option value>--vyberte kategoriu--</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select>
-        </div>
+    {block head}{/block}
+</head>
 
-        <div class="form-group">
-            <div class="checkbox">
-                <label >
+<body>
+<div id="wrap">
 
-                    <input type="checkbox" id="autoSwitch"  />
-                    <span>Automatické ???</span>
-                </label>
+    {block body}
 
+
+        <div class="container">
+            <div class="fyziklani-results" data-basepath="{$basePath}">
             </div>
         </div>
-
-        <div class="form-group has-error">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="orgResults" >
-                    Neverejné výlsedkovky, <span class="text-danger">túto funkciu nezapínajte pokial sú vysledkovky premietané!!!</span>
-                </label>
-            </div>
-        </div>
+    {/block body}
+</div> <!-- wrap -->
 
 
-    </form>
-</div>
+<div id="spinner"></div>
 
+{block scripts}
+    {control jsLoader
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/bootstrap.min.js',
+        'js/nette.ajax.js',
+        'js/tablesorter.min.js',
+        'https://unpkg.com/react@15/dist/react.min.js',
+        'https://unpkg.com/react-dom@15/dist/react-dom.min.js',
+        'js/jsx/fyziklaniResults.js'
+            }
+
+    {* CSS files are only collected at the end of rendering, so we use this
+    invalid workaround and link some CSS files at the end of the page
+    *}
+    {control jsLoader:inline}
 {/block}
+{control cssLoader}
+</body>
+</html>
