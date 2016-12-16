@@ -1,11 +1,9 @@
-<p>
-{var $isListMode = ($mode == \FKSDB\Components\Controls\StoredQueryTagCloud::MODE_LIST)}
+<p class="storedQueryTags">
+{var $isListMode = ($mode == $control::MODE_LIST)}
 {foreach $tags as $tag}
     {var $active = ($isListMode && array_key_exists($tag->tag_type_id, $activeTagIds))?'storedQueryTag-active':''}
-    <a class="label storedQueryTag storedQueryTag-{$tag->color} {$active}"
-       {if $isListMode}
-           href="{link onClick! $nextActiveTagIds[$tag->tag_type_id]}"
-       {/if}
-        title="{$tag->description}">{$tag->name}</a>
+    <a n:tag-if="$isListMode" href="{link onClick! $nextActiveTagIds[$tag->tag_type_id]}">
+        <span class="label storedQueryTag storedQueryTag-{$tag->color} {$active}" title="{$tag->description}">{$tag->name}</span>
+    </a>
 {/foreach}
 </p>

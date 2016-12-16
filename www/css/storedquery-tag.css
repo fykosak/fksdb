@@ -1,11 +1,11 @@
 /* general setting */
+.storedQueryTags a:hover, .storedQueryTags a:focus{
+    text-decoration: none;
+}
+
 .storedQueryTag {
     color: black;
     background-color: silver;
-}
-
-.storedQueryTag:hover, .storedQueryTag:focus {
-    text-decoration: none;
 }
 
 .storedQueryTag-active, .storedQueryTag:hover, .storedQueryTag:focus {
