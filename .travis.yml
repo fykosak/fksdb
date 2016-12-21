@@ -4,6 +4,7 @@ addons:
   hosts:
   - db.fykos.local
   - auth.fykos.local
+  - localhost
 
 php:
   - 5.6
