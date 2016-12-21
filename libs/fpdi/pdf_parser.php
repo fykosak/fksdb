@@ -98,6 +98,10 @@ if (!class_exists('pdf_parser', false)) {
          *
          * @param string $filename  Source-Filename
          */
+    	function __construct($filename) {
+            $this->pdf_parser($filename);
+        }
+
     	function pdf_parser($filename) {
             $this->filename = $filename;
             
