@@ -43,25 +43,37 @@ parameters:
                     idMask: '%%s.rocnik.%3$s' # sprintf mask: contestName, year, category
                 aesop.fol:
                     idMask: '%%s.FoL.%3$s' # sprintf mask: contestName, year, category
+                    eventTypeId: 9
                 aesop.dsef:
                     idMask: '%%s.dsef' # sprintf mask: contestName, year, category
+                    eventTypeId: 2
                 aesop.dsef2:
                     idMask: '%%s.dsef2' # sprintf mask: contestName, year, category
+                    eventTypeId: 14
                 aesop.tsaf:
                     idMask: '%%s.tsaf' # sprintf mask: contestName, year, category
+                    eventTypeId: 7
                 aesop.vaf:
                     idMask: '%%s.vaf' # sprintf mask: contestName, year, category
+                    eventTypeId: 3
                 aesop.sous.j:
                     idMask: '%%s.sous.jaro' # sprintf mask: contestName, year, category
+                    eventTypeId: 4
                 aesop.sous.p:
                     idMask: '%%s.sous.podzim' # sprintf mask: contestName, year, category
+                    eventTypeId: 5
                 aesop.klani.ct:
                     idMask: '%%s.fyziklani.%3$s' # sprintf mask: contestName, year, category
+                    eventTypeId: 1
                 aesop.klani.uc:
                     idMask: '%%s.fyziklani.ucitele' # sprintf mask: contestName, year, category
+                    eventTypeId: 1
                 aesop.tabor:
                     idMask: '%%s.tabor' # sprintf mask: contestName, year, category
+                    eventTypeId: 10
                 aesop.setkani.j:
                     idMask: '%%s.setkani.jaro' # sprintf mask: contestName, year, category
+                    eventTypeId: 11
                 aesop.setkani.p:
                     idMask: '%%s.setkani.podzim' # sprintf mask: contestName, year, category
+                    eventTypeId: 12
