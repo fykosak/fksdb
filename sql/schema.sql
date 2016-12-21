@@ -5,13 +5,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
--- -----------------------------------------------------
--- Schema fksdb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `fksdb` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci ;
-USE `fksdb` ;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 
 -- -----------------------------------------------------
 -- Table `contest`
