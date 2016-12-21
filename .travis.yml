@@ -4,7 +4,6 @@ addons:
   hosts:
   - db.fykos.local
   - auth.fykos.local
-  - localhost
 
 php:
   - 5.6
@@ -19,7 +18,7 @@ before_install:
 
 install:
 #  - composer install --no-interaction --prefer-source
-  - "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
+  - "sed -e 's/user:/user: root/' app/config/config.local.neon.sample | sed -e 's/localhost/127.0.0.1/' > app/config/config.local.neon"
   - ./i18n/compile.sh
 
 before_script:
