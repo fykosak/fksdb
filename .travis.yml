@@ -1,0 +1,39 @@
+language: php
+
+addons:
+  hosts:
+  - db.fykos.local
+  - auth.fykos.local
+
+php:
+  - 5.6
+  - 7.0
+  
+services:
+  - mysql
+
+before_install:
+#  - composer self-update
+  - echo "user=root" >> ~/.my.cnf
+
+install:
+#  - composer install --no-interaction --prefer-source
+#  - git submodule init (automatic)
+#  - git submodule update (automatic)
+  - sed -e "s/user:/user: root/" app/config/config.local.neon.sample > app/config/config.local.neon
+  - ./i18n/compile.sh
+
+before_script:
+  - mysql -e 'CREATE DATABASE newfks;'
+  - mysql newfks < sql/schema.sql
+  - mysql newfks < sql/views.sql
+  - mysql newfks < sql/initval.sql
+  - ./tests/init-database.sh
+  - ./tests/clear-database.sh
+
+script:
+  - ./tests/run.sh
+
+after_failure:
+  # Vytiskne obsah souborů *.actual
+  - for i in $(find ./tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
