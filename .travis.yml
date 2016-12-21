@@ -18,8 +18,6 @@ before_install:
 
 install:
 #  - composer install --no-interaction --prefer-source
-#  - git submodule init (automatic)
-#  - git submodule update (automatic)
   - sed -e "s/user:/user: root/" app/config/config.local.neon.sample > app/config/config.local.neon
   - ./i18n/compile.sh
 
