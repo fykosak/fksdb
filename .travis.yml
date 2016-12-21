@@ -14,7 +14,7 @@ services:
 
 before_install:
 #  - composer self-update
-  - echo "user=root" >> ~/.my.cnf
+  - echo $'\n[client]\nuser=root' >> ~/.my.cnf
 
 install:
 #  - composer install --no-interaction --prefer-source
