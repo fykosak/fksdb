@@ -41,6 +41,7 @@ class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
 
         //$this->addColumn('points',_('Počet bodů'));
         $this->addColumn('room',_('Místnost'));
+        $this->addColumn('category',_('Kategória'));
 
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-success')
@@ -48,13 +49,7 @@ class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
                     return $presenter->link(':Org:Fyziklani:close',['id' => $row->e_fyziklani_team_id]);
                 })
                 ->setText(_('Uzavrieť bodovanie'));
-
-
-
-
         $teams = $this->database->table('e_fyziklani_team')->select('*')->where('event_id',$presenter->getCurrentEventID(null))->where('status?','participated')->where('points',NULL);
-        \Nette\Diagnostics\Debugger::barDump($teams);
         $this->setDataSource(new NDataSource($teams));
     }
-
 }

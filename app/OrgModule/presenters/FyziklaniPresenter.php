@@ -2,7 +2,8 @@
 
 namespace OrgModule;
 
-use FKS\Utils\CSVParser;
+use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use Fyziklani\CloseSubmitStragegy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -15,7 +16,7 @@ use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
-class FyziklaniPresenter extends \OrgModule\BasePresenter {
+class FyziklaniPresenter extends BasePresenter {
 
     const EVENT_TYPE_ID = 1;
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
@@ -64,7 +65,6 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             $result = [];
             $type = $this->getHttpRequest()->getQuery('type');
 
-
             if ($type == 'init') {
                 foreach ($this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id', $this->eventID)->order('label') as $row) {
                     $result['tasks'][] = ['label' => $row->label, 'name' => $row->name, 'task_id' => $row->fyziklani_task_id];
@@ -85,8 +85,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
             $this->sendResponse(new JsonResponse($result));
         } else {
-            $this->template->rooms = ['M1', 'M2', 'S1', 'S6', 'F1', 'F2'];
-            $this->template->category = $this->getHttpRequest()->getQuery('category');
+
         }
     }
 
@@ -155,8 +154,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
     public function closeFormSucceeded(Form $form) {
 
         $values = $form->getValues();
-        $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->select('*')->where('e_fyziklani_team_id', $values->e_fyziklani_team_id);
-        Debugger::barDump($submits);
+        $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id', $values->e_fyziklani_team_id);
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
@@ -164,6 +162,60 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
         if ($this->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET ? WHERE e_fyziklani_team_id=? ', ['points' => $sum], $values->e_fyziklani_team_id)) {
             $this->redirect(':Org:Fyziklani:close');
         }
+    }
+
+    public function createComponentCloseCategoryForm($category) {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        $form->addHidden('category', $category);
+        $form->addSubmit('send', _('Uzavrieť kategoriu' . $category));
+        $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
+        return $form;
+    }
+
+    public function createComponentCloseCategoryAForm() {
+        return $this->createComponentCloseCategoryForm('A');
+    }
+
+    public function createComponentCloseCategoryBForm() {
+        return $this->createComponentCloseCategoryForm('B');
+    }
+
+    public function createComponentCloseCategoryCForm() {
+        return $this->createComponentCloseCategoryForm('C');
+    }
+
+    public function closeCategoryFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        $closeStrategy = new CloseSubmitStragegy($this, $values->category);
+        $closeStrategy->preprocess();
+    }
+
+    public function createComponentCloseGlobalForm() {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        $form->addSubmit('send', _('Uzavrieť Fyzikláni'));
+        $form->onSuccess[] = [$this, 'closeGlobalFormSucceeded'];
+        return $form;
+    }
+
+    public function closeGlobalFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        // $closeStrategy = new CloseSubmitStragegy($this, $values->category);
+        // $closeStrategy->preprocess();
+    }
+
+
+    private function isReadyToClose($category = null) {
+        $database = $this->database;
+        $query = $database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('status', 'participated')->where('event_id', $this->eventID);
+        if ($category) {
+            $query->where('category', $category);
+        }
+        $query->where('points', null);
+        $count = $query->count();
+        return $count == 0;
+
     }
 
     /**
@@ -183,6 +235,19 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
                 $this->flashMessage('tento tým má už uzavreté bodovanie', 'danger');
                 $this->redirect(':org:fyziklani:close');
             }
+        }
+
+        if (!$this->isReadyToClose('A')) {
+            $this['closeCategoryAForm']['send']->setDisabled();
+        }
+        if (!$this->isReadyToClose('B')) {
+            $this['closeCategoryBForm']['send']->setDisabled();
+        }
+        if (!$this->isReadyToClose('C')) {
+            $this['closeCategoryCForm']['send']->setDisabled();
+        }
+        if (!$this->isReadyToClose()) {
+            $this['closeGlobalForm']['send']->setDisabled();
         }
     }
 
@@ -231,10 +296,7 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
             $this->flashMessage(_('Bodovaní tohto týmu je uzvřené'), 'danger');
             $this->redirect(':Org:Fyziklani:submits');
         }
-
-
         $submit = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('fyziklani_submit_id = ?', $id)->fetch();
-
         $this->template->fyziklani_submit_id = $submit ? true : false;
         $this['fyziklaniEditForm']->setDefaults(['team_id' => $submit->e_fyziklani_team_id, 'task' => $submit->label, 'points' => $submit->points, 'team' => $submit->name, 'submit_id' => $submit->fyziklani_submit_id]);
     }
@@ -440,43 +502,19 @@ class FyziklaniPresenter extends \OrgModule\BasePresenter {
 
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $filename = $values->csvfile->getTemporaryFile();
-        if ($values->state == self::IMPORT_STATE_REMOVE_N_INSERT) {
-            $this->database->query('DELETE FROM ' . \DbNames::TAB_FYZIKLANI_TASK . ' WHERE event_id=?', $this->eventID);
-        }
-        $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-        foreach ($parser as $row) {
-            $taskID = $this->taskLabelToTaskID($row['label']);
-            if ($taskID) {
-                if ($values->state == self::IMPORT_STATE_UPDATE_N_INSERT) {
-                    if ($this->database->query('UPDATE ' . \DbNames::TAB_FYZIKLANI_TASK . ' SET ? WHERE fyziklani_task_id =?', ['label' => $row['label'], 'name' => $row['name']], $taskID)) {
-                        $this->flashMessage('Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola updatnuta', 'info');
-                    } else {
-                        $this->flashMessage(_('Vyskytal sa chyba'), 'danger');
-                    }
-                } else {
-                    $this->flashMessage('Úloha ' . $row['label'] . ' "' . $row['name'] . '" nebola pozmenená', 'warning');
-                }
-            } else {
-                if ($this->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_TASK, ['label' => $row['label'], 'name' => $row['name'], 'event_id' => $this->eventID])) {
-                    $this->flashMessage('Úloa ' . $row['label'] . ' "' . $row['name'] . '" bola vložená', 'success');
-                } else {
-                    $this->flashMessage(_('Vyskytal sa chyba'), 'danger');
-                }
-            }
-        }
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this);
+        $taskImportProcessor->preprosess($values);
         $this->redirect('this');
     }
 
     public function createComponentTaskGrid() {
-        return  new FyziklaniTaskGrid($this);
+        return new FyziklaniTaskGrid($this);
     }
 
 
     private function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
         if (!$this->checkControlNumber($taskCode)) {
-
             $msg = _('Chybne zadaný kód úlohy.');
             return false;
         }

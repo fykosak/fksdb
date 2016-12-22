@@ -1,18 +1,31 @@
 {block content}
-{if $id}
+    {if $id}
 
-    <table class="table table-striped">
-        <thead><tr><th>Label</th><th>Body</th></tr></thead>
-    <tbody>
-        {foreach $submits as $submit}
-            <tr><td>{$submit->fyziklani_task->label}</td><td>{$submit->points}</td></tr>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Label</th>
+                <th>Body</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $submits as $submit}
+                <tr>
+                    <td>{$submit->fyziklani_task->label}</td>
+                    <td>{$submit->points}</td>
+                </tr>
 
-        {/foreach}
-    </tbody>
-</table>
+            {/foreach}
+            </tbody>
+        </table>
 
-{control closeForm}
-{else}
-    {control closeGrid}
-{/if}
+        {control closeForm}
+    {else}
+        {control closeGrid}
+        {control closeCategoryAForm}
+        {control closeCategoryBForm}
+        {control closeCategoryCForm}
+        {control closeGlobalForm}
+
+    {/if}
 {/block}

@@ -7,7 +7,6 @@
     <title>{block titleHeader}{$title} | FKSDB{/block}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
     {control cssLoader
         'css/bootstrap.min.css' => [screen],
         'css/bootstrap-theme.min.css' => [screen],
@@ -20,17 +19,13 @@
 
 <body>
 <div id="wrap">
-
     {block body}
-
-
         <div class="container">
             <div class="fyziklani-results" data-basepath="{$basePath}">
             </div>
         </div>
     {/block body}
-</div> <!-- wrap -->
-
+</div>
 
 <div id="spinner"></div>
 
@@ -41,14 +36,11 @@
         'js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/tablesorter.min.js',
-        'https://unpkg.com/react@15/dist/react.min.js',
-        'https://unpkg.com/react-dom@15/dist/react-dom.min.js',
+        'js/jsx/lib/react.min.js',
+        'js/jsx/lib/react-dom.min.js',
         'js/jsx/fyziklaniResults.js'
             }
 
-    {* CSS files are only collected at the end of rendering, so we use this
-    invalid workaround and link some CSS files at the end of the page
-    *}
     {control jsLoader:inline}
 {/block}
 {control cssLoader}
