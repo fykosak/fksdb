@@ -88,7 +88,7 @@ class ApplicationHandlerTest extends EventTestCase {
             array(
                 'name' => $teamName,
                 'phone' => '',
-		'force_a' => false,
+                'force_a' => false,
                 'teacher_id' => $id1,
                 'teacher_id_1' =>
                 array(

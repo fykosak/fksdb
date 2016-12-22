@@ -22,10 +22,6 @@ install:
   - ./i18n/compile.sh
 
 before_script:
-  - mysql -e 'CREATE DATABASE newfks;'
-  - mysql newfks < sql/schema.sql
-  - mysql newfks < sql/views.sql
-  - mysql newfks < sql/initval.sql
   - ./tests/init-database.sh
   - ./tests/clear-database.sh
   - rm -rf temp/* tmp
