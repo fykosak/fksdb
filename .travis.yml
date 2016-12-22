@@ -28,6 +28,7 @@ before_script:
   - mysql newfks < sql/initval.sql
   - ./tests/init-database.sh
   - ./tests/clear-database.sh
+  - rm -rf temp/*
 
 script:
   - ./tests/run.sh
