@@ -27,7 +27,7 @@ before_script:
   - rm -rf temp/* tmp
 
 script:
-  - ./tests/run.sh
+  - ./tests/run.sh -j 1
 
 after_failure:
   # Vytiskne obsah souborů *.actual
