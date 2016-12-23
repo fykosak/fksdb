@@ -8,7 +8,6 @@
 namespace Fyziklani;
 
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
 use OrgModule\FyziklaniPresenter;
 
@@ -27,13 +26,36 @@ class CloseSubmitStragegy {
      */
     protected $presenter;
 
-    public function __construct(FyziklaniPresenter $presenter, $category = null) {
+
+    public function __construct(FyziklaniPresenter $presenter) {
         $this->presenter = $presenter;
-        $this->category = $category;
     }
 
-    public function preprocess() {
-        $teams = $this->getAllTeams($this->category);
+    public function closeByCategory($category) {
+        $teams = $this->getAllTeams($category);
+        $teamsData = $this->getTeamsStats($teams);
+        usort($teamsData, self::sortFunction());
+        $this->saveResults($teamsData);
+    }
+
+    public function closeGlobal() {
+        $teams = $this->getAllTeams(null);
+        $teamsData = $this->getTeamsStats($teams);
+        usort($teamsData, self::sortFunction());
+        $this->saveResults($teamsData);
+    }
+
+    private function saveResults($data) {
+        $msg = '';
+        foreach ($data as $index => &$teamData) {
+            $teamData['rank_category'] = $index;
+            $msg .= '<li>TeamID:' . $teamData['e_fyziklani_team_id'] . ' Poradie: ' . ($index + 1) . '</li>';
+            $this->presenter->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET rank_category=? WHERE e_fyziklani_team_id=?', $index + 1, $teamData['e_fyziklani_team_id']);
+        }
+        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+    }
+
+    private function getTeamsStats($teams) {
         $teamsData = [];
         foreach ($teams as $team) {
             $teamData = [];
@@ -46,14 +68,7 @@ class CloseSubmitStragegy {
             $teamData['submits'] = $this->getAllSubmits($team_id);
             $teamsData[] = $teamData;
         }
-        usort($teamsData, self::sortFunction());
-        $msg = '';
-        foreach ($teamsData as $index => &$teamData) {
-            $teamData['rank_category'] = $index;
-            $msg .= '<li>TeamID:' . $teamData['e_fyziklani_team_id'] . ' Poradie: ' . ($index + 1) . '</li>';
-            $this->presenter->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET rank_category=? WHERE e_fyziklani_team_id=?', $index + 1, $teamData['e_fyziklani_team_id']);
-        }
-        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+        return $teamsData;
     }
 
     private static function sortFunction() {
@@ -68,13 +83,10 @@ class CloseSubmitStragegy {
                     $qb = $b['submits']['sum'] / $b['submits']['count'];
                     return $qa - $qb;
                 }
-
                 return 0;
             }
         };
-
     }
-
 
     private function getAllTeams($category = null) {
         $database = $this->presenter->database;
@@ -95,8 +107,6 @@ class CloseSubmitStragegy {
             $count++;
             $arraySubmits[] = ['task_id' => $submit->task_id, 'points' => $submit->points, 'time' => $submit->submitted_on];
         }
-
         return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];
     }
-
 }

@@ -15,6 +15,7 @@ use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
+use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 
 class FyziklaniPresenter extends BasePresenter {
 
@@ -36,7 +37,10 @@ class FyziklaniPresenter extends BasePresenter {
      * @var FyziklaniFactory
      */
     private $fyziklaniFactory;
-
+    /**
+     * @var TaskCodePreprocessor
+     */
+    private $taskCodePreprocessor;
     /**
      *
      * @var Container
@@ -48,6 +52,7 @@ class FyziklaniPresenter extends BasePresenter {
         $this->container = $container;
         $this->fyziklaniFactory = $pointsFactory;
         $this->database = $database;
+        $this->taskCodePreprocessor = new TaskCodePreprocessor();
     }
 
     public function startup() {
@@ -186,9 +191,8 @@ class FyziklaniPresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $values = $form->getValues();
-        $closeStrategy = new CloseSubmitStragegy($this, $values->category);
-        $closeStrategy->preprocess();
+        $closeStrategy = new CloseSubmitStragegy($this);
+        $closeStrategy->closeByCategory($form->getValues()->category);
     }
 
     public function createComponentCloseGlobalForm() {
@@ -199,10 +203,9 @@ class FyziklaniPresenter extends BasePresenter {
         return $form;
     }
 
-    public function closeGlobalFormSucceeded(Form $form) {
-        $values = $form->getValues();
-        // $closeStrategy = new CloseSubmitStragegy($this, $values->category);
-        // $closeStrategy->preprocess();
+    public function closeGlobalFormSucceeded() {
+        $closeStrategy = new CloseSubmitStragegy($this);
+        $closeStrategy->closeGlobal();
     }
 
 
@@ -376,8 +379,8 @@ class FyziklaniPresenter extends BasePresenter {
         Debugger::timer();
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
-            $teamID = $this->extractTeamID($values->taskCode);
-            $taskLabel = $this->extractTaskLabel($values->taskCode);
+            $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
+            $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
             $taskID = $this->taskLabelToTaskID($taskLabel);
             $r = $this->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_SUBMIT, ['points' => $values->points, 'fyziklani_task_id' => $taskID, 'e_fyziklani_team_id' => $teamID]);
             $t = Debugger::timer();
@@ -392,15 +395,16 @@ class FyziklaniPresenter extends BasePresenter {
         }
     }
 
-    public function entryFormByTaksCodeSucceeded(Form $form) {
-        foreach ($form->getComponents() as $control) {
-            if ($control instanceof \Nette\Forms\Controls\SubmitButton) {
-                if ($control->isSubmittedBy()) {
-                    $points = substr($control->getName(), 6);
+    /*
+        public function entryFormByTaksCodeSucceeded(Form $form) {
+            foreach ($form->getComponents() as $control) {
+                if ($control instanceof \Nette\Forms\Controls\SubmitButton) {
+                    if ($control->isSubmittedBy()) {
+                        $points = substr($control->getName(), 6);
+                    }
                 }
             }
-        }
-    }
+        }*/
 
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -420,7 +424,7 @@ class FyziklaniPresenter extends BasePresenter {
             $this->database->query('UPDATE ' . \DbNames::TAB_FYZIKLANI_SUBMIT . ' SET ? where fyziklani_submit_id=?', ['points' => $values->points], $values->submit_id);
             $this->flashMessage(_('Body boli zmenené'), 'success');
             $this->redirect('this');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flashMessage('ops', 'danger');
             Debugger::log($e);
         }
@@ -439,25 +443,6 @@ class FyziklaniPresenter extends BasePresenter {
         return $this->getCurrentEvent() ? true : false;
     }
 
-    public function extractTeamID($numLabel) {
-        return (int)substr($numLabel, 0, 6);
-    }
-
-    public function extractTaskLabel($teamTaskLabel) {
-        return (string)substr($teamTaskLabel, 6, 2);
-    }
-
-    public function getNumLabel($teamTaskLabel) {
-        return str_replace(array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'), array(1, 2, 3, 4, 5, 6, 7, 8), $teamTaskLabel);
-    }
-
-    private function checkControlNumber($taskCode) {
-        $subcode = str_split($this->getNumLabel($taskCode));
-
-        $c = 3 * ($subcode[0] + $subcode[3] + $subcode[6]) + 7 * ($subcode[1] + $subcode[4] + $subcode[7]) + ($subcode[2] + $subcode[5] + $subcode[8]);
-
-        return $c % 10 == 0;
-    }
 
     public function taskLabelToTaskID($taskLabel) {
         $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('label = ?', $taskLabel)->where('event_id = ?', $this->eventID)->fetch();
@@ -511,15 +496,14 @@ class FyziklaniPresenter extends BasePresenter {
         return new FyziklaniTaskGrid($this);
     }
 
-
-    private function checkTaskCode($taskCode, &$msg) {
+    public function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
-        if (!$this->checkControlNumber($taskCode)) {
+        if (!$this->taskCodePreprocessor->checkControlNumber($taskCode)) {
             $msg = _('Chybne zadaný kód úlohy.');
             return false;
         }
         /* Existenica týmu */
-        $teamID = $this->extractTeamID($taskCode);
+        $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
         if (!$this->teamExist($teamID)) {
             $msg = _('Team ' . $teamID . ' nexistuje');
@@ -532,7 +516,7 @@ class FyziklaniPresenter extends BasePresenter {
             return false;
         }
         /* správny label */
-        $taskLabel = $this->extractTaskLabel($taskCode);
+        $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
         $taskID = $this->taskLabelToTaskID($taskLabel);
         if (!$taskID) {
             $msg = 'Úloha  ' . $taskLabel . ' nexistuje';
