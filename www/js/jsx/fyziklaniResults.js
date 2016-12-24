@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -112,7 +111,6 @@ var Results = (function (_super) {
                 $("html, body").delay(t / 3).animate({ scrollTop: $(document).height() }, t / 3);
             }
         }
-        console.log(t);
         setTimeout(function () {
             i++;
             i = i % 3;
@@ -130,7 +128,6 @@ var Results = (function (_super) {
                     displayRoom: filter.room });
             }}, filter.name)));
         });
-        var _b = this.state;
         var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"));
         return (React.createElement("div", null, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
@@ -169,9 +166,8 @@ var ResultsTable = (function (_super) {
         $table.tablesorter();
     };
     ResultsTable.prototype.render = function () {
-        var _a = this.props;
         var rows = [];
-        var _b = this.props, submits = _b.submits, teams = _b.teams, tasks = _b.tasks, displayCategory = _b.displayCategory, displayRoom = _b.displayRoom;
+        var _a = this.props, submits = _a.submits, teams = _a.teams, tasks = _a.tasks, displayCategory = _a.displayCategory, displayRoom = _a.displayRoom;
         teams.forEach(function (team, teamIndex) {
             var cools = [];
             tasks.forEach(function (task, taskIndex) {
@@ -202,9 +198,7 @@ var ResultsTable = (function (_super) {
     };
     ;
     return ResultsTable;
-}(React
-    .
-        Component));
+}(React.Component));
 var Timer = (function (_super) {
     __extends(Timer, _super);
     function Timer() {
@@ -247,9 +241,7 @@ var Timer = (function (_super) {
             (s < 10 ? "0" + s : "" + s)));
     };
     return Timer;
-}(React
-    .
-        Component));
+}(React.Component));
 var Images = (function (_super) {
     __extends(Images, _super);
     function Images() {
@@ -289,9 +281,5 @@ var Images = (function (_super) {
         return (React.createElement("div", {style: { display: this.props.visible ? 'none' : '' }, id: 'imageWP', "data-basepath": basePath}, React.createElement("img", {src: imgSRC, alt: ""})));
     };
     return Images;
-}(React
-    .
-        Component));
-ReactDOM
-    .render(React.createElement(Results, null), document
-    .getElementsByClassName('fyziklani-results')[0]);
+}(React.Component));
+ReactDOM.render(React.createElement(Results, null), document.getElementsByClassName('fyziklani-results')[0]);

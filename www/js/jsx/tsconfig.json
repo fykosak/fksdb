@@ -6,7 +6,7 @@
     "target": "es5",
     "sourceMap": false,
     "allowJs": true,
-    "isolatedModules": true
+    "isolatedModules": false
   },
   "exclude": [
     "node_modules"

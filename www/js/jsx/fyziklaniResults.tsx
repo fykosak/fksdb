@@ -48,6 +48,26 @@ const filters = [
 const store = {};
 
 class Results extends React.Component<void, IResultsState> {
+
+    constructor() {
+        super();
+        this.state = {
+            autoDisplayCategory: null,
+            autoDisplayRoom: null,
+            autoSwitch: false,
+            hardVisible: false,
+            displayCategory: null,
+            displayRoom: null,
+            image: null,
+            submits: [],
+            times: {},
+            tasks: new Array<ITask>(),
+            teams: [],
+            visible: false,
+            configDisplay: false,
+        };
+    }
+
     componentDidMount() {
         let that = this;
         console.log('mount');
@@ -62,8 +82,6 @@ class Results extends React.Component<void, IResultsState> {
             },
             error: ()=> alert('error!')
         });
-
-
         setInterval(()=> {
             $.nette.ajax({
                 data: {
@@ -111,7 +129,6 @@ class Results extends React.Component<void, IResultsState> {
                 $("html, body").delay(t / 3).animate({scrollTop: $(document).height()}, t / 3);
             }
         }
-        console.log(t);
         setTimeout(()=> {
             i++;
             i = i % 3;
@@ -119,29 +136,10 @@ class Results extends React.Component<void, IResultsState> {
         }, t);
     };
 
-    public constructor() {
-        super();
-        this.state = {
-            autoDisplayCategory: null,
-            autoDisplayRoom: null,
-            autoSwitch: false,
-            hardVisible: false,
-            displayCategory: null,
-            displayRoom: null,
-            image: null,
-            submits: [],
-            times: {},
-            tasks: new Array<ITask>(),
-            teams: [],
-            visible: false,
-            configDisplay: false,
-        };
-    }
 
     public render() {
         let {times:{visible}, hardVisible}=this.state;
         this.state.visible = visible || hardVisible;
-
 
         let filtersButtons = filters.map((filter, index)=> {
             return (
@@ -156,7 +154,6 @@ class Results extends React.Component<void, IResultsState> {
                 </li>
             )
         });
-        let {} = this.state;
         const button = ( <button
             className={'btn btn-default '+(this.state.configDisplay?'active':'')}
             onClick={()=>this.setState({configDisplay:!this.state.configDisplay})}
@@ -237,16 +234,13 @@ class Results extends React.Component<void, IResultsState> {
     }
 }
 
-class ResultsTable extends React
-    .
-    Component<any, void> {
-    public
-    constructor() {
+class ResultsTable extends React.Component<any, void> {
+    public constructor() {
         super();
         this.refs = {table: undefined};
     }
 
-    componentDidUpdate() {
+    public componentDidUpdate() {
         let $table = $(ReactDOM.findDOMNode(this.refs.table));
         try {
             $table.trigger("update");
@@ -256,19 +250,14 @@ class ResultsTable extends React
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         let $table = $(ReactDOM.findDOMNode(this.refs.table));
         $table.tablesorter()
     }
 
-    public
-    render() {
-        let {} = this.props;
-
+    public render() {
         let rows = [];
-
         let {submits, teams, tasks, displayCategory, displayRoom} = this.props;
-
         teams.forEach((team: ITeam, teamIndex) => {
             let cools = [];
             tasks.forEach((task: ITask, taskIndex)=> {
@@ -327,17 +316,13 @@ class ResultsTable extends React
     ;
 }
 
-class Timer extends React
-    .
-    Component<any, any> {
-    public
-    constructor() {
+class Timer extends React.Component<any, any> {
+    public constructor() {
         super();
         this.state = {toStart: 0, toEnd: 0};
     }
 
-    public
-    componentDidMount() {
+    public componentDidMount() {
         setInterval(()=> {
             this.state.toStart = this.state.toStart - 1;
             this.state.toEnd = this.state.toEnd - 1;
@@ -345,16 +330,14 @@ class Timer extends React
         }, 1000);
     }
 
-    public
-    componentWillReceiveProps() {
+    public componentWillReceiveProps() {
         let {times:{toStart, toEnd}} = this.props;
         this.state.toStart = toStart;
         this.state.toEnd = toEnd;
     }
 
 
-    public
-    render() {
+    public    render() {
         let {toStart, toEnd}=this.state;
         let timeStamp = 0;
         if (toStart > 0) {
@@ -381,27 +364,20 @@ class Timer extends React
     }
 }
 
-class Images extends React
-    .
-    Component<any,any> {
-    public
-    constructor() {
+class Images extends React.Component<any,any> {
+    public constructor() {
         super();
         this.state = {toStart: 0, toEnd: 0};
     }
 
-    public
-    componentWillReceiveProps() {
+    public componentWillReceiveProps() {
         let {times:{toStart, toEnd}} = this.props;
         this.state.toStart = toStart;
         this.state.toEnd = toEnd;
     }
 
-    public
-    render() {
-
+    public render() {
         let {toStart, toEnd}=this.state;
-
         if (toStart == 0 || toEnd == 0) {
             return (<div/>);
         }
@@ -425,135 +401,9 @@ class Images extends React
         return (
             <div style={{display:this.props.visible?'none':''}} id='imageWP' data-basepath={basePath}>
                 <img src={imgSRC} alt=""/>
-            </div>)
-
-
+            </div>
+        )
     }
-
-
 }
 
-ReactDOM
-    .render(
-
-        <
-            Results
-        />,
-        document
-            .getElementsByClassName(
-                'fyziklani-results'
-            )
-            [0]
-    );
-
-/*
-
- * Zobrazí všetky riadky tabuľky;
- * @returns {undefined}
-
- const disableFilter = function () {
- $nav.find('li').removeClass('active');
- $nav.find('li[data-type="all"]').addClass('active');
- $tBody.find('tr').show();
-
- };
- /**
- * Zobrazí riadky tabuľky kde sa kategoria zhoduje so zadanou kategoriou;
- * @param {String} category
- * @author Michal Červeňák
- * @returns {undefined}
-
- const applyFilterByCategory = function (category) {
- $nav.find('li').removeClass('active');
- $nav.find('li[data-category="' + category + '"]').addClass('active');
- $tBody.find('tr').each(function () {
- if ($(this).data('category') == category) {
- $(this).show();
- } else {
- $(this).hide();
- }
- });
- };
- /**
- * Zobrazí riadky tabuľky kde sa miestnost zhoduje so zadanou miestnostou;
- * @param {String} room
- * @author Michal Červeňák
- * @returns {undefined}
-
- const applyFilterByRoom = function (room) {
- $nav.find('li').removeClass('active');
- $nav.find('li[data-room="' + room + '"]').addClass('active');
- $tBody.find('tr').each(function () {
- if ($(this).data('room') == room) {
- $(this).show();
- } else {
- $(this).hide();
- }
- });
- };
- $nav.find('li').click(function () {
- if ($form.find('#autoSwitch').is(':checked')) {
- return;
- }
- if ($(this).data('room')) {
- applyFilterByRoom($(this).data('room'));
- } else if ($(this).data('category')) {
- applyFilterByCategory($(this).data('category'));
- } else {
- disableFilter();
- }
- });
- var i = 0;
- var applyNext = function () {
- //   console.debug('filter' + i);
- var t = 15000;
- if ($form.find('#autoSwitch').is(':checked') && $table.is(':visible')) {
- $("html, body").animate({scrollTop: 0}, 0);
- switch (i) {
- case 0: {
- t = 30000;
- disableFilter();
- break;
- }
- case 1: {
- var room = $form.find('#room').val();
- //   console.debug(room);
- if (room) {
- applyFilterByRoom(room);
- } else {
- t = 0;
- }
- break;
- }
- case 2: {
- var category = $form.find('#category').val();
- if (category) {
- applyFilterByCategory(category);
- } else {
- t = 0;
- }
- break;
- }
- }
- if (t > 1000) {
- $("html, body").delay(t / 3).animate({scrollTop: $(document).height()}, t / 3);
- }
- }
- setTimeout(function () {
- i++;
- i = i % 3;
- applyNext();
- }, t);
- };
- applyNext();
-
-
- };
-
-
-
- */
-
-
-
-
+ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')[0]);
