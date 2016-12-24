@@ -46,6 +46,7 @@ var Results = (function (_super) {
             tasks: new Array(),
             teams: [],
             visible: false,
+            configDisplay: false,
         };
     }
     Results.prototype.componentDidMount = function () {
@@ -75,7 +76,50 @@ var Results = (function (_super) {
                 }
             });
         }, 10 * 1000);
+        this.applyNextAutoFilter(0);
     };
+    Results.prototype.applyNextAutoFilter = function (i) {
+        var _this = this;
+        var t = 15000;
+        var _a = this.state, autoSwitch = _a.autoSwitch, autoDisplayCategory = _a.autoDisplayCategory, autoDisplayRoom = _a.autoDisplayRoom;
+        if (autoSwitch) {
+            switch (i) {
+                case 0: {
+                    t = 30000;
+                    this.setState({ displayCategory: null, displayRoom: null });
+                    break;
+                }
+                case 1: {
+                    if (autoDisplayRoom) {
+                        this.setState({ displayCategory: autoDisplayCategory });
+                    }
+                    else {
+                        t = 0;
+                    }
+                    break;
+                }
+                case 2: {
+                    if (autoDisplayCategory) {
+                        this.setState({ displayRoom: autoDisplayRoom });
+                    }
+                    else {
+                        t = 0;
+                    }
+                    break;
+                }
+            }
+            if (t > 1000) {
+                $("html, body").delay(t / 3).animate({ scrollTop: $(document).height() }, t / 3);
+            }
+        }
+        console.log(t);
+        setTimeout(function () {
+            i++;
+            i = i % 3;
+            _this.applyNextAutoFilter(i);
+        }, t);
+    };
+    ;
     Results.prototype.render = function () {
         var _this = this;
         var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible;
@@ -87,7 +131,8 @@ var Results = (function (_super) {
             }}, filter.name)));
         });
         var _b = this.state;
-        return (React.createElement("div", null, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), React.createElement("button", {className: "btn btn-default"}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"), React.createElement("div", {id: "resultsOpt"}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"));
+        return (React.createElement("div", null, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte miestnosť--"), filters
             .filter(function (filter) { return filter.room != null; })
@@ -157,7 +202,9 @@ var ResultsTable = (function (_super) {
     };
     ;
     return ResultsTable;
-}(React.Component));
+}(React
+    .
+        Component));
 var Timer = (function (_super) {
     __extends(Timer, _super);
     function Timer() {
@@ -200,7 +247,9 @@ var Timer = (function (_super) {
             (s < 10 ? "0" + s : "" + s)));
     };
     return Timer;
-}(React.Component));
+}(React
+    .
+        Component));
 var Images = (function (_super) {
     __extends(Images, _super);
     function Images() {
@@ -240,5 +289,9 @@ var Images = (function (_super) {
         return (React.createElement("div", {style: { display: this.props.visible ? 'none' : '' }, id: 'imageWP', "data-basepath": basePath}, React.createElement("img", {src: imgSRC, alt: ""})));
     };
     return Images;
-}(React.Component));
-ReactDOM.render(React.createElement(Results, null), document.getElementsByClassName('fyziklani-results')[0]);
+}(React
+    .
+        Component));
+ReactDOM
+    .render(React.createElement(Results, null), document
+    .getElementsByClassName('fyziklani-results')[0]);

@@ -76,7 +76,48 @@ class Results extends React.Component<void, IResultsState> {
                 }
             });
         }, 10 * 1000);
+        this.applyNextAutoFilter(0);
     }
+
+    private applyNextAutoFilter(i) {
+
+        let t = 15000;
+        let {autoSwitch, autoDisplayCategory, autoDisplayRoom} = this.state;
+        if (autoSwitch) {
+            switch (i) {
+                case 0: {
+                    t = 30000;
+                    this.setState({displayCategory: null, displayRoom: null});
+                    break;
+                }
+                case 1: {
+                    if (autoDisplayRoom) {
+                        this.setState({displayCategory: autoDisplayCategory});
+                    } else {
+                        t = 0;
+                    }
+                    break;
+                }
+                case 2: {
+                    if (autoDisplayCategory) {
+                        this.setState({displayRoom: autoDisplayRoom});
+                    } else {
+                        t = 0;
+                    }
+                    break;
+                }
+            }
+            if (t > 1000) {
+                $("html, body").delay(t / 3).animate({scrollTop: $(document).height()}, t / 3);
+            }
+        }
+        console.log(t);
+        setTimeout(()=> {
+            i++;
+            i = i % 3;
+            this.applyNextAutoFilter(i);
+        }, t);
+    };
 
     public constructor() {
         super();
@@ -93,6 +134,7 @@ class Results extends React.Component<void, IResultsState> {
             tasks: new Array<ITask>(),
             teams: [],
             visible: false,
+            configDisplay: false,
         };
     }
 
@@ -103,7 +145,8 @@ class Results extends React.Component<void, IResultsState> {
 
         let filtersButtons = filters.map((filter, index)=> {
             return (
-                <li key={index} role="presentation" className={(filter.room==this.state.displayRoom&&filter.category==this.state.displayCategory)?'active':''}>
+                <li key={index} role="presentation"
+                    className={(filter.room==this.state.displayRoom&&filter.category==this.state.displayCategory)?'active':''}>
                     <a onClick={()=>{
                     this.setState({displayCategory:filter.category,
                     displayRoom:filter.room});
@@ -114,80 +157,91 @@ class Results extends React.Component<void, IResultsState> {
             )
         });
         let {} = this.state;
+        const button = ( <button
+            className={'btn btn-default '+(this.state.configDisplay?'active':'')}
+            onClick={()=>this.setState({configDisplay:!this.state.configDisplay})}
+        >
+        <span
+            className="glyphicon glyphicon-cog"
+            type="button"/>
+            Nastavenia
+        </button >);
 
         return (<div>
-            <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
-                {filtersButtons}
-            </ul>
+                <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
+                    {filtersButtons}
+                </ul>
 
-            <Images {...this.state} {...this.props}/>
-            <ResultsTable {...this.state} {...this.props}/>
-            <Timer {...this.state} {...this.props}/>
+                <Images {...this.state} {...this.props}/>
+                <ResultsTable {...this.state} {...this.props}/>
+                <Timer {...this.state} {...this.props}/>
 
-            <button className="btn btn-default">
-                <span className="glyphicon glyphicon-cog" type="button"/>
-                Nastavenia
-            </button>
-            <div id="resultsOpt">
-                <div className="form-group">
-                    <label className="sr-only">
-                        <span>Místnost</span>
-                    </label>
-                    <select className="form-control" onChange={(event)=>{
+                {button}
+
+                <div style={{display:this.state.configDisplay?'block':'none'}}>
+                    <div className="form-group">
+                        <label className="sr-only">
+                            <span>Místnost</span>
+                        </label>
+                        <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayRoom: event.target.value});
                         }}>
-                        <option >--vyberte miestnosť--</option>
-                        {                                filters
-                            .filter((filter)=>filter.room != null)
-                            .map((filter, index)=> {
-                                return (<option key={index} value={filter.room}>{filter.name}</option>)
-                            })
-                        }
-                    </select>
-                </div>
+                            <option >--vyberte miestnosť--</option>
+                            {                                filters
+                                .filter((filter)=>filter.room != null)
+                                .map((filter, index)=> {
+                                    return (<option key={index} value={filter.room}>{filter.name}</option>)
+                                })
+                            }
+                        </select>
+                    </div>
 
-                <div className="form-group">
-                    <label className="sr-only">
-                        <span>Categorie</span>
-                    </label>
-                    <select className="form-control" onChange={(event)=>{
+                    <div className="form-group">
+                        <label className="sr-only">
+                            <span>Categorie</span>
+                        </label>
+                        <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayCategory: event.target.value});
                         }}>
-                        <option value>--vyberte kategoriu--</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                    </select>
-                </div>
+                            <option value>--vyberte kategoriu--</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
 
-                <div className="form-group">
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" value="1" onChange={(event)=>{
+                    <div className="form-group">
+                        <div className="checkbox">
+                            <label>
+                                <input type="checkbox" value="1" onChange={(event)=>{
                             this.setState({autoSwitch:event.target.checked});
                             }}/>
-                            <span>Automatické prepíanie miestností a kategoríi</span>
-                        </label>
+                                <span>Automatické prepíanie miestností a kategoríi</span>
+                            </label>
 
+                        </div>
                     </div>
-                </div>
-                <div className="form-group has-error">
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" value="1" onChange={(event)=>{
+                    <div className="form-group has-error">
+                        <div className="checkbox">
+                            <label>
+                                <input type="checkbox" value="1" onChange={(event)=>{
                             this.setState({hardVisible:event.target.checked});
                             }}/>
-                            Neverejné výsledkovky, <span className="text-danger">túto funkciu nezapínajte pokial sú vysledkovky premietané!!!</span>
-                        </label>
+                                Neverejné výsledkovky, <span className="text-danger">túto funkciu nezapínajte pokial sú vysledkovky premietané!!!</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>);
+            </div >
+        );
     }
 }
 
-class ResultsTable extends React.Component<any, void> {
-    public constructor() {
+class ResultsTable extends React
+    .
+    Component<any, void> {
+    public
+    constructor() {
         super();
         this.refs = {table: undefined};
     }
@@ -207,7 +261,8 @@ class ResultsTable extends React.Component<any, void> {
         $table.tablesorter()
     }
 
-    public render() {
+    public
+    render() {
         let {} = this.props;
 
         let rows = [];
@@ -268,16 +323,21 @@ class ResultsTable extends React.Component<any, void> {
                 </table>
             </div>
         )
-    };
+    }
+    ;
 }
 
-class Timer extends React.Component<any, any> {
-    public constructor() {
+class Timer extends React
+    .
+    Component<any, any> {
+    public
+    constructor() {
         super();
         this.state = {toStart: 0, toEnd: 0};
     }
 
-    public componentDidMount() {
+    public
+    componentDidMount() {
         setInterval(()=> {
             this.state.toStart = this.state.toStart - 1;
             this.state.toEnd = this.state.toEnd - 1;
@@ -285,14 +345,16 @@ class Timer extends React.Component<any, any> {
         }, 1000);
     }
 
-    public componentWillReceiveProps() {
+    public
+    componentWillReceiveProps() {
         let {times:{toStart, toEnd}} = this.props;
         this.state.toStart = toStart;
         this.state.toEnd = toEnd;
     }
 
 
-    public render() {
+    public
+    render() {
         let {toStart, toEnd}=this.state;
         let timeStamp = 0;
         if (toStart > 0) {
@@ -318,19 +380,25 @@ class Timer extends React.Component<any, any> {
             </div>);
     }
 }
-class Images extends React.Component<any,any> {
-    public constructor() {
+
+class Images extends React
+    .
+    Component<any,any> {
+    public
+    constructor() {
         super();
         this.state = {toStart: 0, toEnd: 0};
     }
 
-    public componentWillReceiveProps() {
+    public
+    componentWillReceiveProps() {
         let {times:{toStart, toEnd}} = this.props;
         this.state.toStart = toStart;
         this.state.toEnd = toEnd;
     }
 
-    public render() {
+    public
+    render() {
 
         let {toStart, toEnd}=this.state;
 
@@ -365,7 +433,18 @@ class Images extends React.Component<any,any> {
 
 }
 
-ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')[0]);
+ReactDOM
+    .render(
+
+        <
+            Results
+        />,
+        document
+            .getElementsByClassName(
+                'fyziklani-results'
+            )
+            [0]
+    );
 
 /*
 
@@ -473,7 +552,7 @@ ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')
 
 
 
-*/
+ */
 
 
 
