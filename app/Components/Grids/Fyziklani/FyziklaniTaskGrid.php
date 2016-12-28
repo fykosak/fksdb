@@ -1,28 +1,24 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
+
 
 /**
  * Description of SubmitsGrid
  *
  * @author miso
  */
-class FyziklaniTaskGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniTaskGrid extends BaseGrid {
 
     private $presenter;
     protected $searchable;
 
-    public function __construct(\OrgModule\FyziklaniPresenter $presenter) {
+    public function __construct(BasePresenter $presenter) {
         $this->presenter = $presenter;
         parent::__construct();
     }
@@ -43,5 +39,4 @@ class FyziklaniTaskGrid extends \FKSDB\Components\Grids\BaseGrid {
                 });
         $this->setDataSource($dataSource);
     }
-
 }

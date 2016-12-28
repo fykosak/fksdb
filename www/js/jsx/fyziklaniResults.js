@@ -46,6 +46,7 @@ var Results = (function (_super) {
             tasks: new Array(),
             teams: new Array(),
             visible: false,
+            isOrg: false,
             isReady: false,
             configDisplay: false,
             msg: '',
@@ -84,8 +85,8 @@ var Results = (function (_super) {
                 type: 'refresh'
             },
             success: function (data) {
-                var times = data.times, submits = data.submits;
-                _this.setState({ submits: submits, times: times });
+                var times = data.times, submits = data.submits, is_org = data.is_org;
+                _this.setState({ submits: submits, times: times, isOrg: is_org });
                 _this.forceUpdate();
                 if (_this.state.tasks && _this.state.teams) {
                     _this.state.isReady = true;
@@ -141,7 +142,7 @@ var Results = (function (_super) {
     Results.prototype.render = function () {
         var _this = this;
         var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible;
-        this.state.visible = visible || hardVisible;
+        this.state.visible = (visible || hardVisible);
         var filtersButtons = filters.map(function (filter, index) {
             return (React.createElement("li", {key: index, role: "presentation", className: (filter.room == _this.state.displayRoom && filter.category == _this.state.displayCategory) ? 'active' : ''}, React.createElement("a", {onClick: function () {
                 _this.setState({ displayCategory: filter.category,
@@ -151,6 +152,9 @@ var Results = (function (_super) {
         var msg = [];
         if (hardVisible && !visible) {
             msg.push(React.createElement("div", {key: msg.length, className: "alert alert-warning"}, "Výsledková listina je určená len pre organizárotov!!"));
+        }
+        if (!this.state.isOrg) {
+            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-info"}, "Na výsledkovú listinu sa dívate ako \"Public\""));
         }
         var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"));
         if (!this.state.isReady) {
@@ -166,7 +170,7 @@ var Results = (function (_super) {
             _this.setState({ autoDisplayCategory: event.target.value });
         }}, React.createElement("option", {value: true}, "--vyberte kategoriu--"), React.createElement("option", {value: "A"}, "A"), React.createElement("option", {value: "B"}, "B"), React.createElement("option", {value: "C"}, "C"))), React.createElement("div", {className: "form-group"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
             _this.setState({ autoSwitch: event.target.checked });
-        }}), React.createElement("span", null, "Automatické prepíanie miestností a kategoríi")))), React.createElement("div", {className: "form-group has-error"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
+        }}), React.createElement("span", null, "Automatické prepíanie miestností a kategoríi")))), React.createElement("div", {className: "form-group has-error"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", disabled: !this.state.isOrg, value: "1", onChange: function (event) {
             _this.setState({ hardVisible: event.target.checked });
         }}), "Neverejné výsledkovky, ", React.createElement("span", {className: "text-danger"}, "túto funkciu nezapínajte pokial sú vysledkovky premietané!!!")))))));
     };

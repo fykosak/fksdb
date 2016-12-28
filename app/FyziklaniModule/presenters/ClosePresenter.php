@@ -22,11 +22,11 @@ class ClosePresenter extends BasePresenter {
         $this->setTitle(_('Uzavierka bodovania'));
     }
 
-    /**
-     * @TODO
-     */
     public function authorizedTable() {
-        //$this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'close', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'close', $this->getCurrentEvent(),$this->database));
+    }
+    public function authorizedTeam() {
+       $this->actionTable();
     }
 
     public function renderTeam($id) {
@@ -54,7 +54,7 @@ class ClosePresenter extends BasePresenter {
         if ($this->isOpenSubmit($id)) {
             if (!$this->teamExist($id)) {
                 $this->flashMessage('Tým neexistuje', 'danger');
-                $this->redirect(':org:fyziklani:close');
+                $this->redirect(':Fyziklani:submit:close');
             }
             $this['closeForm']->setDefaults(['e_fyziklani_team_id' => $id, 'next_task' => $this->getNextTask($id)->nextTask]);
         } else {
@@ -164,8 +164,4 @@ class ClosePresenter extends BasePresenter {
         }
         return (object)$return;
     }
-
-
-
-
 }

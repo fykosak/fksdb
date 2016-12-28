@@ -67,6 +67,7 @@ class ContestAuthorizator extends Object {
             if ($role->getContestId() != $contestId) {
                 continue;
             }
+
             if ($this->acl->isAllowed($role, $resource, $privilege)) {
                 return true;
             }

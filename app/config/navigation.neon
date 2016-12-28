@@ -34,11 +34,11 @@ navigation:
             - fykos
             - vyfuk
         org.fyziklani.default:
-            - org.fyziklani.entry
-            - org.fyziklani.close
-            - org.fyziklani.submits
-            - org.fyziklani.results
-            - org.fyziklani.task
-            - org.fyziklani.taskimport
+            - fyziklani.submit.entry
+            - fyziklani.submit.table
+            - fyziklani.close.table
+            - fyziklani.results.default
+            - fyziklani.task.table
+            - fyziklani.task.import
             
         

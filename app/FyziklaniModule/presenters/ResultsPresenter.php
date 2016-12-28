@@ -8,18 +8,8 @@
 
 namespace FyziklaniModule;
 
-use Authorization\Assertions\EventOrgByIdAssertion;
-use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
-use AuthenticatedPresenter;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
-use \Nette\Application\UI\Form;
-use Nette\Database\Connection;
-use Nette\DI\Container;
-use \Nette\Diagnostics\Debugger;
-use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
 class ResultsPresenter extends BasePresenter {
 
@@ -36,19 +26,20 @@ class ResultsPresenter extends BasePresenter {
                     $result['teams'][] = ['category' => $row->category, 'room' => $row->room, 'name' => $row->name, 'team_id' => $row->e_fyziklani_team_id];
                 }
             } elseif ($type == 'refresh') {
-                $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team.event_id', $this->eventID);
-                foreach ($submits as $submit) {
-                    $result['submits'][] = ['points' => $submit->points, 'team_id' => $submit->e_fyziklani_team_id, 'task_id' => $submit->fyziklani_task_id];
+                $result['submits'] = [];
+                $isOrg = $this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'results', $this->getCurrentEvent(), $this->database);
+                $result['is_org'] = $isOrg;
+                if ($isOrg) {
+                    $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team.event_id', $this->eventID);
+                    foreach ($submits as $submit) {
+                        $result['submits'][] = ['points' => $submit->points, 'team_id' => $submit->e_fyziklani_team_id, 'task_id' => $submit->fyziklani_task_id];
+                    }
                 }
             } else {
                 throw new BadRequestException('error', 404);
             }
-
             $result['times'] = ['toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(), 'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(), 'visible' => $this->isResultsVisible()];
-
             $this->sendResponse(new JsonResponse($result));
-        } else {
-
         }
     }
 
@@ -57,12 +48,10 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('results', 'default', $this->getCurrentEvent(), $this->database));
+         $this->setAuthorized(true);
     }
 
-    public function authorizedOrg() {
-        //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'results', $this->getSelectedContest()));
-    }
+
 
     private function isResultsVisible() {
         return (time() < strtotime($this->container->parameters['fyziklani']['results']['hidde'])) && (time() > strtotime($this->container->parameters['fyziklani']['results']['display']));

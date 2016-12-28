@@ -45,9 +45,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEntry() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('submit', 'entry', $this->getCurrentEvent(), $this->database));
-
-        //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'entry', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'submit', $this->getCurrentEvent(), $this->database));
     }
 
     public function titleEdit() {
@@ -55,7 +53,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEdit() {
-        //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'edit', $this->getSelectedContest()));
+        $this->authorizedEntry();
     }
 
     public function titleTable() {
@@ -63,7 +61,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        //      $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'submits', $this->getSelectedContest()));
+        $this->authorizedEntry();
     }
 
     public function createComponentEntryForm() {

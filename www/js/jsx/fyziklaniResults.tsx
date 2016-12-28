@@ -66,6 +66,7 @@ class Results extends React.Component<void, IResultsState> {
             tasks: new Array<ITask>(),
             teams: new Array<ITeam>(),
             visible: false,
+            isOrg: false,
             isReady: false,
             configDisplay: false,
             msg: '',
@@ -106,8 +107,8 @@ class Results extends React.Component<void, IResultsState> {
                 type: 'refresh'
             },
             success: (data)=> {
-                let {times, submits} = data;
-                this.setState({submits, times});
+                let {times, submits, is_org} = data;
+                this.setState({submits, times, isOrg: is_org});
                 this.forceUpdate();
                 if (this.state.tasks && this.state.teams) {
                     this.state.isReady = true;
@@ -162,7 +163,7 @@ class Results extends React.Component<void, IResultsState> {
 
     public render() {
         let {times:{visible}, hardVisible}=this.state;
-        this.state.visible = visible || hardVisible;
+        this.state.visible = (visible || hardVisible);
 
         let filtersButtons = filters.map((filter, index)=> {
             return (
@@ -177,9 +178,16 @@ class Results extends React.Component<void, IResultsState> {
                 </li>
             )
         });
-        let msg=[];
+        let msg = [];
         if (hardVisible && !visible) {
-            msg.push(<div key={msg.length} className="alert alert-warning">Výsledková listina je určená len pre organizárotov!!</div> );
+            msg.push(<div key={msg.length} className="alert alert-warning">
+                Výsledková listina je určená len pre organizárotov!!</div> );
+        }
+        if (!this.state.isOrg) {
+            msg.push(
+                <div key={msg.length} className="alert alert-info">
+                    Na výsledkovú listinu sa dívate ako "Public"</div>
+            );
         }
         const button = ( <button
             className={'btn btn-default '+(this.state.configDisplay?'active':'')}
@@ -257,7 +265,7 @@ class Results extends React.Component<void, IResultsState> {
                     <div className="form-group has-error">
                         <div className="checkbox">
                             <label>
-                                <input type="checkbox" value="1" onChange={(event)=>{
+                                <input type="checkbox" disabled={!this.state.isOrg} value="1" onChange={(event)=>{
                             this.setState({hardVisible:event.target.checked});
                             }}/>
                                 Neverejné výsledkovky, <span className="text-danger">túto funkciu nezapínajte pokial sú vysledkovky premietané!!!</span>

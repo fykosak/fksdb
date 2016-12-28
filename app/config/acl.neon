@@ -98,25 +98,8 @@ acl:
 
     - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
 
-    - allow(fyziklaniOrg, fyziklani, close)
-    - allow(org, fyziklani, close)
 
-    - allow(fyziklaniOrg, fyziklani, default)
-    - allow(org, fyziklani, default)
-
-    - allow(fyziklaniOrg, fyziklani, edit)
-    - allow(org, fyziklani, edit)
-
-    - allow(fyziklaniOrg, fyziklani, entry)
-    - allow(org, fyziklani, entry)
- 
-    - allow(org, fyziklani, results) # only fykos's org can see results;
-   
-    - allow(fyziklaniOrg, fyziklani, submits)   
-    - allow(org, fyziklani, submits)
-
-    - allow(fyziklaniOrg, fyziklani, task)
-    - allow(org, fyziklani, task)
+    - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL))
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
