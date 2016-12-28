@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {control cssLoader
+        'css/bootstrap.min.css' => [screen],
+        'css/bootstrap-theme.min.css' => [screen],
+        'css/style.css' => [screen],
+        'css/fyziklani.css' => [all],
+        }
+
+    {block head}{/block}
+</head>
+
+<body>
+<div id="wrap">
+    {block body}
+        <div class="container">
+            <div class="fyziklani-results" data-basepath="{$basePath}">
+            </div>
+        </div>
+    {/block body}
+</div>
+
+<div id="spinner"></div>
+
+{block scripts}
+    {control jsLoader
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/bootstrap.min.js',
+        'js/nette.ajax.js',
+        'js/tablesorter.min.js',
+        'js/jsx/lib/react.min.js',
+        'js/jsx/lib/react-dom.min.js',
+        'js/jsx/fyziklaniResults.js'
+            }
+
+    {control jsLoader:inline}
+{/block}
+{control cssLoader}
+</body>
+</html>
