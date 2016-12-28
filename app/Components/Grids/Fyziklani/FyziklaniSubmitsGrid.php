@@ -8,6 +8,8 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FyziklaniModule\BasePresenter;
+use FyziklaniModule\SubmitPresenter;
 use \NiftyGrid\DataSource\NDataSource;
 
 /**
@@ -20,7 +22,7 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
     private $presenter;
     protected $searchable;
 
-    public function __construct(\OrgModule\FyziklaniPresenter $presenter) {
+    public function __construct(SubmitPresenter $presenter) {
         $this->presenter = $presenter;
         parent::__construct();
     }
@@ -32,17 +34,17 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('name',_('Názov týmu'));
-        $this->addColumn('e_fyziklani_team_id',_('Tým ID'));
+        $this->addColumn('name',_('Teams\'s name'));
+        $this->addColumn('e_fyziklani_team_id',_('Team ID'));
         $that = $this;
-        $this->addColumn('label',_('Úloha'));
-        $this->addColumn('points',_('počet bodů'));
+        $this->addColumn('label',_('Task'));
+        $this->addColumn('points',_('Points'));
         $this->addColumn('room',_('Room'));
         $this->addColumn('submitted_on',_('Submited on'));
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-default')
                 ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Org:Fyziklani:edit',['id' => $row->fyziklani_submit_id]);
+                    return $presenter->link(':Fyziklani:Submit:edit',['id' => $row->fyziklani_submit_id]);
                 })
                 ->setText(_('Upraviť'));
 

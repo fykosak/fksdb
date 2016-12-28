@@ -8,6 +8,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FyziklaniModule\ClosePresenter;
 use \NiftyGrid\DataSource\NDataSource;
 
 /**
@@ -46,10 +47,10 @@ class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-success')
                 ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Org:Fyziklani:close',['id' => $row->e_fyziklani_team_id]);
+                    return $presenter->link(':Fyziklani:Close:team',['id' => $row->e_fyziklani_team_id,'eventID'=>$presenter->eventID]);
                 })
                 ->setText(_('Uzavrieť bodovanie'));
-        $teams = $this->database->table('e_fyziklani_team')->select('*')->where('event_id',$presenter->getCurrentEventID(null))->where('status?','participated')->where('points',NULL);
+        $teams = $this->database->table('e_fyziklani_team')->select('*')->where('event_id',$presenter->eventID)->where('status?','participated')->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
     }
 }

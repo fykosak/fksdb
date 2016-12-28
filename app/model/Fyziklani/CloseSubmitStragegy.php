@@ -7,6 +7,7 @@
  */
 namespace Fyziklani;
 
+use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 use OrgModule\FyziklaniPresenter;
@@ -27,7 +28,7 @@ class CloseSubmitStragegy {
     protected $presenter;
 
 
-    public function __construct(FyziklaniPresenter $presenter) {
+    public function __construct(BasePresenter $presenter) {
         $this->presenter = $presenter;
     }
 
