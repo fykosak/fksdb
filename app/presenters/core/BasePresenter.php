@@ -69,7 +69,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 	/**
 	 * @var string|null
 	 */
-	private $title = false;
+	protected $title = false;
 
 	/**
 	 * @var boolean

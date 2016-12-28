@@ -1,0 +1,106 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {control cssLoader
+        'css/bootstrap-3.3.7/dist/css/bootstrap.min.css' => [screen],
+        'css/bootstrap-3.3.7/dist/css/bootstrap-theme.min.css' => [screen],
+
+        'css/style.css' => [screen],
+        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
+        'css/fyziklani.css' => [all],
+        }
+
+    {block head}{/block}
+</head>
+
+<body>
+<div id="wrap">
+
+    {block body}
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                </button>
+                <a class="navbar-brand" href="{$basePath}/">FKSDB<small> FYKOSí Fyzikláni</small></a>
+            </div>
+
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                {control navigation:navbar}
+
+                {block user-info}
+                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                        {var $login => $user->getIdentity()}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span>
+                                {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
+                                {else}
+                                {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                                <li class="divider"></li>
+                                <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {/block}
+
+            </div><!-- /.navbar-collapse -->
+        </nav>
+
+        <div class="container">
+            {control breadcrumbs}
+            {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+
+
+            {block flashes}
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+            {/block}
+
+            {include #content}
+
+        </div>
+    {/block body}
+</div> <!-- wrap -->
+<div id="footer" n:block="footer">
+    <div class="container text-center text-muted">
+        <ul class="list-piped">
+            <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
+            <li><a href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
+            <li>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="spinner"></div>
+{block scripts}
+    {control jsLoader
+        'js/netteForms.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/bootstrap.min.js',
+        'js/nette.ajax.js',
+        'js/jquery.confirm.js',
+        'js/main.js'
+            }
+
+    {* CSS files are only collected at the end of rendering, so we use this
+    invalid workaround and link some CSS files at the end of the page
+    *}
+    {control jsLoader:inline}
+{/block}
+{control cssLoader}
+</body>
+</html>

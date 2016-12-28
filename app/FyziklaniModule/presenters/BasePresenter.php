@@ -55,12 +55,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             throw new BadRequestException('Tento event nieje Fyzikláni', 500);
         }
         $this->eventYear = $this->event->event_year;
-        $this->flashMessage(_('Náchádzate sa v '.$this->eventYear.'. Fykosím Fyzikláni'),'warning');
+       // $this->flashMessage(_('Náchádzate sa v ' . $this->eventYear . '. Fykosím Fyzikláni'), 'warning');
         parent::startup();
+
     }
+
     /** Vrati true ak pre daný ročník existuje fyzikláni */
     public function eventExist() {
         return $this->getCurrentEvent() ? true : false;
+    }
+
+    public function getTitle() {
+        return $this->title . ($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : '');
     }
 
     public function getCurrentEventID() {
