@@ -2,16 +2,18 @@
 
 namespace Authorization;
 
+use Authorization\Assertions\EventOrgByIdAssertion;
 use ModelContest;
 use ModelLogin;
 use Nette\Database\Table\ActiveRow;
+use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestAuthorizator extends Object {
@@ -42,7 +44,7 @@ class ContestAuthorizator extends Object {
     /**
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
-     * 
+     *
      * @param mixed $resource
      * @param enum $privilege
      * @param int|ModelContest $contest queried contest
@@ -56,7 +58,8 @@ class ContestAuthorizator extends Object {
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
 
-    public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
+
+    public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 
@@ -72,4 +75,16 @@ class ContestAuthorizator extends Object {
         return false;
     }
 
+    public function isAllowedEvent($resource, $privilege, $event, $db) {
+        if (!$this->getUser()->isLoggedIn()) {
+            return false;
+        }
+        $login = $this->getUser()->getIdentity();
+        return $this->isAllowedToEventForLogin($login, $resource, $privilege, $event, $db) || $this->isAllowed($resource, $privilege, $event->event_type->contest_id);
+    }
+
+    public function isAllowedToEventForLogin(ModelLogin $login, $resource, $privilege, $event, $db) {
+        $eventOrgByIdAssertion = new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $db);
+        return $eventOrgByIdAssertion($this->acl, null, $resource, $privilege, $event->event_id);
+    }
 }

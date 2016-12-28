@@ -12,7 +12,8 @@ class DbNames {
     const TAB_CONTEST_YEAR = 'contest_year';
     const TAB_CONTESTANT_BASE = 'contestant_base';
     const TAB_EVENT = 'event';
-    const TAB_EVENT_HAS_ORG = 'event_has_org';
+    const TAB_EVENT_HAS_ORG = self::TAB_EVENT_ORG;
+    const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_FLAG = 'flag';
