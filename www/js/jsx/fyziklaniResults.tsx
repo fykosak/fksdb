@@ -1,4 +1,5 @@
-//import * as React from './lib/react.min';
+//import * as React from './lib/react/';
+//import * as ReactDOM from './lib/react-dom';
 
 interface ISubmit {
     points: number;
@@ -27,6 +28,7 @@ interface IResultsState {
     teams: Array<any>;
     visible: boolean;
 }
+const basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
 
 const filters = [
     {room: null, category: null, name: "ALL"},
@@ -49,7 +51,7 @@ const store = {};
 
 class Results extends React.Component<void, IResultsState> {
 
-    constructor() {
+    public constructor() {
         super();
         this.state = {
             autoDisplayCategory: null,
@@ -59,45 +61,66 @@ class Results extends React.Component<void, IResultsState> {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: [],
+            submits: new Array<ISubmit>(),
             times: {},
             tasks: new Array<ITask>(),
-            teams: [],
+            teams: new Array<ITeam>(),
             visible: false,
+            isReady: false,
             configDisplay: false,
+            msg: '',
         };
     }
 
-    componentDidMount() {
-        let that = this;
+    public componentDidMount() {
+
         console.log('mount');
+        this.initResults();
+        setInterval(()=> {
+            this.downloadResults();
+        }, 10 * 1000);
+        this.applyNextAutoFilter(0);
+    }
+
+    private initResults() {
         $.nette.ajax({
             data: {
                 type: 'init'
             },
             success: data=> {
                 let {tasks, teams} = data;
-                that.state.tasks = tasks;
-                that.state.teams = teams;
+                this.state.tasks = tasks;
+                this.state.teams = teams;
+                this.downloadResults();
             },
-            error: ()=> alert('error!')
+            error: (e)=> {
+                this.setState({msg: e.toString()});
+            }
         });
-        setInterval(()=> {
-            $.nette.ajax({
-                data: {
-                    type: 'refresh'
-                },
-                success: (data)=> {
-                    let {times, submits} = data;
-                    this.setState({submits, times});
-                    this.forceUpdate();
+    }
+
+    private downloadResults() {
+
+        $.nette.ajax({
+            data: {
+                type: 'refresh'
+            },
+            success: (data)=> {
+                let {times, submits} = data;
+                this.setState({submits, times});
+                this.forceUpdate();
+                if (this.state.tasks && this.state.teams) {
+                    this.state.isReady = true;
                 }
-            });
-        }, 10 * 1000);
-        this.applyNextAutoFilter(0);
+            },
+            error: (e)=> {
+                this.setState({msg: e.toString()});
+            }
+        });
     }
 
     private applyNextAutoFilter(i) {
+        $("html, body").scrollTop();
 
         let t = 15000;
         let {autoSwitch, autoDisplayCategory, autoDisplayRoom} = this.state;
@@ -154,6 +177,10 @@ class Results extends React.Component<void, IResultsState> {
                 </li>
             )
         });
+        let msg=[];
+        if (hardVisible && !visible) {
+            msg.push(<div key={msg.length} className="alert alert-warning">Výsledková listina je určená len pre organizárotov!!</div> );
+        }
         const button = ( <button
             className={'btn btn-default '+(this.state.configDisplay?'active':'')}
             onClick={()=>this.setState({configDisplay:!this.state.configDisplay})}
@@ -164,7 +191,16 @@ class Results extends React.Component<void, IResultsState> {
             Nastavenia
         </button >);
 
+        if (!this.state.isReady) {
+            return (
+                <div className="load" style={{textAlign:'center',}}>
+                    <img src={basePath+'/images/gears.svg'} style={{width:'50%'}}/>
+                </div>)
+        }
+
         return (<div>
+                {msg}
+
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
                     {filtersButtons}
                 </ul>
@@ -381,7 +417,7 @@ class Images extends React.Component<any,any> {
         if (toStart == 0 || toEnd == 0) {
             return (<div/>);
         }
-        const basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
+
         let imgSRC = basePath + '/images/fyziklani/';
         if (toStart > 300) {
             imgSRC += 'nezacalo.svg';

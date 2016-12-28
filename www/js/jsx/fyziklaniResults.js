@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+var basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
 var filters = [
     { room: null, category: null, name: "ALL" },
     { room: null, category: 'A', name: "A" },
@@ -40,45 +41,64 @@ var Results = (function (_super) {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: [],
+            submits: new Array(),
             times: {},
             tasks: new Array(),
-            teams: [],
+            teams: new Array(),
             visible: false,
+            isReady: false,
             configDisplay: false,
+            msg: '',
         };
     }
     Results.prototype.componentDidMount = function () {
         var _this = this;
-        var that = this;
         console.log('mount');
+        this.initResults();
+        setInterval(function () {
+            _this.downloadResults();
+        }, 10 * 1000);
+        this.applyNextAutoFilter(0);
+    };
+    Results.prototype.initResults = function () {
+        var _this = this;
         $.nette.ajax({
             data: {
                 type: 'init'
             },
             success: function (data) {
                 var tasks = data.tasks, teams = data.teams;
-                that.state.tasks = tasks;
-                that.state.teams = teams;
+                _this.state.tasks = tasks;
+                _this.state.teams = teams;
+                _this.downloadResults();
             },
-            error: function () { return alert('error!'); }
+            error: function (e) {
+                _this.setState({ msg: e.toString() });
+            }
         });
-        setInterval(function () {
-            $.nette.ajax({
-                data: {
-                    type: 'refresh'
-                },
-                success: function (data) {
-                    var times = data.times, submits = data.submits;
-                    _this.setState({ submits: submits, times: times });
-                    _this.forceUpdate();
+    };
+    Results.prototype.downloadResults = function () {
+        var _this = this;
+        $.nette.ajax({
+            data: {
+                type: 'refresh'
+            },
+            success: function (data) {
+                var times = data.times, submits = data.submits;
+                _this.setState({ submits: submits, times: times });
+                _this.forceUpdate();
+                if (_this.state.tasks && _this.state.teams) {
+                    _this.state.isReady = true;
                 }
-            });
-        }, 10 * 1000);
-        this.applyNextAutoFilter(0);
+            },
+            error: function (e) {
+                _this.setState({ msg: e.toString() });
+            }
+        });
     };
     Results.prototype.applyNextAutoFilter = function (i) {
         var _this = this;
+        $("html, body").scrollTop();
         var t = 15000;
         var _a = this.state, autoSwitch = _a.autoSwitch, autoDisplayCategory = _a.autoDisplayCategory, autoDisplayRoom = _a.autoDisplayRoom;
         if (autoSwitch) {
@@ -128,8 +148,15 @@ var Results = (function (_super) {
                     displayRoom: filter.room });
             }}, filter.name)));
         });
+        var msg = [];
+        if (hardVisible && !visible) {
+            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-warning"}, "Výsledková listina je určená len pre organizárotov!!"));
+        }
         var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"));
-        return (React.createElement("div", null, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        if (!this.state.isReady) {
+            return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
+        }
+        return (React.createElement("div", null, msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte miestnosť--"), filters
             .filter(function (filter) { return filter.room != null; })
@@ -258,7 +285,6 @@ var Images = (function (_super) {
         if (toStart == 0 || toEnd == 0) {
             return (React.createElement("div", null));
         }
-        var basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
         var imgSRC = basePath + '/images/fyziklani/';
         if (toStart > 300) {
             imgSRC += 'nezacalo.svg';
