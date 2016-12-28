@@ -8,7 +8,7 @@ use \Nette\DI\Container;
 use \Nette\Application\UI\Form;
 
 /**
- * 
+ *
  *
  * @author Michal Červeňák <miso@fykos.cz>
  */
@@ -23,7 +23,7 @@ class FyziklaniFactory {
     private function createPointsField() {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
-        foreach ($this->container->parameters['fyziklani']['availablePionts'] as $v) {
+        foreach ($this->container->parameters['fyziklani']['availablePoints'] as $v) {
             $items[$v] = $v;
         }
         $field->setItems($items);
