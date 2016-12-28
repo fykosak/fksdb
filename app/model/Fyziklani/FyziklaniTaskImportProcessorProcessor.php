@@ -9,28 +9,39 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKS\Utils\CSVParser;
-use \OrgModule\FyziklaniPresenter;
+use FyziklaniModule\BasePresenter;
+use FyziklaniModule\TaskPresenter;
+
 
 class FyziklaniTaskImportProcessor {
     /**
-     * @var FyziklaniPresenter
+     * @var BasePresenter
      */
     private $presenter;
 
-    public function __construct($presenter) {
+    /**
+     * @var TaskCodePreprocessor
+     */
+    private $taskCodePreprocessor;
+
+    public function __construct(BasePresenter $presenter) {
         $this->presenter = $presenter;
+        $this->taskCodePreprocessor = new TaskCodePreprocessor();
     }
 
     public function preprosess($values) {
         $filename = $values->csvfile->getTemporaryFile();
-        if ($values->state == FyziklaniPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
+        if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
             $this->presenter->database->query('DELETE FROM ' . \DbNames::TAB_FYZIKLANI_TASK . ' WHERE event_id=?', $this->presenter->eventID);
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {
-            $taskID = $this->presenter->taskLabelToTaskID($row['label']);
+
+            $task = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id', $this->presenter->eventID)->where('label', $row['label'])->fetch();
+            $taskID = $task ? $task->fyziklani_task_id : false;
+
             if ($taskID) {
-                if ($values->state == FyziklaniPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
+                if ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                     if ($this->presenter->database->query('UPDATE ' . \DbNames::TAB_FYZIKLANI_TASK . ' SET ? WHERE fyziklani_task_id =?', ['label' => $row['label'], 'name' => $row['name']], $taskID)) {
                         $this->presenter->flashMessage('Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola updatnuta', 'info');
                     } else {
@@ -48,6 +59,4 @@ class FyziklaniTaskImportProcessor {
             }
         }
     }
-
-
 }
