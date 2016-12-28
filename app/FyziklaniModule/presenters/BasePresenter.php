@@ -55,7 +55,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             throw new BadRequestException('Tento event nieje Fyzikláni', 500);
         }
         $this->eventYear = $this->event->event_year;
-       // $this->flashMessage(_('Náchádzate sa v ' . $this->eventYear . '. Fykosím Fyzikláni'), 'warning');
+        // $this->flashMessage(_('Náchádzate sa v ' . $this->eventYear . '. Fykosím Fyzikláni'), 'warning');
         parent::startup();
 
     }
@@ -75,7 +75,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /** vráti paramtre daného eventu */
     public function getCurrentEvent() {
-        $this->eventID = $this->eventID ?: 95;
+        // $this->eventID = $this->eventID ?: 95;
+        if (!$this->eventID) {
+            $this->eventID = $this->database->table(\DbNames::TAB_EVENT)->where('event_type_id', 1)->max('event_id');
+        }
         return $this->database->table(\DbNames::TAB_EVENT)->where('event_id', $this->eventID)->fetch();
+
+
     }
 }
