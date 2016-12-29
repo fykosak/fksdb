@@ -19,3 +19,6 @@
 [submodule "tester"]
 	path = tester
 	url = https://github.com/nette/tester.git
+[submodule "www/css/bootstrap"]
+	path = www/css/bootstrap
+	url = https://github.com/twbs/bootstrap.git

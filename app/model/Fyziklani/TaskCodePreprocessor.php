@@ -8,9 +8,6 @@
 
 namespace FKSDB\model\Fyziklani;
 
-
-use OrgModule\FyziklaniPresenter;
-
 class TaskCodePreprocessor {
 
     public function checkControlNumber($taskCode) {
