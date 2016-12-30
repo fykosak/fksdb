@@ -20,25 +20,42 @@ class ResultsPresenter extends BasePresenter {
 
             if ($type == 'init') {
                 foreach ($this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id', $this->eventID)->order('label') as $row) {
-                    $result['tasks'][] = ['label' => $row->label, 'name' => $row->name, 'task_id' => $row->fyziklani_task_id];
+                    $result['tasks'][] = [
+                        'label' => $row->label,
+                        'name' => $row->name,
+                        'task_id' => $row->fyziklani_task_id
+                    ];
                 }
                 foreach ($this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('event_id', $this->eventID) as $row) {
-                    $result['teams'][] = ['category' => $row->category, 'room' => $row->room, 'name' => $row->name, 'team_id' => $row->e_fyziklani_team_id];
+                    $result['teams'][] = [
+                        'category' => $row->category,
+                        'room' => $row->room,
+                        'name' => $row->name,
+                        'team_id' => $row->e_fyziklani_team_id
+                    ];
                 }
             } elseif ($type == 'refresh') {
                 $result['submits'] = [];
                 $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent(), $this->database);
                 $result['is_org'] = $isOrg;
-                if ($isOrg) {
+                if ($isOrg || $this->isResultsVisible()) {
                     $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team.event_id', $this->eventID);
                     foreach ($submits as $submit) {
-                        $result['submits'][] = ['points' => $submit->points, 'team_id' => $submit->e_fyziklani_team_id, 'task_id' => $submit->fyziklani_task_id];
+                        $result['submits'][] = [
+                            'points' => $submit->points,
+                            'team_id' => $submit->e_fyziklani_team_id,
+                            'task_id' => $submit->fyziklani_task_id
+                        ];
                     }
                 }
             } else {
                 throw new BadRequestException('error', 404);
             }
-            $result['times'] = ['toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(), 'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(), 'visible' => $this->isResultsVisible()];
+            $result['times'] = [
+                'toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(),
+                'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(),
+                'visible' => $this->isResultsVisible()
+            ];
             $this->sendResponse(new JsonResponse($result));
         }
     }
@@ -48,9 +65,8 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-         $this->setAuthorized(true);
+        $this->setAuthorized(true);
     }
-
 
 
     private function isResultsVisible() {

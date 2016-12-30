@@ -16,10 +16,10 @@ use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 class ClosePresenter extends BasePresenter {
 
     public function titleTable() {
-        $this->setTitle(_('Uzavierka bodovania'));
+        $this->setTitle(_('Uzavírání bodování'));
     }
     public function titleTeam() {
-        $this->setTitle(_('Uzavierka bodovania'));
+        $this->setTitle(_('Uzavírání bodování'));
     }
 
     public function authorizedTable() {
@@ -56,7 +56,7 @@ class ClosePresenter extends BasePresenter {
             }
             $this['closeForm']->setDefaults(['e_fyziklani_team_id' => $id, 'next_task' => $this->getNextTask($id)->nextTask]);
         } else {
-            $this->flashMessage('tento tým má už uzavreté bodovanie', 'danger');
+            $this->flashMessage('Tento tím má již uzavřeny bodování', 'danger');
             $this->redirect(':fyziklani:close:table');
         }
 
@@ -71,9 +71,9 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('e_fyziklani_team_id', 0);
-        $form->addCheckbox('submit_task_correct', _('Úlohy a počty bodov sú správne'))->setRequired(_('Skontrolujte prosím správnosť zadania bodov!'));
-        $form->addText('next_task', _('Úloha u vydávačov'))->setDisabled();
-        $form->addCheckbox('next_task_correct', _('Úloha u vydávačov sa zhaduje'))->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
+        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))->setRequired(_('Zkontrolujte správnost zadání bodů!'));
+        $form->addText('next_task', _('Úloha u vydávačů'))->setDisabled();
+        $form->addCheckbox('next_task_correct', _('Úloha u vydávaču sa zhaduje.'))->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
         $form->addSubmit('send', 'Potvrdiť spravnosť');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;

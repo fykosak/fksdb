@@ -49,10 +49,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->event = $this->getCurrentEvent();
         Debugger::barDump($this->event);
         if (!$this->eventExist()) {
-            throw new BadRequestException('Pre tento ročník nebolo najduté Fyzikláni', 404);
+            throw new BadRequestException('Event nebyl nalezen.', 404);
         }
         if ($this->event->event_type_id != $this->container->parameters['fyziklani']['eventTypeID']) {
-            throw new BadRequestException('Tento event nieje Fyzikláni', 500);
+            throw new BadRequestException('Tento event není Fyzikláni.', 500);
         }
         $this->eventYear = $this->event->event_year;
         parent::startup();
@@ -64,7 +64,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getTitle() {
-
         return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : ''));
     }
 
