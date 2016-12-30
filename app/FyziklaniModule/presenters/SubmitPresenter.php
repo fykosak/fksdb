@@ -8,7 +8,6 @@
 
 namespace FyziklaniModule;
 
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use \Nette\Application\UI\Form;
 use Nette\Database\Connection;
@@ -66,7 +65,6 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $form = $this->fyziklaniFactory->createEntryForm();
-        $form->setRenderer(new BootstrapRenderer());
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -94,7 +92,11 @@ class SubmitPresenter extends BasePresenter {
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
             $taskID = $this->taskLabelToTaskID($taskLabel);
-            $r = $this->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_SUBMIT, ['points' => $values->points, 'fyziklani_task_id' => $taskID, 'e_fyziklani_team_id' => $teamID]);
+            $r = $this->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_SUBMIT, [
+                'points' => $values->points,
+                'fyziklani_task_id' => $taskID,
+                'e_fyziklani_team_id' => $teamID
+            ]);
             $t = Debugger::timer();
             if ($r) {
                 $this->flashMessage(_('Body boli uložené. (' . $values->points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
@@ -154,8 +156,6 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentFyziklaniEditForm() {
         $form = $this->fyziklaniFactory->createEditForm();
-        $form->setRenderer(new BootstrapRenderer());
-
         $form->addSubmit('send', 'Uložit');
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
@@ -179,7 +179,13 @@ class SubmitPresenter extends BasePresenter {
         }
         $submit = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name')->where('fyziklani_submit_id = ?', $id)->fetch();
         $this->template->fyziklani_submit_id = $submit ? true : false;
-        $this['fyziklaniEditForm']->setDefaults(['team_id' => $submit->e_fyziklani_team_id, 'task' => $submit->label, 'points' => $submit->points, 'team' => $submit->name, 'submit_id' => $submit->fyziklani_submit_id]);
+        $this['fyziklaniEditForm']->setDefaults([
+            'team_id' => $submit->e_fyziklani_team_id,
+            'task' => $submit->label,
+            'points' => $submit->points,
+            'team' => $submit->name,
+            'submit_id' => $submit->fyziklani_submit_id
+        ]);
     }
 
     public function editFormSucceeded(Form $form) {
@@ -201,7 +207,6 @@ class SubmitPresenter extends BasePresenter {
         $this->redirect(':Fyziklani:Submit:table');
 
     }
-
 
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this);

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Forms\Controls\RadioList;
 use \Nette\Forms\Controls\TextInput;
 use \Nette\DI\Container;
@@ -59,6 +60,7 @@ class FyziklaniFactory {
 
     public function createEntryForm() {
         $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField(),'taskCode');
         $form->addComponent($this->createPointsField(),'points');
         $form->addSubmit('send','Uložit');
@@ -68,6 +70,7 @@ class FyziklaniFactory {
     public function createEditForm() {
         $form = new Form();
         $form->addHidden('submit_id',0);
+        $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(),'team');
         $form->addComponent($this->createTeamIDField(),'team_id');
         $form->addComponent($this->createTaskField(),'task');
