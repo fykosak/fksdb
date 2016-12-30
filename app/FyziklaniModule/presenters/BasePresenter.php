@@ -68,37 +68,55 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getCurrentEventID() {
-        return $this->getCurrentEvent()->event_id;
-    }
-
-    /** vráti paramtre daného eventu */
-    public function getCurrentEvent() {
         // $this->eventID = $this->eventID ?: 95;
         if (!$this->eventID) {
             $this->eventID = $this->database->table(\DbNames::TAB_EVENT)->where('event_type_id', 1)->max('event_id');
         }
-        return $this->database->table(\DbNames::TAB_EVENT)->where('event_id', $this->eventID)->fetch();
+        return $this->eventID;
+    }
+
+    /** vráti paramtre daného eventu
+     * @TODO to ORM?
+     */
+    public function getCurrentEvent() {
+        $eventID = $this->getCurrentEventID();
+        return $this->database->table(\DbNames::TAB_EVENT)->where('event_id', $eventID)->fetch();
 
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function submitExist($taskID, $teamID) {
         return (bool)$this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_task_id=?', $taskID)->where('e_fyziklani_team_id=?', $teamID)->count();
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function getSubmit($submitID) {
         return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_submit_id', $submitID)->fetch();
     }
 
+    /**
+     * @TODO to ORM?
+     */
     public function submitToTeam($submitID) {
         $r = $this->getSubmit($submitID);
         return $r ? $r->e_fyziklani_team_id : $r;
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function isOpenSubmit($teamID) {
         $points = $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('e_fyziklani_team_id', $teamID)->fetch()->points;
         return !is_numeric($points);
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function taskLabelToTaskID($taskLabel) {
         $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('label = ?', $taskLabel)->where('event_id = ?', $this->eventID)->fetch();
         if ($row) {
@@ -107,6 +125,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return false;
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function teamExist($teamID) {
         return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->get($teamID)->event_id == $this->eventID;
     }
