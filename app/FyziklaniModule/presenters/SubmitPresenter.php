@@ -8,7 +8,6 @@
 
 namespace FyziklaniModule;
 
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use \Nette\Application\UI\Form;
 use Nette\Database\Connection;
@@ -66,7 +65,6 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $form = $this->fyziklaniFactory->createEntryForm();
-        $form->setRenderer(new BootstrapRenderer());
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -161,9 +159,6 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentFyziklaniEditForm() {
         $form = $this->fyziklaniFactory->createEditForm();
-        $form->setRenderer(new BootstrapRenderer());
-
-        $form->addSubmit('send', 'Uložit');
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
@@ -190,7 +185,7 @@ class SubmitPresenter extends BasePresenter {
             'team_id' => $submit->e_fyziklani_team_id, 
             'task' => $submit->getTask()->label, 
             'points' => $submit->points, 
-            'team' => $submit->getTeam()->name, 
+            'team' => $submit->getTeam()->name,
             'submit_id' => $submit->fyziklani_submit_id
         ]);
     }
@@ -216,7 +211,6 @@ class SubmitPresenter extends BasePresenter {
         $this->redirect(':Fyziklani:Submit:table');
 
     }
-
 
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this->eventID, $this, $this->serviceFyziklaniSubmit);

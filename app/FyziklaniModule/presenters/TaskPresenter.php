@@ -42,7 +42,11 @@ class TaskPresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer);
         $form->addUpload('csvfile')->setRequired();
-        $form->addSelect('state', _('Vyberte akciu'), [self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatnuť úlohy a pridať ak neexistuje'), self::IMPORT_STATE_REMOVE_N_INSERT => _('Ostrániť všetky úlohy a nahrať nove'), self::IMPORT_STATE_INSERT => _('Pridať ak neexistuje')]);
+        $form->addSelect('state', _('Vyberte akciu'), [
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatnuť úlohy a pridať ak neexistuje'),
+            self::IMPORT_STATE_REMOVE_N_INSERT => _('Ostrániť všetky úlohy a nahrať nove'),
+            self::IMPORT_STATE_INSERT => _('Pridať ak neexistuje')
+        ]);
         $form->addSubmit('import', _('importovať'));
         $form->onSuccess[] = [$this, 'taskImportFormSucceeded'];
         return $form;
@@ -50,8 +54,12 @@ class TaskPresenter extends BasePresenter {
 
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this);
-        $taskImportProcessor->preprosess($values);
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this, $this->eventID);
+        $messages = [];
+        $taskImportProcessor($values, $messages);
+        foreach ($messages as $message) {
+            $this->flashMessage($message[0], $message[1]);
+        }
         $this->redirect('this');
     }
 

@@ -25,11 +25,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $event;
     /**
-     * @var int
+     * @var int $eventID
      * @persistent
      */
     public $eventID;
-
+    /**
+     * @var int $eventYear
+     */
     public $eventYear;
 
     /**
@@ -66,6 +68,17 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $serviceFyziklaniSubmit;
     
+    /**
+     * 
+     * @var \Nette\Database\Connection
+     * @deprecated
+     */
+    public $database;
+    
+    public function injectDatabase(Connection $database) {
+        $this->database = $database;
+    }
+    
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
@@ -94,7 +107,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->event = $this->getCurrentEvent();
         Debugger::barDump($this->event);
         if (!$this->eventExist()) {
-            throw new BadRequestException('Pre tento ročník nebolo najduté Fyzikláni', 404);
+            throw new BadRequestException('Event nebyl nalezen.', 404);
         }
         $this->eventYear = $this->event->event_year;
         parent::startup();
@@ -106,8 +119,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getTitle() {
-
-        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : ''));
+        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? (' '.$this->eventYear . '. FYKOSí Fyzikláni') : ''));
     }
 
     public function getCurrentEventID() {
@@ -129,24 +141,39 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function submitExist($taskID, $teamID) {
         return !is_null($this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID));
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function getSubmit($submitID) {
         return $this->serviceFyziklaniSubmit->findByPrimary($submitID);
     }
 
+    /**
+     * @TODO to ORM?
+     */
     public function submitToTeam($submitID) {
         $r = $this->getSubmit($submitID);
         return $r ? $r->e_fyziklani_team_id : $r;
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function isOpenSubmit($teamID) {
         $points = $this->serviceFyziklaniTeam->findByPrimary($teamID)->points;
         return !is_numeric($points);
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function taskLabelToTaskID($taskLabel) {
         $row = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID);
         if ($row) {
@@ -155,6 +182,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return false;
     }
 
+    /**
+     * @TODO to ORM?
+     */
     protected function teamExist($teamID) {
         return $this->serviceFyziklaniTeam->findByPrimary($teamID)->event_id == $this->eventID;
     }

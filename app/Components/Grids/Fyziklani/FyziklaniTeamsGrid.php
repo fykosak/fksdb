@@ -12,12 +12,14 @@ use FyziklaniModule\ClosePresenter;
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+use \NiftyGrid\DataSource\NDataSource;
+use \FKSDB\Components\Grids\BaseGrid;
 /**
  * Description of SubmitsGrid
  *
  * @author miso
  */
-class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniTeamsGrid extends BaseGrid {
 
     private $serviceFyziklaniTeam;
     private $eventID;
