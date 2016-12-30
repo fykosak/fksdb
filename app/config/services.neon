@@ -12,8 +12,9 @@ services:
     - Authentication\FacebookAuthenticator
     - Authentication\GithubAuthenticator
     - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator    
+    - Authentication\TokenAuthenticator
     - Authorization\ContestAuthorizator
+    - Authorization\EventAuthorizator
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})

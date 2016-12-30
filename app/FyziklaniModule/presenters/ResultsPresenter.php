@@ -27,7 +27,7 @@ class ResultsPresenter extends BasePresenter {
                 }
             } elseif ($type == 'refresh') {
                 $result['submits'] = [];
-                $isOrg = $this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'results', $this->getCurrentEvent(), $this->database);
+                $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent(), $this->database);
                 $result['is_org'] = $isOrg;
                 if ($isOrg) {
                     $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team.event_id', $this->eventID);

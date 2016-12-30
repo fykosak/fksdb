@@ -27,7 +27,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'task', $this->getCurrentEvent(), $this->database));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'task', $this->getCurrentEvent(), $this->database));
     }
 
     public function titleImport() {

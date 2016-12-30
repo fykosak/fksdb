@@ -9,6 +9,7 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use \Nette\Diagnostics\Debugger;
 use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
+use Nette\Utils\Html;
 
 
 abstract class BasePresenter extends AuthenticatedPresenter {
@@ -36,16 +37,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public $container;
 
-    public function __construct(Connection $database, FyziklaniFactory $pointsFactory, Container $container) {
+    public function __construct(Connection $database, FyziklaniFactory $fyziklaniFactory, Container $container) {
 
         parent::__construct();
         $this->container = $container;
-        $this->fyziklaniFactory = $pointsFactory;
+        $this->fyziklaniFactory = $fyziklaniFactory;
         $this->database = $database;
     }
 
     public function startup() {
-        //$this->eventID = $this->params['eventID'];
         $this->event = $this->getCurrentEvent();
         Debugger::barDump($this->event);
         if (!$this->eventExist()) {
@@ -55,9 +55,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             throw new BadRequestException('Tento event nieje Fyzikláni', 500);
         }
         $this->eventYear = $this->event->event_year;
-        // $this->flashMessage(_('Náchádzate sa v ' . $this->eventYear . '. Fykosím Fyzikláni'), 'warning');
         parent::startup();
-
     }
 
     /** Vrati true ak pre daný ročník existuje fyzikláni */
@@ -66,7 +64,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getTitle() {
-        return $this->title . ($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : '');
+
+        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : ''));
     }
 
     public function getCurrentEventID() {
@@ -81,6 +80,35 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         }
         return $this->database->table(\DbNames::TAB_EVENT)->where('event_id', $this->eventID)->fetch();
 
+    }
 
+    protected function submitExist($taskID, $teamID) {
+        return (bool)$this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_task_id=?', $taskID)->where('e_fyziklani_team_id=?', $teamID)->count();
+    }
+
+    protected function getSubmit($submitID) {
+        return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_submit_id', $submitID)->fetch();
+    }
+
+    public function submitToTeam($submitID) {
+        $r = $this->getSubmit($submitID);
+        return $r ? $r->e_fyziklani_team_id : $r;
+    }
+
+    protected function isOpenSubmit($teamID) {
+        $points = $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('e_fyziklani_team_id', $teamID)->fetch()->points;
+        return !is_numeric($points);
+    }
+
+    protected function taskLabelToTaskID($taskLabel) {
+        $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('label = ?', $taskLabel)->where('event_id = ?', $this->eventID)->fetch();
+        if ($row) {
+            return $row->fyziklani_task_id;
+        }
+        return false;
+    }
+
+    protected function teamExist($teamID) {
+        return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->get($teamID)->event_id == $this->eventID;
     }
 }

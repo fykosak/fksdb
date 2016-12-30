@@ -45,7 +45,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEntry() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'submit', $this->getCurrentEvent(), $this->database));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'submit', $this->getCurrentEvent(), $this->database));
     }
 
     public function titleEdit() {
@@ -182,7 +182,6 @@ class SubmitPresenter extends BasePresenter {
         $this['fyziklaniEditForm']->setDefaults(['team_id' => $submit->e_fyziklani_team_id, 'task' => $submit->label, 'points' => $submit->points, 'team' => $submit->name, 'submit_id' => $submit->fyziklani_submit_id]);
     }
 
-
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
 
@@ -206,36 +205,5 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this);
-    }
-
-    private function submitExist($taskID, $teamID) {
-        return (bool)$this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_task_id=?', $taskID)->where('e_fyziklani_team_id=?', $teamID)->count();
-    }
-
-    private function getSubmit($submitID) {
-        return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_submit_id', $submitID)->fetch();
-    }
-
-    public function submitToTeam($submitID) {
-        $r = $this->getSubmit($submitID);
-        return $r ? $r->e_fyziklani_team_id : $r;
-    }
-
-    public function isOpenSubmit($teamID) {
-        $points = $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('e_fyziklani_team_id', $teamID)->fetch()->points;
-        return !is_numeric($points);
-    }
-
-    private function taskLabelToTaskID($taskLabel) {
-        $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('label = ?', $taskLabel)->where('event_id = ?', $this->eventID)->fetch();
-        if ($row) {
-            return $row->fyziklani_task_id;
-        }
-        return false;
-    }
-
-
-    private function teamExist($teamID) {
-        return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->get($teamID)->event_id == $this->eventID;
     }
 }

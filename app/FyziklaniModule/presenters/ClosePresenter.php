@@ -23,10 +23,10 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedEvent('fyziklani', 'close', $this->getCurrentEvent(),$this->database));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent(),$this->database));
     }
     public function authorizedTeam() {
-       $this->actionTable();
+       $this->authorizedTable();
     }
 
     public function renderTeam($id) {
@@ -34,8 +34,6 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function actionTable() {
-
-
         if (!$this->isReadyToClose('A')) {
             $this['closeCategoryAForm']['send']->setDisabled();
         }
