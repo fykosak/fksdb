@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FyziklaniModule\BasePresenter;
+use ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
 
@@ -15,11 +15,17 @@ use SQL\SearchableDataSource;
  */
 class FyziklaniTaskGrid extends BaseGrid {
 
-    private $presenter;
+    /**
+     *
+     * @var ServiceFyziklaniTask 
+     */
+    private $serviceFyziklaniTask;
+    private $eventID;
     protected $searchable;
 
-    public function __construct(BasePresenter $presenter) {
-        $this->presenter = $presenter;
+    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->eventID = $eventID;
         parent::__construct();
     }
 
@@ -29,7 +35,7 @@ class FyziklaniTaskGrid extends BaseGrid {
         $this->addColumn('label',_('Label'));
         $this->addColumn('name',_('Názov ǔlohy'));
 
-        $submits = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id = ?',$presenter->eventID);
+        $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
                     $tokens = preg_split('/\s+/', $value);

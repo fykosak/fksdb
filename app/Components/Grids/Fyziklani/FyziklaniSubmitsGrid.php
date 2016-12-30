@@ -11,6 +11,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FyziklaniModule\BasePresenter;
 use FyziklaniModule\SubmitPresenter;
 use \NiftyGrid\DataSource\NDataSource;
+use ServiceFyziklaniSubmit;
 
 /**
  * Description of SubmitsGrid
@@ -20,10 +21,18 @@ use \NiftyGrid\DataSource\NDataSource;
 class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
 
     private $presenter;
+    /**
+     *
+     * @var ServiceFyziklaniSubmit 
+     */
+    private $serviceFyziklaniSubmit;
+    private $eventID;
     protected $searchable;
 
-    public function __construct(SubmitPresenter $presenter) {
+    public function __construct($eventID, SubmitPresenter $presenter, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->presenter = $presenter;
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->eventID = $eventID;
         parent::__construct();
     }
 
@@ -58,7 +67,8 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
                 })
                 ->setText(_('Zmazať'));
 
-        $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
+                ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
         $this->setDataSource(new NDataSource($submits));
     }
 
@@ -74,7 +84,7 @@ class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
             return;
         }
         try {
-            $this->presenter->database->queryArgs('DELETE FROM '.\DbNames::TAB_FYZIKLANI_SUBMIT.' WHERE fyziklani_submit_id=?',[$id]);
+            $this->serviceFyziklaniSubmit->getTable()->where('fyziklani_submit_id', $id)->delete();
             $this->flashMessage(_('Úloha bola zmazaná'),'success');
         } catch (Exception $e) {
             $this->flashMessage(_('Vykytla sa chyba'),'danger');

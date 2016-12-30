@@ -23,14 +23,14 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent(),$this->database));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent()));
     }
     public function authorizedTeam() {
        $this->authorizedTable();
     }
 
     public function renderTeam($id) {
-        $this->template->submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id', $id);
+        $this->template->submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $id);
     }
 
     public function actionTable() {
@@ -63,7 +63,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGrid() {
-        $grid = new FyziklaniTeamsGrid($this->database);
+        $grid = new FyziklaniTeamsGrid($this->eventID, $this->serviceFyziklaniTeam);
         return $grid;
     }
 
@@ -81,14 +81,15 @@ class ClosePresenter extends BasePresenter {
 
     public function closeFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id', $values->e_fyziklani_team_id);
+        $submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $values->e_fyziklani_team_id);
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        if ($this->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET ? WHERE e_fyziklani_team_id=? ', ['points' => $sum], $values->e_fyziklani_team_id)) {
-            $this->redirect(':Fyziklani:Close:table');
-        }
+        $team = $this->serviceFyziklaniTeam->findByPrimary($values->e_fyziklani_team_id);
+        $this->serviceFyziklaniTeam->updateModel($team, ['points' => $sum]);
+        $this->serviceFyziklaniTeam->save($team);
+        $this->redirect(':Fyziklani:Close:table');
     }
 
     public function createComponentCloseCategoryForm($category) {
@@ -132,8 +133,7 @@ class ClosePresenter extends BasePresenter {
 
 
     private function isReadyToClose($category = null) {
-        $database = $this->database;
-        $query = $database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('status', 'participated')->where('event_id', $this->eventID);
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
         if ($category) {
             $query->where('category', $category);
         }
@@ -145,8 +145,8 @@ class ClosePresenter extends BasePresenter {
     private function getNextTask($teamID) {
 
         $return = [];
-        $submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id=?', $teamID)->count();
-        $allTask = $this->database->query('SELECT * FROM ' . \DbNames::TAB_FYZIKLANI_TASK . ' WHERE event_id = ? ORDER BY label', $this->eventID)->fetchAll();
+        $submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $teamID)->count();
+        $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
         $lastID = $submits + $this->container->parameters['fyziklani']['taskOnBoard'] - 1;
         /** @because index start with 0; */
         $nextID = $lastID + 1;

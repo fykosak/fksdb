@@ -10,15 +10,20 @@ use Nette\DI\Container;
 use \Nette\Diagnostics\Debugger;
 use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use Nette\Utils\Html;
+use ServiceEvent;
+use ServiceFyziklaniTask;
+use ServiceFyziklaniSubmit;
+use \ORM\Services\Events\ServiceFyziklaniTeam;
+use ModelEvent;
 
 
 abstract class BasePresenter extends AuthenticatedPresenter {
+
     /**
      *
-     * @var \Nette\Database\Connection
+     * @var ModelEvent
      */
-    public $database;
-    public $event;
+    protected $event;
     /**
      * @var int
      * @persistent
@@ -30,19 +35,59 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @var FyziklaniFactory
      */
-    public $fyziklaniFactory;
+    protected $fyziklaniFactory;
     /**
      *
      * @var Container
      */
-    public $container;
-
-    public function __construct(Connection $database, FyziklaniFactory $fyziklaniFactory, Container $container) {
-
-        parent::__construct();
-        $this->container = $container;
+    protected $container;
+    
+    /**
+     *
+     * @var ServiceEvent
+     */
+    protected $serviceEvent;
+    
+    /**
+     *
+     * @var ServiceFyziklaniTeam
+     */
+    protected $serviceFyziklaniTeam;
+    
+    /**
+     *
+     * @var ServiceFyziklaniTask
+     */
+    protected $serviceFyziklaniTask;
+    
+    /**
+     *
+     * @var ServiceFyziklaniSubmit
+     */
+    protected $serviceFyziklaniSubmit;
+    
+    public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
-        $this->database = $database;
+    }
+    
+    public function injectContainer(Container $container) {
+        $this->container = $container;
+    }
+    
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
+    }
+    
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+    
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    }
+    
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
     public function startup() {
@@ -50,9 +95,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         Debugger::barDump($this->event);
         if (!$this->eventExist()) {
             throw new BadRequestException('Pre tento ročník nebolo najduté Fyzikláni', 404);
-        }
-        if ($this->event->event_type_id != $this->container->parameters['fyziklani']['eventTypeID']) {
-            throw new BadRequestException('Tento event nieje Fyzikláni', 500);
         }
         $this->eventYear = $this->event->event_year;
         parent::startup();
@@ -72,22 +114,27 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getCurrentEvent()->event_id;
     }
 
-    /** vráti paramtre daného eventu */
+    /** vráti paramtre daného eventu 
+     * @return ModelEvent
+     */
     public function getCurrentEvent() {
-        // $this->eventID = $this->eventID ?: 95;
-        if (!$this->eventID) {
-            $this->eventID = $this->database->table(\DbNames::TAB_EVENT)->where('event_type_id', 1)->max('event_id');
+        if(!$this->event){
+            if (!$this->eventID) {
+                $this->eventID = $this->serviceEvent->getTable()
+                        ->where('event_type_id', $this->container->parameters['fyziklani']['eventTypeID'])
+                        ->max('event_id');
+            }
+            $this->event = $this->serviceEvent->findByPrimary($this->eventID);
         }
-        return $this->database->table(\DbNames::TAB_EVENT)->where('event_id', $this->eventID)->fetch();
-
+        return $this->event;
     }
 
     protected function submitExist($taskID, $teamID) {
-        return (bool)$this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_task_id=?', $taskID)->where('e_fyziklani_team_id=?', $teamID)->count();
+        return !is_null($this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID));
     }
 
     protected function getSubmit($submitID) {
-        return $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('fyziklani_submit_id', $submitID)->fetch();
+        return $this->serviceFyziklaniSubmit->findByPrimary($submitID);
     }
 
     public function submitToTeam($submitID) {
@@ -96,12 +143,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function isOpenSubmit($teamID) {
-        $points = $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('e_fyziklani_team_id', $teamID)->fetch()->points;
+        $points = $this->serviceFyziklaniTeam->findByPrimary($teamID)->points;
         return !is_numeric($points);
     }
 
     protected function taskLabelToTaskID($taskLabel) {
-        $row = $this->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('label = ?', $taskLabel)->where('event_id = ?', $this->eventID)->fetch();
+        $row = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID);
         if ($row) {
             return $row->fyziklani_task_id;
         }
@@ -109,6 +156,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function teamExist($teamID) {
-        return $this->database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->get($teamID)->event_id == $this->eventID;
+        return $this->serviceFyziklaniTeam->findByPrimary($teamID)->event_id == $this->eventID;
     }
 }
