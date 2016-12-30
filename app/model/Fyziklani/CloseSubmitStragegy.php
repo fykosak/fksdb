@@ -19,11 +19,8 @@ use OrgModule\FyziklaniPresenter;
  */
 class CloseSubmitStragegy {
     /**
-     * @var string
-     */
-    protected $category;
-    /**
-     * @var FyziklaniPresenter
+     * @var BasePresenter
+     * @deprecated
      */
     protected $presenter;
 
@@ -50,10 +47,10 @@ class CloseSubmitStragegy {
         $msg = '';
         foreach ($data as $index => &$teamData) {
             $teamData['rank_category'] = $index;
-            $msg .= '<li>TeamID:' . $teamData['e_fyziklani_team_id'] . ' Poradie: ' . ($index + 1) . '</li>';
+            $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _(' Poradie') . ': ' . ($index + 1));
             $this->presenter->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET rank_category=? WHERE e_fyziklani_team_id=?', $index + 1, $teamData['e_fyziklani_team_id']);
         }
-        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->presenter->flashMessage(Html::el()->add(_('Pořadí bolo uložené') . Html::el('ul')->add($msg)), 'success');
     }
 
     private function getTeamsStats($teams) {
@@ -106,7 +103,11 @@ class CloseSubmitStragegy {
         foreach ($submits as $submit) {
             $sum += $submit->points;
             $count++;
-            $arraySubmits[] = ['task_id' => $submit->task_id, 'points' => $submit->points, 'time' => $submit->submitted_on];
+            $arraySubmits[] = [
+                'task_id' => $submit->task_id,
+                'points' => $submit->points,
+                'time' => $submit->submitted_on
+            ];
         }
         return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];
     }

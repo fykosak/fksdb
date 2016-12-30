@@ -47,7 +47,7 @@ class TaskPresenter extends BasePresenter {
             self::IMPORT_STATE_REMOVE_N_INSERT => _('Ostrániť všetky úlohy a nahrať nove'),
             self::IMPORT_STATE_INSERT => _('Pridať ak neexistuje')
         ]);
-        $form->addSubmit('import', _('importovať'));
+        $form->addSubmit('import', _('Importovať'));
         $form->onSuccess[] = [$this, 'taskImportFormSucceeded'];
         return $form;
     }

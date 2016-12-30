@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 23.12.2016
- * Time: 2:20
- */
 
 namespace FKSDB\model\Fyziklani;
 

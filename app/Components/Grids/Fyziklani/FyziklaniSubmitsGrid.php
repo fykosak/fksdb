@@ -31,13 +31,13 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('name', _('Teams\'s name'));
+        $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('Team ID'));
         $that = $this;
-        $this->addColumn('label', _('Task'));
-        $this->addColumn('points', _('Points'));
-        $this->addColumn('room', _('Room'));
-        $this->addColumn('submitted_on', _('Submited on'));
+        $this->addColumn('label', _('Úloha'));
+        $this->addColumn('points', _('Body'));
+        $this->addColumn('room', _('Místnost'));
+        $this->addColumn('submitted_on', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $this->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upraviť'));

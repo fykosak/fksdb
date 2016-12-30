@@ -45,12 +45,15 @@ class FyziklaniTaskImportProcessor {
                         'name' => $row['name']
                     ], $taskID)
                     ) {
-                        $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola updatnuta', 'info'];
+                        $messages[] = [sprintf(_('Úloha %s "%s" bola updatnuta'), $row['label'], $row['name']), 'info'];
                     } else {
                         $messages[] = [_('Vyskytal sa chyba'), 'danger'];
                     }
                 } else {
-                    $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" nebola pozmenená', 'warning'];
+                    $messages[] = [
+                        sprintf(_('Úloha %s "%s" nebola updatnuta'), $row['label'], $row['name']),
+                        'warning'
+                    ];
                 }
             } else {
                 if ($this->presenter->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_TASK, [
@@ -59,7 +62,7 @@ class FyziklaniTaskImportProcessor {
                     'event_id' => $this->eventID
                 ])
                 ) {
-                    $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola vložená', 'success'];
+                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložená'), $row['label'], $row['name']), 'success'];
                 } else {
                     $messages[] = [_('Vyskytal sa chyba'), 'danger'];
                 }

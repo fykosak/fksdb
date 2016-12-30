@@ -18,17 +18,20 @@ class ClosePresenter extends BasePresenter {
     public function titleTable() {
         $this->setTitle(_('Uzavírání bodování'));
     }
+
     public function titleTeam() {
         $this->setTitle(_('Uzavírání bodování'));
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent(),$this->database));
-    }
-    public function authorizedTeam() {
-       $this->authorizedTable();
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent(), $this->database));
     }
 
+    public function authorizedTeam() {
+        $this->authorizedTable();
+    }
+
+// @TODO ORM
     public function renderTeam($id) {
         $this->template->submits = $this->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id', $id);
     }
@@ -47,6 +50,7 @@ class ClosePresenter extends BasePresenter {
             $this['closeGlobalForm']['send']->setDisabled();
         }
     }
+
     public function actionTeam($id) {
 
         if ($this->isOpenSubmit($id)) {
@@ -54,7 +58,10 @@ class ClosePresenter extends BasePresenter {
                 $this->flashMessage('Tým neexistuje', 'danger');
                 $this->redirect(':Fyziklani:submit:close');
             }
-            $this['closeForm']->setDefaults(['e_fyziklani_team_id' => $id, 'next_task' => $this->getNextTask($id)->nextTask]);
+            $this['closeForm']->setDefaults([
+                'e_fyziklani_team_id' => $id,
+                'next_task' => $this->getNextTask($id)->nextTask
+            ]);
         } else {
             $this->flashMessage('Tento tím má již uzavřeny bodování', 'danger');
             $this->redirect(':fyziklani:close:table');
@@ -95,7 +102,7 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('category', $category);
-        $form->addSubmit('send', _('Uzavrieť kategoriu' . $category));
+        $form->addSubmit('send', sprintf(_('Uzavrieť kategoriu %s.'),$category));
         $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
         return $form;
     }
@@ -120,7 +127,7 @@ class ClosePresenter extends BasePresenter {
     public function createComponentCloseGlobalForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addSubmit('send', _('Uzavrieť Fyzikláni'));
+        $form->addSubmit('send', _('Uzavrieť celé Fyzikláni'));
         $form->onSuccess[] = [$this, 'closeGlobalFormSucceeded'];
         return $form;
     }
@@ -142,6 +149,7 @@ class ClosePresenter extends BasePresenter {
         return $count == 0;
 
     }
+
     private function getNextTask($teamID) {
 
         $return = [];

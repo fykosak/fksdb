@@ -58,7 +58,7 @@ class FyziklaniFactory {
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField(),'taskCode');
         $form->addComponent($this->createPointsField(),'points');
-        $form->addSubmit('send','Uložit');
+        $form->addSubmit('send',_('Uložit'));
         return $form;
     }
 
@@ -70,7 +70,7 @@ class FyziklaniFactory {
         $form->addComponent($this->createTeamIDField(),'team_id');
         $form->addComponent($this->createTaskField(),'task');
         $form->addComponent($this->createPointsField(),'points');
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', _('Uložit'));
         return $form;
     }
 }
