@@ -15,7 +15,7 @@ class DefaultPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized(true);
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'default', $this->getCurrentEvent()));
     }
 
 }

@@ -6,6 +6,7 @@ use Authorization\Assertions\EventOrgByIdAssertion;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
+use Nette\Database\Connection;
 
 class EventAuthorizator extends Object {
     /**
@@ -17,16 +18,22 @@ class EventAuthorizator extends Object {
      * @var Permission
      */
     private $acl;
+    
+    /**
+     * @var Connection
+     */
+    private $db;
 
     /**
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
 
-    function __construct(User $identity, Permission $acl, ContestAuthorizator $contestAuthorizator) {
+    function __construct(User $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
         $this->acl = $acl;
+        $this->db = $db;
     }
 
     public function getUser() {
@@ -37,15 +44,15 @@ class EventAuthorizator extends Object {
         return $this->acl;
     }
 
-    public function isAllowed($resource, $privilege, $event, $db) {
+    public function isAllowed($resource, $privilege, $event) {
         if (!$this->getUser()->isLoggedIn()) {
             return false;
         }
-        return $this->isAllowedForLogin($resource, $privilege, $event, $db) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);
+        return $this->isAllowedForLogin($resource, $privilege, $event) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);
     }
 
-    public function isAllowedForLogin($resource, $privilege, $event, $db) {
-        $eventOrgByIdAssertion = new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $db);
+    public function isAllowedForLogin($resource, $privilege, $event) {
+        $eventOrgByIdAssertion = new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $this->db);
         return $eventOrgByIdAssertion($this->acl, null, $resource, $privilege, $event->event_id);
     }
 }

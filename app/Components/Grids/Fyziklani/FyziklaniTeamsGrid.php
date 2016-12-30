@@ -8,9 +8,11 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FyziklaniModule\ClosePresenter;
+use \NiftyGrid\DataSource\NDataSource;
+use ORM\Services\Events\ServiceFyziklaniTeam;
 
 use \NiftyGrid\DataSource\NDataSource;
-use \Nette\Database\Connection;
 use \FKSDB\Components\Grids\BaseGrid;
 /**
  * Description of SubmitsGrid
@@ -18,14 +20,13 @@ use \FKSDB\Components\Grids\BaseGrid;
  * @author miso
  */
 class FyziklaniTeamsGrid extends BaseGrid {
-    /**
-     * @var \Nette\Database\Connection
-     * @deprecated
-     */
-    private $database;
 
-    public function __construct(Connection $database) {
-        $this->database = $database;
+    private $serviceFyziklaniTeam;
+    private $eventID;
+
+    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventID = $eventID;
         parent::__construct();
     }
 
@@ -51,10 +52,10 @@ class FyziklaniTeamsGrid extends BaseGrid {
         $this->addButton('edit',null)
                 ->setClass('btn btn-xs btn-success')
                 ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Fyziklani:Close:team',['id' => $row->e_fyziklani_team_id,'eventID'=>$presenter->eventID]);
+                    return $presenter->link(':Fyziklani:Close:team',['id' => $row->e_fyziklani_team_id,'eventID'=> $this->eventID]);
                 })
                 ->setText(_('Uzavrieť bodovanie'));
-        $teams = $this->database->table('e_fyziklani_team')->select('*')->where('event_id',$presenter->eventID)->where('status?','participated')->where('points',NULL);
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventID)->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
     }
 }

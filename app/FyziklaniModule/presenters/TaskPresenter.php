@@ -27,7 +27,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'task', $this->getCurrentEvent(), $this->database));
+        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'task', $this->getCurrentEvent()));
     }
 
     public function titleImport() {
@@ -64,6 +64,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        return new FyziklaniTaskGrid($this);
+        return new FyziklaniTaskGrid($this->eventID, $this->serviceFyziklaniTask);
     }
 }
