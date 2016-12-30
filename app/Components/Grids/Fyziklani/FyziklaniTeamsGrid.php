@@ -8,19 +8,23 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FyziklaniModule\ClosePresenter;
-use \NiftyGrid\DataSource\NDataSource;
 
+use \NiftyGrid\DataSource\NDataSource;
+use \Nette\Database\Connection;
+use \FKSDB\Components\Grids\BaseGrid;
 /**
  * Description of SubmitsGrid
  *
  * @author miso
  */
-class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
-
+class FyziklaniTeamsGrid extends BaseGrid {
+    /**
+     * @var \Nette\Database\Connection
+     * @deprecated
+     */
     private $database;
 
-    public function __construct(\Nette\Database\Connection $database) {
+    public function __construct(Connection $database) {
         $this->database = $database;
         parent::__construct();
     }

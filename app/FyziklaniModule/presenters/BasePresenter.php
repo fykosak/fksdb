@@ -16,15 +16,19 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      *
      * @var \Nette\Database\Connection
+     * @deprecated
      */
     public $database;
+
     public $event;
     /**
-     * @var int
+     * @var int $eventID
      * @persistent
      */
     public $eventID;
-
+    /**
+     * @var int $eventYear
+     */
     public $eventYear;
 
     /**
@@ -38,6 +42,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public $container;
 
     public function __construct(Connection $database, FyziklaniFactory $fyziklaniFactory, Container $container) {
+
 
         parent::__construct();
         $this->container = $container;
@@ -64,7 +69,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getTitle() {
-        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? ' | ' . $this->eventYear . '. FYKOSí Fyzikláni' : ''));
+        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? (' '.$this->eventYear . '. FYKOSí Fyzikláni') : ''));
     }
 
     public function getCurrentEventID() {

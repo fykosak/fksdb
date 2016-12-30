@@ -14,7 +14,10 @@ use SQL\SearchableDataSource;
  * @author miso
  */
 class FyziklaniTaskGrid extends BaseGrid {
-
+    /**
+     * @var BasePresenter
+     * @deprecated
+     */
     private $presenter;
     protected $searchable;
 

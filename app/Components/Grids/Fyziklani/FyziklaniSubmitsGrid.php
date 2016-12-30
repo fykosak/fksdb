@@ -39,7 +39,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('room', _('Room'));
         $this->addColumn('submitted_on', _('Submited on'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
-            return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
+            return $this->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upraviť'));
 
         $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
