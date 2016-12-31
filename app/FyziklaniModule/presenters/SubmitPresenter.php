@@ -23,9 +23,9 @@ class SubmitPresenter extends BasePresenter {
      */
     private $taskCodePreprocessor;
 
-    public function __construct() {
+    public function __construct(TaskCodePreprocessor $taskCodePreprocessor) {
         parent::__construct();
-        $this->taskCodePreprocessor = new TaskCodePreprocessor();
+        $this->taskCodePreprocessor = $taskCodePreprocessor;
     }
 
     public function actionEntry($id) {

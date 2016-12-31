@@ -71,5 +71,10 @@ services:
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
     events.captcha: Events\FormAdjustments\Captcha
 
+    #
+    # Fyziklani
+    #
+    - FKSDB\model\Fyziklani\TaskCodePreprocessor
+
 includes:
     - merger.neon

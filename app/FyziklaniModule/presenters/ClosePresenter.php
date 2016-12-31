@@ -33,7 +33,7 @@ class ClosePresenter extends BasePresenter {
 
 // @TODO ORM
     public function renderTeam($id) {
-        $this->template->submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $id);
+        $this->template->submits = $this->serviceFyziklaniTeam->findByPrimary($id)->getSubmits();
     }
 
     public function actionTable() {
@@ -88,14 +88,17 @@ class ClosePresenter extends BasePresenter {
 
     public function closeFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $values->e_fyziklani_team_id);
+        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection->beginTransaction();
+        $team = $this->serviceFyziklaniTeam->findByPrimary($values->e_fyziklani_team_id);
+        $submits = $team->getSubmits();
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        $team = $this->serviceFyziklaniTeam->findByPrimary($values->e_fyziklani_team_id);
         $this->serviceFyziklaniTeam->updateModel($team, ['points' => $sum]);
         $this->serviceFyziklaniTeam->save($team);
+        $connection->commit();
         $this->redirect(':Fyziklani:Close:table');
     }
 
@@ -121,8 +124,9 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStragegy($this);
-        $closeStrategy->closeByCategory($form->getValues()->category);
+        $closeStrategy = new CloseSubmitStragegy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy->closeByCategory($form->getValues()->category, $msg);
+        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
     public function createComponentCloseGlobalForm() {
@@ -134,8 +138,9 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStragegy($this);
-        $closeStrategy->closeGlobal();
+        $closeStrategy = new CloseSubmitStragegy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy->closeGlobal($msg);
+        $this->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
 
@@ -153,7 +158,7 @@ class ClosePresenter extends BasePresenter {
     private function getNextTask($teamID) {
 
         $return = [];
-        $submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team_id', $teamID)->count();
+        $submits = count($this->serviceFyziklaniTask->findByPrimary($teamID)->getSubmits());
         $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
         $lastID = $submits + $this->container->parameters['fyziklani']['taskOnBoard'] - 1;
         /** @because index start with 0; */
