@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 22.12.2016
- * Time: 2:41
- */
 
 namespace FKSDB\model\Fyziklani;
 
@@ -13,7 +7,11 @@ use FyziklaniModule\TaskPresenter;
 use ServiceFyziklaniTask;
 use \Nette\Diagnostics\Debugger;
 
-
+/**
+ *
+ * @author Michal Červeňák
+ * @author Lukáš Timko
+ */
 class FyziklaniTaskImportProcessor {
 
     /**
@@ -21,7 +19,9 @@ class FyziklaniTaskImportProcessor {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
-
+    /**
+     * @var integer
+     */
     private $eventID;
 
     public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
@@ -38,11 +38,8 @@ class FyziklaniTaskImportProcessor {
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {
-
             $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->eventID);
             $taskID = $task ? $task->fyziklani_task_id : false;
-
-
             try {
                 if ($taskID) {
                     if ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
@@ -52,12 +49,11 @@ class FyziklaniTaskImportProcessor {
                         ]);
                         $this->serviceFyziklaniTask->save($task);
                         $messages[] = [sprintf(_('Úloha %s "%s" bola updatnuta'), $row['label'], $row['name']), 'info'];
-
-
                     } else {
                         $messages[] = [
                             sprintf(_('Úloha %s "%s" nebola updatnuta'), $row['label'], $row['name']),
                             'warning'
+                        ];
                     }
                 } else {
                     $this->serviceFyziklaniTask->createNew($task, [
@@ -67,7 +63,6 @@ class FyziklaniTaskImportProcessor {
                     ]);
                     $this->serviceFyziklaniTask->save($task);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložená'), $row['label'], $row['name']), 'success'];
-
                 }
             } catch (Exception $e) {
                 $messages[] = [_('Vyskytal sa chyba'), 'danger'];

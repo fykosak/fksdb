@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 3.12.2016
- * Time: 1:09
- */
 
 namespace FyziklaniModule;
 
@@ -67,7 +61,6 @@ class ResultsPresenter extends BasePresenter {
     public function authorizedDefault() {
         $this->setAuthorized(true);
     }
-
 
     private function isResultsVisible() {
         return (time() < strtotime($this->container->parameters['fyziklani']['results']['hidde'])) && (time() > strtotime($this->container->parameters['fyziklani']['results']['display']));

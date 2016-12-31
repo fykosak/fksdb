@@ -1,17 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 25.12.2016
- * Time: 22:21
- */
 
 namespace FyziklaniModule;
 
-use Fyziklani\CloseSubmitStragegy;
+use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Application\UI\Form;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
+use Nette\Utils\Html;
 
 class ClosePresenter extends BasePresenter {
 
@@ -31,7 +26,6 @@ class ClosePresenter extends BasePresenter {
         $this->authorizedTable();
     }
 
-// @TODO ORM
     public function renderTeam($id) {
         $this->template->submits = $this->serviceFyziklaniTeam->findByPrimary($id)->getSubmits();
     }
@@ -52,7 +46,6 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function actionTeam($id) {
-
         if ($this->isOpenSubmit($id)) {
             if (!$this->teamExist($id)) {
                 $this->flashMessage('Tým neexistuje', 'danger');
@@ -66,7 +59,6 @@ class ClosePresenter extends BasePresenter {
             $this->flashMessage('Tento tím má již uzavřeny bodování', 'danger');
             $this->redirect(':fyziklani:close:table');
         }
-
     }
 
     public function createComponentCloseGrid() {
@@ -124,7 +116,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStragegy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
@@ -138,11 +130,10 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStragegy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
-
 
     private function isReadyToClose($category = null) {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
@@ -156,7 +147,6 @@ class ClosePresenter extends BasePresenter {
     }
 
     private function getNextTask($teamID) {
-
         $return = [];
         $submits = count($this->serviceFyziklaniTask->findByPrimary($teamID)->getSubmits());
         $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');

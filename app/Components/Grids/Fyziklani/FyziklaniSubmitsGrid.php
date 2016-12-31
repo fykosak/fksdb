@@ -13,6 +13,11 @@ use \NiftyGrid\DataSource\NDataSource;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
 
+/**
+ *
+ * @author Michal Červeňák
+ * @author Lukáš Timko
+ */
 class FyziklaniSubmitsGrid extends BaseGrid {
     /**
      * @var BasePresenter
@@ -24,8 +29,10 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      * @var ServiceFyziklaniSubmit 
      */
     private $serviceFyziklaniSubmit;
+    /**
+     * @var int
+     */
     private $eventID;
-    protected $searchable;
 
     public function __construct($eventID, BasePresenter $presenter, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
 
@@ -50,7 +57,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('room', _('Místnost'));
         $this->addColumn('submitted_on', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
-            return $this->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
+            return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upraviť'));
 
         $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
@@ -83,5 +90,4 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             \Nette\Diagnostics\Debugger::log($e);
         }
     }
-
 }

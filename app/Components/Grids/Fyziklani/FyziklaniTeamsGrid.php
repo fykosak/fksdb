@@ -10,17 +10,21 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-
-use \NiftyGrid\DataSource\NDataSource;
 use \FKSDB\Components\Grids\BaseGrid;
+
 /**
- * Description of SubmitsGrid
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
 class FyziklaniTeamsGrid extends BaseGrid {
-
+    /**
+     * @var ServiceFyziklaniTeam
+     */
     private $serviceFyziklaniTeam;
+    /**
+     * @var integer
+     */
     private $eventID;
 
     public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {

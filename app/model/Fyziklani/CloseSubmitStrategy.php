@@ -8,13 +8,14 @@
 namespace FKSDB\model\Fyziklani;
 
 use Nette\Application\BadRequestException;
-use OrgModule\FyziklaniPresenter;
+use FyziklaniModule\BasePresenter;
+use Nette\Utils\Html;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
- * Description of CloseSubmitStrategy
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
 class CloseSubmitStrategy {
     /**
@@ -28,7 +29,9 @@ class CloseSubmitStrategy {
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
-
+    /**
+     * @var int
+     */
     private $eventID;
 
 
@@ -40,24 +43,20 @@ class CloseSubmitStrategy {
     public function closeByCategory($category, &$msg = null) {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
-
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
-        usort($teamsData, self::sortFunction());
+        usort($teamsData, self::getSortFunction());
         $this->saveResults($teamsData, $msg);
-
         $connection->commit();
     }
 
     public function closeGlobal(&$msg = null) {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
-
         $teams = $this->getAllTeams(null);
         $teamsData = $this->getTeamsStats($teams);
-        usort($teamsData, self::sortFunction());
+        usort($teamsData, self::getSortFunction());
         $this->saveResults($teamsData, $msg);
-
         $connection->commit();
     }
 
@@ -70,7 +69,6 @@ class CloseSubmitStrategy {
             $this->serviceFyziklaniTeam->save($team);
             $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _(' Poradie') . ': ' . ($index + 1));
         }
-
     }
 
     private function getTeamsStats($teams) {
@@ -89,7 +87,7 @@ class CloseSubmitStrategy {
         return $teamsData;
     }
 
-    private static function sortFunction() {
+    private static function getSortFunction() {
         return function ($b, $a) {
             if ($a['points'] > $b['points']) {
                 return 1;

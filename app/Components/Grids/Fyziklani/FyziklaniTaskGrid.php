@@ -7,11 +7,10 @@ use ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
 
-
 /**
- * Description of SubmitsGrid
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
 class FyziklaniTaskGrid extends BaseGrid {
 
@@ -20,8 +19,10 @@ class FyziklaniTaskGrid extends BaseGrid {
      * @var ServiceFyziklaniTask 
      */
     private $serviceFyziklaniTask;
+    /**
+     * @var int
+     */
     private $eventID;
-    protected $searchable;
 
     public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -33,7 +34,7 @@ class FyziklaniTaskGrid extends BaseGrid {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id',_('ID úlohy'));
         $this->addColumn('label',_('Label'));
-        $this->addColumn('name',_('Názov ǔlohy'));
+        $this->addColumn('name',_('Názov úlohy'));
 
         $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
         $dataSource = new SearchableDataSource($submits);

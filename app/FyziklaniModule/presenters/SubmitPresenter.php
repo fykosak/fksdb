@@ -1,19 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 26.12.2016
- * Time: 0:55
- */
 
 namespace FyziklaniModule;
 
 use Nette\Application\BadRequestException;
 use \Nette\Application\UI\Form;
-use Nette\Database\Connection;
-use Nette\DI\Container;
 use \Nette\Diagnostics\Debugger;
-use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 

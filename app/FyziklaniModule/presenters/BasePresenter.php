@@ -5,7 +5,6 @@ namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Database\Connection;
 use Nette\DI\Container;
 use \Nette\Diagnostics\Debugger;
 use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
@@ -16,7 +15,11 @@ use ServiceFyziklaniSubmit;
 use \ORM\Services\Events\ServiceFyziklaniTeam;
 use ModelEvent;
 
-
+/**
+ *
+ * @author Michal Červeňák
+ * @author Lukáš Timko
+ */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
@@ -94,7 +97,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     public function startup() {
         $this->event = $this->getCurrentEvent();
-        Debugger::barDump($this->event);
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
@@ -112,7 +114,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getCurrentEventID() {
-        return $this->getCurrentEvent()->event_id;
+        if (!$this->eventID) {
+            $this->eventID = $this->serviceEvent->getTable()
+                ->where('event_type_id', $this->container->parameters['fyziklani']['eventTypeID'])
+                ->max('event_id');
+        }
+        return $this->eventID;
     }
 
     /** vráti paramtre daného eventu 
@@ -120,49 +127,29 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function getCurrentEvent() {
         if(!$this->event){
-            if (!$this->eventID) {
-                $this->eventID = $this->serviceEvent->getTable()
-                        ->where('event_type_id', $this->container->parameters['fyziklani']['eventTypeID'])
-                        ->max('event_id');
-            }
-            $this->event = $this->serviceEvent->findByPrimary($this->eventID);
+            $this->event = $this->serviceEvent->findByPrimary($this->getCurrentEventID());
         }
         return $this->event;
     }
 
-    /**
-     * @TODO to ORM?
-     */
     protected function submitExist($taskID, $teamID) {
         return !is_null($this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID));
     }
 
-    /**
-     * @TODO to ORM?
-     */
     protected function getSubmit($submitID) {
         return $this->serviceFyziklaniSubmit->findByPrimary($submitID);
     }
 
-    /**
-     * @TODO to ORM?
-     */
     public function submitToTeam($submitID) {
         $r = $this->getSubmit($submitID);
         return $r ? $r->e_fyziklani_team_id : $r;
     }
 
-    /**
-     * @TODO to ORM?
-     */
-    protected function isOpenSubmit($teamID) {
+    public function isOpenSubmit($teamID) {
         $points = $this->serviceFyziklaniTeam->findByPrimary($teamID)->points;
         return !is_numeric($points);
     }
 
-    /**
-     * @TODO to ORM?
-     */
     protected function taskLabelToTaskID($taskLabel) {
         $row = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID);
         if ($row) {
@@ -171,9 +158,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return false;
     }
 
-    /**
-     * @TODO to ORM?
-     */
     protected function teamExist($teamID) {
         return $this->serviceFyziklaniTeam->findByPrimary($teamID)->event_id == $this->eventID;
     }

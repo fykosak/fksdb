@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 28.12.2016
- * Time: 14:21
- */
 
 namespace FyziklaniModule;
 
@@ -15,7 +9,6 @@ use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
 
 class TaskPresenter extends BasePresenter {
-
 
     const EVENT_TYPE_ID = 1;
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
