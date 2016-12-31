@@ -8,7 +8,6 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FyziklaniModule\ClosePresenter;
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 

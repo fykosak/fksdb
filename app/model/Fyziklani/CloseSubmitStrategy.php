@@ -5,19 +5,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Fyziklani;
+namespace FKSDB\model\Fyziklani;
 
-use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
-use Nette\Utils\Html;
 use OrgModule\FyziklaniPresenter;
+use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
- * Description of CloseSubmitStragegy
+ * Description of CloseSubmitStrategy
  *
  * @author miso
  */
-class CloseSubmitStragegy {
+class CloseSubmitStrategy {
     /**
      * @var string
      */
@@ -26,34 +25,54 @@ class CloseSubmitStragegy {
      * @var FyziklaniPresenter
      */
     protected $presenter;
+    
+    /**
+     *
+     * @var ServiceFyziklaniTeam 
+     */
+    private $serviceFyziklaniTeam;
+    
+    private $eventID;
 
 
-    public function __construct(BasePresenter $presenter) {
-        $this->presenter = $presenter;
+    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventID = $eventID;
     }
 
-    public function closeByCategory($category) {
+    public function closeByCategory($category, &$msg = null) {
+        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection->beginTransaction();
+        
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
         usort($teamsData, self::sortFunction());
-        $this->saveResults($teamsData);
+        $this->saveResults($teamsData, $msg);
+        
+        $connection->commit();
     }
 
-    public function closeGlobal() {
+    public function closeGlobal(&$msg = null) {
+        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection->beginTransaction();
+        
         $teams = $this->getAllTeams(null);
         $teamsData = $this->getTeamsStats($teams);
         usort($teamsData, self::sortFunction());
-        $this->saveResults($teamsData);
+        $this->saveResults($teamsData, $msg);
+        
+        $connection->commit();
     }
 
-    private function saveResults($data) {
+    private function saveResults($data, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
             $teamData['rank_category'] = $index;
+            $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
+            $this->serviceFyziklaniTeam->updateModel($team, ['rank_category', $index + 1]);
+            $this->serviceFyziklaniTeam->save($team);
             $msg .= '<li>TeamID:' . $teamData['e_fyziklani_team_id'] . ' Poradie: ' . ($index + 1) . '</li>';
-            $this->presenter->database->query('UPDATE ' . \DbNames::TAB_E_FYZIKLANI_TEAM . ' SET rank_category=? WHERE e_fyziklani_team_id=?', $index + 1, $teamData['e_fyziklani_team_id']);
         }
-        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
     private function getTeamsStats($teams) {
@@ -90,8 +109,7 @@ class CloseSubmitStragegy {
     }
 
     private function getAllTeams($category = null) {
-        $database = $this->presenter->database;
-        $query = $database->table(\DbNames::TAB_E_FYZIKLANI_TEAM)->where('status', 'participated')->where('event_id', $this->presenter->eventID);
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
         if ($category) {
             $query->where('category', $category);
         }
@@ -99,7 +117,7 @@ class CloseSubmitStragegy {
     }
 
     protected function getAllSubmits($team_id) {
-        $submits = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_SUBMIT)->where('e_fyziklani_team_id', $team_id);
+        $submits = $this->serviceFyziklaniTeam->findByPrimary($team_id)->getSubmits();
         $arraySubmits = [];
         $sum = 0;
         $count = 0;

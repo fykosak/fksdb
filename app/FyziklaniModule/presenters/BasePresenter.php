@@ -68,17 +68,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $serviceFyziklaniSubmit;
     
-    /**
-     * 
-     * @var \Nette\Database\Connection
-     * @deprecated
-     */
-    public $database;
-    
-    public function injectDatabase(Connection $database) {
-        $this->database = $database;
-    }
-    
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }

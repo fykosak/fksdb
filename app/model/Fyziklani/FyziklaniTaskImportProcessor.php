@@ -11,59 +11,67 @@ namespace FKSDB\model\Fyziklani;
 use FKS\Utils\CSVParser;
 use FyziklaniModule\BasePresenter;
 use FyziklaniModule\TaskPresenter;
+use ServiceFyziklaniTask;
+use \Nette\Diagnostics\Debugger;
 
 
 class FyziklaniTaskImportProcessor {
+    
     /**
-     * @var BasePresenter
-     * @deprecated
+     *
+     * @var ServiceFyziklaniTask 
      */
-    private $presenter;
+    private $serviceFyziklaniTask;
 
     private $eventID;
 
-    public function __construct(BasePresenter $presenter, $eventID) {
+    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->eventID = $eventID;
-        $this->presenter = $presenter;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     public function __invoke($values, &$messages) {
         $filename = $values->csvfile->getTemporaryFile();
+        $connection = $this->serviceFyziklaniTask->getConnection();
+        $connection->beginTransaction();
         if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
-            $this->presenter->database->query('DELETE FROM ' . \DbNames::TAB_FYZIKLANI_TASK . ' WHERE event_id=?', $this->eventID);
+            $this->serviceFyziklaniTask->findAll($this->eventID)->delete();
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {
 
-            $task = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id', $this->eventID)->where('label', $row['label'])->fetch();
+            $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->eventID);
             $taskID = $task ? $task->fyziklani_task_id : false;
 
-            if ($taskID) {
-                if ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                    if ($this->presenter->database->query('UPDATE ' . \DbNames::TAB_FYZIKLANI_TASK . ' SET ? WHERE fyziklani_task_id =?', [
-                        'label' => $row['label'],
-                        'name' => $row['name']
-                    ], $taskID)
-                    ) {
+            try{
+                if ($taskID) {
+                    if ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
+                        $this->serviceFyziklaniTask->updateModel($task, [
+                            'label' => $row['label'],
+                            'name' => $row['name']
+                        ]);
+                        $this->serviceFyziklaniTask->save($task);
                         $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola updatnuta', 'info'];
                     } else {
-                        $messages[] = [_('Vyskytal sa chyba'), 'danger'];
+                        $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" nebola pozmenená', 'warning'];
                     }
                 } else {
-                    $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" nebola pozmenená', 'warning'];
-                }
-            } else {
-                if ($this->presenter->database->query('INSERT INTO ' . \DbNames::TAB_FYZIKLANI_TASK, [
-                    'label' => $row['label'],
-                    'name' => $row['name'],
-                    'event_id' => $this->eventID
-                ])
-                ) {
+                    $this->serviceFyziklaniTask->createNew($task, [
+                        'label' => $row['label'],
+                        'name' => $row['name'],
+                        'event_id' => $this->eventID
+                    ]);
+                    $this->serviceFyziklaniTask->save($task);
                     $messages[] = ['Úloha ' . $row['label'] . ' "' . $row['name'] . '" bola vložená', 'success'];
-                } else {
-                    $messages[] = [_('Vyskytal sa chyba'), 'danger'];
                 }
             }
+            catch(Exception $e) {
+                $messages[] = [_('Vyskytal sa chyba'), 'danger'];
+                Debugger::log($e);
+                $connection->rollBack();
+                return;
+            }
         }
+        $connection->commit();
     }
 }
