@@ -110,8 +110,8 @@ parameters:
         # Paths for search of XML files, including trailing slash.
         # Arguments: contestName, year, series
         paths:
-            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d.xml'
-            en: '/%1$s%2$d/translations/zadaniWeb%3$d_en.xml'
+            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-cs.xml'
+            en: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-en.xml'
     
     # Various e-mail invitations
     invitation:
