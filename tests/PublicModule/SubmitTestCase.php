@@ -9,6 +9,7 @@ use Nette\Config\Helpers;
 use Nette\Http\FileUpload;
 use Nette\Utils\Finder;
 use Tester\Assert;
+use Tester\Environment;
 
 abstract class SubmitTestCase extends DatabaseTestCase {
 
@@ -29,6 +30,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
 
     protected function setUp() {
         parent::setUp();
+        Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
         $this->taskAll = $this->insert('task', array(
             'label' => '1',

@@ -66,9 +66,7 @@ class CategoryProcessing extends AbstractProcessing
             $participants[] = $studyYear;
         }
 
-        Debugger::barDump($form->getValues());
-        $result = $values['team']['category'] = $form->getValues()->team->force_a ? "A" : $this->getCategory($participants);
-        Debugger::barDump($values);
+        $result = $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
             $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
