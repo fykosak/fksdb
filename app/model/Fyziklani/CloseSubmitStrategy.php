@@ -51,13 +51,7 @@ class CloseSubmitStrategy {
     }
 
     public function closeGlobal(&$msg = null) {
-        $connection = $this->serviceFyziklaniTeam->getConnection();
-        $connection->beginTransaction();
-        $teams = $this->getAllTeams(null);
-        $teamsData = $this->getTeamsStats($teams);
-        usort($teamsData, self::getSortFunction());
-        $this->saveResults($teamsData, $msg);
-        $connection->commit();
+        $this->closeByCategory(null, $msg);
     }
 
     private function saveResults($data, &$msg = null) {
