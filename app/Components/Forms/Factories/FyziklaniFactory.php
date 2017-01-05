@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Forms\Controls\RadioList;
 use \Nette\Forms\Controls\TextInput;
@@ -19,7 +20,7 @@ class FyziklaniFactory {
     private function createPointsField() {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
-        foreach ($this->container->parameters['fyziklani']['availablePoints'] as $v) {
+        foreach ($this->container->parameters[BasePresenter::EVENT_NAME]['availablePoints'] as $v) {
             $items[$v] = $v;
         }
         $field->setItems($items);

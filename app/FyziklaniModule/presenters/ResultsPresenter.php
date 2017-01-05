@@ -46,8 +46,8 @@ class ResultsPresenter extends BasePresenter {
                 throw new BadRequestException('error', 404);
             }
             $result['times'] = [
-                'toStart' => strtotime($this->container->parameters['fyziklani']['start']) - time(),
-                'toEnd' => strtotime($this->container->parameters['fyziklani']['end']) - time(),
+                'toStart' => strtotime($this->container->parameters[self::EVENT_NAME]['game']['start']) - time(),
+                'toEnd' => strtotime($this->container->parameters[self::EVENT_NAME]['game']['end']) - time(),
                 'visible' => $this->isResultsVisible()
             ];
             $this->sendResponse(new JsonResponse($result));
@@ -63,6 +63,6 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function isResultsVisible() {
-        return (time() < strtotime($this->container->parameters['fyziklani']['results']['hidde'])) && (time() > strtotime($this->container->parameters['fyziklani']['results']['display']));
+        return $this->container->parameters[self::EVENT_NAME]['results']['hardDisplay'] || (time() < strtotime($this->container->parameters[self::EVENT_NAME]['results']['hide'])) && (time() > strtotime($this->container->parameters[self::EVENT_NAME]['results']['display']));
     }
 }

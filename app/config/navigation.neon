@@ -32,7 +32,7 @@ navigation:
             - public.application.list           
             - fykos
             - vyfuk
-        fyziklani.default.default:
+        fyziklani.dashboard.default:
             - fyziklani.submit.entry
             - fyziklani.submit.table
             - fyziklani.close.table

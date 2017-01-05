@@ -30,7 +30,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var int
+     * @var integer
      */
     private $eventID;
 

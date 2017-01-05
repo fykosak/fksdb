@@ -56,8 +56,7 @@ class ContestAuthorizator extends Object {
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
 
-
-    public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
+    public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 
