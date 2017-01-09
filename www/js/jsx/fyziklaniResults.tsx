@@ -207,6 +207,7 @@ class Results extends React.Component<void, IResultsState> {
         }
 
         return (<div>
+                <BackLink />
                 {msg}
 
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
@@ -274,6 +275,15 @@ class Results extends React.Component<void, IResultsState> {
                     </div>
                 </div>
             </div >
+        );
+    }
+}
+class BackLink extends React.Component<void, void> {
+    public render() {
+        return (
+            <button className="btn btn-default" onClick={()=>{return window.history.back();}}>
+                <i className="glyphicon glyphicon-chevron-left"/>
+            </button>
         );
     }
 }
@@ -357,7 +367,6 @@ class ResultsTable extends React.Component<any, void> {
             </div>
         )
     }
-    ;
 }
 
 class Timer extends React.Component<any, any> {

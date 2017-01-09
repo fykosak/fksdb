@@ -160,7 +160,7 @@ var Results = (function (_super) {
         if (!this.state.isReady) {
             return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
         }
-        return (React.createElement("div", null, msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        return (React.createElement("div", null, React.createElement(BackLink, null), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte miestnosť--"), filters
             .filter(function (filter) { return filter.room != null; })
@@ -175,6 +175,16 @@ var Results = (function (_super) {
         }}), "Neverejné výsledkovky, ", React.createElement("span", {className: "text-danger"}, "túto funkciu nezapínajte pokial sú vysledkovky premietané!!!")))))));
     };
     return Results;
+}(React.Component));
+var BackLink = (function (_super) {
+    __extends(BackLink, _super);
+    function BackLink() {
+        _super.apply(this, arguments);
+    }
+    BackLink.prototype.render = function () {
+        return (React.createElement("button", {className: "btn btn-default", onClick: function () { return window.history.back(); }}, React.createElement("i", {className: "glyphicon glyphicon-chevron-left"})));
+    };
+    return BackLink;
 }(React.Component));
 var ResultsTable = (function (_super) {
     __extends(ResultsTable, _super);
@@ -227,7 +237,6 @@ var ResultsTable = (function (_super) {
         });
         return (React.createElement("div", {style: { display: (this.props.visible ? 'block' : 'none') }}, React.createElement("table", {ref: "table", className: "tablesorter"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null), React.createElement("th", null, "Sum"), React.createElement("th", null, "Prů"), React.createElement("th", null, "Q"), headCools)), React.createElement("tbody", null, rows))));
     };
-    ;
     return ResultsTable;
 }(React.Component));
 var Timer = (function (_super) {
