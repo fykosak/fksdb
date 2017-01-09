@@ -2,7 +2,6 @@
 
 namespace FyziklaniModule;
 
-
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {

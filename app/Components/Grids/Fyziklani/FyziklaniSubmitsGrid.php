@@ -1,19 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
-use Nette\Diagnostics\Debugger;
+use Nette\Database\Table\Selection;
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
+use SQL\SearchableDataSource;
 
 /**
  *
@@ -50,10 +45,6 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         parent::__construct();
     }
 
-    public function isSearchable() {
-        return false;
-    }
-
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
@@ -80,7 +71,14 @@ class FyziklaniSubmitsGrid extends BaseGrid {
 
         $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
             ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
-        $this->setDataSource(new NDataSource($submits));
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('e_fyziklani_team_id.name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task.label LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
+        $this->setDataSource($dataSource);
     }
 
     public function handleDelete($id) {

@@ -6,7 +6,6 @@ use AuthenticatedPresenter;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use Nette\Utils\Html;
 use ServiceEvent;
 use ServiceFyziklaniTask;
 use ServiceFyziklaniSubmit;
