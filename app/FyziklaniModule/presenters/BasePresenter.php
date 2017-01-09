@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
@@ -32,11 +31,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @persistent
      */
     public $eventID;
-    /**
-     * @var int $eventYear
-     */
-    public $eventYear;
-
     /**
      * @var FyziklaniFactory
      */
@@ -95,14 +89,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
-
     public function startup() {
 
         $this->event = $this->getCurrentEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
-        $this->eventYear = $this->event->event_year;
         parent::startup();
     }
 
@@ -111,8 +103,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getCurrentEvent() ? true : false;
     }
 
-    public function getTitle() {
-        return Html::el()->add($this->title . Html::el('small')->add($this->eventYear ? (' ' . $this->eventYear . '. FYKOSí Fyzikláni') : ''));
+    public function getSubtitle() {
+        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyzikláni');
     }
 
     public function getCurrentEventID() {
@@ -132,33 +124,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
-    protected function submitExist($taskID, $teamID) {
-        return !is_null($this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID));
-    }
-
-    protected function getSubmit($submitID) {
-        return $this->serviceFyziklaniSubmit->findByPrimary($submitID);
-    }
-
+// TODO
     public function submitToTeam($submitID) {
-        $r = $this->getSubmit($submitID);
+        $r = $this->serviceFyziklaniSubmit->findByPrimary($submitID);
         return $r ? $r->e_fyziklani_team_id : $r;
-    }
-
-    public function isOpenSubmit($teamID) {
-        $points = $this->serviceFyziklaniTeam->findByPrimary($teamID)->points;
-        return !is_numeric($points);
-    }
-
-    protected function taskLabelToTaskID($taskLabel) {
-        $row = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID);
-        if ($row) {
-            return $row->fyziklani_task_id;
-        }
-        return false;
-    }
-
-    protected function teamExist($teamID) {
-        return $this->serviceFyziklaniTeam->findByPrimary($teamID)->event_id == $this->eventID;
     }
 }

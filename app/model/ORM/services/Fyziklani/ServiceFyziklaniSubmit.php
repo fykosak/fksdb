@@ -37,4 +37,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $result ? : null;
     }
 
+    public function submitExist($taskID, $teamID) {
+        return !is_null($this->findByTaskAndTeam($taskID, $teamID));
+    }
 }

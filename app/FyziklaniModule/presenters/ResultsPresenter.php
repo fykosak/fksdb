@@ -33,7 +33,8 @@ class ResultsPresenter extends BasePresenter {
                 $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
                 $result['is_org'] = $isOrg;
                 if ($isOrg || $this->isResultsVisible()) {
-                    $submits = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team.event_id', $this->eventID);
+                    $submits = $this->serviceFyziklaniSubmit->getTable()
+                        ->where('e_fyziklani_team.event_id', $this->eventID);
                     foreach ($submits as $submit) {
                         $result['submits'][] = [
                             'points' => $submit->points,

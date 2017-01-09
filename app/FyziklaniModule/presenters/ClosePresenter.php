@@ -14,8 +14,8 @@ class ClosePresenter extends BasePresenter {
         $this->setTitle(_('Uzavírání bodování'));
     }
 
-    public function titleTeam() {
-        $this->setTitle(_('Uzavírání bodování'));
+    public function titleTeam($id) {
+        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->serviceFyziklaniTeam->findByPrimary($id)->__toString()));
     }
 
     public function authorizedTable() {
@@ -46,8 +46,8 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function actionTeam($id) {
-        if ($this->isOpenSubmit($id)) {
-            if (!$this->teamExist($id)) {
+        if ($this->serviceFyziklaniTeam->isOpenSubmit($id)) {
+            if (!$this->serviceFyziklaniTeam->teamExist($id, $this->eventID)) {
                 $this->flashMessage('Tým neexistuje', 'danger');
                 $this->redirect(':Fyziklani:submit:close');
             }
@@ -70,9 +70,11 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('e_fyziklani_team_id', 0);
-        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))->setRequired(_('Zkontrolujte správnost zadání bodů!'));
+        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
+            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydávačů'))->setDisabled();
-        $form->addCheckbox('next_task_correct', _('Úloha u vydávaču sa zhaduje.'))->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
+        $form->addCheckbox('next_task_correct', _('Úloha u vydávaču sa zhaduje.'))
+            ->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
         $form->addSubmit('send', 'Potvrdiť spravnosť');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;
@@ -98,7 +100,7 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('category', $category);
-        $form->addSubmit('send', sprintf(_('Uzavrieť kategoriu %s.'),$category));
+        $form->addSubmit('send', sprintf(_('Uzavrieť kategoriu %s.'), $category));
         $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
         return $form;
     }
@@ -118,7 +120,7 @@ class ClosePresenter extends BasePresenter {
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
-        $this->presenter->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
     public function createComponentCloseGlobalForm() {
@@ -143,22 +145,21 @@ class ClosePresenter extends BasePresenter {
         $query->where('points', null);
         $count = $query->count();
         return $count == 0;
-
     }
 
     private function getNextTask($teamID) {
         $return = [];
-        $submits = count($this->serviceFyziklaniTask->findByPrimary($teamID)->getSubmits());
+        $submits = count($this->serviceFyziklaniTeam->findByPrimary($teamID)->getSubmits());
         $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
         $lastID = $submits + $this->container->parameters[self::EVENT_NAME]['taskOnBoard'] - 1;
         /** @because index start with 0; */
         $nextID = $lastID + 1;
-        if (array_key_exists($nextID, $allTask)) {
+        if ($allTask[$nextID]) {
             $return['nextTask'] = $allTask[$nextID]->label;
         } else {
             $return['nextTask'] = null;
         }
-        if (array_key_exists($lastID, $allTask)) {
+        if ($allTask[$lastID]) {
             $return['lastTask'] = $allTask[$lastID]->label;
         } else {
             $return['lastTask'] = null;

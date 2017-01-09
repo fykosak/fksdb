@@ -82,19 +82,18 @@ class SubmitPresenter extends BasePresenter {
         if ($this->checkTaskCode($values->taskCode, $msg)) {
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
-            $taskID = $this->taskLabelToTaskID($taskLabel);
+            $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel);
             $submit = $this->serviceFyziklaniSubmit->createNew([
-                'points' => $values->points, 
-                'fyziklani_task_id' => $taskID, 
+                'points' => $values->points,
+                'fyziklani_task_id' => $taskID,
                 'e_fyziklani_team_id' => $teamID
             ]);
-            try{
+            try {
                 $this->serviceFyziklaniSubmit->save($submit);
                 $t = Debugger::timer();
                 $this->flashMessage(_('Body boli uložené. (' . $values->points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
                 $this->redirect(':Fyziklani:submit:entry');
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla sa chyba'), 'danger');
                 Debugger::log($e);
             }
@@ -123,25 +122,25 @@ class SubmitPresenter extends BasePresenter {
         /* Existenica týmu */
         $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
-        if (!$this->teamExist($teamID)) {
+        if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->eventID)) {
             $msg = _('Team ' . $teamID . ' nexistuje');
             return false;
         }
         /* otvorenie submitu */
-        if (!$this->isOpenSubmit($teamID)) {
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
 
             $msg = _('Bodovanie tohoto týmu je uzavreté');
             return false;
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
-        $taskID = $this->taskLabelToTaskID($taskLabel);
+        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel);
         if (!$taskID) {
             $msg = 'Úloha  ' . $taskLabel . ' nexistuje';
             return false;
         }
         /* Nezadal sa duplicitne toto nieje editácia */
-        if ($this->submitExist($taskID, $teamID)) {
+        if ($this->serviceFyziklaniSubmit->submitExist($taskID, $teamID)) {
             $msg = 'Úloha ' . $taskLabel . ' už bola zadaná';
             return false;
         }
@@ -166,16 +165,16 @@ class SubmitPresenter extends BasePresenter {
             $this->redirect(':Fyziklani:submit:table');
         }
         /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->isOpenSubmit($teamID)) {
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
             $this->flashMessage(_('Bodovaní tohto týmu je uzvřené'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
         }
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         $this->template->fyziklani_submit_id = $submit ? true : false;
         $this['fyziklaniEditForm']->setDefaults([
-            'team_id' => $submit->e_fyziklani_team_id, 
-            'task' => $submit->getTask()->label, 
-            'points' => $submit->points, 
+            'team_id' => $submit->e_fyziklani_team_id,
+            'task' => $submit->getTask()->label,
+            'points' => $submit->points,
             'team' => $submit->getTeam()->name,
             'submit_id' => $submit->fyziklani_submit_id
         ]);
@@ -191,7 +190,7 @@ class SubmitPresenter extends BasePresenter {
         }
 
         /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->isOpenSubmit($teamID)) {
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
             $this->flashMessage(_('Bodovanie tohoto týmu je uzavreté'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
         }
@@ -204,6 +203,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->eventID, $this, $this->serviceFyziklaniSubmit);
+        return new FyziklaniSubmitsGrid($this->eventID, $this, $this->serviceFyziklaniSubmit,$this->serviceFyziklaniTeam);
     }
 }

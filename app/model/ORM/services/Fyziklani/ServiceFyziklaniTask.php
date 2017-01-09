@@ -37,4 +37,12 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         return $result ? : null;
     }
 
+    public function taskLabelToTaskID($taskLabel) {
+    $row = $this->findByLabel($taskLabel, $this->eventID);
+    if ($row) {
+        return $row->fyziklani_task_id;
+    }
+    return false;
+}
+
 }

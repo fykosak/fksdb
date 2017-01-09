@@ -26,5 +26,15 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $result ? : null;
     }
 
-}
+    public function teamExist($teamID,$eventID){
+        return $this->findByPrimary($teamID)->event_id == $eventID;
+    }
 
+    public function isOpenSubmit($teamID) {
+        $points = $this->findByPrimary($teamID)->points;
+        return !is_numeric($points);
+    }
+
+
+
+}
