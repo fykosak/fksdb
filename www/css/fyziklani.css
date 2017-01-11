@@ -63,5 +63,30 @@
 #imageWP{
     text-align: center;
 }
-
+/*
+.btn.btn-5-points{
+    background-image: none;
+    background-color: aquamarine;
+    border: none;
+    color:black;
+}
+.btn.btn-3-points{
+    background-image: none;
+    background-color: greenyellow;
+    border: none;
+    color:black;
+}
+.btn.btn-2-points{
+    background-image: none;
+    background-color: orange;
+    border: none;
+    color:black;
+}
+.btn.btn-1-points{
+    background-image: none;
+    background-color: red;
+    border: none;
+    color:black;
+}
+*/
 

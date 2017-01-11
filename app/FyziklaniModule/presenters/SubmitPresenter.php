@@ -80,11 +80,18 @@ class SubmitPresenter extends BasePresenter {
         Debugger::timer();
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
+            foreach ($form->getComponents() as $control) {
+                if ($control instanceof \Nette\Forms\Controls\SubmitButton) {
+                    if ($control->isSubmittedBy()) {
+                        $points = substr($control->getName(), 6);
+                    }
+                }
+            }
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
             $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel);
             $submit = $this->serviceFyziklaniSubmit->createNew([
-                'points' => $values->points,
+                'points' => $points,
                 'fyziklani_task_id' => $taskID,
                 'e_fyziklani_team_id' => $teamID
             ]);
@@ -102,16 +109,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    /*
-        public function entryFormByTaksCodeSucceeded(Form $form) {
-            foreach ($form->getComponents() as $control) {
-                if ($control instanceof \Nette\Forms\Controls\SubmitButton) {
-                    if ($control->isSubmittedBy()) {
-                        $points = substr($control->getName(), 6);
-                    }
-                }
-            }
-        }*/
 
     public function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
@@ -203,6 +200,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->eventID, $this, $this->serviceFyziklaniSubmit,$this->serviceFyziklaniTeam);
+        return new FyziklaniSubmitsGrid($this->eventID, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
     }
 }

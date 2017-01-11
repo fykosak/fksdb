@@ -31,8 +31,8 @@ class FyziklaniFactory {
     private function createTaskCodeField() {
         $field = new TextInput(_('Kód úlohy'));
         $field->setRequired();
-        $field->addRule(\Nette\Forms\Form::PATTERN,_('Nesprávný tvar.'),'[0-9]{6}[A-Z]{2}[0-9]');
-        $field->setAttribute('placeholder','000000XX0');
+        $field->addRule(\Nette\Forms\Form::PATTERN, _('Nesprávný tvar.'), '[0-9]{6}[A-Z]{2}[0-9]');
+        $field->setAttribute('placeholder', '000000XX0');
         return $field;
     }
 
@@ -57,20 +57,25 @@ class FyziklaniFactory {
     public function createEntryForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addComponent($this->createTaskCodeField(),'taskCode');
-        $form->addComponent($this->createPointsField(),'points');
-        $form->addSubmit('send',_('Uložit'));
+        $form->addComponent($this->createTaskCodeField(), 'taskCode');
+        //$form->addComponent($this->createPointsField(),'points');
+        //$form->addSubmit('send',_('Uložit'));
+        foreach ($this->container->parameters[BasePresenter::EVENT_NAME]['availablePoints'] as $points) {
+            $label = ($points == 1) ? _('bod') : ($points < 5) ? _('body') : _('bodů');
+            $form->addSubmit('points' . $points, _($points . ' ' . $label))
+                ->setAttribute('class', 'btn-' . $points . '-points');
+        }
         return $form;
     }
 
     public function createEditForm() {
         $form = new Form();
-        $form->addHidden('submit_id',0);
+        $form->addHidden('submit_id', 0);
         $form->setRenderer(new BootstrapRenderer());
-        $form->addComponent($this->createTeamField(),'team');
-        $form->addComponent($this->createTeamIDField(),'team_id');
-        $form->addComponent($this->createTaskField(),'task');
-        $form->addComponent($this->createPointsField(),'points');
+        $form->addComponent($this->createTeamField(), 'team');
+        $form->addComponent($this->createTeamIDField(), 'team_id');
+        $form->addComponent($this->createTaskField(), 'task');
+        $form->addComponent($this->createPointsField(), 'points');
         $form->addSubmit('send', _('Uložit'));
         return $form;
     }

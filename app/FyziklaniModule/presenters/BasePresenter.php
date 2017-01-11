@@ -123,9 +123,4 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
-// TODO
-    public function submitToTeam($submitID) {
-        $r = $this->serviceFyziklaniSubmit->findByPrimary($submitID);
-        return $r ? $r->e_fyziklani_team_id : $r;
-    }
 }

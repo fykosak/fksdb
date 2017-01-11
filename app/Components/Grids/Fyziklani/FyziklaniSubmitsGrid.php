@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use \NiftyGrid\DataSource\NDataSource;
+use Nette\Diagnostics\Debugger;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
@@ -16,11 +16,6 @@ use SQL\SearchableDataSource;
  * @author Lukáš Timko
  */
 class FyziklaniSubmitsGrid extends BaseGrid {
-    /**
-     * @var BasePresenter
-     * @deprecated
-     */
-    private $presenter;
     /**
      * @var ServiceFyziklaniTeam
      */
@@ -36,9 +31,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      */
     private $eventID;
 
-    public function __construct($eventID, BasePresenter $presenter, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-
-        $this->presenter = $presenter;
+    public function __construct($eventID, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->eventID = $eventID;
@@ -82,8 +75,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     }
 
     public function handleDelete($id) {
-
-        $teamID = $this->presenter->submitToTeam($id);
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->getTeam()->e_fyziklani_team_id;
         if (!$teamID) {
             $this->flashMessage(_('Submit nenexistuje'), 'danger');
             return;
