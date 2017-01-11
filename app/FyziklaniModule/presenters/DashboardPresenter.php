@@ -5,7 +5,7 @@ namespace FyziklaniModule;
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('Fykosí Fyzikláni'));
+        $this->setTitle(_('FYKOSí Fyziklání'));
     }
 
     public function authorizedDefault() {
