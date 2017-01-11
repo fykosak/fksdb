@@ -56,7 +56,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Výsledky Fykosího Fyzikláni'));
+        $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
     }
 
     public function authorizedDefault() {

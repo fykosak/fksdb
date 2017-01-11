@@ -43,7 +43,7 @@ class FyziklaniFactory {
     }
 
     private function createTeamIDField() {
-        $field = new TextInput(_('Tým ID'));
+        $field = new TextInput(_('ID týmu'));
         $field->setDisabled(true);
         return $field;
     }
@@ -61,7 +61,7 @@ class FyziklaniFactory {
         //$form->addComponent($this->createPointsField(),'points');
         //$form->addSubmit('send',_('Uložit'));
         foreach ($this->container->parameters[BasePresenter::EVENT_NAME]['availablePoints'] as $points) {
-            $label = ($points == 1) ? _('bod') : ($points < 5) ? _('body') : _('bodů');
+            $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
         }

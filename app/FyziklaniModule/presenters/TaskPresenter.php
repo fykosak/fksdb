@@ -16,7 +16,7 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_INSERT = 3;
 
     public function titleTable() {
-        $this->setTitle(_('Úlohy Fykosího Fyzikláni'));
+        $this->setTitle(_('Úlohy FYKOSího Fyziklání'));
     }
 
     public function authorizedTable() {
@@ -24,7 +24,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function titleImport() {
-        $this->setTitle(_('Import úloh Fykosího Fyzikláni'));
+        $this->setTitle(_('Import úloh FYKOSího Fyziklání'));
     }
 
     public function authorizedImport() {
@@ -35,12 +35,12 @@ class TaskPresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer);
         $form->addUpload('csvfile')->setRequired();
-        $form->addSelect('state', _('Vyberte akciu'), [
-            self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatnuť úlohy a pridať ak neexistuje'),
-            self::IMPORT_STATE_REMOVE_N_INSERT => _('Ostrániť všetky úlohy a nahrať nove'),
-            self::IMPORT_STATE_INSERT => _('Pridať ak neexistuje')
+        $form->addSelect('state', _('Vyberte akci'), [
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatovat úlohy a přidat pokud neexistuje'),
+            self::IMPORT_STATE_REMOVE_N_INSERT => _('Odstranit všechny úlohy a nahrát nové'),
+            self::IMPORT_STATE_INSERT => _('Přidat pokud neexistuje')
         ]);
-        $form->addSubmit('import', _('Importovať'));
+        $form->addSubmit('import', _('Importovat'));
         $form->onSuccess[] = [$this, 'taskImportFormSucceeded'];
         return $form;
     }

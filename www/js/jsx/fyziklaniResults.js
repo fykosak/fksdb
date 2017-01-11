@@ -151,28 +151,28 @@ var Results = (function (_super) {
         });
         var msg = [];
         if (hardVisible && !visible) {
-            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-warning"}, "Výsledková listina je určená len pre organizárotov!!"));
+            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-warning"}, "Výsledková listina je určená pouze pro organizátory!!!"));
         }
         if (!this.state.isOrg) {
-            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-info"}, "Na výsledkovú listinu sa dívate ako \"Public\""));
+            msg.push(React.createElement("div", {key: msg.length, className: "alert alert-info"}, "Na výsledkovou listinu se díváte jako \"Public\""));
         }
-        var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavenia"));
+        var button = (React.createElement("button", {className: 'btn btn-default ' + (this.state.configDisplay ? 'active' : ''), onClick: function () { return _this.setState({ configDisplay: !_this.state.configDisplay }); }}, React.createElement("span", {className: "glyphicon glyphicon-cog", type: "button"}), "Nastavení"));
         if (!this.state.isReady) {
             return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
         }
         return (React.createElement("div", null, React.createElement(BackLink, null), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
-        }}, React.createElement("option", null, "--vyberte miestnosť--"), filters
+        }}, React.createElement("option", null, "--vyberte místnost--"), filters
             .filter(function (filter) { return filter.room != null; })
             .map(function (filter, index) {
             return (React.createElement("option", {key: index, value: filter.room}, filter.name));
-        }))), React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Categorie")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        }))), React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Kategorie")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayCategory: event.target.value });
-        }}, React.createElement("option", {value: true}, "--vyberte kategoriu--"), React.createElement("option", {value: "A"}, "A"), React.createElement("option", {value: "B"}, "B"), React.createElement("option", {value: "C"}, "C"))), React.createElement("div", {className: "form-group"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
+        }}, React.createElement("option", {value: true}, "--vyberte kategorii--"), React.createElement("option", {value: "A"}, "A"), React.createElement("option", {value: "B"}, "B"), React.createElement("option", {value: "C"}, "C"))), React.createElement("div", {className: "form-group"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
             _this.setState({ autoSwitch: event.target.checked });
-        }}), React.createElement("span", null, "Automatické prepíanie miestností a kategoríi")))), React.createElement("div", {className: "form-group has-error"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", disabled: !this.state.isOrg, value: "1", onChange: function (event) {
+        }}), React.createElement("span", null, "Automatické přepínání místností a kategorií")))), React.createElement("div", {className: "form-group has-error"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", disabled: !this.state.isOrg, value: "1", onChange: function (event) {
             _this.setState({ hardVisible: event.target.checked });
-        }}), "Neverejné výsledkovky, ", React.createElement("span", {className: "text-danger"}, "túto funkciu nezapínajte pokial sú vysledkovky premietané!!!")))))));
+        }}), "Neveřejné výsledkovky, ", React.createElement("span", {className: "text-danger"}, "tuto funkci nezapínejte pokud jsou výsledkovky promítané!!!")))))));
     };
     return Results;
 }(React.Component));

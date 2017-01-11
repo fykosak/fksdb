@@ -181,12 +181,12 @@ class Results extends React.Component<void, IResultsState> {
         let msg = [];
         if (hardVisible && !visible) {
             msg.push(<div key={msg.length} className="alert alert-warning">
-                Výsledková listina je určená len pre organizárotov!!</div> );
+                Výsledková listina je určená pouze pro organizátory!!!</div> );
         }
         if (!this.state.isOrg) {
             msg.push(
                 <div key={msg.length} className="alert alert-info">
-                    Na výsledkovú listinu sa dívate ako "Public"</div>
+                    Na výsledkovou listinu se díváte jako "Public"</div>
             );
         }
         const button = ( <button
@@ -196,7 +196,7 @@ class Results extends React.Component<void, IResultsState> {
         <span
             className="glyphicon glyphicon-cog"
             type="button"/>
-            Nastavenia
+            Nastavení
         </button >);
 
         if (!this.state.isReady) {
@@ -228,7 +228,7 @@ class Results extends React.Component<void, IResultsState> {
                         <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayRoom: event.target.value});
                         }}>
-                            <option >--vyberte miestnosť--</option>
+                            <option >--vyberte místnost--</option>
                             {                                filters
                                 .filter((filter)=>filter.room != null)
                                 .map((filter, index)=> {
@@ -240,12 +240,12 @@ class Results extends React.Component<void, IResultsState> {
 
                     <div className="form-group">
                         <label className="sr-only">
-                            <span>Categorie</span>
+                            <span>Kategorie</span>
                         </label>
                         <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayCategory: event.target.value});
                         }}>
-                            <option value>--vyberte kategoriu--</option>
+                            <option value>--vyberte kategorii--</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
@@ -258,7 +258,7 @@ class Results extends React.Component<void, IResultsState> {
                                 <input type="checkbox" value="1" onChange={(event)=>{
                             this.setState({autoSwitch:event.target.checked});
                             }}/>
-                                <span>Automatické prepíanie miestností a kategoríi</span>
+                                <span>Automatické přepínání místností a kategorií</span>
                             </label>
 
                         </div>
@@ -269,7 +269,7 @@ class Results extends React.Component<void, IResultsState> {
                                 <input type="checkbox" disabled={!this.state.isOrg} value="1" onChange={(event)=>{
                             this.setState({hardVisible:event.target.checked});
                             }}/>
-                                Neverejné výsledkovky, <span className="text-danger">túto funkciu nezapínajte pokial sú vysledkovky premietané!!!</span>
+                                Neveřejné výsledkovky, <span className="text-danger">tuto funkci nezapínejte pokud jsou výsledkovky promítané!!!</span>
                             </label>
                         </div>
                     </div>

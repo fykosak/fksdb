@@ -42,7 +42,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('Team ID'));
+        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
         $that = $this;
         $this->addColumn('label', _('Úloha'));
         $this->addColumn('points', _('Body'));
@@ -50,7 +50,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('submitted_on', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Upraviť'))->setShow(function ($row) use ($that, $presenter) {
+        })->setText(_('Upravit'))->setShow(function ($row) use ($that, $presenter) {
             return $this->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
         });
 
@@ -58,7 +58,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             return $that->link("delete!", $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
-        })->setText(_('Zmazať'))->setShow(function ($row) use ($that, $presenter) {
+        })->setText(_('Smazat'))->setShow(function ($row) use ($that, $presenter) {
             return $this->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
         });
 
@@ -75,20 +75,20 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     }
 
     public function handleDelete($id) {
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->getTeam()->e_fyziklani_team_id;
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
         if (!$teamID) {
-            $this->flashMessage(_('Submit nenexistuje'), 'danger');
+            $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage('Tento tým má už uzavreté bodovanie', 'warning');
+            $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }
         try {
             $this->serviceFyziklaniSubmit->getTable()->where('fyziklani_submit_id', $id)->delete();
-            $this->flashMessage(_('Úloha bola zmazaná'), 'success');
+            $this->flashMessage(_('Úloha byla smazaná'), 'success');
         } catch (Exception $e) {
-            $this->flashMessage(_('Vykytla sa chyba'), 'danger');
+            $this->flashMessage(_('Vyskytla sa chyba'), 'danger');
             \Nette\Diagnostics\Debugger::log($e);
         }
     }

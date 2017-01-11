@@ -7,10 +7,10 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_TASK;
     protected $modelClassName = 'ModelFyziklaniTask';
-    
+
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel($label, $eventId) {
@@ -18,31 +18,31 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where(array(
-            'label' => $label, 
+            'label' => $label,
             'event_id' => $eventId
         ))->fetch();
-        return $result ? : null;
+        return $result ?: null;
     }
-    
+
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return \Nette\Database\Table\Selection|null
      */
     public function findAll($eventId) {
         $result = $this->getTable();
         if ($eventId) {
             $result->where('event_id', $eventId);
-        }        
-        return $result ? : null;
+        }
+        return $result ?: null;
     }
 
-    public function taskLabelToTaskID($taskLabel) {
-    $row = $this->findByLabel($taskLabel, $this->eventID);
-    if ($row) {
-        return $row->fyziklani_task_id;
+    public function taskLabelToTaskID($taskLabel, $eventID) {
+        $row = $this->findByLabel($taskLabel, $eventID);
+        if ($row) {
+            return $row->fyziklani_task_id;
+        }
+        return false;
     }
-    return false;
-}
 
 }

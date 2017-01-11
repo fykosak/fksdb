@@ -61,7 +61,7 @@ class CloseSubmitStrategy {
             $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
             $this->serviceFyziklaniTeam->updateModel($team, ['rank_category', $index + 1]);
             $this->serviceFyziklaniTeam->save($team);
-            $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _(' Poradie') . ': ' . ($index + 1));
+            $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
         }
     }
 
@@ -72,7 +72,7 @@ class CloseSubmitStrategy {
             $team_id = $team->e_fyziklani_team_id;
             $teamData['e_fyziklani_team_id'] = $team_id;
             if ($team->points === null) {
-                throw new BadRequestException('Tým ' . $team->name . '(' . $team_id . ') nemá uzatvorené bodovanie');
+                throw new BadRequestException('Tým ' . $team->name . '(' . $team_id . ') nemá uzavřené bodování');
             }
             $teamData['points'] = $team->points;
             $teamData['submits'] = $this->getAllSubmits($team_id);

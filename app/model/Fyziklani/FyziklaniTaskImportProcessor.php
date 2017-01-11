@@ -48,10 +48,10 @@ class FyziklaniTaskImportProcessor {
                             'name' => $row['name']
                         ]);
                         $this->serviceFyziklaniTask->save($task);
-                        $messages[] = [sprintf(_('Úloha %s "%s" bola updatnuta'), $row['label'], $row['name']), 'info'];
+                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
                     } else {
                         $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebola updatnuta'), $row['label'], $row['name']),
+                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
                             'warning'
                         ];
                     }
@@ -62,10 +62,10 @@ class FyziklaniTaskImportProcessor {
                         'event_id' => $this->eventID
                     ]);
                     $this->serviceFyziklaniTask->save($task);
-                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložená'), $row['label'], $row['name']), 'success'];
+                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
                 }
             } catch (Exception $e) {
-                $messages[] = [_('Vyskytal sa chyba'), 'danger'];
+                $messages[] = [_('Vyskytla se chyba'), 'danger'];
                 Debugger::log($e);
                 $connection->rollBack();
                 return;

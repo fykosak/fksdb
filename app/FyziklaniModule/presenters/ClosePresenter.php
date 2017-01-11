@@ -56,7 +56,7 @@ class ClosePresenter extends BasePresenter {
                 'next_task' => $this->getNextTask($id)->nextTask
             ]);
         } else {
-            $this->flashMessage('Tento tím má již uzavřeny bodování', 'danger');
+            $this->flashMessage('Tento tým má již uzavřeno bodování', 'danger');
             $this->redirect(':fyziklani:close:table');
         }
     }
@@ -72,10 +72,10 @@ class ClosePresenter extends BasePresenter {
         $form->addHidden('e_fyziklani_team_id', 0);
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
             ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
-        $form->addText('next_task', _('Úloha u vydávačů'))->setDisabled();
-        $form->addCheckbox('next_task_correct', _('Úloha u vydávaču sa zhaduje.'))
-            ->setRequired(_('Skontrolujte prosím zhodnosť úlohy u vydávačov'));
-        $form->addSubmit('send', 'Potvrdiť spravnosť');
+        $form->addText('next_task', _('Úloha u vydavačů'))->setDisabled();
+        $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
+            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
+        $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;
     }
@@ -100,7 +100,7 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('category', $category);
-        $form->addSubmit('send', sprintf(_('Uzavrieť kategoriu %s.'), $category));
+        $form->addSubmit('send', sprintf(_('Uzavřít kategorii %s.'), $category));
         $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
         return $form;
     }
@@ -120,13 +120,13 @@ class ClosePresenter extends BasePresenter {
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
-        $this->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
     public function createComponentCloseGlobalForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addSubmit('send', _('Uzavrieť celé Fyzikláni'));
+        $form->addSubmit('send', _('Uzavřít celé Fyziklání'));
         $form->onSuccess[] = [$this, 'closeGlobalFormSucceeded'];
         return $form;
     }
@@ -134,7 +134,7 @@ class ClosePresenter extends BasePresenter {
     public function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
-        $this->flashMessage(Html::el()->add('poradie bolo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
     }
 
     private function isReadyToClose($category = null) {

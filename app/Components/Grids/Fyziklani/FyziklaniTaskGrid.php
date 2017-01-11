@@ -33,8 +33,8 @@ class FyziklaniTaskGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id',_('ID úlohy'));
-        $this->addColumn('label',_('Label'));
-        $this->addColumn('name',_('Názov úlohy'));
+        $this->addColumn('label',_('#'));
+        $this->addColumn('name',_('Název úlohy'));
 
         $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
         $dataSource = new SearchableDataSource($submits);

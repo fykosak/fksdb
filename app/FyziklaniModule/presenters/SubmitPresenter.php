@@ -60,22 +60,6 @@ class SubmitPresenter extends BasePresenter {
         return $form;
     }
 
-
-    //    protected function createComponentEntryByTaksCodeForm() {
-//        $form = new Form();
-//        $form->addText('taskCode',_('Kód úlohy'));
-//        //   $form->addHidden('points');
-//        $form->setRenderer(new BootstrapRenderer);
-//
-//        foreach ($this->container->parameters['fyziklani']['availablePionts'] as $v) {
-//            $form->addSubmit('points'.$v,_($v.' bobů'));
-//        }
-//        $form->onSuccess[] = [$this,'entryFormByTaksCodeSucceeded'];
-//
-//        return $form;
-//    }
-
-
     public function entryFormSucceeded(Form $form) {
         Debugger::timer();
         $values = $form->getValues();
@@ -89,7 +73,7 @@ class SubmitPresenter extends BasePresenter {
             }
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
-            $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel);
+            $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
             $submit = $this->serviceFyziklaniSubmit->createNew([
                 'points' => $points,
                 'fyziklani_task_id' => $taskID,
@@ -98,7 +82,7 @@ class SubmitPresenter extends BasePresenter {
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
                 $t = Debugger::timer();
-                $this->flashMessage(_('Body boli uložené. (' . $values->points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
+                $this->flashMessage(_('Body boli uložené. (' . $points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
                 $this->redirect(':Fyziklani:submit:entry');
             } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla sa chyba'), 'danger');
@@ -120,7 +104,7 @@ class SubmitPresenter extends BasePresenter {
         $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->eventID)) {
-            $msg = _('Team ' . $teamID . ' nexistuje');
+            $msg = sprintf(_('Team %s nexistuje'), $teamID);
             return false;
         }
         /* otvorenie submitu */
@@ -131,14 +115,14 @@ class SubmitPresenter extends BasePresenter {
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
-        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel);
+        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
         if (!$taskID) {
-            $msg = 'Úloha  ' . $taskLabel . ' nexistuje';
+            $msg = sprintf(_('Úloha  %s nexistuje'), $taskLabel);
             return false;
         }
         /* Nezadal sa duplicitne toto nieje editácia */
         if ($this->serviceFyziklaniSubmit->submitExist($taskID, $teamID)) {
-            $msg = 'Úloha ' . $taskLabel . ' už bola zadaná';
+            $msg = sprintf(_('Úloha %s už bola zadaná'), $taskLabel);
             return false;
         }
         return true;
@@ -156,7 +140,7 @@ class SubmitPresenter extends BasePresenter {
             throw new BadRequestException('ID je povinné', 400);
         }
         /* Neexitujúci submit nejde editovať */
-        $teamID = $this->submitToTeam($id);
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
         if (!$teamID) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             $this->redirect(':Fyziklani:submit:table');
@@ -180,7 +164,7 @@ class SubmitPresenter extends BasePresenter {
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
 
-        $teamID = $this->submitToTeam($values->submit_id);
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id)->e_fyziklani_team_id;
         if (!$teamID) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
@@ -196,7 +180,6 @@ class SubmitPresenter extends BasePresenter {
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Body boli zmenené'), 'success');
         $this->redirect(':Fyziklani:Submit:table');
-
     }
 
     public function createComponentSubmitsGrid() {

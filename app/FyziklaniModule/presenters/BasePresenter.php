@@ -103,7 +103,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSubtitle() {
-        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyzikláni');
+        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyziklání');
     }
 
     public function getCurrentEventID() {
