@@ -46,6 +46,34 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         }
         return $this->postProcessing;
     }
+    
+    public function getTags() {
+        if (!isset($this->query_id)) {
+            $this->query_id = null;
+        }
+        return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
+    }
+    
+    /**
+     * @return ModelMStoredQueryTag[]
+     */
+    public function getMStoredQueryTags() {
+        $tags = $this->getTags();
+        
+        if (!$tags || count($tags) == 0) {
+            return array();
+        }
+        
+        $result = array();
+        foreach ($tags as $tag) {
+            $tag->tag_type_id; // stupid touch
+            $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
+            $result[] = ModelMStoredQueryTag::createFromExistingModels(
+                ModelStoredQueryTagType::createFromTableRow($tagType), ModelStoredQueryTag::createFromTableRow($tag)
+            );
+        }
+        return $result;
+    }
 
     public function getResourceId() {
         return 'storedQuery';
