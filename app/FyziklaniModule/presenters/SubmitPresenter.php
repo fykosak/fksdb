@@ -5,6 +5,7 @@ namespace FyziklaniModule;
 use Nette\Application\BadRequestException;
 use \Nette\Application\UI\Form;
 use \Nette\Diagnostics\Debugger;
+use \Nette\Forms\Controls\SubmitButton;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 
@@ -31,7 +32,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function titleEntry() {
-        $this->setTitle(_('Zadávaní bodů'));
+        $this->setTitle(_('Zadávání bodů'));
     }
 
     public function authorizedEntry() {
@@ -39,7 +40,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function titleEdit() {
-        $this->setTitle(_('Uprava bodovania'));
+        $this->setTitle(_('Úprava bodování'));
     }
 
     public function authorizedEdit() {
@@ -65,7 +66,7 @@ class SubmitPresenter extends BasePresenter {
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
             foreach ($form->getComponents() as $control) {
-                if ($control instanceof \Nette\Forms\Controls\SubmitButton) {
+                if ($control instanceof SubmitButton) {
                     if ($control->isSubmittedBy()) {
                         $points = substr($control->getName(), 6);
                     }
@@ -82,10 +83,10 @@ class SubmitPresenter extends BasePresenter {
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
                 $t = Debugger::timer();
-                $this->flashMessage(_('Body boli uložené. (' . $points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
+                $this->flashMessage(_('Body byly uloženy. (' . $points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
                 $this->redirect(':Fyziklani:submit:entry');
             } catch (Exception $e) {
-                $this->flashMessage(_('Vyskytla sa chyba'), 'danger');
+                $this->flashMessage(_('Vyskytla se chyba'), 'danger');
                 Debugger::log($e);
             }
         } else {
@@ -97,32 +98,31 @@ class SubmitPresenter extends BasePresenter {
     public function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
         if (!$this->taskCodePreprocessor->checkControlNumber($taskCode)) {
-            $msg = _('Chybne zadaný kód úlohy.');
+            $msg = _('Chybně zadaný kód úlohy.');
             return false;
         }
         /* Existenica týmu */
         $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->eventID)) {
-            $msg = sprintf(_('Team %s nexistuje'), $teamID);
+            $msg = sprintf(_('Tým %s neexistuje.'), $teamID);
             return false;
         }
         /* otvorenie submitu */
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-
-            $msg = _('Bodovanie tohoto týmu je uzavreté');
+            $msg = _('Bodování tohoto týmu je uzavřené.');
             return false;
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
         $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
         if (!$taskID) {
-            $msg = sprintf(_('Úloha  %s nexistuje'), $taskLabel);
+            $msg = sprintf(_('Úloha %s neexistuje.'), $taskLabel);
             return false;
         }
         /* Nezadal sa duplicitne toto nieje editácia */
         if ($this->serviceFyziklaniSubmit->submitExist($taskID, $teamID)) {
-            $msg = sprintf(_('Úloha %s už bola zadaná'), $taskLabel);
+            $msg = sprintf(_('Úloha %s už byla zadaná.'), $taskLabel);
             return false;
         }
         return true;
@@ -137,17 +137,17 @@ class SubmitPresenter extends BasePresenter {
 
     public function actionEdit($id) {
         if (!$id) {
-            throw new BadRequestException('ID je povinné', 400);
+            throw new BadRequestException('ID je povinné.', 400);
         }
         /* Neexitujúci submit nejde editovať */
         $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
         if (!$teamID) {
-            $this->flashMessage(_('Submit neexistuje'), 'danger');
+            $this->flashMessage(_('Submit neexistuje.'), 'danger');
             $this->redirect(':Fyziklani:submit:table');
         }
         /* Uzatvorené bodovanie nejde editovať; */
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage(_('Bodovaní tohto týmu je uzvřené'), 'danger');
+            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
         }
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
@@ -166,19 +166,19 @@ class SubmitPresenter extends BasePresenter {
 
         $teamID = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id)->e_fyziklani_team_id;
         if (!$teamID) {
-            $this->flashMessage(_('Submit neexistuje'), 'danger');
+            $this->flashMessage(_('Submit neexistuje.'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
         }
 
         /* Uzatvorené bodovanie nejde editovať; */
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage(_('Bodovanie tohoto týmu je uzavreté'), 'danger');
+            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->redirect(':Fyziklani:Submit:table');
         }
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id);
         $this->serviceFyziklaniSubmit->updateModel($submit, ['points' => $values->points]);
         $this->serviceFyziklaniSubmit->save($submit);
-        $this->flashMessage(_('Body boli zmenené'), 'success');
+        $this->flashMessage(_('Body byly změněny.'), 'success');
         $this->redirect(':Fyziklani:Submit:table');
     }
 
