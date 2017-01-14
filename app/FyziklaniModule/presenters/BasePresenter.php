@@ -19,7 +19,7 @@ use ModelEvent;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    const EVENT_NAME = 'fyziklani2017';
+    const EVENT_NAME = 'fyziklani';
     /**
      *
      * @var ModelEvent

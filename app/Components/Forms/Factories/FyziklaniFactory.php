@@ -17,10 +17,10 @@ class FyziklaniFactory {
         $this->container = $container;
     }
 
-    private function createPointsField() {
+    private function createPointsField($eventID) {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
-        foreach ($this->container->parameters[BasePresenter::EVENT_NAME]['availablePoints'] as $v) {
+        foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $v) {
             $items[$v] = $v;
         }
         $field->setItems($items);
@@ -54,13 +54,13 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm() {
+    public function createEntryForm($eventID) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField(), 'taskCode');
         //$form->addComponent($this->createPointsField(),'points');
         //$form->addSubmit('send',_('Uložit'));
-        foreach ($this->container->parameters[BasePresenter::EVENT_NAME]['availablePoints'] as $points) {
+        foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
@@ -68,14 +68,14 @@ class FyziklaniFactory {
         return $form;
     }
 
-    public function createEditForm() {
+    public function createEditForm($eventID) {
         $form = new Form();
         $form->addHidden('submit_id', 0);
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIDField(), 'team_id');
         $form->addComponent($this->createTaskField(), 'task');
-        $form->addComponent($this->createPointsField(), 'points');
+        $form->addComponent($this->createPointsField($eventID), 'points');
         $form->addSubmit('send', _('Uložit'));
         return $form;
     }
