@@ -16,7 +16,6 @@ class ResultsPresenter extends BasePresenter {
                 foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
                     $result['tasks'][] = [
                         'label' => $row->label,
-                        'name' => $row->name,
                         'task_id' => $row->fyziklani_task_id
                     ];
                 }

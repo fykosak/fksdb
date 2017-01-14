@@ -15,7 +15,6 @@ interface ITeam {
 interface ITask {
     label: string;
     task_id: number;
-    name: string;
 }
 
 interface IResultsState {
