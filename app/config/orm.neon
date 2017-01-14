@@ -8,6 +8,7 @@ services:
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
+    ServiceEventOrg:         ServiceEventOrg
     ServiceEventType:        ServiceEventType
     ServiceFlag:             ServiceFlag
     ServiceFyziklaniSubmit:  ServiceFyziklaniSubmit
@@ -16,6 +17,7 @@ services:
     ServiceLogin:            ServiceLogin
     ServiceMPersonHasFlag:   ServiceMPersonHasFlag
     ServiceMPostContact:     ServiceMPostContact
+    ServiceMStoredQueryTag:  ServiceMStoredQueryTag
     ServiceOrg:              ServiceOrg
     ServicePerson:           ServicePerson
     ServicePersonHasFlag:    ServicePersonHasFlag
@@ -27,6 +29,8 @@ services:
     ServiceSchool:           ServiceSchool
     ServiceStoredQuery:      ServiceStoredQuery
     ServiceStoredQueryParameter: ServiceStoredQueryParameter
+    ServiceStoredQueryTag:   ServiceStoredQueryTag
+    ServiceStoredQueryTagType: ServiceStoredQueryTagType
     ServiceStudyYear:        ServiceStudyYear
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution

@@ -23,7 +23,7 @@ parameters:
         appId:
         secret:
     ro-database:
-        dsn: 'mysql:host=localhost;dbname=newfks'
+        dsn: 'mysql:host=127.0.0.1;dbname=newfks'
         user: 
         password: 
     github:
@@ -55,7 +55,7 @@ parameters:
 
 nette:
     database:
-        dsn: 'mysql:host=localhost;dbname=newfks'
+        dsn: 'mysql:host=127.0.0.1;dbname=newfks'
         user: 
         password: 
 

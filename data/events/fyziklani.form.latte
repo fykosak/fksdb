@@ -2,7 +2,6 @@
 
 {block content}
 <ul>
-{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
     <li>Systém přihlašování &ndash; po vyplnění formuláře
         a&nbsp;přihlášení týmu web automaticky přijímá týmy jako náhradníky,
         odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
@@ -18,18 +17,16 @@
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
     <li>
+        Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
+    </li>
+    <li>
+
         Podrobné informace o ubytování najdete na <a href="http://fykos.cz/akce/fyziklani/ubytovani">stránce o
             ubytování</a>. Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito podmínkami.
     </li>
     <li>
         Pravidla soutěže naleznete na <a href="http://fykos.cz/akce/fyziklani/pravidla">stránce o pravidlech</a>.
     </li>
-{else}
-    <li>
-        Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
-    </li>
-
-{/if}
 </ul>
 
 

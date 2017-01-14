@@ -10,6 +10,8 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\Arrays;
+use ServiceEvent;
+use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -37,12 +39,24 @@ class ExportFormatFactory extends Object {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
+    
+    /**
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
+    
+    /**
+     * @var ServiceContest
+     */
+    private $serviceContest;
     private $defaultFormats;
 
-    function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory) {
+    function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
+        $this->serviceEvent = $serviceEvent;
+        $this->serviceContest = $serviceContest;
         $this->defaultFormats = array(
             self::CSV_HEAD => _('Uložit CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
@@ -93,13 +107,22 @@ class ExportFormatFactory extends Object {
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
         $category = Arrays::get($queryParameters, 'category', null);
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
-
+        
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
         ));
+        
+        if(array_key_exists('eventTypeId', $parameters[$qid])) {
+            $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
+            $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
+            $format->addParameters(array(
+                'start-date' => $event->begin->format('Y-m-d'),
+                'end-date' => $event->end->format('Y-m-d'),
+            ));
+        }
         
         // temporary 'bugfix' for team competition max-rank computation
         if ($qid != 'aesop.fol' && $qid != 'aesop.klani.ct' && $qid != 'aesop.klani.uc') {
