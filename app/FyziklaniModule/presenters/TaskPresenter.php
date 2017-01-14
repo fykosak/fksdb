@@ -10,7 +10,6 @@ use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
 class TaskPresenter extends BasePresenter {
 
-    const EVENT_TYPE_ID = 1;
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
     const IMPORT_STATE_REMOVE_N_INSERT = 2;
     const IMPORT_STATE_INSERT = 3;

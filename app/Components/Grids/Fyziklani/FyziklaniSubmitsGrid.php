@@ -50,16 +50,16 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('submitted_on', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Upravit'))->setShow(function ($row) use ($that, $presenter) {
-            return $this->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+        })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
         });
 
         $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
             return $that->link("delete!", $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
-        })->setText(_('Smazat'))->setShow(function ($row) use ($that, $presenter) {
-            return $this->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+        })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
         });
 
         $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
@@ -88,7 +88,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             $this->serviceFyziklaniSubmit->getTable()->where('fyziklani_submit_id', $id)->delete();
             $this->flashMessage(_('Úloha byla smazaná'), 'success');
         } catch (Exception $e) {
-            $this->flashMessage(_('Vyskytla sa chyba'), 'danger');
+            $this->flashMessage(_('Vyskytla se chyba'), 'danger');
             \Nette\Diagnostics\Debugger::log($e);
         }
     }
