@@ -19,7 +19,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'close', $this->getCurrentEvent()));
+        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'close'));
     }
 
     public function authorizedTeam() {

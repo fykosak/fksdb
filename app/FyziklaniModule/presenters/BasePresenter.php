@@ -123,4 +123,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
+	protected function eventIsAllowed($resource, $privilege) {
+		$event = $this->getCurrentEvent();
+		if (!$event) {
+			return false;
+		}
+		return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+	}
+
 }

@@ -10,6 +10,7 @@ use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 
 class SubmitPresenter extends BasePresenter {
+
     /**
      * @var TaskCodePreprocessor
      */
@@ -36,7 +37,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEntry() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'submit', $this->getCurrentEvent()));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'submit')));
     }
 
     public function titleEdit() {
@@ -94,7 +95,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-
     public function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
         if (!$this->taskCodePreprocessor->checkControlNumber($taskCode)) {
@@ -133,7 +133,6 @@ class SubmitPresenter extends BasePresenter {
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
-
 
     public function actionEdit($id) {
         if (!$id) {
@@ -185,4 +184,5 @@ class SubmitPresenter extends BasePresenter {
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this->eventID, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
     }
+
 }
