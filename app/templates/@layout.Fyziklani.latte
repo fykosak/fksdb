@@ -61,7 +61,9 @@
 
         <div class="container">
             {control breadcrumbs}
-            {block titleBody}<h1 class="page-header">{$title}<small>{$subtitle}</small></h1>{/block}
+            {block titleBody}
+                <h1 class="page-header">{$title}
+                <small>{$subtitle}</small></h1>{/block}
 
 
             {block flashes}
@@ -93,7 +95,10 @@
         'js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
-        'js/main.js'
+        'js/main.js',
+        'js/jsx/lib/react.min.js',
+        'js/jsx/lib/react-dom.min.js',
+        'js/jsx/taskCode.js'
             }
 
     {* CSS files are only collected at the end of rendering, so we use this

@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Controls\TaskCodeComponent;
 use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Nette\Diagnostics\Debugger;
 use \Nette\Forms\Controls\RadioList;
 use \Nette\Forms\Controls\TextInput;
 use \Nette\DI\Container;
@@ -29,10 +31,13 @@ class FyziklaniFactory {
     }
 
     private function createTaskCodeField() {
+
         $field = new TextInput(_('Kód úlohy'));
+        $field->setHtmlId('taskcode');
         $field->setRequired();
         $field->addRule(Form::PATTERN, _('Nesprávný tvar.'), '[0-9]{6}[A-Z]{2}[0-9]');
         $field->setAttribute('placeholder', '000000XX0');
+
         return $field;
     }
 
@@ -58,8 +63,6 @@ class FyziklaniFactory {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField(), 'taskCode');
-        //$form->addComponent($this->createPointsField(),'points');
-        //$form->addSubmit('send',_('Uložit'));
         foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
