@@ -32,7 +32,7 @@ abstract class AbstractEventOrgAssertion extends Object {
 
     function __construct($eventTypeId, $parameterName, User $user, Connection $connection) {
         if (!is_array($eventTypeId)) {
-            $eventTypeId = array($eventTypeId);
+            $eventTypeId = [$eventTypeId];
         }
         $this->eventTypeId = $eventTypeId;
         $this->parameterName = $parameterName;
@@ -40,10 +40,11 @@ abstract class AbstractEventOrgAssertion extends Object {
         $this->connection = $connection;
     }
 
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege,$parameterValue=null) {
         $storedQuery = $acl->getQueriedResource();
+
         if (!$storedQuery instanceof StoredQuery) {
-            throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+          //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
 
         $identity = $this->user->getIdentity();
@@ -51,18 +52,16 @@ abstract class AbstractEventOrgAssertion extends Object {
         if (!$person) {
             return false;
         }
-        $rows = $this->connection->table(DbNames::TAB_EVENT_HAS_ORG)
+        $rows = $this->connection->table(DbNames::TAB_EVENT_ORG)
                 ->where('person_id', $person->person_id)
                 ->where('event.event_type_id', $this->eventTypeId);
 
-        $queryParameters = $storedQuery->getParameters(true);
+       // $queryParameters = $storedQuery->getParameters(true);
         if ($this->parameterName) {
-            $rows->where('event.' . $this->parameterName, $queryParameters[$this->parameterName]);
+            $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/ $parameterValue);
         }
-
         return count($rows) > 0;
     }
-
 }
 
 class EventOrgAssertion extends AbstractEventOrgAssertion {
@@ -85,6 +84,6 @@ class EventOrgByIdAssertion extends AbstractEventOrgAssertion {
 
     public function __construct($eventTypeId, User $user, Connection $connection) {
         parent::__construct($eventTypeId, 'event_id', $user, $connection);
-    }
 
+    }
 }

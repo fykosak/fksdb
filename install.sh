@@ -74,7 +74,7 @@ lockfile="$fksdb_dir/.install-lock"
 
 check_args || exit 1
 	
-> "$fksdb_dir/install.sh.log"
+exec > "$fksdb_dir/install.sh.log"
 export GIT_DIR="$fksdb_dir/.git"
 
 if [ `current_branch` != $branch ] ; then

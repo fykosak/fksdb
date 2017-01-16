@@ -11,7 +11,7 @@ use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestAuthorizator extends Object {
@@ -42,7 +42,7 @@ class ContestAuthorizator extends Object {
     /**
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
-     * 
+     *
      * @param mixed $resource
      * @param enum $privilege
      * @param int|ModelContest $contest queried contest
@@ -64,6 +64,7 @@ class ContestAuthorizator extends Object {
             if ($role->getContestId() != $contestId) {
                 continue;
             }
+
             if ($this->acl->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
@@ -71,5 +72,4 @@ class ContestAuthorizator extends Object {
 
         return false;
     }
-
 }

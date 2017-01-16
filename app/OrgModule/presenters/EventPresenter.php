@@ -4,6 +4,8 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
+use FKS\Components\Controls\FormControl;
+use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -11,6 +13,8 @@ use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Grids\EventOrgsGrid;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
@@ -28,13 +32,17 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
+use Persons\ExtendedPersonHandler;
+use Persons\SelfResolver;
 use ServiceEvent;
 use SystemContainer;
 use Utils;
+use FKS\Config\Expressions\Helpers;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventPresenter extends EntityPresenter {
@@ -52,6 +60,11 @@ class EventPresenter extends EntityPresenter {
      * @var EventFactory
      */
     private $eventFactory;
+
+    /**
+     * @var \ServicePerson
+     */
+    private $servicePerson;
 
     /**
      *
@@ -79,6 +92,21 @@ class EventPresenter extends EntityPresenter {
      */
     private $flashDumpFactory;
 
+    /**
+     * @var ReferencedPersonFactory
+     */
+    private $referencedPersonFactory;
+    /**
+     * @var \ServiceEventOrg
+     */
+    private $serviceEventOrg;
+
+
+    public function injectServicePerson(\ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
+    }
+
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -89,6 +117,10 @@ class EventPresenter extends EntityPresenter {
 
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
+    }
+
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
     public function injectContainer(Container $container) {
@@ -107,6 +139,10 @@ class EventPresenter extends EntityPresenter {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    public function injectServiceEventOrg(\ServiceEventOrg $serviceEventOrg) {
+        $this->serviceEventOrg = $serviceEventOrg;
+    }
+
     public function authorizedModel($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -116,7 +152,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function actionModel($id) {
-        
+
     }
 
     public function titleList() {
@@ -156,9 +192,9 @@ class EventPresenter extends EntityPresenter {
 
         $form->addSubmit('send', _('Přidat'));
         $that = $this;
-        $form->onSuccess[] = function(Form $form) use($that) {
-                    $that->handleFormSuccess($form, true);
-                };
+        $form->onSuccess[] = function (Form $form) use ($that) {
+            $that->handleFormSuccess($form, true);
+        };
 
         return $form;
     }
@@ -168,9 +204,9 @@ class EventPresenter extends EntityPresenter {
 
         $form->addSubmit('send', _('Uložit'));
         $that = $this;
-        $form->onSuccess[] = function(Form $form) use($that) {
-                    $that->handleFormSuccess($form, false);
-                };
+        $form->onSuccess[] = function (Form $form) use ($that) {
+            $that->handleFormSuccess($form, false);
+        };
 
         return $form;
     }
@@ -225,22 +261,22 @@ class EventPresenter extends EntityPresenter {
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $paramControl = $eventContainer->getComponent('parameters');
             $paramControl->setOption('description', $this->createParamDescription($scheme));
-            $paramControl->addRule(function(BaseControl $control) use($scheme) {
-                        $parameters = $control->getValue();
-                        try {
-                            if ($parameters) {
-                                $parameters = Neon::decode($parameters);
-                            } else {
-                                $parameters = array();
-                            }
+            $paramControl->addRule(function (BaseControl $control) use ($scheme) {
+                $parameters = $control->getValue();
+                try {
+                    if ($parameters) {
+                        $parameters = Neon::decode($parameters);
+                    } else {
+                        $parameters = array();
+                    }
 
-                            NeonScheme::readSection($parameters, $scheme);
-                            return true;
-                        } catch (NeonException $e) {
-                            $control->addError($e->getMessage());
-                            return false;
-                        }
-                    }, _('Parametry nesplňují Neon schéma'));
+                    NeonScheme::readSection($parameters, $scheme);
+                    return true;
+                } catch (NeonException $e) {
+                    $control->addError($e->getMessage());
+                    return false;
+                }
+            }, _('Parametry nesplňují Neon schéma'));
         }
 
         return $form;
@@ -327,4 +363,49 @@ class EventPresenter extends EntityPresenter {
         }
     }
 
+    public function createComponentOrgsGrid($name) {
+        return new EventOrgsGrid($this->getParam('id'),$this->serviceEventOrg);
+
+    }
+
+    public function createComponentOrgForm($name) {
+        $control = new FormControl();
+        $form = $control->getForm();
+        $control->setGroupMode(FormControl::GROUP_CONTAINER);
+
+        $container = new ContainerWithOptions();
+        $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
+
+        $fieldsDefinition = Helpers::evalExpressionArray($this->globalParameters['eventOrg'], $this->container);
+        $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
+
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, ReferencedPersonFactory::SEARCH_ID, false, $modifiabilityResolver, $visibilityResolver);
+
+        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+
+
+        //  $this->appendExtendedContainer($form);
+        $form->addText('note', _('Poznámka'));
+        $form->addHidden('event_id', $this->getParam('id'));
+        $_this = $this;
+        $form->addSubmit('submit', _('Ulozit'))->onClick[] = function () use ($_this, $form) {
+            $_this->orgFormSuccess($form);
+        };
+        // $form->onSuccess[] = [$this, 'orgFormSuccess'];
+        return $control;
+    }
+
+    public function orgFormSuccess(Form $form) {
+        $values = $form->getValues();
+        Debugger::barDump($values);
+        $model = $this->serviceEventOrg->createNew([
+            'person_id' => $values[ExtendedPersonHandler::CONT_AGGR]['person_id'],
+            'event_id' => $values->event_id,
+            'note' => $values->note
+        ]);
+        $this->serviceEventOrg->save($model);
+        $this->flashMessage(_('Organizátor bol založený'), 'success');
+        $this->redirect('this');
+    }
 }

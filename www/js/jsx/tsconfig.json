@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "None",
+    "jsx": "react",
+    "removeComments": true,
+    "target": "es5",
+    "sourceMap": false,
+    "allowJs": true,
+    "isolatedModules": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+

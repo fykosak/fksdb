@@ -12,8 +12,9 @@ services:
     - Authentication\FacebookAuthenticator
     - Authentication\GithubAuthenticator
     - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator    
+    - Authentication\TokenAuthenticator
     - Authorization\ContestAuthorizator
+    - Authorization\EventAuthorizator
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
@@ -69,6 +70,11 @@ services:
     events.expressionEvaluator: Events\Model\ExpressionEvaluator
     events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
     events.captcha: Events\FormAdjustments\Captcha
+
+    #
+    # Fyziklani
+    #
+    - FKSDB\model\Fyziklani\TaskCodePreprocessor
 
 includes:
     - merger.neon

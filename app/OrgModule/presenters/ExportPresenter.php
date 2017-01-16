@@ -11,6 +11,7 @@ use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FormUtils;
 use IResultsModel;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -26,6 +27,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
+use ServiceMStoredQueryTag;
 
 class ExportPresenter extends SeriesPresenter {
 
@@ -56,6 +58,11 @@ class ExportPresenter extends SeriesPresenter {
      * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
+    
+    /**
+     * @var ServiceMStoredQueryTag
+     */
+    private $serviceMStoredQueryTag;
 
     /**
      * @var StoredQueryFormFactory
@@ -88,6 +95,10 @@ class ExportPresenter extends SeriesPresenter {
 
     public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+    }
+    
+    public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
 
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
@@ -241,7 +252,8 @@ class ExportPresenter extends SeriesPresenter {
         if (!$values) {
             $values = array();
             $values[self::CONT_CONSOLE] = $this->getPatternQuery();
-            $values[self::CONT_META] = $this->getPatternQuery();
+            $values[self::CONT_META] = $this->getPatternQuery()->toArray();
+            $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = array();
             foreach ($query->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
@@ -252,7 +264,7 @@ class ExportPresenter extends SeriesPresenter {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
-
+        
         $this['editForm']->setDefaults($values);
     }
 
@@ -326,6 +338,18 @@ class ExportPresenter extends SeriesPresenter {
         }
         $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         return $grid;
+    }
+    
+    protected function createComponentTagCloudList($name) {
+        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
+        $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
+        return $tagCloud;
+    }
+    
+    protected function createComponentTagCloudDetail($name) {
+        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
+        $tagCloud->setModelStoredQuery($this->getPatternQuery());
+        return $tagCloud;
     }
 
     protected function createComponentComposeForm($name) {
@@ -434,11 +458,23 @@ class ExportPresenter extends SeriesPresenter {
         $metadata = $values[self::CONT_META];
         $metadata = FormUtils::emptyStrToNull($metadata);
         $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
-
+        
         $sqlData = $values[self::CONT_CONSOLE];
         $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
 
         $this->serviceStoredQuery->save($storedQuery);
+        
+        $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where(array(
+            'query_id' => $storedQuery->query_id,
+        ))->delete();
+        foreach ($metadata['tags'] as $tagTypeId) {
+            $data = array(
+                'query_id' => $storedQuery->query_id,
+                'tag_type_id' => $tagTypeId,
+            );
+            $tag = $this->serviceMStoredQueryTag->createNew($data);
+            $this->serviceMStoredQueryTag->save($tag);
+        }
 
         $this->serviceStoredQueryParameter->getTable()
                 ->where(array('query_id' => $storedQuery->query_id))->delete();

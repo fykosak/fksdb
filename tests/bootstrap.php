@@ -77,6 +77,8 @@ Container::extensionMethod('addDatePicker', function (Container $container, $nam
     return $container[$name] = new DatePicker($label);
 });
 
+/* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
+define('LOCK_UPLOAD', __DIR__ . '/tmp/upload.lock');
 return $container;
 

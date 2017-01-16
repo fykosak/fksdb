@@ -24,10 +24,25 @@ class StoredQueriesGrid extends BaseGrid {
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
+    
+    private $isFilteredByTag = false;
 
     function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->contestAuthorizator = $contestAuthorizator;
+    }
+
+    public function getFilterByTagCallback(){
+        $that=$this;
+        return function(array $tagTypeId) use($that){
+            if(empty($tagTypeId)){
+                $this->isFilteredByTag = false;
+                return;
+            }
+            $queries = $that->serviceStoredQuery->findByTagType($tagTypeId)->order('name');
+            $that->setDataSource(new NDataSource($queries));
+            $that->isFilteredByTag = true;
+        };
     }
 
     protected function configure($presenter) {
@@ -36,9 +51,10 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // data
         //
-        $queries = $this->serviceStoredQuery->getTable()->order('name');
-
-        $this->setDataSource(new NDataSource($queries));
+        if(!$this->isFilteredByTag){
+            $queries = $this->serviceStoredQuery->getTable()->order('name');
+            $this->setDataSource(new NDataSource($queries));
+        }
 
         //
         // columns

@@ -4,6 +4,7 @@ use Authentication\GithubAuthenticator;
 use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
+use Authorization\EventAuthorizator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;
@@ -12,11 +13,11 @@ use Nette\Security\AuthenticationException;
 
 /**
  * Presenter allows authenticated user access only.
- * 
+ *
  * User can be authenticated in the session (after successful login)
  * or via an authentication token. It's responsibility of the particular
  * operation to dispose the token after use (if it should be so).
- * 
+ *
  * @see http://www.php.net/manual/en/features.http-auth.php
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
@@ -40,6 +41,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @var GithubAuthenticator
      */
     private $githubAuthenticator;
+    /**
+     * @var EventAuthorizator
+     */
+    private $eventAuthorizator;
 
     /**
      * @var ContestAuthorizator
@@ -64,6 +69,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     public function getContestAuthorizator() {
         return $this->contestAuthorizator;
+    }
+
+    public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
+        $this->eventAuthorizator = $eventAuthorizator;
+    }
+
+    public function getEventAuthorizator() {
+        return $this->eventAuthorizator;
     }
 
     public function getTokenAuthenticator() {
@@ -129,14 +142,17 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $reason = AuthenticationPresenter::REASON_AUTH;
         }
         $backlink = $this->application->storeRequest(); //TODO this doesn't work in cross domain environment
-        $this->redirect(':Authentication:login', array('backlink' => $backlink, AuthenticationPresenter::PARAM_REASON => $reason));
+        $this->redirect(':Authentication:login', array(
+            'backlink' => $backlink,
+            AuthenticationPresenter::PARAM_REASON => $reason
+        ));
     }
 
     /**
      * This method may be overriden, however only simple conditions
      * can be checked there -- user session is not prepared at the
      * moment of the call.
-     * 
+     *
      * @return boolean
      */
     public function requiresLogin() {

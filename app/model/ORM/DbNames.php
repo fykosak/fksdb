@@ -12,7 +12,8 @@ class DbNames {
     const TAB_CONTEST_YEAR = 'contest_year';
     const TAB_CONTESTANT_BASE = 'contestant_base';
     const TAB_EVENT = 'event';
-    const TAB_EVENT_HAS_ORG = 'event_has_org';
+    const TAB_EVENT_HAS_ORG = self::TAB_EVENT_ORG;
+    const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_FLAG = 'flag';
@@ -31,6 +32,8 @@ class DbNames {
     const TAB_SPAMEE = 'si_spamee'; // obsolete
     const TAB_STORED_QUERY = 'stored_query';
     const TAB_STORED_QUERY_PARAM = 'stored_query_parameter';
+    const TAB_STORED_QUERY_TAG = 'stored_query_tag';
+    const TAB_STORED_QUERY_TAG_TYPE = 'stored_query_tag_type';
     const TAB_STUDY_YEAR = 'study_year';
     const TAB_SUBMIT = 'submit';
     const TAB_TASK = 'task';

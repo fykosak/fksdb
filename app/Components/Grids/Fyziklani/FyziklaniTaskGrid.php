@@ -1,39 +1,42 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
+use ServiceFyziklaniTask;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
 
 /**
- * Description of SubmitsGrid
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
-class FyziklanitaskGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniTaskGrid extends BaseGrid {
 
-    private $presenter;
-    protected $searchable;
+    /**
+     *
+     * @var ServiceFyziklaniTask 
+     */
+    private $serviceFyziklaniTask;
+    /**
+     * @var int
+     */
+    private $eventID;
 
-    public function __construct(\OrgModule\FyziklaniPresenter $presenter) {
-        $this->presenter = $presenter;
+    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->eventID = $eventID;
         parent::__construct();
     }
 
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id',_('ID úlohy'));
-        $this->addColumn('label',_('Label'));
-        $this->addColumn('name',_('Názov ǔlohy'));
+        $this->addColumn('label',_('#'));
+        $this->addColumn('name',_('Název úlohy'));
 
-        $submits = $this->presenter->database->table(\DbNames::TAB_FYZIKLANI_TASK)->where('event_id = ?',$presenter->eventID);
+        $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
                     $tokens = preg_split('/\s+/', $value);
@@ -43,5 +46,4 @@ class FyziklanitaskGrid extends \FKSDB\Components\Grids\BaseGrid {
                 });
         $this->setDataSource($dataSource);
     }
-
 }

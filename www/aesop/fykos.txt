@@ -96,3 +96,7 @@
 ../fykos29/q/aesop.sous.p?ha=1&format=aesop
 ../fykos30/q/aesop.sous.p?ha=1&format=aesop
 ../fykos30/q/aesop.dsef?ha=1&format=aesop
+../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=A
+../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=B
+../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=C
+../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=zahranicni
