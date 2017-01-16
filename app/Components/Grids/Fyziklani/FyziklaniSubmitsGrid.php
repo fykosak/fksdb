@@ -1,83 +1,95 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use \NiftyGrid\DataSource\NDataSource;
+use FyziklaniModule\BasePresenter;
+use Nette\Database\Table\Selection;
+use Nette\Diagnostics\Debugger;
+use ORM\Services\Events\ServiceFyziklaniTeam;
+use ServiceFyziklaniSubmit;
+use \FKSDB\Components\Grids\BaseGrid;
+use SQL\SearchableDataSource;
 
 /**
- * Description of SubmitsGrid
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
-class FyziklaniSubmitsGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniSubmitsGrid extends BaseGrid {
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     *
+     * @var ServiceFyziklaniSubmit
+     */
+    private $serviceFyziklaniSubmit;
 
-    private $presenter;
-    protected $searchable;
+    /**
+     * @var integer
+     */
+    private $eventID;
 
-    public function __construct(\OrgModule\FyziklaniPresenter $presenter) {
-        $this->presenter = $presenter;
+    public function __construct($eventID, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventID = $eventID;
         parent::__construct();
-    }
-
-    public function isSearchable() {
-        return false;
     }
 
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('name',_('Názov týmu'));
-        $this->addColumn('e_fyziklani_team_id',_('Tým ID'));
+        $this->addColumn('name', _('Jméno týmu'));
+        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
         $that = $this;
-        $this->addColumn('label',_('Úloha'));
-        $this->addColumn('points',_('počet bodů'));
-        $this->addColumn('room',_('Room'));
-        $this->addColumn('submitted_on',_('Submited on'));
-        $this->addButton('edit',null)
-                ->setClass('btn btn-xs btn-default')
-                ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Org:Fyziklani:edit',['id' => $row->fyziklani_submit_id]);
-                })
-                ->setText(_('Upraviť'));
+        $this->addColumn('label', _('Úloha'));
+        $this->addColumn('points', _('Body'));
+        $this->addColumn('room', _('Místnost'));
+        $this->addColumn('submitted_on', _('Zadané'));
+        $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
+            return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
+        })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+        });
 
-        $this->addButton('delete',null)
-                ->setClass('btn btn-xs btn-danger')
-                ->setLink(function($row) use ($that) {
-                    return $that->link("delete!",$row->fyziklani_submit_id);
-                })
-                ->setConfirmationDialog(function() {
-                    return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
-                })
-                ->setText(_('Zmazať'));
+        $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
+            return $that->link("delete!", $row->fyziklani_submit_id);
+        })->setConfirmationDialog(function () {
+            return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
+        })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+        });
 
-        $submits = $this->presenter->database->table('fyziklani_submit')->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room')->where('e_fyziklani_team_id.event_id = ?',$presenter->getCurrentEventID(null));
-        $this->setDataSource(new NDataSource($submits));
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
+            ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('e_fyziklani_team_id.name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task.label LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
+        $this->setDataSource($dataSource);
     }
 
     public function handleDelete($id) {
-
-        $teamID = $this->presenter->submitToTeam($id);
-        if(!$teamID){
-            $this->flashMessage(_('Submit nenexistuje'),'danger');
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
+        if (!$teamID) {
+            $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
-        if(!$this->presenter->isOpenSubmit($teamID)){
-            $this->flashMessage('Tento tým má už uzavreté bodovanie','warning');
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+            $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }
         try {
-            $this->presenter->database->queryArgs('DELETE FROM '.\DbNames::TAB_FYZIKLANI_SUBMIT.' WHERE fyziklani_submit_id=?',[$id]);
-            $this->flashMessage(_('Úloha bola zmazaná'),'success');
+            $this->serviceFyziklaniSubmit->getTable()->where('fyziklani_submit_id', $id)->delete();
+            $this->flashMessage(_('Úloha byla smazaná'), 'success');
         } catch (Exception $e) {
-            $this->flashMessage(_('Vykytla sa chyba'),'danger');
+            $this->flashMessage(_('Vyskytla se chyba'), 'danger');
             \Nette\Diagnostics\Debugger::log($e);
         }
     }
-
 }

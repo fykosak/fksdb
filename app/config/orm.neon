@@ -11,6 +11,8 @@ services:
     ServiceEventOrg:         ServiceEventOrg
     ServiceEventType:        ServiceEventType
     ServiceFlag:             ServiceFlag
+    ServiceFyziklaniSubmit:  ServiceFyziklaniSubmit
+    ServiceFyziklaniTask:    ServiceFyziklaniTask
     ServiceGlobalSession:    ServiceGlobalSession
     ServiceLogin:            ServiceLogin
     ServiceMPersonHasFlag:   ServiceMPersonHasFlag

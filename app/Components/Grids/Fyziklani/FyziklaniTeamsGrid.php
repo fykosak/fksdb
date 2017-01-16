@@ -1,26 +1,29 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use \NiftyGrid\DataSource\NDataSource;
+use ORM\Services\Events\ServiceFyziklaniTeam;
+use \FKSDB\Components\Grids\BaseGrid;
 
 /**
- * Description of SubmitsGrid
  *
- * @author miso
+ * @author Michal Červeňák
+ * @author Lukáš Timko
  */
-class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
+class FyziklaniTeamsGrid extends BaseGrid {
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     * @var integer
+     */
+    private $eventID;
 
-    private $database;
-
-    public function __construct(\Nette\Database\Connection $database) {
-        $this->database = $database;
+    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventID = $eventID;
         parent::__construct();
     }
 
@@ -35,26 +38,21 @@ class FyziklaniTeamsGrid extends \FKSDB\Components\Grids\BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('name',_('Názov týmu'));
-        $this->addColumn('e_fyziklani_team_id',_('Tým ID'));
-
-
-        //$this->addColumn('points',_('Počet bodů'));
-        $this->addColumn('room',_('Místnost'));
-
-        $this->addButton('edit',null)
-                ->setClass('btn btn-xs btn-success')
-                ->setLink(function($row)use($presenter) {
-                    return $presenter->link(':Org:Fyziklani:close',['id' => $row->e_fyziklani_team_id]);
-                })
-                ->setText(_('Uzavrieť bodovanie'));
-
-
-
-
-        $teams = $this->database->table('e_fyziklani_team')->select('*')->where('event_id',$presenter->getCurrentEventID(null))->where('status?','participated')->where('points',NULL);
-        \Nette\Diagnostics\Debugger::barDump($teams);
+        $this->addColumn('name', _('Název týmu'));
+        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
+        $this->addColumn('points', _('Počet bodů'));
+        $this->addColumn('room', _('Místnost'));
+        $this->addColumn('category', _('Kategorie'));
+        $that = $this;
+        $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
+            return $presenter->link(':Fyziklani:Close:team', [
+                'id' => $row->e_fyziklani_team_id,
+                'eventID' => $this->eventID
+            ]);
+        })->setText(_('Uzavřít bodování'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+        });
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventID);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
     }
-
 }
