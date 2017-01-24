@@ -3,10 +3,10 @@ parameters:
         95:
             availablePoints: [5, 3, 2, 1]
             game:
-                start: '2016-12-15T02:45:00'
-                end: '2016-12-17T22:11:00'
+                start: '2017-01-24T19:30:00'
+                end: '2017-01-24T21:00:00'
             taskOnBoard: 7
             results:
-                display: '2016-12-15T02:47:00' # čas zobrazenia po začatiku sútaže
-                hide: '2016-12-16T02:30:00' # čas kedy sa majú skryť (zmarziť)
+                display: '2017-01-24T19:35:00' # čas zobrazenia po začatiku sútaže
+                hide: '2017-01-24T20:45:00' # čas kedy sa majú skryť (zmarziť)
                 hardDisplay: false
