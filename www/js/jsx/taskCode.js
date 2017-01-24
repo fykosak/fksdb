@@ -6,6 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var TaskCode = (function (_super) {
     __extends(TaskCode, _super);
     function TaskCode() {
+        _super.call(this);
         this.state = {};
     }
     TaskCode.prototype.componentDidMount = function () {
@@ -44,29 +45,32 @@ var TaskCode = (function (_super) {
             'border-color': '#66afe9',
         };
         var onInputTask = function (event) {
+            var value = event.target.value.toLocaleUpperCase();
             _this.setState({
-                task: event.target.value,
-                validTask: _this.isValidTask(event.target.value),
-                valid: _this.isValid(_this.getFullCode(null, event.target.value))
+                task: value,
+                validTask: _this.isValidTask(value),
+                valid: _this.isValid(_this.getFullCode(null, value))
             });
-            if (_this.isValidTask(event.target.value)) {
+            if (_this.isValidTask(value)) {
                 jQuery(ReactDOM.findDOMNode(_this.refs.control)).focus();
             }
         };
         var onInputTeam = function (event) {
+            var value = +event.target.value;
             _this.setState({
-                team: event.target.value,
-                validTeam: _this.isValidTeam(event.target.value),
-                valid: _this.isValid(_this.getFullCode(event.target.value))
+                team: value,
+                validTeam: _this.isValidTeam(value),
+                valid: _this.isValid(_this.getFullCode(value))
             });
             if (_this.isValidTeam(event.target.value)) {
                 jQuery(ReactDOM.findDOMNode(_this.refs.task)).focus();
             }
         };
         var onInputControl = function (event) {
+            var value = +event.target.value;
             _this.setState({
-                control: event.target.value,
-                valid: _this.isValid(_this.getFullCode(null, null, event.target.value))
+                control: value,
+                valid: _this.isValid(_this.getFullCode(null, null, value))
             });
         };
         return (React.createElement("div", {className: 'row col-lg-6 task-code-container'}, React.createElement("div", {className: 'form-control form-group has-feedback ', style: containerStyles}, React.createElement("small", null, "00"), React.createElement("input", {maxLength: "4", className: this.state.validTeam === false ? 'invalid' : (this.state.validTeam === true ? 'valid' : ''), onInput: onInputTeam, style: teamInputStyles, placeholder: "XXXX"}), React.createElement("input", {maxLength: "2", className: this.state.validTask === false ? 'invalid' : (this.state.validTask === true ? 'valid' : ''), ref: "task", style: taskInputStyles, placeholder: "XX", onInput: onInputTask}), React.createElement("input", {maxLength: "1", ref: "control", className: this.state.valid ? 'valid' : 'invalid', style: controlInputStyles, placeholder: "X", onInput: onInputControl}), React.createElement("span", {className: 'glyphicon ' + (this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback', "aria-hidden": "true"}))));
@@ -76,14 +80,14 @@ var TaskCode = (function (_super) {
         if (team === void 0) { team = null; }
         if (task === void 0) { task = null; }
         if (control === void 0) { control = null; }
-        team = team || (this.state.team < 1000) ? '0' + this.state.team : this.state.team;
+        team = team || (+this.state.team < 1000) ? '0' + +this.state.team : +this.state.team;
         task = task || this.state.task || '';
         control = control || this.state.control || '';
         return '00' + team + task + control;
     };
     TaskCode.prototype.isValid = function (code) {
         var subCode = code.split('').map(function (char) {
-            return char
+            return char.toLocaleUpperCase()
                 .replace('A', 1)
                 .replace('B', 2)
                 .replace('C', 3)
@@ -99,13 +103,12 @@ var TaskCode = (function (_super) {
         return c % 10 == 0;
     };
     TaskCode.prototype.isValidTask = function (task) {
-        if (!task) {
-            return false;
-        }
-        return /[A-H]{2}/.test(task);
+        var tasks = this.props.tasks;
+        return tasks.map(function (task) { return task.label; }).indexOf(task) !== -1;
     };
     TaskCode.prototype.isValidTeam = function (team) {
-        return (team > 500 && team < 2000);
+        var teams = this.props.teams;
+        return teams.map(function (team) { return team.team_id; }).indexOf(+team) !== -1;
     };
     TaskCode.prototype.componentDidUpdate = function () {
         var code = this.getFullCode();
@@ -117,8 +120,10 @@ jQuery('#taskcode').each(function (a, input) {
     var $ = jQuery;
     if (!input.value) {
         var c = document.createElement('div');
+        var tasks = $(input).data('tasks');
+        var teams = $(input).data('teams');
         $(input).parent().parent().append(c);
         $(input).parent().hide();
-        ReactDOM.render(React.createElement(TaskCode, {node: input}), c);
+        ReactDOM.render(React.createElement(TaskCode, {node: input, tasks: tasks, teams: teams}), c);
     }
 });

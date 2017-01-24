@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Controls\TaskCodeComponent;
+use FKSDB\Components\Controls\TaskCodeInput;
 use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Nette\Diagnostics\Debugger;
 use \Nette\Forms\Controls\RadioList;
 use \Nette\Forms\Controls\TextInput;
 use \Nette\DI\Container;
 use \Nette\Application\UI\Form;
+
 
 class FyziklaniFactory {
 
@@ -30,13 +30,12 @@ class FyziklaniFactory {
         return $field;
     }
 
-    private function createTaskCodeField() {
+    private function createTaskCodeField($teams = [], $tasks = []) {
 
-        $field = new TextInput(_('Kód úlohy'));
-        $field->setHtmlId('taskcode');
+        $field = new TaskCodeInput(_('Kód úlohy'));
+        $field->setTasks($tasks);
+        $field->setTeams($teams);
         $field->setRequired();
-        $field->addRule(Form::PATTERN, _('Nesprávný tvar.'), '[0-9]{6}[A-Z]{2}[0-9]');
-        $field->setAttribute('placeholder', '000000XX0');
 
         return $field;
     }
@@ -59,10 +58,10 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($eventID) {
+    public function createEntryForm($eventID,$teams,$tasks) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addComponent($this->createTaskCodeField(), 'taskCode');
+        $form->addComponent($this->createTaskCodeField($teams,$tasks), 'taskCode');
         foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))

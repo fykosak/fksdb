@@ -1,5 +1,6 @@
 class TaskCode extends React.Component<any,any> {
     constructor() {
+        super();
         this.state = {};
     }
 
@@ -43,23 +44,25 @@ class TaskCode extends React.Component<any,any> {
             ;
 
         const onInputTask = (event)=> {
+            let value = event.target.value.toLocaleUpperCase();
             this.setState(
                 {
-                    task: event.target.value,
-                    validTask: this.isValidTask(event.target.value),
-                    valid: this.isValid(this.getFullCode(null, event.target.value))
+                    task: value,
+                    validTask: this.isValidTask(value),
+                    valid: this.isValid(this.getFullCode(null, value))
                 }
             );
-            if (this.isValidTask(event.target.value)) {
+            if (this.isValidTask(value)) {
                 jQuery(ReactDOM.findDOMNode(this.refs.control)).focus();
             }
         };
 
         const onInputTeam = (event)=> {
+            let value = +event.target.value;
             this.setState({
-                team: event.target.value,
-                validTeam: this.isValidTeam(event.target.value),
-                valid: this.isValid(this.getFullCode(event.target.value))
+                team: value,
+                validTeam: this.isValidTeam(value),
+                valid: this.isValid(this.getFullCode(value))
             });
             if (this.isValidTeam(event.target.value)) {
                 jQuery(ReactDOM.findDOMNode(this.refs.task)).focus();
@@ -67,9 +70,10 @@ class TaskCode extends React.Component<any,any> {
         };
 
         const onInputControl = (event)=> {
+            let value = +event.target.value;
             this.setState({
-                control: event.target.value,
-                valid: this.isValid(this.getFullCode(null, null, event.target.value))
+                control: value,
+                valid: this.isValid(this.getFullCode(null, null, value))
             });
 
         };
@@ -116,7 +120,7 @@ class TaskCode extends React.Component<any,any> {
     };
 
     private getFullCode(team = null, task = null, control = null) {
-        team = team || (this.state.team < 1000) ? '0' + this.state.team : this.state.team;
+        team = team || (+this.state.team < 1000) ? '0' + +this.state.team : +this.state.team;
         task = task || this.state.task || '';
         control = control || this.state.control || '';
         return '00' + team + task + control;
@@ -124,7 +128,7 @@ class TaskCode extends React.Component<any,any> {
 
     private isValid(code) {
         let subCode = code.split('').map((char)=> {
-            return char
+            return char.toLocaleUpperCase()
                 .replace('A', 1)
                 .replace('B', 2)
                 .replace('C', 3)
@@ -141,15 +145,18 @@ class TaskCode extends React.Component<any,any> {
     }
 
 
-    private  isValidTask(task) {
-        if (!task) {
-            return false;
-        }
-        return /[A-H]{2}/.test(task);
+    private isValidTask(task) {
+        let {tasks} = this.props;
+        return tasks.map(task=>task.label).indexOf(task) !== -1;
+        // if (!task) {
+        //     return false;
+        // }
+        // return /[A-H]{2}/.test(task);
     }
 
-    private  isValidTeam(team) {
-        return (team > 500 && team < 2000);
+    private isValidTeam(team) {
+        let {teams} = this.props;
+        return teams.map(team=>team.team_id).indexOf(+team) !== -1;
     }
 
     public componentDidUpdate() {
@@ -164,9 +171,11 @@ jQuery('#taskcode').each(
         let $ = jQuery;
         if (!input.value) {
             let c = document.createElement('div');
+            let tasks = $(input).data('tasks');
+            let teams = $(input).data('teams');
             $(input).parent().parent().append(c);
             $(input).parent().hide();
-            ReactDOM.render(<TaskCode node={input}/>, c);
+            ReactDOM.render(<TaskCode node={input} tasks={tasks} teams={teams}/>, c);
         }
 
     }
