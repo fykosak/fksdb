@@ -79,7 +79,8 @@ class SubmitPresenter extends BasePresenter {
             $submit = $this->serviceFyziklaniSubmit->createNew([
                 'points' => $points,
                 'fyziklani_task_id' => $taskID,
-                'e_fyziklani_team_id' => $teamID
+                'e_fyziklani_team_id' => $teamID,
+                'inserted' => null //ugly, force current timestamp in database
             ]);
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
@@ -175,7 +176,10 @@ class SubmitPresenter extends BasePresenter {
             $this->redirect(':Fyziklani:Submit:table');
         }
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id);
-        $this->serviceFyziklaniSubmit->updateModel($submit, ['points' => $values->points]);
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
+            'points' => $values->points,
+            'updated' => null // ugly, exclude previous value from query
+        ]);
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
         $this->redirect(':Fyziklani:Submit:table');

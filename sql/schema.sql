@@ -1018,6 +1018,7 @@ CREATE TABLE IF NOT EXISTS `event_org` (
   PRIMARY KEY (`e_org_id`),
   INDEX `event_id_idx` (`event_id` ASC),
   INDEX `fk_event_org_1_idx` (`person_id` ASC),
+  UNIQUE INDEX `uq_event_id_person_id` (`event_id` ASC, `person_id` ASC),
   CONSTRAINT `fk_event_org_event`
     FOREIGN KEY (`event_id`)
     REFERENCES `event` (`event_id`)
@@ -1037,10 +1038,11 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fyziklani_task` (
   `fyziklani_task_id` INT NOT NULL AUTO_INCREMENT,
   `event_id` INT NOT NULL,
-  `label` CHAR(2) NULL DEFAULT NULL,
+  `label` CHAR(2) NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`fyziklani_task_id`),
   INDEX `fk_fyziklani_task_1_idx` (`event_id` ASC),
+  UNIQUE INDEX `uq_event_id_label` (`event_id` ASC, `label` ASC),
   CONSTRAINT `fk_fyziklani_task_1`
     FOREIGN KEY (`event_id`)
     REFERENCES `event` (`event_id`)
@@ -1055,12 +1057,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
   `fyziklani_submit_id` INT NOT NULL AUTO_INCREMENT,
   `fyziklani_task_id` INT NOT NULL,
-  `points` TINYINT NOT NULL,
-  `submitted_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `e_fyziklani_team_id` INT NOT NULL,
+  `points` TINYINT NOT NULL,
+  `inserted` TIMESTAMP NOT NULL DEFAULT 0, -- when NULL passed to it, sets to current timestamp
+  `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
   PRIMARY KEY (`fyziklani_submit_id`),
   INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
   INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
+  UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
   CONSTRAINT `fk_fyziklani_submit_1`
     FOREIGN KEY (`fyziklani_task_id`)
     REFERENCES `fyziklani_task` (`fyziklani_task_id`)
