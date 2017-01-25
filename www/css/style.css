@@ -89,3 +89,28 @@ fieldset .well {
 .task-code-container input.invalid {
     color: red;
 }
+
+.task-code-container .team {
+    width: 4em;
+}
+
+.task-code-container .task {
+    width: 2em;
+}
+
+.task-code-container .control {
+    width: 1em;
+}
+
+.task-code-container .control, .task-code-container .task, .task-code-container .team {
+    border: none;
+    outline-offset: 0;
+    outline-color: transparent;
+}
+
+.task-code-container > div {
+    font-size: 120%;
+    border: 1px solid #ccc;
+    border-color: #66afe9;
+}
+
