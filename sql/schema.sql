@@ -1038,7 +1038,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fyziklani_task` (
   `fyziklani_task_id` INT NOT NULL AUTO_INCREMENT,
   `event_id` INT NOT NULL,
-  `label` CHAR(2) NOT NULL,
+  `label` CHAR(2) COLLATE 'utf8_bin' NOT NULL,
   `name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`fyziklani_task_id`),
   INDEX `fk_fyziklani_task_1_idx` (`event_id` ASC),
@@ -1059,8 +1059,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
   `fyziklani_task_id` INT NOT NULL,
   `e_fyziklani_team_id` INT NOT NULL,
   `points` TINYINT NOT NULL,
-  `inserted` TIMESTAMP NOT NULL DEFAULT 0, -- when NULL passed to it, sets to current timestamp
-  `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
+  `created` TIMESTAMP NOT NULL DEFAULT 0, -- when NULL passed to it, sets to current timestamp
+  `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
   PRIMARY KEY (`fyziklani_submit_id`),
   INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
   INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
