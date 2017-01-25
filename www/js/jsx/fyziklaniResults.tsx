@@ -78,7 +78,7 @@ class Results extends React.Component<void, IResultsState> {
         this.initResults();
         setInterval(()=> {
             this.downloadResults();
-        }, 10 * 1000);
+        }, 30 * 1000);
         this.applyNextAutoFilter(0);
     }
 
@@ -244,7 +244,7 @@ class Results extends React.Component<void, IResultsState> {
                         <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayCategory: event.target.value});
                         }}>
-                            <option value>--vyberte kategorii--</option>
+                            <option >--vyberte kategorii--</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
@@ -297,7 +297,7 @@ class ResultsTable extends React.Component<any, void> {
         let $table = $(ReactDOM.findDOMNode(this.refs.table));
         try {
             $table.trigger("update");
-            $table.trigger("sorton", [[[1, 1]]]);
+            $table.trigger("sorton", [[[1, 1],[3,1]]]);
         } catch (error) {
             console.error(error);
         }
@@ -354,8 +354,8 @@ class ResultsTable extends React.Component<any, void> {
                     <tr>
                         <th/>
                         <th>Sum</th>
-                        <th>Prů</th>
                         <th>Q</th>
+                        <th>Prů</th>
                         {headCools}
                     </tr>
                     </thead>
