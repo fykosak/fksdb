@@ -6,11 +6,12 @@ use FKS\Config\Extensions\NavigationExtension;
 use FKS\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use Nette\Application\Responses\TextResponse;
 use Nette\Config\Configurator;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
-use Tester\Environment;
+use Tester\Assert;
 
 // absolute filesystem path to this web root
 define('TESTS_DIR', dirname(__FILE__));
@@ -72,6 +73,13 @@ $container = $configurator->createContainer();
 //
 Replicator::register();
 
+function dumpResponse(TextResponse $response) {
+    $source = $response->getSource();
+    $html = (string) $source;
+
+    /* Use assert so that expected is dumped as a string to file. */
+    Assert::equal('', $html);
+}
 
 Container::extensionMethod('addDatePicker', function (Container $container, $name, $label = NULL) {
     return $container[$name] = new DatePicker($label);
