@@ -58,7 +58,7 @@ var Results = (function (_super) {
         this.initResults();
         setInterval(function () {
             _this.downloadResults();
-        }, 30 * 1000);
+        }, 10 * 1000);
         this.applyNextAutoFilter(0);
     };
     Results.prototype.initResults = function () {
