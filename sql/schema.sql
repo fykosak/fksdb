@@ -1059,8 +1059,10 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
   `fyziklani_task_id` INT NOT NULL,
   `e_fyziklani_team_id` INT NOT NULL,
   `points` TINYINT NOT NULL,
-  `created` TIMESTAMP NOT NULL DEFAULT 0, -- when NULL passed to it, sets to current timestamp
-  `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
+-- when NULL passed to `created`, sets to current timestamp
+-- see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+  `created` TIMESTAMP NOT NULL DEFAULT 0,
+  `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`fyziklani_submit_id`),
   INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
   INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),

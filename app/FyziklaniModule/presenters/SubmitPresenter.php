@@ -80,7 +80,10 @@ class SubmitPresenter extends BasePresenter {
                 'points' => $points,
                 'fyziklani_task_id' => $taskID,
                 'e_fyziklani_team_id' => $teamID,
-                'inserted' => null //ugly, force current timestamp in database
+                /* ugly, force current timestamp in database
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'created' => null
             ]);
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
@@ -178,7 +181,11 @@ class SubmitPresenter extends BasePresenter {
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id);
         $this->serviceFyziklaniSubmit->updateModel($submit, [
             'points' => $values->points,
-            'updated' => null // ugly, exclude previous value from query
+            /* ugly, exclude previous value of `modified` from query
+             * so that `modified` is set automatically by DB
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'modified' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
