@@ -63,7 +63,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function entryFormSucceeded(Form $form) {
-        Debugger::timer();
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
             foreach ($form->getComponents() as $control) {
@@ -81,10 +80,11 @@ class SubmitPresenter extends BasePresenter {
                 'fyziklani_task_id' => $taskID,
                 'e_fyziklani_team_id' => $teamID
             ]);
+            $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
+            $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
-                $t = Debugger::timer();
-                $this->flashMessage(_('Body byly uloženy. (' . $points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
+                $this->flashMessage(_('Body byly uloženy. ' . $points . ' bodů, tým: "' . $teamName . '" (' . $teamID . '), úloha: ' . $taskLabel . ' "' . $taskName . '"'), 'success');
                 $this->redirect(':Fyziklani:submit:entry');
             } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
@@ -92,6 +92,7 @@ class SubmitPresenter extends BasePresenter {
             }
         } else {
             $this->flashMessage($msg, 'danger');
+            $this->redirect(':Fyziklani:submit:entry');
         }
     }
 
