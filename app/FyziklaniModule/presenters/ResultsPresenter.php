@@ -2,49 +2,28 @@
 
 namespace FyziklaniModule;
 
-use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 
 class ResultsPresenter extends BasePresenter {
 
     public function renderDefault() {
         if ($this->isAjax()) {
-            $result = [];
+            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
             $type = $this->getHttpRequest()->getQuery('type');
+            $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
 
+            $result = [];
+            $result['lastUpdated'] = date(DATE_ATOM);
             if ($type == 'init') {
-                foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
-                    $result['tasks'][] = [
-                        'label' => $row->label,
-                        'task_id' => $row->fyziklani_task_id
-                    ];
-                }
-                foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $row) {
-                    $result['teams'][] = [
-                        'category' => $row->category,
-                        'room' => $row->room,
-                        'name' => $row->name,
-                        'team_id' => $row->e_fyziklani_team_id
-                    ];
-                }
-            } elseif ($type == 'refresh') {
-                $result['submits'] = [];
-                $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
-                $result['is_org'] = $isOrg;
-                if ($isOrg || $this->isResultsVisible()) {
-                    $submits = $this->serviceFyziklaniSubmit->getTable()
-                        ->where('e_fyziklani_team.event_id', $this->eventID);
-                    foreach ($submits as $submit) {
-                        $result['submits'][] = [
-                            'points' => $submit->points,
-                            'team_id' => $submit->e_fyziklani_team_id,
-                            'task_id' => $submit->fyziklani_task_id
-                        ];
-                    }
-                }
-            } else {
-                throw new BadRequestException('error', 404);
+                $result['tasks'] = $this->getTasks();
+                $result['teams'] = $this->getTeams();
             }
+            $result['submits'] = [];
+            $result['isOrg'] = $isOrg;
+            if ($isOrg || $this->isResultsVisible()) {
+                $result['submits'] = $this->getSubmits($lastUpdated);
+            }
+            $result['refreshDelay'] = 10000;
             $result['times'] = [
                 'toStart' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['start']) - time(),
                 'toEnd' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['end']) - time(),
@@ -52,6 +31,46 @@ class ResultsPresenter extends BasePresenter {
             ];
             $this->sendResponse(new JsonResponse($result));
         }
+    }
+
+    private function getTasks() {
+        $tasks = [];
+        foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
+            $tasks[] = [
+                'label' => $row->label,
+                'task_id' => $row->fyziklani_task_id
+            ];
+        }
+        return $tasks;
+    }
+
+    private function getTeams() {
+        $teams = [];
+        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $row) {
+            $teams[] = [
+                'category' => $row->category,
+                'room' => $row->room,
+                'name' => $row->name,
+                'team_id' => $row->e_fyziklani_team_id
+            ];
+        }
+        return $teams;
+    }
+
+    private function getSubmits($lastUpdated = null) {
+        $query = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team.event_id', $this->eventID);
+        $submits = [];
+        if ($lastUpdated) {
+            $query->where('modified > ?', $lastUpdated);
+        }
+        foreach ($query as $submit) {
+            $submits[$submit->fyziklani_submit_id] = [
+                'points' => $submit->points,
+                'team_id' => $submit->e_fyziklani_team_id,
+                'task_id' => $submit->fyziklani_task_id
+            ];
+        }
+        return $submits;
     }
 
     public function titleDefault() {

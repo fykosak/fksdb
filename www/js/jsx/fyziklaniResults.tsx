@@ -60,7 +60,7 @@ class Results extends React.Component<void, IResultsState> {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array<ISubmit>(),
+            submits: {},
             times: {},
             tasks: new Array<ITask>(),
             teams: new Array<ITeam>(),
@@ -76,10 +76,13 @@ class Results extends React.Component<void, IResultsState> {
 
         console.log('mount');
         this.initResults();
-        setInterval(()=> {
-            this.downloadResults();
-        }, 10 * 1000);
+
         this.applyNextAutoFilter(0);
+    }
+
+    private addResults(data) {
+        let {times, submits, isOrg, lastUpdated} = data;
+        this.setState({times, isOrg, submits: Object.assign(this.state.submits, submits), lastUpdated});
     }
 
     private initResults() {
@@ -89,8 +92,8 @@ class Results extends React.Component<void, IResultsState> {
             },
             success: data=> {
                 let {tasks, teams} = data;
-                this.state.tasks = tasks;
-                this.state.teams = teams;
+                this.addResults(data);
+                this.setState({tasks, teams, isReady: true});
                 this.downloadResults();
             },
             error: (e)=> {
@@ -103,15 +106,15 @@ class Results extends React.Component<void, IResultsState> {
 
         $.nette.ajax({
             data: {
+                lastUpdated: this.state.lastUpdated,
                 type: 'refresh'
             },
             success: (data)=> {
-                let {times, submits, is_org} = data;
-                this.setState({submits, times, isOrg: is_org});
-                this.forceUpdate();
-                if (this.state.tasks && this.state.teams) {
-                    this.state.isReady = true;
-                }
+                this.addResults(data);
+                let {refreshDelay} = data;
+                setTimeout(()=> {
+                    this.downloadResults();
+                }, refreshDelay || 30000);
             },
             error: (e)=> {
                 this.setState({msg: e.toString()});
@@ -314,7 +317,7 @@ class ResultsTable extends React.Component<any, void> {
         teams.forEach((team: ITeam, teamIndex) => {
             let cools = [];
             tasks.forEach((task: ITask, taskIndex)=> {
-                let submit: ISubmit = submits.filter((submit: ISubmit)=> {
+                let submit: ISubmit = Object.values(submits).filter((submit: ISubmit)=> {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 let points = submit ? submit.points : '';
@@ -325,7 +328,7 @@ class ResultsTable extends React.Component<any, void> {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
             };
             let count = 0;
-            let sum = submits.filter((submit: ISubmit)=> {
+            let sum = Object.values(submits).filter((submit: ISubmit)=> {
                 return submit.team_id == team.team_id;
             }).reduce((val, submit: ISubmit)=> {
                 count++;

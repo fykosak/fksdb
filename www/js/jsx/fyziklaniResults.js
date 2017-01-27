@@ -41,7 +41,7 @@ var Results = (function (_super) {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array(),
+            submits: {},
             times: {},
             tasks: new Array(),
             teams: new Array(),
@@ -53,13 +53,18 @@ var Results = (function (_super) {
         };
     }
     Results.prototype.componentDidMount = function () {
-        var _this = this;
         console.log('mount');
         this.initResults();
-        setInterval(function () {
-            _this.downloadResults();
-        }, 10 * 1000);
         this.applyNextAutoFilter(0);
+    };
+    Results.prototype.addResults = function (data) {
+        var times = data.times, submits = data.submits, isOrg = data.isOrg, lastUpdated = data.lastUpdated;
+        this.setState({
+            times: times,
+            isOrg: isOrg,
+            submits: Object.assign(this.state.submits, submits),
+            lastUpdated: lastUpdated
+        });
     };
     Results.prototype.initResults = function () {
         var _this = this;
@@ -69,8 +74,8 @@ var Results = (function (_super) {
             },
             success: function (data) {
                 var tasks = data.tasks, teams = data.teams;
-                _this.state.tasks = tasks;
-                _this.state.teams = teams;
+                _this.addResults(data);
+                _this.setState({tasks: tasks, teams: teams, isReady: true});
                 _this.downloadResults();
             },
             error: function (e) {
@@ -82,15 +87,15 @@ var Results = (function (_super) {
         var _this = this;
         $.nette.ajax({
             data: {
+                lastUpdated: this.state.lastUpdated,
                 type: 'refresh'
             },
             success: function (data) {
-                var times = data.times, submits = data.submits, is_org = data.is_org;
-                _this.setState({ submits: submits, times: times, isOrg: is_org });
-                _this.forceUpdate();
-                if (_this.state.tasks && _this.state.teams) {
-                    _this.state.isReady = true;
-                }
+                _this.addResults(data);
+                var refreshDelay = data.refreshDelay;
+                setTimeout(function () {
+                    _this.downloadResults();
+                }, refreshDelay || 30000);
             },
             error: function (e) {
                 _this.setState({ msg: e.toString() });
@@ -212,7 +217,7 @@ var ResultsTable = (function (_super) {
         teams.forEach(function (team, teamIndex) {
             var cools = [];
             tasks.forEach(function (task, taskIndex) {
-                var submit = submits.filter(function (submit) {
+                var submit = Object.values(submits).filter(function (submit) {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 var points = submit ? submit.points : '';
@@ -222,7 +227,7 @@ var ResultsTable = (function (_super) {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
             };
             var count = 0;
-            var sum = submits.filter(function (submit) {
+            var sum = Object.values(submits).filter(function (submit) {
                 return submit.team_id == team.team_id;
             }).reduce(function (val, submit) {
                 count++;
