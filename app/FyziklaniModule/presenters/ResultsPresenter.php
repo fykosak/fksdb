@@ -3,18 +3,21 @@
 namespace FyziklaniModule;
 
 use Nette\Application\Responses\JsonResponse;
+use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
 
     public function renderDefault() {
         if ($this->isAjax()) {
             $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
-            $type = $this->getHttpRequest()->getQuery('type');
+            /**
+             * @var DateTime $lastUpdated
+             */
             $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
 
             $result = [];
-            $result['lastUpdated'] = date(DATE_ATOM);
-            if ($type == 'init') {
+            $result['lastUpdated'] = (new DateTime())->__toString();
+            if (!$lastUpdated) {
                 $result['tasks'] = $this->getTasks();
                 $result['teams'] = $this->getTeams();
             }
@@ -23,7 +26,7 @@ class ResultsPresenter extends BasePresenter {
             if ($isOrg || $this->isResultsVisible()) {
                 $result['submits'] = $this->getSubmits($lastUpdated);
             }
-            $result['refreshDelay'] = 10000;
+            $result['refreshDelay'] = $this->container->parameters[self::EVENT_NAME][$this->eventID]['refreshDelay'];
             $result['times'] = [
                 'toStart' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['start']) - time(),
                 'toEnd' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['end']) - time(),
@@ -61,7 +64,7 @@ class ResultsPresenter extends BasePresenter {
         $query = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team.event_id', $this->eventID);
         $submits = [];
         if ($lastUpdated) {
-            $query->where('modified > ?', $lastUpdated);
+            $query->where('modified >= ?', $lastUpdated);
         }
         foreach ($query as $submit) {
             $submits[$submit->fyziklani_submit_id] = [
