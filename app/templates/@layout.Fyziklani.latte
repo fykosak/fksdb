@@ -48,9 +48,17 @@
                                 {else}
                                 {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
+                                <li>
+                                    <a n:href=":Settings:">
+                                        {_'Nastavení'}
+                                    </a>
+                                </li>
                                 <li class="divider"></li>
-                                <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
+                                <li>
+                                    <a n:href=":Authentication:logout">
+                                        {_'Odhlásit'}
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -63,8 +71,9 @@
             {control breadcrumbs}
             {block titleBody}
                 <h1 class="page-header">{$title}
-                <small>{$subtitle}</small></h1>{/block}
-
+                    <small>{$subtitle}</small>
+                </h1>
+            {/block}
 
             {block flashes}
                 <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>

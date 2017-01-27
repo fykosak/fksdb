@@ -58,10 +58,10 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($eventID,$teams,$tasks) {
+    public function createEntryForm($eventID, $teams, $tasks) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addComponent($this->createTaskCodeField($teams,$tasks), 'taskCode');
+        $form->addComponent($this->createTaskCodeField($teams, $tasks), 'taskCode');
         foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))

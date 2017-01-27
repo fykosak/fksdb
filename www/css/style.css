@@ -71,7 +71,7 @@ fieldset .well {
 
 .right-inner-addon i {
     position: absolute;
-    right: 0px;
+    right: 0;
     padding: 8px 12px;
     cursor: pointer; /* TODO not general enough, might be a static icon */
 }
@@ -83,11 +83,11 @@ fieldset .well {
 }
 
 .task-code-container input.valid {
-    color: green;
+    color: #3c763d;
 }
 
 .task-code-container input.invalid {
-    color: red;
+    color: #a94442;
 }
 
 .task-code-container .team {
@@ -110,7 +110,6 @@ fieldset .well {
 
 .task-code-container > div {
     font-size: 120%;
-    border: 1px solid #ccc;
-    border-color: #66afe9;
+    border: 1px solid #66afe9;
 }
 
