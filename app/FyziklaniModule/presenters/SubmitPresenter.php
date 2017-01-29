@@ -84,7 +84,7 @@ class SubmitPresenter extends BasePresenter {
             $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
-                $this->flashMessage(_('Body byly uloženy. ' . $points . ' bodů, tým: "' . $teamName . '" (' . $teamID . '), úloha: ' . $taskLabel . ' "' . $taskName . '"'), 'success');
+                $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
                 $this->redirect(':Fyziklani:submit:entry');
             } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
