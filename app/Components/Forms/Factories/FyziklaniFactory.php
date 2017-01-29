@@ -65,6 +65,7 @@ class FyziklaniFactory {
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
         }
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         return $form;
     }
 

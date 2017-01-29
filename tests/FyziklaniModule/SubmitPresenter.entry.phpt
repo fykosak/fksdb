@@ -16,6 +16,8 @@ class SubmitPresenterTest extends FyziklaniTestCase {
 
     use MockApplicationTrait;
 
+    const TOKEN = 'foo';
+
     /**
      * @var ApplicationHandler
      */
@@ -43,6 +45,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
 
         $this->container->parameters[BasePresenter::EVENT_NAME][$this->eventId] = &$this->container->parameters[BasePresenter::EVENT_NAME][1];
         $this->authenticate($this->userPersonId);
+        $this->fakeProtection(self::TOKEN);
     }
 
     protected function tearDown() {
@@ -66,6 +69,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         $request = $this->createPostRequest(array(
             'taskCode' => '000001AA9',
             'points5' => '5 bodů',
+            '_token_' => self::TOKEN,
                 ), array('action' => 'entry'));
 
         $response = $this->fixture->run($request);
@@ -80,6 +84,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         $request = $this->createPostRequest(array(
             'taskCode' => '000001AA8',
             'points5' => '5 bodů',
+            '_token_' => self::TOKEN,
                 ), array('action' => 'entry'));
 
         $response = $this->fixture->run($request);
