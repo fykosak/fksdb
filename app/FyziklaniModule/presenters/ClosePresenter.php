@@ -154,12 +154,12 @@ class ClosePresenter extends BasePresenter {
         $lastID = $submits + $this->container->parameters[self::EVENT_NAME][$this->eventID]['taskOnBoard'] - 1;
         /** @because index start with 0; */
         $nextID = $lastID + 1;
-        if ($allTask[$nextID]) {
+        if (isset($allTask[$nextID])) {
             $return['nextTask'] = $allTask[$nextID]->label;
         } else {
             $return['nextTask'] = null;
         }
-        if ($allTask[$lastID]) {
+        if (isset($allTask[$lastID])) {
             $return['lastTask'] = $allTask[$lastID]->label;
         } else {
             $return['lastTask'] = null;
