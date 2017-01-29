@@ -106,17 +106,15 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         return $this->connection->lastInsertId();
     }
 
-    protected function assertSubmit($taskId, $teamId) {
+    protected function findSubmit($taskId, $teamId) {
         $submit = $this->connection->fetch(
                 'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
-        Assert::notEqual(false, $submit);
         return $submit;
     }
 
-    protected function assertExtendedApplication(Row $application, $table) {
-        $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
-        Assert::notEqual(false, $application);
-        return $application;
+    protected function findTeam($teamId) {
+        $submit = $this->connection->fetch(
+                'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
+        return $submit;
     }
-
 }

@@ -62,7 +62,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         return $request;
     }
 
-    public function testEntry() {
+    public function testEntryValid() {
         $request = $this->createPostRequest(array(
             'taskCode' => '000001AA9',
             'points5' => '5 bodů',
@@ -71,8 +71,28 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
 
-        $submit = $this->assertSubmit($this->taskId, $this->teamId);
+        $submit = $this->findSubmit($this->taskId, $this->teamId);
+        Assert::notEqual(false, $submit);
         Assert::equal(5, $submit->points);
+    }
+
+    public function testEntryInvalid() {
+        $request = $this->createPostRequest(array(
+            'taskCode' => '000001AA8',
+            'points5' => '5 bodů',
+                ), array('action' => 'entry'));
+
+        $response = $this->fixture->run($request);
+        Assert::type('Nette\Application\Responses\TextResponse', $response);
+
+        $source = $response->getSource();
+        Assert::type('Nette\Templating\ITemplate', $source);
+
+        $html = $source->__toString(true);
+        Assert::contains('Chybně zadaný kód úlohy', $html);
+
+        $submit = $this->findSubmit($this->taskId, $this->teamId);
+        Assert::equal(false, $submit);
     }
 
 }
