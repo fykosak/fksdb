@@ -95,7 +95,7 @@ class ClosePresenter extends BasePresenter {
         $this->redirect(':Fyziklani:Close:table');
     }
 
-    public function createComponentCloseCategoryForm($category) {
+    private function createComponentCloseCategoryForm($category) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('category', $category);
