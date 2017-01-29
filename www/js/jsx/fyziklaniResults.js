@@ -69,38 +69,38 @@ var Results = (function (_super) {
     Results.prototype.initResults = function () {
         var _this = this;
         $.nette.ajax({
-            data: {
-                type: 'init'
-            },
             success: function (data) {
                 var tasks = data.tasks, teams = data.teams;
                 _this.addResults(data);
                 _this.setState({tasks: tasks, teams: teams, isReady: true});
-                _this.downloadResults();
+                var refreshDelay = data.refreshDelay;
+                _this.downloadResults(refreshDelay);
             },
             error: function (e) {
                 _this.setState({ msg: e.toString() });
             }
         });
     };
-    Results.prototype.downloadResults = function () {
+    Results.prototype.downloadResults = function (refreshDelay) {
         var _this = this;
-        $.nette.ajax({
-            data: {
-                lastUpdated: this.state.lastUpdated,
-                type: 'refresh'
-            },
-            success: function (data) {
-                _this.addResults(data);
-                var refreshDelay = data.refreshDelay;
-                setTimeout(function () {
-                    _this.downloadResults();
-                }, refreshDelay || 30000);
-            },
-            error: function (e) {
-                _this.setState({ msg: e.toString() });
-            }
-        });
+        if (refreshDelay === void 0) {
+            refreshDelay = 30000;
+        }
+        setTimeout(function () {
+            $.nette.ajax({
+                data: {
+                    lastUpdated: _this.state.lastUpdated,
+                },
+                success: function (data) {
+                    _this.addResults(data);
+                    var refreshDelay = data.refreshDelay;
+                    _this.downloadResults(refreshDelay);
+                },
+                error: function (e) {
+                    _this.setState({msg: e.toString()});
+                }
+            });
+        }, refreshDelay);
     };
     Results.prototype.applyNextAutoFilter = function (i) {
         var _this = this;

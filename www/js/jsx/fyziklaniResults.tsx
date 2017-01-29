@@ -73,10 +73,8 @@ class Results extends React.Component<void, IResultsState> {
     }
 
     public componentDidMount() {
-
         console.log('mount');
         this.initResults();
-
         this.applyNextAutoFilter(0);
     }
 
@@ -87,14 +85,12 @@ class Results extends React.Component<void, IResultsState> {
 
     private initResults() {
         $.nette.ajax({
-            data: {
-                type: 'init'
-            },
             success: data=> {
                 let {tasks, teams} = data;
                 this.addResults(data);
                 this.setState({tasks, teams, isReady: true});
-                this.downloadResults();
+                let {refreshDelay} = data;
+                this.downloadResults(refreshDelay);
             },
             error: (e)=> {
                 this.setState({msg: e.toString()});
@@ -102,24 +98,22 @@ class Results extends React.Component<void, IResultsState> {
         });
     }
 
-    private downloadResults() {
-
-        $.nette.ajax({
-            data: {
-                lastUpdated: this.state.lastUpdated,
-                type: 'refresh'
-            },
-            success: (data)=> {
-                this.addResults(data);
-                let {refreshDelay} = data;
-                setTimeout(()=> {
-                    this.downloadResults();
-                }, refreshDelay || 30000);
-            },
-            error: (e)=> {
-                this.setState({msg: e.toString()});
-            }
-        });
+    private downloadResults(refreshDelay = 30000) {
+        setTimeout(()=> {
+            $.nette.ajax({
+                data: {
+                    lastUpdated: this.state.lastUpdated,
+                },
+                success: (data)=> {
+                    this.addResults(data);
+                    let {refreshDelay} = data;
+                    this.downloadResults(refreshDelay);
+                },
+                error: (e)=> {
+                    this.setState({msg: e.toString()});
+                }
+            });
+        }, refreshDelay);
     }
 
     private applyNextAutoFilter(i) {
