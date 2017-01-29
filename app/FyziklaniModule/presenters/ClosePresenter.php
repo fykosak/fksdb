@@ -120,6 +120,7 @@ class ClosePresenter extends BasePresenter {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->redirect('this');
     }
 
     public function createComponentCloseGlobalForm() {
@@ -134,6 +135,7 @@ class ClosePresenter extends BasePresenter {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
