@@ -9,6 +9,9 @@ namespace FKSDB\model\Fyziklani;
 class TaskCodePreprocessor {
 
     public static function checkControlNumber($taskCode) {
+        if (strlen($taskCode) != 9) {
+            return false;
+        }
         $subCode = str_split(self::getNumLabel($taskCode));
         $c = 3 * ($subCode[0] + $subCode[3] + $subCode[6]) + 7 * ($subCode[1] + $subCode[4] + $subCode[7]) + ($subCode[2] + $subCode[5] + $subCode[8]);
         return $c % 10 == 0;
