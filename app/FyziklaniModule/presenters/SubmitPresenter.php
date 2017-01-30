@@ -92,7 +92,6 @@ class SubmitPresenter extends BasePresenter {
             }
         } else {
             $this->flashMessage($msg, 'danger');
-            $this->redirect(':Fyziklani:submit:entry');
         }
     }
 
