@@ -18,14 +18,15 @@ class TaskCodePreprocessor {
     }
 
     public static function extractTeamID($numLabel) {
-        return (int)substr($numLabel, 0, 6);
+        return (int) substr($numLabel, 0, 6);
     }
 
     public static function extractTaskLabel($teamTaskLabel) {
-        return (string)substr($teamTaskLabel, 6, 2);
+        return (string) substr($teamTaskLabel, 6, 2);
     }
 
     public static function getNumLabel($teamTaskLabel) {
         return str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $teamTaskLabel);
     }
+
 }
