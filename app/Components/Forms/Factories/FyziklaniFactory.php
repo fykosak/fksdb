@@ -71,7 +71,6 @@ class FyziklaniFactory {
 
     public function createEditForm($eventID) {
         $form = new Form();
-        $form->addHidden('submit_id', 0);
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIDField(), 'team_id');
