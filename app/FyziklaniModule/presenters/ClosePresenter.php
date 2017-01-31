@@ -2,13 +2,17 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use \Nette\Application\UI\Form;
-use \FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
+use Nette\Application\UI\Form;
 use Nette\Utils\Html;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 class ClosePresenter extends BasePresenter {
+
+    /** @var ModelFyziklaniTeam */
+    private $team;
 
     public function titleTable() {
         $this->setTitle(_('Uzavírání bodování'));
@@ -27,7 +31,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function renderTeam($id) {
-        $this->template->submits = $this->serviceFyziklaniTeam->findByPrimary($id)->getSubmits();
+        $this->template->submits = $this->team->getSubmits();
     }
 
     public function actionTable() {
@@ -46,17 +50,13 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function actionTeam($id) {
-        if ($this->serviceFyziklaniTeam->isOpenSubmit($id)) {
-            if (!$this->serviceFyziklaniTeam->teamExist($id, $this->eventID)) {
-                $this->flashMessage('Tým neexistuje', 'danger');
-                $this->redirect(':Fyziklani:submit:close');
-            }
-            $this['closeForm']->setDefaults([
-                'e_fyziklani_team_id' => $id,
-                'next_task' => $this->getNextTask($id)->nextTask
-            ]);
-        } else {
-            $this->flashMessage('Tento tým má již uzavřeno bodování', 'danger');
+        $this->team = $this->serviceFyziklaniTeam->findByPrimary($id);
+        if (!$this->team) {
+            throw new \Nette\Application\BadRequestException('Tým neexistuje', 404);
+        }
+        //TODO replace isOpenSubmit with method of team object
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($id)) {
+            $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name), 'danger');
             $this->redirect(':fyziklani:close:table');
         }
     }
@@ -69,34 +69,33 @@ class ClosePresenter extends BasePresenter {
     public function createComponentCloseForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addHidden('e_fyziklani_team_id', 0);
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
-        $form->addText('next_task', _('Úloha u vydavačů'))->setDisabled();
+                ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
+        $form->addText('next_task', _('Úloha u vydavačů'))
+                ->setDisabled()
+                ->setDefaultValue($this->getNextTask()->nextTask);
         $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
+                ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;
     }
 
     public function closeFormSucceeded(Form $form) {
-        $values = $form->getValues();
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
-        $team = $this->serviceFyziklaniTeam->findByPrimary($values->e_fyziklani_team_id);
-        $submits = $team->getSubmits();
+        $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        $this->serviceFyziklaniTeam->updateModel($team, ['points' => $sum]);
-        $this->serviceFyziklaniTeam->save($team);
+        $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
+        $this->serviceFyziklaniTeam->save($this->team);
         $connection->commit();
         $this->redirect(':Fyziklani:Close:table');
     }
 
-    public function createComponentCloseCategoryForm($category) {
+    private function createComponentCloseCategoryForm($category) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addHidden('category', $category);
@@ -121,6 +120,7 @@ class ClosePresenter extends BasePresenter {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->redirect('this');
     }
 
     public function createComponentCloseGlobalForm() {
@@ -135,6 +135,7 @@ class ClosePresenter extends BasePresenter {
         $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
@@ -147,23 +148,24 @@ class ClosePresenter extends BasePresenter {
         return $count == 0;
     }
 
-    private function getNextTask($teamID) {
+    private function getNextTask() {
         $return = [];
-        $submits = count($this->serviceFyziklaniTeam->findByPrimary($teamID)->getSubmits());
+        $submits = count($this->team->getSubmits());
         $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
         $lastID = $submits + $this->container->parameters[self::EVENT_NAME][$this->eventID]['taskOnBoard'] - 1;
         /** @because index start with 0; */
         $nextID = $lastID + 1;
-        if ($allTask[$nextID]) {
+        if (isset($allTask[$nextID])) {
             $return['nextTask'] = $allTask[$nextID]->label;
         } else {
             $return['nextTask'] = null;
         }
-        if ($allTask[$lastID]) {
+        if (isset($allTask[$lastID])) {
             $return['lastTask'] = $allTask[$lastID]->label;
         } else {
             $return['lastTask'] = null;
         }
-        return (object)$return;
+        return (object) $return;
     }
+
 }

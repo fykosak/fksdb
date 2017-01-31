@@ -6,9 +6,6 @@ parameters:
     # Flag marking the beta version
     beta: false
 
-    # Temporary directory for various purposes.
-    tempDir: %appDir%/../temp
-
     # Various logs
     logDir: %appDir%/../log
 

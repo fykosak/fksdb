@@ -65,12 +65,12 @@ class FyziklaniFactory {
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
         }
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         return $form;
     }
 
     public function createEditForm($eventID) {
         $form = new Form();
-        $form->addHidden('submit_id', 0);
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIDField(), 'team_id');
