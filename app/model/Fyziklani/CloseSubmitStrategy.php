@@ -122,7 +122,7 @@ class CloseSubmitStrategy {
             $arraySubmits[] = [
                 'task_id' => $submit->task_id,
                 'points' => $submit->points,
-                'time' => $submit->submitted_on
+                'time' => $submit->modified,
             ];
         }
         return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];
