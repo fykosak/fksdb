@@ -353,9 +353,9 @@ class ResultsTable extends React.Component<any, void> {
                     <thead>
                     <tr>
                         <th/>
-                        <th>Sum</th>
+                        <th>∑</th>
+                        <th>N</th>
                         <th>Q</th>
-                        <th>Prů</th>
                         {headCools}
                     </tr>
                     </thead>
