@@ -59,12 +59,7 @@ var Results = (function (_super) {
     };
     Results.prototype.addResults = function (data) {
         var times = data.times, submits = data.submits, isOrg = data.isOrg, lastUpdated = data.lastUpdated;
-        this.setState({
-            times: times,
-            isOrg: isOrg,
-            submits: Object.assign(this.state.submits, submits),
-            lastUpdated: lastUpdated
-        });
+        this.setState({ times: times, isOrg: isOrg, submits: Object.assign(this.state.submits, submits), lastUpdated: lastUpdated });
     };
     Results.prototype.initResults = function () {
         var _this = this;
@@ -72,7 +67,7 @@ var Results = (function (_super) {
             success: function (data) {
                 var tasks = data.tasks, teams = data.teams;
                 _this.addResults(data);
-                _this.setState({tasks: tasks, teams: teams, isReady: true});
+                _this.setState({ tasks: tasks, teams: teams, isReady: true });
                 var refreshDelay = data.refreshDelay;
                 _this.downloadResults(refreshDelay);
             },
@@ -83,9 +78,7 @@ var Results = (function (_super) {
     };
     Results.prototype.downloadResults = function (refreshDelay) {
         var _this = this;
-        if (refreshDelay === void 0) {
-            refreshDelay = 30000;
-        }
+        if (refreshDelay === void 0) { refreshDelay = 30000; }
         setTimeout(function () {
             $.nette.ajax({
                 data: {
@@ -97,7 +90,7 @@ var Results = (function (_super) {
                     _this.downloadResults(refreshDelay);
                 },
                 error: function (e) {
-                    _this.setState({msg: e.toString()});
+                    _this.setState({ msg: e.toString() });
                 }
             });
         }, refreshDelay);
@@ -221,7 +214,7 @@ var ResultsTable = (function (_super) {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 var points = submit ? submit.points : '';
-                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, points));
+                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, (+points > 0) ? points : ''));
             });
             var styles = {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
@@ -230,8 +223,12 @@ var ResultsTable = (function (_super) {
             var sum = Object.values(submits).filter(function (submit) {
                 return submit.team_id == team.team_id;
             }).reduce(function (val, submit) {
-                count++;
-                return val + +submit.points;
+                var points = submit.points;
+                if (+points > 0) {
+                    count++;
+                    return val + +points;
+                }
+                return val;
             }, 0);
             var average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
             rows.push(React.createElement("tr", {key: teamIndex, style: styles}, React.createElement("td", null, team.name), React.createElement("td", {className: "sum"}, sum), React.createElement("td", null, count), React.createElement("td", null, average), cools));

@@ -315,7 +315,7 @@ class ResultsTable extends React.Component<any, void> {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 let points = submit ? submit.points : '';
-                cools.push(<td data-points={points} key={taskIndex}>{points}</td>);
+                cools.push(<td data-points={points} key={taskIndex}>{(+points > 0) ? points : ''}</td>);
             });
 
             let styles = {
@@ -325,8 +325,12 @@ class ResultsTable extends React.Component<any, void> {
             let sum = Object.values(submits).filter((submit: ISubmit)=> {
                 return submit.team_id == team.team_id;
             }).reduce((val, submit: ISubmit)=> {
-                count++;
-                return val + +submit.points;
+                let {points}= submit;
+                if (+points > 0) {
+                    count++;
+                    return val + +points;
+                }
+                return val;
             }, 0);
             let average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
             rows.push(<tr key={teamIndex} style={styles}>
