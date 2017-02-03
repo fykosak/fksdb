@@ -47,18 +47,10 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('label', _('Úloha'));
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Místnost'));
-        $this->addColumn('submitted_on', _('Zadané'));
+        //$this->addColumn('', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
-        });
-
-        $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
-            return $that->link("delete!", $row->fyziklani_submit_id);
-        })->setConfirmationDialog(function () {
-            return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
-        })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
             return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
         });
 
@@ -72,24 +64,5 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             }
         });
         $this->setDataSource($dataSource);
-    }
-
-    public function handleDelete($id) {
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
-        if (!$teamID) {
-            $this->flashMessage(_('Submit neexistuje'), 'danger');
-            return;
-        }
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
-            return;
-        }
-        try {
-            $this->serviceFyziklaniSubmit->getTable()->where('fyziklani_submit_id', $id)->delete();
-            $this->flashMessage(_('Úloha byla smazaná'), 'success');
-        } catch (Exception $e) {
-            $this->flashMessage(_('Vyskytla se chyba'), 'danger');
-            \Nette\Diagnostics\Debugger::log($e);
-        }
     }
 }

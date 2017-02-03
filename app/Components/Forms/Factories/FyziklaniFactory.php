@@ -23,6 +23,7 @@ class FyziklaniFactory {
         foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $v) {
             $items[$v] = $v;
         }
+        $items[0] = 0;
         $field->setItems($items);
         $field->setRequired();
         return $field;
