@@ -112,7 +112,7 @@ $(function() {
                     } else {
                         elVal.val(ui.item.value);
                     }
-                    el.val(Array.concat($.map(elVal.val().split(','), function(arg) {
+                    el.val([].concat($.map(elVal.val().split(','), function(arg) {
                         return labelCache[arg];
                     }), ['']).join(', '));
                     return false;
