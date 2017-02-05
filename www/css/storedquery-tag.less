@@ -1,0 +1,81 @@
+.storedQueryBtn(@color,@text) when (iscolor(@color))and(iscolor(@text)) {
+  background-color: transparent;
+  color: @color;
+  border: @color solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+  &:hover:not(.storedQueryTag-active), &:focus:not(.storedQueryTag-active), &.storedQueryTag-active:not(:hover):not(:focus) {
+    transition-duration: 200ms;
+    border-color: darken(@color, 10%);
+    background-color: @color;
+    color: @text;
+  }
+}
+
+/* general setting */
+.storedQueryTags {
+  a:hover, a:focus {
+    text-decoration: none;
+  }
+
+  .storedQueryTag {
+    color: black;
+    background-color: silver;
+  }
+
+  /* color palette from D3.js d3.scale.category10() */
+  /* style 1 */
+  .storedQueryTag-1 {
+    .storedQueryBtn(#1f77b4, white);
+  }
+
+  /* style 2 */
+  .storedQueryTag-2 {
+    .storedQueryBtn(#ff7f0e, black);
+  }
+
+  /* style 3 */
+  .storedQueryTag-3 {
+    .storedQueryBtn(#2ca02c, white);
+  }
+
+  /* style 4 */
+  .storedQueryTag-4 {
+    .storedQueryBtn(#d62728, white);
+  }
+
+  /* style 5 */
+  .storedQueryTag-5 {
+    .storedQueryBtn(#9467bd, white);
+  }
+
+  /* style 6 */
+  .storedQueryTag-6 {
+    .storedQueryBtn(#8c564b, white);
+  }
+
+  /* style 7 */
+  .storedQueryTag-7 {
+    .storedQueryBtn(#e377c2, black);
+  }
+
+  /* style 8 */
+  .storedQueryTag-8 {
+    .storedQueryBtn(#cccccc, black);
+  }
+
+  /* style 9 */
+  .storedQueryTag-9 {
+    .storedQueryBtn(#bcbd22, black);
+  }
+
+  /* style 10 */
+  .storedQueryTag-10 {
+    .storedQueryBtn(#17becf, black);
+  }
+
+  /* style 11 */
+  .storedQueryTag-11 {
+    .storedQueryBtn(#000000, white);
+  }
+}
