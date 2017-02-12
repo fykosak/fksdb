@@ -43,7 +43,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         $this->fixture = $this->createPresenter('Fyziklani:Submit');
         $this->mockApplication();
 
-        $this->container->parameters[BasePresenter::EVENT_NAME][$this->eventId] = &$this->container->parameters[BasePresenter::EVENT_NAME][1];
+        $this->container->parameters[BasePresenter::EVENT_NAME][$this->eventId] = &$this->container->parameters[BasePresenter::EVENT_NAME][0];
         $this->authenticate($this->userPersonId);
         $this->fakeProtection(self::TOKEN);
     }
