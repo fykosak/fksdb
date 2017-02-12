@@ -7,4 +7,3 @@ parameters:
             results:
                 display: '2017-01-24T19:35:00' # čas zobrazenia po začatiku sútaže
                 hide: '2017-01-24T20:45:00' # čas kedy sa majú skryť (zmarziť)
-                hardDisplay: false

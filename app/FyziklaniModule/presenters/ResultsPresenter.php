@@ -63,6 +63,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function isResultsVisible() {
-        return $this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['hardDisplay'] || (time() < strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['hide'])) && (time() > strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['display']));
+        $hardDisplay = $this->getCurrentEvent()->getParameter('resultsHardDisplay');
+        return $hardDisplay || (time() < strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['hide'])) && (time() > strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['display']));
     }
 }
