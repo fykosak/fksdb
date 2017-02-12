@@ -158,6 +158,12 @@ events:
                         modifiable: %events.fyziklani.appCond%
                         factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani.accomodation%))
                         required: false
+                    room:
+                        label: Místnost
+                        visible: role('admin')
+                        modifiable: false
+                        description: "Úpravy se provádí v TeXu routing.tex."
+                    
 
 
             #
