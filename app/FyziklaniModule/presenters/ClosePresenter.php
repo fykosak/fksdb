@@ -57,7 +57,8 @@ class ClosePresenter extends BasePresenter {
         //TODO replace isOpenSubmit with method of team object
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($id)) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name), 'danger');
-            $this->redirect(':fyziklani:close:table');
+            $this->backlinkRedirect();
+            $this->redirect('table'); // if there's no backlink
         }
     }
 
@@ -92,7 +93,8 @@ class ClosePresenter extends BasePresenter {
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
         $this->serviceFyziklaniTeam->save($this->team);
         $connection->commit();
-        $this->redirect(':Fyziklani:Close:table');
+        $this->backlinkRedirect();
+        $this->redirect('table'); // if there's no backlink
     }
 
     private function createComponentCloseCategoryForm($category) {
