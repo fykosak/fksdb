@@ -1,8 +1,10 @@
 <?php
 
-namespace Tasks;
+namespace Astrid;
 
+use FKS\Config\GlobalParameters;
 use ModelContest;
+use Nette\InvalidStateException;
 use RuntimeException;
 
 /**
@@ -10,12 +12,7 @@ use RuntimeException;
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SeriesDownloader {
-    /**
-     * Name prefix of temporary created files.
-     */
-
-    const FILE_PREFIX = 'series';
+class Downloader {
 
     /**
      * @var string
@@ -33,13 +30,6 @@ class SeriesDownloader {
     private $host;
 
     /**
-     * With leading slash.
-     * 
-     * @var string sprintf mask for arguments:  contestName, year, series
-     */
-    private $pathMask;
-
-    /**
      * @var string path to directory for temporary data
      */
     private $tmpDir;
@@ -49,29 +39,44 @@ class SeriesDownloader {
      */
     private $contestMap;
 
-    public function __construct($httpUser, $httpPassword, $host, $pathMask, $tmpDir, $contestMap) {
+    /**
+     * @var GlobalParameters
+     */
+    private $parameters;
+
+    public function __construct($httpUser, $httpPassword, $host, $tmpDir, $contestMap, GlobalParameters $parameters) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
         $this->host = $host;
-        $this->pathMask = $pathMask;
         $this->tmpDir = $tmpDir;
         $this->contestMap = $contestMap;
+        $this->parameters = $parameters;
     }
 
     /**
      * @param \Tasks\ModelContest $contest
      * @param int $year
      * @param int $series
+     * @param string $language
      * @return string filename of downloaded XML file
      */
-    public function download(ModelContest $contest, $year, $series) {
+    public function downloadSeriesTasks(ModelContest $contest, $year, $series, $language) {
+        if (!array_key_exists($language, $this->parameters['tasks']['paths'])) {
+            throw new InvalidStateException("Unspecified path mask for language '$language'.");
+        }
+
+        $mask = $this->parameters['tasks']['paths'][$language];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 
-        $path = sprintf($this->pathMask, $contestName, $year, $series);
+        $path = sprintf($mask, $contestName, $year, $series);
+        return $this->download($path);
+    }
+
+    private function download($path) {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
 
-        if (!@copy($src, $dst)) {            
+        if (!@copy($src, $dst)) {
             throw new DownloadException("Cannot copy file '$src'.");
         }
 

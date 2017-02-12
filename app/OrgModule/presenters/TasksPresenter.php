@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use Astrid\Downloader;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
@@ -9,7 +10,6 @@ use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Pipeline\PipelineException;
 use SeriesCalculator;
-use Tasks\DownloaderFactory;
 use Tasks\DownloadException;
 use Tasks\PipelineFactory;
 use Tasks\SeriesData;
@@ -32,9 +32,9 @@ class TasksPresenter extends BasePresenter {
     private $seriesCalculator;
 
     /**
-     * @var DownloaderFactory
+     * @var Downloader
      */
-    private $downloaderFactory;
+    private $downloader;
 
     /**
      * @var PipelineFactory
@@ -45,8 +45,8 @@ class TasksPresenter extends BasePresenter {
         $this->seriesCalculator = $seriesCalculator;
     }
 
-    public function injectDownloaderFactory(DownloaderFactory $downloaderFactory) {
-        $this->downloaderFactory = $downloaderFactory;
+    public function injectDownloader(Downloader $downloader) {
+        $this->downloader = $downloader;
     }
 
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
@@ -66,8 +66,8 @@ class TasksPresenter extends BasePresenter {
         $seriesForm->setRenderer(new BootstrapRenderer());
 
         $source = $seriesForm->addRadioList('source', _('Zdroj úloh'), array(
-            self::SOURCE_ASTRID => 'Astrid',
-            self::SOURCE_FILE => 'XML soubor',
+            self::SOURCE_ASTRID => _('Astrid'),
+            self::SOURCE_FILE => _('XML soubor'),
         ));
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
@@ -115,8 +115,7 @@ class TasksPresenter extends BasePresenter {
                 // obtain file
                 switch ($values['source']) {
                     case self::SOURCE_ASTRID:
-                        $downloader = $this->downloaderFactory->create($language);
-                        $file = $downloader->download($this->getSelectedContest(), $this->getSelectedYear(), $series);
+                        $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series, $language);
                         break;
                     case self::SOURCE_FILE:
                         if (!$values['file']->isOk()) {

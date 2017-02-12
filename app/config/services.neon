@@ -17,6 +17,7 @@ services:
     - Authorization\EventAuthorizator
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
+    downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
     - FKS\Config\GlobalParameters
     yearCalculator: YearCalculator
