@@ -4,12 +4,12 @@ namespace OrgModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
+use FKS\Application\UploadException;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
-use Nette\InvalidStateException;
 use Pipeline\PipelineException;
 use SeriesCalculator;
 use Tasks\PipelineFactory;
