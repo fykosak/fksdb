@@ -76,7 +76,7 @@ class SubmitPresenter extends BasePresenter {
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
             $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
-            if (is_null($this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID))) {
+            if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID))) {
                 $submit = $this->serviceFyziklaniSubmit->createNew([
                     'points' => $points,
                     'fyziklani_task_id' => $taskID,
@@ -87,7 +87,7 @@ class SubmitPresenter extends BasePresenter {
                     'created' => null
                 ]);
             } else {
-                $submit = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id);
+               // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
                 $this->serviceFyziklaniSubmit->updateModel($submit, [
                     'points' => $points,
                     /* ugly, exclude previous value of `modified` from query
