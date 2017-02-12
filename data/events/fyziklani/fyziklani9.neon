@@ -2,31 +2,7 @@ parameters:
     events:
         fyziklani:
             appCond: or(regOpen(), role('admin'))
-            eventTypeID: 1
-            availablePionts: [5, 3, 2, 1]
-            start: '2016-09-27T13:30:00'
-            end: '2016-09-27T15:00:00'
-            taskOnBoard: 7
-            results:
-                display: '2016-09-27T14:40:00'
-                hidde: '2016-09-27T14:02:00'
-            accomodation:
-                - 
-                    value: 1
-                    capacity: 64
-                    label: "Hostel Elf"                
-                - 
-                    value: 2
-                    capacity: 25
-                    label: "Beta Pension"
-                -
-                    value: 3
-                    capacity: 24
-                    label: "Wellness Hotel Step"
-                -
-                    value: 4
-                    capacity: 70
-                    label: "Hostel Kolbenka"
+            accomodation: 'Noc před soutěží (tj. z 12.2. na 13.2.).'
             teacher:
                 person:
                     other_name: true
@@ -34,8 +10,6 @@ parameters:
                 person_info:
                     email: true
                     id_number: false
-                person_has_flag:
-                    spam_mff: true
             participant:
                 person:
                     other_name: true
@@ -46,8 +20,6 @@ parameters:
                 person_history:
                     school_id: true
                     study_year: true
-                person_has_flag:
-                    spam_mff: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_accomodation
@@ -61,7 +33,7 @@ parameters:
 events:
     fyziklani:
         event_type_id: 1
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        eventYears: [1,2,3,4,5,6,7,8,9] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
@@ -69,7 +41,8 @@ events:
                 default: fyziklani@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <fyziklani@fykos.cz>
-           
+            accomodationCapacity:
+                default: 0
             schoolsInTeam:
                 default: 2
             teamsPerSchool:
@@ -132,11 +105,6 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                    force_a:
-                        label: "Chceme se účastnit v kategorii A"
-                        visible: true
-                        description: "Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
-
                     phone:
                         label: Kontaktní telefon
                         required: false
@@ -155,10 +123,8 @@ events:
                     teacher_accomodation:
                         label: Ubytování pro učitele
                         visible: true
+                        description: %events.fyziklani.accomodation%
                         modifiable: %events.fyziklani.appCond%
-                        factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani.accomodation%))
-                        required: false
-
 
             #
             #   PARTICIPANT
@@ -203,8 +169,8 @@ events:
                     accomodation:
                         label: Ubytování
                         visible: true
+                        description: %events.fyziklani.accomodation%
                         modifiable: %events.fyziklani.appCond%
-                        factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani.accomodation%))
                         required: false
 
 
@@ -242,7 +208,7 @@ events:
                 - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
-                - Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
+                - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
                 #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
