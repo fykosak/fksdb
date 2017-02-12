@@ -1,6 +1,6 @@
 parameters:
     events:
-        fyziklani:
+        fyziklani9:
             appCond: or(regOpen(), role('admin'))
             accomodation: 'Noc před soutěží (tj. z 12.2. na 13.2.).'
             teacher:
@@ -31,7 +31,7 @@ parameters:
                     team.teacher_accomodation: team.teacher_id
 
 events:
-    fyziklani:
+    fyziklani9:
         event_type_id: 1
         eventYears: [1,2,3,4,5,6,7,8,9] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
@@ -67,7 +67,7 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: %events.fyziklani.appCond%
+                        condition: %events.fyziklani9.appCond%
                         label: Přihlásit tým
                         onExecuted:
                             - Events\Transitions\MailSender(team, .*)
@@ -99,7 +99,7 @@ events:
                         label: Název týmu # i18n
                         required: true
                         visible: true # or condition
-                        modifiable: %events.fyziklani.appCond%
+                        modifiable: %events.fyziklani9.appCond%
                     category:
                         label: Kategorie # i18n
                         required: true
@@ -109,22 +109,22 @@ events:
                         label: Kontaktní telefon
                         required: false
                         visible: true
-                        modifiable: %events.fyziklani.appCond%
+                        modifiable: %events.fyziklani9.appCond%
                     teacher_id:
                         label: Učitel/doprovod
                         required: false
                         visible: true
-                        modifiable: %events.fyziklani.appCond%
-                        factory: RefPerson(%events.fyziklani.teacher%, email, true, role('admin'), false)
+                        modifiable: %events.fyziklani9.appCond%
+                        factory: RefPerson(%events.fyziklani9.teacher%, email, true, role('admin'), false)
                     teacher_present:
                         label: Učitel má zájem o program
                         visible: true
-                        modifiable: %events.fyziklani.appCond%
+                        modifiable: %events.fyziklani9.appCond%
                     teacher_accomodation:
                         label: Ubytování pro učitele
                         visible: true
-                        description: %events.fyziklani.accomodation%
-                        modifiable: %events.fyziklani.appCond%
+                        description: %events.fyziklani9.accomodation%
+                        modifiable: %events.fyziklani9.appCond%
 
             #
             #   PARTICIPANT
@@ -142,12 +142,12 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.fyziklani.appCond%
+                        condition: %events.fyziklani9.appCond%
                         label: Přihlásit člena
                         onExecuted:
                             - Events\Transitions\MailSender(member,self)
                     applied->__terminated:
-                        condition: %events.fyziklani.appCond% # TODO the time period is not specified in rules
+                        condition: %events.fyziklani9.appCond% # TODO the time period is not specified in rules
                         label: Odebrat člena
                     applied->participated:
                         condition: role('admin')
@@ -163,14 +163,14 @@ events:
                     person_id:
                         label: Osoba
                         visible: true
-                        modifiable: %events.fyziklani.appCond%
+                        modifiable: %events.fyziklani9.appCond%
                         determining: true
-                        factory: RefPerson(%events.fyziklani.participant%, email, true, role('admin'), false)
+                        factory: RefPerson(%events.fyziklani9.participant%, email, true, role('admin'), false)
                     accomodation:
                         label: Ubytování
                         visible: true
-                        description: %events.fyziklani.accomodation%
-                        modifiable: %events.fyziklani.appCond%
+                        description: %events.fyziklani9.accomodation%
+                        modifiable: %events.fyziklani9.appCond%
                         required: false
 
 
@@ -204,8 +204,8 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - Events\FormAdjustments\DependentRequirements(%events.fyziklani.dep.require%)
-                - Events\FormAdjustments\DependentVisibility(%events.fyziklani.dep.visible%)
+                - Events\FormAdjustments\DependentRequirements(%events.fyziklani9.dep.require%)
+                - Events\FormAdjustments\DependentVisibility(%events.fyziklani9.dep.visible%)
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\FormAdjustments\ResourceAvailability(['team.teacher_accomodation', '*.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
