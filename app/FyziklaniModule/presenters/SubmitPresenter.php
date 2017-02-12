@@ -63,7 +63,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        $form = $this->fyziklaniFactory->createEntryForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -95,7 +95,7 @@ class SubmitPresenter extends BasePresenter {
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
                 $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
-                $this->redirect(':Fyziklani:submit:entry');
+                $this->redirect('this');
             } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
                 Debugger::log($e);
@@ -139,7 +139,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
@@ -156,7 +156,8 @@ class SubmitPresenter extends BasePresenter {
         /* Uzatvorené bodovanie nejde editovať; */
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->redirect(':Fyziklani:Submit:table');
+            $this->backlinkRedirect();
+            $this->redirect('table'); // if there's no backlink
         }
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
@@ -171,13 +172,6 @@ class SubmitPresenter extends BasePresenter {
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
 
-        $teamID = $this->editSubmit->e_fyziklani_team_id;
-
-        /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->redirect(':Fyziklani:Submit:table');
-        }
         $submit = $this->editSubmit;
         $this->serviceFyziklaniSubmit->updateModel($submit, [
             'points' => $values->points,
@@ -189,7 +183,8 @@ class SubmitPresenter extends BasePresenter {
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
-        $this->redirect(':Fyziklani:Submit:table');
+        $this->backlinkRedirect();
+        $this->redirect('table'); // if there's no backlink
     }
 
     public function createComponentSubmitsGrid() {
