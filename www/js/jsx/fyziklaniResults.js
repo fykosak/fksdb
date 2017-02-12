@@ -235,7 +235,7 @@ var ResultsTable = (function (_super) {
         tasks.forEach(function (task, taskIndex) {
             headCools.push(React.createElement("th", {key: taskIndex, "data-task_label": task.label}, task.label));
         });
-        return (React.createElement("div", {style: { display: (this.props.visible ? 'block' : 'none') }}, React.createElement("table", {ref: "table", className: "tablesorter"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null), React.createElement("th", null, "∑"), React.createElement("th", null, "N"), React.createElement("th", null, "Q"), headCools)), React.createElement("tbody", null, rows))));
+        return (React.createElement("div", {style: { display: (this.props.visible ? 'block' : 'none') }}, React.createElement("table", {ref: "table", className: "tablesorter"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null), React.createElement("th", null, "∑"), React.createElement("th", null, "N"), React.createElement("th", null, "x̄"), headCools)), React.createElement("tbody", null, rows))));
     };
     return ResultsTable;
 }(React.Component));
