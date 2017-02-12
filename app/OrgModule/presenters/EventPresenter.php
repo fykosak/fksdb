@@ -35,6 +35,7 @@ use ORM\IModel;
 use Persons\ExtendedPersonHandler;
 use Persons\SelfResolver;
 use ServiceEvent;
+use ServiceEventOrg;
 use SystemContainer;
 use Utils;
 use FKS\Config\Expressions\Helpers;
@@ -97,7 +98,7 @@ class EventPresenter extends EntityPresenter {
      */
     private $referencedPersonFactory;
     /**
-     * @var \ServiceEventOrg
+     * @var ServiceEventOrg
      */
     private $serviceEventOrg;
 
@@ -139,8 +140,20 @@ class EventPresenter extends EntityPresenter {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
-    public function injectServiceEventOrg(\ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
+    }
+    
+    public function authorizedApplications($id) {
+        $model = $this->getModel();
+        if (!$model) {
+            throw new BadRequestException('Neexistující model.', 404);
+        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'application', $this->getSelectedContest()));
+    }
+    
+    public function authorizedOrg($id) {
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('org', 'create', $this->getSelectedContest()));
     }
 
     public function authorizedModel($id) {
@@ -181,6 +194,10 @@ class EventPresenter extends EntityPresenter {
     public function actionDelete($id) {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
+    }
+    
+    public function actionOrg($id) {
+
     }
 
     public function renderApplications($id) {
@@ -388,11 +405,12 @@ class EventPresenter extends EntityPresenter {
         //  $this->appendExtendedContainer($form);
         $form->addText('note', _('Poznámka'));
         $form->addHidden('event_id', $this->getParam('id'));
-        $_this = $this;
-        $form->addSubmit('submit', _('Ulozit'))->onClick[] = function () use ($_this, $form) {
-            $_this->orgFormSuccess($form);
-        };
-        // $form->onSuccess[] = [$this, 'orgFormSuccess'];
+//        $_this = $this;
+//        $form->addSubmit('submit', _('Uložit'))->onClick[] = function () use ($_this, $form) {
+//            $_this->orgFormSuccess($form);
+//        };
+        $form->addSubmit('submit', _('Uložit'));
+        $form->onSuccess[] = [$this, 'orgFormSuccess'];
         return $control;
     }
 
