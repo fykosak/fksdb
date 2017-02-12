@@ -2,6 +2,7 @@
 
 namespace Tasks;
 
+use FKS\Logging\MemoryLogger;
 use Nette\InvalidStateException;
 use Pipeline\Pipeline;
 use ServicePerson;
@@ -84,6 +85,7 @@ class PipelineFactory {
         }
 
         $pipeline = new Pipeline();
+        $pipeline->setLogger(new MemoryLogger());
 
         // common stages
         $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);

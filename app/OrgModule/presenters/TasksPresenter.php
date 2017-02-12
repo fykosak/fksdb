@@ -3,14 +3,15 @@
 namespace OrgModule;
 
 use Astrid\Downloader;
+use Astrid\DownloadException;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Pipeline\PipelineException;
 use SeriesCalculator;
-use Tasks\DownloadException;
 use Tasks\PipelineFactory;
 use Tasks\SeriesData;
 
@@ -22,6 +23,7 @@ use Tasks\SeriesData;
 class TasksPresenter extends BasePresenter {
 
     const SOURCE_ASTRID = 'astrid';
+
     const SOURCE_FILE = 'file';
 
     private static $languages = array('cs', 'en');
@@ -41,6 +43,11 @@ class TasksPresenter extends BasePresenter {
      */
     private $pipelineFactory;
 
+    /**
+     * @var FlashDumpFactory 
+     */
+    private $flashDumpFactory;
+
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -51,6 +58,10 @@ class TasksPresenter extends BasePresenter {
 
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
+    }
+
+    function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
+        $this->flashDumpFactory = $flashDumpFactory;
     }
 
     public function authorizedImport() {
@@ -135,14 +146,11 @@ class TasksPresenter extends BasePresenter {
                 $pipeline->run();
                 unlink($file);
 
-                foreach ($pipeline->getLog() as $message) {
-                    $this->flashMessage($message, self::FLASH_INFO);
-                }
+                $dump = $this->flashDumpFactory->createDefault();
+                $dump->dump($pipeline->getLogger(), $this);
                 $this->flashMessage(sprintf('Úlohy pro jazyk %s úspěšně importovány.', $language), self::FLASH_SUCCESS);
             } catch (DownloadException $e) {
                 $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo stáhnout.', $language), self::FLASH_WARNING);
-            } catch (UploadException $e) {
-                $this->flashMessage(sprintf('Úlohy pro jazyk %s se nepodařilo uploadovat.', $language), self::FLASH_WARNING);
             } catch (PipelineException $e) {
                 $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě. %s', $language, $e->getMessage()), self::FLASH_ERROR);
                 Debugger::log($e);
@@ -155,8 +163,4 @@ class TasksPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-}
-
-class UploadException extends InvalidStateException {
-    
 }

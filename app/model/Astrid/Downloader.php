@@ -72,6 +72,14 @@ class Downloader {
         return $this->download($path);
     }
 
+    public function downloadFyziklaniRooms(ModelContest $contest, $year) {
+        $mask = $this->parameters['fyziklani']['roomsPath'];
+        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
+
+        $path = sprintf($mask, $contestName, $year);
+        return $this->download($path);
+    }
+
     private function download($path) {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
