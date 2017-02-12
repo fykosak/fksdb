@@ -2,14 +2,6 @@ parameters:
     events:
         fyziklani:
             appCond: or(regOpen(), role('admin'))
-            eventTypeID: 1
-            availablePionts: [5, 3, 2, 1]
-            start: '2016-09-27T13:30:00'
-            end: '2016-09-27T15:00:00'
-            taskOnBoard: 7
-            results:
-                display: '2016-09-27T14:40:00'
-                hidde: '2016-09-27T14:02:00'
             accomodation:
                 - 
                     value: 1
@@ -74,6 +66,15 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
+            #availablePionts:
+            #    default: [5, 3, 2, 1]
+            taskOnBoard:
+                default: 7
+            #start: '2016-09-27T13:30:00'
+            #end: '2016-09-27T15:00:00'
+            #results:
+                #display: '2016-09-27T14:40:00'
+                #hidde: '2016-09-27T14:02:00'
 
         baseMachines:
             #
