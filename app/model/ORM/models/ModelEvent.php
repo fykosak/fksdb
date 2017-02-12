@@ -1,5 +1,7 @@
 <?php
 
+use Events\Model\Holder\Holder;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -9,8 +11,21 @@ use Nette\Security\IResource;
 class ModelEvent extends AbstractModelSingle implements IResource {
 
     private $eventType = false;
+
     private $contest = false;
+
     private $acYear = false;
+
+    /**
+     * Event can have a holder assigned for purposes of parameter parsing. 
+     * Nothing else (currently).
+     * @var Holder
+     */
+    private $holder;
+
+    function setHolder(Holder $holder) {
+        $this->holder = $holder;
+    }
 
     public function getEventType() {
         if ($this->eventType === false) {
@@ -39,6 +54,13 @@ class ModelEvent extends AbstractModelSingle implements IResource {
             $this->acYear = $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
         }
         return $this->acYear;
+    }
+
+    public function getParameter($name) {
+        if (!$this->holder) {
+            throw new InvalidStateException('Event does not have any holder assigned.');
+        }
+        return $this->holder->getParameter($name);
     }
 
     public function getResourceId() {

@@ -3,14 +3,15 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
+use Events\Model\Holder\Holder;
+use FKSDB\Components\Forms\Factories\FyziklaniFactory;
+use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use \FKSDB\Components\Forms\Factories\FyziklaniFactory;
+use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
-use ServiceFyziklaniTask;
 use ServiceFyziklaniSubmit;
-use \ORM\Services\Events\ServiceFyziklaniTeam;
-use ModelEvent;
+use ServiceFyziklaniTask;
 
 /**
  *
@@ -19,21 +20,26 @@ use ModelEvent;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
+    // TODO remove/eliminate
     const EVENT_NAME = 'fyziklani';
+
     /**
      *
      * @var ModelEvent
      */
-    protected $event;
+    private $event;
+
     /**
      * @var int $eventID
      * @persistent
      */
     public $eventID;
+
     /**
      * @var FyziklaniFactory
      */
     protected $fyziklaniFactory;
+
     /**
      *
      * @var Container
@@ -114,21 +120,26 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /** vráti paramtre daného eventu
+     * TODO rename to getEvent()
      * @return ModelEvent
      */
     public function getCurrentEvent() {
         if (!$this->event) {
             $this->event = $this->serviceEvent->findByPrimary($this->getCurrentEventID());
+            if ($this->event) {
+                $holder = $this->container->createEventHolder($this->getCurrentEvent());
+                $this->event->setHolder($holder);
+            }
         }
         return $this->event;
     }
 
-	protected function eventIsAllowed($resource, $privilege) {
-		$event = $this->getCurrentEvent();
-		if (!$event) {
-			return false;
-		}
-		return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
-	}
+    protected function eventIsAllowed($resource, $privilege) {
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return false;
+        }
+        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+    }
 
 }
