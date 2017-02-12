@@ -46,8 +46,8 @@ class ResultsPresenter extends BasePresenter {
                 throw new BadRequestException('error', 404);
             }
             $result['times'] = [
-                'toStart' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['start']) - time(),
-                'toEnd' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['end']) - time(),
+                'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
+                'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible()
             ];
             $this->sendResponse(new JsonResponse($result));

@@ -1,6 +1,3 @@
 parameters:
     fyziklani:
         95:
-            game:
-                start: '2017-01-24T19:30:00'
-                end: '2017-01-24T21:00:00'
