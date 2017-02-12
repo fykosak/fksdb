@@ -63,7 +63,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        $form = $this->fyziklaniFactory->createEntryForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -139,7 +139,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
