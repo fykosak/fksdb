@@ -315,7 +315,7 @@ class ResultsTable extends React.Component<any, void> {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 let points = submit ? submit.points : '';
-                cools.push(<td data-points={points} key={taskIndex}>{(+points > 0) ? points : ''}</td>);
+                cools.push(<td data-points={points} key={taskIndex}>{(points !== null) ? points : ''}</td>);
             });
 
             let styles = {
@@ -326,7 +326,7 @@ class ResultsTable extends React.Component<any, void> {
                 return submit.team_id == team.team_id;
             }).reduce((val, submit: ISubmit)=> {
                 let {points}= submit;
-                if (+points > 0) {
+                if (points !== null) {
                     count++;
                     return val + +points;
                 }

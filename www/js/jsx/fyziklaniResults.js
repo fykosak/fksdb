@@ -214,7 +214,7 @@ var ResultsTable = (function (_super) {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 var points = submit ? submit.points : '';
-                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, (+points > 0) ? points : ''));
+                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, (points !== null) ? points : ''));
             });
             var styles = {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
@@ -224,7 +224,7 @@ var ResultsTable = (function (_super) {
                 return submit.team_id == team.team_id;
             }).reduce(function (val, submit) {
                 var points = submit.points;
-                if (+points > 0) {
+                if (points !== null) {
                     count++;
                     return val + +points;
                 }

@@ -41,6 +41,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
+
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
         $that = $this;
@@ -51,7 +52,15 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
+        });
+
+        $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
+            return $that->link("delete!", $row->fyziklani_submit_id);
+        })->setConfirmationDialog(function () {
+            return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
+        })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
+            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
         });
 
         $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
@@ -64,5 +73,28 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             }
         });
         $this->setDataSource($dataSource);
+    }
+
+    public function handleDelete($id) {
+        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
+        if (!$teamID) {
+            $this->flashMessage(_('Submit neexistuje'), 'danger');
+            return;
+        }
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+            $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
+            return;
+        }
+        $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
+            'points' => null,
+            /* ugly, exclude previous value of `modified` from query
+             * so that `modified` is set automatically by DB
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'modified' => null
+        ]);
+        $this->serviceFyziklaniSubmit->save($submit);
+        $this->flashMessage(_('Úloha bola zmazana.'), 'success');
     }
 }

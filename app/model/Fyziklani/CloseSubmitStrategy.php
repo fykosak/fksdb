@@ -117,7 +117,7 @@ class CloseSubmitStrategy {
         $sum = 0;
         $count = 0;
         foreach ($submits as $submit) {
-            if ($submit->points > 0) {
+            if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;
                 $arraySubmits[] = [
