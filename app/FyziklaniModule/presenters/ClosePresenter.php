@@ -154,7 +154,8 @@ class ClosePresenter extends BasePresenter {
         $return = [];
         $submits = count($this->team->getSubmits());
         $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
-        $lastID = $submits + $this->container->parameters[self::EVENT_NAME][$this->eventID]['taskOnBoard'] - 1;
+        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
+        $lastID = $submits + $tasksOnBoard - 1;
         /** @because index start with 0; */
         $nextID = $lastID + 1;
         if (isset($allTask[$nextID])) {

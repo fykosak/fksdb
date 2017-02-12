@@ -94,7 +94,6 @@ class ClosePresenterTest extends FyziklaniTestCase {
         $this->fixture = $this->createPresenter('Fyziklani:Close');
         $this->mockApplication();
 
-        $this->container->parameters[BasePresenter::EVENT_NAME][$this->eventId] = &$this->container->parameters[BasePresenter::EVENT_NAME][0];
         $this->authenticate($this->userPersonId);
     }
 
