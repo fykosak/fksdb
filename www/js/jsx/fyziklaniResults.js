@@ -41,10 +41,10 @@ var Results = (function (_super) {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array(),
+            submits: [],
             times: {},
-            tasks: new Array(),
-            teams: new Array(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
@@ -321,4 +321,5 @@ var Images = (function (_super) {
     };
     return Images;
 }(React.Component));
+$('.fyziklani-results').parent('.container').css({ width: 'inherit' });
 ReactDOM.render(React.createElement(Results, null), document.getElementsByClassName('fyziklani-results')[0]);
