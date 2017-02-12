@@ -20,9 +20,6 @@ use ServiceFyziklaniTask;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    // TODO remove/eliminate
-    const EVENT_NAME = 'fyziklani';
-
     /**
      *
      * @var ModelEvent

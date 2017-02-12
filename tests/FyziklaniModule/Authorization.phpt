@@ -56,7 +56,6 @@ class AuthorizationTest extends FyziklaniTestCase {
 
 
         $this->mockApplication();
-        $this->container->parameters[BasePresenter::EVENT_NAME][$this->eventId] = &$this->container->parameters[BasePresenter::EVENT_NAME][1];
     }
 
     protected function tearDown() {
