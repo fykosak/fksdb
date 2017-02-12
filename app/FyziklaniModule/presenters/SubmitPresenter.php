@@ -63,7 +63,21 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        $form = $this->fyziklaniFactory->createEntryForm($this->eventID);
+        $teams = [];
+        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
+            $teams[] = [
+                'team_id' => $team->e_fyziklani_team_id,
+                'name' => $team->name,
+            ];
+        };
+        $tasks = [];
+        foreach ($this->serviceFyziklaniTask->findAll($this->eventID) as $task) {
+            $tasks[] = [
+                'task_id' => $task->fyziklani_task_id,
+                'label' => $task->label
+            ];
+        };
+        $form = $this->fyziklaniFactory->createEntryForm($this->eventID, $teams, $tasks);
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -71,6 +85,7 @@ class SubmitPresenter extends BasePresenter {
     public function entryFormSucceeded(Form $form) {
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
+            $points = 0;
             foreach ($form->getComponents() as $control) {
                 if ($control instanceof SubmitButton) {
                     if ($control->isSubmittedBy()) {
