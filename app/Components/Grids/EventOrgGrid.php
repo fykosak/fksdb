@@ -29,13 +29,6 @@ class EventOrgsGrid extends BaseGrid {
         $orgs = $this->serviceEventOrg->findByEventID($this->event_id);
 
         $dataSource = new SearchableDataSource($orgs);
-        /*   $dataSource->setFilterCallback(function(Selection $table, $value) {
-               $tokens = preg_split('/\s+/', $value);
-               foreach ($tokens as $token) {
-                   $table->where('CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
-                               LIKE CONCAT(\'%\', ? , \'%\')', $token);
-               }
-           });*/
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
             $person = $row->getPerson();
@@ -43,12 +36,12 @@ class EventOrgsGrid extends BaseGrid {
         });
         $this->addColumn('note', _('Poznámka'));
         $that = $this;
-        $this->addButton("delete", _("Zmazať"))->setClass('btn btn-xs btn-danger')->setText('Zmazat')//todo i18n
+        $this->addButton("delete", _("Smazat"))->setClass('btn btn-xs btn-danger')->setText('Smazat')//todo i18n
         ->setLink(function ($row) use ($that) {
             return $that->link("delete!",$row->e_org_id);
 
         })->setConfirmationDialog(function () {
-            return _("Opravdu znatat organizátora?"); //todo i18n
+            return _("Opravdu smazat organizátora?"); //todo i18n
         });
 
     }
