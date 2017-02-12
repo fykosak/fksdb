@@ -16,6 +16,10 @@ var TaskCode = (function (_super) {
         var _this = this;
         var onInputTask = function (event) {
             var value = event.target.value.toLocaleUpperCase();
+            var oldValue = _this.state.task;
+            if (value == oldValue) {
+                return;
+            }
             _this.isValid(_this.getFullCode(null, value));
             if (_this.isValidTask(value)) {
                 jQuery(ReactDOM.findDOMNode(_this.refs.control)).focus();
@@ -26,6 +30,10 @@ var TaskCode = (function (_super) {
         };
         var onInputTeam = function (event) {
             var value = +event.target.value;
+            var oldValue = _this.state.team;
+            if (value == oldValue) {
+                return;
+            }
             _this.isValid(_this.getFullCode(value));
             if (_this.isValidTeam(value)) {
                 jQuery(ReactDOM.findDOMNode(_this.refs.task)).focus();
@@ -36,13 +44,16 @@ var TaskCode = (function (_super) {
         };
         var onInputControl = function (event) {
             var value = +event.target.value;
-            console.log(value);
+            var oldValue = _this.state.control;
+            if (value == oldValue) {
+                return;
+            }
             _this.isValid(_this.getFullCode(null, null, value));
             _this.setState({
                 control: value,
             });
         };
-        return (React.createElement("div", {className: 'task-code-container'}, React.createElement("div", {className: 'form-control has-feedback '}, React.createElement("small", {style: { paddingRight: '1em' }}, "00"), React.createElement("input", {maxLength: "4", ref: "team", className: 'team ' + (this.state.validTeam === false ? 'invalid' : (this.state.validTeam === true ? 'valid' : '')), onKeyUp: onInputTeam, placeholder: "XXXX"}), React.createElement("input", {maxLength: "2", className: 'task ' + (this.state.validTask === false ? 'invalid' : (this.state.validTask === true ? 'valid' : '')), ref: "task", placeholder: "XX", onInput: onInputTask}), React.createElement("input", {maxLength: "1", ref: "control", className: 'control ' + (this.state.valid ? 'valid' : 'invalid'), placeholder: "X", onInput: onInputControl}), React.createElement("span", {className: 'glyphicon ' + (this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback', "aria-hidden": "true"}))));
+        return (React.createElement("div", {className: 'task-code-container'}, React.createElement("div", {className: 'form-control has-feedback '}, React.createElement("input", {maxLength: "6", ref: "team", className: 'team ' + (this.state.validTeam === false ? 'invalid' : (this.state.validTeam === true ? 'valid' : '')), onKeyUp: onInputTeam, placeholder: "XXXXXX"}), React.createElement("input", {maxLength: "2", className: 'task ' + (this.state.validTask === false ? 'invalid' : (this.state.validTask === true ? 'valid' : '')), ref: "task", placeholder: "XX", onKeyUp: onInputTask}), React.createElement("input", {maxLength: "1", ref: "control", className: 'control ' + (this.state.valid ? 'valid' : 'invalid'), placeholder: "X", onKeyUp: onInputControl}), React.createElement("span", {className: 'glyphicon ' + (this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback', "aria-hidden": "true"}))));
     };
     ;
     TaskCode.prototype.getFullCode = function (team, task, control) {
@@ -64,7 +75,6 @@ var TaskCode = (function (_super) {
             this.state.valid = false;
             return;
         }
-        console.log(code);
         var subCode = code.split('').map(function (char) {
             return char.toLocaleUpperCase()
                 .replace('A', 1)

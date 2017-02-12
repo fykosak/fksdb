@@ -1,4 +1,15 @@
-class TaskCode extends React.Component<any,any> {
+interface ITaskCodeProps {
+    node: Node;
+    tasks: Array<number>;
+    teams: Array<number>;
+}
+
+interface ITaskCodeState {
+    task: string;
+    team: number;
+}
+
+class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
     constructor() {
         super();
         this.state = {};
@@ -12,6 +23,10 @@ class TaskCode extends React.Component<any,any> {
     public render() {
         const onInputTask = (event)=> {
             let value = event.target.value.toLocaleUpperCase();
+            let oldValue = this.state.task;
+            if (value == oldValue) {
+                return;
+            }
             this.isValid(this.getFullCode(null, value));
             if (this.isValidTask(value)) {
                 jQuery(ReactDOM.findDOMNode(this.refs.control)).focus();
@@ -25,6 +40,10 @@ class TaskCode extends React.Component<any,any> {
 
         const onInputTeam = (event)=> {
             let value = +event.target.value;
+            let oldValue = this.state.team;
+            if (value == oldValue) {
+                return;
+            }
             this.isValid(this.getFullCode(value));
             if (this.isValidTeam(value)) {
                 jQuery(ReactDOM.findDOMNode(this.refs.task)).focus();
@@ -36,7 +55,10 @@ class TaskCode extends React.Component<any,any> {
 
         const onInputControl = (event)=> {
             let value = +event.target.value;
-            console.log(value);
+            let oldValue = this.state.control;
+            if (value == oldValue) {
+                return;
+            }
             this.isValid(this.getFullCode(null, null, value));
             this.setState({
                 control: value,
@@ -48,28 +70,26 @@ class TaskCode extends React.Component<any,any> {
                 className={'task-code-container'}>
                 <div
                     className={'form-control has-feedback '}>
-                    <small style={{paddingRight:'1em'}}>00</small>
                     <input
-                        maxLength="4"
+                        maxLength="6"
                         ref="team"
                         className={'team '+(this.state.validTeam===false?'invalid':(this.state.validTeam===true?'valid':''))}
                         onKeyUp={ onInputTeam }
-                        placeholder="XXXX"
+                        placeholder="XXXXXX"
                     />
-
                     <input
                         maxLength="2"
                         className={'task '+(this.state.validTask===false?'invalid':(this.state.validTask===true?'valid':''))}
                         ref="task"
                         placeholder="XX"
-                        onInput={onInputTask}
+                        onKeyUp={onInputTask}
                     />
                     <input
                         maxLength="1"
                         ref="control"
                         className={'control '+(this.state.valid?'valid':'invalid')}
                         placeholder="X"
-                        onInput={onInputControl}
+                        onKeyUp={onInputControl}
                     />
                     <span
                         className={'glyphicon '+( this.state.valid? 'glyphicon-ok':'') + ' form-control-feedback'}
@@ -96,7 +116,6 @@ class TaskCode extends React.Component<any,any> {
             this.state.valid = false;
             return;
         }
-        console.log(code);
         let subCode = code.split('').map((char)=> {
             return char.toLocaleUpperCase()
                 .replace('A', 1)
