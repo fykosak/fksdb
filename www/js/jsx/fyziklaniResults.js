@@ -50,6 +50,7 @@ var Results = (function (_super) {
             isReady: false,
             configDisplay: false,
             msg: '',
+            isRefreshing: false,
         };
     }
     Results.prototype.componentDidMount = function () {
@@ -58,8 +59,14 @@ var Results = (function (_super) {
         this.applyNextAutoFilter(0);
     };
     Results.prototype.addResults = function (data) {
-        var times = data.times, submits = data.submits, isOrg = data.isOrg, lastUpdated = data.lastUpdated;
-        this.setState({ times: times, isOrg: isOrg, submits: Object.assign(this.state.submits, submits), lastUpdated: lastUpdated });
+        var times = data.times, submits = data.submits, isOrg = data.isOrg, lastUpdated = data.lastUpdated, refreshDelay = data.refreshDelay;
+        this.setState({
+            times: times,
+            isOrg: isOrg,
+            submits: Object.assign({}, this.state.submits, submits),
+            lastUpdated: lastUpdated,
+            isRefreshing: (refreshDelay !== null)
+        });
     };
     Results.prototype.initResults = function () {
         var _this = this;
@@ -78,7 +85,9 @@ var Results = (function (_super) {
     };
     Results.prototype.downloadResults = function (refreshDelay) {
         var _this = this;
-        if (refreshDelay === void 0) { refreshDelay = 30000; }
+        if (refreshDelay == null) {
+            return;
+        }
         setTimeout(function () {
             $.nette.ajax({
                 data: {
@@ -139,7 +148,7 @@ var Results = (function (_super) {
     ;
     Results.prototype.render = function () {
         var _this = this;
-        var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible;
+        var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible, lastUpdated = _a.lastUpdated, isRefreshing = _a.isRefreshing;
         this.state.visible = (visible || hardVisible);
         var filtersButtons = filters.map(function (filter, index) {
             return (React.createElement("li", {key: index, role: "presentation", className: (filter.room == _this.state.displayRoom && filter.category == _this.state.displayCategory) ? 'active' : ''}, React.createElement("a", {onClick: function () {
@@ -158,7 +167,7 @@ var Results = (function (_super) {
         if (!this.state.isReady) {
             return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
         }
-        return (React.createElement("div", null, React.createElement(BackLink, null), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        return (React.createElement("div", null, React.createElement(BackLink, null), React.createElement("div", {className: "last-update-info"}, "Naposledy updatnute:", React.createElement("span", {className: isRefreshing ? 'text-success' : 'text-muted'}, lastUpdated)), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte místnost--"), filters
             .filter(function (filter) { return filter.room != null; })

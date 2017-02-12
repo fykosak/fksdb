@@ -69,6 +69,7 @@ class Results extends React.Component<void, IResultsState> {
             isReady: false,
             configDisplay: false,
             msg: '',
+            isRefreshing: false,
         };
     }
 
@@ -79,8 +80,14 @@ class Results extends React.Component<void, IResultsState> {
     }
 
     private addResults(data) {
-        let {times, submits, isOrg, lastUpdated} = data;
-        this.setState({times, isOrg, submits: Object.assign(this.state.submits, submits), lastUpdated});
+        let {times, submits, isOrg, lastUpdated, refreshDelay} = data;
+        this.setState({
+            times,
+            isOrg,
+            submits: Object.assign({}, this.state.submits, submits),
+            lastUpdated,
+            isRefreshing: (refreshDelay !== null)
+        });
     }
 
     private initResults() {
@@ -98,7 +105,10 @@ class Results extends React.Component<void, IResultsState> {
         });
     }
 
-    private downloadResults(refreshDelay = 30000) {
+    private downloadResults(refreshDelay) {
+        if (refreshDelay == null) {
+            return;
+        }
         setTimeout(()=> {
             $.nette.ajax({
                 data: {
@@ -158,7 +168,7 @@ class Results extends React.Component<void, IResultsState> {
 
 
     public render() {
-        let {times:{visible}, hardVisible}=this.state;
+        let {times:{visible}, hardVisible, lastUpdated, isRefreshing}=this.state;
         this.state.visible = (visible || hardVisible);
 
         let filtersButtons = filters.map((filter, index)=> {
@@ -204,6 +214,7 @@ class Results extends React.Component<void, IResultsState> {
 
         return (<div>
                 <BackLink />
+                <div className="last-update-info">Naposledy updatnute:<span className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
                 {msg}
 
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
