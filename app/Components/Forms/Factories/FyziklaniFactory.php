@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use \Nette\Forms\Controls\RadioList;
-use \Nette\Forms\Controls\TextInput;
-use \Nette\DI\Container;
-use \Nette\Application\UI\Form;
+use ModelEvent;
+use Nette\Application\UI\Form;
+use Nette\DI\Container;
+use Nette\Forms\Controls\RadioList;
+use Nette\Forms\Controls\TextInput;
 
 class FyziklaniFactory {
 
@@ -17,10 +17,10 @@ class FyziklaniFactory {
         $this->container = $container;
     }
 
-    private function createPointsField($eventID) {
+    private function createPointsField(ModelEvent $event) {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
-        foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $v) {
+        foreach ($event->getParameter('availablePoints') as $points) {
             $items[$v] = $v;
         }
         $field->setItems($items);
@@ -54,28 +54,27 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($eventID) {
+    public function createEntryForm(ModelEvent $event) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField(), 'taskCode');
-        //$form->addComponent($this->createPointsField(),'points');
-        //$form->addSubmit('send',_('Uložit'));
-        foreach ($this->container->parameters[BasePresenter::EVENT_NAME][$eventID]['availablePoints'] as $points) {
+
+        foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
         }
+        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         return $form;
     }
 
-    public function createEditForm($eventID) {
+    public function createEditForm(ModelEvent $event) {
         $form = new Form();
-        $form->addHidden('submit_id', 0);
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIDField(), 'team_id');
         $form->addComponent($this->createTaskField(), 'task');
-        $form->addComponent($this->createPointsField($eventID), 'points');
+        $form->addComponent($this->createPointsField($event), 'points');
         $form->addSubmit('send', _('Uložit'));
         return $form;
     }

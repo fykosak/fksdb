@@ -17,6 +17,9 @@ mysql $DB_NAME$i <<EOD
 DELETE FROM submit;
 DELETE FROM task;
 
+DELETE FROM fyziklani_submit;
+DELETE FROM fyziklani_task;
+
 DELETE FROM e_tsaf_participant;
 DELETE FROM e_dsef_participant;
 DELETE FROM e_dsef_group;
@@ -27,6 +30,7 @@ DELETE FROM event_status;
 DELETE FROM event;
 DELETE FROM event_type;
 
+DELETE FROM org;
 DELETE FROM person_history;
 DELETE FROM contestant_base;
 DELETE FROM contest_year;

@@ -2,12 +2,13 @@
 
 namespace FyziklaniModule;
 
-use Nette\Application\BadRequestException;
-use \Nette\Application\UI\Form;
-use \Nette\Diagnostics\Debugger;
-use \Nette\Forms\Controls\SubmitButton;
-use \FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
+use ModelFyziklaniSubmit;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
+use Nette\Forms\Controls\SubmitButton;
 
 class SubmitPresenter extends BasePresenter {
 
@@ -15,6 +16,12 @@ class SubmitPresenter extends BasePresenter {
      * @var TaskCodePreprocessor
      */
     private $taskCodePreprocessor;
+
+    /**
+     *
+     * @var ModelFyziklaniSubmit
+     */
+    private $editSubmit;
 
     public function __construct(TaskCodePreprocessor $taskCodePreprocessor) {
         parent::__construct();
@@ -27,7 +34,6 @@ class SubmitPresenter extends BasePresenter {
                 $this['entryForm']->setDefaults(['taskCode' => $id]);
             } else {
                 $this->flashMessage($msg, 'danger');
-                $this->redirect(':Fyziklani:Submit:entry');
             }
         }
     }
@@ -57,13 +63,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        $form = $this->fyziklaniFactory->createEntryForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
 
     public function entryFormSucceeded(Form $form) {
-        Debugger::timer();
         $values = $form->getValues();
         if ($this->checkTaskCode($values->taskCode, $msg)) {
             foreach ($form->getComponents() as $control) {
@@ -79,13 +84,18 @@ class SubmitPresenter extends BasePresenter {
             $submit = $this->serviceFyziklaniSubmit->createNew([
                 'points' => $points,
                 'fyziklani_task_id' => $taskID,
-                'e_fyziklani_team_id' => $teamID
+                'e_fyziklani_team_id' => $teamID,
+                /* ugly, force current timestamp in database
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'created' => null
             ]);
+            $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
+            $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
-                $t = Debugger::timer();
-                $this->flashMessage(_('Body byly uloženy. (' . $points . ' bodů, tým ID ' . $teamID . ', ' . $t . 's)'), 'success');
-                $this->redirect(':Fyziklani:submit:entry');
+                $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
+                $this->redirect('this');
             } catch (Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
                 Debugger::log($e);
@@ -129,56 +139,52 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->eventID);
+        $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
 
     public function actionEdit($id) {
-        if (!$id) {
-            throw new BadRequestException('ID je povinné.', 400);
+        $this->editSubmit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+
+        if (!$this->editSubmit) {
+            throw new BadRequestException(_('Neexistující submit.'), 404);
         }
-        /* Neexitujúci submit nejde editovať */
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
-        if (!$teamID) {
-            $this->flashMessage(_('Submit neexistuje.'), 'danger');
-            $this->redirect(':Fyziklani:submit:table');
-        }
+
+        $teamID = $this->editSubmit->e_fyziklani_team_id;
+
         /* Uzatvorené bodovanie nejde editovať; */
         if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->redirect(':Fyziklani:Submit:table');
+            $this->backlinkRedirect();
+            $this->redirect('table'); // if there's no backlink
         }
-        $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
         $this['fyziklaniEditForm']->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
             'points' => $submit->points,
             'team' => $submit->getTeam()->name,
-            'submit_id' => $submit->fyziklani_submit_id
         ]);
     }
 
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
 
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id)->e_fyziklani_team_id;
-        if (!$teamID) {
-            $this->flashMessage(_('Submit neexistuje.'), 'danger');
-            $this->redirect(':Fyziklani:Submit:table');
-        }
-
-        /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
-            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->redirect(':Fyziklani:Submit:table');
-        }
-        $submit = $this->serviceFyziklaniSubmit->findByPrimary($values->submit_id);
-        $this->serviceFyziklaniSubmit->updateModel($submit, ['points' => $values->points]);
+        $submit = $this->editSubmit;
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
+            'points' => $values->points,
+            /* ugly, exclude previous value of `modified` from query
+             * so that `modified` is set automatically by DB
+             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+             */
+            'modified' => null
+        ]);
         $this->serviceFyziklaniSubmit->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
-        $this->redirect(':Fyziklani:Submit:table');
+        $this->backlinkRedirect();
+        $this->redirect('table'); // if there's no backlink
     }
 
     public function createComponentSubmitsGrid() {

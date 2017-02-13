@@ -31,6 +31,7 @@ abstract class DatabaseTestCase extends TestCase {
     }
 
     protected function tearDown() {
+        $this->connection->query("DELETE FROM org");
         $this->connection->query("DELETE FROM global_session");
         $this->connection->query("DELETE FROM login");
         $this->connection->query("DELETE FROM person_history");
