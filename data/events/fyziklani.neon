@@ -17,7 +17,7 @@ parameters:
                     label: "Hostel Elf"                
                 - 
                     value: 2
-                    capacity: 25
+                    capacity: 29
                     label: "Beta Pension"
                 -
                     value: 3
@@ -25,7 +25,7 @@ parameters:
                     label: "Wellness Hotel Step"
                 -
                     value: 4
-                    capacity: 70
+                    capacity: 73
                     label: "Hostel Kolbenka"
             teacher:
                 person:
