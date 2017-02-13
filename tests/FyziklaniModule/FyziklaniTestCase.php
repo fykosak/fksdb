@@ -55,7 +55,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
             $data['year'] = 1;
         }
         if (!isset($data['event_year'])) {
-            $data['event_year'] = 1;
+            $data['event_year'] = 10;
         }
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy event';
