@@ -38,15 +38,20 @@ class EventOrgsGrid extends BaseGrid {
         $that = $this;
         $this->addButton("delete", _("Smazat"))->setClass('btn btn-xs btn-danger')->setText('Smazat')//todo i18n
         ->setLink(function ($row) use ($that) {
-            return $that->link("delete!",$row->e_org_id);
+            return $that->link("delete!", $row->e_org_id);
 
         })->setConfirmationDialog(function () {
             return _("Opravdu smazat organizátora?"); //todo i18n
         });
+        //  $this->addButton("edit", _("Upravit"))->setClass('btn btn-xs btn-info')->setText('Upravit')//todo i18n
+        // ->setLink(function ($row) use ($presenter) {
+        //     return $presenter->link('org',['e_org_id'=>$row->e_org_id]);
+        // });
+
 
     }
 
-    public function handleDelete($id){
+    public function handleDelete($id) {
         $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
     }
 

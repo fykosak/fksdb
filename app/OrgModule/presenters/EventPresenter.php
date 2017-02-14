@@ -143,15 +143,16 @@ class EventPresenter extends EntityPresenter {
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
     }
-    
+
     public function authorizedApplications($id) {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'application', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()
+            ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
-    
+
     public function authorizedOrg($id) {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('org', 'create', $this->getSelectedContest()));
     }
@@ -195,9 +196,20 @@ class EventPresenter extends EntityPresenter {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
-    
-    public function actionOrg($id) {
 
+    public function actionOrg($id) {
+        if (is_null($id)) {
+            throw new BadRequestException('Nieje vybraný event');
+        }
+
+        //  $e_org_id = $this->getHttpRequest()->getQuery('e_org_id');
+        //  $eOrg = $this->serviceEventOrg->findByPrimary($e_org_id);
+        //  if (!is_null($eOrg)) {
+        //      $this['orgForm']->getForm()->setDefaults([
+        //          'person_id' => $eOrg->person_id,
+        //          'note' => $eOrg->note
+        //      ]);
+        //  }
     }
 
     public function renderApplications($id) {
@@ -354,7 +366,9 @@ class EventPresenter extends EntityPresenter {
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
             $this->serviceEvent->updateModel($model, $data);
 
-            if (!$this->getContestAuthorizator()->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())) {
+            if (!$this->getContestAuthorizator()
+                ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
+            ) {
                 throw new ForbiddenRequestException();
             }
 
@@ -381,7 +395,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function createComponentOrgsGrid($name) {
-        return new EventOrgsGrid($this->getParam('id'),$this->serviceEventOrg);
+        return new EventOrgsGrid($this->getParam('id'), $this->serviceEventOrg);
 
     }
 
@@ -401,14 +415,8 @@ class EventPresenter extends EntityPresenter {
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
-
-        //  $this->appendExtendedContainer($form);
         $form->addText('note', _('Poznámka'));
         $form->addHidden('event_id', $this->getParam('id'));
-//        $_this = $this;
-//        $form->addSubmit('submit', _('Uložit'))->onClick[] = function () use ($_this, $form) {
-//            $_this->orgFormSuccess($form);
-//        };
         $form->addSubmit('submit', _('Uložit'));
         $form->onSuccess[] = [$this, 'orgFormSuccess'];
         return $control;
@@ -417,13 +425,16 @@ class EventPresenter extends EntityPresenter {
     public function orgFormSuccess(Form $form) {
         $values = $form->getValues();
         Debugger::barDump($values);
-        $model = $this->serviceEventOrg->createNew([
-            'person_id' => $values[ExtendedPersonHandler::CONT_AGGR]['person_id'],
-            'event_id' => $values->event_id,
-            'note' => $values->note
-        ]);
-        $this->serviceEventOrg->save($model);
-        $this->flashMessage(_('Organizátor bol založený'), 'success');
-        $this->redirect('this');
+        if (!is_null($values[ExtendedPersonHandler::CONT_AGGR]['person_id'])) {
+            $model = $this->serviceEventOrg->createNew([
+                'person_id' => $values[ExtendedPersonHandler::CONT_AGGR]['person_id'],
+                'event_id' => $values->event_id,
+                'note' => $values->note
+            ]);
+            $this->serviceEventOrg->save($model);
+            $this->flashMessage(_('Organizátor bol založený'), 'success');
+            $this->redirect('this');
+        }
+
     }
 }
