@@ -405,12 +405,12 @@ class EventPresenter extends EntityPresenter {
         //  $this->appendExtendedContainer($form);
         $form->addText('note', _('Poznámka'));
         $form->addHidden('event_id', $this->getParam('id'));
-//        $_this = $this;
-//        $form->addSubmit('submit', _('Uložit'))->onClick[] = function () use ($_this, $form) {
-//            $_this->orgFormSuccess($form);
-//        };
-        $form->addSubmit('submit', _('Uložit'));
-        $form->onSuccess[] = [$this, 'orgFormSuccess'];
+        $_this = $this;
+        $form->addSubmit('submit', _('Uložit'))->onClick[] = function () use ($_this, $form) {
+            $_this->orgFormSuccess($form);
+        };
+        //$form->addSubmit('submit', _('Uložit'));
+        //$form->onSuccess[] = [$this, 'orgFormSuccess'];
         return $control;
     }
 
@@ -423,7 +423,7 @@ class EventPresenter extends EntityPresenter {
             'note' => $values->note
         ]);
         $this->serviceEventOrg->save($model);
-        $this->flashMessage(_('Organizátor bol založený'), 'success');
+        $this->flashMessage(_('Organizátor byl založen'), 'success');
         $this->redirect('this');
     }
 }

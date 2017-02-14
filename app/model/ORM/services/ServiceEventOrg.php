@@ -1,6 +1,7 @@
 <?php
 
 use ORM\CachingServiceTrait;
+use ORM\IModel;
 
 class ServiceEventOrg extends AbstractServiceSingle {
     use CachingServiceTrait;
