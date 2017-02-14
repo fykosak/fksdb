@@ -60,10 +60,10 @@ class Results extends React.Component<void, IResultsState> {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array<ISubmit>(),
+            submits: [],
             times: {},
-            tasks: new Array<ITask>(),
-            teams: new Array<ITeam>(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
@@ -457,5 +457,6 @@ class Images extends React.Component<any,any> {
         )
     }
 }
+$('.fyziklani-results').parent('.container').css({width: 'inherit'});
 
 ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')[0]);
