@@ -28,8 +28,8 @@ class ResultsPresenter extends BasePresenter {
             }
             $result['refreshDelay'] = $this->container->parameters[self::EVENT_NAME][$this->eventID]['refreshDelay'];
             $result['times'] = [
-                'toStart' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['start']) - time(),
-                'toEnd' => strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['game']['end']) - time(),
+                'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
+                'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible()
             ];
             $this->sendResponse(new JsonResponse($result));
@@ -85,6 +85,10 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function isResultsVisible() {
-        return $this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['hardDisplay'] || (time() < strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['hide'])) && (time() > strtotime($this->container->parameters[self::EVENT_NAME][$this->eventID]['results']['display']));
+        $hardDisplay = $this->getCurrentEvent()->getParameter('resultsHardDisplay');
+        $before = (time() < strtotime($this->getCurrentEvent()->getParameter('resultsHide')));
+        $after = (time() > strtotime($this->getCurrentEvent()->getParameter('resultsDisplay')));
+
+        return $hardDisplay || ($before && $after);
     }
 }

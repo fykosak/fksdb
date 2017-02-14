@@ -1,6 +1,6 @@
 parameters:
     fyziklani:
-        95:
+        1:
             availablePoints: [5, 3, 2, 1]
             game:
                 start: '2017-01-24T19:30:00'

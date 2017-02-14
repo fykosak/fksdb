@@ -62,8 +62,8 @@ class Results extends React.Component<void, IResultsState> {
             image: null,
             submits: {},
             times: {},
-            tasks: new Array<ITask>(),
-            teams: new Array<ITeam>(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
@@ -235,7 +235,7 @@ class Results extends React.Component<void, IResultsState> {
                         <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayRoom: event.target.value});
                         }}>
-                            <option >--vyberte místnost--</option>
+                            <option>--vyberte místnost--</option>
                             {                                filters
                                 .filter((filter)=>filter.room != null)
                                 .map((filter, index)=> {
@@ -252,7 +252,7 @@ class Results extends React.Component<void, IResultsState> {
                         <select className="form-control" onChange={(event)=>{
                         this.setState({autoDisplayCategory: event.target.value});
                         }}>
-                            <option value>--vyberte kategorii--</option>
+                            <option>--vyberte kategorii--</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
@@ -305,7 +305,7 @@ class ResultsTable extends React.Component<any, void> {
         let $table = $(ReactDOM.findDOMNode(this.refs.table));
         try {
             $table.trigger("update");
-            $table.trigger("sorton", [[[1, 1]]]);
+            $table.trigger("sorton", [[[1, 1], [3, 1]]]);
         } catch (error) {
             console.error(error);
         }
@@ -365,9 +365,9 @@ class ResultsTable extends React.Component<any, void> {
                     <thead>
                     <tr>
                         <th/>
-                        <th>Sum</th>
-                        <th>Prů</th>
-                        <th>Q</th>
+                        <th>∑</th>
+                        <th>N</th>
+                        <th>x̄</th>
                         {headCools}
                     </tr>
                     </thead>
@@ -469,5 +469,6 @@ class Images extends React.Component<any,any> {
         )
     }
 }
+$('.fyziklani-results').parent('.container').css({width: 'inherit'});
 
 ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')[0]);

@@ -48,7 +48,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('label', _('Úloha'));
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Místnost'));
-        //$this->addColumn('', _('Zadané'));
+        $this->addColumn('modified', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
