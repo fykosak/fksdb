@@ -29,7 +29,7 @@ class EventsGrid extends BaseGrid {
         //
         // data
         //
-        
+
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new SearchableDataSource($events);
@@ -69,10 +69,17 @@ class EventsGrid extends BaseGrid {
                 ->setLink(function($row) use ($that) {
                             return $that->getPresenter()->link('applications', $row->event_id);
                         });
+        $this->addButton('org')
+            ->setText(_('Organizátoři'))
+            ->setLink(function($row) use ($that) {
+                return $that->getPresenter()->link('org', $row->event_id);
+            });
+
         $this->addGlobalButton('add')
                 ->setLink($this->getPresenter()->link('create'))
                 ->setLabel('Přidat akci')
                 ->setClass('btn btn-sm btn-primary');
+
 
         //
         // appeareance
