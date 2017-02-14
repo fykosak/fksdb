@@ -11,7 +11,7 @@ use Pipeline\Stage;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RoomsFromCSV extends Stage {
@@ -67,7 +67,9 @@ class RoomsFromCSV extends Stage {
             ]);
             $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
-            unset($teams[$teamId]);
+            if ($room) {
+                unset($teams[$teamId]);
+            }
         }
         $this->serviceTeam->getConnection()->commit();
 
