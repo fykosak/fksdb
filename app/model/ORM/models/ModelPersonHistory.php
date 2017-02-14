@@ -12,6 +12,13 @@ class ModelPersonHistory extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
+    
+    /**
+     * @return ModelSchool
+     */
+    public function getSchool() {
+        return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+    }
 
     /**
      * @param int $acYear

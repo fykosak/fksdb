@@ -36,6 +36,9 @@ if (!class_exists('pdf_context', false)) {
     	var $stack;
     
     	// Constructor
+	function __construct(&$f) {
+		$this->pdf_context($f);
+	}
     
     	function pdf_context(&$f) {
     		$this->file =& $f;

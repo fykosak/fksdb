@@ -41,10 +41,10 @@ var Results = (function (_super) {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array(),
+            submits: [],
             times: {},
-            tasks: new Array(),
-            teams: new Array(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
@@ -168,7 +168,7 @@ var Results = (function (_super) {
             return (React.createElement("option", {key: index, value: filter.room}, filter.name));
         }))), React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Kategorie")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayCategory: event.target.value });
-        }}, React.createElement("option", {value: true}, "--vyberte kategorii--"), React.createElement("option", {value: "A"}, "A"), React.createElement("option", {value: "B"}, "B"), React.createElement("option", {value: "C"}, "C"))), React.createElement("div", {className: "form-group"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
+        }}, React.createElement("option", null, "--vyberte kategorii--"), React.createElement("option", {value: "A"}, "A"), React.createElement("option", {value: "B"}, "B"), React.createElement("option", {value: "C"}, "C"))), React.createElement("div", {className: "form-group"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", value: "1", onChange: function (event) {
             _this.setState({ autoSwitch: event.target.checked });
         }}), React.createElement("span", null, "Automatické přepínání místností a kategorií")))), React.createElement("div", {className: "form-group has-error"}, React.createElement("div", {className: "checkbox"}, React.createElement("label", null, React.createElement("input", {type: "checkbox", disabled: !this.state.isOrg, value: "1", onChange: function (event) {
             _this.setState({ hardVisible: event.target.checked });
@@ -196,7 +196,7 @@ var ResultsTable = (function (_super) {
         var $table = $(ReactDOM.findDOMNode(this.refs.table));
         try {
             $table.trigger("update");
-            $table.trigger("sorton", [[[1, 1]]]);
+            $table.trigger("sorton", [[[1, 1], [3, 1]]]);
         }
         catch (error) {
             console.error(error);
@@ -235,7 +235,7 @@ var ResultsTable = (function (_super) {
         tasks.forEach(function (task, taskIndex) {
             headCools.push(React.createElement("th", {key: taskIndex, "data-task_label": task.label}, task.label));
         });
-        return (React.createElement("div", {style: { display: (this.props.visible ? 'block' : 'none') }}, React.createElement("table", {ref: "table", className: "tablesorter"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null), React.createElement("th", null, "Sum"), React.createElement("th", null, "Prů"), React.createElement("th", null, "Q"), headCools)), React.createElement("tbody", null, rows))));
+        return (React.createElement("div", {style: { display: (this.props.visible ? 'block' : 'none') }}, React.createElement("table", {ref: "table", className: "tablesorter"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", null), React.createElement("th", null, "∑"), React.createElement("th", null, "N"), React.createElement("th", null, "x̄"), headCools)), React.createElement("tbody", null, rows))));
     };
     return ResultsTable;
 }(React.Component));
@@ -321,4 +321,5 @@ var Images = (function (_super) {
     };
     return Images;
 }(React.Component));
+$('.fyziklani-results').parent('.container').css({ width: 'inherit' });
 ReactDOM.render(React.createElement(Results, null), document.getElementsByClassName('fyziklani-results')[0]);

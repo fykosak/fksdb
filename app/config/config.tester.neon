@@ -10,11 +10,11 @@ parameters:
         acYear: 2000
         dbInstances: 8
     ro-database:
-        dsn: 'mysql:host=localhost;dbname=fksdb_test1'
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
     upload:
         # Path to storage directory
         root: %appDir%/../tmp/upload
 
 nette:
     database:
-        dsn: "mysql:host=localhost;dbname=fksdb_test1"
+        dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"

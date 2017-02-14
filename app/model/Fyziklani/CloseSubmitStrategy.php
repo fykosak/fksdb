@@ -41,12 +41,13 @@ class CloseSubmitStrategy {
     }
 
     public function closeByCategory($category, &$msg = null) {
+        $total = is_null($category);
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
         usort($teamsData, self::getSortFunction());
-        $this->saveResults($teamsData, $msg);
+        $this->saveResults($teamsData, $total, $msg);
         $connection->commit();
     }
 
@@ -54,12 +55,16 @@ class CloseSubmitStrategy {
         $this->closeByCategory(null, $msg);
     }
 
-    private function saveResults($data, &$msg = null) {
+    private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
-            $teamData['rank_category'] = $index;
             $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
-            $this->serviceFyziklaniTeam->updateModel($team, ['rank_category', $index + 1]);
+            if($total) {
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+            }
+            else {
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+            }
             $this->serviceFyziklaniTeam->save($team);
             $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
         }
@@ -117,7 +122,7 @@ class CloseSubmitStrategy {
             $arraySubmits[] = [
                 'task_id' => $submit->task_id,
                 'points' => $submit->points,
-                'time' => $submit->submitted_on
+                'time' => $submit->modified,
             ];
         }
         return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];

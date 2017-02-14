@@ -7,7 +7,6 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Application\UI\Form;
 use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 
-
 class TaskPresenter extends BasePresenter {
 
     const IMPORT_STATE_UPDATE_N_INSERT = 1;
@@ -19,7 +18,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->getEventAuthorizator()->isAllowed('fyziklani', 'task', $this->getCurrentEvent()));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'task')));
     }
 
     public function titleImport() {
@@ -27,7 +26,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedImport() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('fyziklani', 'taskImport', $this->getCurrentEvent()->event_type->contest_id));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'taskImport')));
     }
 
     public function createComponentTaskImportForm() {

@@ -9,6 +9,7 @@
 </div>
 
 <p>{!$storedQuery->description|escape|nl2br}</p>
+{control tagCloudDetail}
 
 {if $storedQuery->getPostProcessing()}
 <h3>{_'PHP post processing'}</h3>
