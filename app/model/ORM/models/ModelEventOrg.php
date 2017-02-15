@@ -14,6 +14,13 @@ class ModelEventOrg extends AbstractModelSingle implements IResource {
         return $row ? ModelPerson::createFromTableRow($row) : null;
     }
     
+    /**
+     * @return ModelEvent
+     */
+    public function getEvent() {
+        return ModelEvent::createFromTableRow($this->ref(DbNames::TAB_EVENT, 'event_id'));
+    }
+    
     public function getResourceId() {
         return 'eventOrg';
     }

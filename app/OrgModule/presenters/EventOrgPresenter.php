@@ -7,6 +7,8 @@ use Nette\Application\UI\Form;
 use ORM\IModel;
 use Persons\ExtendedPersonHandler;
 use ServiceEventOrg;
+use ServiceEvent;
+use ModelEvent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 
 class EventOrgPresenter extends ExtendedPersonPresenter {
@@ -20,17 +22,31 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEventOrg;
     
     /**
-     *
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
+    
+    /**
+     * @var ModelEvent
+     */
+    private $modelEvent;
+    
+    /**
      * @persistent
      */
     public $eventId;
 
-    public function injectServiceOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
+    }
+    
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
     }
 
     public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
+        $model = $this->getModel();
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
     }
 
     public function renderEdit($id) {
@@ -45,11 +61,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit organizátora akce'));
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
     }
 
     public function titleList() {
-        $this->setTitle(_('Organizátoři akce'));
+        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
     }
     
     public function actionDelete($id) {
@@ -98,6 +114,17 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     
     public function messageExists() {
         return _('Organizátor akce již existuje.');
+    }
+    
+    /**
+     * 
+     * @return ModelEvent
+     */
+    private function getEvent() {
+        if(!$this->modelEvent) {
+            $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
+        }
+        return $this->modelEvent;
     }
 
 }
