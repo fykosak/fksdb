@@ -40,7 +40,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->paginate = false;
+        //$this->paginate = false;
 
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
@@ -95,6 +95,6 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             'modified' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-        $this->flashMessage(_('Úloha bola zmazana.'), 'success');
+        $this->flashMessage(_('Úloha byla smazána.'), 'success');
     }
 }
