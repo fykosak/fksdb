@@ -39,5 +39,6 @@ navigation:
             - fyziklani.results.default
             - fyziklani.task.table
             - fyziklani.task.import
+            - fyziklani.rooms.import
             
         

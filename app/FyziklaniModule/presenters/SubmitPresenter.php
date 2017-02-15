@@ -96,17 +96,32 @@ class SubmitPresenter extends BasePresenter {
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
             $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
-            $submit = $this->serviceFyziklaniSubmit->createNew([
-                'points' => $points,
-                'fyziklani_task_id' => $taskID,
-                'e_fyziklani_team_id' => $teamID,
-                /* ugly, force current timestamp in database
-                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-                 */
-                'created' => null
-            ]);
+
+            if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID))) {
+                $submit = $this->serviceFyziklaniSubmit->createNew([
+                    'points' => $points,
+                    'fyziklani_task_id' => $taskID,
+                    'e_fyziklani_team_id' => $teamID,
+                    /* ugly, force current timestamp in database
+                     * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                     */
+                    'created' => null
+                ]);
+            } else {
+               // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
+                $this->serviceFyziklaniSubmit->updateModel($submit, [
+                    'points' => $points,
+                    /* ugly, exclude previous value of `modified` from query
+                     * so that `modified` is set automatically by DB
+                     * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                     */
+                    'modified' => null
+                ]);
+                $this->serviceFyziklaniSubmit->save($submit);
+            }
             $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
             $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
+
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
                 $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');

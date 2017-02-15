@@ -109,6 +109,12 @@ parameters:
         paths:
             cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-cs.xml'
             en: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-en.xml'
+
+    # Generic parameters for Fyziklani
+    fyziklani:
+        # Paths to CSV file with team distribution to rooms
+        # Arguments: contestName, year
+        roomsPath: '/%1$s%2$d/fyziklani/out/teams.csv'
     
     # Various e-mail invitations
     invitation:
