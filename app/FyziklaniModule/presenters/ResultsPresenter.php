@@ -26,7 +26,7 @@ class ResultsPresenter extends BasePresenter {
             if ($isOrg || $this->isResultsVisible()) {
                 $result['submits'] = $this->getSubmits($lastUpdated);
             }
-            $result['refreshDelay'] = $this->container->parameters[self::EVENT_NAME][$this->eventID]['refreshDelay'];
+            $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
             $result['times'] = [
                 'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
                 'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
