@@ -77,7 +77,7 @@ class SubmitPresenter extends BasePresenter {
                 'label' => $task->label
             ];
         };
-        $form = $this->fyziklaniFactory->createEntryForm($this->eventID, $teams, $tasks);
+        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent(), $teams, $tasks);
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
