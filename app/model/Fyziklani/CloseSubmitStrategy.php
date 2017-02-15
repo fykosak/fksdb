@@ -59,14 +59,14 @@ class CloseSubmitStrategy {
         $msg = '';
         foreach ($data as $index => &$teamData) {
             $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
-            if($total) {
+            if ($total) {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
-            }
-            else {
+            } else {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
             $this->serviceFyziklaniTeam->save($team);
-            $msg .= Html::el('li')->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
+            $msg .= Html::el('li')
+                ->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
         }
     }
 
@@ -117,13 +117,15 @@ class CloseSubmitStrategy {
         $sum = 0;
         $count = 0;
         foreach ($submits as $submit) {
-            $sum += $submit->points;
-            $count++;
-            $arraySubmits[] = [
-                'task_id' => $submit->task_id,
-                'points' => $submit->points,
-                'time' => $submit->modified,
-            ];
+            if ($submit->points !== null) {
+                $sum += $submit->points;
+                $count++;
+                $arraySubmits[] = [
+                    'task_id' => $submit->task_id,
+                    'points' => $submit->points,
+                    'time' => $submit->modified
+                ];
+            }
         }
         return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];
     }
