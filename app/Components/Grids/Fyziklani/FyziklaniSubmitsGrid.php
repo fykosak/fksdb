@@ -40,7 +40,6 @@ class FyziklaniSubmitsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-        //$this->paginate = false;
 
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
