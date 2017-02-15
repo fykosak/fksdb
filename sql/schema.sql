@@ -1012,7 +1012,7 @@ COMMENT = 'M:N párování SQL dotazů se štítky';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
   `e_org_id` INT(11) NOT NULL,
-  `pozn` TEXT(32) NULL DEFAULT NULL,
+  `note` TEXT(32) NULL DEFAULT NULL,
   `event_id` INT(11) NOT NULL,
   `person_id` INT(11) NOT NULL,
   PRIMARY KEY (`e_org_id`),
