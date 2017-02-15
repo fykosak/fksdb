@@ -44,6 +44,7 @@ acl:
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
+    - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(fyziklani)
 
@@ -88,6 +89,7 @@ acl:
     - allow(exportDesigner, export.adhoc, ::constant(Nette\Security\Permission::ALL))
 
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
+    - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
 

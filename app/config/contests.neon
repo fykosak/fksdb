@@ -62,7 +62,12 @@ parameters:
                 note: false
                 born_id: false
                 id_number: false
-
+        adminEventOrg:
+            person:
+                other_name: true
+                family_name: true
+            person_info:
+                email: true
 
     vyfuk:
         registerContestant:
@@ -121,10 +126,4 @@ parameters:
                 note: false
                 phone_parent_m: false
                 phone_parent_d: false  
-    eventOrg:
-        person:
-             other_name: true
-             family_name: true
-        person_info:
-              email: true
 

@@ -1,8 +1,9 @@
 <?php
 
 use Nette\InvalidStateException;
+use Nette\Security\IResource;
 
-class ModelEventOrg extends AbstractModelSingle {
+class ModelEventOrg extends AbstractModelSingle implements IResource {
 
     /**
      * @return ModelPerson
@@ -11,6 +12,10 @@ class ModelEventOrg extends AbstractModelSingle {
         $this->person_id; // stupid touch
         $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
         return $row ? ModelPerson::createFromTableRow($row) : null;
+    }
+    
+    public function getResourceId() {
+        return 'eventOrg';
     }
 
     public function __toString() {

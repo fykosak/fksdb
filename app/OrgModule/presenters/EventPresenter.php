@@ -4,8 +4,6 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -14,7 +12,6 @@ use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
-use FKSDB\Components\Grids\EventOrgsGrid;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
@@ -32,13 +29,10 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
-use Persons\ExtendedPersonHandler;
-use Persons\SelfResolver;
 use ServiceEvent;
 use ServiceEventOrg;
 use SystemContainer;
 use Utils;
-use FKS\Config\Expressions\Helpers;
 
 
 /**
@@ -153,10 +147,6 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedOrg($id) {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('org', 'create', $this->getSelectedContest()));
-    }
-
     public function authorizedModel($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -195,21 +185,6 @@ class EventPresenter extends EntityPresenter {
     public function actionDelete($id) {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
-    }
-
-    public function actionOrg($id) {
-        if (is_null($id)) {
-            throw new BadRequestException('Nieje vybraný event');
-        }
-
-        //  $e_org_id = $this->getHttpRequest()->getQuery('e_org_id');
-        //  $eOrg = $this->serviceEventOrg->findByPrimary($e_org_id);
-        //  if (!is_null($eOrg)) {
-        //      $this['orgForm']->getForm()->setDefaults([
-        //          'person_id' => $eOrg->person_id,
-        //          'note' => $eOrg->note
-        //      ]);
-        //  }
     }
 
     public function renderApplications($id) {
@@ -394,50 +369,4 @@ class EventPresenter extends EntityPresenter {
         }
     }
 
-    public function createComponentOrgsGrid($name) {
-        return new EventOrgsGrid($this->getParam('id'), $this->serviceEventOrg);
-
-    }
-
-    public function createComponentOrgForm($name) {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
-
-        $container = new ContainerWithOptions();
-        $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-
-        $fieldsDefinition = Helpers::evalExpressionArray($this->globalParameters['eventOrg'], $this->container);
-        $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
-
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, ReferencedPersonFactory::SEARCH_ID, false, $modifiabilityResolver, $visibilityResolver);
-
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
-
-        $form->addText('note', _('Poznámka'));
-        $form->addHidden('event_id', $this->getParam('id'));
-        $_this = $this;
-        $form->addSubmit('submit', _('Uložit'))->onClick[] = function () use ($_this, $form) {
-            $_this->orgFormSuccess($form);
-        };
-        //$form->addSubmit('submit', _('Uložit'));
-        //$form->onSuccess[] = [$this, 'orgFormSuccess'];
-        return $control;
-    }
-
-    public function orgFormSuccess(Form $form) {
-        $values = $form->getValues();
-        Debugger::barDump($values);
-        if (!is_null($values[ExtendedPersonHandler::CONT_AGGR]['person_id'])) {
-            $model = $this->serviceEventOrg->createNew([
-                'person_id' => $values[ExtendedPersonHandler::CONT_AGGR]['person_id'],
-                'event_id' => $values->event_id,
-                'note' => $values->note
-            ]);
-            $this->serviceEventOrg->save($model);
-            $this->flashMessage(_('Organizátor byl založen'), 'success');
-            $this->redirect('this');
-        }
-    }
 }
