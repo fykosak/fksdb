@@ -1,8 +1,21 @@
 //import * as React from './lib/react/';
 //import * as ReactDOM from './lib/react-dom';
 
+if (!Object.values) {
+    Object.values = (obj)=> {
+        var vals = [];
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
+            }
+        }
+        return vals;
+    }
+
+}
+
 interface ISubmit {
-    points: number;
+    points: number|null;
     task_id: number;
     team_id: number;
 }
@@ -214,7 +227,8 @@ class Results extends React.Component<void, IResultsState> {
 
         return (<div>
                 <BackLink />
-                <div className="last-update-info">Naposledy updatnute:<span className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
+                <div className="last-update-info">Naposledy updatnute:<span
+                    className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
                 {msg}
 
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>

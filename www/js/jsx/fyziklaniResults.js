@@ -11,6 +11,17 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+if (!Object.values) {
+    Object.values = function (obj) {
+        var vals = [];
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
+            }
+        }
+        return vals;
+    };
+}
 var basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
 var filters = [
     { room: null, category: null, name: "ALL" },
