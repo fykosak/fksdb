@@ -2,14 +2,13 @@
 
 namespace OrgModule;
 
-use FKSDB\Components\Grids\EventOrgsGrid;
-use Nette\Application\UI\Form;
-use ORM\IModel;
-use Persons\ExtendedPersonHandler;
-use ServiceEventOrg;
-use ServiceEvent;
-use ModelEvent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Grids\EventOrgsGrid;
+use ModelEvent;
+use Nette\Application\UI\Form;
+use Persons\ExtendedPersonHandler;
+use ServiceEvent;
+use ServiceEventOrg;
 
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
@@ -46,7 +45,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit($id) {
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
+        $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), (string) $model->getEvent()));
     }
 
     public function renderEdit($id) {
@@ -61,27 +60,21 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), (string) $this->getEvent()));
     }
 
     public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
+        $this->setTitle(sprintf(_('Organizátoři akce %s'), (string) $this->getEvent()));
     }
     
     public function actionDelete($id) {
         $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
-        if($success){
+        if ($success) {
             $this->flashMessage(_('Organizátor akce smazán.'), self::FLASH_SUCCESS);
-        }
-        else{
+        } else {
             $this->flashMessage(_('Nepodařilo se smazat organizátora akce.'), self::FLASH_ERROR);
         }
         $this->redirect('list');
-    }
-
-    protected function setDefaults(IModel $model = null, Form $form) {
-        parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults(array());
     }
 
     protected function createComponentGrid($name) {

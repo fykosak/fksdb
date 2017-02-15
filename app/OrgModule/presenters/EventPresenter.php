@@ -91,11 +91,6 @@ class EventPresenter extends EntityPresenter {
      * @var ReferencedPersonFactory
      */
     private $referencedPersonFactory;
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
-
 
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -132,10 +127,6 @@ class EventPresenter extends EntityPresenter {
 
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
-        $this->serviceEventOrg = $serviceEventOrg;
     }
 
     public function authorizedApplications($id) {
