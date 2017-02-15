@@ -70,6 +70,8 @@ events:
                 default: [5, 3, 2, 1]
             tasksOnBoard:
                 default: 7
+            refreshDelay:
+                default: 30000
             resultsHardDisplay:
                 default: false
             refreshDelay:
