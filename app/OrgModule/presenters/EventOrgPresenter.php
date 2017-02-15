@@ -10,6 +10,11 @@ use Persons\ExtendedPersonHandler;
 use ServiceEvent;
 use ServiceEventOrg;
 
+/**
+ * Due to author's laziness there's no class doc (or it's self explaining).
+ *
+ * @author Lukáš Timko <lukast@fykos.cz>
+ */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'eventOrg';

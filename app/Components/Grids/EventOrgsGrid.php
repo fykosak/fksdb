@@ -6,7 +6,11 @@ use Nette\Database\Table\Selection;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
 
-
+/**
+ * Due to author's laziness there's no class doc (or it's self explaining).
+ *
+ * @author Lukáš Timko <lukast@fykos.cz>
+ */
 class EventOrgsGrid extends BaseGrid {
 
     /**
