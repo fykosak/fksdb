@@ -72,6 +72,8 @@ events:
                 default: 7
             resultsHardDisplay:
                 default: false
+            refreshDelay:
+                default: 30000
             # TODO make relative to game
             resultsDisplay:
                 default: '1970-01-01T00:00:00'
