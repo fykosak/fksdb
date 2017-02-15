@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
-use Nette\Database\Table\Selection;
+use FKSDB\Components\Grids\BaseGrid;
+use ModelEvent;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
 
@@ -18,11 +19,14 @@ class EventOrgsGrid extends BaseGrid {
      */
     private $serviceEventOrg;
 
-    private $event_id;
+    /**
+     * @var ModelEvent
+     */
+    private $event;
 
-    function __construct($event_id, ServiceEventOrg $serviceEventOrg) {
+    function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg) {
         parent::__construct();
-        $this->event_id = $event_id;
+        $this->event = $event;
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
@@ -30,7 +34,7 @@ class EventOrgsGrid extends BaseGrid {
         parent::configure($presenter);
 
 
-        $orgs = $this->serviceEventOrg->findByEventID($this->event_id);
+        $orgs = $this->serviceEventOrg->findByEventID($this->event->getPrimary());
 
         $dataSource = new SearchableDataSource($orgs);
         $this->setDataSource($dataSource);
