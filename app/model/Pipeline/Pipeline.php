@@ -2,6 +2,7 @@
 
 namespace Pipeline;
 
+use FKS\Logging\ILogger;
 use Nette\InvalidStateException;
 use RuntimeException;
 
@@ -14,10 +15,6 @@ use RuntimeException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {
-
-    const LOG_ERROR = 3;
-    const LOG_WARNING = 2;
-    const LOG_INFO = 1;
 
     /**
      * @var array of IStage
@@ -35,14 +32,22 @@ class Pipeline {
     private $fixedStages = false;
 
     /**
-     * @var array of string
+     * @var ILogger
      */
-    private $log = array();
+    private $logger = null;
+
+    public function setLogger(ILogger $logger) {
+        $this->logger = $logger;
+    }
+
+    public function getLogger() {
+        return $this->logger;
+    }
 
     /**
      * Stages can be added only in the build phase (not after setting the data).
      * 
-     * @param \Pipeline\Stage $stage
+     * @param Stage $stage
      * @throws InvalidStateException
      */
     public function addStage(Stage $stage) {
@@ -69,7 +74,6 @@ class Pipeline {
      * @return mixed    output of the last stage
      */
     public function run() {
-        $this->clearLog();
         $data = $this->input;
         foreach ($this->stages as $stage) {
             $stage->setInput($data);
@@ -80,17 +84,10 @@ class Pipeline {
         return $data;
     }
 
-    // TODO implement log level
-    public function log($message, $level = self::LOG_INFO) {
-        $this->log[] = $message;
-    }
-
-    private function clearLog() {
-        $this->log = array();
-    }
-
-    public function getLog() {
-        return $this->log;
+    public function log($message, $level = ILogger::INFO) {
+        if ($this->logger) {
+            $this->logger->log($message, $level);
+        }
     }
 
 }
