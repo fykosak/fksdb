@@ -41,61 +41,68 @@ var Results = (function (_super) {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array(),
+            submits: {},
             times: {},
-            tasks: new Array(),
-            teams: new Array(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
             configDisplay: false,
             msg: '',
+            isRefreshing: false,
         };
     }
     Results.prototype.componentDidMount = function () {
-        var _this = this;
         console.log('mount');
         this.initResults();
-        setInterval(function () {
-            _this.downloadResults();
-        }, 10 * 1000);
         this.applyNextAutoFilter(0);
+    };
+    Results.prototype.addResults = function (data) {
+        var times = data.times, submits = data.submits, isOrg = data.isOrg, lastUpdated = data.lastUpdated, refreshDelay = data.refreshDelay;
+        this.setState({
+            times: times,
+            isOrg: isOrg,
+            submits: Object.assign({}, this.state.submits, submits),
+            lastUpdated: lastUpdated,
+            isRefreshing: (refreshDelay !== null)
+        });
     };
     Results.prototype.initResults = function () {
         var _this = this;
         $.nette.ajax({
-            data: {
-                type: 'init'
-            },
             success: function (data) {
                 var tasks = data.tasks, teams = data.teams;
-                _this.state.tasks = tasks;
-                _this.state.teams = teams;
-                _this.downloadResults();
+                _this.addResults(data);
+                _this.setState({ tasks: tasks, teams: teams, isReady: true });
+                var refreshDelay = data.refreshDelay;
+                _this.downloadResults(refreshDelay);
             },
             error: function (e) {
                 _this.setState({ msg: e.toString() });
             }
         });
     };
-    Results.prototype.downloadResults = function () {
+    Results.prototype.downloadResults = function (refreshDelay) {
         var _this = this;
-        $.nette.ajax({
-            data: {
-                type: 'refresh'
-            },
-            success: function (data) {
-                var times = data.times, submits = data.submits, is_org = data.is_org;
-                _this.setState({ submits: submits, times: times, isOrg: is_org });
-                _this.forceUpdate();
-                if (_this.state.tasks && _this.state.teams) {
-                    _this.state.isReady = true;
+        if (refreshDelay == null) {
+            return;
+        }
+        setTimeout(function () {
+            $.nette.ajax({
+                data: {
+                    lastUpdated: _this.state.lastUpdated,
+                },
+                success: function (data) {
+                    _this.addResults(data);
+                    var refreshDelay = data.refreshDelay;
+                    _this.downloadResults(refreshDelay);
+                },
+                error: function (e) {
+                    _this.setState({ msg: e.toString() });
                 }
-            },
-            error: function (e) {
-                _this.setState({ msg: e.toString() });
-            }
-        });
+            });
+        }, refreshDelay);
     };
     Results.prototype.applyNextAutoFilter = function (i) {
         var _this = this;
@@ -141,7 +148,7 @@ var Results = (function (_super) {
     ;
     Results.prototype.render = function () {
         var _this = this;
-        var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible;
+        var _a = this.state, visible = _a.times.visible, hardVisible = _a.hardVisible, lastUpdated = _a.lastUpdated, isRefreshing = _a.isRefreshing;
         this.state.visible = (visible || hardVisible);
         var filtersButtons = filters.map(function (filter, index) {
             return (React.createElement("li", {key: index, role: "presentation", className: (filter.room == _this.state.displayRoom && filter.category == _this.state.displayCategory) ? 'active' : ''}, React.createElement("a", {onClick: function () {
@@ -160,7 +167,7 @@ var Results = (function (_super) {
         if (!this.state.isReady) {
             return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
         }
-        return (React.createElement("div", null, React.createElement(BackLink, null), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        return (React.createElement("div", null, React.createElement(BackLink, null), React.createElement("div", {className: "last-update-info"}, "Naposledy updatnute:", React.createElement("span", {className: isRefreshing ? 'text-success' : 'text-muted'}, lastUpdated)), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte místnost--"), filters
             .filter(function (filter) { return filter.room != null; })
@@ -212,21 +219,25 @@ var ResultsTable = (function (_super) {
         teams.forEach(function (team, teamIndex) {
             var cools = [];
             tasks.forEach(function (task, taskIndex) {
-                var submit = submits.filter(function (submit) {
+                var submit = Object.values(submits).filter(function (submit) {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 var points = submit ? submit.points : '';
-                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, points));
+                cools.push(React.createElement("td", {"data-points": points, key: taskIndex}, (points !== null) ? points : ''));
             });
             var styles = {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
             };
             var count = 0;
-            var sum = submits.filter(function (submit) {
+            var sum = Object.values(submits).filter(function (submit) {
                 return submit.team_id == team.team_id;
             }).reduce(function (val, submit) {
-                count++;
-                return val + +submit.points;
+                var points = submit.points;
+                if (points !== null) {
+                    count++;
+                    return val + +points;
+                }
+                return val;
             }, 0);
             var average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
             rows.push(React.createElement("tr", {key: teamIndex, style: styles}, React.createElement("td", null, team.name), React.createElement("td", {className: "sum"}, sum), React.createElement("td", null, count), React.createElement("td", null, average), cools));
@@ -321,4 +332,5 @@ var Images = (function (_super) {
     };
     return Images;
 }(React.Component));
+$('.fyziklani-results').parent('.container').css({ width: 'inherit' });
 ReactDOM.render(React.createElement(Results, null), document.getElementsByClassName('fyziklani-results')[0]);

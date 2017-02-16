@@ -10,6 +10,7 @@ services:
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     - FKSDB\Components\Forms\Factories\ReferencedPersonFactory
     - Persons\ReferencedPersonHandlerFactory
+    - FKSDB\Model\Fyziklani\Rooms\PipelineFactory
     breadcrumbFactory:
         class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
@@ -18,8 +19,6 @@ services:
     statsModelFactory: StatsModelFactory
     pipelineFactory:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    downloaderFactory:
-        class: Tasks\DownloaderFactory(%astrid.user%, %astrid.password%, %astrid.host%, %tasks.paths%, %tempDir%, %contestMapping%)
     flashDumpFactory:
         class: Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:

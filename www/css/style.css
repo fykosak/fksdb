@@ -23,8 +23,9 @@ html, body {
 }
 
 .list-piped > li {
-    display: inline-block;    
+    display: inline-block;
 }
+
 .list-piped > li + li:before {
     color: #CCCCCC;
     content: "| ";
@@ -37,7 +38,7 @@ html, body {
 
 /*
  * Forms
- */ 
+ */
 .well legend {
     color: #999;
     border-style: none;
@@ -48,9 +49,11 @@ html, body {
     top: -2em;
     z-index: 2;
 }
+
 fieldset .well {
     margin-top: 2em;
 }
+
 .clear-referenced {
     position: absolute;
     right: 1em;
@@ -61,12 +64,14 @@ fieldset .well {
 .right-inner-addon {
     position: relative;
 }
+
 .right-inner-addon input {
-    padding-right: 30px;    
+    padding-right: 30px;
 }
+
 .right-inner-addon i {
     position: absolute;
-    right: 0px;
+    right: 0;
     padding: 8px 12px;
     cursor: pointer; /* TODO not general enough, might be a static icon */
 }
@@ -74,5 +79,37 @@ fieldset .well {
 .required .control-label:before {
     color: #b94a48;
     /*content: '* ';*/
-    display:inline;
+    display: inline;
 }
+
+.task-code-container input.valid {
+    color: #3c763d;
+}
+
+.task-code-container input.invalid {
+    color: #a94442;
+}
+
+.task-code-container .team {
+    width: 6em;
+}
+
+.task-code-container .task {
+    width: 2em;
+}
+
+.task-code-container .control {
+    width: 1em;
+}
+
+.task-code-container .control, .task-code-container .task, .task-code-container .team {
+    border: none;
+    outline-offset: 0;
+    outline-color: transparent;
+}
+
+.task-code-container > div {
+    font-size: 120%;
+    border: 1px solid #66afe9;
+}
+

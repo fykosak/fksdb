@@ -60,38 +60,44 @@ class Results extends React.Component<void, IResultsState> {
             displayCategory: null,
             displayRoom: null,
             image: null,
-            submits: new Array<ISubmit>(),
+            submits: {},
             times: {},
-            tasks: new Array<ITask>(),
-            teams: new Array<ITeam>(),
+            tasks: [],
+            teams: [],
             visible: false,
             isOrg: false,
             isReady: false,
             configDisplay: false,
             msg: '',
+            isRefreshing: false,
         };
     }
 
     public componentDidMount() {
-
         console.log('mount');
         this.initResults();
-        setInterval(()=> {
-            this.downloadResults();
-        }, 10 * 1000);
         this.applyNextAutoFilter(0);
+    }
+
+    private addResults(data) {
+        let {times, submits, isOrg, lastUpdated, refreshDelay} = data;
+        this.setState({
+            times,
+            isOrg,
+            submits: Object.assign({}, this.state.submits, submits),
+            lastUpdated,
+            isRefreshing: (refreshDelay !== null)
+        });
     }
 
     private initResults() {
         $.nette.ajax({
-            data: {
-                type: 'init'
-            },
             success: data=> {
                 let {tasks, teams} = data;
-                this.state.tasks = tasks;
-                this.state.teams = teams;
-                this.downloadResults();
+                this.addResults(data);
+                this.setState({tasks, teams, isReady: true});
+                let {refreshDelay} = data;
+                this.downloadResults(refreshDelay);
             },
             error: (e)=> {
                 this.setState({msg: e.toString()});
@@ -99,24 +105,25 @@ class Results extends React.Component<void, IResultsState> {
         });
     }
 
-    private downloadResults() {
-
-        $.nette.ajax({
-            data: {
-                type: 'refresh'
-            },
-            success: (data)=> {
-                let {times, submits, is_org} = data;
-                this.setState({submits, times, isOrg: is_org});
-                this.forceUpdate();
-                if (this.state.tasks && this.state.teams) {
-                    this.state.isReady = true;
+    private downloadResults(refreshDelay) {
+        if (refreshDelay == null) {
+            return;
+        }
+        setTimeout(()=> {
+            $.nette.ajax({
+                data: {
+                    lastUpdated: this.state.lastUpdated,
+                },
+                success: (data)=> {
+                    this.addResults(data);
+                    let {refreshDelay} = data;
+                    this.downloadResults(refreshDelay);
+                },
+                error: (e)=> {
+                    this.setState({msg: e.toString()});
                 }
-            },
-            error: (e)=> {
-                this.setState({msg: e.toString()});
-            }
-        });
+            });
+        }, refreshDelay);
     }
 
     private applyNextAutoFilter(i) {
@@ -161,7 +168,7 @@ class Results extends React.Component<void, IResultsState> {
 
 
     public render() {
-        let {times:{visible}, hardVisible}=this.state;
+        let {times:{visible}, hardVisible, lastUpdated, isRefreshing}=this.state;
         this.state.visible = (visible || hardVisible);
 
         let filtersButtons = filters.map((filter, index)=> {
@@ -207,6 +214,7 @@ class Results extends React.Component<void, IResultsState> {
 
         return (<div>
                 <BackLink />
+                <div className="last-update-info">Naposledy updatnute:<span className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
                 {msg}
 
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>
@@ -314,22 +322,26 @@ class ResultsTable extends React.Component<any, void> {
         teams.forEach((team: ITeam, teamIndex) => {
             let cools = [];
             tasks.forEach((task: ITask, taskIndex)=> {
-                let submit: ISubmit = submits.filter((submit: ISubmit)=> {
+                let submit: ISubmit = Object.values(submits).filter((submit: ISubmit)=> {
                     return submit.task_id == task.task_id && submit.team_id == team.team_id;
                 })[0];
                 let points = submit ? submit.points : '';
-                cools.push(<td data-points={points} key={taskIndex}>{points}</td>);
+                cools.push(<td data-points={points} key={taskIndex}>{(points !== null) ? points : ''}</td>);
             });
 
             let styles = {
                 display: ((!displayCategory || displayCategory == team.category) && (!displayRoom || displayRoom == team.room)) ? '' : 'none',
             };
             let count = 0;
-            let sum = submits.filter((submit: ISubmit)=> {
+            let sum = Object.values(submits).filter((submit: ISubmit)=> {
                 return submit.team_id == team.team_id;
             }).reduce((val, submit: ISubmit)=> {
-                count++;
-                return val + +submit.points;
+                let {points}= submit;
+                if (points !== null) {
+                    count++;
+                    return val + +points;
+                }
+                return val;
             }, 0);
             let average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
             rows.push(<tr key={teamIndex} style={styles}>
@@ -457,5 +469,6 @@ class Images extends React.Component<any,any> {
         )
     }
 }
+$('.fyziklani-results').parent('.container').css({width: 'inherit'});
 
 ReactDOM.render(<Results/>, document.getElementsByClassName('fyziklani-results')[0]);

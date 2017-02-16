@@ -4,8 +4,6 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -14,7 +12,6 @@ use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
-use FKSDB\Components\Grids\EventOrgsGrid;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
@@ -32,12 +29,10 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
-use Persons\ExtendedPersonHandler;
-use Persons\SelfResolver;
 use ServiceEvent;
+use ServiceEventOrg;
 use SystemContainer;
 use Utils;
-use FKS\Config\Expressions\Helpers;
 
 
 /**
@@ -97,7 +92,7 @@ class EventPresenter extends EntityPresenter {
      */
     private $referencedPersonFactory;
     /**
-     * @var \ServiceEventOrg
+     * @var ServiceEventOrg
      */
     private $serviceEventOrg;
 
@@ -139,8 +134,17 @@ class EventPresenter extends EntityPresenter {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
-    public function injectServiceEventOrg(\ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
+    }
+
+    public function authorizedApplications($id) {
+        $model = $this->getModel();
+        if (!$model) {
+            throw new BadRequestException('Neexistující model.', 404);
+        }
+        $this->setAuthorized($this->getContestAuthorizator()
+            ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
     public function authorizedModel($id) {
@@ -337,7 +341,9 @@ class EventPresenter extends EntityPresenter {
             $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
             $this->serviceEvent->updateModel($model, $data);
 
-            if (!$this->getContestAuthorizator()->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())) {
+            if (!$this->getContestAuthorizator()
+                ->isAllowed($model, $isNew ? 'create' : 'edit', $this->getSelectedContest())
+            ) {
                 throw new ForbiddenRequestException();
             }
 
@@ -363,49 +369,4 @@ class EventPresenter extends EntityPresenter {
         }
     }
 
-    public function createComponentOrgsGrid($name) {
-        return new EventOrgsGrid($this->getParam('id'),$this->serviceEventOrg);
-
-    }
-
-    public function createComponentOrgForm($name) {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
-
-        $container = new ContainerWithOptions();
-        $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-
-        $fieldsDefinition = Helpers::evalExpressionArray($this->globalParameters['eventOrg'], $this->container);
-        $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
-
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, ReferencedPersonFactory::SEARCH_ID, false, $modifiabilityResolver, $visibilityResolver);
-
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
-
-
-        //  $this->appendExtendedContainer($form);
-        $form->addText('note', _('Poznámka'));
-        $form->addHidden('event_id', $this->getParam('id'));
-        $_this = $this;
-        $form->addSubmit('submit', _('Ulozit'))->onClick[] = function () use ($_this, $form) {
-            $_this->orgFormSuccess($form);
-        };
-        // $form->onSuccess[] = [$this, 'orgFormSuccess'];
-        return $control;
-    }
-
-    public function orgFormSuccess(Form $form) {
-        $values = $form->getValues();
-        Debugger::barDump($values);
-        $model = $this->serviceEventOrg->createNew([
-            'person_id' => $values[ExtendedPersonHandler::CONT_AGGR]['person_id'],
-            'event_id' => $values->event_id,
-            'note' => $values->note
-        ]);
-        $this->serviceEventOrg->save($model);
-        $this->flashMessage(_('Organizátor bol založený'), 'success');
-        $this->redirect('this');
-    }
 }

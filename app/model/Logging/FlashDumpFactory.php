@@ -16,7 +16,10 @@ class FlashDumpFactory {
 
     const CREATE_PREFIX = 'create';
 
+    const DEFAULT_CONFIGURATION = 'default';
+
     private $configuration;
+
     private $cache = array();
 
     function __construct($configuration) {
@@ -34,7 +37,7 @@ class FlashDumpFactory {
 
     private function create($name) {
         if (!isset($this->configuration[$name])) {
-            throw new InvalidArgumentException("Unknown flash dump configuration '$name'.");
+            $name = self::DEFAULT_CONFIGURATION;
         }
         if (!isset($this->cache[$name])) {
             $this->cache[$name] = new FlashMessageDump($this->configuration[$name]);
