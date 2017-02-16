@@ -38,32 +38,28 @@ class FyziklaniTaskImportProcessor {
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {
-            $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->eventID);
-            $taskID = $task ? $task->fyziklani_task_id : false;
             try {
-                if ($taskID) {
-                    if ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $this->serviceFyziklaniTask->updateModel($task, [
-                            'label' => $row['label'],
-                            'name' => $row['name']
-                        ]);
-                        $this->serviceFyziklaniTask->save($task);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
-                    } else {
-                        $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                            'warning'
-                        ];
-                    }
-                } else {
-                    $this->serviceFyziklaniTask->createNew($task, [
+                $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->eventID);
+                if (!$task) {
+                    $task = $this->serviceFyziklaniTask->createNew([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->eventID
                     ]);
-                    $this->serviceFyziklaniTask->save($task);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
+                } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
+                        $this->serviceFyziklaniTask->updateModel($task, [
+                            'label' => $row['label'],
+                            'name' => $row['name']
+                        ]);
+                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
+                } else {
+                        $messages[] = [
+                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
+                            'warning'
+                        ];
                 }
+                $this->serviceFyziklaniTask->save($task);
             } catch (Exception $e) {
                 $messages[] = [_('Vyskytla se chyba'), 'danger'];
                 Debugger::log($e);
