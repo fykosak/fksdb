@@ -56,7 +56,7 @@ class FyziklaniTaskImportProcessor {
                         ];
                     }
                 } else {
-                    $this->serviceFyziklaniTask->createNew($task, [
+                    $task = $this->serviceFyziklaniTask->createNew([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->eventID
