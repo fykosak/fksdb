@@ -62,7 +62,7 @@ var TaskCode = (function (_super) {
         if (control === void 0) { control = null; }
         team = team || (+this.state.team < 1000) ? '0' + +this.state.team : +this.state.team;
         task = task || this.state.task || '';
-        control = (control !== null) ? control : (this.state.control || '');
+         control = (control !== null) ? control : (typeof this.state.control == "undefined"?  '':this.state.control);
         return '00' + team + task + control;
     };
     TaskCode.prototype.isValid = function (code) {
