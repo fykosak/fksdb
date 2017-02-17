@@ -74,7 +74,7 @@ class ClosePresenter extends BasePresenter {
                 ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydavačů'))
                 ->setDisabled()
-                ->setDefaultValue($this->getNextTask()->nextTask);
+                ->setDefaultValue($this->getNextTask());
         $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
                 ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
@@ -151,24 +151,10 @@ class ClosePresenter extends BasePresenter {
     }
 
     private function getNextTask() {
-        $return = [];
         $submits = count($this->team->getSubmits());
-        $allTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label');
-        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
-        $lastID = $submits + $tasksOnBoard - 1;
-        /** @because index start with 0; */
-        $nextID = $lastID + 1;
-        if (isset($allTask[$nextID])) {
-            $return['nextTask'] = $allTask[$nextID]->label;
-        } else {
-            $return['nextTask'] = null;
-        }
-        if (isset($allTask[$lastID])) {
-            $return['lastTask'] = $allTask[$lastID]->label;
-        } else {
-            $return['lastTask'] = null;
-        }
-        return (object) $return;
+        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');        
+        $nextTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        return ($nextTask) ? $nextTask->label : '';
     }
 
 }

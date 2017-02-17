@@ -1,8 +1,27 @@
 //import * as React from './lib/react/';
 //import * as ReactDOM from './lib/react-dom';
 
+/**
+ * Emulate ES2017 -- polyfill Object static method
+ * See https://github.com/zloirock/core-js#stage-4-proposals
+ * @for chrome <54
+ * @for FF <51
+ */
+if (!Object.values) {
+    Object.values = (obj)=> {
+        var vals = [];
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
+            }
+        }
+        return vals;
+    }
+
+}
+
 interface ISubmit {
-    points: number;
+    points: number|null;
     task_id: number;
     team_id: number;
 }
@@ -214,7 +233,8 @@ class Results extends React.Component<void, IResultsState> {
 
         return (<div>
                 <BackLink />
-                <div className="last-update-info">Naposledy updatnute:<span className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
+                <div className="last-update-info">Naposledny updatováno:<span
+                    className={isRefreshing?'text-success':'text-muted'}>{lastUpdated}</span></div>
                 {msg}
 
                 <ul className="nav nav-tabs" style={{display:(this.state.visible)?'':'none'}}>

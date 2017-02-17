@@ -11,6 +11,17 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+if (!Object.values) {
+    Object.values = function (obj) {
+        var vals = [];
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
+            }
+        }
+        return vals;
+    };
+}
 var basePath = $(document.getElementsByClassName('fyziklani-results')[0]).data('basepath');
 var filters = [
     { room: null, category: null, name: "ALL" },
@@ -167,7 +178,7 @@ var Results = (function (_super) {
         if (!this.state.isReady) {
             return (React.createElement("div", {className: "load", style: { textAlign: 'center', }}, React.createElement("img", {src: basePath + '/images/gears.svg', style: { width: '50%' }})));
         }
-        return (React.createElement("div", null, React.createElement(BackLink, null), React.createElement("div", {className: "last-update-info"}, "Naposledy updatnute:", React.createElement("span", {className: isRefreshing ? 'text-success' : 'text-muted'}, lastUpdated)), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
+        return (React.createElement("div", null, React.createElement(BackLink, null), React.createElement("div", {className: "last-update-info"}, "Naposledny updatováno:", React.createElement("span", {className: isRefreshing ? 'text-success' : 'text-muted'}, lastUpdated)), msg, React.createElement("ul", {className: "nav nav-tabs", style: { display: (this.state.visible) ? '' : 'none' }}, filtersButtons), React.createElement(Images, __assign({}, this.state, this.props)), React.createElement(ResultsTable, __assign({}, this.state, this.props)), React.createElement(Timer, __assign({}, this.state, this.props)), button, React.createElement("div", {style: { display: this.state.configDisplay ? 'block' : 'none' }}, React.createElement("div", {className: "form-group"}, React.createElement("label", {className: "sr-only"}, React.createElement("span", null, "Místnost")), React.createElement("select", {className: "form-control", onChange: function (event) {
             _this.setState({ autoDisplayRoom: event.target.value });
         }}, React.createElement("option", null, "--vyberte místnost--"), filters
             .filter(function (filter) { return filter.room != null; })
