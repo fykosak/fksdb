@@ -32,7 +32,7 @@ var filters = [
     { room: 'M2', category: null, name: "M2" },
     { room: 'M3', category: null, name: "M3" },
     { room: 'M4', category: null, name: "M4" },
-    { room: 'M5', category: null, name: "M5" },
+    { room: 'M6', category: null, name: "M6" },
     { room: 'F1', category: null, name: "F1" },
     { room: 'F2', category: null, name: "F2" },
     { room: 'S1', category: null, name: "S1" },
@@ -118,12 +118,12 @@ var Results = (function (_super) {
     Results.prototype.applyNextAutoFilter = function (i) {
         var _this = this;
         $("html, body").scrollTop();
-        var t = 15000;
+        var t = 20000;
         var _a = this.state, autoSwitch = _a.autoSwitch, autoDisplayCategory = _a.autoDisplayCategory, autoDisplayRoom = _a.autoDisplayRoom;
         if (autoSwitch) {
             switch (i) {
                 case 0: {
-                    t = 30000;
+                    t = 40000;
                     this.setState({ displayCategory: null, displayRoom: null });
                     break;
                 }
@@ -147,7 +147,7 @@ var Results = (function (_super) {
                 }
             }
             if (t > 1000) {
-                $("html, body").delay(t / 3).animate({ scrollTop: $(document).height() }, t / 3);
+                $("html, body").delay(t / 3).animate({ scrollTop: $(document).height() }, 2*t / 3);
             }
         }
         setTimeout(function () {
