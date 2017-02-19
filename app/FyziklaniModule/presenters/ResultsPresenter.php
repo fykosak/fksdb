@@ -6,6 +6,18 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
+    
+    protected function unauthorizedAccess() {
+        if ($this->getAction() == 'default') {
+            return;
+        }
+
+        parent::unauthorizedAccess();
+    }
+
+    public function requiresLogin() {
+        return $this->getAction() != 'default';
+    }
 
     public function renderDefault() {
         if ($this->isAjax()) {
