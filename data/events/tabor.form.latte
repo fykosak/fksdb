@@ -1,7 +1,7 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
-{if !$control->isEventAdmin()}
+
 <ul>
     <li>
         Potvrzením přihlášky se závazně přihlašuješ <strong>na celý tábor</strong>.
@@ -10,11 +10,15 @@
         Uzávěrka pro vyjádření <strong>{$holder->getParameter('deadline')|date:'j. n. Y H:i:s'}</strong>.
     </li>
     <li>
-        Více informací o táboře se bude průběžně objevovat na <a href="http://vyfuk.mff.cuni.cz/akce/tabor">našich stránkách</a>.
+        Více informací o táboře se bude průběžně objevovat na <a href="http://vyfuk.mff.cuni.cz/akce/tabor">našich
+            stránkách</a>.
 
     </li>
+    <li>
+        <strong class="text-danger">Chcete-li přihlášku uložit bez potvrzení zájmu o účast, stikněte tlačítko <code>Uložit</code>. Máte-li
+            závazný zájem o účast na táboře, stiskněte po vyplnění přihlášky tlačítko
+            <code>Potrvrdit učast</code>/<code>Chci jet</code>.
+        </strong>
+    </li>
 </ul>
-{/if}
-
-
 {control form}
