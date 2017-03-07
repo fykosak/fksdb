@@ -37,18 +37,12 @@ parameters:
                     F_M: M dámské
                     F_L: L dámské
                     F_XL: XL dámské
-                color:
-                    red: Červené
-                    green: Zelené
-                    blue: Modré
-                    orange: Oranžové
-                    pink: Ružové
-            
+
                 
 
 events:
     tabor:
-        event_type_id: [10] # jarní i podzimní sous. nejsou různá
+        event_type_id: [10] 
         #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
         formLayout: tabor.form
@@ -109,9 +103,13 @@ events:
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: Potrvrdit učast
+                        onExecuted:
+                            - Events\Transitions\MailSender(tabor/confirm-applied, .self)
                     spare->interested:
                         condition: before(param('deadline')) 
                         label: Chci jet
+                        onExecuted:
+                            - Events\Transitions\MailSender(tabor/confirm-interested, .self)
                     applied->paid:
                         condition: role('admin')
                         label: Zaplatil
@@ -126,8 +124,6 @@ events:
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka
-#                    onExecuted:
-#                           - Events\Transitions\MailSender(tabor/invited, .self)
                     spare->invited:
                         condition: role('admin')
                         label: Pozvat jako účastníka
@@ -164,12 +160,8 @@ events:
                     tshirt_size:
                         label: "Jaké triko nosíš?"
                         required: %events.tabor.requiredCond%
-                        factory: Chooser("Zvolit velikost", Options(%events.tabor.tshirt%))
-                    tshirt_color:
-                        label: "Jakou barvu trička bys chtěl?"
-                        required: false
-                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
-                    
+                        factory: Chooser("Zvolit velikost", Options(%events.tabor.tshirt.size%))
+
                     swimmer:
                          label: "Umím plavat"                           
                     note:
