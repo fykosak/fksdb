@@ -103,17 +103,9 @@ events:
                         label: 'Jakou barvu má Výfuček?'
                         required: true
                         modifiable: %events.setkani.appCond%
-                    #arrival_destination:
-                    #   label: "Na jaké místo přijedeš?"
-                    #   required: true
-                    #   factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     arrival_time:
                        label: "Předpokládaný příjezd"
                        description: "Čas příjezdu" 
-                    #departure_destination:
-                    #   label: "Z jakého místa chceš odjíždět?"
-                    #   required: true
-                    #   factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     departure_time:
                        label: "Předpokládaný odjezd"
                        description: "Čas odjezdu" 
