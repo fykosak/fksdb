@@ -1,8 +1,11 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
-{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
+
 <ul>
+    <li>
+        <strong>Přihláška je závazná!</strong>.
+    </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->application->storeRequest()}
         Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
@@ -12,8 +15,5 @@
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
-
-{/if}
-
 
 {control form}
