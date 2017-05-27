@@ -60,6 +60,8 @@ INSERT INTO `role` (`role_id`, `name`, `description`) VALUES
 (10,'exportDesigner','tvůrce exportů'),
 (11,'aesop','oslizávač dat pro AESOP'),
 (12,'schoolManager','správce dat škol'),
+(13,'web','Dokuwiki uživatel pro fksdbexport'),
+(14,'wiki','Uživatel neveřejné Dokuwiki pro fksdbexport'),
 (100,'superuser','složení všech rolí'),
 (1000,'cartesian','cokoli s čímkoli');
 			
