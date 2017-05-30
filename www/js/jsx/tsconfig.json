@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "None",
-    "jsx": "react",
-    "removeComments": true,
-    "target": "es5",
-    "sourceMap": false,
-    "allowJs": true,
-    "isolatedModules": false
-  }
-
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "target": "es6",
+    "jsx": "react"
+  },
+  "include": [
+    "./src/**/*"
+  ]
 }
 

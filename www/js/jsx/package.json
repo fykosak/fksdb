@@ -1,0 +1,29 @@
+{
+  "name": "fksdb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "latest",
+    "@types/react": "latest",
+    "react-dom": "latest",
+    "@types/jquery": "latest",
+    "@types/react-dom": "latest",
+    "react-redux": "latest",
+    "@types/react-redux": "latest",
+    "redux": "latest",
+    "@types/redux": "latest",
+    "promise-polyfill": "latest",
+    "@types/promise-polyfill": "latest",
+    "redux-logger":"latest",
+    "typescript": "latest",
+    "awesome-typescript-loader": "latest",
+    "source-map-loader": "latest",
+    "babel-polyfill": "latest"
+  }
+}

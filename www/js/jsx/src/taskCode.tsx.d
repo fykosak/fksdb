@@ -1,3 +1,6 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
 interface ITaskCodeProps {
     node: Node;
     tasks: Array<number>;
@@ -7,12 +10,15 @@ interface ITaskCodeProps {
 interface ITaskCodeState {
     task: string;
     team: number;
+    validTask: any;
+    control: any;
+    validTeam: any;
+    valid: any;
 }
 
 class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
     constructor() {
         super();
-        this.state = {};
     }
 
     public componentDidMount() {
@@ -21,7 +27,7 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
     }
 
     public render() {
-        const onInputTask = (event)=> {
+        const onInputTask = (event) => {
             let value = event.target.value.toLocaleUpperCase();
             let oldValue = this.state.task;
             if (value == oldValue) {
@@ -38,7 +44,7 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
             );
         };
 
-        const onInputTeam = (event)=> {
+        const onInputTeam = (event) => {
             let value = +event.target.value;
             let oldValue = this.state.team;
             if (value == oldValue) {
@@ -53,7 +59,7 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
             });
         };
 
-        const onInputControl = (event)=> {
+        const onInputControl = (event) => {
             let value = +event.target.value;
             let oldValue = this.state.control;
             if (value == oldValue) {
@@ -116,7 +122,7 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
             this.state.valid = false;
             return;
         }
-        let subCode = code.split('').map((char)=> {
+        let subCode = code.split('').map((char) => {
             return char.toLocaleUpperCase()
                 .replace('A', 1)
                 .replace('B', 2)
@@ -136,12 +142,12 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
 
     private isValidTask(task) {
         let {tasks} = this.props;
-        return this.state.validTask = tasks.map(task=>task.label).indexOf(task) !== -1;
+        return this.state.validTask = tasks.map(task => task.label).indexOf(task) !== -1;
     }
 
     private isValidTeam(team) {
         let {teams} = this.props;
-        return this.state.validTeam = teams.map(team=>team.team_id).indexOf(+team) !== -1;
+        return this.state.validTeam = teams.map(team => team.team_id).indexOf(+team) !== -1;
     }
 
     public componentDidUpdate() {
@@ -151,18 +157,3 @@ class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
         }
     }
 }
-
-jQuery('#taskcode').each(
-    (a, input) => {
-        let $ = jQuery;
-        if (!input.value) {
-            let c = document.createElement('div');
-            let tasks = $(input).data('tasks');
-            let teams = $(input).data('teams');
-            $(input).parent().parent().append(c);
-            $(input).parent().hide();
-            $(c).addClass('col-lg-6');
-            ReactDOM.render(<TaskCode node={input} tasks={tasks} teams={teams}/>, c);
-        }
-    }
-);
