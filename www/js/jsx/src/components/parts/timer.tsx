@@ -1,21 +1,29 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {getCurrentDelta} from '../../helpers/timer';
 
 interface IProps {
     toStart?: number;
     toEnd?: number;
     visible?: boolean;
+    inserted?: Date;
+    hardVisible?: boolean;
 }
 
 class Timer extends React.Component<IProps, void> {
 
+    componentDidMount() {
+        setInterval(() => this.forceUpdate(), 1000);
+    }
+
     public render() {
-        const {toStart, toEnd, visible} = this.props;
+        const {inserted, visible, toStart, toEnd, hardVisible}=this.props;
+        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
         let timeStamp = 0;
-        if (toStart > 0) {
-            timeStamp = toStart * 1000;
-        } else if (toEnd > 0) {
-            timeStamp = toEnd * 1000;
+        if (currentToStart > 0) {
+            timeStamp = currentToStart;
+        } else if (currentToEnd > 0) {
+            timeStamp = currentToEnd;
         } else {
             return (<div/>);
         }
@@ -24,7 +32,7 @@ class Timer extends React.Component<IProps, void> {
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'clock '+(visible?'':'big')}>
+            <div className={'clock '+((visible||hardVisible)?'':'big')}>
                 {
                     (h < 10 ? "0" + h : "" + h)
                     + ":" +
@@ -41,6 +49,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         ...state.timer,
+        hardVisible: state.options.hardVisible,
     }
 };
 

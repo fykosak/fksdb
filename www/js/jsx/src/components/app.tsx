@@ -12,7 +12,9 @@ import FyziklaniApp from './fyziklani-app';
 
 export default class App extends React.Component<any,any> {
     public render() {
-        const store = createStore(app, applyMiddleware(logger));
+
+        //const store = createStore(app, applyMiddleware(logger));
+        const store = createStore(app);
         return (
             <Provider store={store}>
                 <FyziklaniApp/>

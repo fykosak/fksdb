@@ -6,3 +6,21 @@ export const setReadyStatus = (status: boolean) => {
         status,
     };
 };
+
+export const SET_HARD_VISIBLE = 'SET_HARD_VISIBLE';
+
+export const setHardVisible = (status) => {
+    return {
+        type: SET_HARD_VISIBLE,
+        status,
+    };
+};
+
+export const SET_ORG_STATUS = 'SET_ORG_STATUS';
+
+export const setOrgStatus = (status) => {
+    return {
+        type: SET_ORG_STATUS,
+        status,
+    };
+};

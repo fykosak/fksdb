@@ -1,38 +1,45 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {basePath} from '../../helpers/base-path';
+import {getCurrentDelta} from '../../helpers/timer';
 
 interface IProps {
     toStart?: number;
     toEnd?: number;
+    inserted?: Date;
     visible?: boolean;
 }
 
 class Images extends React.Component<IProps,void> {
+    componentDidMount() {
+        setInterval(() => this.forceUpdate(), 1000);
+    }
 
     public render() {
-        const {toStart, toEnd}=this.props;
-        if (toStart == 0 || toEnd == 0) {
+        const {inserted, toStart, toEnd}=this.props;
+        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
+
+        if (currentToStart == 0 || currentToEnd == 0) {
             return (<div/>);
         }
         let imgSRC = basePath + '/images/fyziklani/';
-        if (toStart > 300) {
+        if (currentToStart > 300 * 1000) {
             imgSRC += 'nezacalo.svg';
-        } else if (toStart > 0) {
+        } else if (currentToStart > 0) {
             imgSRC += 'brzo.svg';
-        } else if (toStart > -120) {
+        } else if (currentToStart > -120 * 1000) {
             imgSRC += 'start.svg';
-        } else if (toEnd > 0) {
+        } else if (currentToEnd > 0) {
             imgSRC += 'fyziklani.svg';
 
-        } else if (toEnd > -240) {
+        } else if (currentToEnd > -240 * 1000) {
             imgSRC += 'skoncilo.svg';
         } else {
             imgSRC += 'ceka.svg';
         }
         return (
             <div id='imageWP' data-basepath={basePath}>
-                <img src={imgSRC} alt=""/>
+                <img src={imgSRC} alt="" style={{width:'80%'}}/>
             </div>
         )
     }

@@ -6,7 +6,10 @@ import {
     setTasks,
     setTeams
 } from '../actions/results';
-import {setReadyStatus} from '../actions/options';
+import {
+    setReadyStatus,
+    setOrgStatus,
+} from '../actions/options';
 
 export const fetchResults = (dispatch: Function, lastUpdated: string = null) => {
     const promise = new Promise((resolve, reject) => {
@@ -14,7 +17,7 @@ export const fetchResults = (dispatch: Function, lastUpdated: string = null) => 
         if (lastUpdated) {
             data.lastUpdated = lastUpdated;
         }
-        $.nette.ajax({
+        (<any>$).nette.ajax({
             data,
             success: (data) => {
                 resolve(data);
@@ -36,6 +39,8 @@ export const fetchResults = (dispatch: Function, lastUpdated: string = null) => 
         if (teams) {
             dispatch(setTeams(teams));
         }
+
+        dispatch(setOrgStatus(isOrg));
         dispatch(setReadyStatus(true));
 
     })

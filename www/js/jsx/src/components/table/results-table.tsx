@@ -16,8 +16,6 @@ interface IResultsTable {
     submits?: any;
     teams?: Array<ITeam>;
     tasks?: Array<ITask>;
-    displayCategory: string;
-    displayRoom: string;
 }
 
 class ResultsTable extends React.Component<IResultsTable, void> {
@@ -29,7 +27,7 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 
     public componentDidUpdate() {
-        let $table = $(ReactDOM.findDOMNode(this.table));
+        const $table = $(ReactDOM.findDOMNode(this.table));
         try {
             $table.trigger("update");
             $table.trigger("sorton", [[[1, 1], [3, 1]]]);
@@ -39,15 +37,13 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 
     public componentDidMount() {
-        let $table = $(ReactDOM.findDOMNode(this.table));
-        //   $table.tablesorter()
+        const $table: any = $(ReactDOM.findDOMNode(this.table));
+        $table.tablesorter();
     }
 
     public render() {
-
-        const {submits, teams, tasks, displayCategory, displayRoom} = this.props;
+        const {submits, teams, tasks, filter:{room, category}} = this.props;
         const submitsForTeams = {};
-        console.log(submits);
         for (let index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit = submits[index];
@@ -57,7 +53,12 @@ class ResultsTable extends React.Component<IResultsTable, void> {
             }
         }
 
-        const rows = teams.map((team: ITeam, teamIndex) => {
+        const rows = teams.filter((team) => {
+            if (category && category !== team.category) {
+                return false;
+            }
+            return !(room && category !== team.room);
+        }).map((team: ITeam, teamIndex) => {
             return (
                 <TeamRow
                     tasks={tasks}
@@ -74,8 +75,7 @@ class ResultsTable extends React.Component<IResultsTable, void> {
 
         return (
             <div>
-
-                <table ref={(table)=>{this.table = table}} className="tablesorter">
+                <table ref={(table)=>{this.table = table}} className="tablesorter table-striped table-hover">
                     <thead>
                     <tr>
                         <th/>
@@ -95,7 +95,6 @@ class ResultsTable extends React.Component<IResultsTable, void> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    debugger;
     const {filterID, room, category, userFilter, autoSwitch} = state.tableFilter;
     return {
         ...ownProps,
