@@ -33,7 +33,9 @@
 ../vyfuk3/q/aesop.setkani.j?ha=1&format=aesop
 ../vyfuk4/q/aesop.setkani.j?ha=1&format=aesop
 ../vyfuk5/q/aesop.setkani.j?ha=1&format=aesop
+../vyfuk6/q/aesop.setkani.j?ha=1&format=aesop
 ../vyfuk2/q/aesop.setkani.p?ha=1&format=aesop
 ../vyfuk3/q/aesop.setkani.p?ha=1&format=aesop
 ../vyfuk4/q/aesop.setkani.p?ha=1&format=aesop
 ../vyfuk5/q/aesop.setkani.p?ha=1&format=aesop
+../vyfuk6/q/aesop.setkani.p?ha=1&format=aesop

@@ -100,3 +100,8 @@
 ../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=B
 ../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=C
 ../fykos30/q/aesop.fol?ha=1&format=aesop&p_category=zahranicni
+../fykos30/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
+../fykos30/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
+../fykos30/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
+../fykos30/q/aesop.klani.uc?ha=1&format=aesop
+../fykos30/q/aesop.sous.j?ha=1&format=aesop
