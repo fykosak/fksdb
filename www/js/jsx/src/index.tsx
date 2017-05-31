@@ -2,13 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import App from './components/app';
-import TaskCode from './taskCode';
+import TaskCode from './components/task-code';
 
 $('.fyziklani-results').parent('.container').css({width: 'inherit'});
 if (document.getElementsByClassName('fyziklani-results').length) {
     ReactDOM.render(<App/>, document.getElementsByClassName('fyziklani-results')[0]);
 }
-
 
 jQuery('#taskcode').each(
     (a, input: HTMLInputElement) => {

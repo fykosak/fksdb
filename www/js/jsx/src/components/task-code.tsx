@@ -136,7 +136,7 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
     }
 
     private isValid(code: string): boolean {
-        let {validTeam, validTask}= this.state;
+        const {validTeam, validTask}= this.state;
         if (!validTask) {
             return false;
         }
@@ -145,14 +145,14 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
         }
         const subCode = code.split('').map((char): number => {
             return +char.toLocaleUpperCase()
-                .replace(/A/, '1')
-                .replace(/B/, '2')
-                .replace(/C/, '3')
-                .replace(/D/, '4')
-                .replace(/E/, '5')
-                .replace(/F/, '6')
-                .replace(/G/, '7')
-                .replace(/H/, '8');
+                .replace('A', '1')
+                .replace('B', '2')
+                .replace('C', '3')
+                .replace('D', '4')
+                .replace('E', '5')
+                .replace('F', '6')
+                .replace('G', '7')
+                .replace('H', '8');
         });
         const c = this.getControl(subCode);
         return (c % 10 == 0);

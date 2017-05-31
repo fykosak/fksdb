@@ -4,12 +4,10 @@ import {connect} from 'react-redux';
 import Images from '../parts/images';
 import ResultsTable from '../table/results-table';
 import Timer from '../parts/timer';
-import {basePath} from '../../helpers/base-path';
 import AutoFilter from '../parts/auto-filter';
 import Options from '../parts/options';
 
 interface IProps {
-    isReady?: boolean;
     visible?: boolean;
     hardVisible?: boolean;
 }
@@ -17,25 +15,13 @@ interface IProps {
 class Results extends React.Component<IProps, any> {
 
     public render() {
-        const {isReady, visible, hardVisible} = this.props;
+        const {visible, hardVisible} = this.props;
 
         const msg = [];
-        /*if (hardVisible) {
-         msg.push(<div key={msg.length} className="alert alert-warning">
-         Výsledková listina je určená pouze pro organizátory!!!</div> );
-         }*/
-        /* if (!this.state.isOrg) {
-         msg.push(
-         <div key={msg.length} className="alert alert-info">
-         Na výsledkovou listinu se díváte jako "Public"</div>
-         );
-         }*/
-
-        if (!isReady) {
-            return (
-                <div className="load" style={{textAlign:'center',}}>
-                    <img src={basePath+'/images/gears.svg'} style={{width:'50%'}}/>
-                </div>)
+        // TODO do samostatného componentu všetky messages
+        if (hardVisible) {
+            msg.push(<div key={msg.length} className="alert alert-warning">
+                Výsledková listina je určená pouze pro organizátory!!!</div> );
         }
 
         return (<div>
@@ -53,7 +39,6 @@ class Results extends React.Component<IProps, any> {
 const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
-        isReady: state.options.isReady,
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,
     }

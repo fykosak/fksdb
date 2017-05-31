@@ -14,7 +14,7 @@ interface IProps {
     onCategoryChange?: Function;
     onAutoSwitchChange?: Function;
     onHardDisplayChange?: Function;
-    isOrg: boolean;
+    isOrg?: boolean;
 }
 
 interface IState {
@@ -106,14 +106,14 @@ class Options extends React.Component<IProps, IState> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps: IProps): IProps => {
     return {
         ...ownProps,
         isOrg: state.options.isOrg,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch, ownProps: IProps): IProps => {
     return {
         ...ownProps,
         onCategoryChange: (category) => dispatch(setCategory(category)),

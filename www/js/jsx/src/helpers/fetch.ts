@@ -1,4 +1,3 @@
-//import * as $ from 'jquery';
 import {updateTimes} from '../actions/times';
 import {updateDownloaderOptions} from '../actions/downloader';
 import {

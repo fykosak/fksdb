@@ -1,5 +1,4 @@
 import {UPDATE_TIMES} from '../actions/times';
-import {TICK} from '../actions/tick';
 
 const updateTimes = (state, action: any) => {
     const {times} = action;
@@ -8,7 +7,7 @@ const updateTimes = (state, action: any) => {
         ...state,
         ...times,
         inserted,
-    }
+    };
 };
 
 export const timer = (state = {}, action) => {

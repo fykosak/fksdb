@@ -11,7 +11,8 @@ interface IProps {
 class Clock extends React.Component<IProps,any> {
     public componentDidMount() {
         const {onTick} = this.props;
-       // setInterval(onTick, 1000);
+        // for no tick components -- DANGER CPU overkill in debug mode
+        // setInterval(onTick, 1000);
     }
 
     public render() {

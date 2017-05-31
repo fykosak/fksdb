@@ -1,4 +1,5 @@
 import {UPDATE_DOWNLOADER_OPTIONS} from '../actions/downloader';
+
 const updateOptions = (state, action) => {
     const {lastUpdated, refreshDelay} = action;
     return {

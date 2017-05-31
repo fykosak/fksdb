@@ -9,7 +9,7 @@ const setNextFilter = (state) => {
     return {
         ...state,
         filterID: (filterID + 1) % 3,
-    }
+    };
 };
 
 const setRoom = (state, action) => {
@@ -46,10 +46,8 @@ export const tableFilter = (state = {filterID: 0, autoSwitch: false}, action) =>
         case SET_USER_TABLE_ROOM:
             return setRoom(state, action);
         case SET_USER_TABLE_AUTO_SWITCH:
-            return setAutoSwitch(state,action);
+            return setAutoSwitch(state, action);
         default:
             return state;
     }
 };
-
-
