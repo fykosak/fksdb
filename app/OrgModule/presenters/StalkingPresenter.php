@@ -94,4 +94,8 @@ class StalkingPresenter extends BasePresenter {
             $this->setTitle('Stalking ' . $this->getPerson()->getFullname());
         }
     }
+
+    public function renderView() {
+        $this->template->person = $this->person;
+    }
 }
