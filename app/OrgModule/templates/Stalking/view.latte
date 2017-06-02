@@ -1,0 +1,24 @@
+{block content}
+    {if !is_null($person)}
+
+        {control baseInfo}
+
+        {control login}
+
+        {control address}
+
+        {control personHistory}
+
+        {control contestant}
+
+        {control org}
+
+        {control eventParticipant}
+
+        {control eventOrg}
+    {else}
+        <div class="alert alert-danger">Person doesn't exist!</div>
+
+    {/if}
+
+{/block}
