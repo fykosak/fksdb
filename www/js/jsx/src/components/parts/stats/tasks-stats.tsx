@@ -2,15 +2,15 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {
     ITask,
-    ISubmit
-} from '../../helpers/interfaces';
+    ISubmit,
+} from '../../../helpers/interfaces';
 
 interface IProps {
     tasks: Array<ITask>;
     submits: any;
 }
 
-class TaskStats extends React.Component<IProps,void> {
+class TaskStats extends React.Component<IProps, void> {
     render() {
         const {submits, tasks} = this.props;
         const tasksSubmits = {};
@@ -48,14 +48,14 @@ class TaskStats extends React.Component<IProps,void> {
                     <div className="col-lg-1">{submit.label + '-'}</div>
                     <div className="col-lg-11">
                         <div className="progress">
-                            <div className="progress-bar progress-bar-success" data-points="5"
-                                 style={{width:(submit[5]/max)*100+"%"}}>{submit[5]}</div>
-                            <div className="progress-bar progress-bar-info" data-points="3"
-                                 style={{width:(submit[3]/max)*100+"%"}}>{submit[3]}</div>
-                            <div className="progress-bar progress-bar-warning" data-points="2"
-                                 style={{width:(submit[2]/max)*100+"%"}}>{submit[2]}</div>
-                            <div className="progress-bar progress-bar-danger" data-points="1"
-                                 style={{width:(submit[1]/max)*100+"%"}}>{submit[1]}</div>
+                            <div className="progress-bar bg-success" data-points="5"
+                                 style={{width: (submit[5] / max) * 100 + "%"}}>{submit[5]}</div>
+                            <div className="progress-bar bg-info" data-points="3"
+                                 style={{width: (submit[3] / max) * 100 + "%"}}>{submit[3]}</div>
+                            <div className="progress-bar bg-warning" data-points="2"
+                                 style={{width: (submit[2] / max) * 100 + "%"}}>{submit[2]}</div>
+                            <div className="progress-bar bg-danger" data-points="1"
+                                 style={{width: (submit[1] / max) * 100 + "%"}}>{submit[1]}</div>
                         </div>
                     </div>
                 </div>
@@ -75,10 +75,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        ...ownProps,
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TaskStats);
+export default connect(mapStateToProps, null)(TaskStats);

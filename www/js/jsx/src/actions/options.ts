@@ -24,3 +24,21 @@ export const setOrgStatus = (status) => {
         status,
     };
 };
+
+export const CHANGE_PAGE = 'CHANGE_PAGE';
+
+export const changePage = (page) => {
+    return {
+        type: CHANGE_PAGE,
+        page,
+    };
+};
+
+export const CHANGE_SUBPAGE = 'CHANGE_SUBPAGE';
+
+export const changeSubPage = (subPage) => {
+    return {
+        type: CHANGE_SUBPAGE,
+        subPage,
+    };
+};

@@ -2,6 +2,8 @@ import {
     SET_READY_STATUS,
     SET_HARD_VISIBLE,
     SET_ORG_STATUS,
+    CHANGE_SUBPAGE,
+    CHANGE_PAGE,
 } from '../actions/options';
 const setReadyStatus = (state, action) => {
     return {
@@ -23,6 +25,22 @@ const setOrgStatus = (state, action) => {
     };
 };
 
+const changeSubPage = (state, action) => {
+    const {subPage} = action;
+    return {
+        ...state,
+        subPage,
+    }
+};
+
+const changePage = (state, action) => {
+    const {page} = action;
+    return {
+        ...state,
+        page,
+    }
+};
+
 export const options = (state = {}, action) => {
     switch (action.type) {
         case SET_READY_STATUS:
@@ -31,6 +49,10 @@ export const options = (state = {}, action) => {
             return setHardVisible(state, action);
         case SET_ORG_STATUS:
             return setOrgStatus(state, action);
+        case CHANGE_SUBPAGE:
+            return changeSubPage(state, action);
+        case CHANGE_PAGE:
+            return changePage(state, action);
         default:
             return state;
     }

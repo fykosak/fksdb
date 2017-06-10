@@ -82,7 +82,8 @@ class ResultsPresenter extends BasePresenter {
             $submits[$submit->fyziklani_submit_id] = [
                 'points' => $submit->points,
                 'team_id' => $submit->e_fyziklani_team_id,
-                'task_id' => $submit->fyziklani_task_id
+                'task_id' => $submit->fyziklani_task_id,
+                'created' => $submit->created->__toString()
             ];
         }
         return $submits;

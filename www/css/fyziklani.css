@@ -86,6 +86,12 @@
     padding: .5em;
 }
 
+.legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
 /*
 .btn.btn-5-points{
     background-image: none;

@@ -41,7 +41,7 @@ class Images extends React.Component<IProps,void> {
             <div id='imageWP' data-basepath={basePath}>
                 <img src={imgSRC} alt="" style={{width:'80%'}}/>
             </div>
-        )
+        );
     }
 }
 
@@ -49,7 +49,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         ...state.timer,
-    }
+    };
 };
 
 export default connect(mapStateToProps, null)(Images);
