@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 
-import TasksStats from '../parts/stats/tasks-stats';
-import TeamStats from '../parts/stats/team-stats';
-import Navigation from '../parts/stats/navigation';
+import TasksStats from './task/index';
+import TeamStats from './team/index';
+import Navigation from './navigation';
+import Timer from '../timer';
 
 interface IProps {
     subPage: string;
@@ -27,6 +28,7 @@ class Statistics extends React.Component<IProps, void> {
                 <h1>Statistics of Physics Brawl</h1>
                 <Navigation/>
                 {content}
+                <Timer/>
             </div>
         );
     }

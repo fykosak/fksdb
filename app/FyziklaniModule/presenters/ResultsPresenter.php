@@ -6,7 +6,7 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
-    
+
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             return;
@@ -40,6 +40,8 @@ class ResultsPresenter extends BasePresenter {
             }
             $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
             $result['times'] = [
+                'gameStart' => $this->getCurrentEvent()->getParameter('gameStart')->__toString(),
+                'gameEnd' => $this->getCurrentEvent()->getParameter('gameEnd')->__toString(),
                 'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
                 'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible()
@@ -83,7 +85,7 @@ class ResultsPresenter extends BasePresenter {
                 'points' => $submit->points,
                 'team_id' => $submit->e_fyziklani_team_id,
                 'task_id' => $submit->fyziklani_task_id,
-                'created' => $submit->created->__toString()
+                'created' => $submit->created->format(\DateTime::ISO8601)
             ];
         }
         return $submits;

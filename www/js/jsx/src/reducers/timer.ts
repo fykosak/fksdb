@@ -7,10 +7,16 @@ const updateTimes = (state, action: any) => {
         ...state,
         ...times,
         inserted,
+        ...initState, // fuck this shit!!!
     };
 };
 
-export const timer = (state = {}, action) => {
+const initState = {
+    gameStart: new Date('2017-02-17T11:30:00'),
+    gameEnd: new Date('2017-02-17T14:30:00'),
+};
+
+export const timer = (state = initState, action) => {
     switch (action.type) {
         case UPDATE_TIMES:
             return updateTimes(state, action);

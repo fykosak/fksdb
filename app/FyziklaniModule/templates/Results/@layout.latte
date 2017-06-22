@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="padding-top:0">
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="{$robots}" n:ifset="$robots">
@@ -16,7 +16,7 @@
     {block head}{/block}
 </head>
 
-<body>
+<body style="padding-top:0">
 <div id="wrap">
         <div class="container">
             <div class="fyziklani-results" data-basepath="{$basePath}">
@@ -27,8 +27,8 @@
 <div id="spinner"></div>
 
     {control jsLoader
-        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'js/jquery.min.js',
+        'js/jquery-ui.min.js',
         'js/bootstrap.v4.min.js',
         'js/nette.ajax.js',
         'js/tablesorter.min.js',

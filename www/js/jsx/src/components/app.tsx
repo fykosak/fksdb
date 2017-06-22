@@ -9,7 +9,7 @@ import {app} from '../reducers/index';
 
 import FyziklaniApp from './fyziklani-app';
 
-export default class App extends React.Component<any,any> {
+export default class App extends React.Component<any, any> {
     public render() {
         // for log events in debug mode
         const store = createStore(app, applyMiddleware(logger));

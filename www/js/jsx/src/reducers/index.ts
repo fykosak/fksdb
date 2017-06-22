@@ -4,6 +4,7 @@ import {options} from './options';
 import {downloader} from './downloader';
 import {combineReducers} from 'redux';
 import {tableFilter}from './table-filter';
+import {stats} from './stats';
 
 export const app = combineReducers({
     timer,
@@ -11,4 +12,5 @@ export const app = combineReducers({
     options,
     downloader,
     tableFilter,
+    stats,
 });

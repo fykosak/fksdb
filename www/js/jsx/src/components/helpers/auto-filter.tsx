@@ -15,9 +15,7 @@ class Clock extends React.Component<IProps,any> {
     }
 
     public render() {
-        return (
-            <div/>
-        );
+        return null;
     };
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {basePath} from '../../helpers/base-path';
-import {getCurrentDelta} from '../../helpers/timer';
+import {basePath} from '../../../helpers/base-path';
+import {getCurrentDelta} from '../../../helpers/timer';
 
 interface IProps {
     toStart?: number;

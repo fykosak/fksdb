@@ -1,35 +1,37 @@
 import * as React from 'react';
-
+import {
+    ITask,
+    ITeam,
+} from '../../../helpers/interfaces';
 
 interface IProps {
     submits: any;
-    team: any;
-    tasks: Array<any>;
+    team: ITeam;
+    tasks: Array<ITask>;
 }
 
 export default class TeamRow extends React.Component<IProps, void> {
 
     public render() {
-        let {submits, team, tasks} = this.props;
-        let cools = [];
+        const {submits, team, tasks} = this.props;
 
         let count = 0;
         let sum = 0;
-        tasks.forEach((task, taskIndex)=> {
+        const cools = tasks.map((task, taskIndex) => {
             // find submit
-            let {task_id}= task;
+            const {task_id} = task;
 
-            let submit = submits[task_id] || null;
-            let points = submit ? submit.points : null;
+            const submit = submits[task_id] || null;
+            const points = submit ? submit.points : null;
 
             if (points !== null) {
                 count++;
                 sum += +points;
             }
-            cools.push(<td data-points={points} key={taskIndex}>{ points }</td>);
+            return (<td data-points={points} key={taskIndex}>{ points }</td>);
         });
 
-        let average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
+        const average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
         return (
             <tr>
                 <td>{team.name}</td>

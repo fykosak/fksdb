@@ -5,9 +5,9 @@ import {
     setCategory,
     setRoom,
     setAutoSwitch,
-} from '../../actions/table-filter';
-import{setHardVisible} from '../../actions/options';
-import {filters} from '../../helpers/filters';
+} from '../../../actions/table-filter';
+import{setHardVisible} from '../../../actions/options';
+import {filters} from '../../../helpers/filters/filters';
 
 interface IProps {
     onRoomChange?: Function;
@@ -61,7 +61,7 @@ class Options extends React.Component<IProps, IState> {
                             {                                filters
                                 .filter((filter) => filter.room != null)
                                 .map((filter, index) => {
-                                    return (<option key={index} value={filter.room}>{filter.name}</option>)
+                                    return (<option key={index} value={filter.room}>{filter.name}</option>);
                                 })
                             }
                         </select>

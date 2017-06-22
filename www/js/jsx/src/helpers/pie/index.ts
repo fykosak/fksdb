@@ -9,9 +9,9 @@ export const getPieData = (data: any): any => {
 export const getColorByPoints = (points: number): string => {
     switch (points) {
         case 5:
-            return 'aquamarine';
+            return 'limegreen';
         case 3:
-            return 'greenyellow';
+            return 'gold';
         case 2:
             return 'orange';
         case 1:

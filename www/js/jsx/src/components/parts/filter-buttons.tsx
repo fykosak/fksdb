@@ -1,16 +1,24 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 
-import {filters} from '../../helpers/filters';
+import {
+    Filter,
+    filters,
+} from '../../helpers/filters/filters';
+import {changeFilter} from '../../actions/options';
 
-class Results extends React.Component<any, void> {
+interface IProps {
+    onFilterChange?: Function;
+}
+
+class FiltersButtons extends React.Component<IProps, void> {
 
     public render() {
-
+        const {onFilterChange} = this.props;
         const filtersButtons = filters.map((filter, index) => {
             return (
                 <li key={index} role="presentation">
-                    <a href="#">
+                    <a href="#" onClick={() => onFilterChange()}>
                         {filter.name}
                     </a>
                 </li>
@@ -29,13 +37,14 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         isReady: state.options.isReady,
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         ...ownProps,
+        onFilterChange: (filter: Filter) => dispatch(changeFilter(filter)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Results);
+export default connect(mapStateToProps, mapDispatchToProps)(FiltersButtons);

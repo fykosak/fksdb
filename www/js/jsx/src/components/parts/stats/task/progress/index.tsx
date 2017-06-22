@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {
     ITask,
     ISubmit,
-} from '../../../helpers/interfaces';
+} from '../../../../../helpers/interfaces';
+import {getColorByPoints} from '../../../../../helpers/pie/index';
 
 interface IProps {
     tasks: Array<ITask>;
@@ -24,7 +25,7 @@ class TaskStats extends React.Component<IProps, void> {
                 2: 0,
                 1: 0,
                 total: 0,
-            }
+            };
         }
         let max = 0;
         for (let index in submits) {
@@ -43,19 +44,36 @@ class TaskStats extends React.Component<IProps, void> {
 
         const rows = Object.keys(tasksSubmits).map((index) => {
             const submit = tasksSubmits[index];
+
             return (
                 <div className="row">
                     <div className="col-lg-1">{submit.label + '-'}</div>
                     <div className="col-lg-11">
                         <div className="progress">
-                            <div className="progress-bar bg-success" data-points="5"
-                                 style={{width: (submit[5] / max) * 100 + "%"}}>{submit[5]}</div>
-                            <div className="progress-bar bg-info" data-points="3"
-                                 style={{width: (submit[3] / max) * 100 + "%"}}>{submit[3]}</div>
-                            <div className="progress-bar bg-warning" data-points="2"
-                                 style={{width: (submit[2] / max) * 100 + "%"}}>{submit[2]}</div>
-                            <div className="progress-bar bg-danger" data-points="1"
-                                 style={{width: (submit[1] / max) * 100 + "%"}}>{submit[1]}</div>
+                            <div className="progress-bar"
+                                 data-points="5"
+                                 style={{
+                                     width: (submit[5] / max) * 100 + "%",
+                                     'background-color': getColorByPoints(5),
+                                 }}>{submit[5]}</div>
+                            <div className="progress-bar"
+                                 data-points="3"
+                                 style={{
+                                     width: (submit[3] / max) * 100 + "%",
+                                     'background-color': getColorByPoints(3),
+                                 }}>{submit[3]}</div>
+                            <div className="progress-bar"
+                                 data-points="2"
+                                 style={{
+                                     width: (submit[2] / max) * 100 + "%",
+                                     'background-color': getColorByPoints(2),
+                                 }}>{submit[2]}</div>
+                            <div className="progress-bar"
+                                 data-points="1"
+                                 style={{
+                                     width: (submit[1] / max) * 100 + "%",
+                                     'background-color': getColorByPoints(1),
+                                 }}>{submit[1]}</div>
                         </div>
                     </div>
                 </div>
@@ -72,7 +90,7 @@ const mapStateToProps = (state, ownProps) => {
         teams: state.results.teams,
         tasks: state.results.tasks,
         submits: state.results.submits,
-    }
+    };
 };
 
 export default connect(mapStateToProps, null)(TaskStats);

@@ -1,18 +1,18 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 
-import Images from '../parts/images';
-import ResultsTable from '../table/results-table';
-import Timer from '../parts/timer';
-import AutoFilter from '../parts/auto-filter';
-import Options from '../parts/options';
+import Images from './images';
+import ResultsTable from './results-table';
+import Timer from '../timer';
+import AutoFilter from '../../helpers/auto-filter';
+import Options from './options';
 
 interface IProps {
     visible?: boolean;
     hardVisible?: boolean;
 }
 
-class Results extends React.Component<IProps, any> {
+class Results extends React.Component<IProps, void> {
 
     public render() {
         const {visible, hardVisible} = this.props;
@@ -21,14 +21,14 @@ class Results extends React.Component<IProps, any> {
         // TODO do samostatného componentu všetky messages
         if (hardVisible) {
             msg.push(<div key={msg.length} className="alert alert-warning">
-                Výsledková listina je určená pouze pro organizátory!!!</div> );
+                Výsledková listina je určená pouze pro organizátory!!!</div>);
         }
 
-        return (<div>
+        return (
+            <div>
                 {msg}
                 <AutoFilter/>
-                {!(visible || hardVisible) && (<Images/>)}
-                {(visible || hardVisible) && ( <ResultsTable/>)}
+                {(visible || hardVisible) ? ( <ResultsTable/>) : (<Images/>)}
                 <Timer/>
                 <Options/>
             </div >
@@ -41,7 +41,7 @@ const mapStateToProps = (state, ownProps) => {
         ...ownProps,
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,
-    }
+    };
 };
 
 export default connect(mapStateToProps, null)(Results);

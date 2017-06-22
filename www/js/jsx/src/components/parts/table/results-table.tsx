@@ -1,18 +1,19 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
+import {findDOMNode} from 'react-dom';
 import {connect} from 'react-redux';
 
 import TeamRow from './team-row';
 import {
     ITeam,
     ITask,
-} from '../../helpers/interfaces';
-import {createFilter} from '../../helpers/table-filter';
-import {IFilter} from '../../helpers/filters';
+} from '../../../helpers/interfaces';
+import {createFilter} from '../../../helpers/filters/table-filter';
+import {
+    Filter,
+} from '../../../helpers/filters/filters';
 
 interface IResultsTable {
-    filter?: IFilter;
+    filter?: Filter;
     submits?: any;
     teams?: Array<ITeam>;
     tasks?: Array<ITask>;
@@ -27,7 +28,7 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 
     public componentDidUpdate() {
-        const $table = $(ReactDOM.findDOMNode(this.table));
+        const $table = $(findDOMNode(this.table));
         try {
             $table.trigger("update");
             $table.trigger("sorton", [[[1, 1], [3, 1]]]);
@@ -37,12 +38,12 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 
     public componentDidMount() {
-        const $table: any = $(ReactDOM.findDOMNode(this.table));
+        const $table: any = $(findDOMNode(this.table));
         $table.tablesorter();
     }
 
     public render() {
-        const {submits, teams, tasks, filter:{room, category}} = this.props;
+        const {submits, teams, tasks, filter} = this.props;
         const submitsForTeams = {};
         for (let index in submits) {
             if (submits.hasOwnProperty(index)) {
@@ -54,10 +55,10 @@ class ResultsTable extends React.Component<IResultsTable, void> {
         }
 
         const rows = teams.filter((team) => {
-            if (category && category !== team.category) {
-                return false;
+            if (!filter) {
+                return true;
             }
-            return !(room && category !== team.room);
+            return filter.match(team);
         }).map((team: ITeam, teamIndex) => {
             return (
                 <TeamRow
@@ -75,7 +76,9 @@ class ResultsTable extends React.Component<IResultsTable, void> {
 
         return (
             <div>
-                <table ref={(table)=>{this.table = table}} className="tablesorter table-striped table-hover">
+                <table ref={(table) => {
+                    this.table = table
+                }} className="tablesorter table-striped table-hover">
                     <thead>
                     <tr>
                         <th/>

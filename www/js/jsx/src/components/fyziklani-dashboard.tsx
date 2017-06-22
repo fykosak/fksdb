@@ -1,21 +1,21 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 
-import Results from './containers/results';
-import Statistics from './containers/statistics';
+import Results from './parts/table/index';
+import Statistics from './parts/stats/index';
 import {basePath} from '../helpers/base-path';
 import {changePage} from '../actions/options';
+import NavBar from './parts/nav-bar/index';
 
 interface IProps {
     page?: string;
     isReady?: boolean;
-    onchangePage?: Function;
 }
 
 class FyziklaniDashboard extends React.Component<IProps, void> {
 
     public render() {
-        const {isReady, page, onchangePage} = this.props;
+        const {isReady, page} = this.props;
 
         if (!isReady) {
             return (
@@ -23,33 +23,26 @@ class FyziklaniDashboard extends React.Component<IProps, void> {
                     <img src={basePath + '/images/gears.svg'} style={{width: '50%'}}/>
                 </div>)
         }
-        const navbar = ( <ul className="nav nav-tabs nav-fill mb-3">
-            <li className="nav-item" onClick={() => onchangePage('results')}>
-                <a
-                    className={'nav-link ' + ((!page || page === 'results') ? 'active' : '')}
-                    href="#">Results</a>
-            </li>
-            <li className="nav-item" onClick={() => onchangePage('stats')}>
-                <a
-                    className={'nav-link ' + (page === 'stats' ? 'active' : '')}
-                    href="#">Statistics</a>
-            </li>
 
-        </ul>);
         switch (page) {
             case 'stats':
                 return (
                     <div>
-                        {navbar}
+                        <NavBar/>
                         <Statistics/>
                     </div>
                 );
-            default:
-            case 'results':
+            case 'table':
                 return (
                     <div>
-                        {navbar}
+                        <NavBar/>
                         <Results/>
+                    </div>
+                );
+            default:
+                return (
+                    <div>
+                        <NavBar/>
                     </div>
                 );
         }
@@ -64,14 +57,7 @@ const mapStateToProps = (state, ownProps): IProps => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        ...ownProps,
-        onchangePage: (page) => dispatch(changePage(page))
-    };
-};
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    null,
 )(FyziklaniDashboard);

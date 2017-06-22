@@ -17,7 +17,7 @@ class Timer extends React.Component<IProps, void> {
     }
 
     public render() {
-        const {inserted, visible, toStart, toEnd, hardVisible}=this.props;
+        const {inserted, visible, toStart, toEnd, hardVisible} = this.props;
         const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
         let timeStamp = 0;
         if (currentToStart > 0) {
@@ -25,20 +25,20 @@ class Timer extends React.Component<IProps, void> {
         } else if (currentToEnd > 0) {
             timeStamp = currentToEnd;
         } else {
-            return (<div/>);
+            return null;
         }
         const date = new Date(timeStamp);
         const h = date.getUTCHours();
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'clock '+((visible||hardVisible)?'':'big')}>
+            <div className={'clock ' + ((visible || hardVisible) ? '' : 'big')}>
                 {
-                    (h < 10 ? "0" + h : "" + h)
-                    + ":" +
-                    ( m < 10 ? "0" + m : "" + m)
-                    + ":" +
-                    (s < 10 ? "0" + s : "" + s)
+                    (h < 10 ? '0' + h : '' + h)
+                    + ':' +
+                    ( m < 10 ? '0' + m : '' + m)
+                    + ':' +
+                    (s < 10 ? '0' + s : '' + s)
                 }
             </div>
         );
@@ -50,7 +50,7 @@ const mapStateToProps = (state, ownProps) => {
         ...ownProps,
         ...state.timer,
         hardVisible: state.options.hardVisible,
-    }
+    };
 };
 
 export default connect(mapStateToProps, null)(Timer);

@@ -10,7 +10,7 @@ const addSubmits = (state, action) => {
         submits: {
             ...state.submits,
             ...submits,
-        }
+        },
     };
 };
 

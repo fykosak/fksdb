@@ -4,30 +4,23 @@ import * as d3 from 'd3';
 import {
     ISubmit,
     ITeam,
-} from '../../../helpers/interfaces';
+} from '../../../../../helpers/interfaces';
 import {
     getPieData,
-    getColorByPoints
-} from '../../../helpers/pie/index';
+    getColorByPoints,
+} from '../../../../../helpers/pie/index';
 
 interface IProps {
-    teams: Array<ITeam>;
-    submits: any;
-    teamID: number;
-}
-interface IState {
-    activePoints: number;
+    teams?: Array<ITeam>;
+    submits?: any;
+    teamID?: number;
+    activePoints?: number;
 }
 
-class PointsPie extends React.Component<IProps, IState> {
-    public constructor() {
-        super();
-        this.state = {activePoints: null};
-    }
+class Chart extends React.Component<IProps, void> {
 
     render() {
-        const {submits, teamID} = this.props;
-        const {activePoints} = this.state;
+        const {submits, teamID, activePoints} = this.props;
 
         if (!teamID) {
             return (<div/>);
@@ -63,15 +56,13 @@ class PointsPie extends React.Component<IProps, IState> {
         const pie = getPieData(pointsCategories.filter((item) => item.count !== 0));
 
         const paths = pie.map((item: any) => {
-            return (
-                <g>
-                    <path
-                        stroke="white"
-                        strokeWidth="5px"
-                        d={arc(item)}
-                        fill={getColorByPoints(item.data.points)}
-                        opacity={(activePoints && (activePoints !== item.data.points)) ? '0.5' : '1'}/>
-                </g>
+            return (<path
+                    stroke="white"
+                    strokeWidth="5px"
+                    d={arc(item)}
+                    fill={getColorByPoints(item.data.points)}
+                    opacity={(activePoints && (activePoints !== item.data.points)) ? '0.5' : '1'}
+                />
             );
         });
 
@@ -91,40 +82,23 @@ class PointsPie extends React.Component<IProps, IState> {
                 {labels}
             </g>
         </svg>);
-        const legend = pointsCategories.filter((item) => item.count !== 0).map((item) => {
-            return (<div className="w-100"
-                         onMouseEnter={() => {
-                             this.setState({activePoints: item.points})
-                         }}
-                         onMouseLeave={() => {
-                             this.setState({activePoints: null})
-                         }}>
-                <i style={{'background-color': getColorByPoints(item.points), display: 'inline-block', height: '1rem', width: '1rem'}}/>
-                <span> <strong>{item.points} points</strong>- {item.count}
-                    ({Math.floor(item.count * 100 / totalSubmits)}%)</span>
-            </div>);
-        });
 
-        return (<div>
-            <h3>Úspešnosť odovzdávania úloh</h3>
-            <div className="row">
-                <div className="col-lg-8">
-                    {pieChart}
-                </div>
-                <div className="align-content-center col-lg-4 d-flex flex-wrap">
-                    {legend}
-                </div>
+        return (
+            <div className="col-lg-8">
+                {pieChart}
             </div>
-        </div>);
+        );
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps: IProps): IProps => {
     return {
         ...ownProps,
         teams: state.results.teams,
         submits: state.results.submits,
-    }
+        teamID: state.stats.teamID,
+        activePoints: state.stats.activePoints,
+    };
 };
 
-export default connect(mapStateToProps, null)(PointsPie);
+export default connect(mapStateToProps, null)(Chart);

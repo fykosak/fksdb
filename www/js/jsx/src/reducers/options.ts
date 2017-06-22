@@ -5,12 +5,14 @@ import {
     CHANGE_SUBPAGE,
     CHANGE_PAGE,
 } from '../actions/options';
+
 const setReadyStatus = (state, action) => {
     return {
         ...state,
         isReady: action.status,
     };
 };
+
 const setHardVisible = (state, action) => {
     return {
         ...state,
@@ -30,7 +32,7 @@ const changeSubPage = (state, action) => {
     return {
         ...state,
         subPage,
-    }
+    };
 };
 
 const changePage = (state, action) => {
@@ -38,7 +40,7 @@ const changePage = (state, action) => {
     return {
         ...state,
         page,
-    }
+    };
 };
 
 export const options = (state = {}, action) => {

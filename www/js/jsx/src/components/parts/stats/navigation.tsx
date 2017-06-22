@@ -22,9 +22,8 @@ class Navigation extends React.Component<IProps, void> {
                     <li className="nav-item" onClick={() => onchangeSupPage('task')}>
                         <a
                             className={'nav-link ' + (subPage === 'task' ? 'active' : '')}
-                            href="#">task</a>
+                            href="#">Task</a>
                     </li>
-
                 </ul>
             </div>
         );
@@ -41,7 +40,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         ...ownProps,
-        onchangeSupPage: (subPage) => dispatch(changeSubPage(subPage))
+        onchangeSupPage: (subPage) => dispatch(changeSubPage(subPage)),
     };
 };
 
