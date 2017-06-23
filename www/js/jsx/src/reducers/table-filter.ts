@@ -2,8 +2,9 @@ import {
     SET_NEXT_TABLE_FILTER,
     SET_USER_TABLE_CATEGORY,
     SET_USER_TABLE_ROOM,
-    SET_USER_TABLE_AUTO_SWITCH,
+    SET_USER_FILTER,
 } from '../actions/table-filter';
+
 const setNextFilter = (state) => {
     let {filterID} = state;
     return {
@@ -13,7 +14,7 @@ const setNextFilter = (state) => {
 };
 
 const setRoom = (state, action) => {
-    const {room}= action;
+    const {room} = action;
     return {
         ...state,
         room,
@@ -21,22 +22,23 @@ const setRoom = (state, action) => {
 };
 
 const setCategory = (state, action) => {
-    const {category}= action;
+    const {category} = action;
     return {
         ...state,
         category,
     };
 };
 
-const setAutoSwitch = (state, action) => {
-    const {autoSwitch}= action;
+
+const setUserFilter = (state, action) => {
     return {
         ...state,
-        autoSwitch,
+        userFilter: action.filter,
+        autoSwitch: !action.filter,
     };
 };
 
-export const tableFilter = (state = {filterID: 0, autoSwitch: false}, action) => {
+export const tableFilter = (state = {filterID: 0, autoSwitch: true}, action) => {
 
     switch (action.type) {
         case SET_NEXT_TABLE_FILTER:
@@ -45,8 +47,8 @@ export const tableFilter = (state = {filterID: 0, autoSwitch: false}, action) =>
             return setCategory(state, action);
         case SET_USER_TABLE_ROOM:
             return setRoom(state, action);
-        case SET_USER_TABLE_AUTO_SWITCH:
-            return setAutoSwitch(state, action);
+        case SET_USER_FILTER:
+            return setUserFilter(state, action);
         default:
             return state;
     }

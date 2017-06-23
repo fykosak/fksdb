@@ -22,7 +22,7 @@ class TeamStats extends React.Component<IProps, void> {
                 <select className="form-control" onChange={(event) => {
                     onchangeTeam(+event.target.value)
                 }}>
-                    <option>--select team--</option>
+                    <option value={null}>--select team--</option>
                     {teams.map((team) => {
                         return (<option value={team.team_id}>{team.name}</option>);
                     })}

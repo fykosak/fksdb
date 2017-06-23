@@ -8,12 +8,13 @@ interface IProps {
     submits: any;
     team: ITeam;
     tasks: Array<ITask>;
+    visible: boolean;
 }
 
 export default class TeamRow extends React.Component<IProps, void> {
 
     public render() {
-        const {submits, team, tasks} = this.props;
+        const {submits, team, tasks, visible} = this.props;
 
         let count = 0;
         let sum = 0;
@@ -33,7 +34,7 @@ export default class TeamRow extends React.Component<IProps, void> {
 
         const average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
         return (
-            <tr>
+            <tr style={{display: visible ? '' : 'none'}}>
                 <td>{team.name}</td>
                 <td className="sum">{sum}</td>
                 <td>{count}</td>

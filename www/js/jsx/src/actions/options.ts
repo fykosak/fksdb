@@ -42,12 +42,3 @@ export const changeSubPage = (subPage) => {
         subPage,
     };
 };
-
-export const CHANGE_FILTER = 'CHANGE_FILTER';
-
-export const changeFilter = (filter) => {
-    return {
-        type: CHANGE_FILTER,
-        filter,
-    };
-};

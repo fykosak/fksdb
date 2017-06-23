@@ -24,11 +24,11 @@ export const setRoom = (room) => {
     };
 };
 
-export const SET_USER_TABLE_AUTO_SWITCH = 'SET_USER_TABLE_AUTO_SWITCH';
+export const SET_USER_FILTER = 'CHANGE_FILTER';
 
-export const setAutoSwitch = (autoSwitch) => {
+export const setUserFilter = (filter) => {
     return {
-        type: SET_USER_TABLE_AUTO_SWITCH,
-        autoSwitch,
+        type: SET_USER_FILTER,
+        filter,
     };
 };

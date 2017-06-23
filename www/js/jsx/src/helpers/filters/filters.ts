@@ -15,10 +15,21 @@ export class Filter implements IFilter {
     }
 
     public match({room = '', category = ''}): boolean {
-        if (this.category !== category) {
+        if (this.category && this.category !== category) {
             return false;
         }
-        return !(this.room !== room);
+        return !(this.room && this.room !== room);
+    }
+
+    public same(filter: Filter): boolean {
+        if (!filter) {
+            return false;
+        }
+        return (filter.room === this.room) && (filter.category === this.category) && (filter.name === this.name);
+    }
+
+    public getHeadline(): string {
+        return (this.category && ('Category ' + this.category)) || (this.room && ('Room ' + this.room)) || (this.name) || 'All';
     }
 }
 

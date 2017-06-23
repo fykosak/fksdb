@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import Results from './parts/table/index';
 import Statistics from './parts/stats/index';
 import {basePath} from '../helpers/base-path';
-import {changePage} from '../actions/options';
 import NavBar from './parts/nav-bar/index';
 
 interface IProps {

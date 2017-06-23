@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import {connect} from 'react-redux';
 
 import TeamRow from './team-row';
+import FilterButtons from './filter-buttons';
 import {
     ITeam,
     ITask,
@@ -54,28 +55,14 @@ class ResultsTable extends React.Component<IResultsTable, void> {
             }
         }
 
-        const rows = teams.filter((team) => {
-            if (!filter) {
-                return true;
-            }
-            return filter.match(team);
-        }).map((team: ITeam, teamIndex) => {
-            return (
-                <TeamRow
-                    tasks={tasks}
-                    submits={submitsForTeams[team.team_id] || {}}
-                    team={team}
-                    key={teamIndex}
-                />
-            );
-        });
-
         const headCools = tasks.map((task: ITask, taskIndex) => {
             return (<th key={taskIndex} data-task_label={task.label}>{task.label}</th>);
         });
 
         return (
-            <div>
+            <div className="mb-3">
+                <FilterButtons/>
+                <h1>{filter.getHeadline()}</h1>
                 <table ref={(table) => {
                     this.table = table
                 }} className="tablesorter table-striped table-hover">
@@ -89,7 +76,17 @@ class ResultsTable extends React.Component<IResultsTable, void> {
                     </tr>
                     </thead>
                     <tbody>
-                    {rows}
+                    {teams.map((team: ITeam, teamIndex) => {
+                        return (
+                            <TeamRow
+                                tasks={tasks}
+                                submits={submitsForTeams[team.team_id] || {}}
+                                team={team}
+                                key={teamIndex}
+                                visible={(filter && filter.match(team))}
+                            />
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
