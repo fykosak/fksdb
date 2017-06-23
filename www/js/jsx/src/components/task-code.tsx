@@ -16,7 +16,7 @@ interface ITaskCodeState {
     valid: boolean;
 }
 
-export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeState> {
+export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeState> {
     private controlInput;
     private teamInput;
     private taskInput;
@@ -77,8 +77,8 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
             });
         };
 
-        const onInputControl = (event) => {
-            if (event.target.value === "") {
+        const onInputControl = (event): void => {
+            if (event.target.value === '') {
                 return;
             }
             const value = +event.target.value;
@@ -100,27 +100,27 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
                     className={'form-control has-feedback '}>
                     <input
                         maxLength={6}
-                        ref={(input)=>this.teamInput = input}
-                        className={'team '+(this.state.validTeam===false?'invalid':(this.state.validTeam===true?'valid':''))}
+                        ref={(input) => this.teamInput = input}
+                        className={'team ' + (this.state.validTeam === false ? 'invalid' : (this.state.validTeam === true ? 'valid' : ''))}
                         onKeyUp={ onInputTeam }
                         placeholder="XXXXXX"
                     />
                     <input
                         maxLength={2}
-                        className={'task '+(this.state.validTask===false?'invalid':(this.state.validTask===true?'valid':''))}
-                        ref={(input)=>this.taskInput = input}
+                        className={'task ' + (this.state.validTask === false ? 'invalid' : (this.state.validTask === true ? 'valid' : ''))}
+                        ref={(input) => this.taskInput = input}
                         placeholder="XX"
                         onKeyUp={onInputTask}
                     />
                     <input
                         maxLength={1}
-                        ref={(input)=>this.controlInput = input}
-                        className={'control '+(this.state.valid?'valid':'invalid')}
+                        ref={(input) => this.controlInput = input}
+                        className={'control ' + (this.state.valid ? 'valid' : 'invalid')}
                         placeholder="X"
                         onKeyUp={onInputControl}
                     />
                     <span
-                        className={'glyphicon '+( this.state.valid? 'glyphicon-ok':'') + ' form-control-feedback'}
+                        className={'glyphicon ' + ( this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback'}
                     />
                 </div>
             </div>
@@ -136,7 +136,7 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
     }
 
     private isValid(code: string): boolean {
-        const {validTeam, validTask}= this.state;
+        const {validTeam, validTask} = this.state;
         if (!validTask) {
             return false;
         }
@@ -154,8 +154,7 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
                 .replace('G', '7')
                 .replace('H', '8');
         });
-        const c = this.getControl(subCode);
-        return (c % 10 == 0);
+        return (this.getControl(subCode) % 10 == 0);
     }
 
     private isValidTask(task: string): boolean {
@@ -175,7 +174,7 @@ export default class TaskCode extends React.Component<ITaskCodeProps,ITaskCodeSt
         }
     }
 
-    private getControl(subCode: Array<any>): number {
+    private getControl(subCode: Array<string | number>): number {
         return 3 * (+subCode[0] + +subCode[3] + +subCode[6]) +
             7 * (+subCode[1] + +subCode[4] + +subCode[7]) +
             (+subCode[2] + +subCode[5] + +subCode[8])
