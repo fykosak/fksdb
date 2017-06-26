@@ -1,84 +1,201 @@
 /* general setting */
-.storedQueryTags a:hover, .storedQueryTags a:focus{
-    text-decoration: none;
-}
+.storedQueryTags {
+  /* color palette from D3.js d3.scale.category10() */
 
-.storedQueryTag {
-    color: black;
-    background-color: silver;
-}
+  /* style 1 */
 
-.storedQueryTag-active, .storedQueryTag:hover, .storedQueryTag:focus {
-    opacity: 0.5;
-}
+  /* style 2 */
 
-.storedQueryTag-active:hover, .storedQueryTag-active:focus {
-    opacity: 1;
-}
+  /* style 3 */
 
-/* color palette from D3.js d3.scale.category10() */
-/* style 1 */
-.storedQueryTag-1, .label.storedQueryTag-1:hover, .label.storedQueryTag-1:focus {
-    color: white;
-    background-color: #1f77b4;
-}
+  /* style 4 */
 
-/* style 2 */
-.storedQueryTag-2, .label.storedQueryTag-2:hover, .label.storedQueryTag-2:focus {
-    color: black;
-    background-color: #ff7f0e;
-}
+  /* style 5 */
 
-/* style 3 */
-.storedQueryTag-3, .label.storedQueryTag-3:hover, .label.storedQueryTag-3:focus {
-    color: white;
-    background-color: #2ca02c;
-}
+  /* style 6 */
 
-/* style 4 */
-.storedQueryTag-4, .label.storedQueryTag-4:hover, .label.storedQueryTag-4:focus {
-    color: white;
-    background-color: #d62728;
-}
+  /* style 7 */
 
-/* style 5 */
-.storedQueryTag-5, .label.storedQueryTag-5:hover, .label.storedQueryTag-5:focus {
-    color: white;
-    background-color: #9467bd;
-}
+  /* style 8 */
 
-/* style 6 */
-.storedQueryTag-6, .label.storedQueryTag-6:hover, .label.storedQueryTag-6:focus {
-    color: white;
-    background-color: #8c564b;
-}
+  /* style 9 */
 
-/* style 7 */
-.storedQueryTag-7, .label.storedQueryTag-7:hover, .label.storedQueryTag-7:focus {
-    color: black;
-    background-color: #e377c2;
-}
+  /* style 10 */
 
-/* style 8 */
-.storedQueryTag-8, .label.storedQueryTag-8:hover, .label.storedQueryTag-8:focus {
-    color: black;
-    background-color: #cccccc;
-}
+  /* style 11 */
 
-/* style 9 */
-.storedQueryTag-9, .label.storedQueryTag-9:hover, .label.storedQueryTag-9:focus {
-    color: black;
-    background-color: #bcbd22;
 }
-
-/* style 10 */
-.storedQueryTag-10, .label.storedQueryTag-10:hover, .label.storedQueryTag-10:focus {
-    color: black;
-    background-color: #17becf;
+.storedQueryTags a:hover,
+.storedQueryTags a:focus {
+  text-decoration: none;
 }
-
-/* style 11 */
-.storedQueryTag-11, .label.storedQueryTag-11:hover, .label.storedQueryTag-11:focus {
-    color: white;
-    background-color: #000000;
+.storedQueryTags .storedQueryTag {
+  color: black;
+  background-color: silver;
 }
+.storedQueryTags .storedQueryTag-1 {
+  background-color: transparent;
+  color: #1f77b4;
+  border: #1f77b4 solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-1:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-1:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-1.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #185a88;
+  background-color: #1f77b4;
+  color: #ffffff;
+}
+.storedQueryTags .storedQueryTag-2 {
+  background-color: transparent;
+  color: #ff7f0e;
+  border: #ff7f0e solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-2:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-2:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-2.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #da6600;
+  background-color: #ff7f0e;
+  color: #000000;
+}
+.storedQueryTags .storedQueryTag-3 {
+  background-color: transparent;
+  color: #2ca02c;
+  border: #2ca02c solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-3:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-3:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-3.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #217821;
+  background-color: #2ca02c;
+  color: #ffffff;
+}
+.storedQueryTags .storedQueryTag-4 {
+  background-color: transparent;
+  color: #d62728;
+  border: #d62728 solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-4:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-4:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-4.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #ab1f20;
+  background-color: #d62728;
+  color: #ffffff;
+}
+.storedQueryTags .storedQueryTag-5 {
+  background-color: transparent;
+  color: #9467bd;
+  border: #9467bd solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-5:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-5:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-5.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #7b49a8;
+  background-color: #9467bd;
+  color: #ffffff;
+}
+.storedQueryTags .storedQueryTag-6 {
+  background-color: transparent;
+  color: #8c564b;
+  border: #8c564b solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-6:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-6:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-6.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #6b4239;
+  background-color: #8c564b;
+  color: #ffffff;
+}
+.storedQueryTags .storedQueryTag-7 {
+  background-color: transparent;
+  color: #e377c2;
+  border: #e377c2 solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-7:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-7:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-7.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #da4daf;
+  background-color: #e377c2;
+  color: #000000;
+}
+.storedQueryTags .storedQueryTag-8 {
+  background-color: transparent;
+  color: #cccccc;
+  border: #cccccc solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-8:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-8:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-8.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #b3b3b3;
+  background-color: #cccccc;
+  color: #000000;
+}
+.storedQueryTags .storedQueryTag-9 {
+  background-color: transparent;
+  color: #bcbd22;
+  border: #bcbd22 solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-9:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-9:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-9.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #91921a;
+  background-color: #bcbd22;
+  color: #000000;
+}
+.storedQueryTags .storedQueryTag-10 {
+  background-color: transparent;
+  color: #17becf;
+  border: #17becf solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-10:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-10:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-10.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #1294a1;
+  background-color: #17becf;
+  color: #000000;
+}
+.storedQueryTags .storedQueryTag-11 {
+  background-color: transparent;
+  color: #000000;
+  border: #000000 solid 1px;
+  font-size: inherit;
+  transition-duration: 200ms;
+}
+.storedQueryTags .storedQueryTag-11:hover:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-11:focus:not(.storedQueryTag-active),
+.storedQueryTags .storedQueryTag-11.storedQueryTag-active:not(:hover):not(:focus) {
+  transition-duration: 200ms;
+  border-color: #000000;
+  background-color: #000000;
+  color: #ffffff;
+}
+(node:704) DeprecationWarning: util.print is deprecated. Use console.log instead.
