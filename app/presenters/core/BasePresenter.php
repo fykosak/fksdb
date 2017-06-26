@@ -30,6 +30,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
 	const FLASH_ERROR = 'danger';
 
+    use LayoutTrait;
+
 	/** @persistent  */
 	public $tld;
 

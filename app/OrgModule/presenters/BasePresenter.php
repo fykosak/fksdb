@@ -38,6 +38,11 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         parent::startup();
         $this['contestChooser']->syncRedirect();
         $this['languageChooser']->syncRedirect();
+        $contest = $this->getSelectedContest();
+        if ($contest) {
+            $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
+            $this->setDynamicLayout("layout.$contestName");
+        }
     }
 
     protected function createComponentContestChooser($name) {
