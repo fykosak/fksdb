@@ -1,33 +1,40 @@
 import {
-    SET_READY_STATUS,
+    CHANGE_PAGE,
+    CHANGE_SUBPAGE,
     SET_HARD_VISIBLE,
     SET_ORG_STATUS,
-    CHANGE_SUBPAGE,
-    CHANGE_PAGE,
+    SET_READY_STATUS,
 } from '../actions/options';
+export interface IState {
+    isReady?: boolean;
+    hardVisible?: boolean;
+    isOrg?: boolean;
+    subPage?: string;
+    page?: string;
+}
 
-const setReadyStatus = (state, action) => {
+const setReadyStatus = (state: IState, action): IState => {
     return {
         ...state,
         isReady: action.status,
     };
 };
 
-const setHardVisible = (state, action) => {
+const setHardVisible = (state: IState, action): IState => {
     return {
         ...state,
         hardVisible: action.status,
     };
 };
 
-const setOrgStatus = (state, action) => {
+const setOrgStatus = (state: IState, action): IState => {
     return {
         ...state,
         isOrg: action.status,
     };
 };
 
-const changeSubPage = (state, action) => {
+const changeSubPage = (state: IState, action): IState => {
     const {subPage} = action;
     return {
         ...state,
@@ -35,7 +42,7 @@ const changeSubPage = (state, action) => {
     };
 };
 
-const changePage = (state, action) => {
+const changePage = (state: IState, action): IState => {
     const {page} = action;
     return {
         ...state,
@@ -43,7 +50,7 @@ const changePage = (state, action) => {
     };
 };
 
-export const options = (state = {}, action) => {
+export const options = (state: IState = {}, action): IState => {
     switch (action.type) {
         case SET_READY_STATUS:
             return setReadyStatus(state, action);

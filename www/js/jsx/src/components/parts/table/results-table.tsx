@@ -1,26 +1,26 @@
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
-import {connect} from 'react-redux';
+import { findDOMNode } from 'react-dom';
+import { connect } from 'react-redux';
 
-import TeamRow from './team-row';
-import FilterButtons from './filter-buttons';
+import { Filter } from '../../../helpers/filters/filters';
+import { createFilter } from '../../../helpers/filters/table-filter';
 import {
-    ITeam,
+    ISubmits,
     ITask,
+    ITeam,
 } from '../../../helpers/interfaces';
-import {createFilter} from '../../../helpers/filters/table-filter';
-import {
-    Filter,
-} from '../../../helpers/filters/filters';
+import { IStore } from '../../../reducers/index';
+import FilterButtons from './filter-buttons';
+import TeamRow from './team-row';
 
-interface IResultsTable {
+interface IState {
     filter?: Filter;
-    submits?: any;
-    teams?: Array<ITeam>;
-    tasks?: Array<ITask>;
+    submits?: ISubmits;
+    teams?: ITeam[];
+    tasks?: ITask[];
 }
 
-class ResultsTable extends React.Component<IResultsTable, void> {
+class ResultsTable extends React.Component<IState, {}> {
     private table;
 
     public constructor() {
@@ -31,8 +31,8 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     public componentDidUpdate() {
         const $table = $(findDOMNode(this.table));
         try {
-            $table.trigger("update");
-            $table.trigger("sorton", [[[1, 1], [3, 1]]]);
+            $table.trigger('update');
+            $table.trigger('sorton', [[[1, 1], [3, 1]]]);
         } catch (error) {
             console.error(error);
         }
@@ -44,14 +44,14 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 
     public render() {
-        const {submits, teams, tasks, filter} = this.props;
+        const { submits, teams, tasks, filter } = this.props;
         const submitsForTeams = {};
-        for (let index in submits) {
+        for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit = submits[index];
-                const {team_id, task_id} = submit;
-                submitsForTeams[team_id] = submitsForTeams[team_id] || {};
-                submitsForTeams[team_id][task_id] = submit;
+                const { team_id: teamId, task_id: taskId } = submit;
+                submitsForTeams[teamId] = submitsForTeams[teamId] || {};
+                submitsForTeams[teamId][taskId] = submit;
             }
         }
 
@@ -64,7 +64,7 @@ class ResultsTable extends React.Component<IResultsTable, void> {
                 <FilterButtons/>
                 <h1>{filter.getHeadline()}</h1>
                 <table ref={(table) => {
-                    this.table = table
+                    this.table = table;
                 }} className="tablesorter table-striped table-hover">
                     <thead>
                     <tr>
@@ -94,14 +94,13 @@ class ResultsTable extends React.Component<IResultsTable, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    const {filterID, room, category, userFilter, autoSwitch} = state.tableFilter;
+const mapStateToProps = (state: IStore): IState => {
+    const { filterID, room, category, userFilter, autoSwitch } = state.tableFilter;
     return {
-        ...ownProps,
-        teams: state.results.teams,
-        tasks: state.results.tasks,
+        filter: createFilter(filterID, autoSwitch, { room, category }, userFilter),
         submits: state.results.submits,
-        filter: createFilter(filterID, autoSwitch, {room, category}, userFilter),
+        tasks: state.results.tasks,
+        teams: state.results.teams,
     };
 };
 

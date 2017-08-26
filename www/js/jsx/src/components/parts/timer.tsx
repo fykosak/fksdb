@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {getCurrentDelta} from '../../helpers/timer';
+import { connect } from 'react-redux';
+import { getCurrentDelta } from '../../helpers/timer';
+import { IStore } from '../../reducers/index';
 
-interface IProps {
+interface IState {
     toStart?: number;
     toEnd?: number;
     visible?: boolean;
@@ -10,15 +11,15 @@ interface IProps {
     hardVisible?: boolean;
 }
 
-class Timer extends React.Component<IProps, void> {
+class Timer extends React.Component<IState, {}> {
 
-    componentDidMount() {
+    public componentDidMount() {
         setInterval(() => this.forceUpdate(), 1000);
     }
 
     public render() {
-        const {inserted, visible, toStart, toEnd, hardVisible} = this.props;
-        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
+        const { inserted, visible, toStart, toEnd, hardVisible } = this.props;
+        const { currentToStart, currentToEnd } = getCurrentDelta({ toStart, toEnd }, inserted);
         let timeStamp = 0;
         if (currentToStart > 0) {
             timeStamp = currentToStart;
@@ -36,7 +37,7 @@ class Timer extends React.Component<IProps, void> {
                 {
                     (h < 10 ? '0' + h : '' + h)
                     + ':' +
-                    ( m < 10 ? '0' + m : '' + m)
+                    (m < 10 ? '0' + m : '' + m)
                     + ':' +
                     (s < 10 ? '0' + s : '' + s)
                 }
@@ -45,11 +46,13 @@ class Timer extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        ...state.timer,
         hardVisible: state.options.hardVisible,
+        inserted: state.timer.inserted,
+        toEnd: state.timer.toEnd,
+        toStart: state.timer.toStart,
+        visible: state.timer.visible,
     };
 };
 

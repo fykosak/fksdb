@@ -1,25 +1,28 @@
-import * as React from 'react';
-import {connect} from 'react-redux';
 import * as d3 from 'd3';
+import * as React from 'react';
+
+import { connect } from 'react-redux';
 import {
     ISubmit,
+    ISubmits,
     ITeam,
 } from '../../../../../helpers/interfaces';
 import {
-    getPieData,
     getColorByPoints,
+    getPieData,
 } from '../../../../../helpers/pie/index';
+import { IStore } from '../../../../../reducers/index';
 
-interface IProps {
-    teams?: Array<ITeam>;
-    submits?: any;
+interface IState {
+    teams?: ITeam[];
+    submits?: ISubmits;
     teamID?: number;
     activePoints?: number;
 }
 
-class Chart extends React.Component<IProps, void> {
+class Chart extends React.Component<IState, {}> {
 
-    render() {
+    public render() {
         const {submits, teamID, activePoints} = this.props;
 
         if (!teamID) {
@@ -37,7 +40,7 @@ class Chart extends React.Component<IProps, void> {
 
         let totalSubmits = 0;
         let maxPoints = 0;
-        for (let index in submits) {
+        for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
                 const {team_id, points} = submit;
@@ -69,7 +72,7 @@ class Chart extends React.Component<IProps, void> {
         const labels = pie.map((item: any) => {
             return (
                 <g>
-                    <text textAnchor="middle" transform={'translate(' + arc.centroid(item).toString() + ')'}>
+                    <text textAnchor="middle" transform={`translate(${arc.centroid(item).toString()})`}>
                         {Math.floor(item.data.count * 100 / totalSubmits)}%
                     </text>
                 </g>
@@ -91,13 +94,12 @@ class Chart extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps: IProps): IProps => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        teams: state.results.teams,
+        activePoints: state.stats.activePoints,
         submits: state.results.submits,
         teamID: state.stats.teamID,
-        activePoints: state.stats.activePoints,
+        teams: state.results.teams,
     };
 };
 

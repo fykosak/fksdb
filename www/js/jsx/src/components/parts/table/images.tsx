@@ -1,25 +1,27 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {basePath} from '../../../helpers/base-path';
-import {getCurrentDelta} from '../../../helpers/timer';
+import { connect } from 'react-redux';
+import { basePath } from '../../../helpers/base-path';
+import { getCurrentDelta } from '../../../helpers/timer';
+import { IStore } from '../../../reducers/index';
 
-interface IProps {
+interface IState {
     toStart?: number;
     toEnd?: number;
     inserted?: Date;
     visible?: boolean;
 }
 
-class Images extends React.Component<IProps,void> {
-    componentDidMount() {
+class Images extends React.Component<IState, {}> {
+
+    public componentDidMount() {
         setInterval(() => this.forceUpdate(), 1000);
     }
 
     public render() {
-        const {inserted, toStart, toEnd}=this.props;
-        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
+        const { inserted, toStart, toEnd } = this.props;
+        const { currentToStart, currentToEnd } = getCurrentDelta({ toStart, toEnd }, inserted);
 
-        if (currentToStart == 0 || currentToEnd == 0) {
+        if (currentToStart === 0 || currentToEnd === 0) {
             return (<div/>);
         }
         let imgSRC = basePath + '/images/fyziklani/';
@@ -39,16 +41,18 @@ class Images extends React.Component<IProps,void> {
         }
         return (
             <div id='imageWP' data-basepath={basePath}>
-                <img src={imgSRC} alt="" style={{width:'80%'}}/>
+                <img src={imgSRC} alt="" style={{ width: '80%' }}/>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        ...state.timer,
+        inserted: state.timer.inserted,
+        toEnd: state.timer.toEnd,
+        toStart: state.timer.toStart,
+        visible: state.timer.visible,
     };
 };
 

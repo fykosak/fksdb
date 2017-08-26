@@ -20,12 +20,13 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: "awesome-typescript-loader"
-            },
+            }
         ],
 
         preLoaders: [
+            {test: /\.tsx$/, loader: "tslint"},
             {test: /\.js$/, loader: "source-map-loader"}
-        ],
+        ]
 
     },
 

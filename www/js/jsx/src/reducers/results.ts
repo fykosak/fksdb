@@ -1,9 +1,21 @@
 import {
     ADD_SUBMITS,
     SET_TASKS,
-    SET_TEAMS
+    SET_TEAMS,
 } from '../actions/results';
-const addSubmits = (state, action) => {
+
+import {
+    ISubmits,
+    ITask,
+    ITeam,
+} from '../helpers/interfaces';
+
+export interface IState {
+    submits?: ISubmits;
+    tasks?: ITask[];
+    teams?: ITeam[];
+}
+const addSubmits = (state: IState, action): IState => {
     const {submits} = action;
     return {
         ...state,
@@ -14,7 +26,7 @@ const addSubmits = (state, action) => {
     };
 };
 
-const setTeams = (state, action) => {
+const setTeams = (state: IState, action): IState => {
     const {teams} = action;
     return {
         ...state,
@@ -22,7 +34,7 @@ const setTeams = (state, action) => {
     };
 };
 
-const setTasks = (state, action) => {
+const setTasks = (state: IState, action): IState => {
     const {tasks} = action;
     return {
         ...state,
@@ -30,7 +42,7 @@ const setTasks = (state, action) => {
     };
 };
 
-export const results = (state = {}, action) => {
+export const results = (state: IState = {}, action): IState => {
     switch (action.type) {
         case ADD_SUBMITS:
             return addSubmits(state, action);

@@ -1,27 +1,31 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
 import {
     fetchResults,
-    waitForFetch
+    waitForFetch,
 } from '../../helpers/fetch';
+import { IStore } from '../../reducers/index';
 
-interface IProps {
+interface IState {
     lastUpdated?: string;
-    refreshDelay: number;
-    onFetch?: Function;
-    onWaitForFetch?: Function;
+    refreshDelay?: number;
+    onFetch?: () => void;
+    onWaitForFetch?: (lastUpdated: string, delay: number) => void;
 }
 
-class Downloader extends React.Component<IProps,any> {
+class Downloader extends React.Component<IState, {}> {
     public componentDidMount() {
-        const {onFetch}= this.props;
-        onFetch(null);
+        const {onFetch} = this.props;
+        onFetch();
     }
 
     public componentWillReceiveProps(nextProps) {
         if (this.props.lastUpdated !== nextProps.lastUpdated) {
             const {onWaitForFetch, refreshDelay, lastUpdated} = nextProps;
-            onWaitForFetch(lastUpdated, refreshDelay)
+            onWaitForFetch(lastUpdated, refreshDelay);
         }
     }
 
@@ -30,25 +34,23 @@ class Downloader extends React.Component<IProps,any> {
         const isRefreshing = true;
         return (
             <div className="last-update-info">Naposledny updatováno:<span
-                className={isRefreshing?'text-success':'text-muted'}>
+                className={isRefreshing ? 'text-success' : 'text-muted'}>
                 {lastUpdated}
                 </span>
             </div>
         );
-    };
+    }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         lastUpdated: state.downloader.lastUpdated,
         refreshDelay: state.downloader.refreshDelay,
-    }
+    };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onFetch: () => fetchResults(dispatch, null),
         onWaitForFetch: (lastUpdated, delay) => waitForFetch(dispatch, delay, lastUpdated),
     };

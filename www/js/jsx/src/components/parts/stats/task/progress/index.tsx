@@ -1,22 +1,24 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
-    ITask,
     ISubmit,
+    ISubmits,
+    ITask,
 } from '../../../../../helpers/interfaces';
-import {getColorByPoints} from '../../../../../helpers/pie/index';
+import { getColorByPoints } from '../../../../../helpers/pie/index';
+import { IStore } from '../../../../../reducers/index';
 
-interface IProps {
-    tasks: Array<ITask>;
-    submits: any;
+interface IState {
+    tasks?: ITask[];
+    submits?: ISubmits;
 }
 
-class TaskStats extends React.Component<IProps, void> {
-    render() {
+class TaskStats extends React.Component<IState, {}> {
+    public render() {
         const {submits, tasks} = this.props;
         const tasksSubmits = {};
 
-        for (let task of tasks) {
+        for (const task of tasks) {
             const {task_id} = task;
             tasksSubmits[task_id] = {
                 ...task,
@@ -28,7 +30,7 @@ class TaskStats extends React.Component<IProps, void> {
             };
         }
         let max = 0;
-        for (let index in submits) {
+        for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
                 const {task_id, points} = submit;
@@ -53,26 +55,26 @@ class TaskStats extends React.Component<IProps, void> {
                             <div className="progress-bar"
                                  data-points="5"
                                  style={{
-                                     width: (submit[5] / max) * 100 + "%",
                                      'background-color': getColorByPoints(5),
+                                     'width': (submit[5] / max) * 100 + '%',
                                  }}>{submit[5]}</div>
                             <div className="progress-bar"
                                  data-points="3"
                                  style={{
-                                     width: (submit[3] / max) * 100 + "%",
                                      'background-color': getColorByPoints(3),
+                                     'width': (submit[3] / max) * 100 + '%',
                                  }}>{submit[3]}</div>
                             <div className="progress-bar"
                                  data-points="2"
                                  style={{
-                                     width: (submit[2] / max) * 100 + "%",
                                      'background-color': getColorByPoints(2),
+                                     'width': (submit[2] / max) * 100 + '%',
                                  }}>{submit[2]}</div>
                             <div className="progress-bar"
                                  data-points="1"
                                  style={{
-                                     width: (submit[1] / max) * 100 + "%",
                                      'background-color': getColorByPoints(1),
+                                     'width': (submit[1] / max) * 100 + '%',
                                  }}>{submit[1]}</div>
                         </div>
                     </div>
@@ -84,12 +86,10 @@ class TaskStats extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        teams: state.results.teams,
-        tasks: state.results.tasks,
         submits: state.results.submits,
+        tasks: state.results.tasks,
     };
 };
 

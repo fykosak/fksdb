@@ -1,51 +1,55 @@
 import * as React from 'react';
 
-import {connect} from 'react-redux';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+
+import { setHardVisible } from '../../../actions/options';
 import {
     setCategory,
     setRoom,
 } from '../../../actions/table-filter';
-import{setHardVisible} from '../../../actions/options';
-import {filters} from '../../../helpers/filters/filters';
 
-interface IProps {
-    onRoomChange?: Function;
-    onCategoryChange?: Function;
-    onAutoSwitchChange?: Function;
-    onHardDisplayChange?: Function;
+import { filters } from '../../../helpers/filters/filters';
+import { IStore } from '../../../reducers/index';
+
+interface IComponentState {
+    isDisplayed: boolean;
+}
+interface IState {
+    onRoomChange?: (room: string) => void;
+    onCategoryChange?: (category: string) => void;
+    onHardDisplayChange?: (status: boolean) => void;
     isOrg?: boolean;
 }
 
-interface IState {
-    isDisplayed: boolean;
-}
-
-class Options extends React.Component<IProps, IState> {
+class Options extends React.Component<IState, IComponentState> {
     constructor() {
         super();
         this.state = {
             isDisplayed: false,
-        }
+        };
     }
 
-    render() {
+    public render() {
         const {
             onRoomChange,
             onCategoryChange,
             onHardDisplayChange,
             isOrg,
         } = this.props;
-        const {isDisplayed} = this.state;
+        const { isDisplayed } = this.state;
         return (
             <div>
                 <button
                     className={'btn btn-secondary ' + (isDisplayed ? 'active' : '')}
-                    onClick={() => this.setState({isDisplayed: !isDisplayed})}
+                    onClick={() => this.setState({ isDisplayed: !isDisplayed })}
                 >
                     Nastavení
                 </button >
 
-                <div style={{display: isDisplayed ? 'block' : 'none'}}>
+                <div style={{ display: isDisplayed ? 'block' : 'none' }}>
                     <div className="form-group">
                         <label className="sr-only">
                             <span>Místnost</span>
@@ -54,7 +58,7 @@ class Options extends React.Component<IProps, IState> {
                             className="form-control"
                             onChange={(event) => onRoomChange(event.target.value)}>
                             {                                filters
-                                .filter((filter) => filter.room != null)
+                                .filter((filter) => filter.room !== null)
                                 .map((filter, index) => {
                                     return (<option key={index} value={filter.room}>{filter.name}</option>);
                                 })
@@ -79,8 +83,8 @@ class Options extends React.Component<IProps, IState> {
                         <div className="checkbox">
                             <label>
                                 <input type="checkbox" disabled={!isOrg} value="1"
-                                       onChange={(event) => onHardDisplayChange(event.target.checked)}/>
-                                Neveřejné výsledkovky, <span className="text-danger">tuto funkci nezapínejte pokud jsou výsledkovky promítané!!!</span>
+                                       onChange={(event) => onHardDisplayChange(event.target.checked)}/>Neveřejné výsledkovky, <span
+                                className="text-danger">tuto funkci nezapínejte pokud jsou výsledkovky promítané!!!</span>
                             </label>
                         </div>
                     </div>
@@ -90,19 +94,17 @@ class Options extends React.Component<IProps, IState> {
     }
 }
 
-const mapStateToProps = (state, ownProps: IProps): IProps => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         isOrg: state.options.isOrg,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps: IProps): IProps => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
-        onCategoryChange: (category) => dispatch(setCategory(category)),
-        onRoomChange: (room) => dispatch(setRoom(room)),
-        onHardDisplayChange: (status) => dispatch(setHardVisible(status)),
+        onCategoryChange: (category: string) => dispatch(setCategory(category)),
+        onHardDisplayChange: (status: boolean) => dispatch(setHardVisible(status)),
+        onRoomChange: (room: string) => dispatch(setRoom(room)),
     };
 };
 

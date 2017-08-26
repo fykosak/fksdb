@@ -2,8 +2,8 @@ export const SET_STATS_ACTIVE_POINTS = 'SET_STATS_ACTIVE_POINTS';
 
 export const setActivePoints = (activePoints: number) => {
     return {
-        type: SET_STATS_ACTIVE_POINTS,
         activePoints,
+        type: SET_STATS_ACTIVE_POINTS,
     };
 };
 
@@ -11,8 +11,8 @@ export const SET_STATS_TEAM_ID = 'SET_STATS_TEAM_ID';
 
 export const setTeamID = (teamID: number) => {
     return {
-        type: SET_STATS_TEAM_ID,
         teamID,
+        type: SET_STATS_TEAM_ID,
     };
 };
 

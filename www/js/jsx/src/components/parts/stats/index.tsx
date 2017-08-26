@@ -1,20 +1,22 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
 
+import Timer from '../timer';
+import Navigation from './navigation';
 import TasksStats from './task/index';
 import TeamStats from './team/index';
-import Navigation from './navigation';
-import Timer from '../timer';
 
-interface IProps {
-    subPage: string;
+import { connect } from 'react-redux';
+import { IStore } from '../../../reducers/index';
+
+interface IState {
+    subPage?: string;
 }
 
-class Statistics extends React.Component<IProps, void> {
+class Statistics extends React.Component<IState, {}> {
 
-    render() {
+    public render() {
         let content = null;
-        const {subPage} = this.props;
+        const { subPage } = this.props;
         switch (subPage) {
             case 'teams':
             default:
@@ -34,9 +36,8 @@ class Statistics extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         subPage: state.options.subPage,
     };
 };

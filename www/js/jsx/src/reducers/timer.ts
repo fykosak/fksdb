@@ -1,7 +1,16 @@
-import {UPDATE_TIMES} from '../actions/times';
+import { UPDATE_TIMES } from '../actions/times';
 
-const updateTimes = (state, action: any) => {
-    const {times} = action;
+export interface IState {
+    gameEnd?: Date;
+    gameStart?: Date;
+    inserted?: Date;
+    toEnd?: number;
+    toStart?: number;
+    visible?: boolean;
+}
+
+const updateTimes = (state: IState, action: any): IState => {
+    const { times } = action;
     const inserted = new Date();
     return {
         ...state,
@@ -11,12 +20,12 @@ const updateTimes = (state, action: any) => {
     };
 };
 
-const initState = {
-    gameStart: new Date('2017-02-17T11:30:00'),
+const initState: IState = {
     gameEnd: new Date('2017-02-17T14:30:00'),
+    gameStart: new Date('2017-02-17T11:30:00'),
 };
 
-export const timer = (state = initState, action) => {
+export const timer = (state: IState = initState, action): IState => {
     switch (action.type) {
         case UPDATE_TIMES:
             return updateTimes(state, action);

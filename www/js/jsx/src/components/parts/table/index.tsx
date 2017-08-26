@@ -1,21 +1,23 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
 
-import Images from './images';
-import ResultsTable from './results-table';
-import Timer from '../timer';
 import AutoFilter from '../../helpers/auto-filter';
+import Timer from '../timer';
+import Images from './images';
 import Options from './options';
+import ResultsTable from './results-table';
 
-interface IProps {
+import { connect } from 'react-redux';
+import { IStore } from '../../../reducers/index';
+
+interface IState {
     visible?: boolean;
     hardVisible?: boolean;
 }
 
-class Results extends React.Component<IProps, void> {
+class Results extends React.Component<IState, {}> {
 
     public render() {
-        const {visible, hardVisible} = this.props;
+        const { visible, hardVisible } = this.props;
 
         const msg = [];
         // TODO do samostatného componentu všetky messages
@@ -28,7 +30,7 @@ class Results extends React.Component<IProps, void> {
             <div>
                 {msg}
                 <AutoFilter/>
-                {(visible || hardVisible) ? ( <ResultsTable/>) : (<Images/>)}
+                {(visible || hardVisible) ? (<ResultsTable/>) : (<Images/>)}
                 <Timer/>
                 <Options/>
             </div >
@@ -36,9 +38,8 @@ class Results extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,
     };

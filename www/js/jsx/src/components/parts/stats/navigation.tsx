@@ -1,16 +1,20 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {changeSubPage} from '../../../actions/options';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+import { changeSubPage } from '../../../actions/options';
+import { IStore } from '../../../reducers/index';
 
-interface IProps {
-    subPage: string;
-    onchangeSupPage: Function;
+interface IState {
+    subPage?: string;
+    onchangeSupPage?: (subPage: string) => void;
 }
 
-class Navigation extends React.Component<IProps, void> {
+class Navigation extends React.Component<IState, {}> {
 
-    render() {
-        const {subPage, onchangeSupPage} = this.props;
+    public render() {
+        const { subPage, onchangeSupPage } = this.props;
         return (
             <div className="container">
                 <ul className="nav nav-pills nav-fill mb-3">
@@ -30,16 +34,14 @@ class Navigation extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         subPage: state.options.subPage,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onchangeSupPage: (subPage) => dispatch(changeSubPage(subPage)),
     };
 };

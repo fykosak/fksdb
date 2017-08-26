@@ -6,9 +6,10 @@ import {
     setTeams
 } from '../actions/results';
 import {
-    setReadyStatus,
     setOrgStatus,
+    setReadyStatus,
 } from '../actions/options';
+import {Dispatch} from 'react-redux';
 
 export const fetchResults = (dispatch: Function, lastUpdated: string = null) => {
     const promise = new Promise((resolve, reject) => {
@@ -41,11 +42,10 @@ export const fetchResults = (dispatch: Function, lastUpdated: string = null) => 
 
         dispatch(setOrgStatus(isOrg));
         dispatch(setReadyStatus(true));
-
     })
 };
 
-export const waitForFetch = (dispatch: Function, delay: number, lastUpdated: string = null) => {
+export const waitForFetch = (dispatch: Dispatch<any>, delay: number, lastUpdated: string = null): number => {
     return setTimeout(() => {
         fetchResults(dispatch, lastUpdated);
     }, delay);

@@ -1,31 +1,35 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-
 import {
-    getColorByPoints,
-} from '../../../../helpers/pie/index';
+    connect,
+    Dispatch,
+} from 'react-redux';
 import {
     setActivePoints,
     setDeActivePoints,
 } from '../../../../actions/stats';
+import {
+    getColorByPoints,
+} from '../../../../helpers/pie/index';
 
-interface IProps {
-    onActivePoints?: Function;
-    onDeActivePoints?: Function;
+import { IStore } from '../../../../reducers/index';
+
+interface IState {
+    onActivePoints?: (points: number) => void;
+    onDeActivePoints?: () => void;
 }
 
-class Legend extends React.Component<IProps, void> {
+class Legend extends React.Component<IState, {}> {
 
-    render() {
+    public render() {
         const availablePoints = [1, 2, 3, 5];
         const {onActivePoints, onDeActivePoints} = this.props;
         const legend = availablePoints.map((points: number) => {
             return (<div className="w-100 legend-item"
                          onMouseEnter={() => {
-                             onActivePoints(points)
+                             onActivePoints(points);
                          }}
                          onMouseLeave={() => {
-                             onDeActivePoints()
+                             onDeActivePoints();
                          }}>
                 <i className="icon" style={{'background-color': getColorByPoints(points)}}/>
                 <strong>{points} points</strong>
@@ -40,9 +44,8 @@ class Legend extends React.Component<IProps, void> {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onActivePoints: (points) => dispatch(setActivePoints(+points)),
         onDeActivePoints: () => dispatch(setDeActivePoints()),
     };

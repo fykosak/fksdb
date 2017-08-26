@@ -1,10 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-interface IProps{
-
-}
-
-export default class BackLink extends React.Component<IProps, void> {
+export default class BackLink extends React.Component<{}, {}> {
     public render() {
         return (
             <a className="nav-link" onClick={() => {

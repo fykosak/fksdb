@@ -1,28 +1,29 @@
 import * as React from 'react';
 import {
+    ISubmits,
     ITask,
     ITeam,
 } from '../../../helpers/interfaces';
 
 interface IProps {
-    submits: any;
+    submits: ISubmits;
     team: ITeam;
-    tasks: Array<ITask>;
+    tasks: ITask[];
     visible: boolean;
 }
 
-export default class TeamRow extends React.Component<IProps, void> {
+export default class TeamRow extends React.Component<IProps, {}> {
 
     public render() {
-        const {submits, team, tasks, visible} = this.props;
+        const { submits, team, tasks, visible } = this.props;
 
         let count = 0;
         let sum = 0;
         const cools = tasks.map((task, taskIndex) => {
             // find submit
-            const {task_id} = task;
+            const { task_id: taskId } = task;
 
-            const submit = submits[task_id] || null;
+            const submit = submits[taskId] || null;
             const points = submit ? submit.points : null;
 
             if (points !== null) {
@@ -34,7 +35,7 @@ export default class TeamRow extends React.Component<IProps, void> {
 
         const average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
         return (
-            <tr style={{display: visible ? '' : 'none'}}>
+            <tr style={{ display: visible ? '' : 'none' }}>
                 <td>{team.name}</td>
                 <td className="sum">{sum}</td>
                 <td>{count}</td>
@@ -42,5 +43,5 @@ export default class TeamRow extends React.Component<IProps, void> {
                 {cools}
             </tr>
         );
-    };
+    }
 }

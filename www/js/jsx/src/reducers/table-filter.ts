@@ -4,41 +4,49 @@ import {
     SET_USER_TABLE_ROOM,
     SET_USER_FILTER,
 } from '../actions/table-filter';
+import { Filter } from '../helpers/filters/filters';
 
-const setNextFilter = (state) => {
-    let {filterID} = state;
+export interface IState {
+    userFilter?: Filter,
+    autoSwitch: boolean;
+    filterID: number;
+    room?: string;
+    category?: string;
+}
+
+const setNextFilter = (state: IState): IState => {
+    const { filterID } = state;
     return {
         ...state,
         filterID: (filterID + 1) % 3,
     };
 };
 
-const setRoom = (state, action) => {
-    const {room} = action;
+const setRoom = (state: IState, action): IState => {
+    const { room } = action;
     return {
         ...state,
         room,
     };
 };
 
-const setCategory = (state, action) => {
-    const {category} = action;
+const setCategory = (state: IState, action): IState => {
+    const { category } = action;
     return {
         ...state,
         category,
     };
 };
 
-
-const setUserFilter = (state, action) => {
+const setUserFilter = (state: IState, action): IState => {
     return {
         ...state,
-        userFilter: action.filter,
         autoSwitch: !action.filter,
+        userFilter: action.filter,
     };
 };
 
-export const tableFilter = (state = {filterID: 0, autoSwitch: true}, action) => {
+export const tableFilter = (state: IState = { filterID: 0, autoSwitch: true }, action): IState => {
 
     switch (action.type) {
         case SET_NEXT_TABLE_FILTER:

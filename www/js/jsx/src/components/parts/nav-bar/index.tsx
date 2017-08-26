@@ -1,14 +1,18 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {changePage} from '../../../actions/options';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+import { changePage } from '../../../actions/options';
+import { IStore } from '../../../reducers/index';
 import BackLink from './back-link';
 
-interface IProps {
+interface IState {
     page?: string;
-    onchangePage?: Function;
+    onchangePage?: (page: string) => void;
 }
 
-class NavBar extends React.Component<IProps, void> {
+class NavBar extends React.Component<IState, {}> {
 
     public render() {
         const {page, onchangePage} = this.props;
@@ -44,19 +48,17 @@ class NavBar extends React.Component<IProps, void> {
                 </div>
             </nav>
         );
-    };
+    }
 }
 
-const mapStateToProps = (state, ownProps): IProps => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
         page: state.options.page,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onchangePage: (page) => dispatch(changePage(page)),
     };
 };

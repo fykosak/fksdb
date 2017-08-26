@@ -1,3 +1,4 @@
+import { Filter } from '../helpers/filters/filters';
 export const SET_NEXT_TABLE_FILTER = 'SET_NEXT_TABLE_FILTER';
 
 export const setNextFilter = () => {
@@ -8,27 +9,27 @@ export const setNextFilter = () => {
 
 export const SET_USER_TABLE_CATEGORY = 'SET_USER_TABLE_CATEGORY';
 
-export const setCategory = (category) => {
+export const setCategory = (category: string) => {
     return {
-        type: SET_USER_TABLE_CATEGORY,
         category,
+        type: SET_USER_TABLE_CATEGORY,
     };
 };
 
 export const SET_USER_TABLE_ROOM = 'SET_USER_TABLE_ROOM';
 
-export const setRoom = (room) => {
+export const setRoom = (room: string) => {
     return {
-        type: SET_USER_TABLE_ROOM,
         room,
+        type: SET_USER_TABLE_ROOM,
     };
 };
 
 export const SET_USER_FILTER = 'CHANGE_FILTER';
 
-export const setUserFilter = (filter) => {
+export const setUserFilter = (filter: Filter) => {
     return {
-        type: SET_USER_FILTER,
         filter,
+        type: SET_USER_FILTER,
     };
 };

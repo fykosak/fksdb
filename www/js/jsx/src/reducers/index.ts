@@ -1,16 +1,44 @@
-import {timer} from './timer';
-import {results} from './results';
-import {options} from './options';
-import {downloader} from './downloader';
-import {combineReducers} from 'redux';
-import {tableFilter}from './table-filter';
-import {stats} from './stats';
+import { combineReducers } from 'redux';
+import {
+    timer,
+    IState as ITimerState
+} from './timer';
+import {
+    results,
+    IState as IResultsState
+} from './results';
+import {
+    options,
+    IState as IOptionsState
+} from './options';
+import {
+    downloader,
+    IState as IDownloaderState,
+} from './downloader';
+
+import {
+    tableFilter,
+    IState as ITableFilterState
+}from './table-filter';
+import {
+    stats,
+    IState as IStatsState
+} from './stats';
 
 export const app = combineReducers({
-    timer,
-    results,
-    options,
     downloader,
-    tableFilter,
+    options,
+    results,
     stats,
+    tableFilter,
+    timer,
 });
+
+export interface IStore {
+    downloader: IDownloaderState;
+    timer: ITimerState;
+    results: IResultsState;
+    options: IOptionsState;
+    tableFilter: ITableFilterState;
+    stats: IStatsState;
+}

@@ -1,22 +1,26 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
 
 import {
     Filter,
     filters,
 } from '../../../helpers/filters/filters';
 
-import {setUserFilter} from '../../../actions/table-filter';
+import { setUserFilter } from '../../../actions/table-filter';
+import { IStore } from '../../../reducers/index';
 
-interface IProps {
-    onFilterChange?: Function;
+interface IState {
+    onFilterChange?: (filter: Filter) => void;
     userFilter?: Filter;
 }
 
-class FiltersButtons extends React.Component<IProps, void> {
+class FiltersButtons extends React.Component<IState, {}> {
 
     public render() {
-        const {onFilterChange, userFilter} = this.props;
+        const { onFilterChange, userFilter } = this.props;
         const filtersButtons = filters.map((filter, index) => {
             return (
                 <li key={index} className="nav-item" role="presentation">
@@ -40,17 +44,14 @@ class FiltersButtons extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        isReady: state.options.isReady,
         userFilter: state.tableFilter.userFilter,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onFilterChange: (filter: Filter) => dispatch(setUserFilter(filter)),
     };
 };

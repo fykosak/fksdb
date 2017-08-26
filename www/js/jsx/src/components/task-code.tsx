@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 
 interface ITaskCodeProps {
     node: HTMLInputElement;
-    tasks: Array<any>;
-    teams: Array<any>;
+    tasks: any[];
+    teams: any[];
 }
 
 interface ITaskCodeState {
@@ -24,18 +24,25 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
     constructor() {
         super();
         this.state = {
+            control: undefined,
             task: undefined,
             team: undefined,
-            control: undefined,
+            valid: false,
             validTask: false,
             validTeam: false,
-            valid: false,
-        }
+        };
     }
 
     public componentDidMount() {
         // focus on load
         jQuery(ReactDOM.findDOMNode(this.teamInput)).focus();
+    }
+
+    public componentDidUpdate(): void {
+        this.props.node.value = '';
+        if (this.state.valid) {
+            this.props.node.value = this.getFullCode(null, null, null);
+        }
     }
 
     public render() {
@@ -50,16 +57,14 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
             if (validTask) {
                 jQuery(ReactDOM.findDOMNode(this.controlInput)).focus();
             }
-            this.setState(
-                {
-                    task: value,
-                    validTask,
-                    valid,
-                }
-            );
+            this.setState({
+                task: value,
+                valid,
+                validTask,
+            });
         };
 
-        const onInputTeam = (event) => {
+        const onInputTeam = (event): void => {
             const value = +event.target.value;
             const oldValue = this.state.team;
             if (value === oldValue) {
@@ -120,12 +125,12 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
                         onKeyUp={onInputControl}
                     />
                     <span
-                        className={'glyphicon ' + ( this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback'}
+                        className={'glyphicon ' + (this.state.valid ? 'glyphicon-ok' : '') + ' form-control-feedback'}
                     />
                 </div>
             </div>
         );
-    };
+    }
 
     private getFullCode(team: number, task: string, control: number): string {
 
@@ -154,29 +159,26 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
                 .replace('G', '7')
                 .replace('H', '8');
         });
-        return (this.getControl(subCode) % 10 == 0);
+        return (this.getControl(subCode) % 10 === 0);
     }
 
     private isValidTask(task: string): boolean {
         const {tasks} = this.props;
-        return tasks.map(task => task.label).indexOf(task) !== -1;
+        return tasks.map((currentTask) => {
+                return currentTask.label;
+            }).indexOf(task) !== -1;
     }
 
     private isValidTeam(team: number): boolean {
         const {teams} = this.props;
-        return teams.map(team => team.team_id).indexOf(+team) !== -1;
-    }
-
-    public componentDidUpdate(): void {
-        this.props.node.value = '';
-        if (this.state.valid) {
-            this.props.node.value = this.getFullCode(null, null, null);
-        }
+        return teams.map((currentTeam) => {
+                return currentTeam.team_id;
+            }).indexOf(+team) !== -1;
     }
 
     private getControl(subCode: Array<string | number>): number {
-        return 3 * (+subCode[0] + +subCode[3] + +subCode[6]) +
-            7 * (+subCode[1] + +subCode[4] + +subCode[7]) +
-            (+subCode[2] + +subCode[5] + +subCode[8])
+        return (+subCode[0] + +subCode[3] + +subCode[6]) * 3 +
+            (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
+            (+subCode[2] + +subCode[5] + +subCode[8]);
     }
 }

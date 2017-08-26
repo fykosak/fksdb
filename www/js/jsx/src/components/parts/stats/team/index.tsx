@@ -1,26 +1,31 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import PointsPie from './pie/index';
-import PointsInTime from './line-chart/index';
-import TimeLine from './timeline/index';
-import {ITeam} from '../../../../helpers/interfaces';
-import {setTeamID} from '../../../../actions/stats';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+import { setTeamID } from '../../../../actions/stats';
+import { ITeam } from '../../../../helpers/interfaces';
+import { IStore } from '../../../../reducers/index';
 
-interface IProps {
-    teams: Array<ITeam>;
-    onchangeTeam: Function;
-    teamID: number;
+import PointsInTime from './line-chart/index';
+import PointsPie from './pie/index';
+import TimeLine from './timeline/index';
+
+interface IState {
+    teams?: ITeam[];
+    onchangeTeam?: (id: number) => void;
+    teamID?: number;
 }
 
-class TeamStats extends React.Component<IProps, void> {
+class TeamStats extends React.Component<IState, {}> {
 
-    render() {
+    public render() {
         const {teams, onchangeTeam, teamID} = this.props;
 
         const teamSelect = (
             <p>
                 <select className="form-control" onChange={(event) => {
-                    onchangeTeam(+event.target.value)
+                    onchangeTeam(+event.target.value);
                 }}>
                     <option value={null}>--select team--</option>
                     {teams.map((team) => {
@@ -40,17 +45,15 @@ class TeamStats extends React.Component<IProps, void> {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        ...ownProps,
-        teams: state.results.teams,
         teamID: state.stats.teamID,
+        teams: state.results.teams,
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        ...ownProps,
         onchangeTeam: (teamID) => dispatch(setTeamID(+teamID)),
     };
 };
