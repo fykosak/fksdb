@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import App from './components/app';
-import TaskCode from './components/task-code';
+import App from './results-n-stats/components/app';
+import Routing from './routing/routing';
+import TaskCode from './task-code/task-code';
 
 $('.fyziklani-results').parent('.container').css({ width: 'inherit' });
 if (document.getElementsByClassName('fyziklani-results').length) {
@@ -20,4 +21,9 @@ jQuery('#taskcode').each((a, input: HTMLInputElement) => {
         $(c).addClass('col-lg-6');
         ReactDOM.render(<TaskCode node={input} tasks={tasks} teams={teams}/>, c);
     }
+});
+
+$('.room-edit').each((a, container) => {
+    const data = JSON.parse($(container).attr('data-data'));
+    ReactDOM.render(<Routing teams={data.teams} rooms={data.rooms}/>, container);
 });

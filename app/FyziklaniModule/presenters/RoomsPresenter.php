@@ -17,7 +17,8 @@ use Pipeline\PipelineException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RoomsPresenter extends BasePresenter {
+class RoomsPresenter extends BasePresenter
+{
 
     const SOURCE_ASTRID = 'astrid';
 
@@ -34,7 +35,7 @@ class RoomsPresenter extends BasePresenter {
     private $pipelineFactory;
 
     /**
-     * @var FlashDumpFactory 
+     * @var FlashDumpFactory
      */
     private $flashDumpFactory;
 
@@ -79,6 +80,31 @@ class RoomsPresenter extends BasePresenter {
         $seriesForm->onSuccess[] = callback($this, 'validRoomsImportForm');
 
         return $seriesForm;
+    }
+
+    public function renderEdit() {
+        $rooms = [
+            ['name' => 'F1', 'x' => 4, 'y' => 10],
+            ['name' => 'F2', 'x' => 2, 'y' => 5],
+            ['name' => 'M1', 'x' => 4, 'y' => 10],
+            ['name' => 'M2', 'x' => 2, 'y' => 4],
+            ['name' => 'F3', 'x' => 2, 'y' => 3],
+            ['name' => 'F6', 'x' => 2, 'y' => 3],
+        ];
+        $data = [
+            'teams' => [],
+            'rooms' => $rooms,
+        ];
+        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
+            $data['teams'][] = [
+                'teamID' => $team->e_fyziklani_team_id,
+                'name' => $team->name,
+                'category' => $team->category,
+            ];
+        };
+
+        $this->template->data = json_encode($data);
+        Debugger::barDump($data);
     }
 
     public function validRoomsImportForm(Form $seriesForm) {

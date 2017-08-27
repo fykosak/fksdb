@@ -9,7 +9,7 @@ export default class PointsPie extends React.Component<{}, {}> {
             <h3>Úspešnosť odovzdávania úloh</h3>
             <div className="row">
                 <Chart/>
-                <Legend/>
+                <Legend inline={false}/>
             </div>
         </div>);
     }

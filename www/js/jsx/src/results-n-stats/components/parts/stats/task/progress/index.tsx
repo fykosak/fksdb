@@ -15,11 +15,11 @@ interface IState {
 
 class TaskStats extends React.Component<IState, {}> {
     public render() {
-        const {submits, tasks} = this.props;
+        const { submits, tasks } = this.props;
         const tasksSubmits = {};
 
         for (const task of tasks) {
-            const {task_id} = task;
+            const { task_id } = task;
             tasksSubmits[task_id] = {
                 ...task,
                 5: 0,
@@ -33,7 +33,7 @@ class TaskStats extends React.Component<IState, {}> {
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
-                const {task_id, points} = submit;
+                const { task_id, points } = submit;
                 if (tasksSubmits.hasOwnProperty(task_id)) {
                     tasksSubmits[task_id][points]++;
                     tasksSubmits[task_id].total++;

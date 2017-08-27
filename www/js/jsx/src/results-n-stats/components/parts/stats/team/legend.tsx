@@ -17,27 +17,30 @@ interface IState {
     onActivePoints?: (points: number) => void;
     onDeActivePoints?: () => void;
 }
+interface IProps {
+    inline: boolean;
+}
 
-class Legend extends React.Component<IState, {}> {
+class Legend extends React.Component<IProps & IState, {}> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];
-        const {onActivePoints, onDeActivePoints} = this.props;
+        const { onActivePoints, onDeActivePoints, inline } = this.props;
         const legend = availablePoints.map((points: number) => {
-            return (<div className="w-100 legend-item"
+            return (<div className={inline ? 'legend-item col-3' : 'w-100 legend-item'}
                          onMouseEnter={() => {
                              onActivePoints(points);
                          }}
                          onMouseLeave={() => {
                              onDeActivePoints();
                          }}>
-                <i className="icon" style={{'background-color': getColorByPoints(points)}}/>
+                <i className="icon" style={{ 'background-color': getColorByPoints(points) }}/>
                 <strong>{points} points</strong>
             </div>);
         });
 
         return (
-            <div className="align-content-center col-lg-4 d-flex flex-wrap">
+            <div className={inline ? 'row col-12' : 'align-content-center col-lg-4 d-flex flex-wrap'}>
                 {legend}
             </div>
         );

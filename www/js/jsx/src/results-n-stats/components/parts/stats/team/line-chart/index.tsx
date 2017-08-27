@@ -1,14 +1,16 @@
 import * as React from 'react';
-
+import Legend from '../legend';
 import Chart from './chart';
 
-export default class TimeLine extends React.Component<{}, {}> {
+export default class PointsInTime extends React.Component<{}, {}> {
+
     public render() {
         return (
             <div>
-                <h3>TimeLine</h3>
+                <h3>Time progress number of points</h3>
                 <div className="row">
                     <Chart/>
+                    <Legend inline={false}/>
                 </div>
             </div>
         );

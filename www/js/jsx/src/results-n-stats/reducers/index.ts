@@ -1,29 +1,33 @@
 import { combineReducers } from 'redux';
-import {
-    timer,
-    IState as ITimerState
-} from './timer';
-import {
-    results,
-    IState as IResultsState
-} from './results';
-import {
-    options,
-    IState as IOptionsState
-} from './options';
+
 import {
     downloader,
     IState as IDownloaderState,
 } from './downloader';
+import {
+    IState as IOptionsState,
+    options,
+} from './options';
 
 import {
-    tableFilter,
-    IState as ITableFilterState
-}from './table-filter';
+    IState as IResultsState,
+    results,
+} from './results';
+
 import {
+    IState as IStatsState,
     stats,
-    IState as IStatsState
 } from './stats';
+
+import {
+    IState as ITableFilterState,
+    tableFilter,
+} from './table-filter';
+
+import {
+    IState as ITimerState,
+    timer,
+} from './timer';
 
 export const app = combineReducers({
     downloader,

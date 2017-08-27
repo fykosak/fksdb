@@ -1,6 +1,6 @@
 import * as React from 'react';
 import logger from 'redux-logger';
-import FyziklaniApp from './fyziklani-app';
+import BrawlApp from './brawl-app';
 
 import { Provider } from 'react-redux';
 import {
@@ -16,7 +16,7 @@ export default class App extends React.Component<{}, {}> {
         // const store = createStore(app);
         return (
             <Provider store={store}>
-                <FyziklaniApp/>
+                <BrawlApp/>
             </Provider>
         );
     }

@@ -16,6 +16,7 @@ import { getColorByPoints } from '../../../../../helpers/pie/index';
 import { IStore } from '../../../../../reducers/index';
 
 interface IState {
+    activePoints?: number;
     submits?: ISubmits;
     tasks?: ITask[];
     teamID?: number;
@@ -40,7 +41,7 @@ class TimeLine extends React.Component<IState, {}> {
     }
 
     public render() {
-        const {teamID, submits, tasks, gameStart, gameEnd} = this.props;
+        const { teamID, submits, tasks, gameStart, gameEnd, activePoints } = this.props;
         const taskOnBoar = 7;
         const taskBuffer = [...(tasks.slice(taskOnBoar))];
 
@@ -56,7 +57,7 @@ class TimeLine extends React.Component<IState, {}> {
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
-                const {team_id, created} = submit;
+                const { team_id, created } = submit;
                 if (teamID === team_id) {
                     teamSubmits.push(submit);
                     const task = taskBuffer.shift();
@@ -78,7 +79,7 @@ class TimeLine extends React.Component<IState, {}> {
         this.yScale = d3.scaleLinear().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
 
         const dots = activeTasks.map((task, index) => {
-            const {task_id, from} = task;
+            const { task_id, from } = task;
             const submit = teamSubmits.filter((fSubmit) => {
                 return fSubmit.task_id === task_id;
             })[0];
@@ -89,8 +90,16 @@ class TimeLine extends React.Component<IState, {}> {
             const yCoordinates = this.yScale(index);
 
             const color = getColorByPoints(submit ? submit.points : null);
+            let active = true;
+            if (activePoints) {
+                active = false;
+                if (submit) {
+                    active = activePoints === submit.points;
+                }
+            }
+
             return (
-                <g>
+                <g style={{ opacity: (active) ? 1 : 0.1 } }>
                     <polyline
                         points={`${fromCoordinates},${yCoordinates} ${toCoordinates},${yCoordinates}`}
                         strokeWidth="2"
@@ -128,6 +137,7 @@ class TimeLine extends React.Component<IState, {}> {
 
 const mapStateToProps = (state: IStore): IState => {
     return {
+        activePoints: state.stats.activePoints,
         gameEnd: state.timer.gameEnd,
         gameStart: state.timer.gameStart,
         submits: state.results.submits,

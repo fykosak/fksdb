@@ -1,10 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+interface ITask {
+    label: string;
+}
+interface ITeam {
+    team_id: number;
+}
 interface ITaskCodeProps {
     node: HTMLInputElement;
-    tasks: any[];
-    teams: any[];
+    tasks: ITask[];
+    teams: ITeam[];
 }
 
 interface ITaskCodeState {
@@ -141,7 +147,7 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
     }
 
     private isValid(code: string): boolean {
-        const {validTeam, validTask} = this.state;
+        const { validTeam, validTask } = this.state;
         if (!validTask) {
             return false;
         }
@@ -163,14 +169,14 @@ export default class TaskCode extends React.Component<ITaskCodeProps, ITaskCodeS
     }
 
     private isValidTask(task: string): boolean {
-        const {tasks} = this.props;
+        const { tasks } = this.props;
         return tasks.map((currentTask) => {
                 return currentTask.label;
             }).indexOf(task) !== -1;
     }
 
     private isValidTeam(team: number): boolean {
-        const {teams} = this.props;
+        const { teams } = this.props;
         return teams.map((currentTeam) => {
                 return currentTeam.team_id;
             }).indexOf(+team) !== -1;
