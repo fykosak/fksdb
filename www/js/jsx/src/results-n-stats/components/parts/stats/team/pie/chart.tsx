@@ -23,19 +23,19 @@ interface IState {
 class Chart extends React.Component<IState, {}> {
 
     public render() {
-        const {submits, teamID, activePoints} = this.props;
+        const { submits, teamID, activePoints } = this.props;
 
         if (!teamID) {
             return (<div/>);
         }
         const teamSubmits = [];
         const pointsCategories = [
-            {points: 0, count: 0},
-            {points: 1, count: 0},
-            {points: 2, count: 0},
-            {points: 3, count: 0},
-            {points: 4, count: 0},
-            {points: 5, count: 0},
+            { points: 0, count: 0 },
+            { points: 1, count: 0 },
+            { points: 2, count: 0 },
+            { points: 3, count: 0 },
+            { points: 4, count: 0 },
+            { points: 5, count: 0 },
         ];
 
         let totalSubmits = 0;
@@ -43,7 +43,7 @@ class Chart extends React.Component<IState, {}> {
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
-                const {team_id, points} = submit;
+                const { team_id, points } = submit;
                 if (teamID === team_id) {
                     totalSubmits++;
                     pointsCategories[points].count++;

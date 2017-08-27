@@ -1,20 +1,21 @@
 import * as React from 'react';
 import logger from 'redux-logger';
-import App from './app';
+import App from './components/app';
 
 import { Provider } from 'react-redux';
 import {
     applyMiddleware,
     createStore,
 } from 'redux';
-import { app } from './reducers/index';
 import {
+    IRoom,
     ITeam,
-} from './reducers/teams';
+} from './interfaces';
+import { app } from './reducers/index';
 
 interface IProps {
     teams: ITeam[];
-    rooms: any[];
+    rooms: IRoom[];
 }
 
 export default class extends React.Component<IProps, {}> {

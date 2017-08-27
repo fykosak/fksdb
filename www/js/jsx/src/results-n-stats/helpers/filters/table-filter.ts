@@ -1,8 +1,6 @@
-import {
-    Filter,
-} from './filters';
+import { Filter } from './filters';
 
-const defaultFilter = new Filter({room: null, category: null, name: ''});
+const defaultFilter = new Filter({ room: null, category: null, name: '' });
 
 export const createFilter = (filterID: number = 0,
                              autoSwitch: boolean = false,
@@ -29,14 +27,14 @@ export const createFilter = (filterID: number = 0,
 
 const getRoomFilter = (filterOptions): Filter => {
     if (filterOptions.room) {
-        return new Filter({room: filterOptions.room, category: null, name: ''});
+        return new Filter({ room: filterOptions.room, category: null, name: '' });
     }
     return defaultFilter;
 };
 
 const getCategoryFilter = (filterOptions): Filter => {
     if (filterOptions.category) {
-        return new Filter({room: null, category: filterOptions.category, name: ''});
+        return new Filter({ room: null, category: filterOptions.category, name: '' });
     }
     return defaultFilter;
 };

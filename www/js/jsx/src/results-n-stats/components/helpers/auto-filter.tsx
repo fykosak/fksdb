@@ -12,7 +12,7 @@ interface IState {
 
 class Clock extends React.Component<IState, {}> {
     public componentDidMount() {
-        const {onSetNextFilter} = this.props;
+        const { onSetNextFilter } = this.props;
         setInterval(onSetNextFilter, 30000);
     }
 

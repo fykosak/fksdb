@@ -1,13 +1,13 @@
 import {
     ADD_SUBMITS,
     SET_TASKS,
-    SET_TEAMS,
+    SET_TEAMS
 } from '../actions/results';
 
 import {
     ISubmits,
     ITask,
-    ITeam,
+    ITeam
 } from '../helpers/interfaces';
 
 export interface IState {
@@ -16,7 +16,7 @@ export interface IState {
     teams?: ITeam[];
 }
 const addSubmits = (state: IState, action): IState => {
-    const {submits} = action;
+    const { submits } = action;
     return {
         ...state,
         submits: {
@@ -27,7 +27,7 @@ const addSubmits = (state: IState, action): IState => {
 };
 
 const setTeams = (state: IState, action): IState => {
-    const {teams} = action;
+    const { teams } = action;
     return {
         ...state,
         teams,
@@ -35,7 +35,7 @@ const setTeams = (state: IState, action): IState => {
 };
 
 const setTasks = (state: IState, action): IState => {
-    const {tasks} = action;
+    const { tasks } = action;
     return {
         ...state,
         tasks,

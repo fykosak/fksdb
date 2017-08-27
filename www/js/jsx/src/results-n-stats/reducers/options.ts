@@ -3,7 +3,7 @@ import {
     CHANGE_SUBPAGE,
     SET_HARD_VISIBLE,
     SET_ORG_STATUS,
-    SET_READY_STATUS,
+    SET_READY_STATUS
 } from '../actions/options';
 export interface IState {
     isReady?: boolean;
@@ -35,7 +35,7 @@ const setOrgStatus = (state: IState, action): IState => {
 };
 
 const changeSubPage = (state: IState, action): IState => {
-    const {subPage} = action;
+    const { subPage } = action;
     return {
         ...state,
         subPage,
@@ -43,7 +43,7 @@ const changeSubPage = (state: IState, action): IState => {
 };
 
 const changePage = (state: IState, action): IState => {
-    const {page} = action;
+    const { page } = action;
     return {
         ...state,
         page,

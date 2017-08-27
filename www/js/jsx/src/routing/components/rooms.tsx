@@ -2,8 +2,10 @@ import * as React from 'react';
 
 import Room from './room';
 
+import { IRoom } from '../interfaces';
+
 interface IProps {
-    rooms: any[];
+    rooms: IRoom[];
 }
 
 export default class Rooms extends React.Component<IProps, {}> {
@@ -12,8 +14,7 @@ export default class Rooms extends React.Component<IProps, {}> {
         const { rooms } = this.props;
         return (<div>
             {rooms.map((room, index) => {
-                const { x, y, name } = room;
-                return (<Room key={index} x={x} y={y} name={name}/>);
+                return (<Room key={index} info={room}/>);
             })}
         </div>);
     }

@@ -7,9 +7,7 @@ import {
     setActivePoints,
     setDeActivePoints,
 } from '../../../../actions/stats';
-import {
-    getColorByPoints,
-} from '../../../../helpers/pie/index';
+import { getColorByPoints } from '../../../../helpers/pie/index';
 
 import { IStore } from '../../../../reducers/index';
 

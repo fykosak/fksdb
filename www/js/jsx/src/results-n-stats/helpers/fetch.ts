@@ -1,5 +1,5 @@
-import {updateTimes} from '../actions/times';
-import {updateDownloaderOptions} from '../actions/downloader';
+import { updateTimes } from '../actions/times';
+import { updateDownloaderOptions } from '../actions/downloader';
 import {
     addSubmits,
     setTasks,
@@ -7,28 +7,29 @@ import {
 } from '../actions/results';
 import {
     setOrgStatus,
-    setReadyStatus,
+    setReadyStatus
 } from '../actions/options';
-import {Dispatch} from 'react-redux';
+import { Dispatch } from 'react-redux';
 
-export const fetchResults = (dispatch: Function, lastUpdated: string = null) => {
-    const promise = new Promise((resolve, reject) => {
+export const fetchResults = (dispatch, oldLastUpdated: string = null) => {
+    const promise = new Promise((resolve) => {
         const data: any = {};
-        if (lastUpdated) {
-            data.lastUpdated = lastUpdated;
+        if (oldLastUpdated) {
+            data.lastUpdated = oldLastUpdated;
         }
-        (<any>$).nette.ajax({
+        const netteJQuery: any = $;
+        netteJQuery.nette.ajax({
             data,
-            success: (data) => {
-                resolve(data);
-            },
             error: (e) => {
                 throw e;
-            }
-        })
+            },
+            success: (d) => {
+                resolve(d);
+            },
+        });
     });
     promise.then((data: any) => {
-        const {times, submits, isOrg, lastUpdated, refreshDelay, tasks, teams} = data;
+        const { times, submits, isOrg, lastUpdated, refreshDelay, tasks, teams } = data;
         dispatch(updateTimes(times));
         dispatch(updateDownloaderOptions(lastUpdated, refreshDelay));
         dispatch(addSubmits(submits));
@@ -42,7 +43,7 @@ export const fetchResults = (dispatch: Function, lastUpdated: string = null) => 
 
         dispatch(setOrgStatus(isOrg));
         dispatch(setReadyStatus(true));
-    })
+    });
 };
 
 export const waitForFetch = (dispatch: Dispatch<any>, delay: number, lastUpdated: string = null): number => {

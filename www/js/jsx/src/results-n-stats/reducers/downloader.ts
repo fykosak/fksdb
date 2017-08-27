@@ -6,7 +6,7 @@ export interface IState {
 }
 
 const updateOptions = (state: IState, action) => {
-    const {lastUpdated, refreshDelay} = action;
+    const { lastUpdated, refreshDelay } = action;
     return {
         ...state,
         lastUpdated,

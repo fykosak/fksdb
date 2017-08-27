@@ -9,8 +9,10 @@ use FKSDB\model\Fyziklani\Rooms\PipelineFactory;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
+use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use Nette\Utils\Json;
 use Pipeline\PipelineException;
 
 /**
@@ -83,6 +85,20 @@ class RoomsPresenter extends BasePresenter
     }
 
     public function renderEdit() {
+        if ($this->isAjax()) {
+            $data = Json::decode($this->getHttpRequest()->getPost('data'));
+            $updatedTeams = [];
+            foreach ($data as $teamData) {
+                if (isset($teamData->x) && isset($teamData->y)) {
+                    $team = $this->serviceFyziklaniTeam->findByPrimary($teamData->teamID);
+                    $team->update(['room' => $teamData->room]);
+                    $this->serviceFyziklaniTeam->save($team);
+                    $updatedTeams[] = $teamData->teamID;
+                }
+            }
+            $this->sendResponse(new JsonResponse(['updatedTeams' => $updatedTeams]));
+
+        }
         $rooms = [
             ['name' => 'F1', 'x' => 4, 'y' => 10],
             ['name' => 'F2', 'x' => 2, 'y' => 5],
@@ -95,6 +111,7 @@ class RoomsPresenter extends BasePresenter
             'teams' => [],
             'rooms' => $rooms,
         ];
+        // TOTO vytiahnuť školy/učastnikov
         foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
             $data['teams'][] = [
                 'teamID' => $team->e_fyziklani_team_id,

@@ -1,4 +1,4 @@
-export const getCurrentDelta = ({toStart, toEnd}, inserted) => {
+export const getCurrentDelta = ({ toStart, toEnd }, inserted) => {
     const now = new Date();
     const delta = now.getTime() - inserted.getTime();
     toEnd -= delta;

@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
 import {
     dragEnd,
     dragStart,
 } from '../actions/dragndrop';
 import { removeTeamPlace } from '../actions/teams';
-import { ITeam } from '../reducers/teams';
+import { ITeam } from '../interfaces';
+import { IStore } from '../reducers/index';
 
 interface IState {
     onDragStart?: (teamID: number) => void;
@@ -48,10 +52,10 @@ class Team extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
-        onDragStart: (teamID) => dispatch(dragStart(teamID)),
+        onDragStart: (teamId) => dispatch(dragStart(teamId)),
         onRemovePlace: (teamId) => dispatch(removeTeamPlace(teamId)),
     };
 };

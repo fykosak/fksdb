@@ -15,10 +15,10 @@ interface IState {
 class NavBar extends React.Component<IState, {}> {
 
     public render() {
-        const {page, onchangePage} = this.props;
+        const { page, onchangePage } = this.props;
         const pageNames = [
-            {id: 'table', name: 'Table'},
-            {id: 'stats', name: 'Statistics'},
+            { id: 'table', name: 'Table' },
+            { id: 'stats', name: 'Statistics' },
         ];
         const pages = pageNames.map((item) => {
             return (<li className={'nav-item ' + ((page === item.id) ? 'active' : '')}>

@@ -18,19 +18,19 @@ interface IState {
 
 class Downloader extends React.Component<IState, {}> {
     public componentDidMount() {
-        const {onFetch} = this.props;
+        const { onFetch } = this.props;
         onFetch();
     }
 
     public componentWillReceiveProps(nextProps) {
         if (this.props.lastUpdated !== nextProps.lastUpdated) {
-            const {onWaitForFetch, refreshDelay, lastUpdated} = nextProps;
+            const { onWaitForFetch, refreshDelay, lastUpdated } = nextProps;
             onWaitForFetch(lastUpdated, refreshDelay);
         }
     }
 
     public render() {
-        const {lastUpdated} = this.props;
+        const { lastUpdated } = this.props;
         const isRefreshing = true;
         return (
             <div className="last-update-info">Naposledny updatováno:<span

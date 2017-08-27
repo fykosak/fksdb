@@ -2,7 +2,8 @@ import * as React from 'react';
 import Team from './team';
 
 import { connect } from 'react-redux';
-import { ITeam } from '../reducers/teams';
+import { ITeam } from '../interfaces';
+import { IStore } from '../reducers/index';
 
 interface IState {
     stateTeams?: ITeam[];
@@ -27,13 +28,13 @@ class UnRoutedTeams extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state): IState => {
+const mapStateToProps = (state: IStore): IState => {
     return {
         stateTeams: state.teams,
     };
 };
 
-const maxDispatchToProps = () => {
+const maxDispatchToProps = (): IState => {
     return {};
 };
 

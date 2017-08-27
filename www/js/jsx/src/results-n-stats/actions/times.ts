@@ -1,7 +1,7 @@
 export const UPDATE_TIMES = 'UPDATE_TIMES';
 
 export const updateTimes = (times: any) => {
-    const {toStart, toEnd} = times;
+    const { toStart, toEnd } = times;
     return {
         times: {
             ...times,

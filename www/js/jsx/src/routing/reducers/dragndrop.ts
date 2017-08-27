@@ -1,6 +1,6 @@
 import { ACTION_DRAG_START } from '../actions/dragndrop';
 
-const dragStart = (state, action) => {
+const dragStart = (state: IState, action): IState => {
     const { teamID } = action;
     return {
         ...state,
@@ -8,7 +8,7 @@ const dragStart = (state, action) => {
     };
 };
 
-export const dragNDrop = (state = {}, action) => {
+export const dragNDrop = (state: IState = {}, action): IState => {
     switch (action.type) {
         case ACTION_DRAG_START:
             return dragStart(state, action);
@@ -16,3 +16,6 @@ export const dragNDrop = (state = {}, action) => {
             return state;
     }
 };
+export interface IState {
+    draggedTeamID?: number;
+}

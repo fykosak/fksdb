@@ -20,7 +20,7 @@ interface IState {
 class TeamStats extends React.Component<IState, {}> {
 
     public render() {
-        const {teams, onchangeTeam, teamID} = this.props;
+        const { teams, onchangeTeam, teamID } = this.props;
 
         const teamSelect = (
             <p>

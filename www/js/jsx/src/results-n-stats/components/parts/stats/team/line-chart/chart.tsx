@@ -65,12 +65,12 @@ class PointsInTime extends React.Component<IState, {}> {
 
         const teamSubmits: IExtendedSubmit[] = [];
         const pointsCategories = [
-            {points: 0, count: 0},
-            {points: 1, count: 0},
-            {points: 2, count: 0},
-            {points: 3, count: 0},
-            {points: 4, count: 0},
-            {points: 5, count: 0},
+            { points: 0, count: 0 },
+            { points: 1, count: 0 },
+            { points: 2, count: 0 },
+            { points: 3, count: 0 },
+            { points: 4, count: 0 },
+            { points: 5, count: 0 },
         ];
 
         let totalSubmits = 0;
@@ -79,7 +79,7 @@ class PointsInTime extends React.Component<IState, {}> {
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
-                const {team_id, points} = submit;
+                const { team_id, points } = submit;
                 if (teamID === team_id) {
                     const currentTask = tasks.filter((task) => {
                         return submit.task_id === task.task_id;
@@ -117,7 +117,7 @@ class PointsInTime extends React.Component<IState, {}> {
                 </circle>
             );
         });
-        const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, teamSubmits);
+        const linePath = getLinePath({ xScale: this.xScale, yScale: this.yScale }, teamSubmits);
 
         return (
             <div className="col-lg-8">

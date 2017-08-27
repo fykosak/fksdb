@@ -1,18 +1,26 @@
 import * as React from 'react';
 
-import Rooms from './components/rooms';
-import UnRoutedTeams from './components/unrouted-teams';
+import Form from './form';
+import Rooms from './rooms';
+import UnRoutedTeams from './unrouted-teams';
 
-import { connect } from 'react-redux';
-import { addTeams } from './actions/teams';
-import { ITeam } from './reducers/teams';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+import { addTeams } from '../actions/teams';
+import {
+    IRoom,
+    ITeam,
+} from '../interfaces';
+import { IStore } from '../reducers/index';
 
 interface IState {
-    onAddTeams?: (teams: any[]) => void;
+    onAddTeams?: (teams: ITeam[]) => void;
 }
 interface IProps {
     teams: ITeam[];
-    rooms: any[];
+    rooms: IRoom[];
 }
 
 class RoutingApp extends React.Component<IState & IProps, {}> {
@@ -33,6 +41,9 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
                 <div className="col-lg-4" style={{ overflowY: 'scroll', maxHeight: '700px' }}>
                     <UnRoutedTeams/>
                 </div>
+                <div className="col-lg-12">
+                    <Form/>
+                </div>
             </div>
         );
     }
@@ -42,7 +53,7 @@ const mapStateToProps = (): IState => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

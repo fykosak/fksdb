@@ -2,17 +2,17 @@ import * as React from 'react';
 
 import Place from './place';
 
+import { IRoom } from '../interfaces';
+
 interface IProps {
-    name: string;
-    x: number;
-    y: number;
+    info: IRoom;
 }
 
 export default  class Room extends React.Component<IProps, {}> {
 
     public render() {
-        const { name, x: maxX, y: maxY } = this.props;
-
+        const { info } = this.props;
+        const { name, x: maxX, y: maxY } = info;
         const rows = [];
         for (let y = 0; y < maxY; y++) {
             const row = [];

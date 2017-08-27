@@ -1,13 +1,13 @@
 import * as React from 'react';
-import FyziklaniDashboard from './fyziklani-dashboard';
+import BrawlDashboard from './brawl-dashboard';
 import Downloader from './helpers/downloader';
 
-export default class FyziklaniApp extends React.Component<{}, {}> {
+export default class BrawlApp extends React.Component<{}, {}> {
     public render() {
         return (
             <div>
                 <Downloader/>
-                <FyziklaniDashboard/>
+                <BrawlDashboard/>
             </div>
         );
     }

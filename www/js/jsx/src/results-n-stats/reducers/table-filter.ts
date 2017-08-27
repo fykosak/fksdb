@@ -1,8 +1,8 @@
 import {
     SET_NEXT_TABLE_FILTER,
-    SET_USER_TABLE_CATEGORY,
-    SET_USER_TABLE_ROOM,
     SET_USER_FILTER,
+    SET_USER_TABLE_CATEGORY,
+    SET_USER_TABLE_ROOM
 } from '../actions/table-filter';
 import { Filter } from '../helpers/filters/filters';
 

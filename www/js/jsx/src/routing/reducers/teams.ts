@@ -1,8 +1,9 @@
+import { ACTION_DROP_ITEM } from '../actions/dragndrop';
 import {
     ACTION_ADD_TEAMS,
     ACTION_REMOVE_PLACE,
 } from '../actions/teams';
-import { ACTION_DROP_ITEM } from '../actions/dragndrop';
+import { ITeam } from '../interfaces';
 
 const routeTeam = (state: any[], action): ITeam[] => {
     const { teamID, place: { x, y, room } } = action;
@@ -50,12 +51,3 @@ export const teams = (state: ITeam[] = [], action): ITeam[] => {
             return state;
     }
 };
-
-export interface ITeam {
-    teamID: number;
-    category: string;
-    name: string;
-    x?: number;
-    y?: number;
-    room?: string;
-}

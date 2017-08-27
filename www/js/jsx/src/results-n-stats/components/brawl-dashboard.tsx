@@ -12,15 +12,15 @@ interface IState {
     isReady?: boolean;
 }
 
-class FyziklaniDashboard extends React.Component<IState, {}> {
+class BrawlDashboard extends React.Component<IState, {}> {
 
     public render() {
-        const {isReady, page} = this.props;
+        const { isReady, page } = this.props;
 
         if (!isReady) {
             return (
-                <div className="load" style={{textAlign: 'center'}}>
-                    <img src={basePath + '/images/gears.svg'} style={{width: '50%'}}/>
+                <div className="load" style={{ textAlign: 'center' }}>
+                    <img src={basePath + '/images/gears.svg'} style={{ width: '50%' }}/>
                 </div>);
         }
 
@@ -59,4 +59,4 @@ const mapStateToProps = (state: IStore): IState => {
 export default connect(
     mapStateToProps,
     null,
-)(FyziklaniDashboard);
+)(BrawlDashboard);
