@@ -12,6 +12,7 @@ import { ITeam } from '../interfaces';
 import { IStore } from '../reducers/index';
 
 interface IState {
+    isUpdated?: boolean;
     onDragStart?: (teamID: number) => void;
     onDragEnd?: () => void;
     onRemovePlace?: (teamID: number) => void;
@@ -22,7 +23,7 @@ interface IProps {
 class Team extends React.Component<IProps & IState, {}> {
     public render() {
 
-        const { onDragStart, onDragEnd, team, onRemovePlace } = this.props;
+        const { onDragStart, onDragEnd, team, onRemovePlace, isUpdated } = this.props;
         let className = 'panel';
         const hasPlace = (team.x !== undefined && team.y !== undefined && team.room !== undefined);
         switch (team.category) {
@@ -43,14 +44,28 @@ class Team extends React.Component<IProps & IState, {}> {
                  onDragStart={() => onDragStart(team.teamID)}
                  onDragEnd={onDragEnd}>
                 <div className={className}>
-                    <div className="panel-heading">{team.name + ' (' + team.category + ')'}</div>
+                    <div className="panel-heading">
+                        {team.name + ' (' + team.category + ')'}
+                    </div>
                     <div className="panel-body">
-                        {hasPlace && (<button onClick={() => onRemovePlace(team.teamID)}>X</button>)}
+                        <p>
+                            {isUpdated && (<span className="updated-confirm-text text-center">updated</span>)}
+                            {hasPlace && (
+                                <button className="close" onClick={() => onRemovePlace(team.teamID)}>&times;</button>
+                            )}
+                        </p>
                     </div>
                 </div>
             </div>);
     }
 }
+
+const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
+
+    return {
+        isUpdated: (state.save.updatedTeams.indexOf(ownProps.team.teamID) !== -1),
+    };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
@@ -60,4 +75,4 @@ const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     };
 };
 
-export default connect(null, mapDispatchToProps)(Team);
+export default connect(mapStateToProps, mapDispatchToProps)(Team);

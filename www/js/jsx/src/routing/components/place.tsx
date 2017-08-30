@@ -28,7 +28,6 @@ class Place extends React.Component<IState & IProps, {}> {
                 return (currentTeam.x === x) && (currentTeam.y === y) && (currentTeam.room === room);
             })[0];
         return (<td
-            style={{ width: '5rem', border: 'solid 1px red', height: '5rem' }}
             onDragOver={(e) => {
                 if (!team) {
                     e.preventDefault();

@@ -11,15 +11,20 @@ import { IStore } from '../reducers/index';
 interface IState {
     onSaveRouting?: (teams: ITeam[]) => void;
     teams?: ITeam[];
+    saving?: boolean;
+    error?: any;
 }
 class Form extends React.Component<IState, {}> {
 
     public render() {
-        const { onSaveRouting, teams } = this.props;
-        return (<button className="btn btn-success" onClick={() => {
-            onSaveRouting(teams);
-        }}>Save
-        </button>);
+        const { onSaveRouting, teams, saving, error } = this.props;
+        return (<div>
+            <button disabled={saving} className="btn btn-success" onClick={() => {
+                onSaveRouting(teams);
+            }}>Save
+            </button>
+            {error && (<span className="text-danger">{error.statusText}</span>)}
+        </div>);
     }
 }
 
@@ -31,6 +36,8 @@ const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
 
 const mapStateToProps = (state: IStore): IState => {
     return {
+        error: state.save.error,
+        saving: state.save.saving,
         teams: state.teams,
     };
 };
