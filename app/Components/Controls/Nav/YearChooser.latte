@@ -1,0 +1,12 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {$currentYear?:_('Ročník') }
+  </button>
+  <div class="dropdown-menu">
+  {foreach $years as $index => $year}
+    <a class="dropdown-item"  href="{link change! $year}">{$year}. Ročník</a>
+        {/foreach}
+  </div>
+</div>
+
+

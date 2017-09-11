@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
+use OrgModule\BasePresenter;
 use SeriesCalculator;
 use ServiceContest;
 
@@ -83,6 +84,9 @@ class SeriesChooser extends Control {
         $this->valid = true;
 
         $session = $this->session->getSection(self::SESSION_SECTION);
+        /**
+         * @var $presenter BasePresenter|\PublicModule\BasePresenter
+         */
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();
         $year = $presenter->getSelectedYear();

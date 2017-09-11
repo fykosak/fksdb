@@ -6,9 +6,9 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Components\Controls\LanguageChooser;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -16,7 +16,8 @@ use Nette\DateTime;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
-final class AuthenticationPresenter extends BasePresenter {
+final class AuthenticationPresenter extends BasePresenter
+{
 
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -201,7 +202,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function renderRecover() {
-        
+
     }
 
     private function getFbLoginUrl() {
@@ -216,7 +217,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * This workaround is here because LoginUser storage
      * returns false when only global login exists.
      * False is return in order to AuthenticatedPresenter to correctly login the user.
-     * 
+     *
      * @return bool
      */
     private function isLoggedIn() {
@@ -232,10 +233,10 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addPassword('password', _('Heslo'))
-                ->addRule(Form::FILLED, _('Zadejte heslo.'));
+            ->addRule(Form::FILLED, _('Zadejte heslo.'));
         //$form->addCheckbox('remember', _('Zapamatovat si přihlášení'));
 
         $form->addSubmit('send', _('Přihlásit'));
@@ -249,13 +250,13 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * Password recover form.
-     * 
+     *
      * @return Form
      */
     protected function createComponentRecoverForm() {
         $form = new Form();
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addSubmit('send', _('Pokračovat'));
 
@@ -308,7 +309,7 @@ final class AuthenticationPresenter extends BasePresenter {
             return;
         }
         $this->restoreRequest($this->backlink);
-        
+
         /* If it was't valid backlink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
@@ -332,20 +333,21 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($url->getHost()) { // this would indicate absolute URL
             if (in_array($url->getHost(), $this->globalParameters['authentication']['backlinkHosts'])) {
-                $this->redirectUrl((string) $url, 303);
+                $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);
             }
         }
     }
 
+    /**
+     * @param $login ModelLogin
+     */
     private function initialRedirect($login) {
-        if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
+        if ($login->isOrg($this->yearCalculator)) {
             $this->redirect(':Org:Dashboard:', array(self::PARAM_DISPATCH => 1));
         } else {
             $this->redirect(':Public:Dashboard:', array(self::PARAM_DISPATCH => 1));
         }
-        // or else redirect to page suggesting registration
     }
-
 }

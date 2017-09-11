@@ -3,18 +3,24 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Nav\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\Components\Controls\Nav\YearChooser;
+use FKSDB\OrgModule\presenters\ContestNav;
 use IContestPresenter;
-use ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter
+{
+    /**
+     * include contest,year,series chooser
+     */
+    use ContestNav;
 
     /**
      * @var int
@@ -34,16 +40,12 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      */
     public $lang;
 
+    protected $role = \ModelRole::ORG;
+
     protected function startup() {
         parent::startup();
         $this['contestChooser']->syncRedirect();
         $this['languageChooser']->syncRedirect();
-    }
-
-    protected function createComponentContestChooser($name) {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
-        $control->setContests(ModelRole::ORG);
-        return $control;
     }
 
     protected function createComponentLanguageChooser($name) {
@@ -51,7 +53,26 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $control;
     }
 
+
+    public function getSelectedAcademicYear() {
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
+    public function getSelectedLanguage() {
+        /**
+         * @var $languageChooser LanguageChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        if (!$languageChooser->isValid()) {
+            throw new BadRequestException('No languages available.', 403);
+        }
+        return $languageChooser->getLanguage();
+    }
+
     public function getSelectedContest() {
+        /**
+         * @var $contestChooser ContestChooser
+         */
         $contestChooser = $this['contestChooser'];
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
@@ -60,23 +81,14 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     public function getSelectedYear() {
-        $contestChooser = $this['contestChooser'];
-        if (!$contestChooser->isValid()) {
+        /**
+         * @var $yearChooser YearChooser
+         */
+        $yearChooser = $this['yearChooser'];
+        if (!$yearChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
-        return $contestChooser->getYear();
+        return $yearChooser->getYear();
     }
 
-    public function getSelectedAcademicYear() {
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
-    }
-
-    public function getSelectedLanguage() {
-        $languageChooser = $this['languageChooser'];
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
-    }
-    
 }

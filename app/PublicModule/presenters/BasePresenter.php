@@ -4,8 +4,8 @@ namespace PublicModule;
 
 use AuthenticatedPresenter;
 use DbNames;
-use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\OrgModule\presenters\ContestNav;
 use IContestPresenter;
 use ModelContestant;
 use ModelRole;
@@ -19,6 +19,8 @@ use Nette\Application\BadRequestException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+
+    use ContestNav;
 
     const PRESETS_KEY = 'publicPresets';
 
@@ -37,16 +39,12 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
      * @persistent
      */
     public $lang;
+
+    protected $role = ModelRole::CONTESTANT;
     
     protected function startup() {
         parent::startup();
         $this['contestChooser']->syncRedirect();
-    }
-
-    protected function createComponentContestChooser($name) {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
-        $control->setContests(ModelRole::CONTESTANT);
-        return $control;
     }
 
     protected function createComponentLanguageChooser($name) {

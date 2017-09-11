@@ -57,6 +57,14 @@ fksrouter:
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
+
+        # Empty params
+        '//[!<subdomain>].%domain.host%.[!<tld>]':
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            module: Public
+            presenter: Chooser
+            flags: [ONE_WAY, SECURED]
                        
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
