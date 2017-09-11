@@ -60,4 +60,20 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
         }
         return $languageChooser->getLanguage();
     }
+
+    public function handleChange($contestId, $role) {
+        switch ($role) {
+            case 'org':
+                $this->redirect(':Org:Dashboard:default', ['contestId' => $contestId,]);
+                return;
+            case 'contestant':
+                $this->redirect(':Public:Dashboard:default', ['contestId' => $contestId,]);
+                return;
+        }
+    }
+
+    public function getTitle() {
+        return _('Razcestník');
+    }
+
 }

@@ -5,7 +5,7 @@ namespace PublicModule;
 use AuthenticatedPresenter;
 use DbNames;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\OrgModule\presenters\ContestNav;
+use \ContestNav;
 use IContestPresenter;
 use ModelContestant;
 use ModelRole;
@@ -13,9 +13,9 @@ use Nette\Application\BadRequestException;
 
 /**
  * Current year of FYKOS.
- * 
+ *
  * @todo Contest should be from URL and year should be current.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
@@ -41,10 +41,10 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     public $lang;
 
     protected $role = ModelRole::CONTESTANT;
-    
+
     protected function startup() {
         parent::startup();
-        $this['contestChooser']->syncRedirect();
+        $this->startupRedirects();
     }
 
     protected function createComponentLanguageChooser($name) {
@@ -55,27 +55,15 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
     /** @var ModelContestant|null|false */
     private $contestant = false;
 
-    public function getSelectedContest() {
-        $contestChooser = $this['contestChooser'];
-        if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
-        }
-        return $contestChooser->getContest();
-    }
-
-    public function getSelectedYear() {
-        $contestChooser = $this['contestChooser'];
-        if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
-        }
-        return $contestChooser->getYear();
-    }
 
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     public function getSelectedLanguage() {
+        /**
+         * @var $languageChooser LanguageChooser
+         */
         $languageChooser = $this['languageChooser'];
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);
@@ -85,11 +73,14 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
 
     public function getContestant() {
         if ($this->contestant === false) {
+            /**
+             * @var $person \ModelPerson
+             */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(
-                        'contest_id' => $this->getSelectedContest()->contest_id,
-                        'year' => $this->getSelectedYear()
-                    ))->fetch();
+                'contest_id' => $this->getSelectedContest()->contest_id,
+                'year' => $this->getSelectedYear()
+            ))->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
         }

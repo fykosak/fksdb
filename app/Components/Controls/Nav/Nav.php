@@ -6,8 +6,22 @@
 namespace FKSDB\Components\Controls\Nav;
 
 use Nette\Application\UI\Control;
+use ModelContest;
+use Nette\Http\Session;
+use ServiceContest;
 
 abstract class Nav extends Control {
+
+    const SESSION_PREFIX = 'contestPreset';
+
+    /**
+     * @var bool
+     */
+    protected $valid = false;
+    /**
+     * @var bool
+     */
+    protected $initialized = false;
 
     /**
      * @var string
@@ -21,10 +35,30 @@ abstract class Nav extends Control {
         $this->role = $role;
     }
 
+
+    /**
+     * @var ServiceContest
+     */
+    protected $serviceContest;
+
+    /**
+     * @var ModelContest
+     */
+    protected $contest;
+    /**
+     * @var Session
+     */
+    protected $session;
+
     /**
      * @return boolean
      */
     abstract function isValid();
+
+    /**
+     * @return integer
+     */
+    abstract function syncRedirect();
 
 
     /**

@@ -7,7 +7,7 @@ use News;
 
 /**
  * Just proof of concept.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
@@ -39,10 +39,10 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function renderDefault() {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
-	  as $new) {
-            $this->flashMessage($new);
-        }
+        //   foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
+        //  as $new) {
+        //        $this->flashMessage($new);
+        //    }
     }
 
 }

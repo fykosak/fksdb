@@ -21,10 +21,10 @@
         <div id="wrap">
 
             {block body}
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <nav n:class="'fixed-top navbar navbar-expand-md ',$contest?($contest==1?'bg-fykos navbar-dark':'bg-vyfuk navbar-dark'):'bg-light navbar-light'" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                         <span class="sr-only">Toggle navigation</span>
                     </button>
                     <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
@@ -36,19 +36,19 @@
                     {control navigation:navbar}
 
                     {block user-info}
-                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                    <ul n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
                         {var $login => $user->getIdentity()}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-user"></span>
                                 {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
                                 {else}
                                     {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
-                                    <li class="divider"></li>
-                                    <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
-                                </ul>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" n:href=":Settings:">{_'Nastavení'}</a>
+                                    <span class="dropdown-divider"></span>
+                                    <a class="dropdown-item" n:href=":Authentication:logout">{_'Odhlásit'}</a>
+                                </div>
                             </li>
                         </ul>                
                         {/block}

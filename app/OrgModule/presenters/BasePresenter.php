@@ -6,7 +6,7 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Nav\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Nav\YearChooser;
-use FKSDB\OrgModule\presenters\ContestNav;
+use \ContestNav;
 use IContestPresenter;
 use Nette\Application\BadRequestException;
 
@@ -44,7 +44,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
-        $this['contestChooser']->syncRedirect();
+        $this->startupRedirects();
         $this['languageChooser']->syncRedirect();
     }
 

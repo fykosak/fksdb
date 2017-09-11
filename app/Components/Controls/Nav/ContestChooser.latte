@@ -1,13 +1,13 @@
-<div class="btn-group">
-  <button type="button" n:class="'btn dropdown-toggle '.($class)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div class="navbar-nav nav">
+<div class="dropdown">
+  <span n:class="'nav-link dropdown-toggle '.($class)" data-toggle="dropdown">
     {$currentContest?  $currentContest->name: _('seminar') }
-  </button>
+  </span>
   <div class="dropdown-menu">
   {foreach $availableContests as $contestId => $contest}
 
     <a n:class="'dropdown-item btn-'.$contest->symbol"  href="{link change! $contestId}">{$contest->contest->name}</a>
         {/foreach}
   </div>
+  </div>
 </div>
-
-

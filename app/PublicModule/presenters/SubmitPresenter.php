@@ -55,6 +55,9 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedDownload($id) {
+        /**
+         * @var $submit ModelSubmit
+         */
         $submit = $this->submitService->findByPrimary($id);
 
         if (!$submit) {
@@ -62,6 +65,7 @@ class SubmitPresenter extends BasePresenter {
         }
 
         $submit->task_id; // stupid touch
+
         $contest = $submit->getContestant()->getContest();
         $this->setAuthorized($this->contestAuthorizator->isAllowed($submit, 'download', $contest));
 
@@ -75,6 +79,9 @@ class SubmitPresenter extends BasePresenter {
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
+            /**
+             * @var $person \ModelPerson
+             */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
@@ -86,6 +93,9 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function actionDownload($id) {
+        /**
+         * @var $submit ModelSubmit
+         */
         $submit = $this->submitService->findByPrimary($id);
 
         $filename = $this->submitStorage->retrieveFile($submit);
@@ -161,9 +171,9 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @internal
-     * @param type $form
+     * @param \Nette\Forms\Form $form
      */
-    public function handleUploadFormSuccess($form) {
+    public function handleUploadFormSuccess(\Nette\Forms\Form $form) {
         $values = $form->getValues();
 
         $ctId = $this->getContestant()->ct_id;

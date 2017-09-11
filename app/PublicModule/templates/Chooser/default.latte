@@ -1,22 +1,28 @@
-{layout ../../../templates/@layout.latte}
+{layout ../../../templates/@layout.latte }
 
-{block content}
-
+{block #content}
 <div class="container">
     <div class="row">
         <div class="col-6">
             <div class="row text-center">
-                <img src="/images/contests/fykos.svg" alt=""/>
-                <span>FYKOS</span>
+                <img class="col-12 my-3" src="/images/contests/fykos.svg" alt=""/>
+                 <a href="{link change! '1','contestant'}" class="col-12 btn btn-fykos btn-lg btn-block">FYKOS - účastník</a>
+                 <a href="{link change! '1','org'}" class="col-12 btn btn-fykos btn-lg btn-block">FYKOS - org</a>
             </div>
         </div>
         <div class="col-6">
             <div class="row text-center">
-                <img src="/images/contests/fykos.svg" alt=""/>
-                <span>VYFUK</span>
+                <img class="col-12 my-3" src="/images/contests/vyfuk.svg" alt=""/>
+                <a href="{link change! '2','contestant'}" class="col-12 btn btn-vyfuk btn-lg btn-block">Výfuk - účastník</a>
+                <a href="{link change! '2','org'}" class="col-12 btn btn-vyfuk btn-lg btn-block">Výfuk - org</a>
             </div>
         </div>
+        <div class="col-6">
+                    <div class="row text-center">
+                        <img class="col-12 my-3" src="/images/contests/fyziklani.svg" alt=""/>
+                        <a href="{link :Fyziklani:Dashboard: }" class="col-12 btn btn-fykos btn-lg btn-block">Fykosí Fyzikláni</a>
+                    </div>
+                </div>
     </div>
 </div>
-
 {/block}

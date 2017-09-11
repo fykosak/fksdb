@@ -8,7 +8,7 @@ use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Nav\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
@@ -47,6 +47,8 @@ use ServiceContestant;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
+
+    use \ContestNav;
 
     /**
      * @var int
@@ -93,14 +95,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function injectContainer(Container $container) {
         $this->container = $container;
-    }
-
-    protected function createComponentContestChooser($name) {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
-        $control->setContests(ContestChooser::CONTESTS_ALL);
-        $control->setDefaultContest(ContestChooser::DEFAULT_NULL);
-        $control->setContestSource(ContestChooser::SOURCE_URL);
-        return $control;
     }
 
     protected function createComponentLanguageChooser($name) {

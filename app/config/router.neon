@@ -58,13 +58,7 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        # Empty params
-        '//[!<subdomain>].%domain.host%.[!<tld>]':
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            module: Public
-            presenter: Chooser
-            flags: [ONE_WAY, SECURED]
+
                        
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
@@ -105,12 +99,26 @@ fksrouter:
             module: Fyziklani
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][<module %modules%>/]<presenter>/<action=default>[/<id>]':
-            module: Public
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%org/<contestId %contests%>/[<year [0-9]+>/][<presenter>/]<action=default>[/<id>]':
             presenter: Dashboard
+            module: Org
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            flags: SECURED
+               # Empty params
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%public/[<contestId %contests%>/][<year [0-9]+>/][<presenter>/]<action=default>[/<id>]':
+            presenter: Dashboard
+            module: Public
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
+        '//[!<subdomain>].%domain.host%.[!<tld>]':
+            module: Public
+            presenter: Chooser
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            flags: SECURED
 

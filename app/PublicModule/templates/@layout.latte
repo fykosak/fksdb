@@ -2,11 +2,12 @@
 
 
 {block user-info}
-{include #parent}
+
 {if $control['languageChooser']->isValid()}
     {control languageChooser,null}
 {/if}
 {if $control['contestChooser']->isValid()}
     {control contestChooser}
 {/if}
+{include #parent}
 {/block}

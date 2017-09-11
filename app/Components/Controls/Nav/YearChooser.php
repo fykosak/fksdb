@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Controls\Nav;
 
-use ModelContest;
 use ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use ServiceContest;
 use YearCalculator;
@@ -13,28 +13,14 @@ use YearCalculator;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class YearChooser extends Nav {
 
-    const SOURCE_SESSION = 0x1;
-    const SOURCE_URL = 0x2;
-    const SESSION_PREFIX = 'contestPreset';
-    const CONTESTS_ALL = '__*';
-    const YEARS_ALL = '__*';
-    /** @obsolete (no first contest anymore) */
-    const DEFAULT_FIRST = 'first';
-    const DEFAULT_SMART_FIRST = 'smfirst';
-    const DEFAULT_NULL = 'null';
-
     /**
-     * @var mixed
+     * @var integer[]
      */
     private $yearDefinition;
-
-    /**
-     * @var Session
-     */
-    private $session;
 
     /**
      * @var YearCalculator
@@ -42,31 +28,9 @@ class YearChooser extends Nav {
     private $yearCalculator;
 
     /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
-
-    /**
-     * @var ModelContest
-     */
-    private $contest;
-
-    /**
      * @var int
      */
     private $year;
-
-    /**
-     * @var boolean
-     */
-    private $valid;
-    private $initialized = false;
-
-    /**
-     * @var int bitmask of what "sources" are used to infer selected contest
-     */
-    private $contestSource = 0xffffffff;
-
 
     /**
      *
@@ -82,19 +46,10 @@ class YearChooser extends Nav {
     }
 
     /**
-     *
-     * @param mixed $yearDefinition enum
+     * @param integer[] $yearDefinition enum
      */
     public function setYears($yearDefinition) {
         $this->yearDefinition = $yearDefinition;
-    }
-
-    public function getContestSource() {
-        return $this->contestSource;
-    }
-
-    public function setContestSource($contestSource) {
-        $this->contestSource = $contestSource;
     }
 
     public function isValid() {
@@ -107,16 +62,14 @@ class YearChooser extends Nav {
      */
     public function syncRedirect() {
         $this->init();
-
+        /**
+         * @var $presenter \OrgModule\BasePresenter|\PublicModule\BasePresenter
+         */
         $presenter = $this->getPresenter();
-
-        $contestId = isset($this->contest) ? $this->contest->contest_id : null;
-        if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
-            $presenter->redirect('this', array(
-                'contestId' => $contestId,
-                'year' => $this->year
-            ));
+        if ($this->year != $presenter->year) {
+            return $this->year;
         }
+        return null;
     }
 
     public function getYear() {
@@ -136,7 +89,8 @@ class YearChooser extends Nav {
          * @var $presenter \OrgModule\BasePresenter|\PublicModule\BasePresenter
          */
         $presenter = $this->getPresenter();
-        $contestId = $presenter->getSelectedContest()->contest_id;
+        $presentersContest = $presenter->getSelectedContest();
+        $contestId = is_null($presentersContest) ? null : $presentersContest->contest_id;
 
         $this->contest = $this->serviceContest->findByPrimary($contestId);
 
@@ -152,11 +106,14 @@ class YearChooser extends Nav {
 
     private function getYears() {
 
-        if ($this->yearDefinition === self::YEARS_ALL || $this->role == ModelRole::ORG) {
+        if ($this->role === ModelRole::ORG) {
             $min = $this->yearCalculator->getFirstYear($this->contest);
             $max = $this->yearCalculator->getLastYear($this->contest);
             return array_reverse(range($min, $max));
+        } elseif (count($this->yearDefinition) > 0) {
+            return $this->yearDefinition;
         } else {
+
             /**
              * @var $login \ModelLogin
              */
@@ -228,5 +185,4 @@ class YearChooser extends Nav {
         }
         return $year;
     }
-
 }
