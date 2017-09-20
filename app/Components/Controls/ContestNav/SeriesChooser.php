@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\UI\Control;
 use Nette\Http\Session;
@@ -11,28 +11,18 @@ use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SeriesChooser extends Control {
+class SeriesChooser extends Nav {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
      * @var SeriesCalculator
      */
     private $seriesCalculator;
-
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
 
     /**
      * @var ITranslator
@@ -44,57 +34,37 @@ class SeriesChooser extends Control {
      */
     private $series;
 
-    /**
-     * @var boolean
-     */
-    private $initialized = false;
-
-    /**
-     * @var boolean
-     */
     private $valid;
 
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
-        $this->session = $session;
+        parent::__construct($session, $serviceContest);
         $this->seriesCalculator = $seriesCalculator;
-        $this->serviceContest = $serviceContest;
         $this->translator = $translator;
     }
 
-    public function isValid() {
-        $this->init();
-        return $this->valid;
-    }
-
     public function getSeries() {
-        $this->init();
         return $this->series;
     }
 
-    private function init() {
+    protected function init($params) {
         if ($this->initialized) {
             return;
         }
         $this->initialized = true;
 
         if (count($this->getAllowedSeries()) == 0) {
-            $this->valid = false;
+            $this->series = -1;
             return;
         }
-        $this->valid = true;
 
         $session = $this->session->getSection(self::SESSION_SECTION);
-        /**
-         * @var $presenter BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
-        $contest = $presenter->getSelectedContest();
-        $year = $presenter->getSelectedYear();
+        $contest = $this->serviceContest->findByPrimary($params->contestId);
+        $year = $params->year;
         $series = null;
 
         // 1) URL (overrides)
-        if (!$series && isset($presenter->series)) {
-            $series = $presenter->series;
+        if (isset($params->series)) {
+            $series = $params->series;
         }
 
         // 2) session
@@ -103,24 +73,15 @@ class SeriesChooser extends Control {
         }
 
         // 3) default (last resort)
-        if (!$series || !$this->isValidSeries($series)) {
+        if (!$series || !$this->isValidSeries($series, 0, 0)) {
             $series = $this->seriesCalculator->getCurrentSeries($contest, $year);
         }
-
-        $this->series = $series;
-
-        // for links generation
-        $presenter->series = $this->series;
-
+        $this->series = $series ?: -1;
         // remember
         $session[self::SESSION_KEY] = $this->series;
     }
 
     public function render() {
-        if (!$this->isValid()) {
-            return;
-        }
-
         $this->template->allowedSeries = $this->getAllowedSeries();
         $this->template->currentSeries = $this->getSeries();
 
@@ -152,27 +113,32 @@ class SeriesChooser extends Control {
     /**
      * @return array of int of allowed series
      */
-    private function getAllowedSeries() {
-        $presenter = $this->getPresenter();
-        $contest = $presenter->getSelectedContest();
-        $year = $presenter->getSelectedYear();
-
+    private function getAllowedSeries($contestId = 1, $year = 0) {
+        $contest = $this->serviceContest->findByPrimary($contestId);
         $lastSeries = $this->seriesCalculator->getLastSeries($contest, $year);
         if ($lastSeries === null) {
-            return array();
+            return [];
         } else {
             return range(1, $lastSeries);
         }
     }
 
-    private function isValidSeries($series) {
-        return in_array($series, $this->getAllowedSeries());
+    private function isValidSeries($series, $contestId, $year) {
+        return in_array($series, $this->getAllowedSeries($contestId, $year));
     }
 
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);
         return $template;
+    }
+
+    public function syncRedirect($params) {
+        $this->init($params);
+        if ($this->series != $params->series) {
+            return $this->series;
+        }
+        return null;
     }
 
 }

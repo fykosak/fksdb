@@ -28,7 +28,7 @@ use ServiceMStoredQueryTag;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
 
-class ExportPresenter extends SeriesPresenter {
+class ExportPresenter extends BasePresenter {
 
     const CONT_CONSOLE = 'console';
     const CONT_PARAMS_META = 'paramsMeta';

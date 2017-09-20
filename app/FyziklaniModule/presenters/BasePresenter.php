@@ -139,4 +139,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
+    public function getSelectedContest() {
+        return 'brawl';
+    }
 }

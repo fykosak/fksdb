@@ -22,7 +22,7 @@ use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
-class InboxPresenter extends SeriesPresenter {
+class InboxPresenter extends BasePresenter {
 
     const POST_CT_ID = 'ctId';
     const POST_ORDER = 'order';
@@ -159,7 +159,8 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+                [$this->seriesTable, 'getFingerprint'],
+                [$this->seriesTable, 'formatAsFormValues']
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -168,9 +169,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $this->serviceTaskStudyYear->preloadCache(array(
+        $this->serviceTaskStudyYear->preloadCache([
             'task_id' => $tasks,
-        ));
+        ]);
 
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);

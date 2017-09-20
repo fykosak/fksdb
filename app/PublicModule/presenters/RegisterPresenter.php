@@ -8,7 +8,7 @@ use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Controls\Nav\ContestChooser;
+use FKSDB\Components\Controls\ContestNav\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
@@ -28,12 +28,12 @@ use ServiceContestant;
  *   logged user (nullable)
  *   condition: the logged user is not contestant of the contest
  *   condition: the logged user is a person
- * 
+ *
  * OUTPUT:
  *   registered contestant for the current year
  *      - if contest was provided in that contest
  *      - if user was provided for that user
- * 
+ *
  * OPERATION
  *   - show/process person/login info iff logged user is null
  *   - show contest selector iff contest is null
@@ -41,9 +41,9 @@ use ServiceContestant;
  *     - user must be logged in
  *     - if exists use last contestant from the provided contest
  *     - otherwise use last contestant from any contest (Vyfuk <= FYKOS)
- * 
+ *
  * Just proof of concept (obsoleted due to ReferencedPerson).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
@@ -81,6 +81,23 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private $container;
 
+    private $role = \ModelRole::CONTESTANT;
+
+    /**
+     * @var int
+     * @persistent
+     */
+    public $series;
+
+    /**
+     * @var \SeriesCalculator
+     */
+    protected $seriesCalculator;
+
+    public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
+        $this->seriesCalculator = $seriesCalculator;
+    }
+
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
@@ -103,11 +120,18 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedContest() {
-        return $this['contestChooser']->getContest();
+        $pk = $this->serviceContest->getPrimary();
+        $contests = $this->serviceContest->fetchPairs($pk, $pk);
+        /**
+         * @var $contestChooser ContestChooser
+         */
+        $contestChooser = $this['contestChooser'];
+        $contestChooser->setContests($contests);
+        return $contestChooser->getContest();
     }
 
     public function getSelectedYear() {
-        return $this['contestChooser']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this['yearChooser']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
     public function getSelectedAcademicYear() {
@@ -202,20 +226,20 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
         $submit = $form->addSubmit('register', _('Registrovat'));
         $that = $this;
-        $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
-                    $form = $button->getForm();
-                    if ($result = $handler->handleForm($form, $that)) { // intentionally =
-                        /*
-                         * Do not automatically log in user with existing logins for security reasons.
-                         * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
-                         */
-                        if (!$that->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
-                            $login = $handler->getPerson()->getLogin();
-                            $that->getUser()->login($login);
-                        }
-                        $this->redirect(':Public:Dashboard:default');
-                    }
-                };
+        $submit->onClick[] = function (SubmitButton $button) use ($that, $handler) {
+            $form = $button->getForm();
+            if ($result = $handler->handleForm($form, $that)) { // intentionally =
+                /*
+                 * Do not automatically log in user with existing logins for security reasons.
+                 * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
+                 */
+                if (!$that->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
+                    $login = $handler->getPerson()->getLogin();
+                    $that->getUser()->login($login);
+                }
+                $this->redirect(':Public:Dashboard:default');
+            }
+        };
 
 
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
@@ -238,7 +262,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function messageError() {
         return _('Chyba při registraci.');
     }
-    
+
     public function messageExists() {
         return _('Řešitel je již registrován.');
     }

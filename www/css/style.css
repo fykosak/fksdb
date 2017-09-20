@@ -113,3 +113,50 @@ fieldset .well {
     border: 1px solid #66afe9;
 }
 
+.btn-fykos {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.btn-vyfuk {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}
+
+.btn-fykos:hover {
+    color: #fff;
+    background-color: #005CC1;
+    border-color: #0042A7;
+}
+
+.btn-vyfuk:hover {
+    color: #fff;
+    background-color: #E62F00;
+    border-color: #CC1500;
+}
+
+.btn-brawl:hover {
+    color: #fff;
+    background-color: #5C00C1;
+    border-color: #4200A7;
+}
+
+.btn-brawl {
+    color: #fff;
+    background-color: #7511da;
+    border-color: #5C00C1;
+}
+
+.bg-vyfuk {
+    background-color: #ff4800;;
+}
+
+.bg-fykos {
+    background-color: #1175da;
+}
+
+.bg-brawl {
+    background-color: #7511da;
+}

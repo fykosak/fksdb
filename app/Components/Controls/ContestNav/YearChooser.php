@@ -1,10 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\Nav;
+namespace FKSDB\Components\Controls\ContestNav;
 
 use ModelRole;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use ServiceContest;
 use YearCalculator;
@@ -16,11 +15,6 @@ use YearCalculator;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class YearChooser extends Nav {
-
-    /**
-     * @var integer[]
-     */
-    private $yearDefinition;
 
     /**
      * @var YearCalculator
@@ -39,60 +33,35 @@ class YearChooser extends Nav {
      * @param ServiceContest $serviceContest
      */
     function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        parent::__construct();
-        $this->session = $session;
+        parent::__construct($session, $serviceContest);
         $this->yearCalculator = $yearCalculator;
-        $this->serviceContest = $serviceContest;
     }
 
     /**
-     * @param integer[] $yearDefinition enum
-     */
-    public function setYears($yearDefinition) {
-        $this->yearDefinition = $yearDefinition;
-    }
-
-    public function isValid() {
-        $this->init();
-        return $this->valid;
-    }
-
-    /**
+     * @param $params object
+     * @return integer
      * Redirect to corrrect address according to the resolved values.
      */
-    public function syncRedirect() {
-        $this->init();
-        /**
-         * @var $presenter \OrgModule\BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
-        if ($this->year != $presenter->year) {
+    public function syncRedirect($params) {
+        $this->init($params);
+        if ($this->year != $params->year) {
             return $this->year;
         }
         return null;
     }
 
     public function getYear() {
-        $this->init();
         return $this->year;
     }
 
-    private function init() {
+    protected function init($params) {
         if ($this->initialized) {
             return;
         }
         $this->initialized = true;
 
-        $this->valid = true;
         $session = $this->session->getSection(self::SESSION_PREFIX);
-        /**
-         * @var $presenter \OrgModule\BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
-        $presentersContest = $presenter->getSelectedContest();
-        $contestId = is_null($presentersContest) ? null : $presentersContest->contest_id;
-
-        $this->contest = $this->serviceContest->findByPrimary($contestId);
+        $this->contest = is_null($params->contestId) ? null : $this->serviceContest->findByPrimary($params->contestId);
 
         if ($this->contest === null) {
             $this->year = null;
@@ -110,14 +79,15 @@ class YearChooser extends Nav {
             $min = $this->yearCalculator->getFirstYear($this->contest);
             $max = $this->yearCalculator->getLastYear($this->contest);
             return array_reverse(range($min, $max));
-        } elseif (count($this->yearDefinition) > 0) {
-            return $this->yearDefinition;
         } else {
 
             /**
              * @var $login \ModelLogin
              */
             $login = $this->getLogin();
+            if (is_null($this->contest)) {
+                return [];
+            }
             $currentYear = $this->yearCalculator->getCurrentYear($this->contest);
             if (!$login || !$login->getPerson()) {
                 return [$currentYear];
@@ -134,12 +104,8 @@ class YearChooser extends Nav {
     }
 
     public function render() {
-        if (!$this->isValid()) {
-            throw new BadRequestException('No years available.', 403);
-        }
         $this->template->years = $this->getYears();
         $this->template->currentYear = $this->getYear();
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'YearChooser.latte');
         $this->template->render();
     }

@@ -256,12 +256,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->template->subtitle = $this->getSubtitle();
         if (method_exists($this, 'getSelectedContest')) {
             $contest = $this->getSelectedContest();
-            $this->template->contest = $contest ? $contest->contest_id : null;
+            if ($contest instanceof ModelContest) {
+                $this->template->contest = $contest ? $contest->contest_id : null;
+            } else {
+                $this->template->contest = $contest;
+            }
+
         } else {
             $this->template->contest = null;
         }
-
-
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }

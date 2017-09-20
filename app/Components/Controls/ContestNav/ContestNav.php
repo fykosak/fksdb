@@ -1,0 +1,149 @@
+<?php
+/**
+ * @author Michal Červeňák <miso@fykos.cz>
+ * trait content contest, year, and series chooser
+ */
+
+namespace FKSDB\Components\Controls\ContestNav;
+
+use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
+
+class ContestNav extends Control {
+    /**
+     * @var string
+     */
+    protected $role;
+    /**
+     * @var \YearCalculator
+     */
+    protected $yearCalculator;
+    protected $session;
+    /**
+     * @var \ServiceContest
+     */
+    protected $serviceContest;
+
+    /**
+     * @var \SeriesCalculator
+     */
+    private $seriesCalculator;
+
+    /**
+     * @var ITranslator
+     */
+    private $translator;
+
+    /**
+     * ContestNav constructor.
+     * @param \YearCalculator $yearCalculator
+     * @param \SeriesCalculator $seriesCalculator
+     * @param $session
+     * @param \ServiceContest $serviceContest
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        \YearCalculator $yearCalculator,
+        \SeriesCalculator $seriesCalculator,
+        $session,
+        \ServiceContest $serviceContest,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+        $this->yearCalculator = $yearCalculator;
+        $this->session = $session;
+        $this->serviceContest = $serviceContest;
+        $this->translator = $translator;
+        $this->seriesCalculator = $seriesCalculator;
+    }
+
+    public function setRole($role) {
+        $this->role = $role;
+    }
+
+
+    protected function createComponentContestChooser() {
+        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setRole($this->role);
+        return $control;
+    }
+
+    protected function createComponentYearChooser() {
+        $control = new YearChooser($this->session, $this->yearCalculator, $this->serviceContest);
+        $control->setRole($this->role);
+        return $control;
+    }
+
+    protected function createComponentSeriesChooser() {
+        $control = new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
+        $control->setRole($this->role);
+        return $control;
+    }
+
+    /**
+     * @return \ModelContest
+     */
+    public function getSelectedContest() {
+        /**
+         * @var $contestChooser ContestChooser
+         */
+        $contestChooser = $this['contestChooser'];
+        return $contestChooser->getContest();
+    }
+
+    /**
+     * @return int
+     */
+    public function getSelectedYear() {
+        /**
+         * @var $yearChooser YearChooser
+         */
+        $yearChooser = $this['yearChooser'];
+        return $yearChooser->getYear();
+    }
+
+    /**
+     * @return int
+     */
+    public function getSelectedSeries() {
+        /**
+         * @var $seriesChooser SeriesChooser
+         */
+        $seriesChooser = $this['yearChooser'];
+        return $seriesChooser->getSeries();
+    }
+
+    public function render() {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestNav.latte');
+        $this->template->render();
+    }
+
+    /**
+     * @param $params object
+     * @return object
+     * redirect to correct URL
+     */
+    public function getSyncRedirectParams($params) {
+        /**
+         * @var $contestChooser ContestChooser
+         */
+        $contestChooser = $this['contestChooser'];
+        $contestId = $contestChooser->syncRedirect($params);
+        /**
+         * @var $yearChooser YearChooser
+         */
+        $yearChooser = $this['yearChooser'];
+        $year = $yearChooser->syncRedirect($params);
+        /**
+         * @var $seriesChooser SeriesChooser
+         */
+        $seriesChooser = $this['seriesChooser'];
+        $series = $seriesChooser->syncRedirect($params);
+
+        return (object)[
+            'year' => $year,
+            'contestId' => $contestId,
+            'series' => $series,
+        ];
+    }
+}

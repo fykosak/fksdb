@@ -4,24 +4,16 @@
  * trait content contest, year, and series chooser
  */
 
-use FKSDB\Components\Controls\Nav\ContestChooser;
-use FKSDB\Components\Controls\Nav\YearChooser;
+use FKSDB\Components\Controls\ContestNav\ContestChooser;
+use FKSDB\Components\Controls\ContestNav\YearChooser;
 use Nette\Application\BadRequestException;
 
 trait ContestNav {
 
 
-    protected function createComponentContestChooser($name) {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+    protected function createComponentContestNav() {
+        $control = new \FKSDB\Components\Controls\ContestNav\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
         $control->setRole($this->role);
-        return $control;
-    }
-
-    protected function createComponentYearChooser($name) {
-        $control = new YearChooser($this->session, $this->getYearCalculator(), $this->getServiceContest());
-        $this->getSelectedContest();
-        $control->setRole($this->role);
-        // $control->setContest();
         return $control;
     }
 
@@ -30,14 +22,10 @@ trait ContestNav {
      */
     public function getSelectedContest() {
         /**
-         * @var $contestChooser ContestChooser
+         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
          */
-        $contestChooser = $this['contestChooser'];
-        if (!$contestChooser->isValid()) {
-            \Nette\Diagnostics\Debugger::barDump($contestChooser);
-            // $this->redirect(':Public:Chooser:default');
-        }
-        return $contestChooser->getContest();
+        $contestNav = $this['contestNav'];
+        return $contestNav->getSelectedContest();
     }
 
     /**
@@ -45,14 +33,21 @@ trait ContestNav {
      */
     public function getSelectedYear() {
         /**
-         * @var $yearChooser YearChooser
+         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
          */
-        $yearChooser = $this['yearChooser'];
-        if (!$yearChooser->isValid()) {
-            \Nette\Diagnostics\Debugger::barDump($yearChooser);
-            //$this->redirect(':Public:Chooser:default');
-        }
-        return $yearChooser->getYear();
+        $contestNav = $this['contestNav'];
+        return $contestNav->getSelectedYear();
+    }
+
+    /**
+     * @return int
+     */
+    public function getSelectedSeries() {
+        /**
+         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
+         */
+        $contestNav = $this['contestNav'];
+        return -1;// $contestNav->getSelectedSeries();
     }
 
     /**
@@ -60,29 +55,22 @@ trait ContestNav {
      */
     protected function startupRedirects() {
         /**
-         * @var $contestChooser ContestChooser
+         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
          */
-        $contestChooser = $this['contestChooser'];
-        $contestId = $contestChooser->syncRedirect();
-        /**
-         * @var $yearChooser YearChooser
-         */
-        $yearChooser = $this['yearChooser'];
-        $year = $yearChooser->syncRedirect();
-        \Nette\Diagnostics\Debugger::barDump($year . 'A');
-        if (is_null($year) && is_null($contestId)) {
-        } else {
-            \Nette\Diagnostics\Debugger::barDump([
-                'year' => $year ?: $year - $year,
-                'contestId' => $contestId ?: $this->contestId,
-            ]);
-
-            $this->redirect('this', [
-                'year' => $year ?: $year - $year,
-                'contestId' => $contestId ?: $this->contestId,
-            ]);
+        $contestNav = $this['contestNav'];
+        $params = $contestNav->getSyncRedirectParams((object)[
+            'year' => $this->year,
+            'contestId' => $this->contestId,
+            'series' => $this->series,
+        ]);
+        if (is_null($params->year) && is_null($params->contestId) && is_null($params->series)) {
+            return;
         }
-
+        $this->redirect('this', [
+            'year' => $params->year ?: $this->year,
+            'contestId' => $params->contestId ?: $this->contestId,
+            'series' => $params->series ?: $this->series,
+        ]);
     }
 
 }

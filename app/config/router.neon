@@ -99,12 +99,15 @@ fksrouter:
             module: Fyziklani
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%org/<contestId %contests%>/[<year [0-9]+>/][<presenter>/]<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%org/<contestId %contests%>/year<year [0-9]+>/series<series -?[0-9]+>[<presenter>/]<action=default>[/<id>]':
             presenter: Dashboard
             module: Org
             subdomain: %subdomain.db%
             tld: %domain.tld%
+            #contest: null
             contestId: [filterTable: %inverseContestMapping%]
+            year: null
+            series: null
             flags: SECURED
                # Empty params
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%public/[<contestId %contests%>/][<year [0-9]+>/][<presenter>/]<action=default>[/<id>]':
@@ -113,6 +116,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            year: null
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]':

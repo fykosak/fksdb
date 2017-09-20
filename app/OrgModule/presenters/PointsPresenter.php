@@ -18,7 +18,7 @@ use ServiceTaskStudyYear;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
-class PointsPresenter extends SeriesPresenter {
+class PointsPresenter extends BasePresenter {
 
     /**
      * Show all tasks?

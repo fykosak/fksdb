@@ -42,6 +42,20 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
 
     protected $role = ModelRole::CONTESTANT;
 
+    /**
+     * @var int
+     * @persistent
+     */
+    public $series;
+
+    /**
+     * @var \SeriesCalculator
+     */
+    protected $seriesCalculator;
+    public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
+        $this->seriesCalculator = $seriesCalculator;
+    }
+
     protected function startup() {
         parent::startup();
         $this->startupRedirects();

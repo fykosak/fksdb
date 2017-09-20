@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Components\Controls\Nav;
+namespace FKSDB\Components\Controls\ContestNav;
 
 use ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
-use OrgModule\BasePresenter;
 use ServiceContest;
 use YearCalculator;
 
@@ -34,7 +34,7 @@ class ContestChooser extends Nav {
     /**
      * @var YearCalculator
      */
-    private $yearCalculator;
+    protected $yearCalculator;
 
     /**
      *
@@ -43,10 +43,8 @@ class ContestChooser extends Nav {
      * @param ServiceContest $serviceContest
      */
     function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
-        parent::__construct();
-        $this->session = $session;
+        parent::__construct($session, $serviceContest);
         $this->yearCalculator = $yearCalculator;
-        $this->serviceContest = $serviceContest;
     }
 
     /**
@@ -56,37 +54,30 @@ class ContestChooser extends Nav {
         $this->contestsDefinition = $contestsDefinition;
     }
 
-    public function isValid() {
-        $this->init();
-        return $this->valid;
-    }
-
     /**
+     * @param $params object
+     * @return integer
      * Redirect to corrrect address according to the resolved values.
      */
-    public function syncRedirect() {
-        $this->init();
-        /**
-         * @var $presenter BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
+    public function syncRedirect($params) {
+        $this->init($params);
         $contestId = isset($this->contest) ? $this->contest->contest_id : null;
         /** fix empty presenter contest  */
-        if (is_null($presenter->contestId)) {
+        if (is_null($params->contestId)) {
             return null;
         }
-        if ($contestId != $presenter->contestId) {
+        if ($contestId != $params->contestId) {
             return $contestId;
         }
         return null;
     }
 
     public function getContest() {
-        $this->init();
         return $this->contest;
     }
 
-    private function init() {
+    protected function init($params) {
+        Debugger::barDump($this->contest);
         if ($this->initialized) {
             return;
         }
@@ -96,42 +87,30 @@ class ContestChooser extends Nav {
             throw  new BadRequestException('Role is empty');
         }
 
-        $contestIds = $this->getContests();
-        if (count($contestIds) === 0) {
-            $this->valid = false;
-            return;
-        }
-
-        $this->valid = true;
-
-        $session = $this->session->getSection(self::SESSION_PREFIX);
-        /**
-         * @var $presenter BasePresenter|\PublicModule\BasePresenter
-         */
-        $presenter = $this->getPresenter();
-
-        /* CONTEST */
-
         $contestId = null;
+
         // session TODO
+        $session = $this->session->getSection(self::SESSION_PREFIX);
         if ((self::CONTEST_SOURCE & self::SOURCE_SESSION) && isset($session->contestId)) {
             $contestId = $session->contestId;
         }
         // URL TODO
-        if ((self::CONTEST_SOURCE & self::SOURCE_URL) && $presenter->contestId) {
-            $contestId = $presenter->contestId;
+        if ((self::CONTEST_SOURCE & self::SOURCE_URL) && $params->contestId) {
+            $contestId = $params->contestId;
         }
 
         $this->contest = $this->serviceContest->findByPrimary($contestId);
 
         if (is_null($this->contest)) {
+            $contestIds = $this->getContests();
+            if (count($contestIds) === 0) {
+                return;
+            }
             $this->contest = array_shift($contestIds)->contest;
         }
 
         if ($this->contest === null) {
-            throw new BadRequestException('Undefined contest');
         } else {
-            // remember
             $session->contestId = $this->contest->contest_id;
         }
     }
@@ -154,7 +133,7 @@ class ContestChooser extends Nav {
     protected function fillContests($contests) {
         $this->contests = [];
 
-        foreach ($contests as $id) {
+        foreach ($contests as $id => $contest) {
             $class = '';
             switch ($id) {
                 case 1:
@@ -164,7 +143,6 @@ class ContestChooser extends Nav {
                     $class = 'vyfuk';
                     break;
             }
-            $contest = $this->serviceContest->findByPrimary($id);
             $this->contests[$id] = (object)[
                 'contest' => $contest,
                 'symbol' => $class,
@@ -173,7 +151,7 @@ class ContestChooser extends Nav {
     }
 
     /**
-     * @return integer[]
+     * @return \ModelContest[]
      */
     private function getContestsByRole() {
         $login = $this->getLogin();
@@ -182,31 +160,29 @@ class ContestChooser extends Nav {
         }
         switch ($this->role) {
             case ModelRole::ORG:
-                return array_keys($login->getActiveOrgsContests($this->yearCalculator));
+                $result = [];
+                foreach ($login->getActiveOrgsContests($this->yearCalculator) as $contestId => $org) {
+                    $result[] = $this->serviceContest->findByPrimary($contestId);
+                };
+                return $result;
             case ModelRole::CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
-                    return array_keys($person->getActiveContestants($this->yearCalculator));
+                    return $person->getActiveContestants($this->yearCalculator);
                 }
         }
         return [];
     }
 
     public function render() {
-        if (!$this->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
-        }
         $this->template->availableContests = $this->getContests();
         $this->template->currentContest = $this->getContest();
-        $class = '';
-        $this->template->class = $class;
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
         $this->template->render();
     }
 
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
-        $presenter->redirect('this', ['contestId' => $contestId, 'year' => null,]);
+        $presenter->redirect('this', ['contestId' => $contestId,]);
     }
 }

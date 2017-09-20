@@ -16,8 +16,7 @@ use Nette\DateTime;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
-final class AuthenticationPresenter extends BasePresenter
-{
+final class AuthenticationPresenter extends BasePresenter {
 
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -342,12 +341,9 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * @param $login ModelLogin
+     * Fuck redirect!!!
      */
     private function initialRedirect($login) {
-        if ($login->isOrg($this->yearCalculator)) {
-            $this->redirect(':Org:Dashboard:', array(self::PARAM_DISPATCH => 1));
-        } else {
-            $this->redirect(':Public:Dashboard:', array(self::PARAM_DISPATCH => 1));
-        }
+        $this->redirect(':Public:Chooser:', [self::PARAM_DISPATCH => 1]);
     }
 }
