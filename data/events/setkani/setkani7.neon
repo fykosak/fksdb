@@ -47,8 +47,8 @@ parameters:
                 
 events:
     setkani:
-        event_type_id: [11,12]
-        #eventYears: [4] # specify for which years this machine is valid, by default all years
+        event_type_id: [12]
+        eventYears: [7]
         tableLayout: event.grid
         formLayout: setkani.form
         paramScheme:
