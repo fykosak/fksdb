@@ -42,12 +42,13 @@ class YearChooser extends Nav {
      * @return integer
      * Redirect to corrrect address according to the resolved values.
      */
-    public function syncRedirect($params) {
+    public function syncRedirect(&$params) {
         $this->init($params);
         if ($this->year != $params->year) {
-            return $this->year;
+            $params->year = $this->year;
+            return true;
         }
-        return null;
+        return false;
     }
 
     public function getYear() {
@@ -67,7 +68,7 @@ class YearChooser extends Nav {
             $this->year = null;
         } else {
             /* YEAR */
-            $year = $this->calculateYear($session);
+            $year = $this->calculateYear($session, $this->contest);
             $this->year = $year;
             $session->year = $this->year;
         }
@@ -122,8 +123,7 @@ class YearChooser extends Nav {
     }
 
 // WTF TODO refacroeing
-    private function calculateYear($session, $contest = null, $override = null) {
-        $contest = $contest ?: $this->contest;
+    private function calculateYear($session, \ModelContest $contest, $override = null) {
         $presenter = $this->getPresenter();
         $year = null;
         // session

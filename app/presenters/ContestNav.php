@@ -4,15 +4,36 @@
  * trait content contest, year, and series chooser
  */
 
-use FKSDB\Components\Controls\ContestNav\ContestChooser;
-use FKSDB\Components\Controls\ContestNav\YearChooser;
-use Nette\Application\BadRequestException;
+use \FKSDB\Components\Controls;
 
 trait ContestNav {
 
+    /**
+     * @var int
+     * @persistent
+     */
+    protected $contestId;
+
+    /**
+     * @var int
+     * @persistent
+     */
+    protected $year;
+
+    /**
+     * @var int
+     * @persistent
+     */
+    protected $lang;
+
+    /**
+     * @var int
+     * @persistent
+     */
+    protected $series;
 
     protected function createComponentContestNav() {
-        $control = new \FKSDB\Components\Controls\ContestNav\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
+        $control = new Controls\ContestNav\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
         $control->setRole($this->role);
         return $control;
     }
@@ -22,7 +43,7 @@ trait ContestNav {
      */
     public function getSelectedContest() {
         /**
-         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
+         * @var $contestNav Controls\ContestNav\ContestNav
          */
         $contestNav = $this['contestNav'];
         return $contestNav->getSelectedContest();
@@ -33,7 +54,7 @@ trait ContestNav {
      */
     public function getSelectedYear() {
         /**
-         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
+         * @var $contestNav Controls\ContestNav\ContestNav
          */
         $contestNav = $this['contestNav'];
         return $contestNav->getSelectedYear();
@@ -44,10 +65,18 @@ trait ContestNav {
      */
     public function getSelectedSeries() {
         /**
-         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
+         * @var $contestNav Controls\ContestNav\ContestNav
          */
         $contestNav = $this['contestNav'];
-        return -1;// $contestNav->getSelectedSeries();
+        return $contestNav->getSelectedSeries();
+    }
+
+    public function getSelectedLanguage() {
+        /**
+         * @var $contestNav ContestNav
+         */
+        $contestNav = $this['contestNav'];
+        return $contestNav->getSelectedLanguage();
     }
 
     /**
@@ -55,7 +84,7 @@ trait ContestNav {
      */
     protected function startupRedirects() {
         /**
-         * @var $contestNav \FKSDB\Components\Controls\ContestNav\ContestNav
+         * @var $contestNav Controls\ContestNav\ContestNav
          */
         $contestNav = $this['contestNav'];
         $params = $contestNav->getSyncRedirectParams((object)[
@@ -63,9 +92,15 @@ trait ContestNav {
             'contestId' => $this->contestId,
             'series' => $this->series,
         ]);
-        if (is_null($params->year) && is_null($params->contestId) && is_null($params->series)) {
+        if (is_null($params)) {
             return;
         }
+        /**
+         * @var $languageChooser Controls\ContestNav\LanguageChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        $languageChooser->syncRedirect();
+
         $this->redirect('this', [
             'year' => $params->year ?: $this->year,
             'contestId' => $params->contestId ?: $this->contestId,

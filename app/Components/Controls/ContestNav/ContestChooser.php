@@ -56,20 +56,21 @@ class ContestChooser extends Nav {
 
     /**
      * @param $params object
-     * @return integer
-     * Redirect to corrrect address according to the resolved values.
+     * @return boolean
+     * Redirect to correct address according to the resolved values.
      */
-    public function syncRedirect($params) {
+    public function syncRedirect(&$params) {
         $this->init($params);
         $contestId = isset($this->contest) ? $this->contest->contest_id : null;
         /** fix empty presenter contest  */
         if (is_null($params->contestId)) {
-            return null;
+            return false;
         }
         if ($contestId != $params->contestId) {
-            return $contestId;
+            $params->contestId = $contestId;
+            return true;
         }
-        return null;
+        return false;
     }
 
     public function getContest() {

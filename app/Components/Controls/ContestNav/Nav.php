@@ -53,9 +53,9 @@ abstract class Nav extends Control {
 
     /**
      * @param $params object
-     * @return integer
+     * @return bool
      */
-    abstract function syncRedirect($params);
+    abstract function syncRedirect(&$params);
 
 
     /**
@@ -70,5 +70,4 @@ abstract class Nav extends Control {
      * @return void
      */
     abstract protected function init($params);
-
 }

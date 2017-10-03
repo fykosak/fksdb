@@ -114,10 +114,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->container = $container;
     }
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
-    }
 
     public function getSelectedContest() {
         $pk = $this->serviceContest->getPrimary();
@@ -131,6 +127,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
+
         return $this['yearChooser']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
@@ -196,7 +193,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->container);
     }
 
-    public function createComponentContestantForm($name) {
+    public function createComponentContestantForm() {
         $control = new FormControl();
         $form = $control->getForm();
         $control->setGroupMode(FormControl::GROUP_CONTAINER);
@@ -267,4 +264,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return _('Řešitel je již registrován.');
     }
 
+    public function getSelectedContestSymbol() {
+        $contest = $this->getSelectedContest();
+        return $contest->contest_id ?: null;
+    }
 }

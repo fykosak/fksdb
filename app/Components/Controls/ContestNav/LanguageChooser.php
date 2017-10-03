@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -29,10 +29,10 @@ class LanguageChooser extends Control {
     private $session;
 
     /**
-     * @var ModelLanguage
+     * @var \ModelLanguage
      */
     private $language;
-    private $languageNames = array('cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina');
+    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     /**
      * @var boolean
@@ -49,7 +49,6 @@ class LanguageChooser extends Control {
      * 
 
      * @param Session $session
-     * @param ServiceLanguage $serviceLanguage
      */
     function __construct(Session $session) {
         $this->session = $session;
@@ -152,7 +151,7 @@ class LanguageChooser extends Control {
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();
     }
 

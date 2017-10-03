@@ -12,6 +12,7 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 
 class ChooserPresenter extends AuthenticatedPresenter implements IContestPresenter {
 
@@ -50,6 +51,10 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
         return null;
     }
 
+    public function getSelectedSeries() {
+        return null;
+    }
+
     public function getSelectedLanguage() {
         /**
          * @var $languageChooser LanguageChooser
@@ -74,6 +79,10 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
 
     public function getTitle() {
         return _('Razcestník');
+    }
+
+    public function getSelectedContestSymbol() {
+        return null;
     }
 
 }

@@ -24,34 +24,13 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
 
     const PRESETS_KEY = 'publicPresets';
 
-    /**
-     * @persistent
-     */
-    public $contestId;
-
-    /**
-     * @var int
-     * @persistent
-     */
-    public $year;
-
-    /**
-     * @persistent
-     */
-    public $lang;
-
     protected $role = ModelRole::CONTESTANT;
-
-    /**
-     * @var int
-     * @persistent
-     */
-    public $series;
 
     /**
      * @var \SeriesCalculator
      */
     protected $seriesCalculator;
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -61,28 +40,12 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         $this->startupRedirects();
     }
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
-    }
-
     /** @var ModelContestant|null|false */
     private $contestant = false;
 
 
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
-    }
-
-    public function getSelectedLanguage() {
-        /**
-         * @var $languageChooser LanguageChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
     }
 
     public function getContestant() {
@@ -102,4 +65,8 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         return $this->contestant;
     }
 
+    public function getSelectedContestSymbol() {
+        $contest = $this->getSelectedContest();
+        return $contest->contest_id ?: null;
+    }
 }

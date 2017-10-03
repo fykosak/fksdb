@@ -7,6 +7,7 @@
 namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\UI\Control;
+use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 
 class ContestNav extends Control {
@@ -18,6 +19,9 @@ class ContestNav extends Control {
      * @var \YearCalculator
      */
     protected $yearCalculator;
+    /**
+     * @var Session
+     */
     protected $session;
     /**
      * @var \ServiceContest
@@ -45,7 +49,7 @@ class ContestNav extends Control {
     public function __construct(
         \YearCalculator $yearCalculator,
         \SeriesCalculator $seriesCalculator,
-        $session,
+        Session $session,
         \ServiceContest $serviceContest,
         ITranslator $translator
     ) {
@@ -79,6 +83,10 @@ class ContestNav extends Control {
         $control->setRole($this->role);
         return $control;
     }
+    protected function createComponentLanguageChooser() {
+        $control = new LanguageChooser($this->session);
+        return $control;
+    }
 
     /**
      * @return \ModelContest
@@ -100,6 +108,14 @@ class ContestNav extends Control {
          */
         $yearChooser = $this['yearChooser'];
         return $yearChooser->getYear();
+    }
+
+    public function getSelectedLanguage() {
+        /**
+         * @var $languageChooser LanguageChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        return $languageChooser->getLanguage();
     }
 
     /**
@@ -128,22 +144,22 @@ class ContestNav extends Control {
          * @var $contestChooser ContestChooser
          */
         $contestChooser = $this['contestChooser'];
-        $contestId = $contestChooser->syncRedirect($params);
+        $redirect = false;
+        $redirect = $redirect || $contestChooser->syncRedirect($params);
         /**
          * @var $yearChooser YearChooser
          */
         $yearChooser = $this['yearChooser'];
-        $year = $yearChooser->syncRedirect($params);
+        $redirect = $redirect || $yearChooser->syncRedirect($params);
         /**
          * @var $seriesChooser SeriesChooser
          */
         $seriesChooser = $this['seriesChooser'];
-        $series = $seriesChooser->syncRedirect($params);
-
-        return (object)[
-            'year' => $year,
-            'contestId' => $contestId,
-            'series' => $series,
-        ];
+        $redirect = $redirect || $seriesChooser->syncRedirect($params);
+        if ($redirect) {
+            return $params;
+        } else {
+            return null;
+        }
     }
 }

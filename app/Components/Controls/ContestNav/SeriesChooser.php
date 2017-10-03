@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 use OrgModule\BasePresenter;
@@ -33,8 +34,10 @@ class SeriesChooser extends Nav {
      * @var int
      */
     private $series;
-
-    private $valid;
+    /**
+     * @var integer
+     */
+    private $year;
 
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
         parent::__construct($session, $serviceContest);
@@ -52,14 +55,15 @@ class SeriesChooser extends Nav {
         }
         $this->initialized = true;
 
+        $contest = $this->serviceContest->findByPrimary($params->contestId);
+        $this->contest = $contest;
+        $this->year = $params->year;
+
         if (count($this->getAllowedSeries()) == 0) {
             $this->series = -1;
             return;
         }
 
-        $session = $this->session->getSection(self::SESSION_SECTION);
-        $contest = $this->serviceContest->findByPrimary($params->contestId);
-        $year = $params->year;
         $series = null;
 
         // 1) URL (overrides)
@@ -68,54 +72,37 @@ class SeriesChooser extends Nav {
         }
 
         // 2) session
+        $session = $this->session->getSection(self::SESSION_SECTION);
         if (!$series && isset($session[self::SESSION_KEY])) {
             $series = $session[self::SESSION_KEY];
         }
 
         // 3) default (last resort)
-        if (!$series || !$this->isValidSeries($series, 0, 0)) {
-            $series = $this->seriesCalculator->getCurrentSeries($contest, $year);
+        if (!$series || !$this->isValidSeries($series)) {
+            $series = $this->seriesCalculator->getCurrentSeries($this->contest);
         }
+        // store params
         $this->series = $series ?: -1;
+
         // remember
         $session[self::SESSION_KEY] = $this->series;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->allowedSeries = $this->getAllowedSeries();
         $this->template->currentSeries = $this->getSeries();
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SeriesChooser.latte');
         $this->template->render();
-    }
-
-    public function handleChange($contestId) {
-        $presenter = $this->getPresenter();
-        $backupYear = null;
-        if (isset($presenter->year)) {
-            $backupYear = $presenter->year;
-            $presenter->year = null;
-        }
-        $contest = $this->serviceContest->findByPrimary($contestId);
-
-        $year = $this->calculateYear($this->session, $contest);
-        if (isset($presenter->year)) {
-            $presenter->year = $backupYear;
-        }
-
-        if ($backupYear && $backupYear != $year) {
-            $presenter->redirect('this', array('contestId' => $contestId, 'year' => $year));
-        } else {
-            $presenter->redirect('this', array('contestId' => $contestId));
-        }
     }
 
     /**
      * @return array of int of allowed series
      */
-    private function getAllowedSeries($contestId = 1, $year = 0) {
-        $contest = $this->serviceContest->findByPrimary($contestId);
-        $lastSeries = $this->seriesCalculator->getLastSeries($contest, $year);
+    private function getAllowedSeries() {
+        $lastSeries = $this->seriesCalculator->getLastSeries($this->contest, $this->year);
         if ($lastSeries === null) {
             return [];
         } else {
@@ -123,8 +110,8 @@ class SeriesChooser extends Nav {
         }
     }
 
-    private function isValidSeries($series, $contestId, $year) {
-        return in_array($series, $this->getAllowedSeries($contestId, $year));
+    private function isValidSeries($series) {
+        return in_array($series, $this->getAllowedSeries());
     }
 
     protected function createTemplate($class = NULL) {
@@ -133,12 +120,12 @@ class SeriesChooser extends Nav {
         return $template;
     }
 
-    public function syncRedirect($params) {
+    public function syncRedirect(&$params) {
         $this->init($params);
         if ($this->series != $params->series) {
-            return $this->series;
+            $params->series = $this->series;
+            return true;
         }
-        return null;
+        return false;
     }
-
 }
