@@ -1,23 +1,23 @@
-$(function() {
+$(function () {
     $.widget("fks.autocompleteSelect", $.ui.autocomplete, {
 // default options
         options: {
             metaSuffix: '__meta'
         },
-        _create: function() {
-            function split(val) {
+        _create: function () {
+            const split = function (val) {
                 return val.split(/,\s*/);
-            }
-            function extractLast(term) {
-                var result = split(term).pop();
-                return result;
-            }
+            };
+
+            const extractLast = function (term) {
+                return split(term).pop();
+            };
 
             var elVal = this.element;
 
             var ajax = elVal.data('ac-ajax');
             var multiselect = elVal.data('ac-multiselect');
-	    var defaultValue = elVal.val();
+            var defaultValue = elVal.val();
             var defaultText = elVal.data('ac-default-value');
             var renderMethod = elVal.data('ac-render-method');
 
@@ -46,33 +46,32 @@ $(function() {
             }
 
 
-
             var select = null, focus = null, source = null;
             var cache = {}; //TODO move in better scope
             var labelCache = {};
-            var termFunction = function(arg) {
+            var termFunction = function (arg) {
                 return arg;
             };
-	    // ensures default value is always suggested (needed for AJAX)
-	    var conservationFunction = function(data) {
-               if (!defaultText) {
-                   return data;
-	       }
-               var found = false;
-               for (var i in data) {
-                   if (data[i].value == defaultValue) {
-                       found = true;
-		       break;
-		   }
-	       } 
-	       if (!found) {
-                   data.push({
-                       label: defaultText,
-		       value: defaultValue
-		   });
-	       }
-	       return data;
-	    }
+            // ensures default value is always suggested (needed for AJAX)
+            var conservationFunction = function (data) {
+                if (!defaultText) {
+                    return data;
+                }
+                var found = false;
+                for (var i in data) {
+                    if (data[i].value == defaultValue) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    data.push({
+                        label: defaultText,
+                        value: defaultValue
+                    });
+                }
+                return data;
+            };
             if (multiselect) {
                 termFunction = extractLast;
             }
@@ -80,54 +79,61 @@ $(function() {
             var options = {};
 
             if (ajax) {
-                options.source = function(request, response) {
+                options.source = function (request, response) {
                     var term = termFunction(request.term);
                     if (term in cache) {
-                        response(cache[ term ]);
+                        response(cache[term]);
                         return;
                     }
-                    $.getJSON(elVal.data('ac-ajax-url'), {acQ: term}, function(data, status, xhr) {
+                    $.getJSON(elVal.data('ac-ajax-url'), {acQ: term}, function (data, status, xhr) {
                         data = conservationFunction(data);
-                        cache[ term ] = data;
+                        cache[term] = data;
                         response(data);
                     });
                 };
                 options.minLength = 3;
             } else {
                 var items = elVal.data('ac-items');
-                options.source = function(request, response) {
+                options.source = function (request, response) {
                     var s = termFunction(request.term);
                     response($.ui.autocomplete.filter(
-                            items, s));
+                        items, s));
                 };
                 options.minLength = 3;
             }
 
 
             if (multiselect) {
-                options.select = function(event, ui) {
+                options.select = function (event, ui) {
+
                     labelCache[ui.item.value] = ui.item.label;
                     if (elVal.val()) {
                         elVal.val(elVal.val() + ',' + ui.item.value);
                     } else {
                         elVal.val(ui.item.value);
                     }
-                    el.val([].concat($.map(elVal.val().split(','), function(arg) {
-                        return labelCache[arg];
-                    }), ['']).join(', '));
+                    var value = elVal.val().split(',').map(function (arg) {
+                        return labelCache[arg] || arg;
+                    }).join(', ');
+                    console.log(labelCache);
+
+                    console.log(defaultText);
+                    console.log(value);
+                    console.log(defaultValue);
+                    /*el.val();*/
                     return false;
                 };
-                options.focus = function(e, ui) {
+                options.focus = function (e, ui) {
                     return false;
                 };
             } else {
-                options.select = function(e, ui) {
+                options.select = function (e, ui) {
                     elVal.val(ui.item.value);
                     el.val(ui.item.label);
                     elVal.change();
                     return false;
                 };
-                options.focus = function(e, ui) {
+                options.focus = function (e, ui) {
                     elVal.val(ui.item.value);
                     el.val(ui.item.label);
 
@@ -138,7 +144,7 @@ $(function() {
             var acEl = el.autocomplete(options);
 
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = function(ul, item) {
+                acEl.data('ui-autocomplete')._renderItem = function (ul, item) {
                     return eval(renderMethod);
                 };
             }

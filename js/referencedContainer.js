@@ -64,7 +64,7 @@ $(function() {
                 elSearch.keydown(function(e) {
                     var code = e.keyCode || e.which;
                     var hasShift = e.shiftKey;
-                    if (code == '9') {
+                    if (+code === 9) {
                         var controls = $('.form-control,input[type="submit"],input[type="checkbox"]');
                         var next = this;
                         var diff = hasShift ? -1 : 1;
@@ -79,7 +79,7 @@ $(function() {
                 });
 
                 elSearch.keypress(function(e) {
-                    if (e.which == 13) {
+                    if (+e.which === 13) {
                         return false;
                     }
                 });

@@ -10,7 +10,7 @@ $(function() {
             var elSearchInput = $(elTable.data('st-search-input'));
             var elCount = $(elTable.data('st-count'));
 
-            var index = new Array();
+            var index = [];
             var fullCount = 0;
 
             elTable.find('tbody tr').each(function() {

@@ -44,7 +44,7 @@ $(function() {
             }
 
             function removeOverlay() {
-                if (actualInput.val() == originalValue) {
+                if (actualInput.val() === originalValue) {
                     actualInput.val('');
                 }
                 overlayInput.hide();
@@ -60,7 +60,7 @@ $(function() {
                 applyOverlay();
             });
 
-            if (actualInput.val() == originalValue) {
+            if (actualInput.val() === originalValue) {
                 applyOverlay();
             } else {
                 removeOverlay();

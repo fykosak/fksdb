@@ -9,6 +9,10 @@ use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 
+
+
+
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
@@ -124,7 +128,7 @@ class Navigation extends Control {
     }
 
     private function renderFromRoot($template, $root) {
-        if ($root != null) {
+        if ($root != null) {           
             if (!isset($this->structure[$root])) {
                 throw new InvalidArgumentException("No such node $root.");
             }
