@@ -32,13 +32,13 @@ navigation:
             - public.application.list           
             - fykos
             - vyfuk
-        fyziklani.dashboard.default:
-            - fyziklani.submit.entry
-            - fyziklani.submit.table
-            - fyziklani.close.table
-            - fyziklani.results.default
-            - fyziklani.task.table
-            - fyziklani.task.import
-            - fyziklani.rooms.import
+        brawl.dashboard.default:
+            - brawl.submit.entry
+            - brawl.submit.table
+            - brawl.close.table
+            - brawl.results.default
+            - brawl.task.table
+            - brawl.task.import
+            - brawl.rooms.import
             
         

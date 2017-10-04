@@ -10,7 +10,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 
-
 class BrawlFactory {
 
     private $container;

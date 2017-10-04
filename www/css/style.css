@@ -160,3 +160,23 @@ fieldset .well {
 .bg-brawl {
     background-color: #7511da;
 }
+
+.link-fykos {
+    color: #1175da;
+}
+
+.link-fykos:hover {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.link-vyfuk {
+    color: #ff4800;
+}
+
+.link-vyfuk:hover {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}

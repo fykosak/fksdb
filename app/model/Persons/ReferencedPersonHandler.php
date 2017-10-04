@@ -83,7 +83,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     }
 
     public function createFromValues(ArrayHash $values) {
-        $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
+        $email = isset($values['person_info']['email']) ? $values['person_info']['email.latte'] : null;
         $person = $this->servicePerson->findByEmail($email);
         if (!$person) {
             $person = $this->servicePerson->createNew();

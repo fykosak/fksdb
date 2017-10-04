@@ -66,7 +66,7 @@ class ContestChooser extends Nav {
         if (is_null($params->contestId)) {
             return false;
         }
-        if ($contestId != $params->contestId) {
+        if ($contestId !== $params->contestId) {
             $params->contestId = $contestId;
             return true;
         }
@@ -110,8 +110,7 @@ class ContestChooser extends Nav {
             $this->contest = array_shift($contestIds)->contest;
         }
 
-        if ($this->contest === null) {
-        } else {
+        if ($this->contest !== null) {
             $session->contestId = $this->contest->contest_id;
         }
     }
@@ -134,9 +133,10 @@ class ContestChooser extends Nav {
     protected function fillContests($contests) {
         $this->contests = [];
 
-        foreach ($contests as $id => $contest) {
+        foreach ($contests as $contest) {
             $class = '';
-            switch ($id) {
+
+            switch ($contest->contest_id) {
                 case 1:
                     $class = 'fykos';
                     break;
@@ -144,7 +144,7 @@ class ContestChooser extends Nav {
                     $class = 'vyfuk';
                     break;
             }
-            $this->contests[$id] = (object)[
+            $this->contests[] = (object)[
                 'contest' => $contest,
                 'symbol' => $class,
             ];
@@ -184,6 +184,6 @@ class ContestChooser extends Nav {
 
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
-        $presenter->redirect('this', ['contestId' => $contestId,]);
+        $presenter->redirect('this', ['contestId' => $contestId, 'year' => -1,]);
     }
 }

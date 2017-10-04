@@ -73,12 +73,13 @@ fksrouter:
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+        '//%subdomain.auth%.%domain.cz%%path%<presenter register>/[<contestId %contests%>/[<year [0-9]+>/[<personId -?[0-9]+>/]]]<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
+            year: null
         '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
@@ -87,42 +88,39 @@ fksrouter:
             flags: [ONE_WAY, SECURED]
 
         # Application itself (note the presenters w/out module are handled specially)
+        '//[!<subdomain>].%domain.host%.[!<tld>]':
+            module: Public
+            presenter: Chooser
+            subdomain: %subdomain.db%
+            tld: %domain.tld%
+            action: default
+            flags: [ONE_WAY, SECURED]
+
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventID [0-9]+>]/<presenter>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/<eventID [0-9]+>/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Brawl
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%org/<contestId %contests%>/year<year [0-9]+>/series<series -?[0-9]+>[<presenter>/]<action=default>[/<id>]':
-            presenter: Dashboard
-            module: Org
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            #contest: null
-            contestId: [filterTable: %inverseContestMapping%]
-            year: null
-            series: null
-            flags: SECURED
-               # Empty params
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%public/[<contestId %contests%>/][<year [0-9]+>/][<presenter>/]<action=default>[/<id>]':
-            presenter: Dashboard
-            module: Public
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            contestId: [filterTable: %inverseContestMapping%]
-            year: null
-            flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]':
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/<contestId %contests%>/year<year -?[0-9]+>/series<series -?[0-9]+>/[<presenter>/]<action=default>[/<id>]':
+            presenter: Dashboard
             module: Public
-            presenter: Chooser
             subdomain: %subdomain.db%
             tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
+            year: -1
+            series: -1
             flags: SECURED
+               # Empty params <module %modules%>
+
+
+
 

@@ -8,7 +8,7 @@ use Nette\Http\Session;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Jakub Šafin <xellos@fykos.cz>
  */
 class LanguageChooser extends Control {
@@ -46,8 +46,7 @@ class LanguageChooser extends Control {
     private $defaultLanguage = self::DEFAULT_FIRST;
 
     /**
-     * 
-
+     *
      * @param Session $session
      */
     function __construct(Session $session) {
@@ -143,14 +142,14 @@ class LanguageChooser extends Control {
         return $template;
     }
 
-    public function render($class) {
+    public function render() {
         if (!$this->isValid()) {
             throw new BadRequestException('No languages available.', 404);
         }
         $this->template->languages = $this->getLanguages();
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
-        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
+        $this->template->class = 'nav navbar-nav navbar-right';
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();

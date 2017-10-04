@@ -12,8 +12,11 @@ use FKSDB\Components\Controls\ContestNav\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
+use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
@@ -48,12 +51,26 @@ use ServiceContestant;
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
 
-    use \ContestNav;
+    /**
+     * @var integer
+     * @persistent
+     */
+    public $contestId;
+    /**
+     * @var integer
+     * @persistent
+     */
+    public $year;
+    /**
+     * @var integer
+     * @persistent
+     */
+    public $personId;
 
     /**
      * @var ModelPerson
      */
-    private $person = false;
+    private $person;
 
     /**
      * @var ServiceContestant
@@ -74,8 +91,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var Container
      */
     private $container;
-
-    private $role = \ModelRole::CONTESTANT;
+    /**
+     * @var \ServicePerson
+     */
+    protected $servicePerson;
 
     /**
      * @var \SeriesCalculator
@@ -88,6 +107,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
+    }
+
+    public function injectServicePerson(\ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
@@ -104,19 +127,12 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     public function getSelectedContest() {
-        $pk = $this->serviceContest->getPrimary();
-        $contests = $this->serviceContest->fetchPairs($pk, $pk);
-        /**
-         * @var $contestChooser ContestChooser
-         */
-        $contestChooser = $this['contestChooser'];
-        $contestChooser->setContests($contests);
-        return $contestChooser->getContest();
+        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
 
     public function getSelectedYear() {
-
-        return $this['yearChooser']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this->year;
+        //  return $this['contestNav']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
     public function getSelectedAcademicYear() {
@@ -127,15 +143,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     private function getPerson() {
-        if ($this->person === false) {
-            $this->person = $this->user->isLoggedIn() && $this->user->getIdentity()->getPerson() ? $this->user->getIdentity()->getPerson() : null;
+        if (!$this->person) {
+            $this->person = $this->user->isLoggedIn() ?
+                $this->user->getIdentity()->getPerson() :
+                ($this->personId !== -1 ? $this->servicePerson->findByPrimary($this->personId) : null);
         }
         return $this->person;
     }
 
     public function actionDefault() {
-        // so far we do not implement registration of person only
-        $this->redirect('contestant');
+        $this->redirect('contest');
     }
 
     public function actionContestant() {
@@ -156,17 +173,77 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                 }
             }
         }
-        if (!$this->getSelectedContest()) {
-            $this->setView('contestChooser');
-        }
     }
 
     public function titleContestant() {
         $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear()));
     }
 
+    private function getAvailableCombination() {
+        return [];
+    }
+
+
+    public function actionContest() {
+        if ($this->contestId) {
+            $this->changeAction('year');
+        }
+    }
+
+    public function actionYear() {
+        if ($this->year) {
+            $this->changeAction('email');
+        }
+    }
+
+    public function actionEmail() {
+        if ($this->getPerson()) {
+            $this->changeAction('contestant');
+        }
+    }
+
+    public function renderContest() {
+        $pk = $this->serviceContest->getPrimary();
+
+        $this->template->contests = array_map(function ($value) {
+            return $this->serviceContest->findByPrimary($value);
+        }, $this->serviceContest->fetchPairs($pk, $pk));
+    }
+
+    public function renderYear() {
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        $this->template->years = [];
+        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest);
+    }
+
+    public function handleChangeContest($contestId) {
+        $this->redirect('this', ['contestId' => $contestId,]);
+    }
+
+    public function handleChangeYear($year) {
+        $this->redirect('this', ['year' => $year,]);
+    }
+
+
+    public function createComponentEmailForm() {
+        $form = new Form();
+        $form->setRenderer(new BootstrapRenderer());
+        $form->addText('email', _('email'));
+        $form->addSubmit('submit', _('hladať'));
+        $form->onSuccess[] = [$this, 'emailFormSucceeded'];
+        return $form;
+    }
+
+    public function emailFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        $person = $this->servicePerson->findByEmail($values->email);
+        $this->redirect('this', ['personId' => $person ? $person->person_id : -1]);
+    }
+
     public function renderContestant() {
+
         $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
+        $this->template->contests = $this->getAvailableCombination();
         $referencedId = $this['contestantForm']->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -254,6 +331,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function getSelectedContestSymbol() {
         $contest = $this->getSelectedContest();
-        return $contest->contest_id ?: null;
+        return $contest ? $contest->contest_id : null;
+    }
+
+    public function getSelectedSeries() {
+        return null;
     }
 }

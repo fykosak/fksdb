@@ -8,7 +8,7 @@ use Nette\DateTime;
 class ResultsPresenter extends BasePresenter {
     
     protected function unauthorizedAccess() {
-        if ($this->getAction() == 'default') {
+        if ($this->getAction() === 'default') {
             return;
         }
 
@@ -16,7 +16,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function requiresLogin() {
-        return $this->getAction() != 'default';
+        return $this->getAction() !== 'default';
     }
 
     public function renderDefault() {
@@ -50,10 +50,13 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTasks() {
         $tasks = [];
+        /**
+         * @var $row \ModelBrawlTask
+         */
         foreach ($this->serviceBrawlTask->findAll($this->eventID)->order('label') as $row) {
             $tasks[] = [
                 'label' => $row->label,
-                'task_id' => $row->brawl_task_id
+                'task_id' => $row->fyziklani_task_id
             ];
         }
         return $tasks;
@@ -62,11 +65,11 @@ class ResultsPresenter extends BasePresenter {
     private function getTeams() {
         $teams = [];
         foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $row) {
-            $teams[] = [
+             $teams[] = [
                 'category' => $row->category,
                 'room' => $row->room,
                 'name' => $row->name,
-                'team_id' => $row->e_brawl_team_id
+                'team_id' => $row->e_fyziklani_team_id
             ];
         }
         return $teams;
@@ -78,11 +81,14 @@ class ResultsPresenter extends BasePresenter {
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
+        /**
+         * @var $submit \ModelBrawlSubmit
+         */
         foreach ($query as $submit) {
-            $submits[$submit->brawl_submit_id] = [
+            $submits[$submit->fyziklani_submit_id] = [
                 'points' => $submit->points,
-                'team_id' => $submit->e_brawl_team_id,
-                'task_id' => $submit->brawl_task_id
+                'team_id' => $submit->e_fyziklani_team_id,
+                'task_id' => $submit->fyziklani_task_id
             ];
         }
         return $submits;

@@ -20,7 +20,7 @@ abstract class Nav extends Control {
      */
     protected $serviceContest;
     /**
-     * @var bool
+     * @var boolean
      */
     protected $initialized = false;
 

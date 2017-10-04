@@ -24,6 +24,11 @@ class BrawlTaskGrid extends BaseGrid {
      */
     private $eventID;
 
+    /**
+     * BrawlTaskGrid constructor.
+     * @param integer $eventID
+     * @param ServiceBrawlTask $serviceBrawlTask
+     */
     public function __construct($eventID, ServiceBrawlTask $serviceBrawlTask) {
         $this->serviceBrawlTask = $serviceBrawlTask;
         $this->eventID = $eventID;

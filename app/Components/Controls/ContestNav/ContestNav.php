@@ -7,6 +7,7 @@
 namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 
@@ -42,7 +43,7 @@ class ContestNav extends Control {
      * ContestNav constructor.
      * @param \YearCalculator $yearCalculator
      * @param \SeriesCalculator $seriesCalculator
-     * @param $session
+     * @param Session $session
      * @param \ServiceContest $serviceContest
      * @param ITranslator $translator
      */
@@ -158,6 +159,12 @@ class ContestNav extends Control {
      * redirect to correct URL
      */
     public function getSyncRedirectParams($params) {
+        /**
+         * @var $languageChooser LanguageChooser
+         */
+        // $languageChooser = $this['languageChooser'];
+        // $languageChooser->syncRedirect();
+
         /**
          * @var $contestChooser ContestChooser
          */

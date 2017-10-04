@@ -5,7 +5,9 @@ namespace BrawlModule;
 use FKSDB\Components\Grids\Brawl\BrawlTeamsGrid;
 use FKSDB\model\Brawl\CloseSubmitStrategy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
@@ -30,29 +32,45 @@ class ClosePresenter extends BasePresenter {
         $this->authorizedTable();
     }
 
-    public function renderTeam($id) {
+    public function renderTeam() {
         $this->template->submits = $this->team->getSubmits();
     }
 
     public function actionTable() {
         if (!$this->isReadyToClose('A')) {
-            $this['closeCategoryAForm']['send']->setDisabled();
+            /**
+             * @var $component SubmitButton
+             */
+            $component = $this['closeCategoryAForm']['send'];
+            $component->setDisabled();
         }
         if (!$this->isReadyToClose('B')) {
-            $this['closeCategoryBForm']['send']->setDisabled();
+            /**
+             * @var $component SubmitButton
+             */
+            $component = $this['closeCategoryBForm']['send'];
+            $component->setDisabled();
         }
         if (!$this->isReadyToClose('C')) {
-            $this['closeCategoryCForm']['send']->setDisabled();
+            /**
+             * @var $component SubmitButton
+             */
+            $component = $this['closeCategoryCForm']['send'];
+            $component->setDisabled();
         }
         if (!$this->isReadyToClose()) {
-            $this['closeGlobalForm']['send']->setDisabled();
+            /**
+             * @var $component SubmitButton
+             */
+            $component = $this['closeGlobalForm']['send'];
+            $component->setDisabled();
         }
     }
 
     public function actionTeam($id) {
         $this->team = $this->serviceBrawlTeam->findByPrimary($id);
         if (!$this->team) {
-            throw new \Nette\Application\BadRequestException('Tým neexistuje', 404);
+            throw new BadRequestException('Tým neexistuje', 404);
         }
         //TODO replace isOpenSubmit with method of team object
         if (!$this->serviceBrawlTeam->isOpenSubmit($id)) {
@@ -71,18 +89,18 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-                ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
+            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydavačů'))
-                ->setDisabled()
-                ->setDefaultValue($this->getNextTask());
+            ->setDisabled()
+            ->setDefaultValue($this->getNextTask());
         $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-                ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
+            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;
     }
 
-    public function closeFormSucceeded(Form $form) {
+    public function closeFormSucceeded() {
         $connection = $this->serviceBrawlTeam->getConnection();
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
@@ -152,7 +170,7 @@ class ClosePresenter extends BasePresenter {
 
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
-        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');        
+        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
         $nextTask = $this->serviceBrawlTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }

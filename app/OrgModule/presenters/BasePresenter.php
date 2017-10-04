@@ -32,6 +32,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
+        \Nette\Diagnostics\Debugger::barDump($this);
         $this->startupRedirects();
     }
 

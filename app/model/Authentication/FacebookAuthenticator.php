@@ -72,7 +72,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
 
         // try both e-mail and FB ID
-        $result = $this->servicePerson->getTable()->where('person_info:email = ? OR person_info:fb_id = ?', $fbUser['email'], $fbUser['id']);
+        $result = $this->servicePerson->getTable()->where('person_info:email = ? OR person_info:fb_id = ?', $fbUser['email.latte'], $fbUser['id']);
         if (count($result) > 1) {
             throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
         } else if (count($result) == 0) {
@@ -115,8 +115,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
          * however, mark it to the log.
          */
         if (isset($personInfo->email)) {
-            if (isset($personInfoData['email']) && $personInfoData['email'] !== $personInfo->email) {
-                Debugger::log(sprintf('Our email: %s, FB email %s', $personInfo->email, $personInfoData['email']));
+            if (isset($personInfoData['email']) && $personInfoData['email.latte'] !== $personInfo->email) {
+                Debugger::log(sprintf('Our email: %s, FB email.latte %s', $personInfo->email, $personInfoData['email.latte']));
             }
             unset($personInfoData['email']);
         }
@@ -140,7 +140,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     private function getPersonInfoData($fbUser) {
         return array(
-            'email' => $fbUser['email'],
+            'email' => $fbUser['email.latte'],
             'fb_id' => $fbUser['id'],
         );
     }

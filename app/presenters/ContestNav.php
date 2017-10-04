@@ -9,28 +9,28 @@ use \FKSDB\Components\Controls;
 trait ContestNav {
 
     /**
-     * @var int
+     * @var integer
      * @persistent
      */
-    protected $contestId;
+    public $contestId;
 
     /**
-     * @var int
+     * @var integer
      * @persistent
      */
-    protected $year;
+    public $year;
 
     /**
-     * @var int
+     * @var mixed
      * @persistent
      */
-    protected $lang;
+    public $lang;
 
     /**
-     * @var int
+     * @var integer
      * @persistent
      */
-    protected $series;
+    public $series;
 
     protected function createComponentContestNav() {
         $control = new Controls\ContestNav\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
@@ -95,11 +95,6 @@ trait ContestNav {
         if (is_null($params)) {
             return;
         }
-        /**
-         * @var $languageChooser Controls\ContestNav\LanguageChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        $languageChooser->syncRedirect();
 
         $this->redirect('this', [
             'year' => $params->year ?: $this->year,

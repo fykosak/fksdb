@@ -72,7 +72,7 @@ class Downloader {
         return $this->download($path);
     }
 
-    public function downloadFyziklaniRooms(ModelContest $contest, $year) {
+    public function downloadBrawlRooms(ModelContest $contest, $year) {
         $mask = $this->parameters['fyziklani']['roomsPath'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 

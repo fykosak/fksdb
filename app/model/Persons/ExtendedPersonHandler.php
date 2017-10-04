@@ -116,6 +116,10 @@ class ExtendedPersonHandler extends Object {
         return $this->person;
     }
 
+    /**
+     * @param Form $form
+     * @return ModelPerson
+     */
     protected final function getReferencedPerson(Form $form) {
         return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
     }
@@ -128,7 +132,9 @@ class ExtendedPersonHandler extends Object {
             }
             $values = $form->getValues();
             $create = !$presenter->getModel();
-
+            /**
+             * @var $person ModelPerson
+             */
             $person = $this->person = $this->getReferencedPerson($form);
             $this->storeExtendedModel($person, $values, $presenter);
 

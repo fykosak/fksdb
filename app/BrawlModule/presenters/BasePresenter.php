@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Factories\BrawlFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use ORM\Services\Events\ServiceFyziklaniTeam;
+use ORM\Services\Events\ServiceFyziklaniTeam as ServiceBrawlTeam;
 use ServiceEvent;
 use ServiceBrawlSubmit;
 use ServiceBrawlTask;
@@ -50,7 +50,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      *
-     * @var ServiceFyziklaniTeam
+     * @var ServiceBrawlTeam
      */
     protected $serviceBrawlTeam;
 
@@ -78,7 +78,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function injectServiceBrawlTeam(ServiceFyziklaniTeam $serviceBrawlTeam) {
+    public function injectServiceBrawlTeam(ServiceBrawlTeam $serviceBrawlTeam) {
         $this->serviceBrawlTeam = $serviceBrawlTeam;
     }
 

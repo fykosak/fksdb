@@ -53,10 +53,10 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
     public function handleChange($contestId, $role) {
         switch ($role) {
             case 'org':
-                $this->redirect(':Org:Dashboard:default', ['contestId' => $contestId,]);
+                $this->redirect(':Org:Dashboard:default', ['contestId' => $contestId,'year'=>-1]);
                 return;
             case 'contestant':
-                $this->redirect(':Public:Dashboard:default', ['contestId' => $contestId,]);
+                $this->redirect(':Public:Dashboard:default', ['contestId' => $contestId,'year'=>-1]);
                 return;
         }
     }

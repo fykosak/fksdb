@@ -9,6 +9,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 class SubmitPresenter extends BasePresenter {
 
@@ -31,7 +32,11 @@ class SubmitPresenter extends BasePresenter {
     public function actionEntry($id) {
         if ($id) {
             if ($this->checkTaskCode($id, $msg)) {
-                $this['entryForm']->setDefaults(['taskCode' => $id]);
+                /**
+                 * @var $entryForm Form
+                 */
+                $entryForm = $this['entryForm'];
+                $entryForm->setDefaults(['taskCode' => $id]);
             } else {
                 $this->flashMessage($msg, 'danger');
             }
@@ -64,6 +69,9 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $teams = [];
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
         foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $team) {
             $teams[] = [
                 'team_id' => $team->e_fyziklani_team_id,
@@ -71,13 +79,16 @@ class SubmitPresenter extends BasePresenter {
             ];
         };
         $tasks = [];
+        /**
+         * @var $task \ModelBrawlTask
+         */
         foreach ($this->serviceBrawlTask->findAll($this->eventID) as $task) {
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
                 'label' => $task->label
             ];
         };
-        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent(), $teams, $tasks);
+        $form = $this->brawlFactory->createEntryForm($this->getCurrentEvent(), $teams, $tasks);
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -108,7 +119,7 @@ class SubmitPresenter extends BasePresenter {
                     'created' => null
                 ]);
             } else {
-               // $submit = $this->serviceBrawlSubmit->findByTaskAndTeam($teamID,$taskID);
+                // $submit = $this->serviceBrawlSubmit->findByTaskAndTeam($teamID,$taskID);
                 $this->serviceBrawlSubmit->updateModel($submit, [
                     'points' => $points,
                     /* ugly, exclude previous value of `modified` from query
@@ -126,7 +137,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->serviceBrawlSubmit->save($submit);
                 $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
                 $this->redirect('this');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
                 Debugger::log($e);
             }
@@ -135,8 +146,13 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $taskCode
+     * @param $msg
+     * @return bool
+     */
     public function checkTaskCode($taskCode, &$msg) {
-        /** skontroluje pratnosť kontrolu */
+        /* check control number */
         if (!$this->taskCodePreprocessor->checkControlNumber($taskCode)) {
             $msg = _('Chybně zadaný kód úlohy.');
             return false;
@@ -168,8 +184,8 @@ class SubmitPresenter extends BasePresenter {
         return true;
     }
 
-    public function createComponentBrawlEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
+    public function createComponentEditForm() {
+        $form = $this->brawlFactory->createEditForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
@@ -191,7 +207,11 @@ class SubmitPresenter extends BasePresenter {
         }
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
-        $this['fyziklaniEditForm']->setDefaults([
+        /**
+         * @var $editForm Form
+         */
+        $editForm = $this['editForm'];
+        $editForm->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
             'points' => $submit->points,

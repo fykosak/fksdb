@@ -56,6 +56,7 @@ class SeriesChooser extends Nav {
         $this->initialized = true;
 
         $contest = $this->serviceContest->findByPrimary($params->contestId);
+        Debugger::barDump($params);
         $this->contest = $contest;
         $this->year = $params->year;
 
@@ -102,6 +103,9 @@ class SeriesChooser extends Nav {
      * @return array of int of allowed series
      */
     private function getAllowedSeries() {
+        if ($this->contest === null) {
+            return [];
+        }
         $lastSeries = $this->seriesCalculator->getLastSeries($this->contest, $this->year);
         if ($lastSeries === null) {
             return [];

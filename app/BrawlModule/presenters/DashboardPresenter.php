@@ -5,10 +5,10 @@ namespace BrawlModule;
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('FYKOSí Fyziklání'));
+        $this->setTitle(_('Physics Brawl'));
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'dashboard'));
+        $this->setAuthorized($this->eventIsAllowed('brawl', 'dashboard'));
     }
 }

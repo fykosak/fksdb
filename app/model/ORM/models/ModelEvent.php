@@ -7,6 +7,7 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer event_year
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
