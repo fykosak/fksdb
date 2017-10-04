@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Brawl;
 
 use FKSDB\Components\Grids\BaseGrid;
-use ServiceFyziklaniTask;
+use ServiceBrawlTask;
 use Nette\Database\Table\Selection;
 use SQL\SearchableDataSource;
 
@@ -12,20 +12,20 @@ use SQL\SearchableDataSource;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class FyziklaniTaskGrid extends BaseGrid {
+class BrawlTaskGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceFyziklaniTask 
+     * @var ServiceBrawlTask
      */
-    private $serviceFyziklaniTask;
+    private $serviceBrawlTask;
     /**
      * @var int
      */
     private $eventID;
 
-    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    public function __construct($eventID, ServiceBrawlTask $serviceBrawlTask) {
+        $this->serviceBrawlTask = $serviceBrawlTask;
         $this->eventID = $eventID;
         parent::__construct();
     }
@@ -36,7 +36,7 @@ class FyziklaniTaskGrid extends BaseGrid {
         $this->addColumn('label',_('#'));
         $this->addColumn('name',_('Název úlohy'));
 
-        $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
+        $submits = $this->serviceBrawlTask->findAll($this->eventID);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
                     $tokens = preg_split('/\s+/', $value);

@@ -21,7 +21,6 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected $role = \ModelRole::ORG;
 
-
     /**
      * @var \SeriesCalculator
      */

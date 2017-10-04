@@ -13,47 +13,51 @@ use Nette\Application\Responses\TextResponse;
  */
 class GithubPresenter extends AuthenticatedPresenter {
 
-	/** @var Updater */
-	private $updater;
+    /** @var Updater */
+    private $updater;
 
-	/** @var EventFactory */
-	private $eventFactory;
+    /** @var EventFactory */
+    private $eventFactory;
 
-	public function injectEventFactory(EventFactory $eventFactory) {
-		$this->eventFactory = $eventFactory;
-	}
+    public function injectEventFactory(EventFactory $eventFactory) {
+        $this->eventFactory = $eventFactory;
+    }
 
-	public function injectUpdater(Updater $updater) {
-		$this->updater = $updater;
-	}
+    public function injectUpdater(Updater $updater) {
+        $this->updater = $updater;
+    }
 
-	public function getAllowedAuthMethods() {
-		return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
-	}
+    public function getAllowedAuthMethods() {
+        return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
+    }
 
-	public function authorizedApi() {
-		/* Already authenticated user has ultimate access to this presenter. */
-		$this->setAuthorized(true);
-	}
+    public function authorizedApi() {
+        /* Already authenticated user has ultimate access to this presenter. */
+        $this->setAuthorized(true);
+    }
 
-	public function actionApi() {
-		$type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
-		$payload = $this->getFullHttpRequest()->getPayload();
-		$data = json_decode($payload, true);
+    public function actionApi() {
+        $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
+        $payload = $this->getFullHttpRequest()->getPayload();
+        $data = json_decode($payload, true);
 
-		$event = $this->eventFactory->createEvent($type, $data);
-		if ($event instanceof PushEvent) {
-			if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {
-				return;
-			}
-			$branch = substr($event->ref, strlen(PushEvent::REFS_HEADS));
-			$this->updater->installBranch($branch);
-		}
-	}
+        $event = $this->eventFactory->createEvent($type, $data);
+        if ($event instanceof PushEvent) {
+            if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {
+                return;
+            }
+            $branch = substr($event->ref, strlen(PushEvent::REFS_HEADS));
+            $this->updater->installBranch($branch);
+        }
+    }
 
-	public function renderApi() {
-		$response = new TextResponse("Thank you, Github.");
-		$this->sendResponse($response);
-	}
+    public function renderApi() {
+        $response = new TextResponse("Thank you, Github.");
+        $this->sendResponse($response);
+    }
+
+    public function getSelectedContestSymbol() {
+        return null;
+    }
 
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
-use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
-use FKSDB\model\Fyziklani\TaskCodePreprocessor;
-use ModelFyziklaniSubmit;
+use FKSDB\Components\Grids\Brawl\BrawlSubmitsGrid;
+use FKSDB\model\Brawl\TaskCodePreprocessor;
+use ModelBrawlSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -19,7 +19,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      *
-     * @var ModelFyziklaniSubmit
+     * @var ModelBrawlSubmit
      */
     private $editSubmit;
 
@@ -64,14 +64,14 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $teams = [];
-        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
+        foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $team) {
             $teams[] = [
                 'team_id' => $team->e_fyziklani_team_id,
                 'name' => $team->name,
             ];
         };
         $tasks = [];
-        foreach ($this->serviceFyziklaniTask->findAll($this->eventID) as $task) {
+        foreach ($this->serviceBrawlTask->findAll($this->eventID) as $task) {
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
                 'label' => $task->label
@@ -95,10 +95,10 @@ class SubmitPresenter extends BasePresenter {
             }
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
-            $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
+            $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->eventID);
 
-            if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID))) {
-                $submit = $this->serviceFyziklaniSubmit->createNew([
+            if (is_null($submit = $this->serviceBrawlSubmit->findByTaskAndTeam($taskID, $teamID))) {
+                $submit = $this->serviceBrawlSubmit->createNew([
                     'points' => $points,
                     'fyziklani_task_id' => $taskID,
                     'e_fyziklani_team_id' => $teamID,
@@ -108,8 +108,8 @@ class SubmitPresenter extends BasePresenter {
                     'created' => null
                 ]);
             } else {
-               // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
-                $this->serviceFyziklaniSubmit->updateModel($submit, [
+               // $submit = $this->serviceBrawlSubmit->findByTaskAndTeam($teamID,$taskID);
+                $this->serviceBrawlSubmit->updateModel($submit, [
                     'points' => $points,
                     /* ugly, exclude previous value of `modified` from query
                      * so that `modified` is set automatically by DB
@@ -117,13 +117,13 @@ class SubmitPresenter extends BasePresenter {
                      */
                     'modified' => null
                 ]);
-                $this->serviceFyziklaniSubmit->save($submit);
+                $this->serviceBrawlSubmit->save($submit);
             }
-            $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
-            $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
+            $teamName = $this->serviceBrawlTeam->findByPrimary($teamID)->name;
+            $taskName = $this->serviceBrawlTask->findByLabel($taskLabel, $this->eventID)->name;
 
             try {
-                $this->serviceFyziklaniSubmit->save($submit);
+                $this->serviceBrawlSubmit->save($submit);
                 $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
                 $this->redirect('this');
             } catch (Exception $e) {
@@ -144,38 +144,38 @@ class SubmitPresenter extends BasePresenter {
         /* Existenica týmu */
         $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
-        if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->eventID)) {
+        if (!$this->serviceBrawlTeam->teamExist($teamID, $this->eventID)) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamID);
             return false;
         }
         /* otvorenie submitu */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        if (!$this->serviceBrawlTeam->isOpenSubmit($teamID)) {
             $msg = _('Bodování tohoto týmu je uzavřené.');
             return false;
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
-        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
+        $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->eventID);
         if (!$taskID) {
             $msg = sprintf(_('Úloha %s neexistuje.'), $taskLabel);
             return false;
         }
         /* Nezadal sa duplicitne toto nieje editácia */
-        if ($this->serviceFyziklaniSubmit->submitExist($taskID, $teamID)) {
+        if ($this->serviceBrawlSubmit->submitExist($taskID, $teamID)) {
             $msg = sprintf(_('Úloha %s už byla zadaná.'), $taskLabel);
             return false;
         }
         return true;
     }
 
-    public function createComponentFyziklaniEditForm() {
+    public function createComponentBrawlEditForm() {
         $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
 
     public function actionEdit($id) {
-        $this->editSubmit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $this->editSubmit = $this->serviceBrawlSubmit->findByPrimary($id);
 
         if (!$this->editSubmit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
@@ -184,7 +184,7 @@ class SubmitPresenter extends BasePresenter {
         $teamID = $this->editSubmit->e_fyziklani_team_id;
 
         /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        if (!$this->serviceBrawlTeam->isOpenSubmit($teamID)) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->backlinkRedirect();
             $this->redirect('table'); // if there's no backlink
@@ -203,7 +203,7 @@ class SubmitPresenter extends BasePresenter {
         $values = $form->getValues();
 
         $submit = $this->editSubmit;
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
+        $this->serviceBrawlSubmit->updateModel($submit, [
             'points' => $values->points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -211,14 +211,14 @@ class SubmitPresenter extends BasePresenter {
              */
             'modified' => null
         ]);
-        $this->serviceFyziklaniSubmit->save($submit);
+        $this->serviceBrawlSubmit->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
         $this->backlinkRedirect();
         $this->redirect('table'); // if there's no backlink
     }
 
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->eventID, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
+        return new BrawlSubmitsGrid($this->eventID, $this->serviceBrawlSubmit, $this->serviceBrawlTeam);
     }
 
 }

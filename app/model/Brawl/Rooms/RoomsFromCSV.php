@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani\Rooms;
+namespace FKSDB\model\Brawl\Rooms;
 
 use FKS\Logging\ILogger;
 use FKS\Utils\CSVParser;

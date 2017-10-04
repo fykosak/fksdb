@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani\Rooms;
+namespace FKSDB\model\Brawl\Rooms;
 
 use FKS\Logging\MemoryLogger;
 use ModelEvent;
@@ -8,7 +8,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 use Pipeline\Pipeline;
 
 /**
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
@@ -23,7 +23,7 @@ class PipelineFactory {
     }
 
     /**
-     * 
+     * @param $event ModelEvent
      * @return Pipeline
      */
     public function create(ModelEvent $event) {

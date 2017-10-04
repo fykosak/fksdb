@@ -34,7 +34,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public $tld;
 
     /** @persistent */
-    public $lang;
+    private $lang;
 
     /**
      * Backlink for tree construction for breadcrumbs.

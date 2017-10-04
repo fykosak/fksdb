@@ -1,11 +1,11 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
-use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\model\Brawl\TaskImportProcessor;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use \Nette\Application\UI\Form;
-use \FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
+use \FKSDB\Components\Grids\Brawl\BrawlTaskGrid;
 
 class TaskPresenter extends BasePresenter {
 
@@ -18,7 +18,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedTable() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'task')));
+        $this->setAuthorized(($this->eventIsAllowed('brawl', 'task')));
     }
 
     public function titleImport() {
@@ -26,7 +26,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function authorizedImport() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'taskImport')));
+        $this->setAuthorized(($this->eventIsAllowed('brawl', 'taskImport')));
     }
 
     public function createComponentTaskImportForm() {
@@ -45,7 +45,7 @@ class TaskPresenter extends BasePresenter {
 
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->eventID, $this->serviceFyziklaniTask);
+        $taskImportProcessor = new TaskImportProcessor($this->eventID, $this->serviceBrawlTask);
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -55,6 +55,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        return new FyziklaniTaskGrid($this->eventID, $this->serviceFyziklaniTask);
+        return new BrawlTaskGrid($this->eventID, $this->serviceBrawlTask);
     }
 }

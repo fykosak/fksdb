@@ -1,6 +1,6 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
@@ -21,7 +21,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function renderDefault() {
         if ($this->isAjax()) {
-            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
+            $isOrg = $this->getEventAuthorizator()->isAllowed('brawl', 'results', $this->getCurrentEvent());
             /**
              * @var DateTime $lastUpdated
              */
@@ -50,10 +50,10 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTasks() {
         $tasks = [];
-        foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
+        foreach ($this->serviceBrawlTask->findAll($this->eventID)->order('label') as $row) {
             $tasks[] = [
                 'label' => $row->label,
-                'task_id' => $row->fyziklani_task_id
+                'task_id' => $row->brawl_task_id
             ];
         }
         return $tasks;
@@ -61,28 +61,28 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTeams() {
         $teams = [];
-        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $row) {
+        foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $row) {
             $teams[] = [
                 'category' => $row->category,
                 'room' => $row->room,
                 'name' => $row->name,
-                'team_id' => $row->e_fyziklani_team_id
+                'team_id' => $row->e_brawl_team_id
             ];
         }
         return $teams;
     }
 
     private function getSubmits($lastUpdated = null) {
-        $query = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team.event_id', $this->eventID);
+        $query = $this->serviceBrawlSubmit->getTable()->where('e_brawl_team.event_id', $this->eventID);
         $submits = [];
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
         foreach ($query as $submit) {
-            $submits[$submit->fyziklani_submit_id] = [
+            $submits[$submit->brawl_submit_id] = [
                 'points' => $submit->points,
-                'team_id' => $submit->e_fyziklani_team_id,
-                'task_id' => $submit->fyziklani_task_id
+                'team_id' => $submit->e_brawl_team_id,
+                'task_id' => $submit->brawl_task_id
             ];
         }
         return $submits;

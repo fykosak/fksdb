@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\model\Brawl;
 
 /**
  * @author Michal Červeňák

@@ -3,15 +3,16 @@
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class ServiceFyziklaniTask extends AbstractServiceSingle {
+class ServiceBrawlTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_TASK;
-    protected $modelClassName = 'ModelFyziklaniTask';
+    protected $modelClassName = 'ModelBrawlTask';
 
     /**
      * Syntactic sugar.
-     *
-     * @return ModelFyziklaniTask|null
+     * @param $label string
+     * @param $eventId integer
+     * @return ModelBrawlTask|null
      */
     public function findByLabel($label, $eventId) {
         if (!$label || !$eventId) {

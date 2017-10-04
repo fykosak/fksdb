@@ -29,7 +29,7 @@ class LanguageChooser extends Control {
     private $session;
 
     /**
-     * @var \ModelLanguage
+     * @var mixed
      */
     private $language;
     private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
@@ -41,7 +41,7 @@ class LanguageChooser extends Control {
     private $initialized = false;
 
     /**
-     * @var enum DEFAULT_*
+     * @var mixed DEFAULT_*
      */
     private $defaultLanguage = self::DEFAULT_FIRST;
 
@@ -51,11 +51,12 @@ class LanguageChooser extends Control {
      * @param Session $session
      */
     function __construct(Session $session) {
+        parent::__construct();
         $this->session = $session;
     }
 
     /**
-     * @param mixed $languageDefinition role enum|ALL_LANGUAGES|array of languages
+     * @param mixed $languages role enum|ALL_LANGUAGES|array of languages
      */
     public function setLanguages($languages) {
         $this->languages = $languages;

@@ -1,9 +1,9 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
-use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
-use FKSDB\model\Fyziklani\CloseSubmitStrategy;
+use FKSDB\Components\Grids\Brawl\BrawlTeamsGrid;
+use FKSDB\model\Brawl\CloseSubmitStrategy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;
@@ -19,11 +19,11 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function titleTeam($id) {
-        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->serviceFyziklaniTeam->findByPrimary($id)->__toString()));
+        $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->serviceBrawlTeam->findByPrimary($id)->__toString()));
     }
 
     public function authorizedTable() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'close'));
+        $this->setAuthorized($this->eventIsAllowed('brawl', 'close'));
     }
 
     public function authorizedTeam() {
@@ -50,12 +50,12 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function actionTeam($id) {
-        $this->team = $this->serviceFyziklaniTeam->findByPrimary($id);
+        $this->team = $this->serviceBrawlTeam->findByPrimary($id);
         if (!$this->team) {
             throw new \Nette\Application\BadRequestException('Tým neexistuje', 404);
         }
         //TODO replace isOpenSubmit with method of team object
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($id)) {
+        if (!$this->serviceBrawlTeam->isOpenSubmit($id)) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name), 'danger');
             $this->backlinkRedirect();
             $this->redirect('table'); // if there's no backlink
@@ -63,7 +63,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGrid() {
-        $grid = new FyziklaniTeamsGrid($this->eventID, $this->serviceFyziklaniTeam);
+        $grid = new BrawlTeamsGrid($this->eventID, $this->serviceBrawlTeam);
         return $grid;
     }
 
@@ -83,15 +83,15 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeFormSucceeded(Form $form) {
-        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection = $this->serviceBrawlTeam->getConnection();
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
-        $this->serviceFyziklaniTeam->save($this->team);
+        $this->serviceBrawlTeam->updateModel($this->team, ['points' => $sum]);
+        $this->serviceBrawlTeam->save($this->team);
         $connection->commit();
         $this->backlinkRedirect();
         $this->redirect('table'); // if there's no backlink
@@ -119,7 +119,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceBrawlTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -134,14 +134,14 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceBrawlTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
+        $query = $this->serviceBrawlTeam->findParticipating($this->eventID);
         if ($category) {
             $query->where('category', $category);
         }
@@ -153,7 +153,7 @@ class ClosePresenter extends BasePresenter {
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
         $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');        
-        $nextTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->serviceBrawlTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 

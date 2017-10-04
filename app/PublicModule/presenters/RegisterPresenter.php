@@ -51,12 +51,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     use \ContestNav;
 
     /**
-     * @var int
-     * @persistent
-     */
-    public $contestId;
-
-    /**
      * @var ModelPerson
      */
     private $person = false;
@@ -82,12 +76,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     private $container;
 
     private $role = \ModelRole::CONTESTANT;
-
-    /**
-     * @var int
-     * @persistent
-     */
-    public $series;
 
     /**
      * @var \SeriesCalculator

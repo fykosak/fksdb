@@ -73,8 +73,8 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
+    protected function createComponentLanguageChooser() {
+        $control = new \FKSDB\Components\Controls\ContestNav\LanguageChooser($this->session);
         return $control;
     }
 
@@ -345,5 +345,9 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private function initialRedirect($login) {
         $this->redirect(':Public:Chooser:', [self::PARAM_DISPATCH => 1]);
+    }
+
+    public function getSelectedContestSymbol() {
+        return null;
     }
 }

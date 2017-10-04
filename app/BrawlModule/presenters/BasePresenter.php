@@ -1,17 +1,16 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
-use FKSDB\Components\Forms\Factories\FyziklaniFactory;
+use FKSDB\Components\Forms\Factories\BrawlFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
-use ServiceFyziklaniSubmit;
-use ServiceFyziklaniTask;
+use ServiceBrawlSubmit;
+use ServiceBrawlTask;
 
 /**
  *
@@ -33,9 +32,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public $eventID;
 
     /**
-     * @var FyziklaniFactory
+     * @var BrawlFactory
      */
-    protected $fyziklaniFactory;
+    protected $brawlFactory;
 
     /**
      *
@@ -53,22 +52,22 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      *
      * @var ServiceFyziklaniTeam
      */
-    protected $serviceFyziklaniTeam;
+    protected $serviceBrawlTeam;
 
     /**
      *
-     * @var ServiceFyziklaniTask
+     * @var ServiceBrawlTask
      */
-    protected $serviceFyziklaniTask;
+    protected $serviceBrawlTask;
 
     /**
      *
-     * @var ServiceFyziklaniSubmit
+     * @var ServiceBrawlSubmit
      */
-    protected $serviceFyziklaniSubmit;
+    protected $serviceBrawlSubmit;
 
-    public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
-        $this->fyziklaniFactory = $fyziklaniFactory;
+    public function injectBrawlFactory(BrawlFactory $brawlFactory) {
+        $this->brawlFactory = $brawlFactory;
     }
 
     public function injectContainer(Container $container) {
@@ -79,16 +78,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function injectServiceBrawlTeam(ServiceFyziklaniTeam $serviceBrawlTeam) {
+        $this->serviceBrawlTeam = $serviceBrawlTeam;
     }
 
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    public function injectServiceBrawlTask(ServiceBrawlTask $serviceBrawlTask) {
+        $this->serviceBrawlTask = $serviceBrawlTask;
     }
 
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+    public function injectServiceBrawlSubmit(ServiceBrawlSubmit $serviceBrawlSubmit) {
+        $this->serviceBrawlSubmit = $serviceBrawlSubmit;
     }
 
     public function startup() {
@@ -140,6 +139,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSelectedContest() {
+        return 'brawl';
+    }
+
+    public function getSelectedContestSymbol() {
         return 'brawl';
     }
 }

@@ -96,7 +96,7 @@ fksrouter:
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventID [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
-            module: Fyziklani
+            module: Brawl
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%org/<contestId %contests%>/year<year [0-9]+>/series<series -?[0-9]+>[<presenter>/]<action=default>[/<id>]':

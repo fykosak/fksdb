@@ -61,28 +61,43 @@ class ContestNav extends Control {
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @param $role
+     */
     public function setRole($role) {
         $this->role = $role;
     }
 
-
+    /**
+     * @return ContestChooser
+     */
     protected function createComponentContestChooser() {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setRole($this->role);
         return $control;
     }
 
+    /**
+     * @return YearChooser
+     */
     protected function createComponentYearChooser() {
         $control = new YearChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setRole($this->role);
         return $control;
     }
 
+    /**
+     * @return SeriesChooser
+     */
     protected function createComponentSeriesChooser() {
         $control = new SeriesChooser($this->session, $this->seriesCalculator, $this->serviceContest, $this->translator);
         $control->setRole($this->role);
         return $control;
     }
+
+    /**
+     * @return LanguageChooser
+     */
     protected function createComponentLanguageChooser() {
         $control = new LanguageChooser($this->session);
         return $control;
@@ -110,6 +125,9 @@ class ContestNav extends Control {
         return $yearChooser->getYear();
     }
 
+    /**
+     * @return mixed
+     */
     public function getSelectedLanguage() {
         /**
          * @var $languageChooser LanguageChooser

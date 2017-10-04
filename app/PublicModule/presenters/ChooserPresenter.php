@@ -34,11 +34,6 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
      */
     public $lang;
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
-    }
-
     public function getSelectedContest() {
         return null;
     }
@@ -53,17 +48,6 @@ class ChooserPresenter extends AuthenticatedPresenter implements IContestPresent
 
     public function getSelectedSeries() {
         return null;
-    }
-
-    public function getSelectedLanguage() {
-        /**
-         * @var $languageChooser LanguageChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
     }
 
     public function handleChange($contestId, $role) {

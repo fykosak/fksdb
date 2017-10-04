@@ -5,10 +5,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\model\Brawl;
 
 use Nette\Application\BadRequestException;
-use FyziklaniModule\BasePresenter;
+use BrawlModule\BasePresenter;
 use Nette\Utils\Html;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
@@ -28,21 +28,21 @@ class CloseSubmitStrategy {
      *
      * @var ServiceFyziklaniTeam
      */
-    private $serviceFyziklaniTeam;
+    private $serviceBrawlTeam;
     /**
      * @var int
      */
     private $eventID;
 
 
-    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct($eventID, ServiceFyziklaniTeam $serviceBrawlTeam) {
+        $this->serviceBrawlTeam = $serviceBrawlTeam;
         $this->eventID = $eventID;
     }
 
     public function closeByCategory($category, &$msg = null) {
         $total = is_null($category);
-        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection = $this->serviceBrawlTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
@@ -58,15 +58,15 @@ class CloseSubmitStrategy {
     private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
-            $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
+            $team = $this->serviceBrawlTeam->findByPrimary($teamData['e_brawl_team_id']);
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+                $this->serviceBrawlTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+                $this->serviceBrawlTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
-            $this->serviceFyziklaniTeam->save($team);
+            $this->serviceBrawlTeam->save($team);
             $msg .= Html::el('li')
-                ->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
+                ->add(_('TeamID') . ':' . $teamData['e_brawl_team_id'] . _('Pořadí') . ': ' . ($index + 1));
         }
     }
 
@@ -74,8 +74,8 @@ class CloseSubmitStrategy {
         $teamsData = [];
         foreach ($teams as $team) {
             $teamData = [];
-            $team_id = $team->e_fyziklani_team_id;
-            $teamData['e_fyziklani_team_id'] = $team_id;
+            $team_id = $team->e_brawl_team_id;
+            $teamData['e_brawl_team_id'] = $team_id;
             if ($team->points === null) {
                 throw new BadRequestException('Tým ' . $team->name . '(' . $team_id . ') nemá uzavřené bodování');
             }
@@ -104,7 +104,7 @@ class CloseSubmitStrategy {
     }
 
     private function getAllTeams($category = null) {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
+        $query = $this->serviceBrawlTeam->findParticipating($this->eventID);
         if ($category) {
             $query->where('category', $category);
         }
@@ -112,7 +112,7 @@ class CloseSubmitStrategy {
     }
 
     protected function getAllSubmits($team_id) {
-        $submits = $this->serviceFyziklaniTeam->findByPrimary($team_id)->getSubmits();
+        $submits = $this->serviceBrawlTeam->findByPrimary($team_id)->getSubmits();
         $arraySubmits = [];
         $sum = 0;
         $count = 0;

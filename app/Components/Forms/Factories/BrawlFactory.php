@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\TaskCodeInput;
-use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
 use Nette\Application\UI\Form;
@@ -12,7 +11,7 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 
 
-class FyziklaniFactory {
+class BrawlFactory {
 
     private $container;
 

@@ -8,6 +8,10 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
+    public function getSelectedContestSymbol() {
+        return 'error';
+    }
+
     protected function putIntoBreadcrumbs() {
         /* empty */
     }

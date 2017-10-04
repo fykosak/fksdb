@@ -73,9 +73,9 @@ services:
     events.captcha: Events\FormAdjustments\Captcha
 
     #
-    # Fyziklani
+    # Brawl
     #
-    - FKSDB\model\Fyziklani\TaskCodePreprocessor
+    - FKSDB\model\Brawl\TaskCodePreprocessor
 
 includes:
     - merger.neon

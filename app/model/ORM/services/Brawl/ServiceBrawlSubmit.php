@@ -2,16 +2,18 @@
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
+ * @readonly-property
  */
-class ServiceFyziklaniSubmit extends AbstractServiceSingle {
+class ServiceBrawlSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FYZIKLANI_SUBMIT;
-    protected $modelClassName = 'ModelFyziklaniSubmit';
+    protected $modelClassName = 'ModelBrawlSubmit';
     
     /**
      * Syntactic sugar.
-     * 
-     * @return ModelFyziklaniSubmit|null
+     * @param $taskId integer
+     * @param $teamId integer
+     * @return ModelBrawlSubmit|null
      */
     public function findByTaskAndTeam($taskId, $teamId) {
         if (!$taskId || !$teamId) {
@@ -21,12 +23,12 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             'fyziklani_task_id' => $taskId, 
             'e_fyziklani_team_id' => $teamId
         ))->fetch();
-        return $result ? : null;
+        return $result ?: null;
     }
     
     /**
      * Syntactic sugar.
-     * 
+     * @param $eventId integer
      * @return \Nette\Database\Table\Selection|null
      */
     public function findAll($eventId) {

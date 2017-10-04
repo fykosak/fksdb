@@ -1,6 +1,6 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
 class DashboardPresenter extends BasePresenter {
 

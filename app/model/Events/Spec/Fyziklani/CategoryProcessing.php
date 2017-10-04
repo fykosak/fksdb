@@ -14,7 +14,7 @@ use Nette\Forms\Form;
 use YearCalculator;
 
 /**
- * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
+ * Na Brawl 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
  *
  * @author Aleš Podolník <ales@fykos.cz>
  * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)

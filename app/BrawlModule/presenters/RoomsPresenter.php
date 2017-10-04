@@ -1,11 +1,11 @@
 <?php
 
-namespace FyziklaniModule;
+namespace BrawlModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKS\Application\UploadException;
-use FKSDB\model\Fyziklani\Rooms\PipelineFactory;
+use FKSDB\model\Brawl\Rooms\PipelineFactory;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
@@ -55,7 +55,7 @@ class RoomsPresenter extends BasePresenter {
     }
 
     public function authorizedImport() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'roomsImport')));
+        $this->setAuthorized(($this->eventIsAllowed('brawl', 'roomsImport')));
     }
 
     protected function createComponentRoomsImportForm() {
@@ -87,10 +87,11 @@ class RoomsPresenter extends BasePresenter {
         try {
             // obtain file
             switch ($values['source']) {
+                default:
                 case self::SOURCE_ASTRID:
                     $contest = $this->getCurrentEvent()->getContest();
                     $year = $this->getCurrentEvent()->year;
-                    $file = $this->downloader->downloadFyziklaniRooms($contest, $year);
+                    $file = $this->downloader->downloadBrawlRooms($contest, $year);
                     break;
                 case self::SOURCE_FILE:
                     if (!$values['file']->isOk()) {
@@ -99,7 +100,6 @@ class RoomsPresenter extends BasePresenter {
                     $file = $values['file']->getTemporaryFile();
                     break;
             }
-
 
             // process file
             $pipeline = $this->pipelineFactory->create($this->getCurrentEvent());
