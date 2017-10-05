@@ -12,6 +12,7 @@
         'css/style.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
+        'css/font-awesome-4.5.0/css/font-awesome.min.css' => [all]
         }
 
         {block head}{/block}
@@ -21,19 +22,21 @@
         <div id="wrap">
 
             {block body}
-            <nav n:class="'fixed-top navbar navbar-expand-md ',$contest?($contest==1?'bg-fykos navbar-dark':($contest==2?'bg-vyfuk navbar-dark':'bgg-brawl navbar-dark')):'bg-light navbar-light'" role="navigation">
+            <nav n:class="'fixed-top navbar navbar-expand-md ',$contest?($contest==1?'bg-fykos navbar-dark':($contest==2?'bg-vyfuk navbar-dark':'bg-brawl navbar-dark')):'bg-light navbar-light'" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
+                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
+                    <a class="navbar-brand" href="{$basePath}/"><i class="fa fa-home" aria-hidden="true"></i> FKSDB</a>
                 </div>
 
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">                
-                    {control navigation:navbar}
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    {block nav }
+                    {control navigation:navbar $navRoot}
+                    {/block}
 
                     {block user-info}
                     <ul n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">

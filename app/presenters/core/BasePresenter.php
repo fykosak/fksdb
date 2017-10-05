@@ -255,6 +255,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->template->title = $this->getTitle();
         $this->template->subtitle = $this->getSubtitle();
         $this->template->contest = $this->getSelectedContestSymbol();
+        $this->template->navRoot = $this->getNavRoot();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
@@ -264,6 +265,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return string|number
      */
     abstract function getSelectedContestSymbol();
+
+    abstract function getNavRoot();
 
     protected function getSubtitle() {
         return null;

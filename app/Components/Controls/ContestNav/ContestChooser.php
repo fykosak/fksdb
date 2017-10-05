@@ -78,7 +78,7 @@ class ContestChooser extends Nav {
     }
 
     protected function init($params) {
-        Debugger::barDump($this->contest);
+        //Debugger::barDump($this->contest);
         if ($this->initialized) {
             return;
         }
@@ -88,26 +88,22 @@ class ContestChooser extends Nav {
             throw  new BadRequestException('Role is empty');
         }
 
-        $contestId = null;
-
-        // session TODO
         $session = $this->session->getSection(self::SESSION_PREFIX);
         if ((self::CONTEST_SOURCE & self::SOURCE_SESSION) && isset($session->contestId)) {
-            $contestId = $session->contestId;
+            $this->contest = $this->serviceContest->findByPrimary($session->contestId);
         }
-        // URL TODO
+
         if ((self::CONTEST_SOURCE & self::SOURCE_URL) && $params->contestId) {
-            $contestId = $params->contestId;
+            $this->contest = $this->serviceContest->findByPrimary($params->contestId);
         }
 
-        $this->contest = $this->serviceContest->findByPrimary($contestId);
-
+        //Debugger::barDump($this->contest);
         if (is_null($this->contest)) {
             $contestIds = $this->getContests();
             if (count($contestIds) === 0) {
                 return;
             }
-            $this->contest = array_shift($contestIds)->contest;
+            $this->contest = array_shift($contestIds);
         }
 
         if ($this->contest !== null) {
@@ -116,7 +112,7 @@ class ContestChooser extends Nav {
     }
 
     /**
-     * @return object[]
+     * @return \ModelContest[]
      */
     private function getContests() {
         if ($this->contests === null) {
@@ -125,30 +121,9 @@ class ContestChooser extends Nav {
             } else {
                 $contests = $this->getContestsByRole();
             }
-            $this->fillContests($contests);
+            $this->contests = $contests;
         }
         return $this->contests;
-    }
-
-    protected function fillContests($contests) {
-        $this->contests = [];
-
-        foreach ($contests as $contest) {
-            $class = '';
-
-            switch ($contest->contest_id) {
-                case 1:
-                    $class = 'fykos';
-                    break;
-                case 2:
-                    $class = 'vyfuk';
-                    break;
-            }
-            $this->contests[] = (object)[
-                'contest' => $contest,
-                'symbol' => $class,
-            ];
-        }
     }
 
     /**

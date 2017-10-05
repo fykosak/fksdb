@@ -5,7 +5,7 @@
   </span>
   <div class="dropdown-menu">
   {foreach $availableContests as $contestId => $contest}
-    <a n:class="'dropdown-item link-'.$contest->symbol"  href="{link change! $contest->contest->contest_id}">{$contest->contest->name}</a>
+    <a n:class="'dropdown-item link-'.$contest->getContestSymbol()"  href="{link change! $contest->contest_id}">{$contest->name}</a>
   {/foreach}
   </div>
   </div>

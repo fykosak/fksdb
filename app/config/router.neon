@@ -57,8 +57,6 @@ fksrouter:
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
-
-
                        
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
@@ -73,28 +71,21 @@ fksrouter:
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%<presenter register>/[<contestId %contests%>/[<year [0-9]+>/[<personId -?[0-9]+>/]]]<action=default>':
+        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[<year [0-9]+>/[<personId -?[0-9]+>/]]]<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
             year: null
-        '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
-            module: Public
-            subdomain: %subdomain.auth%
-            tld: %domain.tld%
-            contestId: [filterTable: %inverseContestMapping%]
-            flags: [ONE_WAY, SECURED]
 
         # Application itself (note the presenters w/out module are handled specially)
-        '//[!<subdomain>].%domain.host%.[!<tld>]':
-            module: Public
-            presenter: Chooser
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%':
             subdomain: %subdomain.db%
+            presenter: Chooser
             tld: %domain.tld%
             action: default
-            flags: [ONE_WAY, SECURED]
+            flags:  SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
@@ -102,17 +93,15 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/<eventID [0-9]+>/<presenter>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/event<eventID -?[0-9]+>/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
+            presenter: Dashboard
             tld: %domain.tld%
+            eventID: -1
             module: Brawl
             flags: SECURED
 
-
-
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/<contestId %contests%>/year<year -?[0-9]+>/series<series -?[0-9]+>/[<presenter>/]<action=default>[/<id>]':
-            presenter: Dashboard
-            module: Public
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[!<contestId %contests%>/]year<year -?[0-9]+>/series<series -?[0-9]+>/[<presenter>/]<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]

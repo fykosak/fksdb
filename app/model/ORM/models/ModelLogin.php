@@ -112,7 +112,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @var array   cache
+     * @var Grant[]   cache
      */
     private $roles;
 

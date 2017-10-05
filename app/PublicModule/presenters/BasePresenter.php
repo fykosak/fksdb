@@ -69,4 +69,7 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         $contest = $this->getSelectedContest();
         return $contest->contest_id ?: null;
     }
+    public function getNavRoot() {
+        return 'public.dashboard.default';
+    }
 }

@@ -344,10 +344,13 @@ final class AuthenticationPresenter extends BasePresenter {
      * Fuck redirect!!!
      */
     private function initialRedirect($login) {
-        $this->redirect(':Public:Chooser:', [self::PARAM_DISPATCH => 1]);
+        $this->redirect('Chooser:default', [self::PARAM_DISPATCH => 1]);
     }
 
     public function getSelectedContestSymbol() {
+        return null;
+    }
+    public function getNavRoot() {
         return null;
     }
 }

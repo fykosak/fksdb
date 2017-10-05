@@ -5,6 +5,7 @@ namespace Authorization;
 use ModelContest;
 use ModelLogin;
 use Nette\Database\Table\ActiveRow;
+use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
@@ -59,7 +60,11 @@ class ContestAuthorizator extends Object {
     public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
-
+        /**
+         * @var $role \Authorization\Grant
+         */
+        //Debugger::barDump($roles);
+        //Debugger::barDump($contestId);
         foreach ($roles as $role) {
             if ($role->getContestId() != $contestId) {
                 continue;

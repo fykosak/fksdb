@@ -145,4 +145,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public function getSelectedContestSymbol() {
         return 'brawl';
     }
+
+    public function getNavRoot() {
+        return 'brawl.dashboard.default';
+    }
 }

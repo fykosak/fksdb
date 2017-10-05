@@ -144,8 +144,8 @@ class ContestNav extends Control {
         /**
          * @var $seriesChooser SeriesChooser
          */
-        $seriesChooser = $this['yearChooser'];
-        return $seriesChooser->getSeries();
+        $seriesChooser = $this['seriesChooser'];
+         return $seriesChooser->getSeries();
     }
 
     public function render() {
@@ -158,7 +158,7 @@ class ContestNav extends Control {
      * @return object
      * redirect to correct URL
      */
-    public function getSyncRedirectParams($params) {
+    public function init($params) {
         /**
          * @var $languageChooser LanguageChooser
          */

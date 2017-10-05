@@ -197,7 +197,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function actionEmail() {
-        if ($this->getPerson()) {
+        if ($this->personId) {
             $this->changeAction('contestant');
         }
     }

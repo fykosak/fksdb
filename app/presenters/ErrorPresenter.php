@@ -43,5 +43,8 @@ class ErrorPresenter extends BasePresenter {
             Debugger::log($exception, Debugger::ERROR); // and log exception
         }
     }
+    public function getNavRoot() {
+        return null;
+    }
 
 }

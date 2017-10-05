@@ -7,13 +7,14 @@ use FKSDB\Components\Controls\LanguageChooser;
 use \ContestNav;
 use IContestPresenter;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter{
+abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
     /**
      * include contest,year,series chooser
      */
@@ -31,9 +32,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     protected function startup() {
-        parent::startup();
-        \Nette\Diagnostics\Debugger::barDump($this);
         $this->startupRedirects();
+        parent::startup();
     }
 
     public function getSelectedAcademicYear() {
@@ -47,5 +47,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     public function getSelectedContestSymbol() {
         $contest = $this->getSelectedContest();
         return $contest->contest_id ?: null;
+    }
+    public function getNavRoot() {
+        return 'org.dashboard.default';
     }
 }

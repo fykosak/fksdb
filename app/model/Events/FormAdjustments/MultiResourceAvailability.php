@@ -167,7 +167,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
 
             }
-            \Nette\Diagnostics\Debugger::barDump($controlsUsages);
+            //\Nette\Diagnostics\Debugger::barDump($controlsUsages);
             foreach ($controlsUsages as $k =>$u ){
                 $us = (array_key_exists($k,$usage) ? $usage[$k] : 0)+$u;
                 if($capacities[$k]-$us<0){

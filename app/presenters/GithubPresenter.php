@@ -59,5 +59,8 @@ class GithubPresenter extends AuthenticatedPresenter {
     public function getSelectedContestSymbol() {
         return null;
     }
+    public function getNavRoot() {
+        return null;
+    }
 
 }

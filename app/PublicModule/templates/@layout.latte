@@ -2,7 +2,10 @@
 
 
 {block user-info}
-{*control languageChooser,null*}
 {control contestNav}
 {include #parent}
+{/block}
+
+{block nav}
+   {control navigation:navbar $navRoot}
 {/block}

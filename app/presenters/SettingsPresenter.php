@@ -144,4 +144,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
         return null;
     }
 
+    public function getNavRoot() {
+        return null;
+    }
+
 }

@@ -56,7 +56,7 @@ class SeriesChooser extends Nav {
         $this->initialized = true;
 
         $contest = $this->serviceContest->findByPrimary($params->contestId);
-        Debugger::barDump($params);
+        //Debugger::barDump($params);
         $this->contest = $contest;
         $this->year = $params->year;
 
