@@ -10,7 +10,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeduplicatePresenter extends BasePresenter {
@@ -38,11 +38,12 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     public function titlePerson() {
+        $this->setIcon('<i class="fa fa-exchange" aria-hidden="true"></i>');
         $this->setTitle(_('Duplicitní osoby'));
     }
 
     public function actionPerson() {
-        
+
     }
 
     public function handleBatchMerge() {

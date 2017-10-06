@@ -96,7 +96,6 @@ class EventPresenter extends EntityPresenter {
      */
     private $serviceEventOrg;
 
-
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -138,7 +137,7 @@ class EventPresenter extends EntityPresenter {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    public function authorizedApplications($id) {
+    public function authorizedApplications() {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
@@ -147,7 +146,7 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedModel($id) {
+    public function authorizedModel() {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
@@ -160,6 +159,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function titleList() {
+        $this->setIcon('<i class="fa fa-calendar-check-o" aria-hidden="true"></i>');
         $this->setTitle(_('Akce'));
     }
 
@@ -167,27 +167,27 @@ class EventPresenter extends EntityPresenter {
         $this->setTitle(_('Přidat akci'));
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
 
-    public function renderApplications($id) {
+    public function renderApplications() {
         $this->template->event = $this->getModel();
     }
 
@@ -221,7 +221,7 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
-    protected function createComponentApplicationsGrid($name) {
+    protected function createComponentApplicationsGrid() {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
 
@@ -234,7 +234,7 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
-    protected function createComponentApplicationsImport($name) {
+    protected function createComponentApplicationsImport() {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
         $machine = $this->container->createEventMachine($this->getModel());
@@ -245,7 +245,7 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
-    protected function createComponentGraphComponent($name) {
+    protected function createComponentGraphComponent() {
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
 
@@ -329,12 +329,10 @@ class EventPresenter extends EntityPresenter {
             $model = $this->getModel();
         }
 
-
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
-
             /*
              * Event
              */
@@ -346,7 +344,6 @@ class EventPresenter extends EntityPresenter {
             ) {
                 throw new ForbiddenRequestException();
             }
-
             $this->serviceEvent->save($model);
 
             /*
@@ -368,5 +365,4 @@ class EventPresenter extends EntityPresenter {
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }
     }
-
 }

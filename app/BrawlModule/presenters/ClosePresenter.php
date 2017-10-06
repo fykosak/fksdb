@@ -81,7 +81,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGrid() {
-        $grid = new BrawlTeamsGrid($this->eventID, $this->serviceBrawlTeam);
+        $grid = new BrawlTeamsGrid($this->getEventId(), $this->serviceBrawlTeam);
         return $grid;
     }
 
@@ -137,7 +137,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceBrawlTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceBrawlTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -152,14 +152,14 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceBrawlTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceBrawlTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
-        $query = $this->serviceBrawlTeam->findParticipating($this->eventID);
+        $query = $this->serviceBrawlTeam->findParticipating($this->getEventId());
         if ($category) {
             $query->where('category', $category);
         }
@@ -171,7 +171,7 @@ class ClosePresenter extends BasePresenter {
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
         $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
-        $nextTask = $this->serviceBrawlTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->serviceBrawlTask->findAll($this->getEventId())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 

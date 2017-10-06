@@ -104,50 +104,6 @@ class ContestNav extends Control {
         return $control;
     }
 
-    /**
-     * @return \ModelContest
-     */
-    public function getSelectedContest() {
-        /**
-         * @var $contestChooser ContestChooser
-         */
-        $contestChooser = $this['contestChooser'];
-        return $contestChooser->getContest();
-    }
-
-    /**
-     * @return int
-     */
-    public function getSelectedYear() {
-        /**
-         * @var $yearChooser YearChooser
-         */
-        $yearChooser = $this['yearChooser'];
-        return $yearChooser->getYear();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSelectedLanguage() {
-        /**
-         * @var $languageChooser LanguageChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        return $languageChooser->getLanguage();
-    }
-
-    /**
-     * @return int
-     */
-    public function getSelectedSeries() {
-        /**
-         * @var $seriesChooser SeriesChooser
-         */
-        $seriesChooser = $this['seriesChooser'];
-         return $seriesChooser->getSeries();
-    }
-
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestNav.latte');
         $this->template->render();
@@ -159,17 +115,18 @@ class ContestNav extends Control {
      * redirect to correct URL
      */
     public function init($params) {
+        $redirect = false;
         /**
          * @var $languageChooser LanguageChooser
          */
-        // $languageChooser = $this['languageChooser'];
-        // $languageChooser->syncRedirect();
+        $languageChooser = $this['languageChooser'];
+        $redirect = $redirect || $languageChooser->syncRedirect($params);
 
         /**
          * @var $contestChooser ContestChooser
          */
         $contestChooser = $this['contestChooser'];
-        $redirect = false;
+
         $redirect = $redirect || $contestChooser->syncRedirect($params);
         /**
          * @var $yearChooser YearChooser

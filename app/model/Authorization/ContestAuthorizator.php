@@ -5,7 +5,6 @@ namespace Authorization;
 use ModelContest;
 use ModelLogin;
 use Nette\Database\Table\ActiveRow;
-use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
@@ -45,7 +44,7 @@ class ContestAuthorizator extends Object {
      * of the queried contest.
      *
      * @param mixed $resource
-     * @param enum $privilege
+     * @param string $privilege
      * @param int|ModelContest $contest queried contest
      * @return boolean
      */
@@ -53,6 +52,9 @@ class ContestAuthorizator extends Object {
         if (!$this->getUser()->isLoggedIn()) {
             return false;
         }
+        /**
+         * @var $login ModelLogin
+         */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }

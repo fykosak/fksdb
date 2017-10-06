@@ -68,6 +68,8 @@ class InboxPresenter extends BasePresenter {
      */
     private $personFactory;
 
+   // protected $icon = '<i class="fa fa-inbox" aria-hidden="true"></i>';
+
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
@@ -109,7 +111,7 @@ class InboxPresenter extends BasePresenter {
 
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('test', Permission::ALL, $this->getSelectedContest()));
-      //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     public function authorizedHandout() {
@@ -117,6 +119,7 @@ class InboxPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
+        $this->setIcon('<i class="fa fa-inbox" aria-hidden="true"></i>');
         $this->setTitle(_('Příjem řešení'));
     }
 
@@ -125,6 +128,7 @@ class InboxPresenter extends BasePresenter {
     }
 
     public function titleHandout() {
+        $this->setIcon('<i class="fa fa-users" aria-hidden="true"></i>');
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
     }
 
@@ -160,8 +164,8 @@ class InboxPresenter extends BasePresenter {
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                [$this->seriesTable, 'getFingerprint'],
-                [$this->seriesTable, 'formatAsFormValues']
+            [$this->seriesTable, 'getFingerprint'],
+            [$this->seriesTable, 'formatAsFormValues']
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -284,9 +288,9 @@ class InboxPresenter extends BasePresenter {
 
         $uploadSubmits = array();
         $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
+            DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
+            DbNames::TAB_TASK . '.series' => $series
+        ))->order(DbNames::TAB_TASK . '.tasknr');
         foreach ($submits as $row) {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
@@ -372,7 +376,7 @@ class InboxPresenter extends BasePresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

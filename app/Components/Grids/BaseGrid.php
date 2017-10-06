@@ -103,13 +103,13 @@ abstract class BaseGrid extends Grid {
      */
     protected function addButton($name, $label = NULL) {
         $button = parent::addButton($name, $label);
-        $button->setClass('btn btn-xs btn-default');
+        $button->setClass('btn btn-sm btn-primary');
         return $button;
     }
 
     public function addGlobalButton($name, $label = NULL) {
         $button = parent::addGlobalButton($name, $label);
-        $button->setClass('btn btn-sm btn-primary');
+        $button->setClass('btn btn-primary');
         return $button;
     }
 

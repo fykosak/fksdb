@@ -33,12 +33,12 @@ class EventsGrid extends BaseGrid {
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new SearchableDataSource($events);
-        $dataSource->setFilterCallback(function(Selection $table, $value) {
-                    $tokens = preg_split('/\s+/', $value);
-                    foreach ($tokens as $token) {
-                        $table->where('event.name LIKE CONCAT(\'%\', ? , \'%\') OR event_type.name LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-                    }
-                });
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('event.name LIKE CONCAT(\'%\', ? , \'%\') OR event_type.name LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
@@ -55,35 +55,37 @@ class EventsGrid extends BaseGrid {
         //
         $that = $this;
         $this->addButton('model', _('Model'))
-                ->setText('Model') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("model", $row->event_id);
-                        });
+            ->setText('Model')//todo i18n
+            ->setClass('btn btn-sm btn-secondary')
+            ->setLink(function ($row) use ($that) {
+                return $that->getPresenter()->link("model", $row->event_id);
+            });
         $this->addButton('edit', _('Upravit'))
-                ->setText('Upravit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->event_id);
-                        });
+            ->setText('Upravit')//todo i18n
+            ->setClass('btn btn-sm btn-warning')
+            ->setLink(function ($row) use ($that) {
+                return $that->getPresenter()->link("edit", $row->event_id);
+            });
         $this->addButton('applications')
-                ->setText('Přihlášky') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link('applications', $row->event_id);
-                        });
+            ->setText('Přihlášky')//todo i18n
+            ->setLink(function ($row) use ($that) {
+                return $that->getPresenter()->link('applications', $row->event_id);
+            });
         $this->addButton('org')
             ->setText(_('Organizátoři'))
-            ->setLink(function($row) use ($that) {
+            ->setLink(function ($row) use ($that) {
                 return $that->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
             });
 
         $this->addGlobalButton('add')
-                ->setLink($this->getPresenter()->link('create'))
-                ->setLabel('Přidat akci')
-                ->setClass('btn btn-sm btn-primary');
+            ->setLink($this->getPresenter()->link('create'))
+            ->setLabel('Přidat akci')
+            ->setClass('btn btn-sm btn-primary');
 
 
         //
         // appeareance
-    //
+        //
 
     }
 

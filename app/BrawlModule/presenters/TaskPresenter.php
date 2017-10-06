@@ -45,7 +45,7 @@ class TaskPresenter extends BasePresenter {
 
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new TaskImportProcessor($this->eventID, $this->serviceBrawlTask);
+        $taskImportProcessor = new TaskImportProcessor($this->getEventId(), $this->serviceBrawlTask);
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -55,6 +55,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        return new BrawlTaskGrid($this->eventID, $this->serviceBrawlTask);
+        return new BrawlTaskGrid($this->getEventId(), $this->serviceBrawlTask);
     }
 }

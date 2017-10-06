@@ -70,7 +70,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var string|null
      */
     protected $title = false;
-
+    /**
+     * @var string
+     */
+    private $icon = null;
     /**
      * @var boolean
      */
@@ -230,8 +233,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->title;
     }
 
+    public function getIcon() {
+        return $this->icon;
+    }
+
     protected function setTitle($title) {
         $this->title = $title;
+    }
+
+    protected final function setIcon($icon) {
+        $this->icon = $icon;
     }
 
     public function setBacklink($backlink) {

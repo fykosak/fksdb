@@ -6,13 +6,16 @@
 {/block}
 
 {block body}
+<div class="h-100" id="wrap">
+    {form loginForm class => 'form-signin card'}
+    <div class="row mx-3" style="max-height:100px">
+            <img class="col-6" src="/images/contests/fykos.svg" alt="fykos"/>
+            <img class="col-6" src="/images/contests/vyfuk.svg" alt="fykos"/>
+        </div>
+    <div class="card-body pt-0">
 
+    <h2 class="card-title text-center">FKSDB</h2>
 
-
-<div class="container">
-    {form loginForm class => form-signin}
-
-    <h2 class="form-signin-heading">FKSDB<small n:if="$beta"> beta</small></h2>
     {block flashes}
     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
     {/block}
@@ -20,10 +23,11 @@
     {input id class => 'top form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
     {input password class => 'bottom last form-control', placeholder => $_input->translate($_input->caption)}
 
-    {input send class => 'btn btn-lg btn-primary btn-block'}
-    <a n:href=":Public:Register:default" class="btn btn btn-secondary btn-block">{_'Registrace'}</a>
-    <a class="btn btn-facebook btn-block" href="{$fbUrl}"><i class="fa fa-facebook"></i> | Log in</a>
+    {input send class => 'btn btn-lg btn-success btn-block'}
+    <a n:href=":Public:Register:default" class="btn btn btn-primary btn-block">{_'Registrace'}</a>
+    <!--<a class="btn btn-facebook btn-block" href="{*$fbUrl*}"><i class="fa fa-facebook"></i> | Log in</a>-->
     <a class="btn btn-link btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
+    </div>
     {/form loginForm}
     {*control languageChooser:,"pagination pull-right"*}
 </div> <!-- /container -->

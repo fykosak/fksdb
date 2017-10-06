@@ -27,6 +27,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      */
     protected $seriesCalculator;
 
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -41,7 +42,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     public function getSubtitle() {
-        return $this->getSelectedYear() . '. ' . _('Ročník');
+        return $this->getSelectedYear() . '. ' . _('Ročník') . ' | ' . $this->getSelectedSeries() . '. ' . _('Série');
     }
 
     public function getSelectedContestSymbol() {

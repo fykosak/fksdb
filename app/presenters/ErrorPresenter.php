@@ -30,7 +30,7 @@ class ErrorPresenter extends BasePresenter {
             $this->payload->error = TRUE;
             $this->terminate();
         } elseif ($exception instanceof BadRequestException) {
-            Debugger::barDump($exception);
+            //Debugger::barDump($exception);
             $code = $exception->getCode();
 
             // known exception or general 500

@@ -8,7 +8,6 @@ use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
-use FKSDB\Components\Controls\LanguageChooser;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -146,7 +145,7 @@ final class AuthenticationPresenter extends BasePresenter {
         if ($this->isLoggedIn()) {
             $login = $this->getUser()->getIdentity();
             $this->loginBacklinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
                 $this->loginBacklinkRedirect();
@@ -164,27 +163,27 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    public function actionFbLogin() {
-        $this->setView('login'); // do not provide a special view
-        try {
-            $me = $this->facebook->api('/me');
-            $identity = $this->facebookAuthenticator->authenticate($me);
+    /*  public function actionFbLogin() {
+          $this->setView('login'); // do not provide a special view
+          try {
+              $me = $this->facebook->api('/me');
+              $identity = $this->facebookAuthenticator->authenticate($me);
 
-            $this->getUser()->login($identity);
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
-        } catch (FacebookApiException $e) {
-            $fbUrl = $this->getFbLoginUrl();
-            $this->redirectUrl($fbUrl);
-        }
-    }
+              $this->getUser()->login($identity);
+              $login = $this->getUser()->getIdentity();
+              $this->initialRedirect($login);
+          } catch (AuthenticationException $e) {
+              $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+          } catch (FacebookApiException $e) {
+              $fbUrl = $this->getFbLoginUrl();
+              $this->redirectUrl($fbUrl);
+          }
+      }*/
 
     public function actionRecover() {
         if ($this->isLoggedIn()) {
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
+            //   $login = $this->getUser()->getIdentity();
+            $this->initialRedirect();
         }
     }
 
@@ -197,20 +196,20 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function renderLogin() {
-        $this->template->fbUrl = $this->getFbLoginUrl();
+        //  $this->template->fbUrl = $this->getFbLoginUrl();
     }
 
     public function renderRecover() {
 
     }
 
-    private function getFbLoginUrl() {
+    /*private function getFbLoginUrl() {
         $fbUrl = $this->facebook->getLoginUrl(array(
             'scope' => 'email',
             'redirect_uri' => $this->link('//fbLogin'), // absolute
         ));
         return $fbUrl;
-    }
+    }*/
 
     /**
      * This workaround is here because LoginUser storage
@@ -271,7 +270,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->user->getIdentity();
 
             $this->loginBacklinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         }
@@ -283,7 +282,9 @@ final class AuthenticationPresenter extends BasePresenter {
             $values = $form->getValues();
 
             $connection->beginTransaction();
-
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
             $this->accountManager->sendRecovery($template, $login);
@@ -340,16 +341,16 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $login ModelLogin
      * Fuck redirect!!!
      */
-    private function initialRedirect($login) {
+    private function initialRedirect() {
         $this->redirect('Chooser:default', [self::PARAM_DISPATCH => 1]);
     }
 
     public function getSelectedContestSymbol() {
         return null;
     }
+
     public function getNavRoot() {
         return null;
     }

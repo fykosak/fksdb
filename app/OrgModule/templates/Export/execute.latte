@@ -1,10 +1,5 @@
 {block title}{$storedQuery->name}{if $storedQuery->qid} ({$storedQuery->qid}){/if}{/block}
 
-{block user-info}
-{include #parent}
-{control seriesChooser}
-{/block}
-
 {block content}
 {control tagCloudDetail}
 {control resultsComponent}

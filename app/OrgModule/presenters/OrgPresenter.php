@@ -32,7 +32,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $this->orgFactory = $orgFactory;
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel()->getPerson()->getFullname()));
     }
 
@@ -51,6 +51,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleList() {
+        $this->setIcon('<i class="fa fa-users" aria-hidden="true"></i>');
         $this->setTitle(_('Organizátoři'));
     }
 
@@ -90,7 +91,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání organizátora.');
     }
-    
+
     public function messageExists() {
         return _('Organizátor již existuje.');
     }

@@ -64,7 +64,7 @@ class PersonsGrid extends BaseGrid {
         
         $this->addButton("mergeAB", _('Sloučit A<-B'))
                 ->setText(_('Sloučit A<-B'))
-                ->setClass("btn btn-xs btn-primary")
+                ->setClass("btn btn-sm btn-secondary")
                 ->setLink(function($row) use ($presenter, $pairs) {
                             return $presenter->link("Person:merge", array(
                                         'trunkId' => $row->person_id,

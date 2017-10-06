@@ -28,6 +28,11 @@ use ServiceMStoredQueryTag;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
 
+/**
+ * Class ExportPresenter
+ * @package OrgModule
+ * @property Form editForm
+ */
 class ExportPresenter extends BasePresenter {
 
     const CONT_CONSOLE = 'console';
@@ -162,10 +167,10 @@ class ExportPresenter extends BasePresenter {
 
     public function getPatternQuery() {
         if ($this->patternQuery === false) {
-            $id = $this->getParam('id');
+            $id = $this->getParameter('id');
             $this->patternQuery = $this->serviceStoredQuery->findByPrimary($id);
-            if (!$this->patternQuery && $this->getParam('qid')) {
-                $this->patternQuery = $this->serviceStoredQuery->findByQid($this->getParam('qid'));
+            if (!$this->patternQuery && $this->getParameter('qid')) {
+                $this->patternQuery = $this->serviceStoredQuery->findByQid($this->getParameter('qid'));
             }
         }
         return $this->patternQuery;
@@ -182,7 +187,7 @@ class ExportPresenter extends BasePresenter {
         );
     }
 
-    public function authorizedEdit($id) {
+    public function authorizedEdit() {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
@@ -190,7 +195,7 @@ class ExportPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
     }
 
-    public function authorizedShow($id) {
+    public function authorizedShow() {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
@@ -198,7 +203,7 @@ class ExportPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
     }
 
-    public function authorizedExecute($id) {
+    public function authorizedExecute() {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new BadRequestException('Neexistující dotaz.', 404);
@@ -218,7 +223,7 @@ class ExportPresenter extends BasePresenter {
         return 'FKSDB-export';
     }
 
-    public function actionExecute($id) {
+    public function actionExecute() {
         $query = $this->getPatternQuery();
         $storedQuery = $this->storedQueryFactory->createQuery($query);
         $this->setStoredQuery($storedQuery);
@@ -240,11 +245,11 @@ class ExportPresenter extends BasePresenter {
         }
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
     }
 
-    public function renderEdit($id) {
+    public function renderEdit() {
         $query = $this->getPatternQuery();
 
         $values = $this->getDesignFormFromSession();
@@ -263,7 +268,6 @@ class ExportPresenter extends BasePresenter {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
-
         $this['editForm']->setDefaults($values);
     }
 
@@ -272,19 +276,22 @@ class ExportPresenter extends BasePresenter {
     }
 
     public function renderCompose() {
-        $query = $this->getPatternQuery();
-
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this['composeForm']->setDefaults($values);
+            /**
+             * @var $form Form
+             */
+            $form = $this['composeForm'];
+            $form->setDefaults($values);
         }
     }
 
     public function titleList() {
+        $this->setIcon('<i class="fa fa-server" aria-hidden="true"></i>');
         $this->setTitle(_('Exporty'));
     }
 
-    public function titleShow($id) {
+    public function titleShow() {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
         if ($qid = $this->getPatternQuery()->qid) { // intentionally =
             $title .= " ($qid)";
@@ -293,15 +300,15 @@ class ExportPresenter extends BasePresenter {
         $this->setTitle($title);
     }
 
-    public function renderShow($id) {
+    public function renderShow() {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
-    public function titleExecute($id) {
+    public function titleExecute() {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
     }
 
-    public function renderExecute($id) {
+    public function renderExecute() {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
@@ -315,12 +322,12 @@ class ExportPresenter extends BasePresenter {
           return $component;
       }*/
 
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid() {
         $grid = new StoredQueriesGrid($this->serviceStoredQuery, $this->getContestAuthorizator());
         return $grid;
     }
 
-    protected function createComponentAdhocResultsComponent($name) {
+    protected function createComponentAdhocResultsComponent() {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
@@ -330,7 +337,7 @@ class ExportPresenter extends BasePresenter {
         return $grid;
     }
 
-    protected function createComponentResultsComponent($name) {
+    protected function createComponentResultsComponent() {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
@@ -339,26 +346,26 @@ class ExportPresenter extends BasePresenter {
         return $grid;
     }
 
-    protected function createComponentTagCloudList($name) {
+    protected function createComponentTagCloudList() {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
         $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
         return $tagCloud;
     }
 
-    protected function createComponentTagCloudDetail($name) {
+    protected function createComponentTagCloudDetail() {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
         $tagCloud->setModelStoredQuery($this->getPatternQuery());
         return $tagCloud;
     }
 
-    protected function createComponentComposeForm($name) {
+    protected function createComponentComposeForm() {
         $form = $this->createDesignForm();
         $form->addSubmit('save', _('Uložit'))
             ->onClick[] = array($this, 'handleComposeSuccess');
         return $form;
     }
 
-    protected function createComponentEditForm($name) {
+    protected function createComponentEditForm() {
         $form = $this->createDesignForm();
         $form->addSubmit('save', _('Uložit'))
             ->onClick[] = array($this, 'handleEditSuccess');

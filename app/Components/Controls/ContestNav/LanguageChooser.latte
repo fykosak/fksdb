@@ -1,7 +1,7 @@
-<ul n:if="$languages" class="{$class}">
-    
-    <div class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{_'Jazyk'} <b class="caret"></b></a>
+<ul class="navbar-nav nav">
+{*dump $languages*}
+    <div class="dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{_'Jazyk'}</a>
         <div class="dropdown-menu">
         {foreach $languages as $language }
             <a n:class="$language==$currentLanguage?active:'','dropdown-item'" href="{link changeLang! $language}">{$languageNames[$language]}</a>

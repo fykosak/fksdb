@@ -56,13 +56,13 @@ class BrawlSubmitsGrid extends BaseGrid {
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Místnost'));
         $this->addColumn('modified', _('Zadané'));
-        $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Brawl:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
             return $that->serviceBrawlTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
         });
 
-        $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
+        $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) use ($that) {
             return $that->link("delete!", $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n

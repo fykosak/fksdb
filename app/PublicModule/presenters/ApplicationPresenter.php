@@ -18,7 +18,6 @@ use ModelAuthToken;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
 use ServiceEvent;
@@ -115,7 +114,7 @@ class ApplicationPresenter extends BasePresenter {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
-    public function titleDefault($eventId, $id) {
+    public function titleDefault() {
         if ($this->getEventApplication()) {
             $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
         } else {
@@ -184,34 +183,12 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
-    public function actionList() {
-        if (!$this->getSelectedContest()) {
-            $this->setView('contestChooser');
-        }
-    }
-
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
         $this->getMachine()->setHolder($this->getHolder());
     }
 
-    protected function createComponentContestChooser($name) {
-        $component = parent::createComponentContestChooser($name);
-        if ($this->getAction() === 'default') {
-            if (!$this->getEvent()) {
-                throw new BadRequestException(_('Neexistující akce.'), 404);
-            }
-            // TODO
-            $component->setContests([
-                $this->getEvent()->getEventType()->contest_id,
-            ]);
-        } else if ($this->getAction() === 'list') {
-            $component->setRole(\ModelRole::ORG);
-        }
-        return $component;
-    }
-
-    protected function createComponentApplication($name) {
+    protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
@@ -229,7 +206,7 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
-    protected function createComponentApplicationsGrid($name) {
+    protected function createComponentApplicationsGrid() {
         $person = $this->getUser()->getIdentity()->getPerson();
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
@@ -244,7 +221,7 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
-    protected function createComponentNewApplicationsGrid($name) {
+    protected function createComponentNewApplicationsGrid() {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
             ->where('registration_begin <= NOW()')
@@ -277,15 +254,7 @@ class ApplicationPresenter extends BasePresenter {
 
     private function getEventApplication() {
         if ($this->eventApplication === false) {
-            $id = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
-                if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                    $eventId = $data['id'];
-                }
-            }
-            $id = $id ?: $this->getParameter('id');
+            $id =$this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
             $this->eventApplication = $service->findByPrimary($id);
         }

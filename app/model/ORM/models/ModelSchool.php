@@ -5,6 +5,7 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer address_id
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
 

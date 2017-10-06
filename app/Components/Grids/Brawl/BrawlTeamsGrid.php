@@ -52,7 +52,7 @@ class BrawlTeamsGrid extends BaseGrid {
         $this->addColumn('room', _('Místnost'));
         $this->addColumn('category', _('Kategorie'));
         $that = $this;
-        $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Brawl:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
                 'eventID' => $this->eventID

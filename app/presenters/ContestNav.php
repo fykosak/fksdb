@@ -6,6 +6,10 @@
 
 use \FKSDB\Components\Controls;
 
+/**
+ * Trait ContestNav
+ * @param $serviceContest ServiceContest
+ */
 trait ContestNav {
 
     /**
@@ -53,10 +57,10 @@ trait ContestNav {
     public function getSelectedContest() {
         $this->init();
         /**
-         * @var $contestNav Controls\ContestNav\ContestNav
+         * @var ServiceContest $serviceContest
          */
-        $contestNav = $this['contestNav'];
-        return $contestNav->getSelectedContest();
+        $serviceContest = $this->serviceContest;
+        return $serviceContest->findByPrimary($this->contestId);
     }
 
     /**
@@ -64,11 +68,7 @@ trait ContestNav {
      */
     public function getSelectedYear() {
         $this->init();
-        /**
-         * @var $contestNav Controls\ContestNav\ContestNav
-         */
-        $contestNav = $this['contestNav'];
-        return $contestNav->getSelectedYear();
+        return $this->year;
     }
 
     /**
@@ -76,20 +76,20 @@ trait ContestNav {
      */
     public function getSelectedSeries() {
         $this->init();
-        /**
-         * @var $contestNav Controls\ContestNav\ContestNav
-         */
-        $contestNav = $this['contestNav'];
-        return $contestNav->getSelectedSeries();
+        return $this->series;
     }
 
     public function getSelectedLanguage() {
         $this->init();
-        /**
-         * @var $contestNav ContestNav
-         */
-        $contestNav = $this['contestNav'];
-        return $contestNav->getSelectedLanguage();
+        return $this->lang;
+    }
+
+    /**
+     * rewrite coreBasePresenter getLang
+     * @return string
+     */
+    public function getLang() {
+        return $this->getSelectedLanguage() ?: parent::getLang();
     }
 
     public function init() {
@@ -104,6 +104,7 @@ trait ContestNav {
             'year' => $this->year,
             'contestId' => $this->contestId,
             'series' => $this->series,
+            'lang' => $this->lang,
         ]);
     }
 
@@ -120,7 +121,7 @@ trait ContestNav {
             'year' => $this->newParams->year ?: $this->year,
             'contestId' => $this->newParams->contestId ?: $this->contestId,
             'series' => $this->newParams->series ?: $this->series,
+            'lang' => $this->newParams->lang ?: $this->lang,
         ]);
     }
-
 }

@@ -4,7 +4,9 @@ namespace FKSDB\Components\Controls\ContestNav;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
+use OrgModule\BasePresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,11 +14,8 @@ use Nette\Http\Session;
  * @author Jakub Šafin <xellos@fykos.cz>
  */
 class LanguageChooser extends Control {
-//    const SESSION_PREFIX = 'contestPreset';
 
-    const ALL_LANGS = '__*';
     const DEFAULT_FIRST = 'cs';
-    const DEFAULT_NULL = 'null';
 
     /**
      * @var mixed
@@ -34,10 +33,6 @@ class LanguageChooser extends Control {
     private $language;
     private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
-    /**
-     * @var boolean
-     */
-    private $valid;
     private $initialized = false;
 
     /**
@@ -77,31 +72,27 @@ class LanguageChooser extends Control {
         return in_array($language, $this->languages);
     }
 
-    public function isValid() {
-        $this->init();
-        return $this->valid;
-    }
-
     /**
+     * @param $params object
+     * @return boolean
      * Redirect to correct address accorging to the resolved values.
      */
-    public function syncRedirect() {
-        $this->init();
+    public function syncRedirect(&$params) {
+        $this->init($params);
 
-        $presenter = $this->getPresenter();
+        if ($this->language !== $params->lang) {
+            $params->lang = $this->language;
 
-        $language = $this->language;
-        if ($language != $presenter->lang && $language != self::DEFAULT_FIRST) {
-            $presenter->redirect('this', array('lang' => $language));
+            return true;
         }
+        return false;
     }
 
     public function getLanguage() {
-        $this->init();
         return $this->language;
     }
 
-    private function init() {
+    private function init($params) {
         if ($this->initialized) {
             return;
         }
@@ -109,23 +100,21 @@ class LanguageChooser extends Control {
 
         $this->setLanguages($this->getSupportedLanguages());
 
-        $languageIds = array_keys($this->getLanguages());
-        if (count($languageIds) == 0) {
-            $this->valid = false;
+        if (count($this->getLanguages()) == 0) {
             return;
         }
-        $this->valid = true;
-
-        $presenter = $this->getPresenter();
 
         /* LANGUAGE */
+        $this->language = $this->getDefaultLanguage();
 
-        $this->language = $this->defaultLanguage;
+        if ($params->lang !== null) {
 
-        if ($presenter->getParameter('lang') != null) {
-            if (!$this->isLanguage($presenter->getParameter('lang')))
-                throw new BadRequestException('Bad language in URL.', 404);
-            $this->language = $presenter->getParameter('lang');
+            if (!$this->isLanguage($params->lang)) {
+                $this->language = $this->getDefaultLanguage();
+            } else {
+                $this->language = $params->lang;
+            }
+
         }
     }
 
@@ -133,7 +122,12 @@ class LanguageChooser extends Control {
      * @return array of existing languages
      */
     private function getSupportedLanguages() {
-        return $this->getPresenter()->getTranslator()->getSupportedLanguages();
+        /**
+         * @var $presenter BasePresenter|\BrawlModule\BasePresenter|\PublicModule\BasePresenter
+         */
+        $presenter = $this->getPresenter();
+        return $presenter->getTranslator()->getSupportedLanguages();
+
     }
 
     protected function createTemplate($class = NULL) {
@@ -143,25 +137,23 @@ class LanguageChooser extends Control {
     }
 
     public function render() {
-        if (!$this->isValid()) {
-            throw new BadRequestException('No languages available.', 404);
-        }
+
         $this->template->languages = $this->getLanguages();
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
-        $this->template->class = 'nav navbar-nav navbar-right';
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 
     public function handleChangeLang($language) {
+        /**
+         * @var $presenter \BasePresenter
+         */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();
-
         $translator->setLang($language);
-
-        $presenter->redirect('this', array('lang' => $language));
+        $presenter->redirect('this', ['lang' => $language]);
     }
 
 }

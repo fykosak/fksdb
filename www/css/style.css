@@ -1,39 +1,25 @@
 html, body {
-    padding-top: 35px;
+    /*padding-top: 35px;*/
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
 }
 
 /* Wrapper for page content to push down footer */
 #wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
     /* Negative indent footer by its height */
-    margin: 0 auto -60px;
+    margin: 0 auto -55px;
     /* Pad bottom by footer height */
-    padding: 0 0 60px;
+    padding: 55px 0;
 }
 
-/* Set the fixed height of the footer here */
-#footer {
-    height: 60px;
-    padding: 20px 0;
-    /*background-color: #eee;*/
-}
-
-.list-piped > li {
+.list-piped > * {
     display: inline-block;
 }
 
-.list-piped > li + li:before {
+.list-piped > * + *:before {
     color: #CCCCCC;
     content: "| ";
-    padding: 0px;
-}
-
-.navbar-brand .beta {
-    font-size: 65%;
+    padding: 0;
 }
 
 /*

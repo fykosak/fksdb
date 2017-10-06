@@ -48,13 +48,6 @@ class ContestChooser extends Nav {
     }
 
     /**
-     * @param integer[] $contestsDefinition
-     */
-    public function setContests($contestsDefinition) {
-        $this->contestsDefinition = $contestsDefinition;
-    }
-
-    /**
      * @param $params object
      * @return boolean
      * Redirect to correct address according to the resolved values.
