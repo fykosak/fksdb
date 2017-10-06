@@ -337,4 +337,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function getSelectedSeries() {
         return null;
     }
+
+    public function getNavRoot() {
+        return null;
+    }
 }

@@ -1,0 +1,20 @@
+php:
+    session.name = fksdb_prod
+
+parameters:
+    astrid:
+        host: astrid.fykos.cz
+        user: fksdb
+        password: mcDaclkj067QH
+    facebook:
+        appId: 104125926285425
+        secret: a1f798779fe2aac88ac047518ab5f062
+    ro-database:
+        dsn: 'mysql:host=localhost;dbname=fksdb'
+        user: fksdb_reader
+        password: klJK86qSA8sad
+
+    wsdlUrl: %appDir%/../www/FKSDBWebServices.wsdl
+
+
+

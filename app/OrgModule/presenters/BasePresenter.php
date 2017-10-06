@@ -46,8 +46,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     public function getSelectedContestSymbol() {
         $contest = $this->getSelectedContest();
-        return $contest->contest_id ?: null;
+        return $contest ? $contest->getContestSymbol() : null;
     }
+
     public function getNavRoot() {
         return 'org.dashboard.default';
     }

@@ -3,6 +3,7 @@
 namespace BrawlModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\BrawlNav\BrawlNav;
 use FKSDB\Components\Forms\Factories\BrawlFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -26,10 +27,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     private $event;
 
     /**
-     * @var int $eventID
+     * @var integer $eventID
      * @persistent
      */
-    public $eventID;
+    public $eventId;
 
     /**
      * @var BrawlFactory
@@ -91,12 +92,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function startup() {
-
+        $this['brawlNav']->syncRedirect((object)['eventId' => +$this->eventId]);
         $this->event = $this->getCurrentEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
+
         parent::startup();
+    }
+
+    public function createComponentBrawlNav($name) {
+        $control = new BrawlNav($this->serviceEvent);
+        return $control;
     }
 
     /** Vrati true ak pre daný ročník existuje fyzikláni */
@@ -108,11 +115,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyziklání');
     }
 
-    public function getCurrentEventID() {
-        if (!$this->eventID) {
-            $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventID;
+    public function getEventId() {
+        return $this->eventId;
     }
 
     /** vráti paramtre daného eventu
@@ -121,7 +125,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function getCurrentEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getCurrentEventID());
+            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
             if ($this->event) {
                 $holder = $this->container->createEventHolder($this->getCurrentEvent());
                 $this->event->setHolder($holder);
@@ -136,10 +140,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             return false;
         }
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
-    }
-
-    public function getSelectedContest() {
-        return 'brawl';
     }
 
     public function getSelectedContestSymbol() {

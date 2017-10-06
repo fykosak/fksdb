@@ -93,11 +93,11 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/event<eventID -?[0-9]+>/<presenter>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%brawl/event<eventId -?[0-9]+>/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             presenter: Dashboard
             tld: %domain.tld%
-            eventID: -1
+            eventId: -1
             module: Brawl
             flags: SECURED
 

@@ -158,7 +158,11 @@ fieldset .well {
 }
 
 .bg-brawl {
-    background-color: #7511da;
+    background-color: #7611da;
+}
+
+.bg-error {
+    background-color: #dc3545;
 }
 
 .link-fykos {
@@ -179,4 +183,13 @@ fieldset .well {
     color: #fff;
     background-color: #ff4800;
     border-color: #E62F00;
+}
+
+.image-error {
+    width: 100%;
+    text-align: center;
+}
+
+.image-error img {
+    height: 20rem;
 }

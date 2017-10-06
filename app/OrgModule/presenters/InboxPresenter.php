@@ -108,7 +108,8 @@ class InboxPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('test', Permission::ALL, $this->getSelectedContest()));
+      //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     public function authorizedHandout() {

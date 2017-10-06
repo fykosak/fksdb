@@ -48,7 +48,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEntry() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'submit')));
+        $this->setAuthorized(($this->eventIsAllowed('brawl', 'submit')));
     }
 
     public function titleEdit() {
@@ -72,7 +72,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $team ModelFyziklaniTeam
          */
-        foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $team) {
+        foreach ($this->serviceBrawlTeam->findParticipating($this->getEventId()) as $team) {
             $teams[] = [
                 'team_id' => $team->e_fyziklani_team_id,
                 'name' => $team->name,
@@ -82,7 +82,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $task \ModelBrawlTask
          */
-        foreach ($this->serviceBrawlTask->findAll($this->eventID) as $task) {
+        foreach ($this->serviceBrawlTask->findAll($this->getEventId()) as $task) {
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
                 'label' => $task->label
@@ -106,7 +106,7 @@ class SubmitPresenter extends BasePresenter {
             }
             $teamID = $this->taskCodePreprocessor->extractTeamID($values->taskCode);
             $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($values->taskCode);
-            $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->eventID);
+            $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->getEventId());
 
             if (is_null($submit = $this->serviceBrawlSubmit->findByTaskAndTeam($taskID, $teamID))) {
                 $submit = $this->serviceBrawlSubmit->createNew([
@@ -131,7 +131,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->serviceBrawlSubmit->save($submit);
             }
             $teamName = $this->serviceBrawlTeam->findByPrimary($teamID)->name;
-            $taskName = $this->serviceBrawlTask->findByLabel($taskLabel, $this->eventID)->name;
+            $taskName = $this->serviceBrawlTask->findByLabel($taskLabel, $this->getEventId())->name;
 
             try {
                 $this->serviceBrawlSubmit->save($submit);
@@ -160,7 +160,7 @@ class SubmitPresenter extends BasePresenter {
         /* Existenica týmu */
         $teamID = $this->taskCodePreprocessor->extractTeamID($taskCode);
 
-        if (!$this->serviceBrawlTeam->teamExist($teamID, $this->eventID)) {
+        if (!$this->serviceBrawlTeam->teamExist($teamID, $this->getEventId())) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamID);
             return false;
         }
@@ -171,7 +171,7 @@ class SubmitPresenter extends BasePresenter {
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
-        $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->eventID);
+        $taskID = $this->serviceBrawlTask->taskLabelToTaskID($taskLabel, $this->getEventId());
         if (!$taskID) {
             $msg = sprintf(_('Úloha %s neexistuje.'), $taskLabel);
             return false;
@@ -238,7 +238,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        return new BrawlSubmitsGrid($this->eventID, $this->serviceBrawlSubmit, $this->serviceBrawlTeam);
+        return new BrawlSubmitsGrid($this->getEventId(), $this->serviceBrawlSubmit, $this->serviceBrawlTeam);
     }
 
 }
