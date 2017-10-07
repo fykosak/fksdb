@@ -68,18 +68,18 @@ class SeriesChooser extends Nav {
         $series = null;
 
         // 1) URL (overrides)
-        if (isset($params->series)) {
+        if (isset($params->series) && $params->series != -1) {
             $series = $params->series;
         }
 
         // 2) session
         $session = $this->session->getSection(self::SESSION_SECTION);
-        if (!$series && isset($session[self::SESSION_KEY])) {
+        if ((!$series && $params->series != -1) && isset($session[self::SESSION_KEY])) {
             $series = $session[self::SESSION_KEY];
         }
 
         // 3) default (last resort)
-        if (!$series || !$this->isValidSeries($series)) {
+        if ((!$series && $params->series != -1) || !$this->isValidSeries($series)) {
             $series = $this->seriesCalculator->getCurrentSeries($this->contest);
         }
         // store params

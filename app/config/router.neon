@@ -71,7 +71,7 @@ fksrouter:
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[<year [0-9]+>/[<personId -?[0-9]+>/]]]<action=default>':
+        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%

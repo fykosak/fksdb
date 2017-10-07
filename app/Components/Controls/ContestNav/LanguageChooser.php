@@ -155,5 +155,4 @@ class LanguageChooser extends Control {
         $translator->setLang($language);
         $presenter->redirect('this', ['lang' => $language]);
     }
-
 }

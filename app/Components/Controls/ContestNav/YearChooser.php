@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\ContestNav;
 
 use ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use ServiceContest;
 use YearCalculator;
@@ -96,6 +97,7 @@ class YearChooser extends Nav {
             $contestants = $login->getPerson()->getContestants($this->contest->contest_id);
             $years = [];
             foreach ($contestants as $contestant) {
+                Debugger::barDump($contestant->year);
                 $years[] = $contestant->year;
             }
 
@@ -140,13 +142,14 @@ class YearChooser extends Nav {
         }
 
         $allowedYears = $this->getYears();
+        Debugger::barDump(in_array($year, $allowedYears));
         if (!$this->yearCalculator->isValidYear($contest, $year) || !in_array($year, $allowedYears)) {
             $currentYear = $this->yearCalculator->getCurrentYear($contest);
             $forwardYear = $currentYear + $this->yearCalculator->getForwardShift($contest);
             if (in_array($forwardYear, $allowedYears)) {
                 $year = $forwardYear;
             } else {
-                $year = $currentYear;
+                $year = count($allowedYears) ? array_pop($allowedYears) : -1;
             }
         }
         return $year;

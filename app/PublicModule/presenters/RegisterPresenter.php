@@ -132,6 +132,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function getSelectedYear() {
         return $this->year;
+        // TODO
         //  return $this['contestNav']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
@@ -144,9 +145,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     private function getPerson() {
         if (!$this->person) {
-            $this->person = $this->user->isLoggedIn() ?
-                $this->user->getIdentity()->getPerson() :
-                ($this->personId !== -1 ? $this->servicePerson->findByPrimary($this->personId) : null);
+
+            if ($this->user->isLoggedIn()) {
+                $this->person = $this->user->getIdentity()->getPerson();
+            } elseif ($this->personId !== -1) {
+                $this->person = $this->servicePerson->findByPrimary($this->personId);
+            } else {
+                $this->person = null;
+            }
         }
         return $this->person;
     }
@@ -156,21 +162,23 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function actionContestant() {
+        $person = $this->getPerson();
+
         if ($this->user->isLoggedIn()) {
-            $person = $this->getPerson();
             if (!$person) {
                 $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
                 $this->redirect(':Authentication:login');
             }
+        }
 
-            if ($this->getSelectedContest()) {
-                $contestants = $person->getActiveContestants($this->yearCalculator);
-                $contest = $this->getSelectedContest();
-                $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
-                if ($contestant && $contestant->year == $this->getSelectedYear()) {
-                    $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
-                    $this->redirect(':Public:Dashboard:default');
-                }
+        if ($this->getSelectedContest() && $person) {
+            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contest = $this->getSelectedContest();
+            $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
+            if ($contestant && $contestant->year == $this->getSelectedYear()) {
+                // TODO FIXME persistent flash
+                $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
+                $this->redirect(':Chooser:default');
             }
         }
     }
@@ -178,11 +186,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function titleContestant() {
         $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear()));
     }
-
-    private function getAvailableCombination() {
-        return [];
-    }
-
 
     public function actionContest() {
         if ($this->contestId) {
@@ -242,8 +245,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function renderContestant() {
 
-        $person = $this->user->isLoggedIn() ? $this->user->getIdentity()->getPerson() : null;
-        $this->template->contests = $this->getAvailableCombination();
+        $person = $this->getPerson();
+
         $referencedId = $this['contestantForm']->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -299,7 +302,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $login = $handler->getPerson()->getLogin();
                     $that->getUser()->login($login);
                 }
-                $this->redirect(':Public:Dashboard:default');
+                $this->redirect(':Chooser:default');
             }
         };
 
@@ -331,7 +334,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function getSelectedContestSymbol() {
         $contest = $this->getSelectedContest();
-        return $contest ? $contest->contest_id : null;
+        return $contest ? $contest->getContestSymbol() : null;
     }
 
     public function getSelectedSeries() {

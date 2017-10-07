@@ -68,7 +68,7 @@ class InboxPresenter extends BasePresenter {
      */
     private $personFactory;
 
-   // protected $icon = '<i class="fa fa-inbox" aria-hidden="true"></i>';
+    // protected $icon = '<i class="fa fa-inbox" aria-hidden="true"></i>';
 
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
@@ -110,8 +110,7 @@ class InboxPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('test', Permission::ALL, $this->getSelectedContest()));
-        //  $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     public function authorizedHandout() {

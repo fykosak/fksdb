@@ -22,11 +22,6 @@ class ContestChooser extends Nav {
     const CONTEST_SOURCE = 0xffffffff;
 
     /**
-     * @var integer[]
-     */
-    private $contestsDefinition;
-
-    /**
      * @var object[]
      */
     private $contests;
@@ -109,12 +104,7 @@ class ContestChooser extends Nav {
      */
     private function getContests() {
         if ($this->contests === null) {
-            if (is_array($this->contestsDefinition)) {
-                $contests = $this->contestsDefinition;
-            } else {
-                $contests = $this->getContestsByRole();
-            }
-            $this->contests = $contests;
+            $this->contests = $this->getContestsByRole();
         }
         return $this->contests;
     }
@@ -137,7 +127,12 @@ class ContestChooser extends Nav {
             case ModelRole::CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
-                    return $person->getActiveContestants($this->yearCalculator);
+                    $result = [];
+                    foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
+                          $result[] = $this->serviceContest->findByPrimary($contestId);
+                    }
+
+                    return $result;
                 }
         }
         return [];

@@ -53,7 +53,7 @@ class ResultsPresenter extends BasePresenter {
         /**
          * @var $row \ModelBrawlTask
          */
-        foreach ($this->serviceBrawlTask->findAll($this->eventID)->order('label') as $row) {
+        foreach ($this->serviceBrawlTask->findAll($this->getEventId())->order('label') as $row) {
             $tasks[] = [
                 'label' => $row->label,
                 'task_id' => $row->fyziklani_task_id
@@ -64,7 +64,7 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTeams() {
         $teams = [];
-        foreach ($this->serviceBrawlTeam->findParticipating($this->eventID) as $row) {
+        foreach ($this->serviceBrawlTeam->findParticipating($this->getEventId()) as $row) {
              $teams[] = [
                 'category' => $row->category,
                 'room' => $row->room,
@@ -76,7 +76,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function getSubmits($lastUpdated = null) {
-        $query = $this->serviceBrawlSubmit->getTable()->where('e_brawl_team.event_id', $this->eventID);
+        $query = $this->serviceBrawlSubmit->getTable()->where('e_fyziklani_team.event_id', $this->getEventId());
         $submits = [];
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);

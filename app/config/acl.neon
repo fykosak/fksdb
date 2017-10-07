@@ -48,7 +48,6 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(brawl)
-    - addResource(test)
 
     # ACL
     - allow(contestant, submit, upload)
