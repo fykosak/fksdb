@@ -1,5 +1,6 @@
 {define #link}
 <a href="{$control->getLink($node)}">
+    {$control->getIcon($node)|noescape}
     {$control->getTitle($node)}
 </a>
 {/define}

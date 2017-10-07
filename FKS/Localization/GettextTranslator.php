@@ -2,6 +2,7 @@
 
 namespace FKS\Localization;
 
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
 

@@ -1,5 +1,6 @@
 {define #link}
 <a href="{$control->getLink($node)}" n:class="nav-link ,($level == 0) ? 'dropdown-toggle'" n:attr="data-toggle => ($level == 0) ? 'dropdown' : null">
+    {$control->getIcon($node)|noescape}
     {$control->getTitle($node)}
 </a>
 {/define}
@@ -24,7 +25,8 @@
     {foreach $nodes as $nodeId => $item}
     {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
     <a href="{$control->getLink($node)}" n:class="dropdown-item, $control->isActive($node) ? active" n:if="$control->isVisible($node)">
-          {$control->getTitle($node)}
+        {$control->getIcon($node)|noescape}
+        {$control->getTitle($node)}
     </a>
     {/foreach}
 </div>

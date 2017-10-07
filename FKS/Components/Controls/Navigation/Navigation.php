@@ -5,17 +5,15 @@ namespace FKS\Components\Controls\Navigation;
 use FKS\Components\Controls\PresenterBuilder;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
 
 
-
-
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends Control {
@@ -38,7 +36,6 @@ class Navigation extends Control {
     }
 
     public function isActive($node) {
-        $result = false;
         if (isset($node->linkPresenter)) {
             $presenter = $this->getPresenter();
             try {
@@ -84,9 +81,19 @@ class Navigation extends Control {
         }
         if (isset($node->linkPresenter)) {
             $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            $presenter->setView($presenter->getView()); // to force update the title    
-
+            $presenter->setView($presenter->getView()); // to force update the title
             return $presenter->getTitle();
+        }
+    }
+
+    public function getIcon($node) {
+        if (isset($node->icon)) {
+            return $node->icon;
+        }
+        if (isset($node->linkPresenter)) {
+            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+            $presenter->setView($presenter->getView());
+            return $presenter->getIcon();
         }
     }
 
@@ -104,7 +111,7 @@ class Navigation extends Control {
     }
 
     public function createNode($nodeId, $arguments) {
-        $node = (object) $arguments;
+        $node = (object)$arguments;
         $this->nodes[$nodeId] = $node;
     }
 
@@ -116,9 +123,10 @@ class Navigation extends Control {
     }
 
     public function renderNavbar($root = null) {
+        //Debugger::barDump($root);
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
-        $this->renderFromRoot($template, $root);
+        $this->renderFromRoot($template, $root ?: '', true);
     }
 
     public function render($root = null) {
@@ -127,12 +135,14 @@ class Navigation extends Control {
         $this->renderFromRoot($template, $root);
     }
 
-    private function renderFromRoot($template, $root) {
-        if ($root != null) {           
-            if (!isset($this->structure[$root])) {
-                throw new InvalidArgumentException("No such node $root.");
+    private function renderFromRoot($template, $root, $navbar = false) {
+        if (!is_null($root)) {
+            if ($root) {
+                $template->nodes = $navbar ? [$root => $this->structure[$root]] : $this->structure[$root];
+            } else {
+                $template->nodes = [];
             }
-            $template->nodes = $this->structure[$root];
+
         } else {
             $template->nodes = $this->structure;
         }
