@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Factories\BrawlFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use ORM\Services\Events\ServiceFyziklaniTeam as ServiceBrawlTeam;
 use ServiceEvent;
 use ServiceBrawlSubmit;
@@ -31,6 +32,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @persistent
      */
     public $eventId;
+    /**
+     * @var string $lang
+     * @persistent
+     */
+    public $lang;
 
     /**
      * @var BrawlFactory
@@ -92,27 +98,36 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function startup() {
-        $this['brawlNav']->syncRedirect((object)['eventId' => +$this->eventId]);
-        $this->event = $this->getCurrentEvent();
-        if (!$this->eventExist()) {
+        /**
+         * @var $brawlNav BrawlNav
+         */
+        $brawlNav = $this['brawlNav'];
+
+        $newParams = $brawlNav->init((object)['eventId' => +$this->eventId, 'lang' => $this->lang]);
+        if ($newParams) {
+            $this->redirect('this', [
+                'eventId' => $newParams->eventId ?: $this->getEventId(),
+                'lang' => $newParams->lang ?: $this->lang,
+            ]);
+        }
+        if (!$this->getEvent()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
-
         parent::startup();
     }
 
-    public function createComponentBrawlNav($name) {
-        $control = new BrawlNav($this->serviceEvent);
+    public function getLang() {
+        Debugger::barDump($this->lang);
+        return $this->lang ?: parent::getLang();
+    }
+
+    public function createComponentBrawlNav() {
+        $control = new BrawlNav($this->serviceEvent, $this->session);
         return $control;
     }
 
-    /** Vrati true ak pre daný ročník existuje fyzikláni */
-    public function eventExist() {
-        return $this->getCurrentEvent() ? true : false;
-    }
-
     public function getSubtitle() {
-        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyziklání');
+        return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
     }
 
     public function getEventId() {
@@ -120,14 +135,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /** vráti paramtre daného eventu
-     * TODO rename to getEvent()
      * @return ModelEvent
      */
-    public function getCurrentEvent() {
+    public function getEvent() {
         if (!$this->event) {
             $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
             if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getCurrentEvent());
+                $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
             }
         }
@@ -135,7 +149,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function eventIsAllowed($resource, $privilege) {
-        $event = $this->getCurrentEvent();
+        $event = $this->getEvent();
         if (!$event) {
             return false;
         }

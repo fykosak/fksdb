@@ -88,7 +88,7 @@ class SubmitPresenter extends BasePresenter {
                 'label' => $task->label
             ];
         };
-        $form = $this->brawlFactory->createEntryForm($this->getCurrentEvent(), $teams, $tasks);
+        $form = $this->brawlFactory->createEntryForm($this->getEvent(), $teams, $tasks);
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -185,7 +185,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEditForm() {
-        $form = $this->brawlFactory->createEditForm($this->getCurrentEvent());
+        $form = $this->brawlFactory->createEditForm($this->getEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }

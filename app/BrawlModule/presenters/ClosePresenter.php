@@ -170,7 +170,7 @@ class ClosePresenter extends BasePresenter {
 
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
-        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
+        $tasksOnBoard = $this->getEvent()->getParameter('tasksOnBoard');
         $nextTask = $this->serviceBrawlTask->findAll($this->getEventId())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }

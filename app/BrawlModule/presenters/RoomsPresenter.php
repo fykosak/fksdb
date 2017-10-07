@@ -89,8 +89,8 @@ class RoomsPresenter extends BasePresenter {
             switch ($values['source']) {
                 default:
                 case self::SOURCE_ASTRID:
-                    $contest = $this->getCurrentEvent()->getContest();
-                    $year = $this->getCurrentEvent()->year;
+                    $contest = $this->getEvent()->getContest();
+                    $year = $this->getEvent()->year;
                     $file = $this->downloader->downloadBrawlRooms($contest, $year);
                     break;
                 case self::SOURCE_FILE:
@@ -102,7 +102,7 @@ class RoomsPresenter extends BasePresenter {
             }
 
             // process file
-            $pipeline = $this->pipelineFactory->create($this->getCurrentEvent());
+            $pipeline = $this->pipelineFactory->create($this->getEvent());
 
             $pipeline->setInput($file);
             $pipeline->run();

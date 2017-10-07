@@ -1,129 +1,74 @@
 <?php
+/**
+ * @author Michal Červeňák <miso@fykos.cz>
+ * trait content contest, year, and series chooser
+ */
 
 namespace FKSDB\Components\Controls\BrawlNav;
 
+use FKSDB\Components\Controls\ContestNav\LanguageChooser;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
+use Nette\Http\Session;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class BrawlNav extends Control {
-
-    const EVENT_TYPE_ID = 1;
     /**
-     * @var \ModelEvent
+     * @var Session
      */
-    private $event;
-
-    /**
-     *
-     */
-    private $eventId;
-    /**
-     * @var \ModelEvent[]
-     */
-    private $brawls;
+    protected $session;
     /**
      * @var \ServiceEvent
      */
-    private $serviceEvent;
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    protected $serviceEvent;
 
 
-    function __construct(\ServiceEvent $serviceEvent) {
+    public function __construct(\ServiceEvent $serviceEvent, $session) {
         parent::__construct();
         $this->serviceEvent = $serviceEvent;
+        $this->session = $session;
     }
 
     /**
-     * @param $params object
-     * Redirect to correct address according to the resolved values.
+     * @return BrawlChooser
      */
-    public function syncRedirect($params) {
-        $this->init($params);
-        $eventId = isset($this->eventId) ? $this->eventId : null;
-        if ($eventId != $params->eventId) {
-            $this->getPresenter()->redirect('this', ['eventId' => $eventId]);
-        }
+    protected function createComponentBrawlChooser() {
+        $control = new BrawlChooser($this->serviceEvent);
+        return $control;
     }
 
     /**
-     * @return integer
+     * @return LanguageChooser
      */
-    public function getEventId() {
-        return $this->eventId;
-    }
-
-    /**
-     * @param $params object
-     */
-    protected function init($params) {
-        if ($this->initialized) {
-            return;
-        }
-        $this->initialized = true;
-        $availableEventIds = $this->getBrawlIds();
-        if ($params->eventId != -1 && $params->eventId != null) {
-
-            if (in_array($params->eventId, $availableEventIds)) {
-                $this->eventId = $params->eventId;
-                return;
-            }
-        }
-        $this->eventId = array_pop($availableEventIds);
-        $this->event = $this->serviceEvent->findByPrimary($this->eventId);
-    }
-
-    /**
-     * @return \ModelContest[]
-     */
-    private function getBrawls() {
-        if ($this->brawls === null) {
-            $this->brawls = [];
-            $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year');
-            foreach ($query as $event) {
-                $this->brawls[] = $event;
-            }
-        }
-        return $this->brawls;
-    }
-
-    /**
-     * @return integer[]
-     */
-    private function getBrawlIds() {
-        $events = $this->getBrawls();
-        $ids = array_map(function (\ModelEvent $event) {
-            return $event->event_id;
-        }, $events);
-        return $ids;
-    }
-
-    /**
-     * @return \ModelEvent
-     */
-    private function getEvent() {
-        if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
-        }
-        return $this->event;
+    protected function createComponentLanguageChooser() {
+        $control = new LanguageChooser($this->session);
+        return $control;
     }
 
     public function render() {
-        $this->template->availableBrawls = $this->getBrawls();
-        $this->template->currentEvent = $this->getEvent();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'BrawlNav.latte');
         $this->template->render();
     }
 
-    public function handleChange($eventId) {
-        $presenter = $this->getPresenter();
-        $presenter->redirect('this', ['eventId' => $eventId]);
+    /**
+     * @param $params object
+     * @return object
+     * redirect to correct URL
+     */
+    public function init($params) {
+        $redirect = false;
+        /**
+         * @var $languageChooser LanguageChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        $redirect = $redirect || $languageChooser->syncRedirect($params);
+        /**
+         * @var $brawlChooser BrawlChooser
+         */
+        $brawlChooser = $this['brawlChooser'];
+        $redirect = $redirect || $brawlChooser->syncRedirect($params);
+        if ($redirect) {
+            return $params;
+        } else {
+            return null;
+        }
     }
 }

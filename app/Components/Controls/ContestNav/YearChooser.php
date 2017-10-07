@@ -124,7 +124,6 @@ class YearChooser extends Nav {
         );
     }
 
-// WTF TODO refacroeing
     private function calculateYear($session, \ModelContest $contest, $override = null) {
         $presenter = $this->getPresenter();
         $year = null;
@@ -142,7 +141,6 @@ class YearChooser extends Nav {
         }
 
         $allowedYears = $this->getYears();
-        Debugger::barDump(in_array($year, $allowedYears));
         if (!$this->yearCalculator->isValidYear($contest, $year) || !in_array($year, $allowedYears)) {
             $currentYear = $this->yearCalculator->getCurrentYear($contest);
             $forwardYear = $currentYear + $this->yearCalculator->getForwardShift($contest);

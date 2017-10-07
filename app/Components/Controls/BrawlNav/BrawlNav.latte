@@ -1,12 +1,2 @@
-<div class="navbar-nav nav">
-<div class="dropdown">
-  <span class="nav-link dropdown-toggle" data-toggle="dropdown">
-    {$currentEvent?  $currentEvent->name: _('Event') }
-  </span>
-  <div class="dropdown-menu">
-  {foreach $availableBrawls as $key => $brawl}
-    <a class="dropdown-item"  href="{link change! $brawl->event_id}">{$brawl->name}</a>
-  {/foreach}
-  </div>
-  </div>
-</div>
+{control brawlChooser}
+{control languageChooser}
