@@ -60,8 +60,10 @@ parameters:
                 account: false
                 homepage: false
                 note: false
+                born: false
                 born_id: false
                 id_number: false
+                birthplace: false
         adminEventOrg:
             person:
                 other_name: true
