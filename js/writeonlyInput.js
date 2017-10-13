@@ -12,7 +12,7 @@ $(function() {
             var originalValue = actualInput.data('writeonly-value');
             var originalLabel = actualInput.data('writeonly-label');
 
-            var button = $('<i class="glyphicon glyphicon-remove"/>');
+            var button = $('<i class="fa fa-times"/>');
             var actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
