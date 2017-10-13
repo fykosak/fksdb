@@ -21,7 +21,7 @@
     {/block}
     <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
     {input id class => 'top form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
-    {input password class => 'bottom last form-control', placeholder => $_input->translate($_input->caption)}
+    {input password class => 'bottom mb-3 form-control', placeholder => $_input->translate($_input->caption)}
 
     {input send class => 'btn btn-lg btn-success btn-block'}
     <a n:href=":Public:Register:default" class="btn btn btn-primary btn-block">{_'Registrace'}</a>

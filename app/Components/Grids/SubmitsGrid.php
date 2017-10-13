@@ -77,7 +77,7 @@ class SubmitsGrid extends BaseGrid {
         //
         $that = $this;
         $this->addButton("revoke", _("Zrušit"))
-                ->setClass("btn btn-xs btn-warning")
+                ->setClass("btn btn-sm btn-warning")
                 ->setText('Zrušit') //todo i18n
                 ->setShow(function($row) use($that) {
                             return $that->canRevoke($row);

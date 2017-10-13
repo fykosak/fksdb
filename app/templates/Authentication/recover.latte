@@ -5,11 +5,13 @@
 
 {block body}
 
-
-<div class="container">
-    {form recoverForm class => form-signin}
-
-
+<div class="h-100" id="wrap">
+    {form recoverForm class => 'form-signin card'}
+    <div class="row mx-3" style="max-height:100px">
+            <img class="col-6" src="/images/contests/fykos.svg" alt="fykos"/>
+            <img class="col-6" src="/images/contests/vyfuk.svg" alt="fykos"/>
+        </div>
+    <div class="card-body pt-0">
     <h2 class="form-signin-heading">FKSDB</h2>
     {block flashes}
     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
@@ -18,8 +20,8 @@
     {input id class => 'last form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
 
 
-    {input send class => 'btn btn-lg btn-primary btn-block'}
-
+    {input send class => 'btn btn-lg btn-success btn-block'}
+    </div>
     {/form recoverForm}
     {*control languageChooser:,"pagination pull-right"*}
 

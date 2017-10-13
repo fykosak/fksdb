@@ -40,12 +40,12 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @var Facebook
      */
-    private $facebook;
+    //private $facebook;
 
     /**
      * @var FacebookAuthenticator
      */
-    private $facebookAuthenticator;
+    //private $facebookAuthenticator;
 
     /**
      * @var ServiceAuthToken
@@ -77,14 +77,15 @@ final class AuthenticationPresenter extends BasePresenter {
         return $control;
     }
 
-    public function injectFacebook(Facebook $facebook) {
-        $this->facebook = $facebook;
-    }
+    /*
+        public function injectFacebook(Facebook $facebook) {
+            $this->facebook = $facebook;
+        }
 
-    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
-        $this->facebookAuthenticator = $facebookAuthenticator;
-    }
-
+        public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
+            $this->facebookAuthenticator = $facebookAuthenticator;
+        }
+    */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
@@ -269,7 +270,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $login = $this->user->getIdentity();
 
-            $this->loginBacklinkRedirect($login);
+            $this->loginBackLinkRedirect($login);
             $this->initialRedirect();
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
@@ -304,7 +305,7 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function loginBacklinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
             return;
         }

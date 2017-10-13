@@ -69,7 +69,7 @@ class YearChooser extends Nav {
             $this->year = null;
         } else {
             /* YEAR */
-            $year = $this->calculateYear($session, $this->contest);
+            $year = $this->calculateYear($session, $params, $this->contest);
             $this->year = $year;
             $session->year = $this->year;
         }
@@ -97,7 +97,6 @@ class YearChooser extends Nav {
             $contestants = $login->getPerson()->getContestants($this->contest->contest_id);
             $years = [];
             foreach ($contestants as $contestant) {
-                Debugger::barDump($contestant->year);
                 $years[] = $contestant->year;
             }
 
@@ -124,16 +123,15 @@ class YearChooser extends Nav {
         );
     }
 
-    private function calculateYear($session, \ModelContest $contest, $override = null) {
-        $presenter = $this->getPresenter();
+    private function calculateYear($session, $params, \ModelContest $contest, $override = null) {
         $year = null;
         // session
         if (isset($session->year)) {
             $year = $session->year;
         }
         // URL
-        if (isset($presenter->year)) {
-            $year = $presenter->year;
+        if (isset($params->year)) {
+            $year = $params->year;
         }
         // override
         if ($override) {

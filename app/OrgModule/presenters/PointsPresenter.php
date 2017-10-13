@@ -143,8 +143,9 @@ class PointsPresenter extends BasePresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', _('Uložit'));
-        $form->onSuccess[] = array($this, 'pointsFormSuccess');
+        $submit = $form->addSubmit('save', _('Uložit'));
+        $submit->getControlPrototype()->addClass('btn-success');
+        $form->onSuccess[] = [$this, 'pointsFormSuccess'];
 
         // JS dependencies        
         $this->registerJSFile('js/points.js');

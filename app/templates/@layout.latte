@@ -41,7 +41,7 @@
                         {var $login => $user->getIdentity()}
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-user"></span>
+                                <span class="fa fa-user"></span>
                                 {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
                                 {else}
                                     {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
@@ -56,8 +56,8 @@
 
                     </div><!-- /.navbar-collapse -->
                 </nav>
-                <div id="wrap" class="h-100">
-                <div class="container py-4 bg-white h-100">
+                <div id="wrap" style="min-height:100%">
+                <div class="container py-4 bg-white" style="min-height:100%">
                     {control breadcrumbs}
                     {block titleBody}<h1 class="page-header">{$title}<small class="text-secondary"> {$subtitle}</small></h1>{/block}
 

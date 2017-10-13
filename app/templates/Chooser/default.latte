@@ -3,26 +3,29 @@
 {block #content}
 <div class="container">
     <div class="row">
+        {foreach $contests as $contest}
+            <div class="col-6 row text-center">
+
+                    <img class="col-12 my-3" n:attr="src => '/images/contests/'.$contest['contest']->getContestSymbol().'.svg'" alt=""/>
+                        {foreach $contest['allowed'] as $role=>$allow}
+                            {if $allow}
+                                <a
+                                n:class="'btn-block btn btn-lg','btn-'.$contest['contest']->getContestSymbol()"
+                                href="{link changeContest! $contest['contest']->contest_id,$role}"
+                                >{$contest['contest']->name} - {$role}</a>
+                            {else}
+                                <span n:class="'btn-block disabled btn btn-lg','btn-'.$contest['contest']->getContestSymbol()">{$contest['contest']->name} - {_($role)}</span>
+                            {/if}
+                        {/foreach}
+
+            </div>
+        {/foreach}
         <div class="col-6">
             <div class="row text-center">
-                <img class="col-12 my-3" src="/images/contests/fykos.svg" alt=""/>
-                 <a href="{link changeContest! 1,'contestant'}" class="col-12 btn btn-fykos btn-lg btn-block">FYKOS - účastník</a>
-                 <a href="{link changeContest! 1,'org'}" class="col-12 btn btn-fykos btn-lg btn-block">FYKOS - org</a>
+                <img class="btn-block my-3" src="/images/contests/fyziklani.svg" alt=""/>
+                <a href="{link :Brawl:Dashboard: }" class="col-12 btn btn-brawl btn-lg btn-block">{_('Fykosí Fyzikláni')}</a>
             </div>
         </div>
-        <div class="col-6">
-            <div class="row text-center">
-                <img class="col-12 my-3" src="/images/contests/vyfuk.svg" alt=""/>
-                <a href="{link changeContest! 2,'contestant'}" class="col-12 btn btn-vyfuk btn-lg btn-block">Výfuk - účastník</a>
-                <a href="{link changeContest! 2,'org'}" class="col-12 btn btn-vyfuk btn-lg btn-block">Výfuk - org</a>
-            </div>
-        </div>
-        <div class="col-6">
-                    <div class="row text-center">
-                        <img class="col-12 my-3" src="/images/contests/fyziklani.svg" alt=""/>
-                        <a href="{link :Brawl:Dashboard: }" class="col-12 btn btn-brawl btn-lg btn-block">Fykosí Fyzikláni</a>
-                    </div>
-                </div>
     </div>
 </div>
 {/block}

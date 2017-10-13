@@ -50,10 +50,11 @@ class ContestChooser extends Nav {
     public function syncRedirect(&$params) {
         $this->init($params);
         $contestId = isset($this->contest) ? $this->contest->contest_id : null;
+
         /** fix empty presenter contest  */
-        if (is_null($params->contestId)) {
-            return false;
-        }
+        /* if (is_null($params->contestId)) {
+             return false;
+         }*/
         if ($contestId !== $params->contestId) {
             $params->contestId = $contestId;
             return true;
@@ -84,11 +85,9 @@ class ContestChooser extends Nav {
         if ((self::CONTEST_SOURCE & self::SOURCE_URL) && $params->contestId) {
             $this->contest = $this->serviceContest->findByPrimary($params->contestId);
         }
-
-        //Debugger::barDump($this->contest);
         if (is_null($this->contest)) {
-            $contestIds = $this->getContests();
-            if (count($contestIds) === 0) {
+            $contests = $this->getContests();
+            if (count($contests) === 0) {
                 return;
             }
             $this->contest = array_shift($contestIds);
@@ -96,6 +95,23 @@ class ContestChooser extends Nav {
 
         if ($this->contest !== null) {
             $session->contestId = $this->contest->contest_id;
+        }
+        $this->authorize();
+
+    }
+
+    /**
+     * Fix rewrite URL
+     * @throws BadRequestException
+     *
+     */
+    private function authorize() {
+        $contestIds = array_map(function (\ModelContest $contest) {
+            return $contest->contest_id;
+        }, $this->getContests());
+
+        if (!in_array($this->contest->contest_id, $contestIds)) {
+            throw  new BadRequestException('Tento seminár pre danú rolu niej dostupný', 403);
         }
     }
 
@@ -129,7 +145,7 @@ class ContestChooser extends Nav {
                 if ($person) {
                     $result = [];
                     foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
-                          $result[] = $this->serviceContest->findByPrimary($contestId);
+                        $result[] = $this->serviceContest->findByPrimary($contestId);
                     }
 
                     return $result;

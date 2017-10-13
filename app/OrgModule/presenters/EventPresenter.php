@@ -187,7 +187,7 @@ class EventPresenter extends EntityPresenter {
         throw new NotImplementedException();
     }
 
-    public function renderApplications() {
+    public function renderApplications($id) {
         $this->template->event = $this->getModel();
     }
 
@@ -222,12 +222,16 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function createComponentApplicationsGrid() {
-        $source = new SingleEventSource($this->getModel(), $this->container);
+        /**
+         * @var $event \ModelEvent
+         */
+        $event = $this->getModel();
+        $source = new SingleEventSource($event, $this->container);
         $source->order('created');
 
         $flashDump = $this->flashDumpFactory->createApplication();
         $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
-        $template = $this->layoutResolver->getTableLayout($this->getModel());
+        $template = $this->layoutResolver->getTableLayout($event);
         $grid->setTemplate($template);
         $grid->setSearchable(true);
 
@@ -235,17 +239,23 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function createComponentApplicationsImport() {
-        $source = new SingleEventSource($this->getModel(), $this->container);
+        /**
+         * @var $event \ModelEvent
+         */
+        $event = $this->getModel();
+        $source = new SingleEventSource($event, $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
-        $machine = $this->container->createEventMachine($this->getModel());
-        $handler = $this->handlerFactory->create($this->getModel(), $logger);
-
+        $machine = $this->container->createEventMachine($event);
+        $handler = $this->handlerFactory->create($event, $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
         return $component;
     }
 
     protected function createComponentGraphComponent() {
+        /**
+         * @var $event \ModelEvent
+         */
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
 
@@ -259,7 +269,9 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
-
+        /**
+         * @var $event \ModelEvent
+         */
         if ($event = $this->getModel()) { // intentionally =
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();

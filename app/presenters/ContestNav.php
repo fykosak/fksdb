@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Michal Červeňák <miso@fykos.cz>
- * trait content contest, year, and series chooser
+ * trait content contest, year, series and lang chooser
  */
 
 use \FKSDB\Components\Controls;
@@ -113,10 +113,18 @@ trait ContestNav {
      */
     protected function startupRedirects() {
         $this->init();
+        if ($this->newParams ? ($this->newParams->year === -1) : (+$this->year === -1)) {
+            //TODO lang
+            $this->flashMessage('Pre túto rolu a seminár niesu dostupné žiadné ročniky');
+        }
+        if ($this->newParams ? ($this->newParams->series === -1) : (+$this->series === -1)) {
+            //TODO lang
+            $this->flashMessage('Pre tento ročník niesu dostupné žiadné série');
+        }
+
         if (is_null($this->newParams)) {
             return;
         }
-
         $this->redirect('this', [
             'year' => $this->newParams->year ?: $this->year,
             'contestId' => $this->newParams->contestId ?: $this->contestId,
