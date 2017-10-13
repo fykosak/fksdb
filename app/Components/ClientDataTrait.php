@@ -9,7 +9,7 @@ namespace FKSDB\Components;
  */
 trait ClientDataTrait {
 
-    private $clientData = array();
+    private $clientData = [];
 
     public function setClientData($key, $value) {
         if ($value === null) {

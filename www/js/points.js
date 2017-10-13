@@ -1,15 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-    function createElement(taskData, dataEl, allData) {
+    const createElement = function (taskData, dataEl, allData) {
         if (!taskData || !taskData.submit_id) {
             var el = $('<span>');
             el.text('-'); //TODO
             return el;
         } else {
-            var el = $('<input type="text">');
+            var el = $('<input type="number" step="1" min="0">');
+            el.addClass('form-control form-control-sm');
             el.attr('placeholder', 'Úloha ' + taskData.task.label);
 
-            el.change(function() {
+            el.change(function () {
                 if (!el.val()) {
                     taskData.raw_points = null;
                 } else {
@@ -24,10 +25,10 @@ $(document).ready(function() {
             wrap.append(el);
             return wrap;
         }
-    }
+    };
 
     $("input.points").submitFields({
-        createElements: function(taskData, allData, dataEl, containerEl) {
+        createElements: function (taskData, allData, dataEl, containerEl) {
             var substEl = createElement(taskData, dataEl, allData);
             substEl.addClass('points-field');
             containerEl.append(substEl);

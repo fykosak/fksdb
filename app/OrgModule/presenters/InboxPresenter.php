@@ -123,7 +123,11 @@ class InboxPresenter extends BasePresenter {
     }
 
     public function renderDefault() {
-        $this['inboxForm']->setDefaults();
+        /**
+         * 
+         */
+        $inboxForm = $this['inboxForm'];
+        $inboxForm->setDefaults();
     }
 
     public function titleHandout() {

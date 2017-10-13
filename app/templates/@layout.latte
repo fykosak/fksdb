@@ -17,8 +17,8 @@
 
         {block head}{/block}
     </head>
-
-    <body>
+    <!-- Radnom background generator -->
+    <body data-mode="{rand(1,4)}">
         {block body}
             <nav n:class="'fixed-top navbar navbar-expand-md ',$contestSymbol?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->

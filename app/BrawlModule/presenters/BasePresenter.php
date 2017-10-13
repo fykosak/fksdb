@@ -117,7 +117,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getLang() {
-        Debugger::barDump($this->lang);
         return $this->lang ?: parent::getLang();
     }
 
@@ -127,7 +126,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSubtitle() {
-        return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
+        return ' ' . $this->getEvent()->event_year . '. ' . _('FYKOSí Fyziklání');
     }
 
     public function getEventId() {

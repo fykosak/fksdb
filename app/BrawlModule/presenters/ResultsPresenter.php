@@ -4,6 +4,7 @@ namespace BrawlModule;
 
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 class ResultsPresenter extends BasePresenter {
     
@@ -64,12 +65,15 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTeams() {
         $teams = [];
+        /**
+         * @var $row ModelFyziklaniTeam
+         */
         foreach ($this->serviceBrawlTeam->findParticipating($this->getEventId()) as $row) {
              $teams[] = [
                 'category' => $row->category,
                 'room' => $row->room,
                 'name' => $row->name,
-                'team_id' => $row->e_fyziklani_team_id
+                'team_id' => $row->e_fyziklani_team_id,
             ];
         }
         return $teams;

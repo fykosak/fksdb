@@ -6,7 +6,7 @@
             var el = $(this);
             var containerEl = el.parent();
             var rawValue = el.val();
-            var data = $.parseJSON(rawValue);
+            var data = JSON.parse(rawValue);
             var ctId = el.data('contestant');
             
             el.hide();

@@ -25,7 +25,7 @@ trait ContestNav {
     public $year;
 
     /**
-     * @var mixed
+     * @var string
      * @persistent
      */
     public $lang;
@@ -35,7 +35,9 @@ trait ContestNav {
      * @persistent
      */
     public $series;
-
+    /**
+     * @var boolean
+     */
     private $initialized = false;
     /**
      * @var object

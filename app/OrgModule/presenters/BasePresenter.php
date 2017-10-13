@@ -3,11 +3,8 @@
 namespace OrgModule;
 
 use AuthenticatedPresenter;
-use FKSDB\Components\Controls\LanguageChooser;
 use \ContestNav;
 use IContestPresenter;
-use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Presenter keeps chosen contest, year and language in session.

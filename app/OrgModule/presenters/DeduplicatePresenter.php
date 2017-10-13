@@ -74,7 +74,7 @@ class DeduplicatePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    protected function createComponentPersonsGrid($name) {
+    protected function createComponentPersonsGrid() {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
