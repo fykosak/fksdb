@@ -5,7 +5,6 @@ parameters:
             # see soustredeni.neon
             requiredCond: or(and(neg(role('admin')),or(state('applied'),state('applied.nodsef'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
 
-            accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
             person:
                 person:
                     other_name: true
@@ -42,8 +41,6 @@ events:
             notifyFrom:
                 default: Týden s experimentální fyzikou <tsaf@fykos.cz>
             capacity:
-                default: 0
-            accomodationCapacity:
                 default: 0
 
         baseMachines:
@@ -172,8 +169,6 @@ events:
 
             formAdjustments:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - Events\FormAdjustments\ResourceAvailability('participantTsaf.accomodation', participantTsaf.accomodationCapacity, 'Kapacita ubytování po akci je již vyčerpána.')
-                - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování před akcí je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
 
