@@ -21,12 +21,12 @@ import {
 
 import {
     IState as ITableFilterState,
-    tableFilter
+    tableFilter,
 } from './table-filter';
 
 import {
     IState as ITimerState,
-    timer
+    timer,
 } from './timer';
 
 export const app = combineReducers({

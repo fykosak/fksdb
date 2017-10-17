@@ -3,11 +3,11 @@ import { updateDownloaderOptions } from '../actions/downloader';
 import {
     addSubmits,
     setTasks,
-    setTeams
+    setTeams,
 } from '../actions/results';
 import {
     setOrgStatus,
-    setReadyStatus
+    setReadyStatus,
 } from '../actions/options';
 import { Dispatch } from 'react-redux';
 
@@ -46,7 +46,7 @@ export const fetchResults = (dispatch, oldLastUpdated: string = null) => {
     });
 };
 
-export const waitForFetch = (dispatch: Dispatch<any>, delay: number, lastUpdated: string = null): number => {
+export const waitForFetch = (dispatch: Dispatch<any>, delay: number, lastUpdated: string = null): any => {
     return setTimeout(() => {
         fetchResults(dispatch, lastUpdated);
     }, delay);

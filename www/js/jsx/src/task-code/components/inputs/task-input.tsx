@@ -4,12 +4,9 @@ import {
     Dispatch,
 } from 'react-redux';
 import {
-    setTaskCode,
     setTaskInput,
-} from '../actions/index';
-import { ITask } from '../middleware/interfaces';
-import { IStore } from '../reducers/index';
-
+} from '../../actions/index';
+import { IStore } from '../../reducers/index';
 
 interface IState {
     setInput?: (input: HTMLInputElement) => void;
@@ -18,9 +15,9 @@ interface IState {
 class TaskInput extends React.Component<IState & any, {}> {
 
     public render() {
-        const { meta: { valid, error }, setInput, input } = this.props;
+        const { meta: { valid}, setInput, input } = this.props;
         return (
-            <span className={'form-group col-lg-5 ' + (valid ? 'has-success' : 'has-error')}>
+            <span className={'form-group col-5 ' + (valid ? 'has-success' : 'has-error')}>
                 <input
                     {...input}
                     maxLength={2}
@@ -28,7 +25,6 @@ class TaskInput extends React.Component<IState & any, {}> {
                     className={'input-lg task ' + (valid === false ? 'invalid' : (valid === true ? 'valid' : ''))}
                     placeholder="XX"
                 />
-                <span className="help-block">{error ? error.msg : 'OK'}</span>
             </span>
 
         );

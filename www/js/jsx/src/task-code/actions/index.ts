@@ -1,45 +1,8 @@
 import { Dispatch } from 'react-redux';
 import { IStore } from '../reducers/index';
-/**
- * Created by miso on 14.10.2017.
- */
-export const ACTION_SET_CONTROL_CODE = 'ACTION_SET_CONTROL_CODE';
-
-export const setControlCode = (code: number, valid: boolean) => {
-    return {
-        code,
-        type: ACTION_SET_CONTROL_CODE,
-        valid,
-    };
-};
-
-export const ACTION_CLEAR_INPUTS = 'ACTION_CLEAR_INPUTS';
-
-export const clearInputs = () => {
-    return {
-        type: ACTION_CLEAR_INPUTS,
-    };
-};
-
-export const ACTION_SET_TASK_CODE = 'ACTION_SET_TASK_CODE';
-
-export const setTaskCode = (code, valid) => {
-    return {
-        code,
-        type: ACTION_SET_TASK_CODE,
-        valid,
-    };
-};
-
-export const ACTION_SET_TEAM_CODE = 'ACTION_SET_TEAM_CODE';
-
-export const setTeamCode = (code, valid) => {
-    return {
-        code,
-        type: ACTION_SET_TEAM_CODE,
-        valid,
-    };
-};
+import { reset } from 'redux-form';
+import { FORM_NAME } from '../components/inputs-container';
+import { getFullCode } from '../middleware/form';
 
 export const ACTION_SET_TASK_INPUT = 'ACTION_SET_TASK_INPUT';
 export const setTaskInput = (node: HTMLInputElement) => {
@@ -66,8 +29,9 @@ export const setControlInput = (node: HTMLInputElement) => {
 export const ACTION_SUBMIT_START = 'ACTION_SUBMIT_START';
 
 export const ACTION_SUBMIT_SUCCESS = 'ACTION_SUBMIT_SUCCESS';
-const submitSuccess = () => {
+const submitSuccess = (data) => {
     return {
+        data,
         type: ACTION_SUBMIT_SUCCESS,
     };
 };
@@ -80,25 +44,27 @@ const submitFail = (error) => {
     };
 };
 
-export const submitStart = (dispatch: Dispatch<IStore>, points: number) => {
+export const submitStart = (dispatch: Dispatch<IStore>, values: any) => {
+    return new Promise((resolve, reject) => {
+        const netteJQuery: any = $;
 
-    const data: { points?: number } = {};
-    data.points = points;
-    const netteJQuery: any = $;
-    netteJQuery.nette.ajax({
-        data,
-        error: (e) => {
-            dispatch(submitFail(e));
-        },
-        success: (data) => {
+        netteJQuery.nette.ajax({
+            data: {
+                ...values,
+                fullCode: getFullCode(values),
+            },
+            error: (e) => {
+                dispatch(submitFail(e));
+                reject();
+            },
 
-            dispatch(submitSuccess());
-            dispatch(clearInputs());
-        },
+            // requires form name
+            success: (data) => {
+                dispatch(submitSuccess(data));
+                dispatch(reset(FORM_NAME));
+                resolve();
+            },
+        });
     });
 
-    return {
-        points,
-        type: ACTION_SUBMIT_START,
-    };
 };

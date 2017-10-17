@@ -13,7 +13,7 @@ interface IState {
     lastUpdated?: string;
     refreshDelay?: number;
     onFetch?: () => void;
-    onWaitForFetch?: (lastUpdated: string, delay: number) => void;
+    onWaitForFetch?: (lastUpdated: string, delay: number) => any;
 }
 
 class Downloader extends React.Component<IState, {}> {
@@ -52,7 +52,7 @@ const mapStateToProps = (state: IStore): IState => {
 const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
         onFetch: () => fetchResults(dispatch, null),
-        onWaitForFetch: (lastUpdated, delay) => waitForFetch(dispatch, delay, lastUpdated),
+        onWaitForFetch: (lastUpdated: string, delay: number): any => waitForFetch(dispatch, delay, lastUpdated),
     };
 };
 

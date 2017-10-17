@@ -10,10 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "react": "latest",
-    "d3": "latest",
+    "d3": "4.10.0",
     "react-dom": "latest",
     "react-redux": "latest",
     "redux": "latest",
+    "redux-form":"latest",
     "promise-polyfill": "latest",
     "babel-polyfill": "latest",
     "redux-logger": "latest"
@@ -27,6 +28,7 @@
     "@types/react-redux": "latest",
     "@types/promise-polyfill": "latest",
     "@types/redux": "latest",
+    "@types/redux-form": "latest",
     "typescript": "latest",
     "awesome-typescript-loader": "latest",
     "source-map-loader": "latest",

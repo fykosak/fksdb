@@ -1,155 +1,70 @@
 import * as React from 'react';
-
 import {
     connect,
 } from 'react-redux';
+import {
+    Form,
+    formValueSelector,
+    reduxForm,
+} from 'redux-form';
+import { validate } from '../middleware/form';
 import {
     ITask,
     ITeam,
 } from '../middleware/interfaces';
 import { IStore } from '../reducers/index';
 
-import ControlInput from './control-input';
-// import FocusSwitcher from './focus-switcher';
-import TaskInput from './task-input';
-import TeamInput from './team-input';
+import FocusSwitcher from './focus-switcher';
+import ByCodeContainer from './inputs-container/by-code-container';
+import SelectContainer from './inputs-container/select-container';
+import SubmitButtons from './inputs-container/submit-buttons';
 
-import {
-    Field,
-    Form,
-    formValueSelector,
-    reduxForm,
-} from 'redux-form';
-
-interface IProps {
+export interface IProps {
     tasks: ITask[];
     teams: ITeam[];
+    onSubmit?: (values: any) => Promise<any>;
 }
 
 interface IState {
     team?: string;
     task?: string;
     control?: string;
+    msg?: string[];
 }
-// <FocusSwitcher />
+
 class InputsContainer extends React.Component<IProps & IState & any, {}> {
 
     public render(): JSX.Element {
-        const { valid } = this.props;
+        const { teams, tasks, valid, submitting, handleSubmit, onSubmit, msg } = this.props;
 
         return (
             <div className="task-code-container">
-                <Form className="has-feedback form-inline">
-                    <Field name="team" component={TeamInput}/>
-                    <Field name="task" component={TaskInput}/>
-                    <Field name="control" component={ControlInput}/>
-                    <span
-                        className={'glyphicon ' + (valid ? 'glyphicon-ok' : '') + ' form-control-feedback'}
-                    />
-
+                {msg && (<div className={'alert alert-' + msg[1]}> {msg[0]}</div>)}
+                <Form className="row" onSubmit={handleSubmit(onSubmit) }>
+                    <div className="col-6">
+                        <ByCodeContainer/>
+                    </div>
+                    <div className="col-6">
+                        <SubmitButtons valid={valid} submitting={submitting} handleSubmit={handleSubmit} onSubmit={onSubmit}/>
+                    </div>
+                    <div className="col-6 mt-3">
+                        <SelectContainer teams={teams} tasks={tasks}/>
+                    </div>
+                    <FocusSwitcher />
                 </Form>
-                <div className="clearfix"/>
-                {this.getValueDisplay()}
             </div>
         );
     }
 
-    private getValueDisplay(): JSX.Element {
-        const { task, team, teams, tasks } = this.props;
-        const elements = [];
-
-        const filterTeams = teams.filter((currentTeam) => {
-            return currentTeam.team_id === +team;
-        });
-        elements.push(<div className="form-group">
-            <label className="col-sm-2 control-label">Tým:</label>
-            <div className="col-sm-10">
-                <p className="form-control-static">{filterTeams.length ? filterTeams[0].name : '-'}</p>
-            </div>
-        </div>);
-
-        const filterTasks = tasks.filter((currentTask) => {
-            return task && currentTask.label === task.toUpperCase();
-        });
-        elements.push(<div className="form-group">
-            <label className="col-sm-2 control-label">Úloha:</label>
-            <div className="col-sm-10">
-                <p className="form-control-static">{filterTasks.length ? filterTasks[0].name : '-'}</p>
-            </div>
-        </div>);
-
-        return (<div className="clearer">{elements}</div>);
-    }
-
 }
 
-const getFullCode = (values): string => {
-    const teamString = (+values.team < 1000) ? '0' + +values.team : +values.team;
-    return '00' + teamString + values.task + values.control;
-};
-
-const isValidFullCode = (code: string): boolean => {
-
-    const subCode = code.split('').map((char): number => {
-        return +char.toLocaleUpperCase()
-            .replace('A', '1')
-            .replace('B', '2')
-            .replace('C', '3')
-            .replace('D', '4')
-            .replace('E', '5')
-            .replace('F', '6')
-            .replace('G', '7')
-            .replace('H', '8');
-    });
-    return (getControl(subCode) % 10 === 0);
-};
-
-const getControl = (subCode: Array<string | number>): number => {
-    return (+subCode[0] + +subCode[3] + +subCode[6]) * 3 +
-        (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
-        (+subCode[2] + +subCode[5] + +subCode[8]);
-};
-
-const validate = (values, props: IProps) => {
-    const errors: any = {};
-    if (values.team) {
-        const teams = props.teams.filter((currentTeam) => {
-            return currentTeam.team_id === +values.team;
-        });
-        if (!teams.length) {
-            errors.team = { type: 'danger', msg: 'team neexistuje' };
-        }
-    }
-    if (values.task) {
-        const tasks = props.tasks.filter((currentTask) => {
-            return currentTask.label === values.task.toUpperCase();
-        });
-        if (!tasks.length) {
-            errors.task = { type: 'danger', msg: 'úloha neexistuje' };
-        }
-    }
-    if ((!errors.task && !errors.team && values.control)) {
-        const code = getFullCode(values);
-        if (!isValidFullCode(code)) {
-            errors.control = { type: 'danger', msg: 'Neplatný control' };
-        }
-    }
-    if (!values.hasOwnProperty('control') || values.control === '') {
-        errors.control = { type: 'danger', msg: 'Required' };
-    }
-    if (!values.hasOwnProperty('team') || !values.team) {
-        errors.team = { type: 'danger', msg: 'Required' };
-    }
-    if (!values.hasOwnProperty('task') || !values.task) {
-        errors.task = { type: 'danger', msg: 'Required' };
-    }
-    return errors;
-};
-
-const FORM_NAME = 'codeForm';
-const mapStateToProps = (state: IStore) => {
+export const FORM_NAME = 'codeForm';
+const mapStateToProps = (state: IStore): IState => {
     const selector = formValueSelector(FORM_NAME);
-    return selector(state, 'task', 'team', 'control');
+    return {
+        ...selector(state, 'task', 'team', 'control'),
+        msg: state.submit.msg,
+    };
 };
 
 export default connect(mapStateToProps, (): IState => {
@@ -158,4 +73,3 @@ export default connect(mapStateToProps, (): IState => {
     form: FORM_NAME,
     validate,
 })(InputsContainer));
-

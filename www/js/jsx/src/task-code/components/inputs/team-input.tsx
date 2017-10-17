@@ -4,11 +4,9 @@ import {
     Dispatch,
 } from 'react-redux';
 import {
-    setTeamCode,
     setTeamInput,
-} from '../actions/index';
-import { IStore } from '../reducers/index';
-import { WrappedFieldProps } from 'redux-form';
+} from '../../actions/index';
+import { IStore } from '../../reducers/index';
 
 interface ITeam {
     team_id: number;
@@ -25,10 +23,10 @@ interface IState {
 class TeamInput extends React.Component<IProps & IState & any, {}> {
 
     public render() {
-        const { meta: { valid, error }, setInput, input } = this.props;
+        const { meta: { valid }, setInput, input } = this.props;
 
         return (
-            <span className={'form-group col-lg-5 ' + (valid ? 'has-success' : 'has-error')}>
+            <span className={'form-group col-5 ' + (valid ? 'has-success' : 'has-error')}>
                 <input
                     {...input}
                     maxLength={6}
@@ -36,12 +34,10 @@ class TeamInput extends React.Component<IProps & IState & any, {}> {
                     className={'input-lg team ' + (valid === false ? 'invalid' : (valid === true ? 'valid' : ''))}
                     placeholder="XXXXXX"
                 />
-                <span className="help-block">{error ? error.msg : 'OK'}</span>
             </span>
 
         );
     }
-
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {

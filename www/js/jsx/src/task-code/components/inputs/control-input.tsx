@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    setControlCode,
     setControlInput,
-} from '../actions/index';
-import { IStore } from '../reducers/index';
+} from '../../actions/index';
 
 interface IState {
     setInput?: (input: HTMLInputElement) => void;
 }
+interface IProps {
+    noRefMode?: boolean;
+}
 
-class ControlInput extends React.Component<IState & any, {}> {
+class ControlInput extends React.Component<IState & IProps & any, {}> {
 
     public render() {
-        const { meta: { valid, error }, setInput, input } = this.props;
+        const { meta: { valid }, setInput, input, noRefMode } = this.props;
         return (
-            <span className={'form-group col-lg-2 ' + (valid ? 'has-success' : 'has-error')}>
+            <span className={'form-group col-2 ' + (valid ? 'has-success' : 'has-error')}>
                 <input
                     {...input}
                     maxLength={1}
-                    ref={setInput}
+                    ref={noRefMode ? null : setInput}
                     className={'input-lg control ' + (valid ? 'valid' : 'invalid')}
                     placeholder="X"
                 />
-                <span className="help-block">{error ? error.msg : 'OK'}</span>
             </span>
         );
     }

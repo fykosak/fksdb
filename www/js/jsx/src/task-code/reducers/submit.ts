@@ -10,12 +10,14 @@ import {
 export interface IState {
     submitting?: boolean;
     error?: any;
+    msg?: string[];
 }
 
 const submitStart = (state: IState): IState => {
     return {
         ...state,
         error: null,
+        msg: null,
         submitting: true,
     };
 };
@@ -29,6 +31,7 @@ const submitFail = (state: IState, action): IState => {
 const submitSuccess = (state: IState, action): IState => {
     return {
         ...state,
+        msg: action.data,
         submitting: false,
     };
 };
