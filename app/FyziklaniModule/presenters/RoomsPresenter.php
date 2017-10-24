@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
+use BrawlLib\Components\Routing;
 use FKS\Application\UploadException;
 use FKSDB\model\Fyziklani\Rooms\PipelineFactory;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -19,8 +20,7 @@ use Pipeline\PipelineException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RoomsPresenter extends BasePresenter
-{
+class RoomsPresenter extends BasePresenter {
 
     const SOURCE_ASTRID = 'astrid';
 
@@ -76,7 +76,6 @@ class RoomsPresenter extends BasePresenter
         $upload = $seriesForm->addUpload('file', _('CSV soubor rozdělení'));
         $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
 
-
         $seriesForm->addSubmit('submit', _('Importovat'));
 
         $seriesForm->onSuccess[] = callback($this, 'validRoomsImportForm');
@@ -97,8 +96,11 @@ class RoomsPresenter extends BasePresenter
                 }
             }
             $this->sendResponse(new JsonResponse(['updatedTeams' => $updatedTeams]));
-
         }
+    }
+
+    public function createComponentRouting() {
+        $control = new Routing();
         $rooms = [
             ['name' => 'F1', 'x' => 4, 'y' => 10],
             ['name' => 'F2', 'x' => 2, 'y' => 5],
@@ -111,7 +113,7 @@ class RoomsPresenter extends BasePresenter
             'teams' => [],
             'rooms' => $rooms,
         ];
-        // TOTO vytiahnuť školy/učastnikov
+        // TODO vytiahnuť školy/učastnikov
         foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
             $data['teams'][] = [
                 'teamID' => $team->e_fyziklani_team_id,
@@ -119,9 +121,8 @@ class RoomsPresenter extends BasePresenter
                 'category' => $team->category,
             ];
         };
-
-        $this->template->data = json_encode($data);
-        Debugger::barDump($data);
+        $control->setData($data);
+        return $control;
     }
 
     public function validRoomsImportForm(Form $seriesForm) {

@@ -59,17 +59,27 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm(ModelEvent $event, $teams, $tasks) {
+    /**
+     * @param ModelEvent $event
+     * @param $teams
+     * @param $tasks
+     * @return \BrawlLib\Components\TaskCodeInput
+     */
+    public function createEntryForm($teams, $tasks) {
+        $control = new \BrawlLib\Components\TaskCodeInput();
+        $control->setTasks($tasks);
+        $control->setTeams($teams);
+        return $control;/*
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTaskCodeField($teams, $tasks), 'taskCode');
-        foreach ($event->getParameter('availablePoints') as $points) {
+    /*    foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points');
         }
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        return $form;
+        return $form;*/
     }
 
     public function createEditForm(ModelEvent $event) {

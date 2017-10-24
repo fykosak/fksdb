@@ -90,26 +90,11 @@ fieldset .well {
     color: #a94442;
 }
 
-.task-code-container .team {
-    width: 6em;
-}
-
-.task-code-container .task {
-    width: 2em;
-}
-
-.task-code-container .control {
-    width: 1em;
-}
-
 .task-code-container .control, .task-code-container .task, .task-code-container .team {
+    width: 100%;
     border: none;
+    border-bottom: 2px solid;
+    border-radius: 0;
     outline-offset: 0;
     outline-color: transparent;
 }
-
-.task-code-container > div {
-    font-size: 120%;
-    border: 1px solid #66afe9;
-}
-

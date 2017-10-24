@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use BrawlLib\Components\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
@@ -48,6 +49,12 @@ class ResultsPresenter extends BasePresenter {
             ];
             $this->sendResponse(new JsonResponse($result));
         }
+    }
+
+    public function createComponentResults() {
+        $control = new Results();
+        $control->setBasePath($this->getHttpRequest()->getUrl()->getBasePath());
+        return $control;
     }
 
     private function getTasks() {

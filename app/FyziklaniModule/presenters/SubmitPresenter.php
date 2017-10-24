@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use ModelFyziklaniSubmit;
 use Nette\Application\BadRequestException;
+use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
@@ -62,6 +63,61 @@ class SubmitPresenter extends BasePresenter {
         $this->authorizedEntry();
     }
 
+    private function savePoints($fullCode, $points) {
+        $teamID = $this->taskCodePreprocessor->extractTeamID($fullCode);
+        $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($fullCode);
+        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
+
+        if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskID, $teamID))) {
+            $submit = $this->serviceFyziklaniSubmit->createNew([
+                'points' => $points,
+                'fyziklani_task_id' => $taskID,
+                'e_fyziklani_team_id' => $teamID,
+                /* ugly, force current timestamp in database
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'created' => null
+            ]);
+        } else {
+            // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
+            $this->serviceFyziklaniSubmit->updateModel($submit, [
+                'points' => $points,
+                /* ugly, exclude previous value of `modified` from query
+                 * so that `modified` is set automatically by DB
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'modified' => null
+            ]);
+            $this->serviceFyziklaniSubmit->save($submit);
+        }
+        $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
+        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
+
+        try {
+            $this->serviceFyziklaniSubmit->save($submit);
+            return [sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success'];
+            // $this->redirect('this');
+        } catch (Exception $e) {
+            Debugger::log($e);
+            return [_('Vyskytla se chyba'), 'danger'];
+
+        }
+    }
+
+    public function renderEntry() {
+        if ($this->isAjax()) {
+
+            $fullCode = $this->getHttpRequest()->getQuery('fullCode');
+            $points = $this->getHttpRequest()->getQuery('points');
+            if ($this->checkTaskCode($fullCode, $msg)) {
+                $msg = $this->savePoints($fullCode, $points);
+            } else {
+                $msg = [$msg, 'danger'];
+            }
+            $this->sendResponse(new JsonResponse($msg));
+        }
+    }
+
     public function createComponentEntryForm() {
         $teams = [];
         foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
@@ -74,11 +130,12 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->serviceFyziklaniTask->findAll($this->eventID) as $task) {
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
-                'label' => $task->label
+                'label' => $task->label,
+                'name' => $task->name,
             ];
         };
-        $form = $this->fyziklaniFactory->createEntryForm($this->getCurrentEvent(), $teams, $tasks);
-        $form->onSuccess[] = [$this, 'entryFormSucceeded'];
+        $form = $this->fyziklaniFactory->createEntryForm($teams, $tasks);
+      //  $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
 
@@ -108,7 +165,7 @@ class SubmitPresenter extends BasePresenter {
                     'created' => null
                 ]);
             } else {
-               // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
+                // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
                 $this->serviceFyziklaniSubmit->updateModel($submit, [
                     'points' => $points,
                     /* ugly, exclude previous value of `modified` from query

@@ -18,26 +18,26 @@
 
 <body style="padding-top:0">
 <div id="wrap">
-        <div class="container">
-            <div class="fyziklani-results" data-basepath="{$basePath}">
-            </div>
-        </div>
+    <div class="container">
+        {block #content}
+        {/block}
+    </div>
 </div>
 
 <div id="spinner"></div>
 
-    {control jsLoader
+{control jsLoader
         'js/jquery.min.js',
         'js/jquery-ui.min.js',
         'js/bootstrap.v4.min.js',
         'js/nette.ajax.js',
         'js/tablesorter.min.js',
-        'js/jsx/lib/react.min.js',
-        'js/jsx/lib/react-dom.min.js',
-        'js/jsx/dist/bundle.min.js'
+        'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/dist/bundle.min.js'
             }
 
-    {control jsLoader:inline}
+{control jsLoader:inline}
 
 {control cssLoader}
 </body>

@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {control cssLoader
-        'css/fof/dist/css/bootstrap.min.css' => [screen],
-        'css/fof/dist/css/bootstrap-theme.min.css' => [screen],
+        'css/bootstrap.v4.min.css' => [screen],
+
         'css/style.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
@@ -105,9 +105,9 @@
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
         'js/main.js',
-        'js/jsx/lib/react.min.js',
-        'js/jsx/lib/react-dom.min.js',
-        'js/jsx/dist/bundle.min.js'
+        'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/dist/bundle.min.js'
             }
 
     {* CSS files are only collected at the end of rendering, so we use this
