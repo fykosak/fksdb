@@ -6,7 +6,6 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
@@ -17,6 +16,8 @@ use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
+
+    use \LanguageNav;
 
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -73,11 +74,6 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
-    }
-
     public function injectFacebook(Facebook $facebook) {
         $this->facebook = $facebook;
     }
@@ -127,7 +123,7 @@ final class AuthenticationPresenter extends BasePresenter {
         // -> check for the GSID parameter
 
         if ($this->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity            
+            $this->getUser()->logout(true); //clear identity
         } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
@@ -201,7 +197,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function renderRecover() {
-        
+
     }
 
     private function getFbLoginUrl() {
@@ -216,7 +212,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * This workaround is here because LoginUser storage
      * returns false when only global login exists.
      * False is return in order to AuthenticatedPresenter to correctly login the user.
-     * 
+     *
      * @return bool
      */
     private function isLoggedIn() {
@@ -249,7 +245,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * Password recover form.
-     * 
+     *
      * @return Form
      */
     protected function createComponentRecoverForm() {
@@ -308,7 +304,7 @@ final class AuthenticationPresenter extends BasePresenter {
             return;
         }
         $this->restoreRequest($this->backlink);
-        
+
         /* If it was't valid backlink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
