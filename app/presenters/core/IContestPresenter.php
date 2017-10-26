@@ -15,5 +15,10 @@ interface IContestPresenter {
 
     /** @return int */
     public function getSelectedAcademicYear();
+
+    /**
+     * @return integer
+     */
+    public function getSelectedSeries();
 }
 

@@ -110,7 +110,7 @@ parameters:
             cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-cs.xml'
             en: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-en.xml'
 
-    # Generic parameters for Fyziklani
+    # Generic parameters for Brawl
     fyziklani:
         # Paths to CSV file with team distribution to rooms
         # Arguments: contestName, year

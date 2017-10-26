@@ -203,7 +203,7 @@ class PersonPresenter extends EntityPresenter {
 
         $form->addSubmit('send', _('Sloučit osoby'));
         $form->addSubmit('cancel', _('Storno'))
-                ->getControlPrototype()->addClass('btn-default');
+                ->getControlPrototype()->addClass('btn-primary');
         $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
         return $form;
     }

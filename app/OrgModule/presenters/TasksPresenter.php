@@ -29,11 +29,6 @@ class TasksPresenter extends BasePresenter {
     private static $languages = array('cs', 'en');
 
     /**
-     * @var SeriesCalculator
-     */
-    private $seriesCalculator;
-
-    /**
      * @var Downloader
      */
     private $downloader;
@@ -47,10 +42,6 @@ class TasksPresenter extends BasePresenter {
      * @var FlashDumpFactory 
      */
     private $flashDumpFactory;
-
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
-        $this->seriesCalculator = $seriesCalculator;
-    }
 
     public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
@@ -112,6 +103,7 @@ class TasksPresenter extends BasePresenter {
         $values = $seriesForm->getValues();
 
         switch ($values['source']) {
+            default:
             case self::SOURCE_ASTRID:
                 $series = $values['series'];
                 $languages = self::$languages;

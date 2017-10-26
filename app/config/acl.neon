@@ -47,7 +47,7 @@ acl:
     - addResource(org)           # create, edit, list, delete
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
-    - addResource(fyziklani)
+    - addResource(brawl)
 
     # ACL
     - allow(contestant, submit, upload)
@@ -101,11 +101,11 @@ acl:
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
-    - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
+    - allow(taskManager, brawl, ::constant(Nette\Security\Permission::ALL))
 
 
-    - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
-    - allow(guest, fyziklani, dashboard)
+    - allow(org, brawl, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
+    - allow(guest, brawl, dashboard)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 

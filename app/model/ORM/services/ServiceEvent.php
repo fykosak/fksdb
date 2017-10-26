@@ -2,6 +2,7 @@
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer year
  */
 class ServiceEvent extends AbstractServiceSingle {
 

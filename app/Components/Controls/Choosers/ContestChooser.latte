@@ -1,0 +1,12 @@
+<div class="navbar-nav nav">
+<div class="dropdown">
+  <span class="nav-link dropdown-toggle" data-toggle="dropdown">
+    {$currentContest?  $currentContest->name: _('seminar') }
+  </span>
+  <div class="dropdown-menu">
+  {foreach $availableContests as $contestId => $contest}
+    <a n:class="'dropdown-item link-'.$contest->getContestSymbol()"  href="{link change! $contest->contest_id}">{$contest->name}</a>
+  {/foreach}
+  </div>
+  </div>
+</div>

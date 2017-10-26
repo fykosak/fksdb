@@ -3,6 +3,8 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string token
+ *
  */
 class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */

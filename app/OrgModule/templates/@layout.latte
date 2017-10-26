@@ -1,8 +1,6 @@
 {layout ../../templates/@layout.latte}
 
-
 {block user-info}
-{include #parent}
-{control languageChooser,null}
-{control contestChooser}
+    {control contestNav}
+    {include #parent}
 {/block}

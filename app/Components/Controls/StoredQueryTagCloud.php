@@ -36,6 +36,11 @@ class StoredQueryTagCloud extends Control {
     
     private $activeTagIds = array();
 
+    /**
+     * StoredQueryTagCloud constructor.
+     * @param string $mode
+     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     */
     function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         parent::__construct();
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;

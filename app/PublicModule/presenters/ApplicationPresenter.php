@@ -10,7 +10,6 @@ use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder\Holder;
 use FKS\Logging\MemoryLogger;
-use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
@@ -26,7 +25,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
@@ -44,7 +43,7 @@ class ApplicationPresenter extends BasePresenter {
     private $eventApplication = false;
 
     /**
-     * @var Holder 
+     * @var Holder
      */
     private $holder;
 
@@ -108,14 +107,14 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedDefault($eventId, $id) {
-        
+
     }
 
     public function authorizedList() {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
-    public function titleDefault($eventId, $id) {
+    public function titleDefault() {
         if ($this->getEventApplication()) {
             $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
         } else {
@@ -184,51 +183,30 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
-    public function actionList() {
-        if (!$this->getSelectedContest()) {
-            $this->setView('contestChooser');
-        }
-    }
-
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
         $this->getMachine()->setHolder($this->getHolder());
     }
 
-    protected function createComponentContestChooser($name) {
-        $component = parent::createComponentContestChooser($name);
-        if ($this->getAction() == 'default') {
-            if (!$this->getEvent()) {
-                throw new BadRequestException(_('Neexistující akce.'), 404);
-            }
-            $component->setContests(array(
-                $this->getEvent()->getEventType()->contest_id,
-            ));
-        } else if ($this->getAction() == 'list') {
-            $component->setContests(ContestChooser::CONTESTS_ALL);
-        }
-        return $component;
-    }
-
-    protected function createComponentApplication($name) {
+    protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
         $that = $this;
-        $component->setRedirectCallback(function($modelId, $eventId) use($that) {
-                    $that->backlinkRedirect();
-                    $that->redirect('this', array(
-                        'eventId' => $eventId,
-                        'id' => $modelId,
-                        self::PARAM_AFTER => true,
-                    ));
-                });
+        $component->setRedirectCallback(function ($modelId, $eventId) use ($that) {
+            $that->backlinkRedirect();
+            $that->redirect('this', array(
+                'eventId' => $eventId,
+                'id' => $modelId,
+                self::PARAM_AFTER => true,
+            ));
+        });
         $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
     }
 
-    protected function createComponentApplicationsGrid($name) {
+    protected function createComponentApplicationsGrid() {
         $person = $this->getUser()->getIdentity()->getPerson();
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
@@ -243,11 +221,11 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
-    protected function createComponentNewApplicationsGrid($name) {
+    protected function createComponentNewApplicationsGrid() {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
-                ->where('registration_begin <= NOW()')
-                ->where('registration_end >= NOW()');
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
         $flashDump = $this->flashDumpFactory->createApplication();
@@ -267,7 +245,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ? : $this->getParameter('eventId');
+            $eventId = $eventId ?: $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
@@ -276,15 +254,7 @@ class ApplicationPresenter extends BasePresenter {
 
     private function getEventApplication() {
         if ($this->eventApplication === false) {
-            $id = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
-                if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                    $eventId = $data['id'];
-                }
-            }
-            $id = $id ? : $this->getParameter('id');
+            $id =$this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
             $this->eventApplication = $service->findByPrimary($id);
         }

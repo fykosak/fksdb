@@ -76,10 +76,10 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
     /**
      * 
-     * @param type $fieldsDefinition
-     * @param type $acYear
-     * @param type $searchType
-     * @param type $allowClear
+     * @param mixed $fieldsDefinition
+     * @param mixed $acYear
+     * @param mixed $searchType
+     * @param mixed $allowClear
      * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array

@@ -66,7 +66,7 @@ class StoredQueryGrid extends BaseGrid {
         if (!$this->storedQuery->getQueryPattern()->isNew()) {
             $this->addGlobalButton('show')
                     ->setLabel(_('Podrobnosti dotazu'))
-                    ->setClass('btn btn-sm btn-default')
+                    ->setClass('btn btn-sm btn-primary')
                     ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
                 $parameters = array('qid' => $qid, 'bc' => null);
@@ -78,7 +78,7 @@ class StoredQueryGrid extends BaseGrid {
                 }
                 $this->addGlobalButton('qid')
                         ->setLabel(_('Odkaz'))
-                        ->setClass('btn btn-sm btn-default')
+                        ->setClass('btn btn-sm btn-primary')
                         ->setLink($this->getPresenter()->link('Export:execute', $parameters));
             }
         }

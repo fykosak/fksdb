@@ -64,6 +64,7 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     public function titleList() {
+        $this->setIcon('<i class="fa fa-university" aria-hidden="true"></i>');
         $this->setTitle(_('Školy'));
     }
 
@@ -71,12 +72,12 @@ class SchoolPresenter extends EntityPresenter {
         $this->setTitle(_('Založit školu'));
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $school = $this->getModel();
         $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
         // This should set active flag to false.
         throw new NotImplementedException();
     }
@@ -100,6 +101,9 @@ class SchoolPresenter extends EntityPresenter {
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
+        /**
+         * @var \ModelSchool|null $model
+         */
         if (!$model) {
             return;
         }
@@ -151,6 +155,9 @@ class SchoolPresenter extends EntityPresenter {
              * Address
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
+            /**
+             * @var $address \ModelAddress
+             */
             $address = $this->serviceAddress->createNew($data);
             $this->serviceAddress->save($address);
 
@@ -158,6 +165,9 @@ class SchoolPresenter extends EntityPresenter {
              * School
              */
             $data = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL]);
+            /**
+             * @var $school \ModelSchool
+             */
             $school = $this->serviceSchool->createNew($data);
             $school->address_id = $address->address_id;
             $this->serviceSchool->save($school);
@@ -186,6 +196,9 @@ class SchoolPresenter extends EntityPresenter {
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
         $values = $form->getValues();
+        /**
+         * @var $school \ModelSchool
+         */
         $school = $this->getModel();
         $address = $school->getAddress();
 

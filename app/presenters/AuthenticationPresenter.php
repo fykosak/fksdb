@@ -6,7 +6,6 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKS\Authentication\SSO\IGlobalSession;
 use FKS\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
@@ -17,6 +16,8 @@ use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
+
+    use \LanguageNav;
 
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -41,12 +42,12 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @var Facebook
      */
-    private $facebook;
+    //private $facebook;
 
     /**
      * @var FacebookAuthenticator
      */
-    private $facebookAuthenticator;
+    //private $facebookAuthenticator;
 
     /**
      * @var ServiceAuthToken
@@ -73,19 +74,20 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
+    protected function createComponentLanguageChooser() {
+        $control = new \FKSDB\Components\Controls\ContestNav\LanguageChooser($this->session);
         return $control;
     }
 
-    public function injectFacebook(Facebook $facebook) {
-        $this->facebook = $facebook;
-    }
+    /*
+        public function injectFacebook(Facebook $facebook) {
+            $this->facebook = $facebook;
+        }
 
-    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
-        $this->facebookAuthenticator = $facebookAuthenticator;
-    }
-
+        public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
+            $this->facebookAuthenticator = $facebookAuthenticator;
+        }
+    */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
@@ -127,7 +129,7 @@ final class AuthenticationPresenter extends BasePresenter {
         // -> check for the GSID parameter
 
         if ($this->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity            
+            $this->getUser()->logout(true); //clear identity
         } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
@@ -146,7 +148,7 @@ final class AuthenticationPresenter extends BasePresenter {
         if ($this->isLoggedIn()) {
             $login = $this->getUser()->getIdentity();
             $this->loginBacklinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
                 $this->loginBacklinkRedirect();
@@ -164,27 +166,27 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    public function actionFbLogin() {
-        $this->setView('login'); // do not provide a special view
-        try {
-            $me = $this->facebook->api('/me');
-            $identity = $this->facebookAuthenticator->authenticate($me);
+    /*  public function actionFbLogin() {
+          $this->setView('login'); // do not provide a special view
+          try {
+              $me = $this->facebook->api('/me');
+              $identity = $this->facebookAuthenticator->authenticate($me);
 
-            $this->getUser()->login($identity);
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
-        } catch (FacebookApiException $e) {
-            $fbUrl = $this->getFbLoginUrl();
-            $this->redirectUrl($fbUrl);
-        }
-    }
+              $this->getUser()->login($identity);
+              $login = $this->getUser()->getIdentity();
+              $this->initialRedirect($login);
+          } catch (AuthenticationException $e) {
+              $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
+          } catch (FacebookApiException $e) {
+              $fbUrl = $this->getFbLoginUrl();
+              $this->redirectUrl($fbUrl);
+          }
+      }*/
 
     public function actionRecover() {
         if ($this->isLoggedIn()) {
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
+            //   $login = $this->getUser()->getIdentity();
+            $this->initialRedirect();
         }
     }
 
@@ -197,26 +199,26 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function renderLogin() {
-        $this->template->fbUrl = $this->getFbLoginUrl();
+        //  $this->template->fbUrl = $this->getFbLoginUrl();
     }
 
     public function renderRecover() {
-        
+
     }
 
-    private function getFbLoginUrl() {
+    /*private function getFbLoginUrl() {
         $fbUrl = $this->facebook->getLoginUrl(array(
             'scope' => 'email',
             'redirect_uri' => $this->link('//fbLogin'), // absolute
         ));
         return $fbUrl;
-    }
+    }*/
 
     /**
      * This workaround is here because LoginUser storage
      * returns false when only global login exists.
      * False is return in order to AuthenticatedPresenter to correctly login the user.
-     * 
+     *
      * @return bool
      */
     private function isLoggedIn() {
@@ -232,10 +234,10 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addPassword('password', _('Heslo'))
-                ->addRule(Form::FILLED, _('Zadejte heslo.'));
+            ->addRule(Form::FILLED, _('Zadejte heslo.'));
         //$form->addCheckbox('remember', _('Zapamatovat si přihlášení'));
 
         $form->addSubmit('send', _('Přihlásit'));
@@ -249,13 +251,13 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * Password recover form.
-     * 
+     *
      * @return Form
      */
     protected function createComponentRecoverForm() {
         $form = new Form();
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addSubmit('send', _('Pokračovat'));
 
@@ -270,8 +272,8 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->user->login($form['id']->value, $form['password']->value);
             $login = $this->user->getIdentity();
 
-            $this->loginBacklinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->loginBackLinkRedirect($login);
+            $this->initialRedirect();
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         }
@@ -283,7 +285,9 @@ final class AuthenticationPresenter extends BasePresenter {
             $values = $form->getValues();
 
             $connection->beginTransaction();
-
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
             $this->accountManager->sendRecovery($template, $login);
@@ -303,12 +307,12 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function loginBacklinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
             return;
         }
         $this->restoreRequest($this->backlink);
-        
+
         /* If it was't valid backlink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
@@ -332,20 +336,25 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($url->getHost()) { // this would indicate absolute URL
             if (in_array($url->getHost(), $this->globalParameters['authentication']['backlinkHosts'])) {
-                $this->redirectUrl((string) $url, 303);
+                $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);
             }
         }
     }
 
-    private function initialRedirect($login) {
-        if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:', array(self::PARAM_DISPATCH => 1));
-        } else {
-            $this->redirect(':Public:Dashboard:', array(self::PARAM_DISPATCH => 1));
-        }
-        // or else redirect to page suggesting registration
+    /**
+     * Fuck redirect!!!
+     */
+    private function initialRedirect() {
+        $this->redirect('Dispatch:default', [self::PARAM_DISPATCH => 1]);
     }
 
+    public function getSelectedContestSymbol() {
+        return null;
+    }
+
+    public function getNavRoot() {
+        return null;
+    }
 }

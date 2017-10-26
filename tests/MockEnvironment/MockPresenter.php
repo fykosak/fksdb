@@ -14,5 +14,13 @@ class MockPresenter extends BasePresenter {
         return 'cs';
     }
 
+    public function getSelectedContestSymbol() {
+        return '';
+    }
+
+    public function getNavRoot() {
+        return null;
+    }
+
 }
 

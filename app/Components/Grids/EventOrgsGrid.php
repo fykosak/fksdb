@@ -43,7 +43,7 @@ class EventOrgsGrid extends BaseGrid {
             ->setShow(function($row) use ($presenter) {
                 return $presenter->authorized("edit", ['id' => $row->e_org_id]);
             });
-        $this->addButton("delete", _("Smazat"))->setClass('btn btn-xs btn-danger')->setText('Smazat')//todo i18n
+        $this->addButton("delete", _("Smazat"))->setClass('btn btn-sm btn-danger')->setText('Smazat')//todo i18n
             ->setLink(function ($row) use ($that) {
                 return $that->getPresenter()->link("delete", $row->e_org_id);
             })

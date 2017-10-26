@@ -97,7 +97,7 @@ class Merger {
     }
 
     /**
-     * @param booled $commit
+     * @param boolean $commit
      * @return boolean
      */
     public function merge($commit = null) {

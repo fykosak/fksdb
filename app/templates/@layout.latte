@@ -8,58 +8,58 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         {control cssLoader
-        'css/bootstrap.min.css' => [screen],
-        'css/bootstrap-theme.min.css' => [screen],
+        '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' => [screen],
         'css/style.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
+        'css/font-awesome-4.5.0/css/font-awesome.min.css' => [all]
         }
 
         {block head}{/block}
     </head>
-
-    <body>
-        <div id="wrap">
-
-            {block body}
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Radnom background generator -->
+    <body data-mode="{rand(1,4)}">
+        {block body}
+            <nav n:class="'fixed-top navbar navbar-expand-md ',$contestSymbol?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
+                    <a class="navbar-brand" href="{$basePath}/"><i class="fa fa-home" aria-hidden="true"></i> FKSDB</a>
                 </div>
 
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">                
-                    {control navigation:navbar}
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    {block nav }
+                    {control navigation:navbar $navRoot}
+                    {/block}
 
                     {block user-info}
-                    <ul  n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                    <ul n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
                         {var $login => $user->getIdentity()}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-user"></span>
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                <span class="fa fa-user"></span>
                                 {if $login->getPerson()}<b>{$login->getPerson()->getFullname()}</b>
                                 {else}
                                     {_'Uživatel'} <b>{$login->login}</b>{/if} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a n:href=":Settings:">{_'Nastavení'}</a></li>
-                                    <li class="divider"></li>
-                                    <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
-                                </ul>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" n:href=":Settings:">{_'Nastavení'}</a>
+                                    <span class="dropdown-divider"></span>
+                                    <a class="dropdown-item" n:href=":Authentication:logout">{_'Odhlásit'}</a>
+                                </div>
                             </li>
-                        </ul>                
+                        </ul>
                         {/block}
 
                     </div><!-- /.navbar-collapse -->
                 </nav>
-
-                <div class="container">
+                <div id="wrap" style="min-height:100%">
+                <div class="container py-4 bg-white" style="height:100%">
                     {control breadcrumbs}
-                    {block titleBody}<h1 class="page-header">{$title}</h1>{/block}
+                    {block titleBody}<h1 class="page-header">{$title}<small class="text-secondary"> {$subtitle}</small></h1>{/block}
 
 
                     {block flashes}
@@ -69,25 +69,27 @@
                     {include #content}
 
                 </div>
-                {/block body}
-            </div> <!-- wrap -->
-            <div id="footer" n:block="footer">
-                <div class="container text-center text-muted">
-                    <ul class="list-piped">
-                        <li><a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a></li>
-                        <li><a href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></li>
-                        <li>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></li>
-                    </ul>
+                </div> <!-- wrap -->
+            {/block body}
+
+            <footer n:block="footer">
+                <div class="container text-center text-light py-3">
+                    <span class="list-piped">
+                    <span>Created by <a class="text-light" href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a>
+                        &amp; <a class="text-light" href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></span>
+                        <span>{_'Správce systému'}: <a class="text-light" href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></span>
+                    </span>
                 </div>
-            </div>
+            </footer>
 
             <div id="spinner"></div>
             {block scripts}
-            {control jsLoader 
+            {control jsLoader
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-        'js/bootstrap.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
         'js/main.js'

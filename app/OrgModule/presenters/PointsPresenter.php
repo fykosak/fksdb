@@ -18,7 +18,7 @@ use ServiceTaskStudyYear;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
-class PointsPresenter extends SeriesPresenter {
+class PointsPresenter extends BasePresenter {
 
     /**
      * Show all tasks?
@@ -143,8 +143,9 @@ class PointsPresenter extends SeriesPresenter {
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
-        $form->addSubmit('save', _('Uložit'));
-        $form->onSuccess[] = array($this, 'pointsFormSuccess');
+        $submit = $form->addSubmit('save', _('Uložit'));
+        $submit->getControlPrototype()->addClass('btn-success');
+        $form->onSuccess[] = [$this, 'pointsFormSuccess'];
 
         // JS dependencies        
         $this->registerJSFile('js/points.js');

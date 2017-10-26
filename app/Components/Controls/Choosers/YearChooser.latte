@@ -1,0 +1,12 @@
+<div class="navbar-nav nav">
+<div class="dropdown">
+  <span class="nav-link dropdown-toggle" data-toggle="dropdown">
+    {$currentYear?:_('Ročník') }
+  </span>
+  <div class="dropdown-menu">
+  {foreach $years as $index => $year}
+    <a class="dropdown-item"  href="{link change! $year}">{$year}. Ročník</a>
+        {/foreach}
+  </div>
+</div>
+</div>

@@ -96,7 +96,6 @@ class EventPresenter extends EntityPresenter {
      */
     private $serviceEventOrg;
 
-
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -138,7 +137,7 @@ class EventPresenter extends EntityPresenter {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    public function authorizedApplications($id) {
+    public function authorizedApplications() {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
@@ -147,7 +146,7 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedModel($id) {
+    public function authorizedModel() {
         $model = $this->getModel();
         if (!$model) {
             throw new BadRequestException('Neexistující model.', 404);
@@ -160,6 +159,7 @@ class EventPresenter extends EntityPresenter {
     }
 
     public function titleList() {
+        $this->setIcon('<i class="fa fa-calendar-check-o" aria-hidden="true"></i>');
         $this->setTitle(_('Akce'));
     }
 
@@ -167,22 +167,22 @@ class EventPresenter extends EntityPresenter {
         $this->setTitle(_('Přidat akci'));
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
@@ -221,31 +221,41 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
-    protected function createComponentApplicationsGrid($name) {
-        $source = new SingleEventSource($this->getModel(), $this->container);
+    protected function createComponentApplicationsGrid() {
+        /**
+         * @var $event \ModelEvent
+         */
+        $event = $this->getModel();
+        $source = new SingleEventSource($event, $this->container);
         $source->order('created');
 
         $flashDump = $this->flashDumpFactory->createApplication();
         $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory, $flashDump);
-        $template = $this->layoutResolver->getTableLayout($this->getModel());
+        $template = $this->layoutResolver->getTableLayout($event);
         $grid->setTemplate($template);
         $grid->setSearchable(true);
 
         return $grid;
     }
 
-    protected function createComponentApplicationsImport($name) {
-        $source = new SingleEventSource($this->getModel(), $this->container);
+    protected function createComponentApplicationsImport() {
+        /**
+         * @var $event \ModelEvent
+         */
+        $event = $this->getModel();
+        $source = new SingleEventSource($event, $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
-        $machine = $this->container->createEventMachine($this->getModel());
-        $handler = $this->handlerFactory->create($this->getModel(), $logger);
-
+        $machine = $this->container->createEventMachine($event);
+        $handler = $this->handlerFactory->create($event, $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ImportComponent($machine, $source, $handler, $flashDump, $this->container);
         return $component;
     }
 
-    protected function createComponentGraphComponent($name) {
+    protected function createComponentGraphComponent() {
+        /**
+         * @var $event \ModelEvent
+         */
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
 
@@ -259,7 +269,9 @@ class EventPresenter extends EntityPresenter {
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
-
+        /**
+         * @var $event \ModelEvent
+         */
         if ($event = $this->getModel()) { // intentionally =
             $holder = $this->container->createEventHolder($event);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
@@ -329,12 +341,10 @@ class EventPresenter extends EntityPresenter {
             $model = $this->getModel();
         }
 
-
         try {
             if (!$connection->beginTransaction()) {
                 throw new ModelException();
             }
-
             /*
              * Event
              */
@@ -346,7 +356,6 @@ class EventPresenter extends EntityPresenter {
             ) {
                 throw new ForbiddenRequestException();
             }
-
             $this->serviceEvent->save($model);
 
             /*
@@ -368,5 +377,4 @@ class EventPresenter extends EntityPresenter {
             $this->flashMessage(_('Nedostatečné oprávnění.'), self::FLASH_ERROR);
         }
     }
-
 }

@@ -4,11 +4,14 @@ namespace ORM\Models\Events;
 
 use AbstractModelSingle;
 use DbNames;
-use ModelFyziklaniSubmit;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string category
+ * @property string room
+ * @property string name
+ * @property integer e_fyziklani_team_id
  */
 class ModelFyziklaniTeam extends AbstractModelSingle {
 
@@ -17,7 +20,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     }
     /**
      *
-     * @return ModelFyziklaniSubmit[]
+     * @return \ModelBrawlSubmit[]
      */
     public function getSubmits() {
         $result = array();

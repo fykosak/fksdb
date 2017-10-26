@@ -22,7 +22,7 @@ use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
-class InboxPresenter extends SeriesPresenter {
+class InboxPresenter extends BasePresenter {
 
     const POST_CT_ID = 'ctId';
     const POST_ORDER = 'order';
@@ -67,6 +67,8 @@ class InboxPresenter extends SeriesPresenter {
      * @var PersonFactory
      */
     private $personFactory;
+
+    // protected $icon = '<i class="fa fa-inbox" aria-hidden="true"></i>';
 
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
@@ -116,14 +118,20 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function titleDefault() {
+        $this->setIcon('<i class="fa fa-inbox" aria-hidden="true"></i>');
         $this->setTitle(_('Příjem řešení'));
     }
 
     public function renderDefault() {
-        $this['inboxForm']->setDefaults();
+        /**
+         * 
+         */
+        $inboxForm = $this['inboxForm'];
+        $inboxForm->setDefaults();
     }
 
     public function titleHandout() {
+        $this->setIcon('<i class="fa fa-users" aria-hidden="true"></i>');
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
     }
 
@@ -159,7 +167,8 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            [$this->seriesTable, 'getFingerprint'],
+            [$this->seriesTable, 'formatAsFormValues']
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -168,9 +177,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $this->serviceTaskStudyYear->preloadCache(array(
+        $this->serviceTaskStudyYear->preloadCache([
             'task_id' => $tasks,
-        ));
+        ]);
 
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
@@ -282,9 +291,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $uploadSubmits = array();
         $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
+            DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
+            DbNames::TAB_TASK . '.series' => $series
+        ))->order(DbNames::TAB_TASK . '.tasknr');
         foreach ($submits as $row) {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
@@ -370,7 +379,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

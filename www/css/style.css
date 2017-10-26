@@ -1,39 +1,25 @@
 html, body {
-    padding-top: 35px;
+    /*padding-top: 35px;*/
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
 }
 
 /* Wrapper for page content to push down footer */
 #wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
     /* Negative indent footer by its height */
-    margin: 0 auto -60px;
+    margin: 0 auto -55px;
     /* Pad bottom by footer height */
-    padding: 0 0 60px;
+    padding: 55px 0;
 }
 
-/* Set the fixed height of the footer here */
-#footer {
-    height: 60px;
-    padding: 20px 0;
-    /*background-color: #eee;*/
-}
-
-.list-piped > li {
+.list-piped > * {
     display: inline-block;
 }
 
-.list-piped > li + li:before {
+.list-piped > * + *:before {
     color: #CCCCCC;
     content: "| ";
-    padding: 0px;
-}
-
-.navbar-brand .beta {
-    font-size: 65%;
+    padding: 0;
 }
 
 /*
@@ -113,3 +99,87 @@ fieldset .well {
     border: 1px solid #66afe9;
 }
 
+.dispatch-logo {
+    height: 10rem;
+}
+
+.btn-fykos {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.btn-vyfuk {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}
+
+.btn-fykos:hover {
+    color: #fff;
+    background-color: #005CC1;
+    border-color: #0042A7;
+}
+
+.btn-vyfuk:hover {
+    color: #fff;
+    background-color: #E62F00;
+    border-color: #CC1500;
+}
+
+.btn-brawl:hover {
+    color: #fff;
+    background-color: #5C00C1;
+    border-color: #4200A7;
+}
+
+.btn-brawl {
+    color: #fff;
+    background-color: #7511da;
+    border-color: #5C00C1;
+}
+
+.bg-vyfuk {
+    background-color: #ff4800;;
+}
+
+.bg-fykos {
+    background-color: #1175da;
+}
+
+.bg-brawl {
+    background-color: #7611da;
+}
+
+.bg-error {
+    background-color: #dc3545;
+}
+
+.link-fykos {
+    color: #1175da;
+}
+
+.link-fykos:hover {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.link-vyfuk {
+    color: #ff4800;
+}
+
+.link-vyfuk:hover {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}
+
+.image-error {
+    width: 100%;
+    text-align: center;
+}
+
+.image-error img {
+    height: 20rem;
+}

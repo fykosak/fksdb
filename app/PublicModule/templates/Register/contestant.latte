@@ -1,3 +1,8 @@
+{layout ../../../templates/@layout.latte}
 {block content}
-{control contestantForm}
+    {control contestantForm}
+{/block}
+{block user-info}
+    {control languageNav}
+    {include #parent}
 {/block}
