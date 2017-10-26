@@ -1,10 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use ModelRole;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use ServiceContest;
 use YearCalculator;
@@ -15,7 +14,7 @@ use YearCalculator;
  * @author Michal Koutný <michal@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ContestChooser extends Nav {
+class ContestChooser extends Chooser {
 
     const SOURCE_SESSION = 0x1;
     const SOURCE_URL = 0x2;
@@ -157,7 +156,7 @@ class ContestChooser extends Nav {
     public function render() {
         $this->template->availableContests = $this->getContests();
         $this->template->currentContest = $this->getContest();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'ContestChooser.latte');
         $this->template->render();
     }
 

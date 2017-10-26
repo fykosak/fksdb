@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
+use Nette\Templating\Template;
 use OrgModule\BasePresenter;
 
 /**
@@ -31,6 +32,9 @@ class LanguageChooser extends Control {
      * @var mixed
      */
     private $language;
+    /**
+     * @var array
+     */
     private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     private $initialized = false;
@@ -131,6 +135,9 @@ class LanguageChooser extends Control {
     }
 
     protected function createTemplate($class = NULL) {
+        /**
+         * @var $template Template
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getPresenter()->getTranslator());
         return $template;
@@ -142,7 +149,7 @@ class LanguageChooser extends Control {
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'LanguageChooser.latte');
         $this->template->render();
     }
 

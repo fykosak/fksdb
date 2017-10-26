@@ -51,6 +51,7 @@ use ServiceContestant;
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
 
+    use \LanguageNav;
     /**
      * @var integer
      * @persistent
@@ -178,7 +179,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
                 $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
-                $this->redirect(':Chooser:default');
+                $this->redirect(':Dispatch:default');
             }
         }
     }
@@ -302,7 +303,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $login = $handler->getPerson()->getLogin();
                     $that->getUser()->login($login);
                 }
-                $this->redirect(':Chooser:default');
+                $this->redirect(':Dispatch:default');
             }
         };
 

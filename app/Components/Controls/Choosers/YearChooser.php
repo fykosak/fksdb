@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use ModelRole;
 use Nette\Application\BadRequestException;
@@ -15,7 +15,7 @@ use YearCalculator;
  * @author Michal Koutný <michal@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class YearChooser extends Nav {
+class YearChooser extends Chooser {
 
     /**
      * @var YearCalculator

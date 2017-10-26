@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\BrawlNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use Nette\Application\UI\Control;
 
@@ -120,7 +120,7 @@ class BrawlChooser extends Control {
     public function render() {
         $this->template->availableBrawls = $this->getBrawls();
         $this->template->currentEvent = $this->getEvent();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'BrawlChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'BrawlChooser.latte');
         $this->template->render();
     }
 

@@ -1,6 +1,8 @@
 <?php
 
-class ChooserPresenter extends AuthenticatedPresenter implements IContestPresenter {
+class DispatchPresenter extends AuthenticatedPresenter implements IContestPresenter {
+
+    use \LanguageNav;
 
     public function getSelectedContest() {
         return null;

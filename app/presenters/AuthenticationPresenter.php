@@ -17,6 +17,8 @@ use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
 
+    use \LanguageNav;
+
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
@@ -127,7 +129,7 @@ final class AuthenticationPresenter extends BasePresenter {
         // -> check for the GSID parameter
 
         if ($this->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity            
+            $this->getUser()->logout(true); //clear identity
         } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
@@ -345,7 +347,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * Fuck redirect!!!
      */
     private function initialRedirect() {
-        $this->redirect('Chooser:default', [self::PARAM_DISPATCH => 1]);
+        $this->redirect('Dispatch:default', [self::PARAM_DISPATCH => 1]);
     }
 
     public function getSelectedContestSymbol() {

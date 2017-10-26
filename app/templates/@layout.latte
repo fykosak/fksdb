@@ -51,13 +51,13 @@
                                     <a class="dropdown-item" n:href=":Authentication:logout">{_'Odhlásit'}</a>
                                 </div>
                             </li>
-                        </ul>                
+                        </ul>
                         {/block}
 
                     </div><!-- /.navbar-collapse -->
                 </nav>
                 <div id="wrap" style="min-height:100%">
-                <div class="container py-4 bg-white" style="min-height:100%">
+                <div class="container py-4 bg-white" style="height:100%">
                     {control breadcrumbs}
                     {block titleBody}<h1 class="page-header">{$title}<small class="text-secondary"> {$subtitle}</small></h1>{/block}
 
@@ -73,18 +73,18 @@
             {/block body}
 
             <footer n:block="footer">
-                <div class="container text-center text-muted bg-white py-3">
+                <div class="container text-center text-light py-3">
                     <span class="list-piped">
-                    <span>Created with <b>&lt;love/&gt;</b> by <a class="text-muted" href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a>
-                        &amp; <a class="text-muted" href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></span>
-                        <span>{_'Správce systému'}: <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></span>
+                    <span>Created by <a class="text-light" href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a>
+                        &amp; <a class="text-light" href="http://vyfuk.mff.cuni.cz/" title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a></span>
+                        <span>{_'Správce systému'}: <a class="text-light" href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a></span>
                     </span>
                 </div>
             </footer>
 
             <div id="spinner"></div>
             {block scripts}
-            {control jsLoader 
+            {control jsLoader
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',

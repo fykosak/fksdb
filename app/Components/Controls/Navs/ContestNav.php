@@ -4,10 +4,13 @@
  * trait content contest, year, and series chooser
  */
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Navs;
 
+use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
+use FKSDB\Components\Controls\Choosers\SeriesChooser;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 
@@ -105,7 +108,7 @@ class ContestNav extends Control {
     }
 
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestNav.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'ContestNav.latte');
         $this->template->render();
     }
 

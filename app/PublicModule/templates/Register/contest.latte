@@ -1,13 +1,17 @@
 {layout ../../../templates/@layout.latte}
 
 {block content}
-<h2>{_'Zvolit seminář'}</h2>
-{dump $contests}
-{foreach $contests as $contest}
- <a
- href="{link changeContest! $contest->contest_id}"
- n:class="'col-12 btn btn-lg btn-block', 'btn-'.$contest->getContestSymbol()">{$contest->name}</a>
-{/foreach}
+    <h2>{_'Zvolit seminář'}</h2>
+    {dump $contests}
+    {foreach $contests as $contest}
+        <a
+                href="{link changeContest! $contest->contest_id}"
+                n:class="'col-12 btn btn-lg btn-block', 'btn-'.$contest->getContestSymbol()">{$contest->name}</a>
+    {/foreach}
+{/block}
 
 
+{block user-info}
+    {control languageNav}
+    {include #parent}
 {/block}

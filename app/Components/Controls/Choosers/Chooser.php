@@ -3,15 +3,15 @@
  * @author Michal Červeňák <miso@fykos.cz>
  */
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use Nette\Application\UI\Control;
 use ModelContest;
-use Nette\ComponentModel\IContainer;
 use Nette\Http\Session;
+
 use ServiceContest;
 
-abstract class Nav extends Control {
+abstract class Chooser extends Control {
 
     const SESSION_PREFIX = 'contestPreset';
 
@@ -62,7 +62,15 @@ abstract class Nav extends Control {
      * @return \ModelLogin
      */
     protected function getLogin() {
-        return $this->getPresenter()->getUser()->getIdentity();
+        /**
+         * @var $presenter \OrgModule\BasePresenter|\PublicModule\BasePresenter
+         */
+        $presenter = $this->getPresenter();
+        /**
+         * @var $model \ModelLogin
+         */
+        $model = $presenter->getUser()->getIdentity();
+        return $model;
     }
 
     /**

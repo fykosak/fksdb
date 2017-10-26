@@ -48,7 +48,7 @@ trait ContestNav {
     private $newParams = null;
 
     protected function createComponentContestNav() {
-        $control = new Controls\ContestNav\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
+        $control = new Controls\Navs\ContestNav($this->getYearCalculator(), $this->seriesCalculator, $this->session, $this->serviceContest, $this->getTranslator());
         $control->setRole($this->role);
         return $control;
     }

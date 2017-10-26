@@ -1,6 +1,10 @@
 {layout ../../../templates/@layout.latte}
 
 {block content}
-<h2>{_'Zadejte e-mail'}</h2>
-{control emailForm}
+    <h2>{_'Zadejte e-mail'}</h2>
+    {control emailForm}
+{/block}
+{block user-info}
+    {control languageNav}
+    {include #parent}
 {/block}

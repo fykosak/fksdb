@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\ContestNav;
+namespace FKSDB\Components\Controls\Choosers;
 
 use Nette\Application\UI\Control;
 use Nette\Diagnostics\Debugger;
@@ -15,7 +15,7 @@ use ServiceContest;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SeriesChooser extends Nav {
+class SeriesChooser extends Chooser {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
@@ -95,7 +95,7 @@ class SeriesChooser extends Nav {
     public function render() {
         $this->template->allowedSeries = $this->getAllowedSeries();
         $this->template->currentSeries = $this->getSeries();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SeriesChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'SeriesChooser.latte');
         $this->template->render();
     }
 
