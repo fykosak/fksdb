@@ -27,4 +27,12 @@ class WebServicePresenter extends BasePresenter {
         }
     }
 
+    public function getSelectedContestSymbol() {
+        return null;
+    }
+
+    public function getNavRoot() {
+        return null;
+    }
+
 }

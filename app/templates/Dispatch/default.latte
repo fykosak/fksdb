@@ -1,33 +1,40 @@
 {layout ../../templates/@layout.latte }
 
 {block #content}
-<div class="container">
-    <div class="row">
-        {foreach $contests as $contest}
-            <div class="col-6 row text-center">
+    <div class="container">
+        <div class="row">
+            {foreach $contests as $contest}
+                <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
 
-                    <img class="col-12 my-3" n:attr="src => '/images/contests/'.$contest['contest']->getContestSymbol().'.svg'" alt=""/>
+                    <div class="col-12 my-3">
+                        <img class="dispatch-logo" n:attr="src => '/images/contests/'.$contest['contest']->getContestSymbol().'.svg'"
+                             alt=""/>
+                    </div>
+                    <div class="col-12">
                         {foreach $contest['allowed'] as $role=>$allow}
                             {if $allow}
                                 <a
-                                n:class="'btn-block btn btn-lg','btn-'.$contest['contest']->getContestSymbol()"
-                                href="{link changeContest! $contest['contest']->contest_id,$role}"
+                                        n:class="'btn-block btn btn-lg','btn-'.$contest['contest']->getContestSymbol()"
+                                        href="{link changeContest! $contest['contest']->contest_id,$role}"
                                 >{$contest['contest']->name} - {$role}</a>
                             {else}
-                                <span n:class="'btn-block disabled btn btn-lg','btn-'.$contest['contest']->getContestSymbol()">{$contest['contest']->name} - {_($role)}</span>
+                                <span n:class="'btn-block disabled btn btn-lg','btn-'.$contest['contest']->getContestSymbol()">{$contest['contest']->name}
+                                    - {_($role)}</span>
                             {/if}
                         {/foreach}
+                    </div>
 
-            </div>
-        {/foreach}
-        <div class="col-6">
-            <div class="row text-center">
-                <img class="btn-block my-3" src="/images/contests/fyziklani.svg" alt=""/>
-                <a href="{link :Brawl:Dashboard: }" class="col-12 btn btn-brawl btn-lg btn-block">{_('Fykosí Fyzikláni')}</a>
+                </div>
+            {/foreach}
+            <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
+                <div class="col-12 my-3"><img class="dispatch-logo" src="/images/contests/fyziklani.svg" alt=""/></div>
+                <div class="col-12">
+                    <a href="{link :Brawl:Dashboard: }"
+                       class="col-12 btn btn-brawl btn-lg btn-block">{_('Fykosí Fyzikláni')}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {/block}
 
 {block user-info}

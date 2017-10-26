@@ -99,6 +99,10 @@ fieldset .well {
     border: 1px solid #66afe9;
 }
 
+.dispatch-logo {
+    height: 10rem;
+}
+
 .btn-fykos {
     color: #fff;
     background-color: #1175da;

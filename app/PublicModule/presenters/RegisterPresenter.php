@@ -179,7 +179,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
                 $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullname(), $contest->name), self::FLASH_INFO);
-                $this->redirect(':Dispatch:default');
+                $this->redirect(':Authentication:login');
             }
         }
     }
@@ -233,7 +233,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addText('email', _('email'));
-        $form->addSubmit('submit', _('hladať'));
+        $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = [$this, 'emailFormSucceeded'];
         return $form;
     }
@@ -247,8 +247,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function renderContestant() {
 
         $person = $this->getPerson();
-
-        $referencedId = $this['contestantForm']->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
+        /**
+         * @var $contestantForm Form
+         */
+        $contestantForm = $this['contestantForm'];
+         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
@@ -306,8 +309,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                 $this->redirect(':Dispatch:default');
             }
         };
-
-
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
 
         return $control;
