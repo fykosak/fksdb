@@ -102,6 +102,11 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
+    public function startup() {
+        parent::startup();
+        $this->startupRedirects();
+    }
+
     public function actionLogout() {
         $subdomainAuth = $this->globalParameters['subdomain']['auth'];
         $subdomain = $this->getParam('subdomain');
@@ -228,10 +233,10 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addPassword('password', _('Heslo'))
-                ->addRule(Form::FILLED, _('Zadejte heslo.'));
+            ->addRule(Form::FILLED, _('Zadejte heslo.'));
         //$form->addCheckbox('remember', _('Zapamatovat si přihlášení'));
 
         $form->addSubmit('send', _('Přihlásit'));
@@ -251,7 +256,7 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentRecoverForm() {
         $form = new Form();
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-                ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
 
         $form->addSubmit('send', _('Pokračovat'));
 
@@ -328,9 +333,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($url->getHost()) { // this would indicate absolute URL
             if (in_array($url->getHost(), $this->globalParameters['authentication']['backlinkHosts'])) {
-                $this->redirectUrl((string) $url, 303);
+                $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string) $url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);
             }
         }
     }
