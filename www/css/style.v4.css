@@ -1,0 +1,185 @@
+html, body {
+    /*padding-top: 35px;*/
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    /* Negative indent footer by its height */
+    margin: 0 auto -55px;
+    /* Pad bottom by footer height */
+    padding: 55px 0;
+}
+
+.list-piped > * {
+    display: inline-block;
+}
+
+.list-piped > * + *:before {
+    color: #CCCCCC;
+    content: "| ";
+    padding: 0;
+}
+
+/*
+ * Forms
+ */
+.well legend {
+    color: #999;
+    border-style: none;
+    border-width: 0;
+    font-size: 100%;
+    margin-bottom: 0px;
+    position: absolute;
+    top: -2em;
+    z-index: 2;
+}
+
+fieldset .well {
+    margin-top: 2em;
+}
+
+.clear-referenced {
+    position: absolute;
+    right: 1em;
+    top: -3em;
+    z-index: 3;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+
+.right-inner-addon input {
+    padding-right: 30px;
+}
+
+.right-inner-addon i {
+    position: absolute;
+    right: 0;
+    padding: 8px 12px;
+    cursor: pointer; /* TODO not general enough, might be a static icon */
+}
+
+.required .control-label:before {
+    color: #b94a48;
+    /*content: '* ';*/
+    display: inline;
+}
+
+.task-code-container input.valid {
+    color: #3c763d;
+}
+
+.task-code-container input.invalid {
+    color: #a94442;
+}
+
+.task-code-container .team {
+    width: 6em;
+}
+
+.task-code-container .task {
+    width: 2em;
+}
+
+.task-code-container .control {
+    width: 1em;
+}
+
+.task-code-container .control, .task-code-container .task, .task-code-container .team {
+    border: none;
+    outline-offset: 0;
+    outline-color: transparent;
+}
+
+.task-code-container > div {
+    font-size: 120%;
+    border: 1px solid #66afe9;
+}
+
+.dispatch-logo {
+    height: 10rem;
+}
+
+.btn-fykos {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.btn-vyfuk {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}
+
+.btn-fykos:hover {
+    color: #fff;
+    background-color: #005CC1;
+    border-color: #0042A7;
+}
+
+.btn-vyfuk:hover {
+    color: #fff;
+    background-color: #E62F00;
+    border-color: #CC1500;
+}
+
+.btn-brawl:hover {
+    color: #fff;
+    background-color: #5C00C1;
+    border-color: #4200A7;
+}
+
+.btn-brawl {
+    color: #fff;
+    background-color: #7511da;
+    border-color: #5C00C1;
+}
+
+.bg-vyfuk {
+    background-color: #ff4800;;
+}
+
+.bg-fykos {
+    background-color: #1175da;
+}
+
+.bg-brawl {
+    background-color: #7611da;
+}
+
+.bg-error {
+    background-color: #dc3545;
+}
+
+.link-fykos {
+    color: #1175da;
+}
+
+.link-fykos:hover {
+    color: #fff;
+    background-color: #1175da;
+    border-color: #005CC1;
+}
+
+.link-vyfuk {
+    color: #ff4800;
+}
+
+.link-vyfuk:hover {
+    color: #fff;
+    background-color: #ff4800;
+    border-color: #E62F00;
+}
+
+.image-error {
+    width: 100%;
+    text-align: center;
+}
+
+.image-error img {
+    height: 20rem;
+}

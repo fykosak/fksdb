@@ -8,15 +8,16 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
+    public function getSelectedContestSymbol() {
+        return 'error';
+    }
+
     protected function putIntoBreadcrumbs() {
         /* empty */
     }
 
-    public function titleDefault($exception) {
+    public function titleDefault() {
         $title = _('Chyba');
-        if ($exception instanceof BadRequestException) {
-            $title .= ' ' . $exception->getCode();
-        }
         $this->setTitle($title);
     }
 
@@ -29,15 +30,21 @@ class ErrorPresenter extends BasePresenter {
             $this->payload->error = TRUE;
             $this->terminate();
         } elseif ($exception instanceof BadRequestException) {
+            //Debugger::barDump($exception);
             $code = $exception->getCode();
+
             // known exception or general 500
-            $this->setView(in_array($code, array(403, 404, 405)) ? $code : '500');
+            $this->setView(in_array($code, array(403, 404, 405)) ? /*$code*/ 405: '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {
             $this->setView('500'); // load template 500.latte
             Debugger::log($exception, Debugger::ERROR); // and log exception
         }
+    }
+
+    public function getNavRoot() {
+        return null;
     }
 
 }

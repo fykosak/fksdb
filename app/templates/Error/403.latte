@@ -1,12 +1,18 @@
+{layout ../@layout.v4.latte}
 {var $robots = noindex}
 
 {block content}
+<div class="row text-center mb-3">
+    <div class="image-error">
+        <img src="/images/403.svg" alt="403"/>
+    </div>
+</div>
 
-<p>{_'K zobrazení stránky nemáte dostatečné oprávnění. Možná řešení:'}</p>
+<h2>{_'K zobrazení stránky nemáte dostatečné oprávnění.'}<span class="badge badge-warning">#403</span></h2>
+<span>{_'Možná řešení:'}</span>
 <ul>
     <li><a n:href=":Public:Register:">{_'Zaregistrovat se jako řešitel'}</a> ({_'je třeba doplnit školní a korespondenční údaje, případně se přihlásit do nového ročníku'}),</li>
     <li>{_'stát se organizátorem'},</li>
     <li>{_'požádat o přidělení role'}.</li>
+    <!--<li><a href="{*link Chooser:default*}">{*_'Pokračuj na rázcestník aktivít'*}</a></li>-->
 </ul>
-
-<p><small>{_'chyba'} 403</small></p>
