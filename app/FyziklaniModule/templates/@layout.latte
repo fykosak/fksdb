@@ -1,6 +1,11 @@
-{layout '../../templates/@layout.Fyziklani.latte'}
+{layout '../../templates/@layout.v4.latte'}
 
 {block user-info}
+    <div class="navbar-nav">
+        <div class="nav-item">
+            <a class="nav-link" n:href=":Fyziklani:Dashboard:default">{_('Pultík')}</a>
+        </div>
+    </div>
     {control brawlNav}
     {include #parent}
 {/block}
