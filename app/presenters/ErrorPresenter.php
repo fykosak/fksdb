@@ -34,7 +34,7 @@ class ErrorPresenter extends BasePresenter {
             $code = $exception->getCode();
 
             // known exception or general 500
-            $this->setView(in_array($code, array(403, 404, 405)) ? /*$code*/ 405: '500');
+            $this->setView(in_array($code, array(403, 404, 405)) ? $code: '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {
