@@ -43,13 +43,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @return array of ModelOrg indexed by contest_id (i.e. impersonal orgs)
      */
-    public function getActiveOrgs(YearCalculator $yearCalculator) {
+    public function getActiveOrgsContests(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {
             return $this->getPerson()->getActiveOrgs($yearCalculator);
         } else {
-            $result = array();
+            $result = [];
             foreach ($this->getRoles() as $grant) {
                 if ($grant->getRoleId() == ModelRole::ORG) {
                     $result[$grant->getContestId()] = null;
@@ -59,9 +59,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-  
+    public function getActiveOrgs(YearCalculator $yearCalculator) {
+        return $this->getActiveOrgsContests($yearCalculator);
+    }
+
+
     public function isOrg($yearCalculator) {
-        return count($this->getActiveOrgs($yearCalculator)) > 0;
+        return count($this->getActiveOrgsContests($yearCalculator)) > 0;
     }
 
     public function isContestant($yearCalculator) {
@@ -75,13 +79,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return string Human readable identification of the login.
      */
     public function getName() {
         $person = $this->getPerson();
         if ($person) {
-            return (string) $person;
+            return (string)$person;
         }
         if ($this->login) {
             return $this->login;
@@ -96,9 +100,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Sets hash of the instance with correct hashing function.
-     * 
+     *
      * @note Must be called after setting login_id.
-     * 
+     *
      * @param string $password password
      */
     public function setHash($password) {
@@ -112,7 +116,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @var array   cache
+     * @var Grant[]   cache
      */
     private $roles;
 
@@ -146,5 +150,3 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
 }
-
-?>
