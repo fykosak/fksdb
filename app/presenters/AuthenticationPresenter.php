@@ -40,11 +40,6 @@ final class AuthenticationPresenter extends BasePresenter {
     public $flag;
 
     /**
-     * @var Facebook
-     */
-    private $facebook;
-
-    /**
      * @var FacebookAuthenticator
      */
     private $facebookAuthenticator;
@@ -55,7 +50,8 @@ final class AuthenticationPresenter extends BasePresenter {
     private $serviceAuthToken;
 
     /**
-     * @var IGlobalSession
+     * todo check if type is persistent
+     * @var \Authentication\SSO\GlobalSession
      */
     private $globalSession;
 
@@ -74,9 +70,6 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
-    public function injectFacebook(Facebook $facebook) {
-        $this->facebook = $facebook;
-    }
 
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
@@ -108,18 +101,18 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function actionLogout() {
-        $subdomainAuth = $this->globalParameters['subdomain']['auth'];
-        $subdomain = $this->getParam('subdomain');
+        $subDomainAuth = $this->globalParameters['subdomain']['auth'];
+        $subDomain = $this->getParameter('subdomain');
 
-        if ($subdomain != $subdomainAuth) {
+        if ($subDomain != $subDomainAuth) {
             // local logout
             $this->getUser()->logout(true);
 
             // redirect to global logout
-            $params = array(
-                'subdomain' => $subdomainAuth,
+            $params = [
+                'subdomain' => $subDomainAuth,
                 self::PARAM_GSID => $this->globalSession->getId(),
-            );
+            ];
             $url = $this->link('//this', $params);
             $this->redirectUrl($url);
             return;
@@ -129,31 +122,35 @@ final class AuthenticationPresenter extends BasePresenter {
 
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
-        } else if ($this->getParam(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
+        } else if ($this->getParameter(self::PARAM_GSID)) { // global session may exist but central login doesn't know it (e.g. expired its session)
             // We restart the global session with provided parameter.
             // This is secure as only harm an attacker can make to the user is to log him out.
             $this->globalSession->destroy();
 
             // If the GSID is valid, we'll obtain user's identity and log him out promptly.
-            $this->globalSession->start($this->getParam(self::PARAM_GSID));
+
+            $this->globalSession->start($this->getParameter(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage(_("Byl jste odhlášen."), self::FLASH_SUCCESS);
-        $this->loginBacklinkRedirect();
-        $this->redirect("login");
+        $this->flashMessage(_('Byl jste odhlášen.'), self::FLASH_SUCCESS);
+        $this->loginBackLinkRedirect();
+        $this->redirect('login');
     }
 
     public function actionLogin() {
         if ($this->isLoggedIn()) {
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->getUser()->getIdentity();
-            $this->loginBacklinkRedirect($login);
+            $this->loginBackLinkRedirect($login);
             $this->initialRedirect($login);
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
-                $this->loginBacklinkRedirect();
+                $this->loginBackLinkRedirect();
             }
-            if ($this->getParam(self::PARAM_REASON)) {
-                switch ($this->getParam(self::PARAM_REASON)) {
+            if ($this->getParameter(self::PARAM_REASON)) {
+                switch ($this->getParameter(self::PARAM_REASON)) {
                     case self::REASON_TIMEOUT:
                         $this->flashMessage(_('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.'), self::FLASH_INFO);
                         break;
@@ -165,25 +162,11 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    public function actionFbLogin() {
-        $this->setView('login'); // do not provide a special view
-        try {
-            $me = $this->facebook->api('/me');
-            $identity = $this->facebookAuthenticator->authenticate($me);
-
-            $this->getUser()->login($identity);
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
-        } catch (AuthenticationException $e) {
-            $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
-        } catch (FacebookApiException $e) {
-            $fbUrl = $this->getFbLoginUrl();
-            $this->redirectUrl($fbUrl);
-        }
-    }
-
     public function actionRecover() {
         if ($this->isLoggedIn()) {
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->getUser()->getIdentity();
             $this->initialRedirect($login);
         }
@@ -195,22 +178,6 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function titleRecover() {
         $this->setTitle(_('Obnova hesla'));
-    }
-
-    public function renderLogin() {
-        $this->template->fbUrl = $this->getFbLoginUrl();
-    }
-
-    public function renderRecover() {
-
-    }
-
-    private function getFbLoginUrl() {
-        $fbUrl = $this->facebook->getLoginUrl(array(
-            'scope' => 'email',
-            'redirect_uri' => $this->link('//fbLogin'), // absolute
-        ));
-        return $fbUrl;
     }
 
     /**
@@ -234,16 +201,10 @@ final class AuthenticationPresenter extends BasePresenter {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
-
         $form->addPassword('password', _('Heslo'))
             ->addRule(Form::FILLED, _('Zadejte heslo.'));
-        //$form->addCheckbox('remember', _('Zapamatovat si přihlášení'));
-
         $form->addSubmit('send', _('Přihlásit'));
-
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-
-
         $form->onSuccess[] = callback($this, 'loginFormSubmitted');
         return $form;
     }
@@ -269,9 +230,11 @@ final class AuthenticationPresenter extends BasePresenter {
     public function loginFormSubmitted($form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->user->getIdentity();
-
-            $this->loginBacklinkRedirect($login);
+            $this->loginBackLinkRedirect($login);
             $this->initialRedirect($login);
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
@@ -284,7 +247,9 @@ final class AuthenticationPresenter extends BasePresenter {
             $values = $form->getValues();
 
             $connection->beginTransaction();
-
+            /**
+             * @var $login ModelLogin
+             */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
             $this->accountManager->sendRecovery($template, $login);
@@ -304,30 +269,30 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function loginBacklinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
             return;
         }
         $this->restoreRequest($this->backlink);
 
-        /* If it was't valid backlink serialization interpret it like a URL. */
+        /* If it was't valid backLink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
 
-        if (in_array($this->flag, array(self::FLAG_SSO_PROBE, self::FLAG_SSO_LOGIN))) {
+        if (in_array($this->flag, [self::FLAG_SSO_PROBE, self::FLAG_SSO_LOGIN])) {
             if ($login) {
-                $gsid = $this->globalSession->getId();
+                $globalSessionId = $this->globalSession->getId();
                 $expiration = $this->globalParameters['authentication']['sso']['tokenExpiration'];
                 $until = DateTime::from($expiration);
-                $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $gsid);
-                $url->appendQuery(array(
+                $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
+                $url->appendQuery([
                     LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_AUTHENTICATED,
                     TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token
-                ));
+                ]);
             } else {
-                $url->appendQuery(array(
+                $url->appendQuery([
                     LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_UNAUTHENTICATED,
-                ));
+                ]);
             }
         }
 
@@ -340,11 +305,11 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function initialRedirect($login) {
+    private function initialRedirect(ModelLogin $login) {
         if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:', array(self::PARAM_DISPATCH => 1));
+            $this->redirect(':Org:Dashboard:', [self::PARAM_DISPATCH => 1]);
         } else {
-            $this->redirect(':Public:Dashboard:', array(self::PARAM_DISPATCH => 1));
+            $this->redirect(':Public:Dashboard:', [self::PARAM_DISPATCH => 1]);
         }
         // or else redirect to page suggesting registration
     }

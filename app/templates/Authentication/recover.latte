@@ -1,31 +1,9 @@
-{layout ../@layout.v4.latte}
-{block head}
-    {include #parent}
-    <link rel="stylesheet" media="screen" href="{$basePath}/css/login.css"/>
+{layout ./@layout.latte}
+
+{block #form}
+    {form recoverForm class => 'form-signin'}
+        <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+        {input id class => 'last form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
+        {input send class => 'btn btn-lg btn-success btn-block'}
+    {/form recoverForm}
 {/block}
-
-{block body}
-
-    <div class="h-100" id="wrap">
-        {form recoverForm class => 'form-signin card'}
-            <div class="row mx-3" style="height:6rem">
-                <img class="col-6" src="/images/contests/fykos.svg" alt="fykos"/>
-                <img class="col-6" src="/images/contests/vyfuk.svg" alt="fykos"/>
-            </div>
-            <div class="card-body pt-0">
-                <h2 class="form-signin-heading">FKSDB</h2>
-                {block flashes}
-                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-                {/block}
-                <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
-                {input id class => 'last form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
-
-                {input send class => 'btn btn-lg btn-success btn-block'}
-                {control languageNav}
-            </div>
-        {/form recoverForm}
-        {*control languageChooser:,"pagination pull-right"*}
-
-    </div> <!-- /container -->
-{/block}
-
