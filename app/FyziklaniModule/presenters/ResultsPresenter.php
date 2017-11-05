@@ -5,6 +5,7 @@ namespace FyziklaniModule;
 use BrawlLib\Components\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
+use Nette\Diagnostics\Debugger;
 
 class ResultsPresenter extends BasePresenter {
 
@@ -21,33 +22,42 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function renderDefault() {
+
         if ($this->isAjax()) {
             $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
-            /**
-             * @var DateTime $lastUpdated
-             */
-            $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
+            if ($this->getHttpRequest()->getQuery('type') === 'LANG') {
+                $response = [];
+                foreach (json_decode($this->getHttpRequest()->getQuery('keys')) as $key) {
+                    $response[$key] = _($key);
+                }
+                $this->sendResponse(new JsonResponse($response));
+            } else {
+                /**
+                 * @var DateTime $lastUpdated
+                 */
+                $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
 
-            $result = [];
-            $result['lastUpdated'] = (new DateTime())->__toString();
-            if (!$lastUpdated) {
-                $result['tasks'] = $this->getTasks();
-                $result['teams'] = $this->getTeams();
+                $result = [];
+                $result['lastUpdated'] = (new DateTime())->__toString();
+                if (!$lastUpdated) {
+                    $result['tasks'] = $this->getTasks();
+                    $result['teams'] = $this->getTeams();
+                }
+                $result['submits'] = [];
+                $result['isOrg'] = $isOrg;
+                if ($isOrg || $this->isResultsVisible()) {
+                    $result['submits'] = $this->getSubmits($lastUpdated);
+                }
+                $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
+                $result['times'] = [
+                    'gameStart' => $this->getCurrentEvent()->getParameter('gameStart')->format(\DateTime::ISO8601),
+                    'gameEnd' => $this->getCurrentEvent()->getParameter('gameEnd')->format(\DateTime::ISO8601),
+                    'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
+                    'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
+                    'visible' => $this->isResultsVisible()
+                ];
+                $this->sendResponse(new JsonResponse($result));
             }
-            $result['submits'] = [];
-            $result['isOrg'] = $isOrg;
-            if ($isOrg || $this->isResultsVisible()) {
-                $result['submits'] = $this->getSubmits($lastUpdated);
-            }
-            $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
-            $result['times'] = [
-                'gameStart' => $this->getCurrentEvent()->getParameter('gameStart')->__toString(),
-                'gameEnd' => $this->getCurrentEvent()->getParameter('gameEnd')->__toString(),
-                'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
-                'visible' => $this->isResultsVisible()
-            ];
-            $this->sendResponse(new JsonResponse($result));
         }
     }
 

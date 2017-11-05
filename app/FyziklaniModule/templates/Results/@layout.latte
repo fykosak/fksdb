@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {control cssLoader
-        'css/bootstrap.v4.min.css' => [all],
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css' => [all],
         'css/style.css' => [screen],
         'css/fyziklani.css' => [all],
         }
@@ -27,14 +27,15 @@
 <div id="spinner"></div>
 
 {control jsLoader
+        'https://code.jquery.com/jquery-3.2.1.slim.min.js',
         'js/jquery.min.js',
         'js/jquery-ui.min.js',
-        'js/bootstrap.v4.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js',
+        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/tablesorter.min.js',
         'js/lib/react.min.js',
-        'js/lib/react-dom.min.js',
-        'js/dist/bundle.min.js'
+        'js/lib/react-dom.min.js'
             }
 
 {control jsLoader:inline}
