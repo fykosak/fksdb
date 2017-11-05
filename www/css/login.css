@@ -1,9 +1,13 @@
 body {
-    background: url(/images/bg/1.jpg) 50% 50%;
-    background: url(/images/bg/IMGP1847.JPG) 50% 50%;
-    background: url(/images/bg/IMGP2127.JPG) 50% 50%;
-    background: url(/images/bg/IMGP2147.JPG) 50% 50%;
-    background: url(/images/bg/IMGP3099.JPG) 50% 50%;
+    background: url(/images/bg/1.jpg) 50%;
+    background-size: cover;
+}
+body[data-bg="1"]{
+    background: url(/images/bg/1.jpg)  50%;
+    background-size: cover;
+}
+body[data-bg="2"]{
+    background: url(/images/bg/2.jpg) 0 10%;
     background-size: cover;
 }
 
