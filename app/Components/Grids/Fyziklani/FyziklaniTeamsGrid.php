@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FyziklaniModule\BasePresenter;
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use \FKSDB\Components\Grids\BaseGrid;
@@ -21,6 +22,11 @@ class FyziklaniTeamsGrid extends BaseGrid {
      */
     private $eventID;
 
+    /**
+     * FyziklaniTeamsGrid constructor.
+     * @param integer $eventID
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->eventID = $eventID;
@@ -34,7 +40,9 @@ class FyziklaniTeamsGrid extends BaseGrid {
 //    public function setSearchable($searchable) {
 //        $this->searchable = $searchable;
 //    }
-
+    /**
+     * @param $presenter BasePresenter
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;

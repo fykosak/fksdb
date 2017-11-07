@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use Nette\Diagnostics\Debugger;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
@@ -31,6 +31,12 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      */
     private $eventID;
 
+    /**
+     * FyziklaniSubmitsGrid constructor.
+     * @param integer $eventID
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct($eventID, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -38,6 +44,9 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         parent::__construct();
     }
 
+    /**
+     * @param $presenter BasePresenter
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
 
@@ -75,12 +84,16 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     }
 
     public function handleDelete($id) {
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
-        if (!$teamID) {
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $teamId = $team->e_fyziklani_team_id;
+        if (!$teamId) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamId)) {
             $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }

@@ -14,6 +14,7 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Json;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use Pipeline\PipelineException;
 
 /**
@@ -114,6 +115,9 @@ class RoomsPresenter extends BasePresenter {
             'rooms' => $rooms,
         ];
         // TODO vytiahnuť školy/učastnikov
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
         foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
             $data['teams'][] = [
                 'teamID' => $team->e_fyziklani_team_id,
@@ -143,7 +147,6 @@ class RoomsPresenter extends BasePresenter {
                     $file = $values['file']->getTemporaryFile();
                     break;
             }
-
 
             // process file
             $pipeline = $this->pipelineFactory->create($this->getCurrentEvent());

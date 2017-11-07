@@ -5,7 +5,7 @@ namespace FyziklaniModule;
 use BrawlLib\Components\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 class ResultsPresenter extends BasePresenter {
 
@@ -69,10 +69,13 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTasks() {
         $tasks = [];
-        foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
+        /**
+         * @var $task \ModelFyziklaniTask
+         */
+        foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $task) {
             $tasks[] = [
-                'label' => $row->label,
-                'task_id' => $row->fyziklani_task_id
+                'label' => $task->label,
+                'task_id' => $task->fyziklani_task_id
             ];
         }
         return $tasks;
@@ -80,12 +83,15 @@ class ResultsPresenter extends BasePresenter {
 
     private function getTeams() {
         $teams = [];
-        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $row) {
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
             $teams[] = [
-                'category' => $row->category,
-                'room' => $row->room,
-                'name' => $row->name,
-                'team_id' => $row->e_fyziklani_team_id
+                'category' => $team->category,
+                'room' => $team->room,
+                'name' => $team->name,
+                'team_id' => $team->e_fyziklani_team_id
             ];
         }
         return $teams;
@@ -97,6 +103,9 @@ class ResultsPresenter extends BasePresenter {
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
+        /**
+         * @var $submit \ModelFyziklaniSubmit
+         */
         foreach ($query as $submit) {
             $submits[$submit->fyziklani_submit_id] = [
                 'points' => $submit->points,

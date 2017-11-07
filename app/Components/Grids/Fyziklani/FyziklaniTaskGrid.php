@@ -16,7 +16,7 @@ class FyziklaniTaskGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceFyziklaniTask 
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
@@ -24,6 +24,11 @@ class FyziklaniTaskGrid extends BaseGrid {
      */
     private $eventID;
 
+    /**
+     * FyziklaniTaskGrid constructor.
+     * @param integer $eventID
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     */
     public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->eventID = $eventID;

@@ -10,6 +10,7 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 class SubmitPresenter extends BasePresenter {
 
@@ -30,9 +31,16 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function actionEntry($id) {
+
         if ($id) {
-            if ($this->checkTaskCode($id, $msg)) {
-                $this['entryForm']->setDefaults(['taskCode' => $id]);
+            $this->setView('entryQR');
+            $code = '00' . strtoupper($id);
+            if ($this->checkTaskCode($code, $msg)) {
+                /**
+                 * @var $form Form
+                 */
+                $form = $this['entryQRForm'];
+                $form->setDefaults(['taskCode' => $code]);
             } else {
                 $this->flashMessage($msg, 'danger');
             }
@@ -79,7 +87,6 @@ class SubmitPresenter extends BasePresenter {
                 'created' => null
             ]);
         } else {
-            // $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($teamID,$taskID);
             $this->serviceFyziklaniSubmit->updateModel($submit, [
                 'points' => $points,
                 /* ugly, exclude previous value of `modified` from query
@@ -90,14 +97,18 @@ class SubmitPresenter extends BasePresenter {
             ]);
             $this->serviceFyziklaniSubmit->save($submit);
         }
-        $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
+
         $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
 
         try {
             $this->serviceFyziklaniSubmit->save($submit);
-            return [sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success'];
+            return [sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamID, $taskLabel, $taskName), 'success'];
             // $this->redirect('this');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Debugger::log($e);
             return [_('Vyskytla se chyba'), 'danger'];
 
@@ -105,6 +116,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function renderEntry() {
+
         if ($this->isAjax()) {
 
             $fullCode = $this->getHttpRequest()->getQuery('fullCode');
@@ -120,6 +132,9 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $teams = [];
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
         foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
             $teams[] = [
                 'team_id' => $team->e_fyziklani_team_id,
@@ -127,6 +142,9 @@ class SubmitPresenter extends BasePresenter {
             ];
         };
         $tasks = [];
+        /**
+         * @var $task \ModelFyziklaniTask
+         */
         foreach ($this->serviceFyziklaniTask->findAll($this->eventID) as $task) {
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
@@ -135,7 +153,12 @@ class SubmitPresenter extends BasePresenter {
             ];
         };
         $form = $this->fyziklaniFactory->createEntryForm($teams, $tasks);
-      //  $form->onSuccess[] = [$this, 'entryFormSucceeded'];
+        return $form;
+    }
+
+    public function createComponentEntryQRForm() {
+        $form = $this->fyziklaniFactory->createEntryQRForm($this->getCurrentEvent());
+        $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
 
@@ -176,14 +199,17 @@ class SubmitPresenter extends BasePresenter {
                 ]);
                 $this->serviceFyziklaniSubmit->save($submit);
             }
-            $teamName = $this->serviceFyziklaniTeam->findByPrimary($teamID)->name;
+            /**
+             * @var $team ModelFyziklaniTeam
+             */
+            $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
             $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->eventID)->name;
 
             try {
                 $this->serviceFyziklaniSubmit->save($submit);
-                $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $teamName, $teamID, $taskLabel, $taskName), 'success');
+                $this->flashMessage(sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamID, $taskLabel, $taskName), 'success');
                 $this->redirect('this');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->flashMessage(_('Vyskytla se chyba'), 'danger');
                 Debugger::log($e);
             }
@@ -194,6 +220,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function checkTaskCode($taskCode, &$msg) {
         /** skontroluje pratnosť kontrolu */
+        Debugger::barDump($taskCode);
         if (!$this->taskCodePreprocessor->checkControlNumber($taskCode)) {
             $msg = _('Chybně zadaný kód úlohy.');
             return false;
@@ -248,7 +275,11 @@ class SubmitPresenter extends BasePresenter {
         }
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
-        $this['fyziklaniEditForm']->setDefaults([
+        /**
+         * @var $form Form
+         */
+        $form = $this['fyziklaniEditForm'];
+        $form->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
             'points' => $submit->points,
