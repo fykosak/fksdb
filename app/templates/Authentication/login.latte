@@ -1,33 +1,11 @@
-{block head}
-{include #parent}
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" media="screen" href="{$basePath}/css/social-buttons.css"/>
-<link rel="stylesheet" media="screen" href="{$basePath}/css/login.css"/>
-{/block}
-
-{block body}
-
-
-
-<div class="container">
-    {form loginForm class => form-signin}
-
-
-    <h2 class="form-signin-heading">FKSDB<small n:if="$beta"> beta</small></h2>
-    {block flashes}
-    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-    {/block}
-    <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
-    {input id class => 'top form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
-    {input password class => 'bottom last form-control', placeholder => $_input->translate($_input->caption)}
-
-    {input send class => 'btn btn-lg btn-primary btn-block'}
-    <a n:href=":Public:Register:default" class="btn btn btn-default btn-block">{_'Registrace'}</a>
-    <a class="btn btn-facebook btn-block" href="{$fbUrl}"><i class="fa fa-facebook"></i> | Log in</a>
-    <a class="btn btn-link btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
+{layout ./@layout.latte}
+{block #form}
+    {form loginForm class => 'form-signin'}
+        <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+        {input id class => 'top form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
+        {input password class => 'bottom mb-3 form-control', placeholder => $_input->translate($_input->caption)}
+        {input send class => 'btn btn-lg btn-primary btn-block'}
+        <a n:href=":Public:Register:default" class="btn btn btn-secondary btn-block">{_'Registrace'}</a>
+        <a class="btn btn-link btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
     {/form loginForm}
-    {control languageChooser:,"pagination pull-right"}
-</div> <!-- /container -->
-
 {/block}
-
