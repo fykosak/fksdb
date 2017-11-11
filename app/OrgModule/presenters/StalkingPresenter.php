@@ -10,40 +10,53 @@ use FKSDB\Components\Controls\Stalking\EventParticipant;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
+use ModelPerson;
+use Nette\Application\BadRequestException;
+use ServiceEvent;
+use ServicePerson;
 
 class StalkingPresenter extends BasePresenter {
 
     /**
-     * @var \ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \ModelPerson
+     * @var ModelPerson|null
      */
-    private $person = null;
+    private $person = false;
 
     /**
-     * @return \ModelPerson|null
+     * @return ModelPerson|null
      */
     private function getPerson() {
-        if (is_null($this->person)) {
+        if ($this->person === false) {
             $id = $this->getParameter('id');
             $this->person = $this->servicePerson->findByPrimary($id);
         }
+
         return $this->person;
     }
 
-    public function injectServicePerson(\ServicePerson $servicePerson) {
+    public function authorizedDefault($id) {
+        $person = $this->getPerson();
+        if (!$person) {
+            throw new BadRequestException('Neexistující osoba.', 404);
+        }
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($person, 'stalk', $this->getSelectedContest()));
+    }
+
+    public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
-    public function injectServiceEvent(\ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -87,15 +100,12 @@ class StalkingPresenter extends BasePresenter {
         return $component;
     }
 
-    public function titleView() {
-        if (is_null($this->getPerson())) {
-            $this->setTitle('Stalking');
-        } else {
-            $this->setTitle('Stalking ' . $this->getPerson()->getFullname());
-        }
+    public function titleDefault() {
+        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
     }
 
-    public function renderView() {
+    public function renderDefault() {
         $this->template->person = $this->person;
     }
+
 }
