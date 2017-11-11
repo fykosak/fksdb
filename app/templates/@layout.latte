@@ -28,12 +28,12 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                         <span class="sr-only">Toggle navigation</span>
                     </button>
-                    <a class="navbar-brand" href="{$basePath}/">FKSDB<small n:if="$beta" class="beta"> beta</small></a>
+                    <a class="navbar-brand" href="{$basePath}/">FKSDB</a>
                 </div>
 
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">                
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
                     {control navigation:navbar}
 
                     {block user-info}
@@ -51,7 +51,7 @@
                                     <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
                                 </ul>
                             </li>
-                        </ul>                
+                        </ul>
                         {/block}
 
                     </div><!-- /.navbar-collapse -->
@@ -83,7 +83,7 @@
 
             <div id="spinner"></div>
             {block scripts}
-            {control jsLoader 
+            {control jsLoader
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
