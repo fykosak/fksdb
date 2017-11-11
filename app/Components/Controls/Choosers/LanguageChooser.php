@@ -127,7 +127,7 @@ class LanguageChooser extends Control {
      */
     private function getSupportedLanguages() {
         /**
-         * @var $presenter \AuthenticationPresenter
+         * @var $presenter BasePresenter|\BrawlModule\BasePresenter|\PublicModule\BasePresenter
          */
         $presenter = $this->getPresenter();
         return $presenter->getTranslator()->getSupportedLanguages();

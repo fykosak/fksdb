@@ -17,7 +17,7 @@ use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksPresenter extends BasePresenter {
@@ -27,11 +27,6 @@ class TasksPresenter extends BasePresenter {
     const SOURCE_FILE = 'file';
 
     private static $languages = array('cs', 'en');
-
-    /**
-     * @var SeriesCalculator
-     */
-    private $seriesCalculator;
 
     /**
      * @var Downloader
@@ -44,13 +39,10 @@ class TasksPresenter extends BasePresenter {
     private $pipelineFactory;
 
     /**
-     * @var FlashDumpFactory 
+     * @var FlashDumpFactory
      */
     private $flashDumpFactory;
 
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
-        $this->seriesCalculator = $seriesCalculator;
-    }
 
     public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
@@ -85,7 +77,7 @@ class TasksPresenter extends BasePresenter {
         // Astrid downoald
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $seriesEnum = $seriesForm->addSelect('series', _('Série'))
-                ->setItems($seriesItems, false);
+            ->setItems($seriesItems, false);
         $seriesEnum->addConditionOn($source, Form::EQUAL, self::SOURCE_ASTRID)->toggle($seriesEnum->getHtmlId() . '-pair');
 
         // File upload

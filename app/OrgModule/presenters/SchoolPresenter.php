@@ -17,7 +17,7 @@ use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolPresenter extends EntityPresenter {
@@ -223,6 +223,10 @@ class SchoolPresenter extends EntityPresenter {
             Debugger::log($e, Debugger::ERROR);
             $this->flashMessage(_('Chyba při úpravě školy.'), self::FLASH_ERROR);
         }
+    }
+
+    protected function getChoosers() {
+        return ['dispatch', 'lang',];
     }
 
 }

@@ -1,0 +1,17 @@
+<ul class="navbar-nav nav">
+    <li class="dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            {$currentContest?  $currentContest->name: _('seminar') }
+        </a>
+        <ul class="dropdown-menu">
+            {foreach $availableCombinations as $id => $combination}
+                <li>
+                    <a n:class="'dropdown-item link-'. $combination['contest']->getContestSymbol()"
+                            href="{link change! $combination['contest']->contest_id,$combination['role']}">
+                        {$combination['contest']->name} - {$combination['role']=='org'?'Org':'Contestant'}
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </li>
+</ul>

@@ -17,8 +17,6 @@ use Nette\Security\AuthenticationException;
 
 final class AuthenticationPresenter extends BasePresenter {
 
-    use \LanguageNav;
-
     const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     const PARAM_DISPATCH = 'dispatch';
@@ -93,11 +91,6 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
-    }
-
-    public function startup() {
-        parent::startup();
-        $this->startupRedirects();
     }
 
     public function actionLogout() {

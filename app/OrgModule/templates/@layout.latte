@@ -2,7 +2,6 @@
 
 
 {block user-info}
-{include #parent}
-{control languageChooser,null}
-{control contestChooser}
+    {include #parent}
+    {control nav ,['lang','dispatch','year','series']}
 {/block}

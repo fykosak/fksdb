@@ -1,0 +1,44 @@
+{layout ../../templates/@layout.latte }
+
+{block #content}
+    <div class="container">
+        <div class="row">
+            {foreach $contests as $contest}
+
+                <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
+
+                    <div class="col-12 my-3">
+                        <!-- <img class="dispatch-logo" n:attr="src => '/images/contests/'.$contest->getContestSymbol().'.svg'"
+                              alt=""/>-->
+                    </div>
+                    <div class="col-12">
+                        {foreach $availableCombinations as $id => $combination}
+                            {if ($combination['contest']->contest_id === $contest->contest_id)}
+                                <a n:class="'btn-block btn-primary btn btn-lg','btn-'.$combination['contest']->getContestSymbol()"
+                                        href="{link changeContest! $combination['contest']->contest_id,$combination['role']}"
+                                >{$combination['contest']->name} - {$combination['role']}</a>
+                            {/if}
+                        {/foreach}
+                    </div>
+
+                </div>
+            {/foreach}
+            <div class="col-lg-4 col-md-6 col-sm-12 row text-center">
+                <!--  <div class="col-12 my-3"><img class="dispatch-logo" src="/images/contests/fyziklani.svg" alt=""/></div>-->
+                <div class="col-12">
+                    <a href="{link :Brawl:Dashboard: }"
+                       class="col-12 btn btn-brawl btn-primary btn-lg btn-block">{_('Fykosí Fyzikláni')}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}
+
+{block user-info}
+    {control nav}
+    {include #parent}
+{/block}
+
+
+
+

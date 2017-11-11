@@ -11,6 +11,11 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
+
+    /**
+     * @var boolean
+     */
+    const NO_ACL_ROLES = true;
     /**
      * @var YearCalculator|null
      */
@@ -59,7 +64,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-  
+
     public function isOrg($yearCalculator) {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
@@ -75,13 +80,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return string Human readable identification of the login.
      */
     public function getName() {
         $person = $this->getPerson();
         if ($person) {
-            return (string) $person;
+            return (string)$person;
         }
         if ($this->login) {
             return $this->login;
@@ -96,9 +101,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Sets hash of the instance with correct hashing function.
-     * 
+     *
      * @note Must be called after setting login_id.
-     * 
+     *
      * @param string $password password
      */
     public function setHash($password) {
@@ -112,39 +117,55 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
+     *
+     */
+    private $noACLRoles;
+
+    /**
      * @var array   cache
      */
     private $roles;
 
-    public function getRoles() {
-        if ($this->roles === null) {
+    /**
+     * @param bool $noACLRoles
+     * @return array|null
+     */
+    public function getRoles($noACLRoles = false) {
+        if ($this->roles === null || $this->noACLRoles === null) {
+
             if (!$this->yearCalculator) {
                 throw new InvalidStateException('To obtain current roles, you have to inject YearCalculator to this Login instance.');
             }
-            $this->roles = array();
+
+
             /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
              * that Identity is known, however user is not logged in.
              */
-
-            // explicitly assigned roles
-            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+            if (!$noACLRoles) {
+                $this->roles = [];
+                // explicitly assigned roles
+                foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
+                    $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                }
             }
+            $this->noACLRoles = [];
+
             // roles from other tables
             $person = $this->getPerson();
             if ($person) {
                 foreach ($person->getActiveOrgs($this->yearCalculator) as $org) {
-                    $this->roles[] = new Grant($org->contest_id, ModelRole::ORG);
+                    $grant = new Grant($org->contest_id, ModelRole::ORG);
+                    $this->noACLRoles[] = $grant;
+                    $this->roles[] = $grant;
                 }
                 foreach ($person->getActiveContestants($this->yearCalculator) as $contestant) {
-                    $this->roles[] = new Grant($contestant->contest_id, ModelRole::CONTESTANT);
+                    $grant = new Grant($contestant->contest_id, ModelRole::CONTESTANT);
+                    $this->noACLRoles[] = $grant;
+                    $this->roles[] = $grant;
                 }
             }
         }
-
-        return $this->roles;
+        return $noACLRoles ? $this->noACLRoles : $this->roles;
     }
 
 }
-
-?>

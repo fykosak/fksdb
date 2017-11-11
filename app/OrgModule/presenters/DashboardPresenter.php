@@ -29,7 +29,10 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function renderDefault() {
-        
+    }
+
+    protected function getChoosers() {
+       return ['lang','dispatch'];
     }
 
 }
