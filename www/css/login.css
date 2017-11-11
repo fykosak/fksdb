@@ -2,11 +2,13 @@ body {
     background: url(/images/bg/1.jpg) 50%;
     background-size: cover;
 }
-body[data-bg="1"]{
-    background: url(/images/bg/1.jpg)  50%;
+
+body[data-bg="1"] {
+    background: url(/images/bg/1.jpg) 50%;
     background-size: cover;
 }
-body[data-bg="2"]{
+
+body[data-bg="2"] {
     background: url(/images/bg/2.jpg) 0 10%;
     background-size: cover;
 }
@@ -42,4 +44,12 @@ body[data-bg="2"]{
 
 .form-signin input.last {
     margin-bottom: 10px;
+}
+
+footer a {
+    text-decoration: underline;
+}
+
+footer * {
+    text-shadow: 0 0 .25rem #000;
 }
