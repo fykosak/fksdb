@@ -1,20 +1,26 @@
 <?php
-/**
- * @author Michal Červeňák <miso@fykos.cz>
- * trait content contest, year, and series chooser
- */
 
 namespace FKSDB\Components\Controls\Navs;
 
-use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Controls\Choosers\BrawlChooser;
+use FKSDB\Components\Controls\Choosers\Chooser;
+use FKSDB\Components\Controls\Choosers\DispatchChooser;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Components\Controls\Choosers\YearChooser;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Localization\ITranslator;
 
-class ContestNav extends Control {
+class Nav extends Control {
+
+    /**
+     * @var \ServiceEvent
+     */
+    private $serviceEvent;
+
     /**
      * @var string
      */
@@ -43,13 +49,10 @@ class ContestNav extends Control {
     private $translator;
 
     /**
-     * ContestNav constructor.
-     * @param \YearCalculator $yearCalculator
-     * @param \SeriesCalculator $seriesCalculator
-     * @param Session $session
-     * @param \ServiceContest $serviceContest
-     * @param ITranslator $translator
+     * @var string[]
      */
+    private $choosers;
+
     public function __construct(
         \YearCalculator $yearCalculator,
         \SeriesCalculator $seriesCalculator,
@@ -66,17 +69,18 @@ class ContestNav extends Control {
     }
 
     /**
-     * @param $role
+     * @return LanguageChooser
      */
-    public function setRole($role) {
-        $this->role = $role;
+    protected function createComponentLangChooser() {
+        $control = new LanguageChooser($this->session);
+        return $control;
     }
 
     /**
-     * @return ContestChooser
+     * @return DispatchChooser
      */
-    protected function createComponentContestChooser() {
-        $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
+    protected function createComponentDispatchChooser() {
+        $control = new DispatchChooser($this->session, $this->yearCalculator, $this->serviceContest);
 
         return $control;
     }
@@ -91,6 +95,14 @@ class ContestNav extends Control {
     }
 
     /**
+     * @return BrawlChooser
+     */
+    protected function createComponentBrawlChooser() {
+        $control = new BrawlChooser($this->serviceEvent);
+        return $control;
+    }
+
+    /**
      * @return SeriesChooser
      */
     protected function createComponentSeriesChooser() {
@@ -99,16 +111,13 @@ class ContestNav extends Control {
         return $control;
     }
 
-    /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser() {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    public function setChoosers($choosers) {
+        $this->choosers = $choosers;
     }
 
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestNav.latte');
+        $this->template->choosers = $this->choosers;
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Nav.latte');
         $this->template->render();
     }
 
@@ -119,32 +128,21 @@ class ContestNav extends Control {
      */
     public function init($params) {
         $redirect = false;
-        /**
-         * @var $languageChooser LanguageChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        $redirect = $redirect || $languageChooser->syncRedirect($params);
 
-        /**
-         * @var $contestChooser ContestChooser
-         */
-        $contestChooser = $this['contestChooser'];
-
-        $redirect = $redirect || $contestChooser->syncRedirect($params);
-        /**
-         * @var $yearChooser YearChooser
-         */
-        $yearChooser = $this['yearChooser'];
-        $redirect = $redirect || $yearChooser->syncRedirect($params);
-        /**
-         * @var $seriesChooser SeriesChooser
-         */
-        $seriesChooser = $this['seriesChooser'];
-        $redirect = $redirect || $seriesChooser->syncRedirect($params);
+        foreach ($this->choosers as $chooser) {
+            Debugger::barDump($chooser);
+            /**
+             * @var $chooserControl Chooser
+             */
+            $chooserControl = $this[$chooser . 'Chooser'];
+            $currentRedirect = $chooserControl->syncRedirect($params);
+            $redirect = $redirect || $currentRedirect;
+        }
         if ($redirect) {
             return $params;
         } else {
             return null;
         }
     }
+
 }

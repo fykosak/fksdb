@@ -1,0 +1,17 @@
+{foreach $choosers as $chooser}
+    {if ($chooser === 'lang')}
+        {control langChooser}
+    {/if}
+    {if ($chooser === 'dispatch')}
+        {control dispatchChooser}
+    {/if}
+    {if ($chooser === 'series')}
+        {control seriesChooser}
+    {/if}
+    {if ($chooser === 'year')}
+        {control yearChooser}
+    {/if}
+    {if ($chooser === 'brawl')}
+        {control brawlChooser}
+    {/if}
+{/foreach}
