@@ -157,6 +157,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('contest');
     }
 
+
     public function actionContestant() {
 
         if ($this->user->isLoggedIn()) {
@@ -173,6 +174,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                 if ($person->getLogin()) {
                     $session = $this->session->getSection(self::SESSION_KEY);
                     $session->email = $email;
+                    $this->flashMessage('Bol nájdený účet, pre pokračovanie sa prihláste');
                     $this->redirect(':Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }
@@ -200,10 +202,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
+    public function titleContest() {
+        $this->setTitle(_('Zvolit seminář'));
+    }
+
     public function actionYear() {
         if ($this->year) {
             $this->changeAction('email');
         }
+    }
+
+    public function titleYear() {
+        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setTitle(_('Zvolit ročník'));
     }
 
     public function actionEmail() {
@@ -211,6 +222,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if ($this->getParameter('email')) {
             $this->changeAction('contestant');
         }
+    }
+
+    public function titleEmail() {
+        $this->setSubtitle($this->serviceContest->findByPrimary($this->contestId)->name);
+        $this->setTitle(_('Zadejte e-mail'));
     }
 
     public function renderContest() {
@@ -342,6 +358,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedSeries() {
+        return null;
+    }
+
+    protected function getSelectedContestSymbol() {
+        /**
+         * @var $contest \ModelContest
+         */
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        if ($contest) {
+            return $contest->getContestSymbol();
+        }
         return null;
     }
 }

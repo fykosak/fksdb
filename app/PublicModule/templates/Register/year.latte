@@ -1,7 +1,6 @@
 {layout ../../../templates/@layout.v4.latte}
 
 {block content}
-    <h2>{_'Zvolit ročník'}</h2>
     {foreach $years as $year}
         <a href="{link changeYear! $year}" class="col-12 btn btn-primary btn-lg btn-block">{$year}. {_('Ročnik')}</a>
     {/foreach}

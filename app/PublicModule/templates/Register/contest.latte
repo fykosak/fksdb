@@ -1,7 +1,6 @@
 {layout ../../../templates/@layout.v4.latte}
 
 {block content}
-    <h2>{_'Zvolit seminář'}</h2>
     {dump $contests}
     {foreach $contests as $contest}
         <a href="{link changeContest! $contest->contest_id}"
