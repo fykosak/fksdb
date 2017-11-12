@@ -237,7 +237,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
         $person = $this->servicePerson->findByEmail($values->email);
-        $this->redirect('this', ['personId' => $person ? $person->person_id : -1]);
+        $login = $person->getLogin();
+        if ($login) {
+            $this->redirect(':Authentication:', ['loginId' => $login->login_id]);
+        }
+        $this->redirect('this');
     }
 
     public function renderContestant() {
@@ -247,7 +251,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
          * @var $contestantForm Form
          */
         $contestantForm = $this['contestantForm'];
-         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
+        $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
