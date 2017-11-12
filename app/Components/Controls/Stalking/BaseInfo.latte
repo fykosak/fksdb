@@ -1,132 +1,137 @@
-<h2>Base info</h2>
+<div class="card">
+    <div>Base info</div>
+    <div class="">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">person_id</label>
+            <div class="col-sm-10">
+                <p class="form-control-static">{$info->person_id}</p>
+            </div>
+        </div>
 
-<div class="form-group">
-    <label class="col-sm-2 control-label">person_id</label>
-    <div class="col-sm-10">
-        <p class="form-control-static">{$info->person_id}</p>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Born</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->born))}
+                    <p class="form-control-static">{$info->born->__toString()}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">ID number</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->id_number))}
+                    <p class="form-control-static">{$info->id_number}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Born ID</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->born_id))}
+                    <p class="form-control-static">{$info->born_id}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">UK login</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->uk_login))}
+                    <p class="form-control-static">{$info->uk_login}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Bank account</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->account))}
+                    <p class="form-control-static">{$info->account}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Birthplace</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->birthplace))}
+                    <p class="form-control-static">{$info->birthplace}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Origin</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->origin))}
+                    <p class="form-control-static">{$info->origin}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <h2>Contact information</h2>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->email))}
+                    <p class="form-control-static">{$info->email}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Phone</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->phone))}
+                    <p class="form-control-static">{$info->phone}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Phone parent mum</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->phone_parent_m))}
+                    <p class="form-control-static">{$info->phone_parent_m}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Phone parent dad</label>
+            <div class="col-sm-10">
+                {if (!is_null($info->phone_parent_d))}
+                    <p class="form-control-static">{$info->phone_parent_d}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-2 control-label">Born</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->born))}
-            <p class="form-control-static">{$info->born->__toString()}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">ID number</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->id_number))}
-            <p class="form-control-static">{$info->id_number}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Born ID</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->born_id))}
-            <p class="form-control-static">{$info->born_id}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">UK login</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->uk_login))}
-            <p class="form-control-static">{$info->uk_login}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Bank account</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->account))}
-            <p class="form-control-static">{$info->account}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Birthplace</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->birthplace))}
-            <p class="form-control-static">{$info->birthplace}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-sm-2 control-label">Origin</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->origin))}
-            <p class="form-control-static">{$info->origin}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<h2>Contact information</h2>
-<div class="form-group">
-    <label class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->email))}
-            <p class="form-control-static">{$info->email}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Phone</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->phone))}
-            <p class="form-control-static">{$info->phone}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Phone parent mum</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->phone_parent_m))}
-            <p class="form-control-static">{$info->phone_parent_m}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-2 control-label">Phone parent dad</label>
-    <div class="col-sm-10">
-        {if (!is_null($info->phone_parent_d))}
-            <p class="form-control-static">{$info->phone_parent_d}</p>
-        {else}
-            <p class="form-control-static"><span class="label label-danger">not set</span></p>
-        {/if}
-    </div>
-</div>

@@ -5,9 +5,10 @@
     <meta name="robots" content="{$robots}" n:ifset="$robots">
     <title>{block titleHeader}{$title} | FKSDB{/block}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     {control cssLoader
         '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' => [screen],
-        'css/style.css' => [screen],
+        'css/style.v4.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
         'css/font-awesome-4.5.0/css/font-awesome.min.css' => [all]
@@ -15,9 +16,9 @@
     {block head}{/block}
 </head>
 <!-- Radnom background generator -->
-<body data-bg="{rand(1,2)}">
+<body data-bg="{rand(1,2)}" data-contest="{isset($contestSymbol)?$contestSymbol:''}">
 {block body}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',$contestSymbol?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',isset($contestSymbol)?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -29,7 +30,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar $navRoot}
+                {control navigation:navbar isset($navRoot)?:null}
             {/block}
 
             {block user-info}
@@ -58,7 +59,7 @@
             {control breadcrumbs}
             {block titleBody}
                 <h1 class="page-header">{$title}
-                <small class="text-secondary"> {$subtitle}</small></h1>{/block}
+                <small class="text-secondary small"> {$subtitle}</small></h1>{/block}
             {block flashes}
                 <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
             {/block}
