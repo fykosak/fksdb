@@ -1,0 +1,19 @@
+<h2>Contestant</h2>
+{if count($contestants)}
+    {foreach $contestants as $contestant}
+        <p class="row">
+            <span class="col-sm-2">{$contestant->ct_id}</span>
+            <span class="col-sm-2">
+            {if ($contestant->contest_id==1)}
+                <span class="label" style="background-color: #1175da;">FYKOS</span>
+                {else}
+                <span class="label" style="background-color: #ff4800;">Výfuk</span>
+            {/if}
+            </span>
+            <span class="col-sm-2">{$contestant->year}. year</span>
+        </p>
+    {/foreach}
+
+{else}
+    <span class="label-warning label">No records</span>
+{/if}
