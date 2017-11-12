@@ -3,7 +3,6 @@
 namespace Tasks;
 
 use ModelContest;
-use SimpleXMLElement;
 
 /**
  * "POD" to hold series pipeline processing data.
@@ -28,21 +27,26 @@ class SeriesData {
     private $series;
 
     /**
-     * @var SimpleXMLElement
+     * @var string ISO 2 chars
      */
-    private $XML;
+    private $language;
 
     /**
-     *
+     * @var mixed
+     */
+    private $data;
+
+    /**
      * @var array[tasknr] of ModelTask
      */
     private $tasks = array();
 
-    public function __construct(ModelContest $contest, $year, $series, SimpleXMLElement $XML) {
+    function __construct(ModelContest $contest, $year, $series, $language, $data) {
         $this->contest = $contest;
         $this->year = $year;
         $this->series = $series;
-        $this->XML = $XML;
+        $this->language = $language;
+        $this->data = $data;
     }
 
     public function getContest() {
@@ -57,8 +61,12 @@ class SeriesData {
         return $this->series;
     }
 
-    public function getXML() {
-        return $this->XML;
+    public function getData() {
+        return $this->data;
+    }
+
+    function getLanguage() {
+        return $this->language;
     }
 
     public function getTasks() {

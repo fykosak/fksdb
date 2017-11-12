@@ -1,21 +1,23 @@
 <?php
 
-namespace Tasks;
+namespace Tasks\Legacy;
 
 use Pipeline\Stage;
 use ServiceStudyYear;
 use ServiceTaskStudyYear;
 use SimpleXMLElement;
+use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StudyYearsFromXML extends Stage {
+class StudyYearsFromXML2 extends Stage {
 
-    const DELIMITER = ',';
-    const XML_ELEMENT = 'study-years';
+    const XML_ELEMENT_PARENT = 'study-years';
+
+    const XML_ELEMENT_CHILD = 'study-year';
 
     /**
      * @var SeriesData
@@ -48,7 +50,8 @@ class StudyYearsFromXML extends Stage {
     }
 
     public function process() {
-        foreach ($this->data->getXML() as $task) {
+        $xml = $this->data->getData();
+        foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
@@ -67,19 +70,26 @@ class StudyYearsFromXML extends Stage {
         // parse contributors            
         $studyYears = array();
         $hasYears = false;
-        foreach (explode(self::DELIMITER, (string) $XMLTask->{self::XML_ELEMENT}) as $studyYear) {
-            $studyYear = trim($studyYear);
-            if (!$studyYear) {
-                continue;
-            }
-            $hasYears = true;
 
-            if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                $this->log(sprintf(_("Neznámý ročník '%s'."), $studyYear));
-                continue;
-            }
+        $parentEl = $XMLTask->{self::XML_ELEMENT_PARENT};
+        // parse contributors            
+        $contributors = array();
+        if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
+            foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
+                $studyYear = (string) $element;
+                $studyYear = trim($studyYear);
+                if (!$studyYear) {
+                    continue;
+                }
+                $hasYears = true;
 
-            $studyYears[] = $studyYear;
+                if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
+                    $this->log(sprintf(_("Neznámý ročník '%s'."), $studyYear));
+                    continue;
+                }
+
+                $studyYears[] = $studyYear;
+            }
         }
 
         if (!$studyYears) {
@@ -110,4 +120,3 @@ class StudyYearsFromXML extends Stage {
     }
 
 }
-

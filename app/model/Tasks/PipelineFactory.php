@@ -3,18 +3,24 @@
 namespace Tasks;
 
 use FKS\Logging\MemoryLogger;
-use Nette\InvalidStateException;
 use Pipeline\Pipeline;
 use ServicePerson;
 use ServiceStudyYear;
 use ServiceTask;
 use ServiceTaskContribution;
 use ServiceTaskStudyYear;
+use Tasks\Legacy\ContributionsFromXML;
+use Tasks\Legacy\ContributionsFromXML2;
+use Tasks\Legacy\DeadlineFromXML;
+use Tasks\Legacy\DeadlineFromXML2;
+use Tasks\Legacy\StudyYearsFromXML;
+use Tasks\Legacy\StudyYearsFromXML2;
+use Tasks\Legacy\TasksFromXML;
 
 /**
  * This is not real factory, it's only used as an internode for defining
  * pipelines inside Neon and inject them into presenters at once.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
@@ -74,45 +80,54 @@ class PipelineFactory {
     }
 
     /**
-     * 
-     * @param string $language ISO 639-1
+     *
      * @return \Pipeline\Pipeline
-     * @throws InvalidStateException
      */
     public function create($language) {
-        if (!array_key_exists($language, $this->columnMappings)) {
-            throw new InvalidStateException("Missing mapping specification for language '$language'.");
-        }
-
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
+
 
         // common stages
         $metadataStage = new TasksFromXML($this->columnMappings[$language], $this->serviceTask);
         $pipeline->addStage($metadataStage);
 
-        // NOTE: There's no need to store content of the tasks in the database.
-        // language customizations
-        switch ($language) {
-            case 'cs':
-                $this->appendCzech($pipeline);
-                break;
-            default:
-                break;
+        if ($language == 'cs') {
+            $deadlineStage = new DeadlineFromXML($this->serviceTask);
+            $pipeline->addStage($deadlineStage);
+
+            $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->servicePerson);
+            $pipeline->addStage($contributionStage);
+
+            $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
+            $pipeline->addStage($studyYearStage);
         }
 
         return $pipeline;
     }
 
-    protected function appendCzech(Pipeline $pipeline) {
-        $deadlineStage = new DeadlineFromXML($this->serviceTask);
+    /**
+     *
+     * @return \Pipeline\Pipeline
+     */
+    public function create2() {
+        $pipeline = new Pipeline();
+        $pipeline->setLogger(new MemoryLogger());
+
+        // common stages
+        $metadataStage = new TasksFromXML2($this->serviceTask);
+        $pipeline->addStage($metadataStage);
+
+        $deadlineStage = new DeadlineFromXML2($this->serviceTask);
         $pipeline->addStage($deadlineStage);
 
-        $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->servicePerson);
+        $contributionStage = new ContributionsFromXML2($this->serviceTaskContribution, $this->servicePerson);
         $pipeline->addStage($contributionStage);
 
-        $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
+        $studyYearStage = new StudyYearsFromXML2($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
         $pipeline->addStage($studyYearStage);
+
+        return $pipeline;
     }
 
 }
