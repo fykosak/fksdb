@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {control cssLoader
         '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' => [screen],
-        'css/style.css' => [screen],
+        'css/style.v4.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
         'css/font-awesome-4.5.0/css/font-awesome.min.css' => [all]
@@ -17,7 +17,7 @@
 <!-- Radnom background generator -->
 <body data-bg="{rand(1,2)}">
 {block body}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',$contestSymbol?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',isset($contestSymbol)?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -29,7 +29,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar $navRoot}
+                {control navigation:navbar isset($navRoot)?:null}
             {/block}
 
             {block user-info}

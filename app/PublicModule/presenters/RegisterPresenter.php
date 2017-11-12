@@ -14,6 +14,7 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
@@ -98,6 +99,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     protected $seriesCalculator;
 
+    const SESSION_KEY = 'register';
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -128,9 +131,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
-        return $this->year;
-        // TODO
-        //  return $this['contestNav']->getYear() + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this->year + $this->yearCalculator->getForwardShift($this->getSelectedContest());
     }
 
     public function getSelectedAcademicYear() {
@@ -145,8 +146,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
-            } elseif ($this->personId !== -1) {
-                $this->person = $this->servicePerson->findByPrimary($this->personId);
             } else {
                 $this->person = null;
             }
@@ -159,12 +158,23 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function actionContestant() {
-        $person = $this->getPerson();
 
         if ($this->user->isLoggedIn()) {
+            $person = $this->getPerson();
+
             if (!$person) {
                 $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
                 $this->redirect(':Authentication:login');
+            }
+        } else {
+            $email = $this->getHttpRequest()->getQuery('email');
+            $person = $this->servicePerson->findByEmail($email);
+            if ($person) {
+                if ($person->getLogin()) {
+                    $session = $this->session->getSection(self::SESSION_KEY);
+                    $session->email = $email;
+                    $this->redirect(':Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
+                }
             }
         }
 
@@ -197,7 +207,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function actionEmail() {
-        if ($this->personId) {
+
+        if ($this->getParameter('email')) {
             $this->changeAction('contestant');
         }
     }
@@ -236,12 +247,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $person = $this->servicePerson->findByEmail($values->email);
-        $login = $person->getLogin();
-        if ($login) {
-            $this->redirect(':Authentication:', ['loginId' => $login->login_id]);
-        }
-        $this->redirect('this');
+
+        $this->redirect('this', ['email' => $values->email,]);
     }
 
     public function renderContestant() {

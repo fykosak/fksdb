@@ -8,10 +8,11 @@ use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
 use ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
@@ -78,5 +79,5 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         }
         return $languageChooser->getLanguage();
     }
-    
+
 }
