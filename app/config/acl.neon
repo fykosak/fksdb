@@ -38,7 +38,7 @@ acl:
     # Resources
     - addResource(submit)        # revoke, upload, download, edit, ALL
     - addResource(task)          # insert, edit
-    - addResource(person)        # create, edit, list, delete, merge
+    - addResource(person)        # create, edit, list, delete, merge, stalk, stalk-search
     - addResource(contestant)    # create, edit, list, delete
     - addResource(school)        # create, edit, list, delete
     - addResource(storedQuery)   # create, edit, list, delete, show
@@ -82,7 +82,8 @@ acl:
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
 
-    - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
+    # list privileges explicitly, so that we exclude stalk and stalk-search
+    - allow(dataManager, person, [create, edit, list, delete, merge])
     - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
 
     - allow(exportDesigner, storedQuery, ::constant(Nette\Security\Permission::ALL))
@@ -96,6 +97,8 @@ acl:
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(boss, person, stalk, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(boss, person, stalk-search)
 
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
