@@ -293,6 +293,7 @@ class PersonFactory {
 
     private function rawPhone($label, $acYear = null) {
         $control = new WriteonlyInput($label);
+        $control->setAttribute("placeholder", 've tvaru +420123456789');
         $control->addRule(Form::MAX_LENGTH, null, 32)
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/\+42[01]\d{9}/');
