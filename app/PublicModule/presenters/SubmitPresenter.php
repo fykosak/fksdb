@@ -18,7 +18,7 @@ use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
@@ -122,8 +122,8 @@ class SubmitPresenter extends BasePresenter {
             $container = $form->addContainer('task' . $task->task_id);
             $upload = $container->addUpload('file', $task->getFQName());
             $conditionedUpload = $upload
-                    ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
             if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                 $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));

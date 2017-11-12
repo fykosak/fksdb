@@ -87,10 +87,11 @@ class DispatchChooser extends Chooser {
             if (count($contests) === 0) {
                 return;
             }
-            $this->contest = array_shift($contests);
+            $this->contest = array_shift($contests)['contest'];
         }
 
         if ($this->contest !== null) {
+
             $session->contestId = $this->contest->contest_id;
         }
         $this->authorize();
@@ -113,7 +114,7 @@ class DispatchChooser extends Chooser {
     }
 
     /**
-     * @return \ModelContest[]
+     * @return array[]
      */
     private function getContests() {
         $login = $this->getLogin();
