@@ -13,7 +13,7 @@
         {if in_array($participant->status,['participated'])}
             <span class="badge badge-success">{$participant->status}</span>
         {elseif in_array($participant->status,['rejected','missed']) }
-            <span class="badge label-danger">{$participant->status}</span>
+            <span class="badge badge-danger">{$participant->status}</span>
         {else}
             <span class="badge badge-warning">{$participant->status}</span>
         {/if}
