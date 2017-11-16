@@ -5,6 +5,8 @@ namespace FyziklaniModule;
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use BrawlLib\Components\Routing;
+use BrawlLib\Components\RoutingDownload;
+use BrawlLib\Components\RoutingEdit;
 use FKS\Application\UploadException;
 use FKSDB\model\Fyziklani\Rooms\PipelineFactory;
 
@@ -162,18 +164,12 @@ class RoomsPresenter extends BasePresenter {
         }
     }
 
-    public function renderDownload() {
-        $this->template->rooms = $this->getRooms();
-        /*     $teams = [];
-             foreach ($this->getTeams() as $team) {
-                 $team['color'] = '#' . substr(md5($team['name']), 0, 6);
-
-                 $teams[] = $team;
-             }
-
-             $this->template->teams = $teams;*/
-        $this->template->dataRooms = json_encode($this->getRooms());
-        $this->template->dataTeams = json_encode($this->getTeams());
+    public function createComponentDownload() {
+        $control = new RoutingDownload($this->getTranslator());
+        $control->setBuildings(['M', 'F', 'S']);
+        $control->setRooms($this->getRooms());
+        $control->setTeams($this->getTeams());
+        return $control;
     }
 
     private function getRooms() {
@@ -226,7 +222,7 @@ class RoomsPresenter extends BasePresenter {
     }
 
     public function createComponentRouting() {
-        $control = new Routing();
+        $control = new RoutingEdit();
         $data = [
             'teams' => $this->getTeams(),
             'rooms' => $this->getRooms(),
