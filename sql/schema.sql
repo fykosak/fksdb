@@ -619,7 +619,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `points` INT(11) NULL DEFAULT NULL,
   `rank_category` INT(11) NULL DEFAULT NULL,
   `rank_total` INT(11) NULL DEFAULT NULL,
-  `room_id` INT(11) NULL DEFAULT NULL,
+  `room` varchar(3) NULL DEFAULT NULL COMMENT '@DEPRECATED',
   PRIMARY KEY (`e_fyziklani_team_id`),
   INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
   INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),
@@ -1093,12 +1093,12 @@ CREATE TABLE IF NOT EXISTS `brawl_room` (
 -- Table `brawl_room`
 -- -----------------------------------------------------
 
-CREATE TABLE brawl_team_position(
- position_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   e_fyziklani_team_id  INT(11) NOT NULL,
-   row INT(11),
-   col INT(11),
-   room_id INT(11),
+CREATE TABLE IF NOT EXISTS `brawl_team_position`(
+  `position_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `e_fyziklani_team_id`  INT(11) NOT NULL,
+  `row` INT(11),
+  `col` INT(11),
+  `room_id` INT(11),
    CONSTRAINT `fk_e_fyziklani_team_position1`
      FOREIGN KEY (`e_fyziklani_team_id`)
      REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
@@ -1115,6 +1115,3 @@ CREATE TABLE brawl_team_position(
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-
-
