@@ -5,7 +5,7 @@ parameters:
             accomodation:
                 -
                     value: 1
-                    capacity: 60
+                    capacity: 66
                     label: "Hostel Elf"
 
             teacher:
