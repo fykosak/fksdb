@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-26 23:41+0100\n"
+"POT-Creation-Date: 2017-11-27 22:06+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2405,7 +2405,7 @@ msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:209
-msgid "Ubytování noc před souteží z 16.2.2017 na 17.2.2017."
+msgid "Ubytování noc před soutěží."
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:182

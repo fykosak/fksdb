@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-26 23:41+0100\n"
+"POT-Creation-Date: 2017-11-27 22:06+0100\n"
 "PO-Revision-Date: 2017-11-17 00:37+0100\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -2412,8 +2412,11 @@ msgid ""
 "na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní "
 "kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT "
 "Excelence SŠ."
-msgstr "You will be ranked in the highest category (with the oldest participants) regardless of the age of your team members. Category A competes in a different building than other categories. This category is also the only one that is part of the Ministry of education Excellence High School program."
-
+msgstr ""
+"You will be ranked in the highest category (with the oldest participants) "
+"regardless of the age of your team members. Category A competes in a "
+"different building than other categories. This category is also the only one "
+"that is part of the Ministry of education Excellence High School program."
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:144
 #, fuzzy
@@ -2434,8 +2437,9 @@ msgstr "Accommodation for teacher"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:209
-msgid "Ubytování noc před soutěží z 16.2.2017 na 17.2.2017."
-msgstr "Accommodation the night before the competition from 16/2/2017 to 17/2/2017."
+#, fuzzy
+msgid "Ubytování noc před soutěží."
+msgstr "Accommodation the night before the competition"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:182
 #, fuzzy
