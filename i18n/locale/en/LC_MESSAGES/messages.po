@@ -2365,33 +2365,33 @@ msgstr "Person is already applied to Online Physics Brawl."
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:91
 msgid "Čeká na schválení"
-msgstr ""
+msgstr "Waiting for approval"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
 msgid "Náhradník"
-msgstr ""
+msgstr "Substitute"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:93
 msgid "Potvrzen"
-msgstr ""
+msgstr "Confirmed"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:96
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:117
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:176
 msgid "Nepřijel"
-msgstr ""
+msgstr "Did not come"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:106
 msgid "Schválit účast"
-msgstr ""
+msgstr "Approve participation"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
 msgid "Potvrdit jako náhradníka"
-msgstr ""
+msgstr "Confirm as a substitute"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:114
 msgid "Prezentovat"
-msgstr ""
+msgstr "Present"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:121
 #, fuzzy
@@ -2400,11 +2400,11 @@ msgstr "Cancel"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:125
 msgid "Smazat tým"
-msgstr ""
+msgstr "Delete team"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:139
 msgid "Chceme se účastnit v kategorii A"
-msgstr ""
+msgstr "We want to take part in category A"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:141
 msgid ""
@@ -2412,29 +2412,30 @@ msgid ""
 "na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní "
 "kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT "
 "Excelence SŠ."
-msgstr ""
+msgstr "You will be ranked in the highest category (with the oldest participants) regardless of the age of your team members. Category A competes in a different building than other categories. This category is also the only one that is part of the Ministry of education Excellence High School program."
+
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:144
 #, fuzzy
 msgid "Kontaktní telefon"
-msgstr "Contact e-mail"
+msgstr "Contact phone"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:149
 msgid "Učitel/doprovod"
-msgstr ""
+msgstr "Teacher/escort"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:155
 msgid "Učitel má zájem o program"
-msgstr ""
+msgstr "The teacher is interested in the program"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:159
 msgid "Ubytování pro učitele"
-msgstr ""
+msgstr "Accommodation for teacher"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:209
-msgid "Ubytování noc před souteží z 16.2.2017 na 17.2.2017."
-msgstr ""
+msgid "Ubytování noc před soutěží z 16.2.2017 na 17.2.2017."
+msgstr "Accommodation the night before the competition from 16/2/2017 to 17/2/2017."
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:182
 #, fuzzy
@@ -2448,7 +2449,7 @@ msgstr "Add event"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:206
 msgid "Ubytování"
-msgstr ""
+msgstr "Accommodation"
 
 #~ msgid "Cizí přihláška."
 #~ msgstr "Not an own application."

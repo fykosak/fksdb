@@ -159,7 +159,7 @@ events:
                         label: _('Ubytování pro učitele')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
-                        factory: Chooser(_('Ubytování noc před souteží z 16.2.2017 na 17.2.2017.'), Options(%events.fyziklani12.accomodation%))
+                        factory: Chooser(_('Ubytování noc před soutěží z 16.2.2017 na 17.2.2017.'), Options(%events.fyziklani12.accomodation%))
                         required: false
 
             #
@@ -206,7 +206,7 @@ events:
                         label: _('Ubytování')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
-                        factory: Chooser(_('Ubytování noc před souteží z 16.2.2017 na 17.2.2017.'), Options(%events.fyziklani12.accomodation%))
+                        factory: Chooser(_('Ubytování noc před soutěží z 16.2.2017 na 17.2.2017.'), Options(%events.fyziklani12.accomodation%))
                         required: false
 
 
