@@ -1,0 +1,281 @@
+parameters:
+    events:
+        fyziklani12:
+            appCond: or(regOpen(), role('admin'))
+            accomodation:
+                -
+                    value: 1
+                    capacity: 66
+                    label: "Hostel Elf"
+
+            teacher:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    id_number: false
+                person_has_flag:
+                    spam_mff: true
+            participant:
+                person:
+                    other_name: true
+                    family_name: true
+                person_info:
+                    email: true
+                    id_number: false
+                person_history:
+                    school_id: true
+                    study_year: true
+                person_has_flag:
+                    spam_mff: true
+            dep:
+                require:
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
+                visible:
+                    team.teacher_id.person_info.id_number: team.teacher_accomodation
+                    p*.person_id.person_info.id_number: p*.accomodation
+                    team.teacher_present: team.teacher_id
+                    team.teacher_accomodation: team.teacher_id
+
+events:
+    fyziklani12:
+        event_type_id: 1
+        eventYears: [12] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklani.grid
+        formLayout: fyziklani.form
+        paramScheme:
+            notifyBcc:
+                default: fyziklani@fykos.cz
+            notifyFrom:
+                default: FYKOSí Fyziklání <fyziklani@fykos.cz>
+
+            schoolsInTeam:
+                default: 2
+            teamsPerSchool:
+                default: 2
+            availablePoints:
+                default: [5, 3, 2, 1]
+            tasksOnBoard:
+                default: 7
+            refreshDelay:
+                default: 30000
+            resultsHardDisplay:
+                default: false
+            # TODO make relative to game
+            resultsDisplay:
+                default: '1970-01-01T00:00:00'
+            # TODO make relative to game
+            resultsHide:
+                default: '1970-01-01T01:00:00'
+            # TODO infer from event begin date
+            gameStart:
+                default: '1970-01-01T00:00:00'
+            # TODO infer from event end date
+            gameEnd:
+                default: '1970-01-01T01:00:00'
+            rooms:
+                default: []
+
+        baseMachines:
+            #
+            #   TEAM
+            #
+            TEAM:
+                service: @event.ServiceFyziklaniTeam
+                personIds: [teacher_id]
+                eventId: e_fyziklani_team.event_id
+
+                states:
+                    pending: _('Čeká na schválení')
+                    spare: _('Náhradník')
+                    approved: _('Potvrzen')
+                    participated: _('Účastnil se')
+                    cancelled: _('Zrušen')
+                    missed: _('Nepřijel')
+
+                transitions:
+                    __init->pending:
+                        condition: %events.fyziklani12.appCond%
+                        label: _('Přihlásit tým')
+                        onExecuted:
+                            - Events\Transitions\MailSender(team, .*)
+                    pending->approved:
+                        condition: role('admin')
+                        label: _('Schválit účast')
+                        onExecuted:
+                            - Events\Transitions\MailSender(team, *)
+                    pending->spare:
+                        condition: role('admin')
+                        label: _('Potvrdit jako náhradníka')
+                    approved|spare->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Prezentovat')
+                    approved|spare->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Nepřijel')
+                        dangerous: true
+                    pending|spare|approved->cancelled:
+                        condition: role('admin')
+                        label: _('Zrušit tým')
+                        dangerous: true
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Smazat tým')
+
+                fields:
+                    name:
+                        label: _('Název týmu') # i18n
+                        required: true
+                        visible: true # or condition
+                        modifiable: %events.fyziklani12.appCond%
+                    category:
+                        label: _('Kategorie') # i18n
+                        required: true
+                        visible: neg(state('__init'))
+                        modifiable: false
+                    force_a:
+                        label: _('Chceme se účastnit v kategorii A')
+                        visible: true
+                        description: _('Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+
+                    phone:
+                        label: _('Kontaktní telefon')
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                    teacher_id:
+                        label: _('Učitel/doprovod')
+                        required: false
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                        factory: RefPerson(%events.fyziklani12.teacher%, email, true, role('admin'), false)
+                    teacher_present:
+                        label: _('Učitel má zájem o program')
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                    teacher_accomodation:
+                        label: _('Ubytování pro učitele')
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                        factory: Chooser(_('Ubytování noc před soutěží.'), Options(%events.fyziklani12.accomodation%))
+                        required: false
+
+            #
+            #   PARTICIPANT
+            #
+            PARTICIPANT:
+                service: @event.ServiceMFyziklaniParticipant
+                joinOn: e_fyziklani_team_id
+                personIds: [e_fyziklani_participant:event_participant.person_id]
+
+                states:
+                    applied: _('Přihlášen')
+                    participated: _('Účastnil se')
+                    missed: _('Nepřijel')
+                    cancelled: _('Zrušen')
+
+                transitions:
+                    __init->applied:
+                        condition: %events.fyziklani12.appCond%
+                        label: _('Přihlásit člena')
+                        onExecuted:
+                            - Events\Transitions\MailSender(member,self)
+                    applied->__terminated:
+                        condition: %events.fyziklani12.appCond% # TODO the time period is not specified in rules
+                        label: _('Odebrat člena')
+                    applied->participated:
+                        condition: role('admin')
+                        visible: false
+                    applied->missed:
+                        condition: role('admin')
+                        visible: false
+                    *->cancelled:
+                        condition: role('admin')
+                        visible: false
+
+                fields:
+                    person_id:
+                        label: _('Osoba')
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                        determining: true
+                        factory: RefPerson(%events.fyziklani12.participant%, email, true, role('admin'), false)
+                    accomodation:
+                        label: _('Ubytování')
+                        visible: true
+                        modifiable: %events.fyziklani12.appCond%
+                        factory: Chooser(_('Ubytování noc před soutěží.'), Options(%events.fyziklani12.accomodation%))
+                        required: false
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                team:
+                    bmName: TEAM
+                    label: Tým
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                p1:
+                    bmName: PARTICIPANT
+                    label: 1. člen
+                    required: true
+                p2:
+                    bmName: PARTICIPANT
+                    label: 2. člen
+                p3:
+                    bmName: PARTICIPANT
+                    label: 3. člen
+                p4:
+                    bmName: PARTICIPANT
+                    label: 4. člen
+                p5:
+                    bmName: PARTICIPANT
+                    label: 5. člen
+            formAdjustments:
+                - @events.privacyPolicy
+                - @events.captcha
+                - Events\FormAdjustments\DependentRequirements(%events.fyziklani12.dep.require%)
+                - Events\FormAdjustments\DependentVisibility(%events.fyziklani12.dep.visible%)
+                - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani12.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
+                - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
+                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+
+            processings:
+                - Events\Spec\Fyziklani\CategoryProcessing()
+                - @events.privacyPolicy
+
+            joins:
+                team:
+                    *->participated:
+                        p1: participated
+                        p2: participated
+                        p3: participated
+                        p4: participated
+                        p5: participated
+                    *->missed:
+                        p1: missed
+                        p2: missed
+                        p3: missed
+                        p4: missed
+                        p5: missed
+                    *->cancelled:
+                        p1: cancelled
+                        p2: cancelled
+                        p3: cancelled
+                        p4: cancelled
+                        p5: cancelled
+                    *->__terminated:
+                        p1: __terminated
+                        p2: __terminated
+                        p3: __terminated
+                        p4: __terminated
+                        p5: __terminated
