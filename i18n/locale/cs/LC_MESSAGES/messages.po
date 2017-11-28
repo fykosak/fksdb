@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-27 22:06+0100\n"
+"POT-Creation-Date: 2017-11-27 23:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -520,7 +520,7 @@ msgstr ""
 #: ../app/OrgModule/presenters/ExtendedPersonPresenter.php:87
 #: ../app/OrgModule/presenters/StalkingPresenter.php:138
 #: ../data/events/fol.neon.neon2php:137
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:200
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:201
 msgid "Osoba"
 msgstr ""
 
@@ -2250,19 +2250,19 @@ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 
 #: ../data/events/fol.neon.neon2php:52 ../data/events/fol.neon.neon2php:113
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:174
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:175
 msgid "Přihlášen"
 msgstr ""
 
 #: ../data/events/fol.neon.neon2php:53
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:95
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:177
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:178
 msgid "Zrušen"
 msgstr ""
 
 #: ../data/events/fol.neon.neon2php:54 ../data/events/fol.neon.neon2php:114
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:94
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:175
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:176
 msgid "Účastnil se"
 msgstr ""
 
@@ -2346,7 +2346,7 @@ msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:96
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:117
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:176
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:177
 msgid "Nepřijel"
 msgstr ""
 
@@ -2399,18 +2399,23 @@ msgid "Ubytování pro učitele"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:162
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:209
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:210
+msgid "Nechceme ubytování."
+msgstr ""
+
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:163
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:211
 msgid "Ubytování noc před soutěží."
 msgstr ""
 
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:182
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:183
 msgid "Přihlásit člena"
 msgstr ""
 
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:187
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:188
 msgid "Odebrat člena"
 msgstr ""
 
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:206
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:207
 msgid "Ubytování"
 msgstr ""
