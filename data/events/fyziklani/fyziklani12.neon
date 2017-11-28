@@ -159,7 +159,8 @@ events:
                         label: _('Ubytování pro učitele')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
-                        factory: Chooser(_('Ubytování noc před soutěží.'), Options(%events.fyziklani12.accomodation%))
+                        factory: Chooser(_('Nechceme ubytování.'), Options(%events.fyziklani12.accomodation%))
+                        description: _('Ubytování noc před soutěží.')
                         required: false
 
             #
@@ -206,7 +207,8 @@ events:
                         label: _('Ubytování')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
-                        factory: Chooser(_('Ubytování noc před soutěží.'), Options(%events.fyziklani12.accomodation%))
+                        factory: Chooser(_('Nechceme ubytování.'), Options(%events.fyziklani12.accomodation%))
+                        description: _('Ubytování noc před soutěží.')
                         required: false
 
 
@@ -218,25 +220,25 @@ events:
             baseMachines:
                 team:
                     bmName: TEAM
-                    label: Tým
+                    label: _('Tým')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                 p1:
                     bmName: PARTICIPANT
-                    label: 1. člen
+                    label: _('1. člen')
                     required: true
                 p2:
                     bmName: PARTICIPANT
-                    label: 2. člen
+                    label: _('2. člen')
                 p3:
                     bmName: PARTICIPANT
-                    label: 3. člen
+                    label: _('3. člen')
                 p4:
                     bmName: PARTICIPANT
-                    label: 4. člen
+                    label: _('4. člen')
                 p5:
                     bmName: PARTICIPANT
-                    label: 5. člen
+                    label: _('5. člen')
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
