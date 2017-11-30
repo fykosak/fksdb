@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-27 23:05+0100\n"
+"POT-Creation-Date: 2017-12-01 00:43+0100\n"
 "PO-Revision-Date: 2017-11-17 00:37+0100\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -524,6 +524,7 @@ msgstr "Person is required."
 
 #: ../app/OrgModule/presenters/ExtendedPersonPresenter.php:87
 #: ../app/OrgModule/presenters/StalkingPresenter.php:138
+#: ../data/events/vaf/vaf3.neon.neon2php:84
 #: ../data/events/fol.neon.neon2php:137
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:201
 msgid "Osoba"
@@ -1614,6 +1615,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/FyziklaniFactory.php:45
 #: ../data/events/fol.neon.neon2php:153
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:223
 msgid "Tým"
 msgstr "Team"
 
@@ -2224,27 +2226,6 @@ msgstr "Log out"
 msgid "Správce systému"
 msgstr "Administrator"
 
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:2
-msgid "Rooms"
-msgstr ""
-
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:6
-msgid "room"
-msgstr ""
-
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:7
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:42
-msgid "actions"
-msgstr ""
-
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:37
-msgid "Buildings"
-msgstr ""
-
-#: ../libs/BrawlLib/Components/RoutingDownload.latte.latte2php:41
-msgid "building"
-msgstr ""
-
 #: ../app/config/exports.neon.neon2php:12
 #: ../app/config/exports.neon.neon2php:14
 #: ../app/config/exports.neon.neon2php:16
@@ -2260,6 +2241,126 @@ msgstr ""
 #: ../app/config/exports.neon.neon2php:36
 msgid "Uložit AESOP"
 msgstr "Save AESOP"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:19
+msgid "Kvůli pojišťovně."
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:22
+msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:24
+#: ../data/events/vaf/vaf3.neon.neon2php:25
+#: ../data/events/vaf/vaf3.neon.neon2php:26
+#: ../data/events/vaf/vaf3.neon.neon2php:27
+#: ../data/events/vaf/vaf3.neon.neon2php:28
+msgid "pánské"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:29
+#: ../data/events/vaf/vaf3.neon.neon2php:30
+#: ../data/events/vaf/vaf3.neon.neon2php:31
+#: ../data/events/vaf/vaf3.neon.neon2php:32
+msgid "dámské"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:52
+#: ../data/events/fol.neon.neon2php:52 ../data/events/fol.neon.neon2php:113
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:175
+msgid "Přihlášen"
+msgstr "Applied"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:53
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
+msgid "Náhradník"
+msgstr "Substitute"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:54
+#: ../data/events/fol.neon.neon2php:54 ../data/events/fol.neon.neon2php:114
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:94
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:176
+msgid "Účastnil se"
+msgstr "Participated"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:55
+#: ../data/events/vaf/vaf3.neon.neon2php:72
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:96
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:117
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:177
+msgid "Nepřijel"
+msgstr "Did not come"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:56
+#: ../data/events/fol.neon.neon2php:53
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:95
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:178
+msgid "Zrušen"
+msgstr "Cancelled"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:61
+#, fuzzy
+msgid "Přihlásit náhradníka"
+msgstr "Login"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:66
+#, fuzzy
+msgid "Nasadit náhradníka"
+msgstr "Substitute"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:69
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:114
+msgid "Prezentovat"
+msgstr "Present"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:76
+#, fuzzy
+msgid "Zrušit přihlášku"
+msgstr "Import applications"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:80
+#, fuzzy
+msgid "Smazat přihlášku"
+msgstr "Import applications"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:90
+msgid "Jaké triko nosíš?"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:92
+#, fuzzy
+msgid "Zvolit velikost"
+msgstr "Choose type"
+
+#: ../data/events/vaf/vaf3.neon.neon2php:94
+msgid "Jídlo"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:95
+msgid ""
+"Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
+"…? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě "
+"veganů) dovezeš jídlo vlastní?"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:97
+msgid "Zdravotní omezení"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:98
+msgid ""
+"Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
+"soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
+"náročných nebo nočních her? Například různé alergie (a jejich projevy), "
+"cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
+"pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace "
+"ohledně tvého zdravotního stavu, co bychom měli vědět?"
+msgstr ""
+
+#: ../data/events/vaf/vaf3.neon.neon2php:113
+#, fuzzy
+msgid "Zvolená osoba je již přihlášená."
+msgstr "Person %s is already applied to the event."
 
 #: ../data/events/fol.neon.neon2php:14 ../data/events/fol.neon.neon2php:25
 msgid "Pouze pro české a slovenské studenty."
@@ -2277,23 +2378,6 @@ msgstr ""
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 "To calculate category. Leave empty if you are not a high school student."
-
-#: ../data/events/fol.neon.neon2php:52 ../data/events/fol.neon.neon2php:113
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:175
-msgid "Přihlášen"
-msgstr "Applied"
-
-#: ../data/events/fol.neon.neon2php:53
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:95
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:178
-msgid "Zrušen"
-msgstr "Cancelled"
-
-#: ../data/events/fol.neon.neon2php:54 ../data/events/fol.neon.neon2php:114
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:94
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:176
-msgid "Účastnil se"
-msgstr "Participated"
 
 #: ../data/events/fol.neon.neon2php:55 ../data/events/fol.neon.neon2php:115
 msgid "Nezúčastnil se"
@@ -2336,22 +2420,27 @@ msgid "Smazat člena"
 msgstr ""
 
 #: ../data/events/fol.neon.neon2php:158
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:228
 msgid "1. člen"
 msgstr "Member 1"
 
 #: ../data/events/fol.neon.neon2php:162
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:232
 msgid "2. člen"
 msgstr "Member 2"
 
 #: ../data/events/fol.neon.neon2php:165
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:235
 msgid "3. člen"
 msgstr "Member 3"
 
 #: ../data/events/fol.neon.neon2php:168
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:238
 msgid "4. člen"
 msgstr "Member 4"
 
 #: ../data/events/fol.neon.neon2php:171
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:241
 msgid "5. člen"
 msgstr "Member 5"
 
@@ -2367,19 +2456,9 @@ msgstr "Person is already applied to Online Physics Brawl."
 msgid "Čeká na schválení"
 msgstr "Waiting for approval"
 
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
-msgid "Náhradník"
-msgstr "Substitute"
-
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:93
 msgid "Potvrzen"
 msgstr "Confirmed"
-
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:96
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:117
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:177
-msgid "Nepřijel"
-msgstr "Did not come"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:106
 msgid "Schválit účast"
@@ -2388,10 +2467,6 @@ msgstr "Approve participation"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
 msgid "Potvrdit jako náhradníka"
 msgstr "Confirm as a substitute"
-
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:114
-msgid "Prezentovat"
-msgstr "Present"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:121
 #, fuzzy
