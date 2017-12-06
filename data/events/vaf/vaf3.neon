@@ -21,15 +21,15 @@ parameters:
                         required: %events.soustredeni.requiredCond%
                         description: _('Telefon (i s předvolbou státu), jenž budeš mít s sebou.')
             tshirt:
-                M_S: S _('pánské')
-                M_M: M _('pánské')
-                M_L: L _('pánské')
-                M_XL: XL _('pánské')
-                M_XXL: XXL _('pánské')
-                F_S: S _('dámské')
-                F_M: M _('dámské')
-                F_L: L _('dámské')
-                F_XL: XL _('dámské')
+                M_S: S unisex
+                M_M: M unisex
+                M_L: L unisex
+                M_XL: XL unisex
+                M_XXL: XXL unisex
+                F_S: S dámské/female
+                F_M: M dámské/female
+                F_L: L dámské/female
+                F_XL: XL dámské/female
 events:
     vikend3:
         event_type_id: 3
@@ -89,7 +89,7 @@ events:
                     tshirt_size:
                         label: _('Jaké triko nosíš?')
                         required: %events.soustredeni.requiredCond%
-                        factory: Chooser(_('Zvolit velikost'), Options(%events.soustredeni.tshirt%))
+                        factory: Chooser(_('Zvolit velikost'), Options(%events.vikend3.tshirt%))
                     diet:
                         label: _('Jídlo')
                         description: _('Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?')
