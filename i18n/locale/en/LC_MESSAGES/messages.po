@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-01 00:43+0100\n"
+"POT-Creation-Date: 2017-12-06 19:40+0100\n"
 "PO-Revision-Date: 2017-11-17 00:37+0100\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -129,7 +129,7 @@ msgid "Chybně zadaný kód úlohy."
 msgstr ""
 
 #: ../app/FyziklaniModule/presenters/SubmitPresenter.php:148
-#, fuzzy, php-format
+#, php-format
 msgid "Tým %s neexistuje."
 msgstr "Team with name '%value' already exists."
 
@@ -1069,7 +1069,6 @@ msgid "Od zobrazení formuláře byla změněna jeho data."
 msgstr "The data have been modified since last form load."
 
 #: ../app/Components/Forms/Controls/PersonFlag.php:27
-#, fuzzy
 msgid "Ano"
 msgstr "yes"
 
@@ -1491,12 +1490,10 @@ msgid "Rodné číslo nemá platný formát."
 msgstr "Health insurance no. is not valid."
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:227
-#, fuzzy
 msgid "Telefonní číslo (matka)"
 msgstr "Phone number"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:231
-#, fuzzy
 msgid "Telefonní číslo (otec)"
 msgstr "Phone number"
 
@@ -1797,7 +1794,6 @@ msgid "Zrušit"
 msgstr "Cancel"
 
 #: ../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:44
-#, fuzzy
 msgid "Jméno týmu"
 msgstr "Name"
 
@@ -1807,7 +1803,6 @@ msgstr ""
 
 #: ../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:49
 #: ../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:44
-#, fuzzy
 msgid "Místnost"
 msgstr "Place"
 
@@ -2250,21 +2245,6 @@ msgstr "Because of the insurance company."
 msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr "The phone number (with the country code) that you will have with you."
 
-#: ../data/events/vaf/vaf3.neon.neon2php:24
-#: ../data/events/vaf/vaf3.neon.neon2php:25
-#: ../data/events/vaf/vaf3.neon.neon2php:26
-#: ../data/events/vaf/vaf3.neon.neon2php:27
-#: ../data/events/vaf/vaf3.neon.neon2php:28
-msgid "pánské"
-msgstr "men's"
-
-#: ../data/events/vaf/vaf3.neon.neon2php:29
-#: ../data/events/vaf/vaf3.neon.neon2php:30
-#: ../data/events/vaf/vaf3.neon.neon2php:31
-#: ../data/events/vaf/vaf3.neon.neon2php:32
-msgid "dámské"
-msgstr "women's"
-
 #: ../data/events/vaf/vaf3.neon.neon2php:52
 #: ../data/events/fol.neon.neon2php:52 ../data/events/fol.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:175
@@ -2351,8 +2331,17 @@ msgid "Zdravotní omezení"
 msgstr "Medical restrictrions"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:98
-msgid "Máš nějaká zdravotní omezení, která by tě mohla omezovat během akce? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže... Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
-msgstr "Do you have any health restrictions that could limit you during the event? For example, various allergies (and their symptoms), diabetes, epilepsy, longer-term problems... Do you take any medication? What are they? Are there any other information about your health condition, what should we know?"
+msgid ""
+"Máš nějaká zdravotní omezení, která by tě mohla omezovat během akce? "
+"Například různé alergie (a jejich projevy), cukrovka, epilepsie, "
+"dlouhodobější obtíže... Bereš nějaké léky, ať už pravidelně, nebo v případě "
+"obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního "
+"stavu, co bychom měli vědět?"
+msgstr ""
+"Do you have any health restrictions that could limit you during the event? "
+"For example, various allergies (and their symptoms), diabetes, epilepsy, "
+"longer-term problems... Do you take any medication? What are they? Are there "
+"any other information about your health condition, what should we know?"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:113
 #, fuzzy
@@ -2491,7 +2480,6 @@ msgstr ""
 "that is part of the Ministry of education Excellence High School program."
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:144
-#, fuzzy
 msgid "Kontaktní telefon"
 msgstr "Contact phone"
 
@@ -2509,29 +2497,61 @@ msgstr "Accommodation for teacher"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:210
-#, fuzzy
 msgid "Nechceme ubytování."
 msgstr "We don't want accommodation."
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:163
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:211
-#, fuzzy
 msgid "Ubytování noc před soutěží."
 msgstr "Accommodation the night before the competition"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:183
-#, fuzzy
 msgid "Přihlásit člena"
 msgstr "Login"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:188
-#, fuzzy
 msgid "Odebrat člena"
 msgstr "Add event"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:207
 msgid "Ubytování"
 msgstr "Accommodation"
+
+#, fuzzy
+#~ msgid "S pánské"
+#~ msgstr "men's"
+
+#, fuzzy
+#~ msgid "M pánské"
+#~ msgstr "men's"
+
+#, fuzzy
+#~ msgid "L pánské"
+#~ msgstr "men's"
+
+#, fuzzy
+#~ msgid "XL pánské"
+#~ msgstr "men's"
+
+#, fuzzy
+#~ msgid "XXL pánské"
+#~ msgstr "men's"
+
+#, fuzzy
+#~ msgid "S dámské"
+#~ msgstr "women's"
+
+#, fuzzy
+#~ msgid "M dámské"
+#~ msgstr "women's"
+
+#, fuzzy
+#~ msgid "L dámské"
+#~ msgstr "women's"
+
+#, fuzzy
+#~ msgid "XL dámské"
+#~ msgstr "women's"
 
 #~ msgid "Cizí přihláška."
 #~ msgstr "Not an own application."
