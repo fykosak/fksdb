@@ -68,7 +68,10 @@ class FyziklaniTeamsGrid extends BaseGrid {
                 'eventID' => $this->eventId
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+            /**
+             * @var $row ModelFyziklaniTeam
+             */
+            return $row->hasOpenSubmit();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventId);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));

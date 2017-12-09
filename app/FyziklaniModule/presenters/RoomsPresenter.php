@@ -2,24 +2,10 @@
 
 namespace FyziklaniModule;
 
-use Astrid\Downloader;
-use Astrid\DownloadException;
-use BrawlLib\Components\Routing;
 use BrawlLib\Components\RoutingDownload;
 use BrawlLib\Components\RoutingEdit;
-use FKS\Application\UploadException;
-use FKSDB\model\Fyziklani\Rooms\PipelineFactory;
-
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Logging\FlashDumpFactory;
-use ModelException;
 use Nette\Application\Responses\JsonResponse;
-use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 use Nette\Utils\Json;
-use ORM\Models\Events\ModelFyziklaniTeam;
-use Pipeline\PipelineException;
-
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
@@ -76,14 +62,14 @@ class RoomsPresenter extends BasePresenter {
     }
 
     private function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsById($this->getCurrentEvent()->getParameter('rooms'));
+        return $this->serviceBrawlRoom->getRoomsById($this->getEvent()->getParameter('rooms'));
     }
 
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
         $control->setBuildings(['M', 'F', 'S']);
         $control->setRooms($this->getRooms());
-        $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->eventID));
+        $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
         return $control;
     }
 
@@ -91,7 +77,7 @@ class RoomsPresenter extends BasePresenter {
     public function createComponentRouting() {
         $control = new RoutingEdit();
         $data = [
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->eventID),
+            'teams' => $this->serviceFyziklaniTeam->getTeams($this->getEventId()),
             'rooms' => $this->getRooms(),
         ];
         $control->setData($data);

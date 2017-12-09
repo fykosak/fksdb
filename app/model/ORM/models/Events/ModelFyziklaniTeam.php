@@ -21,6 +21,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     public function __toString() {
         return $this->name;
     }
+
     /**
      *
      * @return ModelFyziklaniSubmit[]
@@ -36,11 +37,16 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     /**
      * @return null|\ModelBrawlTeamPosition
      */
-    public function getPosition(){
+    public function getPosition() {
         foreach ($this->related(DbNames::TAB_BRAWL_TEAM_POSITION, 'e_fyziklani_team_id') as $row) {
             return \ModelBrawlTeamPosition::createFromTableRow($row);
         }
         return null;
+    }
+
+    public function hasOpenSubmit() {
+        $points = $this->points;
+        return !is_numeric($points);
     }
 
 }

@@ -4,7 +4,6 @@ namespace FyziklaniModule;
 
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
-use Nette\Diagnostics\FireLogger;
 
 class ResultsPresenter extends BasePresenter {
 
@@ -22,7 +21,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function renderDefault() {
         if ($this->isAjax()) {
-            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
+            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
             /**
              * @var DateTime $lastUpdated
              */
@@ -31,18 +30,18 @@ class ResultsPresenter extends BasePresenter {
             $result = [];
             $result['lastUpdated'] = (new DateTime())->__toString();
             if (!$lastUpdated) {
-                $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->eventID);
-                $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->eventID);
+                $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEventId());
+                $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
             }
             $result['submits'] = [];
             $result['isOrg'] = $isOrg;
             if ($isOrg || $this->isResultsVisible()) {
-                $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->eventID, $lastUpdated);
+                $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEventId(), $lastUpdated);
             }
-            $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
+            $result['refreshDelay'] = $this->getEvent()->getParameter('refreshDelay');
             $result['times'] = [
-                'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
+                'toStart' => strtotime($this->getEvent()->getParameter('gameStart')) - time(),
+                'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible()
             ];
             $this->sendResponse(new JsonResponse($result));
@@ -58,9 +57,9 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function isResultsVisible() {
-        $hardDisplay = $this->getCurrentEvent()->getParameter('resultsHardDisplay');
-        $before = (time() < strtotime($this->getCurrentEvent()->getParameter('resultsHide')));
-        $after = (time() > strtotime($this->getCurrentEvent()->getParameter('resultsDisplay')));
+        $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
+        $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));
+        $after = (time() > strtotime($this->getEvent()->getParameter('resultsDisplay')));
 
         return $hardDisplay || ($before && $after);
     }
