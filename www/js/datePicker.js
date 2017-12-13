@@ -34,10 +34,15 @@ $(document).ready(function() {
         var maxDate = el.attr("max") || null;
         if (maxDate)
             maxDate = $.datepicker.parseDate($.datepicker.W3C, maxDate);
+        var defaultDate = el.attr("default-date") || null;
+        if (defaultDate)
+            defaultDate = new Date(defaultDate);
+            
 
         el.datepicker({
             minDate: minDate,
             maxDate: maxDate,
+            defaultDate: defaultDate,
             changeMonth: true,
             changeYear: true
         });
