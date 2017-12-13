@@ -68,6 +68,7 @@
                     </xs:unique>
                 </xs:element>
             </xs:sequence>
+            <xs:attribute name="version" type="versionType" use="required"/>
         </xs:complexType>
     </xs:element>
 
@@ -246,6 +247,12 @@
     <xs:simpleType name="signatureType">
         <xs:restriction base="xs:string">
             <xs:pattern value="[a-z]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="versionType">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1"/>
         </xs:restriction>
     </xs:simpleType>
 
