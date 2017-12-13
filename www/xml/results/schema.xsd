@@ -23,13 +23,15 @@
 		    <xsd:enumeration value="2"/>
 		    <xsd:enumeration value="3"/>
 		    <xsd:enumeration value="4"/>
+                    
+                    <xsd:enumeration value="ALL"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	
 	<!-- types -->
 	<xsd:simpleType name="label-type">
 		<xsd:restriction base="xsd:string">
-			<xsd:maxLength value="5"/>
+			<xsd:maxLength value="20"/>
 		</xsd:restriction>	
 	</xsd:simpleType>
 	
@@ -79,6 +81,25 @@
 					  <xsd:complexContent>
 					    <xsd:extension base="tns:categories-type">
 							<xsd:attribute name="series" type="tns:series-number-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+                                <xsd:element name="brojure" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-list-type" use="required"/>
+                                                        <xsd:attribute name="listed-series" type="tns:series-number-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+                                <xsd:element name="school-cumulative" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-list-type" use="required"/>
 					    </xsd:extension>
 					  </xsd:complexContent>
 					</xsd:complexType> 
