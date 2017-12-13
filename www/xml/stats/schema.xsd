@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://fykos.cz/xml/stats/schema"
+	xmlns:fksres="http://fykos.cz/xml/results/schema"
+	targetNamespace="http://fykos.cz/xml/stats/schema">
+
+	<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="http://fykos.cz/xml/results/schema.xsd"/>
+	
+	<!-- elements -->
+	<xsd:element name="stats">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="task" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="points" type="fksres:points-type"/>
+							<xsd:element name="solvers" type="xsd:nonNegativeInteger"/>
+							<xsd:element name="average" type="fksres:points-type"/>
+						</xsd:sequence>
+						<xsd:attribute name="series" type="fksres:series-number-type" use="required"/>
+						<xsd:attribute name="label" type="fksres:label-type" use="required"/>
+					</xsd:complexType> 
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>
