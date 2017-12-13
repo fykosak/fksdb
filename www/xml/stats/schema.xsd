@@ -6,7 +6,11 @@
 	xmlns:fksres="http://fykos.cz/xml/results/schema"
 	targetNamespace="http://fykos.cz/xml/stats/schema">
 
-	<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="http://fykos.cz/xml/results/schema.xsd"/>
+	<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="https://db.fykos.cz/xml/results/schema.xsd"/>
+        
+        <xsd:simpleType name="task-number-type">
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
 	
 	<!-- elements -->
 	<xsd:element name="stats">
@@ -21,6 +25,7 @@
 						</xsd:sequence>
 						<xsd:attribute name="series" type="fksres:series-number-type" use="required"/>
 						<xsd:attribute name="label" type="fksres:label-type" use="required"/>
+                                                <xsd:attribute name="tasknr" type="tns:task-number-type" use="required"/>
 					</xsd:complexType> 
 				</xsd:element>
 			</xsd:sequence>
