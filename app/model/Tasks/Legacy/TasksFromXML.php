@@ -1,7 +1,8 @@
 <?php
 
-namespace Tasks;
+namespace Tasks\Legacy;
 
+use Nette\Diagnostics\Debugger;
 use Pipeline\Stage;
 use ServiceTask;
 use SimpleXMLElement;
