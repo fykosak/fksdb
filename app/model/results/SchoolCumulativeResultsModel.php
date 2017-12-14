@@ -178,7 +178,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                         $resultRow[$column] += $value;
                         break;
                     default:
-                        $resultRow[$column] += $this->weightVector($i)*$value;
+                        if (isset($resultRow[$column])) {
+                            $resultRow[$column] += $this->weightVector($i)*$value;
+                        }
                         break;
                 }
             }
