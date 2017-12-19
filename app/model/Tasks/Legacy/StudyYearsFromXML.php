@@ -6,6 +6,7 @@ use Pipeline\Stage;
 use ServiceStudyYear;
 use ServiceTaskStudyYear;
 use SimpleXMLElement;
+use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -48,7 +49,7 @@ class StudyYearsFromXML extends Stage {
     }
 
     public function process() {
-        foreach ($this->data->getXML() as $task) {
+        foreach ($this->data->getData() as $task) {
             $this->processTask($task);
         }
     }

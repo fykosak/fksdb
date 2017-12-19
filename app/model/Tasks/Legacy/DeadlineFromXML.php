@@ -6,6 +6,7 @@ use Nette\DateTime;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
 use ServiceTask;
+use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -47,7 +48,7 @@ class DeadlineFromXML extends Stage {
     }
 
     public function process() {
-        $XMLproblems = $this->data->getXML();
+        $XMLproblems = $this->data->getData();
         if (!$XMLproblems['deadline']) {
             return;
         }
