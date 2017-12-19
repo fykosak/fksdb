@@ -6,6 +6,7 @@ use Nette\Diagnostics\Debugger;
 use Pipeline\Stage;
 use ServiceTask;
 use SimpleXMLElement;
+use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,7 +40,7 @@ class TasksFromXML extends Stage {
     }
 
     public function process() {
-        foreach ($this->data->getXML() as $task) {
+        foreach ($this->data->getData() as $task) {
             $this->processTask($task);
         }
     }
