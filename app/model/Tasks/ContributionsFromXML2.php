@@ -4,7 +4,7 @@ namespace Tasks\Legacy;
 
 use Pipeline\Pipeline;
 use Pipeline\Stage;
-use ServicePerson;
+use ServiceOrg;
 use ServiceTaskContribution;
 use SimpleXMLElement;
 use Tasks\SeriesData;
@@ -35,13 +35,13 @@ class ContributionsFromXML2 extends Stage {
     private $taskContributionService;
 
     /**
-     * @var ServicePerson
+     * @var ServiceOrg
      */
-    private $servicePerson;
+    private $serviceOrg;
 
-    public function __construct(ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
+    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
-        $this->servicePerson = $servicePerson;
+        $this->serviceOrg = $serviceOrg;
     }
 
     public function setInput($data) {
@@ -80,20 +80,15 @@ class ContributionsFromXML2 extends Stage {
                 if (!$signature) {
                     continue;
                 }
+                
+                
+                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
-
-                $person = $this->servicePerson->findByTeXSignature($signature);
-                if (!$person) {
+                if (!$org) {
                     $this->log(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature));
                     continue;
                 }
-
-                $org = $person->getOrgs($this->data->getContest()->contest_id)->fetch();
-
-                if (!$org) {
-                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person), Pipeline::LOG_WARNING);
-                }
-                $contributors[] = $person;
+                $contributors[] = $org;
             }
 
             // delete old contributions

@@ -4,7 +4,7 @@ namespace Tasks;
 
 use FKS\Logging\MemoryLogger;
 use Pipeline\Pipeline;
-use ServicePerson;
+use ServiceOrg;
 use ServiceStudyYear;
 use ServiceTask;
 use ServiceTaskContribution;
@@ -64,11 +64,11 @@ class PipelineFactory {
     private $serviceStudyYear;
 
     /**
-     * @var ServicePerson
+     * @var ServiceOrg
      */
-    private $servicePerson;
+    private $serviceOrg;
 
-    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServicePerson $servicePerson) {
+    function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -76,7 +76,7 @@ class PipelineFactory {
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
-        $this->servicePerson = $servicePerson;
+        $this->serviceOrg = $serviceOrg;
     }
 
     /**
@@ -96,7 +96,7 @@ class PipelineFactory {
             $deadlineStage = new DeadlineFromXML($this->serviceTask);
             $pipeline->addStage($deadlineStage);
 
-            $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->servicePerson);
+            $contributionStage = new ContributionsFromXML($this->contributionMappings, $this->serviceTaskContribution, $this->serviceOrg);
             $pipeline->addStage($contributionStage);
 
             $studyYearStage = new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
@@ -121,7 +121,7 @@ class PipelineFactory {
         $deadlineStage = new DeadlineFromXML2($this->serviceTask);
         $pipeline->addStage($deadlineStage);
 
-        $contributionStage = new ContributionsFromXML2($this->serviceTaskContribution, $this->servicePerson);
+        $contributionStage = new ContributionsFromXML2($this->serviceTaskContribution, $this->serviceOrg);
         $pipeline->addStage($contributionStage);
 
         $studyYearStage = new StudyYearsFromXML2($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear);
