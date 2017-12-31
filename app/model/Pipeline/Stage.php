@@ -2,6 +2,8 @@
 
 namespace Pipeline;
 
+use FKS\Logging\ILogger;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * 
@@ -34,7 +36,7 @@ abstract class Stage {
         $this->pipeline = $pipeline;
     }
 
-    protected function log($message) {
+    protected function log($message, $level = ILogger::INFO) {
         $this->getPipeline()->log($message);
     }
 
