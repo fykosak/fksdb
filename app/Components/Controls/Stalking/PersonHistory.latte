@@ -1,0 +1,41 @@
+<h2>Person history</h2>
+{if count($data['history'])}
+    {foreach $data['history'] as $history}
+        <h3>{$history->ac_year}</h3>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">School</label>
+            <div class="col-sm-10">
+                {if (!is_null($history->school_id))}
+                    <p class="form-control-static">{$history->school->name_abbrev}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Class</label>
+            <div class="col-sm-10">
+                {if (!is_null($history->class))}
+                    <p class="form-control-static">{$history->class}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Study_year</label>
+            <div class="col-sm-10">
+                {if (!is_null($history->study_year))}
+                    <p class="form-control-static">{$history->study_year}</p>
+                {else}
+                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
+                {/if}
+            </div>
+        </div>
+
+    {/foreach}
+
+{else}
+    <span class="label-warning label">No records</span>
+{/if}

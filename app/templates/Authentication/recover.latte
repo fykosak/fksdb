@@ -1,28 +1,9 @@
-{block head}
-{include #parent}
-<link rel="stylesheet" media="screen" href="{$basePath}/css/login.css"/>
-{/block}
+{layout ./@layout.latte}
 
-{block body}
-
-
-<div class="container">
-    {form recoverForm class => form-signin}
-
-
-    <h2 class="form-signin-heading">FKSDB</h2>
-    {block flashes}
-    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
-    {/block}
-    <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
-    {input id class => 'last form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
-
-
-    {input send class => 'btn btn-lg btn-primary btn-block'}
-
+{block #form}
+    {form recoverForm class => 'form-signin'}
+        <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+        {input id class => 'last form-control', autofocus => true, placeholder => $_input->translate($_input->caption)}
+        {input send class => 'btn btn-lg btn-primary btn-block'}
     {/form recoverForm}
-    {control languageChooser:,"pagination pull-right"}
-
-</div> <!-- /container -->
 {/block}
-

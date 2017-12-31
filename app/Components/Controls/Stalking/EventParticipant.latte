@@ -1,0 +1,25 @@
+<h2>Event Participant</h2>
+{if count($participants)}
+    {foreach $participants as $participant}
+        <p class="row">
+            <span class="col-sm-2">{$participant->event->event_year}. {$participant->event->event_type->name}</span>
+            <span class="col-sm-2">{$participant->event->name}</span>
+            <span class="col-sm-1">{$participant->event->year}. year</span>
+            <span class="col-sm-2">
+        {if in_array($participant->status,['participated'])}
+            <span class="label label-success">{$participant->status}</span>
+        {elseif in_array($participant->status,['rejected','missed']) }
+            <span class="label label-danger">{$participant->status}</span>
+        {else}
+            <span class="label label-warning">{$participant->status}</span>
+        {/if}
+            </span>
+            {if ($participant->event->event_type_id ==1 || $participant->event->event_type_id==9 )}
+                {* TODO FYZIKLANI tymy + ...*}
+            {/if}
+        </p>
+    {/foreach}
+
+{else}
+    <span class="label-warning label">No records</span>
+{/if}

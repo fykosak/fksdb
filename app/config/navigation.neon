@@ -27,6 +27,7 @@ navigation:
             - org.org.list
             - org.event.list
             - org.deduplicate.person
+            - org.stalking.default
         public.dashboard.default:
             - public.submit.default
             - public.application.list           
