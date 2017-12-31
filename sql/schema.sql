@@ -1095,20 +1095,20 @@ CREATE TABLE IF NOT EXISTS `brawl_room` (
 
 CREATE TABLE IF NOT EXISTS `brawl_team_position`(
   `position_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `e_fyziklani_team_id`  INT(11) NOT NULL,
+  `e_fyziklani_team_id`  INT(11) UNIQUE NOT NULL,
   `row` INT(11),
   `col` INT(11),
   `room_id` INT(11),
    CONSTRAINT `fk_e_fyziklani_team_position1`
      FOREIGN KEY (`e_fyziklani_team_id`)
      REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-     ON DELETE NO ACTION
-     ON UPDATE NO ACTION,
+     ON DELETE CASCADE
+     ON UPDATE CASCADE,
    CONSTRAINT `fk_e_fyziklani_room_position1`
      FOREIGN KEY (`room_id`)
      REFERENCES `brawl_room` (`room_id`)
-     ON DELETE NO ACTION
-     ON UPDATE NO ACTION
+     ON DELETE RESTRICT
+     ON UPDATE RESTRICT
 ) ENGINE='InnoDB';
 
 
