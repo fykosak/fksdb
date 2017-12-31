@@ -30,7 +30,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var int $eventID
      * @persistent
      */
-    private $eventID;
+    public $eventID;
 
     /**
      * @var FyziklaniFactory

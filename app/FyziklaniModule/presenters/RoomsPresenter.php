@@ -6,6 +6,7 @@ use BrawlLib\Components\RoutingDownload;
 use BrawlLib\Components\RoutingEdit;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Utils\Json;
+
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
@@ -62,12 +63,13 @@ class RoomsPresenter extends BasePresenter {
     }
 
     private function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsById($this->getEvent()->getParameter('rooms'));
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
-        $control->setBuildings(['M', 'F', 'S']);
+        $rooms = $this->getEvent()->getParameter('buildings');
+        $control->setBuildings($rooms);
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
         return $control;

@@ -5,11 +5,15 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
     protected $tableName = \DbNames::TAB_BRAWL_TEAM_POSITION;
     protected $modelClassName = 'ModelBrawlTeamPosition';
 
+    /**
+     * @return \ModelBrawlTeamPosition
+     */
     public function findByTeamId($teamId) {
-        /**
-         * @var $model \ModelBrawlTeamPosition
-         */
-        return $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
+        $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
+        if ($row) {
+            return ModelBrawlTeamPosition::createFromTableRow($row);
+        }
+        return null;
     }
 
     /**
