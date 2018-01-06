@@ -8,13 +8,13 @@ parameters:
         # (Language) domains
         cz: fykos.cz
         org: fykos.org
-        
+
         # Default top level domain
         tld: cz
 
         # Main domain
         host: fykos
-    
+
     # Available subdomains
     subdomain:
         # Central authentication domain for SSO.
@@ -57,7 +57,7 @@ fksrouter:
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
-                       
+
         # Central authentication domain (+ logout must be enabled at each domain too)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>':
             presenter: Authentication
@@ -93,6 +93,13 @@ fksrouter:
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventID [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
+            tld: %domain.tld%
+            module: Fyziklani
+            flags: SECURED
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventID [0-9]+>]/s/q[/<id>]':
+            subdomain: %subdomain.db%
+            presenter: Submit
+            action: qrEntry
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
