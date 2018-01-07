@@ -38,7 +38,8 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
      * @return null|\ModelBrawlTeamPosition
      */
     public function getPosition() {
-        foreach ($this->related(DbNames::TAB_BRAWL_TEAM_POSITION, 'e_fyziklani_team_id') as $row) {
+        $row = $this->related(DbNames::TAB_BRAWL_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
+        if ($row) {
             return \ModelBrawlTeamPosition::createFromTableRow($row);
         }
         return null;
