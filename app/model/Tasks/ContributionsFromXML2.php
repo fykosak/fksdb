@@ -2,7 +2,6 @@
 
 namespace Tasks;
 
-use Pipeline\Pipeline;
 use Pipeline\Stage;
 use ServiceOrg;
 use ServiceTaskContribution;
