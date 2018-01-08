@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks\Legacy;
+namespace Tasks;
 
 use Nette\DateTime;
 use Pipeline\PipelineException;

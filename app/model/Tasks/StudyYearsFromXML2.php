@@ -1,6 +1,6 @@
 <?php
 
-namespace Tasks\Legacy;
+namespace Tasks;
 
 use Pipeline\Stage;
 use ServiceStudyYear;
