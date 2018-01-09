@@ -10,13 +10,17 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     *
+     * @param $label string
+     * @param $eventId integer
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel($label, $eventId) {
         if (!$label || !$eventId) {
             return null;
         }
+        /**
+         * @var $result ModelFyziklaniTask
+         */
         $result = $this->getTable()->where(array(
             'label' => $label,
             'event_id' => $eventId
@@ -26,7 +30,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     *
+     * @param $eventId integer
      * @return \Nette\Database\Table\Selection|null
      */
     public function findAll($eventId) {
@@ -37,12 +41,30 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         return $result ?: null;
     }
 
-    public function taskLabelToTaskID($taskLabel, $eventID) {
-        $row = $this->findByLabel($taskLabel, $eventID);
-        if ($row) {
-            return $row->fyziklani_task_id;
+    public function taskLabelToTaskId($taskLabel, $eventId) {
+        /**
+         * @var $task ModelFyziklaniTask
+         */
+        $task = $this->findByLabel($taskLabel, $eventId);
+        if ($task) {
+            return $task->fyziklani_task_id;
         }
         return false;
+    }
+
+
+    public function getTasks($eventId) {
+        $tasks = [];
+        /**
+         * @var $row ModelFyziklaniTask
+         */
+        foreach ($this->findAll($eventId)->order('label') as $row) {
+            $tasks[] = [
+                'label' => $row->label,
+                'task_id' => $row->fyziklani_task_id
+            ];
+        }
+        return $tasks;
     }
 
 }

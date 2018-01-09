@@ -6,9 +6,13 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property integer fyziklani_submit_id
+ * @property integer points
+ * @property integer e_fyziklani_team_id
+ * @property integer fyziklani_task_id
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle {
-    
+
     /**
      * @return ModelFyziklaniTask
      */
@@ -16,7 +20,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle {
         $data = $this->ref(DbNames::TAB_FYZIKLANI_TASK, 'fyziklani_task_id');
         return ModelFyziklaniTask::createFromTableRow($data);
     }
-    
+
     /**
      * @return ModelFyziklaniTeam
      */
