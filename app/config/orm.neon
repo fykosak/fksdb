@@ -4,6 +4,8 @@
 services:
     ServiceAuthToken:        ServiceAuthToken
     ServiceAddress:          ServiceAddress
+    ServiceBrawlRoom:        ServiceBrawlRoom
+    ServiceBrawlTeamPosition: ServiceBrawlTeamPosition
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
