@@ -30,11 +30,9 @@ class ErrorPresenter extends BasePresenter {
             $this->payload->error = TRUE;
             $this->terminate();
         } elseif ($exception instanceof BadRequestException) {
-            //Debugger::barDump($exception);
             $code = $exception->getCode();
-
             // known exception or general 500
-            $this->setView(in_array($code, array(403, 404, 405)) ? $code: '500');
+            $this->setView(in_array($code, [403, 404, 405]) ? $code: '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {
