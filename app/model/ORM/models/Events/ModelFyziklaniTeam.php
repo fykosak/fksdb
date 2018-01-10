@@ -12,8 +12,10 @@ use ModelFyziklaniSubmit;
  * @property integer e_fyziklani_team_id
  * @property integer event_id
  * @property integer points
+ * @property string status
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @author Michal Červeňák <miso@fykos.cz>
  *
  */
 class ModelFyziklaniTeam extends AbstractModelSingle {
