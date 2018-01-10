@@ -1,98 +1,115 @@
-<h2>Org</h2>
-{if count($orgs)}
-    {foreach $orgs as $org}
-        {if ($org->contest_id==1)}
-            <h3><span class="label" style="background-color: #1175da;">FYKOS</span></h3>
-        {else}
-            <h3><span class="label" style="background-color: #ff4800;">Výfuk</span></h3>
-        {/if}
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">Org</h4>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">org_id</label>
-            <div class="col-sm-10">
-                <p class="form-control-static">{$org->org_id}</p>
-            </div>
+    {if count($orgs)}
+        {foreach $orgs as $org}
+
+            {if ($org->contest_id==1)}
+                <h3 class="card-header"><span class="badge" style="background-color: #1175da;">FYKOS</span></h3>
+            {else}
+                <h3 class="card-header"><span class="badge" style="background-color: #ff4800;">Výfuk</span></h3>
+            {/if}
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">org_id</span>
+                        <span class="col-7">{$org->org_id}</span>
+                    </div>
+                </li>
+
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">Since</span>
+                        <span class="col-7">
+                                {if (!is_null($org->since))}
+                                    {$org->since}
+                                {else}
+                                    <span class="badge badge-danger">not set</span>
+                                {/if}
+                            </span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">Until</span>
+                        <div class="col-7">
+                            {if (!is_null($org->until))}
+                                {$org->until}
+                            {else}
+                                <span class="badge badge-success">still organizing</span>
+
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">role</span>
+                        <div class="col-7">
+                            {if (is_null($org->role))}
+                                <span class="badge badge-danger">not set</span>
+                            {else}
+                                {$org->role}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">order</span>
+                        <div class="col-7">
+                            {if (is_null($org->order))}
+                                <span class="badge badge-danger">not set</span>
+                            {else}
+                                {$org->order}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">Contribution</span>
+                        <div class="col-7">
+                            {if (is_null($org->contribution))}
+                                <span class="badge badge-danger">not set</span>
+                            {else}
+                                {$org->contribution}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">tex_signature</span>
+                        <div class="col-7">
+                            {if (is_null($org->tex_signature))}
+                                <span class="badge badge-danger">not set</span>
+                            {else}
+                                {$org->tex_signature}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">domain_alias</span>
+                        <div class="col-7">
+                            {if (is_null($org->domain_alias))}
+                                <span class="badge badge-danger">not set</span>
+                            {else}
+                                {$org->domain_alias}
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        {/foreach}
+
+    {else}
+        <div class="card-body">
+            <span class="badge-warning badge">No records</span>
         </div>
+    {/if}
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Since</label>
-            <div class="col-sm-10">
-                {if (!is_null($org->since))}
-                    <p class="form-control-static">{$org->since}</p>
-                {else}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Until</label>
-            <div class="col-sm-10">
-                {if (!is_null($org->until))}
-                    <p class="form-control-static">{$org->until}</p>
-                {else}
-                    <p class="form-control-static"><span class="label label-success">still organizing</span></p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">role</label>
-            <div class="col-sm-10">
-                {if (is_null($org->role))}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {else}
-                    <p class="form-control-static">{$org->role}</p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">order</label>
-            <div class="col-sm-10">
-                {if (is_null($org->order))}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {else}
-                    <p class="form-control-static">{$org->order}</p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Contribution</label>
-            <div class="col-sm-10">
-                {if (is_null($org->contribution))}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {else}
-                    <p class="form-control-static">{$org->contribution}</p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">tex_signature</label>
-            <div class="col-sm-10">
-                {if (is_null($org->tex_signature))}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {else}
-                    <p class="form-control-static">{$org->tex_signature}</p>
-                {/if}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">domain_alias</label>
-            <div class="col-sm-10">
-                {if (is_null($org->domain_alias))}
-                    <p class="form-control-static"><span class="label label-danger">not set</span></p>
-                {else}
-                    <p class="form-control-static">{$org->domain_alias}</p>
-                {/if}
-            </div>
-        </div>
-
-    {/foreach}
-
-{else}
-    <span class="label-warning label">No records</span>
-{/if}
+</div>
