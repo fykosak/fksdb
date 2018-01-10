@@ -6,7 +6,7 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
-    
+
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             return;
@@ -16,12 +16,12 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function requiresLogin() {
-        return $this->getAction() != 'default';
+        return $this->getAction() !== 'default';
     }
 
     public function renderDefault() {
         if ($this->isAjax()) {
-            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getCurrentEvent());
+            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
             /**
              * @var DateTime $lastUpdated
              */
@@ -30,62 +30,22 @@ class ResultsPresenter extends BasePresenter {
             $result = [];
             $result['lastUpdated'] = (new DateTime())->__toString();
             if (!$lastUpdated) {
-                $result['tasks'] = $this->getTasks();
-                $result['teams'] = $this->getTeams();
+                $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEventId());
+                $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
             }
             $result['submits'] = [];
             $result['isOrg'] = $isOrg;
             if ($isOrg || $this->isResultsVisible()) {
-                $result['submits'] = $this->getSubmits($lastUpdated);
+                $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEventId(), $lastUpdated);
             }
-            $result['refreshDelay'] = $this->getCurrentEvent()->getParameter('refreshDelay');
+            $result['refreshDelay'] = $this->getEvent()->getParameter('refreshDelay');
             $result['times'] = [
-                'toStart' => strtotime($this->getCurrentEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getCurrentEvent()->getParameter('gameEnd')) - time(),
+                'toStart' => strtotime($this->getEvent()->getParameter('gameStart')) - time(),
+                'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible()
             ];
             $this->sendResponse(new JsonResponse($result));
         }
-    }
-
-    private function getTasks() {
-        $tasks = [];
-        foreach ($this->serviceFyziklaniTask->findAll($this->eventID)->order('label') as $row) {
-            $tasks[] = [
-                'label' => $row->label,
-                'task_id' => $row->fyziklani_task_id
-            ];
-        }
-        return $tasks;
-    }
-
-    private function getTeams() {
-        $teams = [];
-        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $row) {
-            $teams[] = [
-                'category' => $row->category,
-                'room' => $row->room,
-                'name' => $row->name,
-                'team_id' => $row->e_fyziklani_team_id
-            ];
-        }
-        return $teams;
-    }
-
-    private function getSubmits($lastUpdated = null) {
-        $query = $this->serviceFyziklaniSubmit->getTable()->where('e_fyziklani_team.event_id', $this->eventID);
-        $submits = [];
-        if ($lastUpdated) {
-            $query->where('modified >= ?', $lastUpdated);
-        }
-        foreach ($query as $submit) {
-            $submits[$submit->fyziklani_submit_id] = [
-                'points' => $submit->points,
-                'team_id' => $submit->e_fyziklani_team_id,
-                'task_id' => $submit->fyziklani_task_id
-            ];
-        }
-        return $submits;
     }
 
     public function titleDefault() {
@@ -97,9 +57,9 @@ class ResultsPresenter extends BasePresenter {
     }
 
     private function isResultsVisible() {
-        $hardDisplay = $this->getCurrentEvent()->getParameter('resultsHardDisplay');
-        $before = (time() < strtotime($this->getCurrentEvent()->getParameter('resultsHide')));
-        $after = (time() > strtotime($this->getCurrentEvent()->getParameter('resultsDisplay')));
+        $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
+        $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));
+        $after = (time() > strtotime($this->getEvent()->getParameter('resultsDisplay')));
 
         return $hardDisplay || ($before && $after);
     }

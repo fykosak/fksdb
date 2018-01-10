@@ -1,12 +1,13 @@
 <?php
 
-namespace Tasks;
+namespace Tasks\Legacy;
 
 use Pipeline\Pipeline;
 use Pipeline\Stage;
-use ServicePerson;
+use ServiceOrg;
 use ServiceTaskContribution;
 use SimpleXMLElement;
+use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -33,14 +34,14 @@ class ContributionsFromXML extends Stage {
     private $taskContributionService;
 
     /**
-     * @var ServicePerson
+     * @var ServiceOrg
      */
-    private $servicePerson;
+    private $serviceOrg;
 
-    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServicePerson $servicePerson) {
+    public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->contributionFromXML = $contributionFromXML;
         $this->taskContributionService = $taskContributionService;
-        $this->servicePerson = $servicePerson;
+        $this->serviceOrg = $serviceOrg;
     }
 
     public function setInput($data) {
@@ -48,7 +49,7 @@ class ContributionsFromXML extends Stage {
     }
 
     public function process() {
-        foreach ($this->data->getXML() as $task) {
+        foreach ($this->data->getData() as $task) {
             $this->processTask($task);
         }
     }
@@ -74,18 +75,13 @@ class ContributionsFromXML extends Stage {
                 }
 
 
-                $person = $this->servicePerson->findByTeXSignature($signature);
-                if (!$person) {
+                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
+
+                if (!$org) {
                     $this->log(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature));
                     continue;
                 }
-
-                $org = $person->getOrgs($this->data->getContest()->contest_id)->fetch();
-
-                if (!$org) {
-                    $this->log(sprintf(_("Osoba '%s' není org."), (string) $person), Pipeline::LOG_WARNING);
-                }
-                $contributors[] = $person;
+                $contributors[] = $org;
             }
 
             // delete old contributions

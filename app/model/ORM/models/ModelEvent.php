@@ -17,7 +17,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     private $acYear = false;
 
     /**
-     * Event can have a holder assigned for purposes of parameter parsing. 
+     * Event can have a holder assigned for purposes of parameter parsing.
      * Nothing else (currently).
      * @var Holder
      */
@@ -46,7 +46,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return int
      */
     public function getAcYear() {
@@ -72,5 +72,3 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
 }
-
-?>

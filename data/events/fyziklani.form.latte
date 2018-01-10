@@ -1,34 +1,62 @@
 {layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
 
 {block content}
+<div class="alert alert-warning">
+    <p>
+        {if $presenter->getLang() == 'cs'}
+            Tato přihláška je na soutěž FYKOSí Fyziklání v Praze!
+        {else}
+            This application is for Physics Brawl competition in Prague!
+        {/if}
+    </p>
+</div>
 <ul>
-    <li>Systém přihlašování &ndash; po vyplnění formuláře
-        a&nbsp;přihlášení týmu web automaticky přijímá týmy jako náhradníky,
-        odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
-        kontrole organizátorem se stává tým účastníkem.
-        Není tedy třeba psát emailem dotaz, jestli bude váš tým přijat, pokud váš
-        tým splňuje podmínky. Stačí počkat a&nbsp;brzy se status vašeho týmu změní
-        na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.</li>
-    <li>
-        Podrobné informace naleznene na stránce <a href="http://fyziklani.cz/">FYKOSího Fyziklání</a>
-    </li>
-    
-    <li>
-        Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
-    </li>
-    <li>
-        Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
-    </li>
-    <li>
+    {if $presenter->getLang() == 'cs'}
+        <li><b>Systém přihlašování</b> &ndash; po vyplnění formuláře
+            a&nbsp;přihlášení týmu, web automaticky přijímá týmy jako náhradníky,
+            odešle potvrzovací email o&nbsp;obdržení přihlášky a&nbsp;až po
+            kontrole organizátorem se tým stane přihlášeným.
+            Není tedy třeba psát emailem dotaz, jestli bude váš tým přijat, pokud váš
+            tým splňuje podmínky. Stačí počkat a&nbsp;brzy se status vašeho týmu změní
+            na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.
+        </li>
+        <li>
+            Podrobné informace naleznene na stránce <a href="http://fykos.cz/rocnik31/fyziklani/start">FYKOSího Fyziklání</a>
+            kde jsou i informace o ubytování.Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito podmínkami.
+        </li>
+        <li>
+            Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+        </li>
+        <li>
+            Chcete-li nahradit člena týmu, starého smažte, přihlášku uložte a na prázdné místo pak vložte člena nového.
+        </li>
+        <li>
+            Pravidla soutěže naleznete na <a href="http://fykos.cz/rocnik31/fyziklani/pravidla">stránce o pravidlech</a>.
+        </li>
+    {else}
+        <li><b>Login system</b> &ndash; after completing the form
+            and team registration, the web automatically accepts team as a substitute
+            and sends a confirmation email about receiving your application. The team become
+            applied only after checking by the organizers.
+            So there's no need to write an email asking if your team will be accepted if your
+            team meets the conditions.
+            Just wait and your team status soon changes to the received.
+            Unless it happened within three days, then it is recommended to ask the organizers.
+        </li>
+        <li>
+            Detailed information can be found on page of <a href="http://fykos.cz/year31/physicsbrawl/start">Physics Brawl</a>
+            where is also information about accommodation. By submitting your application for accommodation you also agree to these terms and conditions.
+        </li>
+        <li>
+            The registration ends with <strong>{$event->registration_end|date:'F j, Y, g:i a e'}</strong>.
+        </li>
+        <li>
+            To replace a member of the team, delete the old one, save the application and then place a new member in the blank space.
+        </li>
+        <li>
+            You can find the rules on the <a href="http://fykos.cz/year31/physicsbrawl/rules">rule page</a>.
+        </li>
 
-        Podrobné informace o ubytování najdete na <a href="http://fykos.cz/akce/fyziklani/ubytovani">stránce o
-            ubytování</a>. Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito podmínkami.
-    </li>
-    <li>
-        Pravidla soutěže naleznete na <a href="http://fykos.cz/akce/fyziklani/pravidla">stránce o pravidlech</a>.
-    </li>
+    {/if}
 </ul>
-
-
-
 {control form}

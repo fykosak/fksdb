@@ -30,7 +30,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar isset($navRoot)?:null}
+                {control navigation:navbar isset($navRoot)?$navRoot:null}
             {/block}
 
             {block user-info}

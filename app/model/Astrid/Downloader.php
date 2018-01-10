@@ -72,6 +72,20 @@ class Downloader {
         return $this->download($path);
     }
 
+    /**
+     * @param \Tasks\ModelContest $contest
+     * @param int $year
+     * @param int $series
+     * @return string filename of downloaded XML file
+     */
+    public function downloadSeriesTasks2(ModelContest $contest, $year, $series) {
+        $mask = $this->parameters['tasks']['paths2'];
+        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
+
+        $path = sprintf($mask, $contestName, $year, $series);
+        return $this->download($path);
+    }
+
     public function downloadFyziklaniRooms(ModelContest $contest, $year) {
         $mask = $this->parameters['fyziklani']['roomsPath'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
