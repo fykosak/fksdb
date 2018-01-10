@@ -224,6 +224,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
+    public function getEventOrg() {
+        if (!isset($this->person_id)) {
+            $this->person_id = null;
+        }
+        return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
+    }
+
     /**
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */

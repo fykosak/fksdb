@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use Nette\Diagnostics\Debugger;
 use \NiftyGrid\DataSource\NDataSource;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use \FKSDB\Components\Grids\BaseGrid;
 
@@ -19,11 +21,16 @@ class FyziklaniTeamsGrid extends BaseGrid {
     /**
      * @var integer
      */
-    private $eventID;
+    private $eventId;
 
-    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    /**
+     * FyziklaniTeamsGrid constructor.
+     * @param integer $eventId
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
+    public function __construct($eventId, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventID = $eventID;
+        $this->eventId = $eventId;
         parent::__construct();
     }
 
@@ -41,18 +48,32 @@ class FyziklaniTeamsGrid extends BaseGrid {
         $this->addColumn('name', _('Název týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
         $this->addColumn('points', _('Počet bodů'));
-        $this->addColumn('room', _('Místnost'));
+
+        $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
+            /**
+             * @var $row ModelFyziklaniTeam
+             */
+            $position = $row->getPosition();
+            if (!$position) {
+                return '-';
+            }
+            $room = $position->getRoom();
+            return $room->name;
+        });
         $this->addColumn('category', _('Kategorie'));
         $that = $this;
         $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
-                'eventID' => $this->eventID
+                'eventID' => $this->eventId
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id);
+            /**
+             * @var $row ModelFyziklaniTeam
+             */
+            return $row->hasOpenSubmit();
         });
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventID);//->where('points',NULL);
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventId);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
     }
 }

@@ -25,6 +25,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
+use Nette\DateTime;
 use Persons\ReferencedPersonHandler;
 use ServicePerson;
 use YearCalculator;
@@ -204,7 +205,8 @@ class PersonFactory {
      */
 
     public function createBorn($acYear = null) {
-        return (new WriteonlyDatePicker(_('Datum narození')));
+        return (new WriteonlyDatePicker(_('Datum narození')))
+                ->setDefaultDate((new DateTime())->modify('-16 years'));
     }
 
     public function createIdNumber($acYear = null) {
@@ -293,9 +295,10 @@ class PersonFactory {
 
     private function rawPhone($label, $acYear = null) {
         $control = new WriteonlyInput($label);
+        $control->setAttribute("placeholder", 've tvaru +420123456789');
         $control->addRule(Form::MAX_LENGTH, null, 32)
                 ->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/(\+42[01])?(\s?\d{3}){3}/');
+                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/\+42[01]\d{9}/');
 	return $control;
     }
 

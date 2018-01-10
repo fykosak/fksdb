@@ -10,7 +10,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeduplicatePresenter extends BasePresenter {
@@ -42,7 +42,7 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     public function actionPerson() {
-        
+
     }
 
     public function handleBatchMerge() {
@@ -82,6 +82,7 @@ class DeduplicatePresenter extends BasePresenter {
 
         return $grid;
     }
+
 
     protected function createPersonDuplicateFinder() {
         return new DuplicateFinder($this->servicePerson, $this->globalParameters);

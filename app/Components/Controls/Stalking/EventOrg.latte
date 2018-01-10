@@ -1,0 +1,15 @@
+<h2>Event Org</h2>
+{if count($orgs)}
+    {foreach $orgs as $eventOrg}
+        <p class="row">
+            <span class="col-sm-2">{$eventOrg->event->event_year}. {$eventOrg->event->event_type->name}</span>
+            <span class="col-sm-2">{$eventOrg->event->name}</span>
+            <span class="col-sm-1">{$eventOrg->event->year}. year</span>
+            <span class="col-sm-2">{$eventOrg->note} </span>
+        </p>
+
+    {/foreach}
+
+{else}
+    <span class="label-warning label">No records</span>
+{/if}

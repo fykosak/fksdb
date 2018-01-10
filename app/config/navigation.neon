@@ -27,9 +27,10 @@ navigation:
             - org.org.list
             - org.event.list
             - org.deduplicate.person
+            - org.stalking.default
         public.dashboard.default:
             - public.submit.default
-            - public.application.list           
+            - public.application.list
             - fykos
             - vyfuk
         fyziklani.dashboard.default:
@@ -39,6 +40,6 @@ navigation:
             - fyziklani.results.default
             - fyziklani.task.table
             - fyziklani.task.import
-            - fyziklani.rooms.import
-            
-        
+            - fyziklani.rooms.default
+
+
