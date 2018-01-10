@@ -35,13 +35,25 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $team = $this->findByPrimary($teamId);
         return $team && $team->event_id == $eventId;
     }
+    /**
+     * Syntactic sugar.
+     * @param int $eventId
+     * @return \Nette\Database\Table\Selection|null
+     */
+    public function findApplied($eventId = null) {
+        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare']);
+        if ($eventId) {
+            $result->where('event_id', $eventId);
+        }
+        return $result ?: null;
+    }
 
     public function getTeams($eventId) {
         $teams = [];
         /**
          * @var $row ModelFyziklaniTeam
          */
-        foreach ($this->findParticipating($eventId) as $row) {
+        foreach ($this->findApplied($eventId) as $row) {
             /**
              * @var $row ModelFyziklaniTeam
              */
@@ -51,6 +63,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
                 'category' => $row->category,
                 'roomId' => $position ? $position->getRoom()->room_id : '',
                 'name' => $row->name,
+                'status'=>$row->status,
                 'teamId' => $row->e_fyziklani_team_id,
                 'x' => $position ? $position->col : null,
                 'y' => $position ? $position->row : null,
