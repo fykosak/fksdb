@@ -40,7 +40,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @param int $eventId
      * @return \Nette\Database\Table\Selection|null
      */
-    public function findApplied($eventId = null) {
+    public function findPossiblyAttending($eventId = null) {
         $result = $this->getTable()->where('status', ['participated', 'approved', 'spare']);
         if ($eventId) {
             $result->where('event_id', $eventId);
@@ -53,7 +53,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         /**
          * @var $row ModelFyziklaniTeam
          */
-        foreach ($this->findApplied($eventId) as $row) {
+        foreach ($this->findPossiblyAttending($eventId) as $row) {
             /**
              * @var $row ModelFyziklaniTeam
              */
