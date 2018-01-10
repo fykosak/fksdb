@@ -1,19 +1,28 @@
-<h2>Contestant</h2>
-{if count($contestants)}
-    {foreach $contestants as $contestant}
-        <p class="row">
-            <span class="col-sm-2">{$contestant->ct_id}</span>
-            <span class="col-sm-2">
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">Contestant</h4>
+
+    {if count($contestants)}
+        <ul class="list-group list-group-flush">
+            {foreach $contestants as $contestant}
+                <li class="list-group-item">
+                <span class="row">
+                    <span class="col-4">{$contestant->ct_id}</span>
+                    <span class="col-4">
             {if ($contestant->contest_id==1)}
-                <span class="label" style="background-color: #1175da;">FYKOS</span>
+                <span class="badge" style="background-color: #1175da;">FYKOS</span>
                 {else}
-                <span class="label" style="background-color: #ff4800;">Výfuk</span>
+                <span class="badge" style="background-color: #ff4800;">Výfuk</span>
             {/if}
             </span>
-            <span class="col-sm-2">{$contestant->year}. year</span>
-        </p>
-    {/foreach}
+                    <span class="col-4">{$contestant->year}. year</span>
+                </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            <span class="badge-warning badge">No records</span>
+        </div>
+    {/if}
 
-{else}
-    <span class="label-warning label">No records</span>
-{/if}
+</div>
