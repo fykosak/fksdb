@@ -31,6 +31,7 @@ class SubmitPresenter extends BasePresenter {
         $this->taskCodePreprocessor = $taskCodePreprocessor;
     }
 
+
     public function actionQrEntry($id) {
         if (!$id) {
             $this->flashMessage('Code is required', 'danger');
@@ -48,7 +49,7 @@ class SubmitPresenter extends BasePresenter {
              */
             $form = $this['entryQRForm'];
             $form->setDefaults(['taskCode' => $code]);
-            foreach ($this->getCurrentEvent()->getParameter('availablePoints') as $points) {
+            foreach ($this->getEvent()->getParameter('availablePoints') as $points) {
                 /**
                  * @var $button Button
                  */
@@ -150,20 +151,22 @@ class SubmitPresenter extends BasePresenter {
 
     public function createComponentEntryForm() {
         $teams = [];
-        /**
-         * @var $team ModelFyziklaniTeam
-         */
-        foreach ($this->serviceFyziklaniTeam->findParticipating($this->eventID) as $team) {
+        foreach ($this->serviceFyziklaniTeam->findParticipating($this->getEventId()) as $team) {
+            /**
+             * @var $team ModelFyziklaniTeam
+             */
+
             $teams[] = [
                 'teamId' => $team->e_fyziklani_team_id,
                 'name' => $team->name,
             ];
         };
         $tasks = [];
-        /**
-         * @var $task \ModelFyziklaniTask
-         */
-        foreach ($this->serviceFyziklaniTask->findAll($this->eventID) as $task) {
+
+        foreach ($this->serviceFyziklaniTask->findAll($this->getEventId()) as $task) {
+            /**
+             * @var $task \ModelFyziklaniTask
+             */
             $tasks[] = [
                 'task_id' => $task->fyziklani_task_id,
                 'label' => $task->label,
@@ -175,7 +178,8 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryQRForm() {
-        $form = $this->fyziklaniFactory->createEntryQRForm($this->getCurrentEvent());
+        $form = $this->fyziklaniFactory->createEntryQRForm($this->getEvent());
+
         $form->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
@@ -195,6 +199,7 @@ class SubmitPresenter extends BasePresenter {
             }
             $log = $this->savePoints($values->taskCode, $points);
             $this->flashMessage($log[0], $log[1]);
+
         } else {
             $this->flashMessage($msg, 'danger');
         }
@@ -209,18 +214,23 @@ class SubmitPresenter extends BasePresenter {
         /* Existenica týmu */
         $teamID = $this->taskCodePreprocessor->extractTeamId($taskCode);
 
-        if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->eventID)) {
+
+        if (!$this->serviceFyziklaniTeam->teamExist($teamID, $this->getEventId())) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamID);
             return false;
         }
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
         /* otvorenie submitu */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        if (!$team->hasOpenSubmit()) {
             $msg = _('Bodování tohoto týmu je uzavřené.');
             return false;
         }
         /* správny label */
         $taskLabel = $this->taskCodePreprocessor->extractTaskLabel($taskCode);
-        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->eventID);
+        $taskID = $this->serviceFyziklaniTask->taskLabelToTaskID($taskLabel, $this->getEventId());
         if (!$taskID) {
             $msg = sprintf(_('Úloha %s neexistuje.'), $taskLabel);
             return false;
@@ -234,7 +244,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->getCurrentEvent());
+        $form = $this->fyziklaniFactory->createEditForm($this->getEvent());
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         return $form;
     }
@@ -249,7 +259,11 @@ class SubmitPresenter extends BasePresenter {
         $teamID = $this->editSubmit->e_fyziklani_team_id;
 
         /* Uzatvorené bodovanie nejde editovať; */
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
+        if (!$team->hasOpenSubmit()) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->backlinkRedirect();
             $this->redirect('table'); // if there's no backlink
@@ -287,7 +301,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->eventID, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
+        return new FyziklaniSubmitsGrid($this->getEventId(), $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
     }
 
 }

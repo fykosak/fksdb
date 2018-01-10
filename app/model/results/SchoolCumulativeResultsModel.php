@@ -178,13 +178,15 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                         $resultRow[$column] += $value;
                         break;
                     default:
-                        $resultRow[$column] += $this->weightVector($i)*$value;
+                        if (isset($resultRow[$column])) {
+                            $resultRow[$column] += $this->weightVector($i)*$value;
+                        }
                         break;
                 }
             }
             $resultRow[self::ALIAS_UNWEIGHTED_SUM] += $schoolContestants[$i][self::ALIAS_SUM];
         }
-        $resultRow[self::ALIAS_PERCENTAGE] = round($resultRow[self::ALIAS_PERCENTAGE] / (float) $resultRow[self::ALIAS_CONTESTANTS_COUNT]);
+        $resultRow[self::ALIAS_PERCENTAGE] = ($resultRow[self::ALIAS_CONTESTANTS_COUNT] > 0) ? round($resultRow[self::ALIAS_PERCENTAGE] / (float) $resultRow[self::ALIAS_CONTESTANTS_COUNT]) : null;
         foreach($resultRow as $key => $value){
             if(is_float($value)){
                 $resultRow[$key] = round($value);

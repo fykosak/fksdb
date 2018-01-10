@@ -25,6 +25,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
+use Nette\DateTime;
 use Persons\ReferencedPersonHandler;
 use ServicePerson;
 use YearCalculator;
@@ -204,7 +205,8 @@ class PersonFactory {
      */
 
     public function createBorn($acYear = null) {
-        return (new WriteonlyDatePicker(_('Datum narození')));
+        return (new WriteonlyDatePicker(_('Datum narození')))
+                ->setDefaultDate((new DateTime())->modify('-16 years'));
     }
 
     public function createIdNumber($acYear = null) {
