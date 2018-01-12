@@ -10,6 +10,19 @@
         {/if}
     </p>
 </div>
+<div class="alert alert-info">
+    <p>
+        {if $presenter->getLang() == 'cs'}
+            <strong>Na vybavení dalších ubytovacích kapacít usilovne pracujeme. </strong>
+            O navýšení kapacity vás budeme včas informovať mailom.
+            Ubytovanie bude možné dodatočne zaregistrovať!.
+        {else}
+            <strong>We are working to increase accommodation capacity.</strong>
+            We will inform you about any changes by email.
+            Accommodation will be available book additional.
+        {/if}
+    </p>
+</div>
 <ul>
     {if $presenter->getLang() == 'cs'}
         <li><b>Systém přihlašování</b> &ndash; po vyplnění formuláře
@@ -21,8 +34,10 @@
             na přijatý. Až pokud by se tak nestalo během tří dnů, pak je vhodné se ozvat.
         </li>
         <li>
-            Podrobné informace naleznene na stránce <a href="http://fykos.cz/rocnik31/fyziklani/start">FYKOSího Fyziklání</a>
-            kde jsou i informace o ubytování.Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito podmínkami.
+            Podrobné informace naleznene na stránce <a href="http://fykos.cz/rocnik31/fyziklani/start">FYKOSího
+                Fyziklání</a>
+            kde jsou i informace o ubytování.Odesláním přihlášky se zájmem o ubytování, souhlasíte i s těmito
+            podmínkami.
         </li>
         <li>
             Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
@@ -44,14 +59,17 @@
             Unless it happened within three days, then it is recommended to ask the organizers.
         </li>
         <li>
-            Detailed information can be found on page of <a href="http://fykos.cz/year31/physicsbrawl/start">Physics Brawl</a>
-            where is also information about accommodation. By submitting your application for accommodation you also agree to these terms and conditions.
+            Detailed information can be found on page of <a href="http://fykos.cz/year31/physicsbrawl/start">Physics
+                Brawl</a>
+            where is also information about accommodation. By submitting your application for accommodation you also
+            agree to these terms and conditions.
         </li>
         <li>
             The registration ends with <strong>{$event->registration_end|date:'F j, Y, g:i a e'}</strong>.
         </li>
         <li>
-            To replace a member of the team, delete the old one, save the application and then place a new member in the blank space.
+            To replace a member of the team, delete the old one, save the application and then place a new member in the
+            blank space.
         </li>
         <li>
             You can find the rules on the <a href="http://fykos.cz/year31/physicsbrawl/rules">rule page</a>.
