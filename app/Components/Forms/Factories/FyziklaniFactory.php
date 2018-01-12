@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use BrawlLib\Components\TaskCodeInput;
+use FKSDB\Components\Controls\TaskCodeInput;
+use FyziklaniModule\BasePresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
+
 
 class FyziklaniFactory {
 
@@ -29,13 +31,23 @@ class FyziklaniFactory {
         return $field;
     }
 
+    private function createTaskCodeField($teams = [], $tasks = []) {
+
+        $field = new TaskCodeInput(_('Kód úlohy'));
+        $field->setTasks($tasks);
+        $field->setTeams($teams);
+        $field->setRequired();
+
+        return $field;
+    }
+
     private function createTeamField() {
         $field = new TextInput(_('Tým'));
         $field->setDisabled(true);
         return $field;
     }
 
-    private function createTeamIdField() {
+    private function createTeamIDField() {
         $field = new TextInput(_('ID týmu'));
         $field->setDisabled(true);
         return $field;
@@ -47,21 +59,10 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($teams, $tasks) {
-        $control = new TaskCodeInput();
-        $control->setTasks($tasks);
-        $control->setTeams($teams);
-        return $control;
-    }
-
-    /**
-     * @param ModelEvent $event
-     * @return Form
-     */
-    public function createEntryQRForm(ModelEvent $event) {
+    public function createEntryForm(ModelEvent $event, $teams, $tasks) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('taskCode')->setDisabled(true);
+        $form->addComponent($this->createTaskCodeField($teams, $tasks), 'taskCode');
         foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
@@ -75,7 +76,7 @@ class FyziklaniFactory {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addComponent($this->createTeamField(), 'team');
-        $form->addComponent($this->createTeamIdField(), 'team_id');
+        $form->addComponent($this->createTeamIDField(), 'team_id');
         $form->addComponent($this->createTaskField(), 'task');
         $form->addComponent($this->createPointsField($event), 'points');
         $form->addSubmit('send', _('Uložit'));
