@@ -60,7 +60,10 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
+            /**
+             * @var $row ModelFyziklaniTeam
+             */
+            return $row->hasOpenSubmit() && !is_null($row->points);
         });
 
         $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
@@ -68,7 +71,10 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
         })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
+            /**
+             * @var $row ModelFyziklaniTeam
+             */
+            return $row->hasOpenSubmit() && !is_null($row->points);
         });
 
         $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
@@ -93,7 +99,12 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamId)) {
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
+        if (!$team->hasOpenSubmit()) {
+
             $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }

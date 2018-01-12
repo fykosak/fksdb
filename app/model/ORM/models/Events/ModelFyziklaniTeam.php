@@ -7,18 +7,23 @@ use DbNames;
 use ModelFyziklaniSubmit;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string category
  * @property string name
  * @property integer e_fyziklani_team_id
- * @property string room
- * @property string category
+ * @property integer event_id
+ * @property integer points
+ * @property string status
+ *
+ * @author Michal Koutný <xm.koutny@gmail.com>
+ * @author Michal Červeňák <miso@fykos.cz>
+ *
  */
 class ModelFyziklaniTeam extends AbstractModelSingle {
 
     public function __toString() {
         return $this->name;
     }
+
     /**
      *
      * @return ModelFyziklaniSubmit[]
@@ -29,6 +34,22 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
             $result[] = ModelFyziklaniSubmit::createFromTableRow($row);
         }
         return $result;
+    }
+
+    /**
+     * @return null|\ModelBrawlTeamPosition
+     */
+    public function getPosition() {
+        $row = $this->related(DbNames::TAB_BRAWL_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
+        if ($row) {
+            return \ModelBrawlTeamPosition::createFromTableRow($row);
+        }
+        return null;
+    }
+
+    public function hasOpenSubmit() {
+        $points = $this->points;
+        return !is_numeric($points);
     }
 
 }

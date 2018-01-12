@@ -92,7 +92,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     public function startup() {
 
-        $this->event = $this->getCurrentEvent();
+        $this->event = $this->getEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
@@ -101,37 +101,54 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /** Vrati true ak pre daný ročník existuje fyzikláni */
     public function eventExist() {
-        return $this->getCurrentEvent() ? true : false;
+        return $this->getEvent() ? true : false;
     }
 
     public function getSubtitle() {
-        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyziklání');
+        return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
     }
 
-    public function getCurrentEventID() {
+    public function getEventId() {
         if (!$this->eventID) {
             $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
         return $this->eventID;
     }
 
+    /**
+     * @deprecated
+     * @return integer
+     */
+    public function getCurrentEventID() {
+        return $this->getEventId();
+    }
+
     /** vráti paramtre daného eventu
      * TODO rename to getEvent()
      * @return ModelEvent
      */
-    public function getCurrentEvent() {
+    public function getEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getCurrentEventID());
+            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
             if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getCurrentEvent());
+                $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
             }
         }
         return $this->event;
     }
 
+    /** vráti paramtre daného eventu
+     * @return ModelEvent
+     * @deprecated
+     */
+    public function getCurrentEvent() {
+        return $this->getEvent();
+    }
+
+
     protected function eventIsAllowed($resource, $privilege) {
-        $event = $this->getCurrentEvent();
+        $event = $this->getEvent();
         if (!$event) {
             return false;
         }

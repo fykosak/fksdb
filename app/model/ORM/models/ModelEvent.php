@@ -74,5 +74,3 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
 }
-
-?>

@@ -22,16 +22,16 @@ class FyziklaniTaskGrid extends BaseGrid {
     /**
      * @var int
      */
-    private $eventID;
+    private $eventId;
 
     /**
      * FyziklaniTaskGrid constructor.
-     * @param integer $eventID
+     * @param integer $eventId
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct($eventId, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->eventID = $eventID;
+        $this->eventId = $eventId;
         parent::__construct();
     }
 
@@ -41,7 +41,7 @@ class FyziklaniTaskGrid extends BaseGrid {
         $this->addColumn('label',_('#'));
         $this->addColumn('name',_('Název úlohy'));
 
-        $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
+        $submits = $this->serviceFyziklaniTask->findAll($this->eventId);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
                     $tokens = preg_split('/\s+/', $value);

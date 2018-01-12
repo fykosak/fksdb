@@ -12,7 +12,7 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  * @property integer fyziklani_submit_id
  * @property DateTime created
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle {
+class ModelFyziklaniSubmit extends \AbstractModelSingle {
 
     /**
      * @return ModelFyziklaniTask

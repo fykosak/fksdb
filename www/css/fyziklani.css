@@ -143,3 +143,15 @@
     border: solid 1px #AAAAAA;
     height: 10rem;
 }
+
+.badge-category-A {
+    background-color: #f00;
+}
+
+.badge-category-B {
+    background-color: #0f0;
+}
+
+.badge-category-C {
+    background-color: #00f;
+}

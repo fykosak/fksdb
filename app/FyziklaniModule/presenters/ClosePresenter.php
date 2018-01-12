@@ -63,8 +63,8 @@ class ClosePresenter extends BasePresenter {
         if (!$this->team) {
             throw new BadRequestException('Tým neexistuje', 404);
         }
-        //TODO replace isOpenSubmit with method of team object
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($id)) {
+
+        if (!$this->team->hasOpenSubmit()) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name), 'danger');
             $this->backlinkRedirect();
             $this->redirect('table'); // if there's no backlink
@@ -72,7 +72,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGrid() {
-        $grid = new FyziklaniTeamsGrid($this->eventID, $this->serviceFyziklaniTeam);
+        $grid = new FyziklaniTeamsGrid($this->getEventId(), $this->serviceFyziklaniTeam);
         return $grid;
     }
 
@@ -128,7 +128,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -143,14 +143,14 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEventId());
         if ($category) {
             $query->where('category', $category);
         }
@@ -161,11 +161,12 @@ class ClosePresenter extends BasePresenter {
 
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
+
         $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
         /**
          * @var $nextTask \ModelFyziklaniTask
          */
-        $nextTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->serviceFyziklaniTask->findAll($this->getEventId())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 
