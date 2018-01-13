@@ -10,7 +10,7 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  * @property integer points
  * @property integer fyziklani_task_id
  * @property integer fyziklani_submit_id
- * @property DateTime created
+ * @property \Nette\DateTime created
  */
 class ModelFyziklaniSubmit extends \AbstractModelSingle {
 
