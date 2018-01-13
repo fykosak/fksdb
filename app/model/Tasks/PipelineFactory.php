@@ -10,11 +10,8 @@ use ServiceTask;
 use ServiceTaskContribution;
 use ServiceTaskStudyYear;
 use Tasks\Legacy\ContributionsFromXML;
-use Tasks\Legacy\ContributionsFromXML2;
 use Tasks\Legacy\DeadlineFromXML;
-use Tasks\Legacy\DeadlineFromXML2;
 use Tasks\Legacy\StudyYearsFromXML;
-use Tasks\Legacy\StudyYearsFromXML2;
 use Tasks\Legacy\TasksFromXML;
 
 /**

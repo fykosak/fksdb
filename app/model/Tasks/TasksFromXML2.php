@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use Nette\Diagnostics\Debugger;
+use Pipeline\PipelineException;
 use Pipeline\Stage;
 use ServiceTask;
 use SimpleXMLElement;
@@ -49,7 +49,7 @@ class TasksFromXML2 extends Stage {
         $sImported = (string) $xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
-            throw new \Pipeline\PipelineException(sprintf(_('Nesouhlasí importovaná (%i) a nastavená (%i) série.'), $sImported, $sSet));
+            throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%i) a nastavená (%i) série.'), $sImported, $sSet));
         }
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {
