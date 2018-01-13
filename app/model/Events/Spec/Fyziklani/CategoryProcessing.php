@@ -4,6 +4,7 @@ namespace Events\Spec\Fyziklani;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
+use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
@@ -38,14 +39,33 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * @param $control IControl
+     * @param $holder
+     * @param $acYear integer
      * @return boolean;
      */
-    private function isAbroad($control) {
-        $country = $this->serviceSchool->getTable()
-            ->select('address.region.country_iso')->where(['school_id' => $control->getValue()])->fetch();
-        if (!in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
+    private function isAbroad($control, BaseHolder $holder, $acYear) {
+        if ($control) {
+            $country = $this->serviceSchool->getTable()
+                ->select('address.region.country_iso')->where(['school_id' => $control->getValue()])->fetch();
+            if (!in_array($country->country_iso, ['CZ', 'SK'])) {
+                return true;
+            }
+        } else {
+            /**
+             * @var $person \ModelPerson
+             */
+            $person = $holder->getModel()->getMainModel()->person;
+            /**
+             * @var $ph \ModelPersonHistory
+             */
+            $ph = $person->related('person_history')->where('ac_year', $acYear)->fetch();
+            if (!in_array($ph->getSchool()->address->region->country_iso, ['CZ', 'SK'])) {
+                return true;
+            }
+
         }
+
+
         return false;
     }
 
@@ -70,7 +90,7 @@ class CategoryProcessing extends AbstractProcessing {
             $formControl = $this->getControl("$name.person_id.person_history.study_year");
             $schoolControl = $this->getControl("$name.person_id.person_history.school_id");
 
-            $abroad = $abroad || $this->isAbroad($schoolControl[0]);
+            $abroad = $abroad || $this->isAbroad(reset($schoolControl), $baseHolder, $acYear);
 
             $formControl = reset($formControl);
             $formValue = $formControl ? $formControl->getValue() : null;
@@ -93,8 +113,9 @@ class CategoryProcessing extends AbstractProcessing {
         if ($abroad) {
             $result = 'Z';
         } else {
-            $result = $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
+            $result = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         }
+        $values['team']['category'] = $result;
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $result) {
