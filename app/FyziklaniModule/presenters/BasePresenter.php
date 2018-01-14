@@ -5,7 +5,6 @@ namespace FyziklaniModule;
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Choosers\BrawlChooser;
 use FKSDB\Components\Controls\LanguageChooser;
-use FKSDB\Components\Controls\Navs\BrawlNav;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -139,11 +138,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
         return $this->eventID;
-    }
-
-    public function createComponentBrawlNav() {
-        $control = new BrawlNav($this->serviceEvent, $this->session);
-        return $control;
     }
 
     /** vráti paramtre daného eventu
