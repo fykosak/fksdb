@@ -1,12 +1,16 @@
-<div class="navbar-nav nav">
-<div class="dropdown">
-  <span class="nav-link dropdown-toggle" data-toggle="dropdown">
+<ul class="navbar-nav nav ">
+    <li class="dropdown">
+  <a class="nav-link dropdown-toggle" data-toggle="dropdown">
     {$currentEvent?  $currentEvent->name: _('Event') }
-  </span>
-  <div class="dropdown-menu">
-  {foreach $availableBrawls as $key => $brawl}
-    <a class="dropdown-item"  href="{link change! $brawl->event_id}">{$brawl->name}</a>
-  {/foreach}
-  </div>
-  </div>
-</div>
+  </a>
+        <ul class="dropdown-menu">
+            {foreach $availableBrawls as $key => $brawl}
+                {if $brawl->event_id == $currentEvent->event_id}
+                    <li class="dropdown-item disabled"><span class="dropdown-item disabled">{$brawl->name}</span></li>
+                {else}
+                    <li class="dropdown-item"><a href="{link change! $brawl->event_id}">{$brawl->name}</a></li>
+                {/if}
+            {/foreach}
+        </ul>
+    </li>
+</ul>

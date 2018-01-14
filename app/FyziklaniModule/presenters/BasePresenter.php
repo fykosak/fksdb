@@ -3,7 +3,8 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
+use FKSDB\Components\Controls\Choosers\BrawlChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Navs\BrawlNav;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
@@ -92,19 +93,31 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
+    /**
+     * @return BrawlChooser
+     */
+    protected function createComponentBrawlChooser() {
+        $control = new BrawlChooser($this->serviceEvent);
+
+        return $control;
+    }
+
+    protected function createComponentLanguageChooser() {
+        $control = new LanguageChooser($this->session);
+
+        return $control;
+    }
+
     public function startup() {
         /**
-         * @var $brawlNav BrawlNav
+         * @var $languageChooser LanguageChooser
+         * @var $brawlChooser BrawlChooser
          */
-        $brawlNav = $this['brawlNav'];
+        $languageChooser = $this['languageChooser'];
+        $brawlChooser = $this['brawlChooser'];
+        $languageChooser->syncRedirect();
+        $brawlChooser->setEvent($this->getCurrentEvent());
 
-        $newParams = $brawlNav->init((object)['eventId' => +$this->getCurrentEventID(), 'lang' => $this->lang]);
-        if ($newParams) {
-            $this->redirect('this', [
-                'eventID' => $newParams->eventId ?: $this->getCurrentEventId(),
-                'lang' => $newParams->lang ?: $this->lang,
-            ]);
-        }
         $this->event = $this->getCurrentEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);

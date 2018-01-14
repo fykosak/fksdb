@@ -18,10 +18,6 @@ class BrawlChooser extends Control {
     private $event;
 
     /**
-     *
-     */
-    private $eventId;
-    /**
      * @var \ModelEvent[]
      */
     private $brawls;
@@ -29,57 +25,20 @@ class BrawlChooser extends Control {
      * @var \ServiceEvent
      */
     private $serviceEvent;
-    /**
-     * @var bool
-     */
-    private $initialized = false;
-
 
     function __construct(\ServiceEvent $serviceEvent) {
         parent::__construct();
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param $params object
-     * @return boolean
-     * Redirect to correct address according to the resolved values.
-     */
-    public function syncRedirect(&$params) {
-        $this->init($params);
-        $eventId = isset($this->eventId) ? $this->eventId : null;
-        if ($eventId != $params->eventId) {
-            $params->eventId = $eventId;
-            return true;
-        }
-        return false;
+    public function setEvent(\ModelEvent $event) {
+        $this->event = $event;
     }
-
     /**
-     * @return integer
+     * @return \ModelEvent
      */
-    public function getEventId() {
-        return $this->eventId;
-    }
-
-    /**
-     * @param $params object
-     */
-    protected function init($params) {
-        if ($this->initialized) {
-            return;
-        }
-        $this->initialized = true;
-        $availableEventIds = $this->getBrawlIds();
-        if ($params->eventId != -1 && $params->eventId != null) {
-
-            if (in_array($params->eventId, $availableEventIds)) {
-                $this->eventId = $params->eventId;
-                return;
-            }
-        }
-        $this->eventId = array_pop($availableEventIds);
-        $this->event = $this->serviceEvent->findByPrimary($this->eventId);
+    private function getEvent() {
+        return $this->event;
     }
 
     /**
@@ -96,31 +55,10 @@ class BrawlChooser extends Control {
         return $this->brawls;
     }
 
-    /**
-     * @return integer[]
-     */
-    private function getBrawlIds() {
-        $events = $this->getBrawls();
-        $ids = array_map(function (\ModelEvent $event) {
-            return $event->event_id;
-        }, $events);
-        return $ids;
-    }
-
-    /**
-     * @return \ModelEvent
-     */
-    private function getEvent() {
-        if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
-        }
-        return $this->event;
-    }
-
     public function render() {
         $this->template->availableBrawls = $this->getBrawls();
         $this->template->currentEvent = $this->getEvent();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'BrawlChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'BrawlChooser.latte');
         $this->template->render();
     }
 
