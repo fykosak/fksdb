@@ -4,14 +4,12 @@ namespace Events\Spec\Fyziklani;
 
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKS\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 use YearCalculator;
 
 /**
@@ -37,38 +35,6 @@ class CategoryProcessing extends AbstractProcessing {
         $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * @param $control IControl
-     * @param $holder
-     * @param $acYear integer
-     * @return boolean;
-     */
-    private function isAbroad($control, BaseHolder $holder, $acYear) {
-        if ($control) {
-            $country = $this->serviceSchool->getTable()
-                ->select('address.region.country_iso')->where(['school_id' => $control->getValue()])->fetch();
-            if (!in_array($country->country_iso, ['CZ', 'SK'])) {
-                return true;
-            }
-        } else {
-            /**
-             * @var $person \ModelPerson
-             */
-            $person = $holder->getModel()->getMainModel()->person;
-            /**
-             * @var $ph \ModelPersonHistory
-             */
-            $ph = $person->related('person_history')->where('ac_year', $acYear)->fetch();
-            if (!in_array($ph->getSchool()->address->region->country_iso, ['CZ', 'SK'])) {
-                return true;
-            }
-
-        }
-
-
-        return false;
-    }
-
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
@@ -82,20 +48,20 @@ class CategoryProcessing extends AbstractProcessing {
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
         $participants = array();
-        $abroad = false;
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            $formControl = $this->getControl("$name.person_id.person_history.study_year");
+            $studyYearControl = $this->getControl("$name.person_id.person_history.study_year");
             $schoolControl = $this->getControl("$name.person_id.person_history.school_id");
 
-            $abroad = $abroad || $this->isAbroad(reset($schoolControl), $baseHolder, $acYear);
+            $studyYearControl = reset($studyYearControl);
+            $schoolControl = reset($schoolControl);
+            
+            $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
+            $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
 
-            $formControl = reset($formControl);
-            $formValue = $formControl ? $formControl->getValue() : null;
-
-            if (!$formValue) {
+            if (!$studyYearValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
@@ -103,19 +69,22 @@ class CategoryProcessing extends AbstractProcessing {
                  * @var $person \ModelPerson
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                $studyYear = $person->related('person_history')->where('ac_year', $acYear)->fetch()->study_year;
+                $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
+                $participantData = [
+                    'school_id' => $history->school_id,
+                    'study_year' => $history->study_year,
+                ];
 
             } else {
-                $studyYear = $formValue;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];
             }
-            $participants[] = $studyYear;
+            $participants[] = $participantData;
         }
-        if ($abroad) {
-            $result = 'Z';
-        } else {
-            $result = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
-        }
-        $values['team']['category'] = $result;
+
+        $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $result) {
@@ -127,8 +96,17 @@ class CategoryProcessing extends AbstractProcessing {
         $coefficient_sum = 0;
         $count_4 = 0;
         $count_3 = 0;
+        $abroad = 0;
 
-        foreach ($participants as $studyYear) {
+        foreach ($participants as $participant) {            
+            $country = $this->serviceSchool->getTable()
+                    ->select('address.region.country_iso')
+                    ->where(['school_id' => $participant['school_id']])->fetch();
+            if (!in_array($country->country_iso, array('CZ', 'SK'))) {
+                $abroad += 1;
+            }            
+            
+            $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficient_sum += $coefficient;
 
@@ -141,7 +119,9 @@ class CategoryProcessing extends AbstractProcessing {
 
         $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
-        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        if ($abroad > 0) {
+            $result = 'Z';
+        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';
