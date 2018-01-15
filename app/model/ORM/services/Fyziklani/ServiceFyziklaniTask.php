@@ -61,7 +61,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         foreach ($this->findAll($eventId)->order('label') as $row) {
             $tasks[] = [
                 'label' => $row->label,
-                'task_id' => $row->fyziklani_task_id
+                'taskId' => $row->fyziklani_task_id
             ];
         }
         return $tasks;

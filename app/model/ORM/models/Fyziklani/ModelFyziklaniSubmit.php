@@ -6,12 +6,13 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  * @author Michal Červeňák <miso@fykos.cz>
- * @property integer fyziklani_submit_id
- * @property integer points
  * @property integer e_fyziklani_team_id
+ * @property integer points
  * @property integer fyziklani_task_id
+ * @property integer fyziklani_submit_id
+ * @property \Nette\DateTime created
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle {
+class ModelFyziklaniSubmit extends \AbstractModelSingle {
 
     /**
      * @return ModelFyziklaniTask

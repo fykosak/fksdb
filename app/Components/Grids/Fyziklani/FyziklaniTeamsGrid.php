@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Nette\Diagnostics\Debugger;
+
+use FyziklaniModule\BasePresenter;
 use \NiftyGrid\DataSource\NDataSource;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -41,7 +42,9 @@ class FyziklaniTeamsGrid extends BaseGrid {
 //    public function setSearchable($searchable) {
 //        $this->searchable = $searchable;
 //    }
-
+    /**
+     * @param $presenter BasePresenter
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->paginate = false;
