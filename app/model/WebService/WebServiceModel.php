@@ -90,6 +90,12 @@ class WebServiceModel {
         }
     }
 
+    public function GetBrawl($args){
+        $this->checkAuthentication(__FUNCTION__);
+        echo 'ahoj';
+        die();
+    }
+
     public function GetResults($args) {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
@@ -125,7 +131,7 @@ class WebServiceModel {
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
-      
+
         if (isset($args->{'school-cumulatives'})) {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
 
@@ -227,7 +233,7 @@ class WebServiceModel {
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = array();
-        
+
         $this->checkAuthentication(__FUNCTION__, $qid);
 
         // stupid PHP deserialization
@@ -315,7 +321,7 @@ class WebServiceModel {
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
-    
+
     private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));

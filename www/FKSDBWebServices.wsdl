@@ -8,23 +8,24 @@
 	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
 	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
 	xmlns:fksres="http://fykos.cz/xml/results/schema"
+	xmlns:fksbrawl="http://fykos.cz/xml/brawl/schema"
 	xmlns:fksst="http://fykos.cz/xml/stats/schema"
-	xmlns:fksex="http://fykos.cz/xml/export/schema"	
+	xmlns:fksex="http://fykos.cz/xml/export/schema"
 	xmlns:tns="http://fykos.cz/xml/ws/service"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
-	
+
 	<!-- wsdl:types encapsulates schema definitions of communication types -->
 	<wsdl:types>
 		<xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
 			<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="https://db.fykos.cz/xml/results/schema.xsd"/>
 			<xsd:import namespace="http://fykos.cz/xml/stats/schema" schemaLocation="https://db.fykos.cz/xml/stats/schema.xsd"/>
-			<xsd:import namespace="http://fykos.cz/xml/export/schema" schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>			
+			<xsd:import namespace="http://fykos.cz/xml/export/schema" schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>
 			<!-- types for web service only -->
 			<xsd:complexType name="GetResultsRequestType">
 				<xsd:sequence>
 					<xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>				
+					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
 					<xsd:element name="detail" type="fksres:series-list-type" minOccurs="0" maxOccurs="1"/>
 					<xsd:element name="cumulatives" minOccurs="0" maxOccurs="1">
 						<xsd:complexType>
@@ -50,11 +51,11 @@
 						</xsd:complexType>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:complexType>							
+			</xsd:complexType>
 			<xsd:complexType name="GetStatsRequestType">
 				<xsd:sequence>
 					<xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
-					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>				
+					<xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
 					<xsd:element name="series" minOccurs="0" maxOccurs="unbounded">
 						<xsd:complexType>
 						  <xsd:complexContent>
@@ -62,10 +63,10 @@
 								<xsd:attribute name="series" type="fksres:series-number-type" use="required"/>
 						    </xsd:extension>
 						  </xsd:complexContent>
-						</xsd:complexType> 
+						</xsd:complexType>
 					</xsd:element>
 				</xsd:sequence>
-			</xsd:complexType>							
+			</xsd:complexType>
 			<xsd:complexType name="GetExportRequestType">
 				<xsd:sequence>
 					<xsd:element name="qid" minOccurs="1" maxOccurs="1" type="fksex:qid-type"/>
@@ -78,7 +79,13 @@
 					<xsd:element name="username" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 					<xsd:element name="password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 				</xsd:sequence>
-			</xsd:complexType>									
+			</xsd:complexType>
+			<xsd:complexType name="GetBrawlRequestType">
+				<xsd:sequence>
+					<xsd:element name="eventId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="act" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				</xsd:sequence>
+			</xsd:complexType>
 		</xsd:schema>
 	</wsdl:types>
 
@@ -93,6 +100,14 @@
 
 	<wsdl:message name="GetResultsResponse">
 		<wsdl:part name="GetResultsResponse" element="fksres:results"/>
+	</wsdl:message>
+
+	<wsdl:message name="GetBrawlRequest">
+		<wsdl:part name="GetBrawlRequest" type="xsd1:GetBrawlRequestType"/>
+	</wsdl:message>
+
+	<wsdl:message name="GetBrawlResponse">
+		<wsdl:part name="GetBrawlResponse" element="fksbrawl:brawl"/>
 	</wsdl:message>
 
 	<wsdl:message name="GetStatsRequest">
@@ -117,6 +132,10 @@
 			<wsdl:input message="tns:GetResultsRequest"/>
 			<wsdl:output message="tns:GetResultsResponse"/>
 		</wsdl:operation>
+		<wsdl:operation name="GetBrawl">
+			<wsdl:input message="tns:GetBrawlRequest"/>
+			<wsdl:output message="tns:GetBrawlResponse"/>
+		</wsdl:operation>
 		<wsdl:operation name="GetStats">
 			<wsdl:input message="tns:GetStatsRequest"/>
 			<wsdl:output message="tns:GetStatsResponse"/>
@@ -124,7 +143,7 @@
 		<wsdl:operation name="GetExport">
 			<wsdl:input message="tns:GetExportRequest"/>
 			<wsdl:output message="tns:GetExportResponse"/>
-		</wsdl:operation>		
+		</wsdl:operation>
 	</wsdl:portType>
 
 
@@ -132,6 +151,16 @@
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="GetResults">
 			<soap:operation soapAction="GetResults"/>
+			<wsdl:input>
+				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetBrawl">
+			<soap:operation soapAction="GetBrawl"/>
 			<wsdl:input>
 				<soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
 				<soap:body use="literal"/>
@@ -159,7 +188,7 @@
 			<wsdl:output>
 				<soap:body use="literal"/>
 			</wsdl:output>
-		</wsdl:operation>		
+		</wsdl:operation>
 	</wsdl:binding>
 
 	<wsdl:service name="FKSDBService">

@@ -20,6 +20,7 @@ class WebServicePresenter extends BasePresenter {
             $response = new SoapResponse($server);
             $this->sendResponse($response);
         } catch (AbortException $e) {
+            Debugger::log($e);
             throw $e;
         } catch (Exception $e) {
             Debugger::log($e);
