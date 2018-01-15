@@ -12,23 +12,6 @@ use Nette\Utils\Json;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RoomsPresenter extends BasePresenter {
-    /**
-     * @var \ServiceBrawlRoom
-     */
-    private $serviceBrawlRoom;
-    /**
-     * @var \ServiceBrawlTeamPosition
-     */
-    protected $serviceBrawlTeamPosition;
-
-
-    public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
-        $this->serviceBrawlRoom = $serviceBrawlRoom;
-    }
-
-    public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-    }
 
     public function titleDefault() {
         $this->setTitle(_('Rozdělení do místností'));
@@ -60,10 +43,6 @@ class RoomsPresenter extends BasePresenter {
             $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
             $this->sendResponse(new JsonResponse(['updatedTeams' => $updatedTeams]));
         }
-    }
-
-    private function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 
     public function createComponentDownload() {
