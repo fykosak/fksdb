@@ -6,7 +6,8 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
     protected $modelClassName = 'ModelBrawlTeamPosition';
 
     /**
-     * @return \ModelBrawlTeamPosition
+     * @param $teamId
+     * @return ModelBrawlTeamPosition
      */
     public function findByTeamId($teamId) {
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
@@ -55,5 +56,4 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
         }
         return $updatedTeams;
     }
-
 }

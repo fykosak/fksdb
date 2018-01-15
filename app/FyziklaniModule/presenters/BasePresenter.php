@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
