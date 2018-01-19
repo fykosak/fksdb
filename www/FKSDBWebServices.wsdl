@@ -21,6 +21,7 @@
 			<xsd:import namespace="http://fykos.cz/xml/results/schema" schemaLocation="https://db.fykos.cz/xml/results/schema.xsd"/>
 			<xsd:import namespace="http://fykos.cz/xml/stats/schema" schemaLocation="https://db.fykos.cz/xml/stats/schema.xsd"/>
 			<xsd:import namespace="http://fykos.cz/xml/export/schema" schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>
+			<xsd:import namespace="http://fykos.cz/xml/brawl/schema" schemaLocation="http://db.fykos.local/xml/brawl/schema.xsd"/>
 			<!-- types for web service only -->
 			<xsd:complexType name="GetResultsRequestType">
 				<xsd:sequence>

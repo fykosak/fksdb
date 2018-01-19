@@ -39,7 +39,7 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage: 
+    submitStorage:
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
@@ -48,14 +48,14 @@ services:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
     translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-
+    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
     # web services
     soapServer:
         class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
 
-    webServiceModel: WebServiceModel(%inverseContestMapping%, ...)
+
 
     nette.userStorage: Authentication\LoginUserStorage
     nette.mailer:

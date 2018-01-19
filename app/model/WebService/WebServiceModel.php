@@ -90,10 +90,16 @@ class WebServiceModel {
         }
     }
 
-    public function GetBrawl($args){
+    public function GetBrawl($args) {
+
         $this->checkAuthentication(__FUNCTION__);
-        echo 'ahoj';
-        die();
+        $doc = new DOMDocument();
+        $brawlNode = $doc->createElement('brawl');
+        $doc->appendChild($brawlNode);
+        //    $teams = $doc->createElement('team');
+        //    $brawlNode->appendChild($teams);
+        $doc->formatOutput = true;
+        return new SoapVar($doc->saveXML($brawlNode), XSD_ANYXML);
     }
 
     public function GetResults($args) {
@@ -186,7 +192,7 @@ class WebServiceModel {
         }
 
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $year = (string) $args->year;
+        $year = (string)$args->year;
 
         $doc = new DOMDocument();
         $statsNode = $doc->createElement('stats');
@@ -281,7 +287,7 @@ class WebServiceModel {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
-        } else if($arg !== null) {
+        } else if ($arg !== null) {
             $this->log("Called $serviceName($arg).");
         } else {
             $this->log("Called $serviceName.");
