@@ -83,7 +83,7 @@
 			</xsd:complexType>
 			<xsd:complexType name="GetBrawlRequestType">
 				<xsd:sequence>
-					<xsd:element name="eventId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="event-id" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
 					<xsd:element name="act" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 				</xsd:sequence>
 			</xsd:complexType>
