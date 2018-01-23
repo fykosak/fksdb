@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use BrawlLib\Components\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
@@ -20,6 +21,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function renderDefault() {
+
         if ($this->isAjax()) {
             $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
             /**
@@ -29,10 +31,6 @@ class ResultsPresenter extends BasePresenter {
 
             $result = [];
             $result['lastUpdated'] = (new DateTime())->__toString();
-            if (!$lastUpdated) {
-                $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-                $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
-            }
             $result['submits'] = [];
             $result['isOrg'] = $isOrg;
             if ($isOrg || $this->isResultsVisible()) {
@@ -46,6 +44,17 @@ class ResultsPresenter extends BasePresenter {
             ];
             $this->sendResponse(new JsonResponse($result));
         }
+    }
+
+    public function createComponentResults() {
+        $control = new Results();
+
+        $control->setRooms($this->getRooms());
+        $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
+        $control->setTasks($this->serviceFyziklaniTask->getTasks($this->getEventId()));
+
+        $control->setBasePath($this->getHttpRequest()->getUrl()->getBasePath());
+        return $control;
     }
 
     public function titleDefault() {

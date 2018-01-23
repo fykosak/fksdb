@@ -3,9 +3,9 @@
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @property integer fyziklani_task_id
- * @property string label
  * @property string name
+ * @property string label
+ * @property integer fyziklani_task_id
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
 

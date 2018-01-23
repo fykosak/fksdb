@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use Nette\Diagnostics\Debugger;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
@@ -45,6 +44,9 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         parent::__construct();
     }
 
+    /**
+     * @param $presenter BasePresenter
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
 
@@ -88,8 +90,12 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     }
 
     public function handleDelete($id) {
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
-        if (!$teamID) {
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $teamId = $team->e_fyziklani_team_id;
+        if (!$teamId) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
@@ -98,6 +104,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
          */
         $team = $this->serviceFyziklaniTeam->findByPrimary($teamID);
         if (!$team->hasOpenSubmit()) {
+
             $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }

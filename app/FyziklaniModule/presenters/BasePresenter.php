@@ -3,7 +3,6 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -67,6 +66,24 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $serviceFyziklaniSubmit;
 
+    /**
+     * @var \ServiceBrawlRoom
+     */
+    protected $serviceBrawlRoom;
+    /**
+     * @var \ServiceBrawlTeamPosition
+     */
+    protected $serviceBrawlTeamPosition;
+
+
+    public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
+        $this->serviceBrawlRoom = $serviceBrawlRoom;
+    }
+
+    public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
+        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
+    }
+
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
@@ -107,6 +124,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     public function getSubtitle() {
         return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
+    }
+
+    /**
+     * @return \ModelBrawlRoom[]
+     */
+    protected function getRooms() {
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 
     public function getEventId() {

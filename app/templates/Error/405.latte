@@ -1,7 +1,12 @@
+{layout ../@layout.v4.latte}
 {var $robots = noindex}
 
 {block content}
 
-<p>{_'Zvolená metoda není pro tuto stránku podporována.'}</p>
+<div class="row text-center mb-3">
+    <div class="image-error">
+        <img src="/images/404.svg" alt="405"/>
+    </div>
+</div>
+<h2>{_'Zvolená metoda není pro tuto stránku podporována.'}<span class="badge badge-warning">#405</span></h2>
 
-<p><small>{_'chyba'} 405</small></p>
