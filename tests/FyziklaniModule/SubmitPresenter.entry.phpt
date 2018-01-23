@@ -69,7 +69,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'taskCode' => '000001AA9',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
-                ), array('action' => 'entryQR'));
+                ), array('action' => 'qrEntry'));
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
@@ -84,7 +84,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'taskCode' => '000001AA8',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
-        ], ['action' => 'entryQR']);
+        ], ['action' => 'qrEntry']);
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\TextResponse', $response);
