@@ -61,7 +61,7 @@ class FyziklaniFactory {
     public function createEntryQRForm(ModelEvent $event) {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('taskCode')->setDisabled(true);
+        $form->addText('taskCode')->setAttribute('readonly', true);
         foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))

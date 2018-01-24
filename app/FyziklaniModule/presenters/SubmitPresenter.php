@@ -10,7 +10,6 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\Button;
-use Nette\Forms\Controls\SubmitButton;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
 class SubmitPresenter extends BasePresenter {
@@ -166,22 +165,21 @@ class SubmitPresenter extends BasePresenter {
 
     public function entryFormSucceeded(Form $form) {
         $values = $form->getValues();
-
+        $httpData = $form->getHttpData();
 
         if ($this->checkTaskCode($values->taskCode, $msg)) {
             $points = 0;
-            foreach ($form->getComponents() as $control) {
-                if ($control instanceof SubmitButton) {
-                    if ($control->isSubmittedBy()) {
-                        $points = substr($control->getName(), 6);
-                    }
+            foreach ($httpData as $key => $value) {
+                if (preg_match('/points([0-9])/', $key, $match)) {
+                    $points = +$match[1];
                 }
             }
             $log = $this->savePoints($values->taskCode, $points);
             $this->flashMessage($log[0], $log[1]);
-
+            $this->redirect('this');
         } else {
             $this->flashMessage($msg, 'danger');
+           // $this->redirect('this');
         }
     }
 

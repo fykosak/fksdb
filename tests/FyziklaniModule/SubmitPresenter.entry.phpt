@@ -53,11 +53,11 @@ class SubmitPresenterTest extends FyziklaniTestCase {
 
     private function createPostRequest($postData, $post = array()) {
         $post = Helpers::merge($post, [
-                    'lang' => 'cs',
-                    'contestId' => 1,
-                    'year' => 1,
-                    'eventId' => $this->eventId,
-                    'do' => 'entryQRForm-submit',
+            'lang' => 'cs',
+            'contestId' => 1,
+            'year' => 1,
+            'eventId' => $this->eventId,
+            'do' => 'entryQRForm-submit',
         ]);
 
         $request = new Request('Fyziklani:Submit', 'POST', $post, $postData);
@@ -65,11 +65,11 @@ class SubmitPresenterTest extends FyziklaniTestCase {
     }
 
     public function testEntryValid() {
-        $request = $this->createPostRequest(array(
+        $request = $this->createPostRequest([
             'taskCode' => '000001AA9',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
-                ), array('action' => 'qrEntry'));
+        ], ['action' => 'qrEntry', 'id' => '000001AA9']);
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
@@ -84,7 +84,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'taskCode' => '000001AA8',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
-        ], ['action' => 'qrEntry']);
+        ], ['action' => 'qrEntry', 'id' => '000001AA8']);
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\TextResponse', $response);
