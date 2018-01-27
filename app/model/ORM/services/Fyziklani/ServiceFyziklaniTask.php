@@ -52,8 +52,12 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         return false;
     }
 
-
-    public function getTasks($eventId) {
+    /**
+     * @param integer $eventId
+     * @param bool $injectName
+     * @return array
+     */
+    public function getTasks($eventId, $injectName = true) {
         $tasks = [];
         /**
          * @var $row ModelFyziklaniTask
@@ -61,7 +65,8 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         foreach ($this->findAll($eventId)->order('label') as $row) {
             $tasks[] = [
                 'label' => $row->label,
-                'taskId' => $row->fyziklani_task_id
+                'taskId' => $row->fyziklani_task_id,
+                'name' => $injectName ? $row->name : 'hidden value',
             ];
         }
         return $tasks;

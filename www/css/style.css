@@ -81,20 +81,3 @@ fieldset .well {
     /*content: '* ';*/
     display: inline;
 }
-
-.task-code-container input.valid {
-    color: #3c763d;
-}
-
-.task-code-container input.invalid {
-    color: #a94442;
-}
-
-.task-code-container .control, .task-code-container .task, .task-code-container .team {
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid;
-    border-radius: 0;
-    outline-offset: 0;
-    outline-color: transparent;
-}

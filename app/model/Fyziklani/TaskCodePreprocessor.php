@@ -8,6 +8,7 @@ namespace FKSDB\model\Fyziklani;
  */
 class TaskCodePreprocessor {
 
+
     public static function checkControlNumber($taskCode) {
         if (strlen($taskCode) != 9) {
             return false;
@@ -17,7 +18,7 @@ class TaskCodePreprocessor {
         return $c % 10 == 0;
     }
 
-    public static function extractTeamID($numLabel) {
+    public static function extractTeamId($numLabel) {
         return (int) substr($numLabel, 0, 6);
     }
 
