@@ -52,6 +52,10 @@ class ClosePresenter extends BasePresenter {
             $button = $this['closeCategoryCForm']['send'];
             $button->setDisabled();
         }
+        if (!$this->isReadyToClose('F')) {
+            $button = $this['closeCategoryFForm']['send'];
+            $button->setDisabled();
+        }
         if (!$this->isReadyToClose()) {
             $button = $this['closeGlobalForm']['send'];
             $button->setDisabled();
@@ -127,6 +131,10 @@ class ClosePresenter extends BasePresenter {
         return $this->createComponentCloseCategoryForm('C');
     }
 
+    public function createComponentCloseCategoryFForm() {
+        return $this->createComponentCloseCategoryForm('F');
+    }
+
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
@@ -162,7 +170,7 @@ class ClosePresenter extends BasePresenter {
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
 
-        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');
+        $tasksOnBoard = $this->getEvent()->getParameter('tasksOnBoard');
         /**
          * @var $nextTask \ModelFyziklaniTask
          */
