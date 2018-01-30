@@ -133,6 +133,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 
+    /**
+     * @return integer
+     */
     public function getEventId() {
         if (!$this->eventID) {
             $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
@@ -140,16 +143,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->eventID;
     }
 
-    /**
-     * @deprecated
-     * @return integer
-     */
-    public function getCurrentEventID() {
-        return $this->getEventId();
-    }
-
     /** vráti paramtre daného eventu
-     * TODO rename to getEvent()
      * @return ModelEvent
      */
     public function getEvent() {
@@ -163,21 +157,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
-    /** vráti paramtre daného eventu
-     * @return ModelEvent
-     * @deprecated
-     */
-    public function getCurrentEvent() {
-        return $this->getEvent();
-    }
-
-
     protected function eventIsAllowed($resource, $privilege) {
         $event = $this->getEvent();
         if (!$event) {
             return false;
         }
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+    }
+
+    public function getSelectedContestSymbol() {
+        return 'brawl';
     }
 
 }

@@ -26,11 +26,12 @@ class RoomsPresenter extends BasePresenter {
     }
 
     public function authorizedEdit() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'roomsImport')));
+        // TODO now can edit routing anybody
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
     }
 
     public function authorizedDownload() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'roomsDownload')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
     }
 
     public function authorizedDefault() {
@@ -47,8 +48,8 @@ class RoomsPresenter extends BasePresenter {
 
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
-        $rooms = $this->getEvent()->getParameter('buildings');
-        $control->setBuildings($rooms);
+        $buildings = $this->getEvent()->getParameter('buildings');
+        $control->setBuildings($buildings);
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
         return $control;

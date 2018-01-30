@@ -12,7 +12,6 @@ class ResultsPresenter extends BasePresenter {
         if ($this->getAction() == 'default') {
             return;
         }
-
         parent::unauthorizedAccess();
     }
 
@@ -48,7 +47,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function createComponentResults() {
         $control = new Results();
-
+// TODO set others parameters (game start/end...)
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
         $control->setTasks($this->serviceFyziklaniTask->getTasks($this->getEventId()));
@@ -65,6 +64,9 @@ class ResultsPresenter extends BasePresenter {
         $this->setAuthorized(true);
     }
 
+    /**
+     * @return boolean
+     */
     private function isResultsVisible() {
         $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
         $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));

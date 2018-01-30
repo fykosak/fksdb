@@ -66,12 +66,15 @@ class SubmitPresenter extends BasePresenter {
         $this->setTitle(_('Zadávání bodů'));
     }
 
-    public function titleQrEnntry() {
-        $this->setTitle(_('Zadávání bodů'));
+    public function titleQrEntry() {
+        $this->titleEntry();
     }
 
     public function authorizedEntry() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'submit')));
+    }
+    public function authorizedQrEntry() {
+        $this->authorizedEntry();
     }
 
     public function titleEdit() {
