@@ -9,8 +9,8 @@ parameters:
                     label: "Hostel Elf"
                 -
                     value: 2
-                    capacity: 20
-                    label: "unspecified hotel"
+                    capacity: 150
+                    label: "Hotel Duo"
 
             teacher:
                 person:
@@ -81,6 +81,8 @@ events:
                 default: '1970-01-01T01:00:00'
             rooms:
                 default: []
+            buildings:
+                 default: []
 
         baseMachines:
             #
