@@ -165,8 +165,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
-    public function getSelectedContestSymbol() {
-        return 'brawl';
+    public function getNavBarVariant() {
+        return ['brawl brawl' . $this->getEventId(), 'dark'];
     }
 
 }

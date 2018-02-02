@@ -17,9 +17,9 @@
     {block head}{/block}
 </head>
 <!-- Radnom background generator -->
-<body data-bg="{rand(1,2)}" data-contest="{isset($contestSymbol)?$contestSymbol:''}">
+<body data-bg="{rand(1,2)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
 {block body}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',isset($contestSymbol)?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',!is_null($contestSymbol)?('bg-'.$contestSymbol.' navbar-'.$navVariant):('bg-light navbar-light')"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">

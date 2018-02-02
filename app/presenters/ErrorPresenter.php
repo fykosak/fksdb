@@ -8,8 +8,8 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    public function getSelectedContestSymbol() {
-        return 'error';
+    public function getNavBarVariant() {
+        return ['error', 'dark'];
     }
 
     protected function putIntoBreadcrumbs() {
@@ -32,7 +32,7 @@ class ErrorPresenter extends BasePresenter {
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();
             // known exception or general 500
-            $this->setView(in_array($code, [403, 404, 405]) ? $code: '500');
+            $this->setView(in_array($code, [403, 404, 405]) ? $code : '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {

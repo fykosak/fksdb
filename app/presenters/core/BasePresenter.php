@@ -262,14 +262,20 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
         $this->template->title = $this->getTitle();
-        if (method_exists($this, 'getSelectedContestSymbol')) {
-            $this->template->contestSymbol = $this->getSelectedContestSymbol();
-        }
+
+        list ($symbol, $type) = $this->getNavBarVariant();
+        $this->template->contestSymbol = $symbol;
+        $this->template->navVariant = $type;
+
 
         $this->template->subtitle = $this->getSubtitle();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
+    }
+
+    protected function getNavBarVariant() {
+        return [null, null];
     }
 
     protected function getSubtitle() {
