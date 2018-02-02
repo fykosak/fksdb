@@ -53,7 +53,7 @@ parameters:
 events:
     fyziklani11:
         event_type_id: 1
-        eventYears: [10,11] # specify for which years this machine is valid, by default all years
+        eventYears: [9,10,11] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
