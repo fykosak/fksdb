@@ -160,15 +160,15 @@ class StalkingPresenter extends BasePresenter {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
     }
 
-    protected function getSelectedContestSymbol() {
+    protected function getNavBarVariant() {
         /**
          * @var $contest \ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return $contest->getContestSymbol();
+            return [$contest->getContestSymbol(), 'dark'];
         }
-        return null;
+        return [null, null];
     }
 
 }

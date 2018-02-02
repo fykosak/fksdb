@@ -33,7 +33,7 @@ parameters:
 events:
     fyziklani9:
         event_type_id: 1
-        eventYears: [1,2,3,4,5,6,7,8,9] # specify for which years this machine is valid, by default all years
+        eventYears: [1,2,3,4,5,6,7,8] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
@@ -51,12 +51,12 @@ events:
         baseMachines:
             #
             #   TEAM
-            #    
+            #
             TEAM:
                 service: @event.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
-                
+
                 states:
                     pending: Čeká na schválení
                     spare: Náhradník
@@ -128,7 +128,7 @@ events:
 
             #
             #   PARTICIPANT
-            #    
+            #
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
@@ -181,7 +181,7 @@ events:
         machine:
             baseMachines:
                 team:
-                    bmName: TEAM 
+                    bmName: TEAM
                     label: Tým
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
