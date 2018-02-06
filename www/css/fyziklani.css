@@ -55,6 +55,15 @@
     font-weight: bold;
 }
 
+.brawl-results table tbody {
+    counter-reset: results-table;
+}
+
+.brawl-results table tbody tr td:first-child::before {
+    counter-increment: results-table;
+    content: counter(results-table) ".";
+}
+
 .clock {
     background: white;
 

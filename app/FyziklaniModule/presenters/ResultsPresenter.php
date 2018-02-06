@@ -52,7 +52,11 @@ class ResultsPresenter extends BasePresenter {
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
         $control->setTasks($this->serviceFyziklaniTask->getTasks($this->getEventId()));
 
-        $control->setBasePath($this->getHttpRequest()->getUrl()->getBasePath());
+        $control->setParams([
+            'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
+            'gameStart' => (string)$this->getEvent()->getParameter('gameStart'),
+            'gameEnd' => (string)$this->getEvent()->getParameter('gameEnd'),
+        ]);
         return $control;
     }
 
