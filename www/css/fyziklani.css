@@ -3,19 +3,19 @@
 }
 
 .brawl-results table tbody tr td[data-points="5"] {
-    background-color: limegreen;
+    background-color: #2d7dd2;
 }
 
 .brawl-results table tbody tr td[data-points="3"] {
-    background-color: gold;
+    background-color: #98cc04;
 }
 
 .brawl-results table tbody tr td[data-points="2"] {
-    background-color: orange;
+    background-color: #eeb902;
 }
 
 .brawl-results table tbody tr td[data-points="1"] {
-    background-color: red;
+    background-color: #f45d01;
 }
 
 .brawl-results table tbody tr td {
@@ -53,6 +53,15 @@
 .brawl-results table tbody tr td {
     border: solid 1px #ccc;
     font-weight: bold;
+}
+
+.brawl-results table tbody {
+    counter-reset: results-table;
+}
+
+.brawl-results table tbody tr td:first-child::before {
+    counter-increment: results-table;
+    content: counter(results-table) ".";
 }
 
 .clock {
