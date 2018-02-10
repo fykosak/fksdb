@@ -10,8 +10,16 @@
         {/if}
     </p>
 </div>
-
-{*<div class="alert alert-info"><p>{if $presenter->getLang() == 'cs'}
+{if $presenter->getLang() == 'cs'}
+    <div class="alert alert-danger"><p>
+            Kategorie B a C jsou naplněné, a proto zastavujeme přihlašování týmů do kategorií B a C. Stále je možné
+            přihlásit svůj tým do kategorie A, kde jsou ale už jen 4 volná místa. Pokud spadáte do jiné kategorie
+            než A, ale chcete se soutěže zúčastnit i tak, můžete v přihlášce zaškrtnout možnost „Soutěžit v kategorii A“ a
+            přihlásit se do této kategorie.
+        </p>
+    </div>
+{/if}
+{*<div class="alert alert-info"><p>
         Kapacita hotelu Elf je naplněna, proto přidáme možnost ubytování v dalším hotelu.
             Dokončujeme detaily a nový hotel zveřejníme v průběhu nejbližších dní.
             Přihlašování na soutěž pokračuje beze změny, ubytování si budete moci v přihlášce později doplnit.
