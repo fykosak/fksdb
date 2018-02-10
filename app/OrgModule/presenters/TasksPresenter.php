@@ -9,7 +9,7 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Diagnostics\Debugger;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
 use Pipeline\PipelineException;
 use SeriesCalculator;
 use SimpleXMLElement;
