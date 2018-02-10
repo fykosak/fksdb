@@ -1,0 +1,7 @@
+{layout ../../../templates/@layout.v4.latte}
+{block content}
+    {foreach $tests as $test}
+        <a href="{plink $test->getAction()}">{$test->getTitle()}</a>
+
+    {/foreach}
+{/block}

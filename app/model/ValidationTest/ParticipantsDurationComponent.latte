@@ -1,0 +1,19 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>personID</th>
+        <th>Name</th>
+        <th>delta</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $log as $l}
+        <tr n:class="'table-'.$l['status']">
+            <td>{$l['person']->person_id}</td>
+            <td><a href="{plink Stalking:view ,id=>$l['person']->person_id }">{$l['person']->__toString()}</a></td>
+            <td>{$l['delta']}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+
