@@ -58,7 +58,6 @@ class SubmitPresenter extends BasePresenter {
         } else {
             $this->flashMessage($msg, 'danger');
         }
-
     }
 
 
@@ -70,9 +69,14 @@ class SubmitPresenter extends BasePresenter {
         $this->titleEntry();
     }
 
+    public function titleAutoClose() {
+        $this->titleEntry();
+    }
+
     public function authorizedEntry() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'submit')));
     }
+
     public function authorizedQrEntry() {
         $this->authorizedEntry();
     }
@@ -179,10 +183,10 @@ class SubmitPresenter extends BasePresenter {
             }
             $log = $this->savePoints($values->taskCode, $points);
             $this->flashMessage($log[0], $log[1]);
-            $this->redirect('this');
+            $this->redirect('autoClose');
         } else {
             $this->flashMessage($msg, 'danger');
-           // $this->redirect('this');
+            // $this->redirect('this');
         }
     }
 
