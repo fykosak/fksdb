@@ -86,15 +86,15 @@ class FyziklaniSubmitsGrid extends BaseGrid {
 
     public function handleDelete($id) {
         /**
-         * @var $team ModelFyziklaniTeam
+         * @var $submit \ModelFyziklaniSubmit
          */
-        $team = $this->serviceFyziklaniSubmit->findByPrimary($id);
-        $teamId = $team->e_fyziklani_team_id;
+        $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $teamId = $submit->e_fyziklani_team_id;
         if (!$teamId) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
-        if (!$team->hasOpenSubmit()) {
+        if (!$submit->getTeam()->hasOpenSubmit()) {
 
             $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
