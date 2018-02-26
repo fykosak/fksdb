@@ -122,7 +122,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         $parametersNode = $doc->createElement('parameters');
         $node->appendChild($parametersNode);
         foreach ($dataSource->getImplicitParameters() as $name => $value) {
-            $parameterNode = $doc->createElement('parameters', $value);
+            $parameterNode = $doc->createElement('parameter', $value);
             $parameterNode->setAttribute('name', $name);
             $parametersNode->appendChild($parameterNode);
         }

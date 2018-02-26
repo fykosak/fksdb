@@ -142,7 +142,7 @@ class StalkingPresenter extends BasePresenter {
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
         $that = $this;
-        $submit->onClick[] = function(SubmitButton $button) use($that) {
+        $submit->onClick[] = function (SubmitButton $button) use ($that) {
             $form = $button->getForm();
             $values = $form->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
@@ -158,6 +158,17 @@ class StalkingPresenter extends BasePresenter {
 
     public function titleView($id) {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+    }
+
+    protected function getNavBarVariant() {
+        /**
+         * @var $contest \ModelContest
+         */
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        if ($contest) {
+            return [$contest->getContestSymbol(), 'dark'];
+        }
+        return [null, null];
     }
 
 }

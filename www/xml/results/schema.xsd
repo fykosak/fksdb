@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://fykos.cz/xml/results/schema"
+	targetNamespace="http://fykos.cz/xml/results/schema">
+	
+	<!-- general types (move to own file?) -->
+	<xsd:simpleType name="contest-type">
+		<xsd:restriction base="xsd:string">
+		    <xsd:enumeration value="fykos"/>
+		    <xsd:enumeration value="vyfuk"/>		    
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="category-type">
+		<xsd:restriction base="xsd:string">
+		    <xsd:enumeration value="6"/>
+		    <xsd:enumeration value="7"/>
+		    <xsd:enumeration value="8"/>
+		    <xsd:enumeration value="9"/>		    
+
+		    <xsd:enumeration value="1"/>
+		    <xsd:enumeration value="2"/>
+		    <xsd:enumeration value="3"/>
+		    <xsd:enumeration value="4"/>
+                    
+                    <xsd:enumeration value="ALL"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<!-- types -->
+	<xsd:simpleType name="label-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>	
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="label-list-type">
+		<xsd:list itemType="tns:label-type"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="points-type">
+		<xsd:restriction base="xsd:decimal"/>		
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="series-number-type">
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="series-list-type">
+		<xsd:list itemType="tns:series-number-type"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="personal-name-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="511"/>
+		</xsd:restriction>	
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="school-abbrev-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="32"/>
+		</xsd:restriction>	
+	</xsd:simpleType>
+	
+	<!-- elements -->
+	<xsd:element name="results">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="cumulative" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-list-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+				<xsd:element name="detail" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-number-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+                                <xsd:element name="brojure" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-list-type" use="required"/>
+                                                        <xsd:attribute name="listed-series" type="tns:series-number-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+                                <xsd:element name="school-cumulative" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+					  <xsd:complexContent>
+					    <xsd:extension base="tns:categories-type">
+							<xsd:attribute name="series" type="tns:series-list-type" use="required"/>
+					    </xsd:extension>
+					  </xsd:complexContent>
+					</xsd:complexType> 
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!--
+		Type for representation of results sheet. 
+		(It's a type not an element in order to have only one global element - root.)
+	-->
+	<xsd:complexType name="categories-type">
+		<xsd:sequence>
+			<xsd:element name="category" minOccurs="1" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="column-definitions" minOccurs="1" maxOccurs="1">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="column-definition" minOccurs="1" maxOccurs="unbounded">
+									  <xsd:complexType>
+									    <xsd:attribute name="label" type="tns:label-type" use="required"/>
+									    <xsd:attribute name="limit" type="tns:points-type" use="required"/>	    
+									  </xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="data">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="contestant">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="rank">
+													<xsd:complexType>
+														<xsd:attribute name="from" type="xsd:positiveInteger" use="required"/>
+														<xsd:attribute name="to" type="xsd:positiveInteger"/>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="column" type="tns:points-type"/>
+											</xsd:sequence>
+											<xsd:attribute name="name" type="tns:personal-name-type" use="required"/>
+											<xsd:attribute name="school" type="tns:school-abbrev-type" use="required"/>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="id" type="tns:category-type"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+
+	</xsd:complexType>
+	
+
+	
+	
+	
+	
+	
+</xsd:schema>

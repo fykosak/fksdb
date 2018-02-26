@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://fykos.cz/xml/export/schema"
+	targetNamespace="http://fykos.cz/xml/export/schema">
+	
+	<!-- types -->
+	<xsd:simpleType name="qid-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="16"/>			
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="format-version-type">
+		<xsd:restriction base="xsd:positiveInteger"/>
+	</xsd:simpleType>        
+	<xsd:simpleType name="column-name-type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="column-value-type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="parameter-name-type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="parameter-value-type">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>	
+	<xsd:complexType name="parameter-type">
+		 <xsd:simpleContent>
+		 	<xsd:extension base="tns:parameter-value-type">
+		 		<xsd:attribute name="name" type="tns:parameter-name-type" use="required"/>
+		 	</xsd:extension>
+		 </xsd:simpleContent>
+	</xsd:complexType>
+	
+	<!-- elements -->
+	<xsd:element name="export">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="parameters" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="parameter" minOccurs="0" maxOccurs="unbounded" type="tns:parameter-type"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="column-definitions" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="column-definition" minOccurs="1" maxOccurs="unbounded">
+							  <xsd:complexType>
+							    <xsd:attribute name="name" type="tns:column-name-type" use="required"/>
+							  </xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="data">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="row">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="col" type="tns:column-name-type" minOccurs="1" maxOccurs="unbounded"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="qid" type="tns:qid-type" use="required"/>
+                        <xsd:attribute name="format-version" type="tns:format-version-type"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+	
+	
+</xsd:schema>

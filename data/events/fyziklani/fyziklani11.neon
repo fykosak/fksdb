@@ -3,11 +3,11 @@ parameters:
         fyziklani11:
             appCond: or(regOpen(), role('admin'))
             accomodation:
-                - 
+                -
                     value: 1
                     capacity: 64
-                    label: "Hostel Elf"                
-                - 
+                    label: "Hostel Elf"
+                -
                     value: 2
                     capacity: 29
                     label: "Beta Pension"
@@ -53,7 +53,7 @@ parameters:
 events:
     fyziklani11:
         event_type_id: 1
-        eventYears: [10,11] # specify for which years this machine is valid, by default all years
+        eventYears: [9,10,11] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
@@ -61,7 +61,7 @@ events:
                 default: fyziklani@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <fyziklani@fykos.cz>
-           
+
             schoolsInTeam:
                 default: 2
             teamsPerSchool:
@@ -80,22 +80,26 @@ events:
             # TODO make relative to game
             resultsHide:
                 default: '1970-01-01T01:00:00'
-            # TODO infer from event begin date 
+            # TODO infer from event begin date
             gameStart:
                 default: '1970-01-01T00:00:00'
             # TODO infer from event end date
             gameEnd:
                 default: '1970-01-01T01:00:00'
+            rooms:
+                default: []
+            buildings:
+                default: [M, F, S]
 
         baseMachines:
             #
             #   TEAM
-            #    
+            #
             TEAM:
                 service: @event.ServiceFyziklaniTeam
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
-                
+
                 states:
                     pending: Čeká na schválení
                     spare: Náhradník
@@ -175,12 +179,12 @@ events:
                         visible: role('admin')
                         modifiable: false
                         description: "Úpravy se provádí v TeXu routing.tex."
-                    
+
 
 
             #
             #   PARTICIPANT
-            #    
+            #
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
@@ -233,7 +237,7 @@ events:
         machine:
             baseMachines:
                 team:
-                    bmName: TEAM 
+                    bmName: TEAM
                     label: Tým
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine

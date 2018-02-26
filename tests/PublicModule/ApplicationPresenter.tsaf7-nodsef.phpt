@@ -37,7 +37,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
                         'born' => "15. 09. 2014",
-                        'phone' => '987654321'
+                        'phone' => '+420987654321'
                     ),
                     'post_contact_d' => array(
                         'address' => array(

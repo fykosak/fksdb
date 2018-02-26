@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="{$robots}" n:ifset="$robots">
@@ -11,26 +12,26 @@
         'css/style.v4.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
-        'css/font-awesome-4.5.0/css/font-awesome.min.css' => [all]
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all]
         }
     {block head}{/block}
 </head>
 <!-- Radnom background generator -->
-<body data-bg="{rand(1,2)}" data-contest="{isset($contestSymbol)?$contestSymbol:''}">
+<body data-bg="{rand(1,2)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
 {block body}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',isset($contestSymbol)?('bg-'.$contestSymbol.' navbar-dark'):('bg-light navbar-light')"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',!is_null($contestSymbol)?('bg-'.$contestSymbol.' navbar-'.$navVariant):('bg-light navbar-light')"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="{$basePath}/"><i class="fa fa-home" aria-hidden="true"></i> FKSDB</a>
+            <a class="navbar-brand" href="{$basePath}/"><i class="fas fa fa-home" aria-hidden="true"></i> FKSDB</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar isset($navRoot)?:null}
+                {control navigation:navbar isset($navRoot)?$navRoot:''}
             {/block}
 
             {block user-info}

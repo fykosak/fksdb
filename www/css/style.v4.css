@@ -192,3 +192,8 @@ body[data-contest="vyfuk"] h6 {
 .image-error img {
     height: 20rem;
 }
+
+.card-columns {
+    -webkit-column-count: 3;
+    column-count: 2;
+}

@@ -2,17 +2,18 @@
 
 namespace Tasks;
 
+use FKS\Logging\ILogger;
 use Nette\DateTime;
-use Pipeline\PipelineException;
 use Pipeline\Stage;
 use ServiceTask;
+use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
  * 
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DeadlineFromXML extends Stage {
+class DeadlineFromXML2 extends Stage {
 
     /**
      * @var SeriesData
@@ -23,6 +24,7 @@ class DeadlineFromXML extends Stage {
      * @var ServiceTask
      */
     private $taskService;
+
     private static $months = array(
         'ledna' => '1.',
         'února' => '2.',
@@ -47,42 +49,23 @@ class DeadlineFromXML extends Stage {
     }
 
     public function process() {
-        $XMLproblems = $this->data->getXML();
-        if (!$XMLproblems['deadline']) {
+        $xml = $this->data->getData();
+        $deadline = (string) $xml->deadline[0];
+        if (!$deadline) {
+            $this->log(_('Chybí deadline série.'), ILogger::WARNING);
             return;
         }
 
-        $deadline = $this->datetimeFromString($XMLproblems['deadline']);
+        $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
 
         foreach ($this->data->getTasks() as $task) {
-            $task->submit_deadline = $deadline;
+            $task->submit_deadline = $datetime;
             $this->taskService->save($task);
         }
     }
 
     public function setInput($data) {
         $this->data = $data;
-    }
-
-    /**
-     * @param string $string
-     * @return DateTime
-     */
-    private function datetimeFromString($string) {
-        $compactString = strtr($string, '~', ' ');
-        $compactString = str_replace(' ', '', $compactString);
-        $compactString = mb_strtolower($compactString);
-        $compactString = str_replace(array_keys(self::$months), array_values(self::$months), $compactString);
-
-        if (!($datetime = DateTime::createFromFormat('j.n.YG.i', $compactString))) {
-            $datetime = DateTime::createFromFormat('j.n.Y', $compactString . '23.59');
-        }
-
-        if (!$datetime) {
-            throw new PipelineException("Cannot parse date '$string'.");
-        }
-
-        return $datetime;
     }
 
 }
