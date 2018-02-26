@@ -193,7 +193,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleContestant() {
-        $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear()));
+        $contest = $this->getSelectedContest();
+        $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $contest ? $contest->name : '', $this->getSelectedYear()));
     }
 
     public function actionContest() {
@@ -361,13 +362,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-    protected function getSelectedContestSymbol() {
+    protected function getNavBarVariant() {
         /**
          * @var $contest \ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return $contest->getContestSymbol();
+            return [$contest->getContestSymbol(),'dark'];
         }
         return null;
     }
