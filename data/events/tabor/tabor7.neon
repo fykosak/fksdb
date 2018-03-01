@@ -132,9 +132,9 @@ events:
                         required: %events.tabor.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tabor.tshirt.size%))
                     tshirt_color:
-                        label: "Jaké barvu trika nosíš?"
+                        label: "Jakou barvu trika nosíš?"
                         required: %events.tabor.requiredCond%
-                        factory: Chooser("Zvolit barbu", Options(%events.tabor.tshirt.color%))
+                        factory: Chooser("Zvolit barvu", Options(%events.tabor.tshirt.color%))
                     arrival_destination:
                         label: "Mám zájem o svozy"
                         description: "Místo z ktereho chci cestovat"
