@@ -137,7 +137,7 @@ events:
                         factory: Chooser("Zvolit barvu", Options(%events.tabor.tshirt.color%))
                     arrival_destination:
                         label: "Mám zájem o svozy"
-                        description: "Místo z ktereho chci cestovat"
+                        description: "Místo, ze kterého chci cestovat"
                         factory: Chooser("Zvolit místo", Options(%events.tabor7.arrival.destination%))
                     swimmer:
                          label: "Umím plavat"
