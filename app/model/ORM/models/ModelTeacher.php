@@ -5,6 +5,10 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property DateTime until
+ * @property DateTime since
+ * @property integer school_id
+ * @property integer person_id
  */
 class ModelTeacher extends AbstractModelSingle implements IResource {
 

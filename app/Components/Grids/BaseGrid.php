@@ -12,10 +12,10 @@ use SQL\SearchableDataSource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-    
+
     /** @persistent string */
     public $searchTerm;
-    
+
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
@@ -33,7 +33,7 @@ abstract class BaseGrid extends Grid {
 
     public function render() {
         $paginator = $this->getPaginator();
-        
+
         // this has to be done already here (and in the parent call again :-( )
         if($this->searchTerm) {
             $this->dataSource->applyFilter($this->searchTerm);
@@ -63,7 +63,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /*     * ******************************
-     * Search 
+     * Search
      * ****************************** */
 
     public function isSearchable() {
@@ -78,7 +78,7 @@ abstract class BaseGrid extends Grid {
         $form = new Form();
         $form->setMethod(Form::GET);
         $form->addText('term')->setDefaultValue($this->searchTerm);
-        
+
         $that = $this;
         $form->onSuccess[] = function(Form $form) use($that) {
                     $values = $form->getValues();
@@ -97,13 +97,13 @@ abstract class BaseGrid extends Grid {
 
     /**
      * Adds button with Bootstrap CSS classes (default is 'default').
-     * 
+     *
      * @param string $name
      * @param string $label
      */
     protected function addButton($name, $label = NULL) {
         $button = parent::addButton($name, $label);
-        $button->setClass('btn btn-xs btn-default');
+        $button->setClass('btn btn-sm btn-secondary btn-default');
         return $button;
     }
 

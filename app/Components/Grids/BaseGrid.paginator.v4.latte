@@ -1,0 +1,41 @@
+{if $paginator->pageCount > 1}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {if $paginator->isFirst()}
+                <li class="page-item disabled">
+                    <span class="page-link">{('Previous')}</span>
+                </li>
+            {else}
+                <li class="page-item">
+                    <a class="page-link" href="{link this, 'page' => $paginator->page - 1}">{('Previous')}</a>
+                </li>
+            {/if}
+
+            {foreach $steps as $step}
+                {if $step == $paginator->page}
+                    <li class="page-item active">
+                        <span class="page-link">{$step}<span class="sr-only">(current)</span></span>
+                    </li>
+                {else}
+                    <li class="page-item">
+                        <a class="page-link" href="{link this, 'page' => $step}">{$step}</a>
+                    </li>
+                {/if}
+                {if $iterator->nextValue > $step + 1}
+                    <li class="divider">
+                        <span>…</span>
+                    </li>{/if}
+            {/foreach}
+
+            {if $paginator->isLast()}
+                <li class="page-item disabled">
+                    <span class="page-link">{('Next')}</span>
+                </li>
+            {else}
+                <li class="page-item">
+                    <a class="page-link" href="{link this, 'page' => $paginator->page + 1}">{('Next')}</a>
+                </li>
+            {/if}
+        </ul>
+    </nav>
+{/if}

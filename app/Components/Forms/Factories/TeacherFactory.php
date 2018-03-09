@@ -3,11 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use ModelContest;
-use Nette\Forms\ControlGroup;
+use JanTvrdik\Components\DatePicker;
 use Nette\Forms\Form;
-use ServicePerson;
-use YearCalculator;
 
 /**
  *
@@ -17,11 +14,8 @@ class TeacherFactory {
 
     public function createTeacher() {
         $container = new ModelContainer();
-
-        $container->addText('since', _('Since year'));
-
-        $container->addText('until', _('Until year'));
-
+        $container->addComponent(new DatePicker(_('Since year')), 'since');
+        $container->addComponent(new DatePicker(_('Until year')), 'until');
         $container->addText('note', _('Note'))
             ->addRule(Form::MAX_LENGTH, null, 255);
         return $container;

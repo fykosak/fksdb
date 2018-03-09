@@ -41,7 +41,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit teacher %s'), $this->getModel()->getPerson()->getFullname()));
+        /**
+         * @var $model \ModelTeacher
+         */
+        $model = $this->getModel();
+        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullname()));
     }
 
     public function titleCreate() {
@@ -60,9 +64,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     protected function appendExtendedContainer(Form $form) {
         $container = $this->teacherFactory->createTeacher();
-        $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
-        $form->addComponent($schoolContainer, 'school_id');
+        $container->addComponent($schoolContainer, 'school_id');
+
+        $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
+
     }
 
     protected function getORMService() {
@@ -85,5 +91,15 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         return _('Teacher already exist');
     }
 
+    protected function getNavBarVariant() {
+        /**
+         * @var $contest \ModelContest
+         */
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        if ($contest) {
+            return [$contest->getContestSymbol(), 'dark'];
+        }
+        return [null, null];
+    }
 }
 
