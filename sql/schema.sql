@@ -1111,6 +1111,29 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position`(
      ON UPDATE RESTRICT
 ) ENGINE='InnoDB';
 
+-- -----------------------------------------------------
+-- Table `teacher`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `teacher`(
+  `teacher_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `person_id`  INT(11) NOT NULL,
+  `school_id` INT(11) NOT NULL,
+  `since` DATE,
+  `until` DATE,
+  `note` TEXT,
+  CONSTRAINT `fk_teacher_person_id1`
+  FOREIGN KEY (`person_id`)
+  REFERENCES `person` (`person_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_teacher_school_id1`
+  FOREIGN KEY (`school_id`)
+  REFERENCES `school` (`school_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE='InnoDB';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
