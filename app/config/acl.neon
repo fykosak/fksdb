@@ -8,7 +8,7 @@
 services:
     # assertions
     ownerAssertion: Authorization\Assertions\OwnerAssertion
-    
+
     # data services
     #- authorizator:
      #   class: Nette\Security\Permission
@@ -48,6 +48,7 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(fyziklani)
+    - addResource(teacher)
 
     # ACL
     - allow(contestant, submit, upload)
