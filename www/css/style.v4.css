@@ -68,6 +68,14 @@ fieldset .well {
     display: inline;
 }
 
+body[data-contest="vyfuk"] h1,
+body[data-contest="vyfuk"] h2,
+body[data-contest="vyfuk"] h3,
+body[data-contest="vyfuk"] h4,
+body[data-contest="vyfuk"] h5,
+body[data-contest="vyfuk"] h6 {
+    font-family: 'Gloria Hallelujah', cursive;
+}
 .task-code-container input.valid {
     color: #3c763d;
 }
@@ -140,7 +148,7 @@ fieldset .well {
 }
 
 .bg-vyfuk {
-    background-color: #ff4800;;
+    background-color: #9c3;;
 }
 
 .bg-fykos {
@@ -182,4 +190,9 @@ fieldset .well {
 
 .image-error img {
     height: 20rem;
+}
+
+.card-columns {
+    -webkit-column-count: 3;
+    column-count: 2;
 }
