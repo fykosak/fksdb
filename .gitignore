@@ -8,3 +8,4 @@ temp/*
 upload/*
 !upload/.htaccess
 /app/config/config.local.neon
+.idea/*

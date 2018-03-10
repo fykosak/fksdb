@@ -1,51 +1,21 @@
 parameters:
     events:
-        tabor:
-            appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            person:
-                person:
-                    other_name: true
-                    family_name: true
-                person_info:
-                    email: true
-                    born: 
-                        required: %events.tabor.requiredCond%                   
-                    born_id: 
-                        required: %events.tabor.requiredCond%
-                        description: "Kvůli pojišťovně."
-                    birthplace: state('participated')
-                    phone:
-                        required: %events.tabor.requiredCond%
-                        description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-                    phone_parent_m: false
-                    phone_parent_d: false 
-                post_contact_p:
-                    address: %events.tabor.requiredCond%
-                person_history:
-                    school_id:
-                        required: state('participated')
-                        description: "Pokud nelze školu nalézt, napiš správci."
-            tshirt:
-                size:
-                    M_S: S pánské
-                    M_M: M pánské
-                    M_L: L pánské
-                    M_XL: XL pánské
-                    M_XXL: XXL pánské
-                    F_S: S dámské
-                    F_M: M dámské
-                    F_L: L dámské
-                    F_XL: XL dámské
+        tabor7:
+            arrival:
+                destination:
+                    CB: "České Budějovice"
+                    PHA: "Praha"
+                    BRN: "Brno"
+                    OVA: "Ostrava"
 
-                
+
 
 events:
-    tabor:
-        event_type_id: [10] 
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+    tabor7:
+        event_type_id: [10]
+        eventYears: [7] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
-        formLayout: tabor.form
+        formLayout: tabor/tabor7.form
         paramScheme:
             notifyBcc:
                 default: vyfuk@vyfuk.mff.cuni.cz
@@ -53,7 +23,7 @@ events:
                 default: vyfuk@vyfuk.mff.cuni.cz
             deadline:
                 default: 1970-01-01 00:00:00
-            
+
             letterWhere:
                 default: nikde
             letterSignature:
@@ -65,11 +35,11 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMSousParticipant
-                
-                states:                    
-                    invited: Pozvaný                    
+
+                states:
+                    invited: Pozvaný
                     auto.invited: "Pozvaný (auto)"
-                    spare: Náhradník                   
+                    spare: Náhradník
                     auto.spare: "Náhradník (auto)"
                     applied: Účastní se
                     interested: Chce jet
@@ -106,7 +76,7 @@ events:
                         onExecuted:
                             - Events\Transitions\MailSender(tabor/confirm-applied, .self)
                     spare->interested:
-                        condition: before(param('deadline')) 
+                        condition: before(param('deadline'))
                         label: Chci jet
                         onExecuted:
                             - Events\Transitions\MailSender(tabor/confirm-interested, .self)
@@ -127,7 +97,7 @@ events:
                     spare->invited:
                         condition: role('admin')
                         label: Pozvat jako účastníka
-                   
+
                     paid->participated:
                         condition: and(role('admin'),eventWas())
                         label: Zúčastnil se
@@ -161,9 +131,16 @@ events:
                         label: "Jaké triko nosíš?"
                         required: %events.tabor.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tabor.tshirt.size%))
-
+                    tshirt_color:
+                        label: "Jakou barvu trika nosíš?"
+                        required: %events.tabor.requiredCond%
+                        factory: Chooser("Zvolit barvu", Options(%events.tabor.tshirt.color%))
+                    arrival_destination:
+                        label: "Mám zájem o svozy"
+                        description: "Místo, ze kterého chci cestovat"
+                        factory: Chooser("Zvolit místo", Options(%events.tabor7.arrival.destination%))
                     swimmer:
-                         label: "Umím plavat"                           
+                         label: "Umím plavat"
                     note:
                         label: "Ještě něco, co bychom o Tobě měli vědět?"
 
@@ -180,8 +157,8 @@ events:
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")      
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
-                
+
             processings:
                 - @events.privacyPolicy
