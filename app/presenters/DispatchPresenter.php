@@ -1,24 +1,8 @@
 <?php
 
-class DispatchPresenter extends AuthenticatedPresenter implements IContestPresenter {
+class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;
-
-    public function getSelectedContest() {
-        return null;
-    }
-
-    public function getSelectedYear() {
-        return null;
-    }
-
-    public function getSelectedAcademicYear() {
-        return null;
-    }
-
-    public function getSelectedSeries() {
-        return null;
-    }
 
     public function renderDefault() {
         /**
@@ -67,8 +51,7 @@ class DispatchPresenter extends AuthenticatedPresenter implements IContestPresen
         }
     }
 
-    public
-    function handleChangeContest($contestId, $role) {
+    public function handleChangeContest($contestId, $role) {
         switch ($role) {
             case 'org':
                 $this->redirect(':Org:Dashboard:default', [
@@ -83,20 +66,11 @@ class DispatchPresenter extends AuthenticatedPresenter implements IContestPresen
         }
     }
 
-    public
-    function getTitle() {
+    public function getTitle() {
         return _('Razcestník');
     }
 
-    public
-    function getSelectedContestSymbol() {
-        return null;
+    public function getNavBarVariant() {
+        return ['dark', 'dark'];
     }
-
-    public
-    function getNavRoot() {
-        return null;
-    }
-
-
 }
