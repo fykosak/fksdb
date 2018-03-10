@@ -14,10 +14,11 @@ class ServiceAuthToken extends AbstractServiceSingle {
     protected $modelClassName = 'ModelAuthToken';
 
     /**
-     * 
+     *
      * @param string $type
      * @param \Nette\DateTime $until
      * @param \Nette\DateTime $since
+     * @param ModelLogin $login
      * @return ModelAuthToken
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
@@ -68,7 +69,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param string $token
      * @partm bool $strict
      * @return ModelAuthToken|null
@@ -91,7 +92,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param ModelAuthToken|string $tokenData
      */
     public function disposeToken($token) {

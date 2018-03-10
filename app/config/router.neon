@@ -103,6 +103,13 @@ fksrouter:
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventID [0-9]+>]/s/q[/<id>]':
+            subdomain: %subdomain.db%
+            presenter: Submit
+            action: qrEntry
+            tld: %domain.tld%
+            module: Fyziklani
+            flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][<module %modules%>/]<presenter>/<action=default>[/<id>]':
             module: Public

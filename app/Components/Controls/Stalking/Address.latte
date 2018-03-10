@@ -1,0 +1,43 @@
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">Address</h4>
+    <div class="card-body">
+
+        {if count($MAddress)}
+            {foreach $MAddress as $address}
+                {if $address->type == 'P'}
+                    <h3>Permanent addres</h3>
+                {else}
+                    <h3>Delivery addres</h3>
+                {/if}
+                <div>
+                    {if !is_null($address->first_row)}
+                        <div>{$address->first_row}</div>
+                    {/if}
+                    {if !is_null($address->second_row)}
+                        <div>{$address->second_row}</div>
+                    {/if}
+
+                    {if !is_null($address->target)}
+                        <div>{$address->target}</div>
+                    {/if}
+
+                    {if !is_null($address->city)}
+                        <div>{$address->city}</div>
+                    {/if}
+
+                    {if !is_null($address->postal_code)}
+                        <div>{$address->postal_code}</div>
+                    {/if}
+                    {if !is_null($address->region_id)}
+                        <div>{$address->getAddress()->region->name}</div>
+                    {/if}
+                </div>
+
+            {/foreach}
+        {else}
+            <span class="label-warning label">No records</span>
+        {/if}
+    </div>
+</div>
+
+

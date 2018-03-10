@@ -3,6 +3,7 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string email
  */
 class ModelPersonInfo extends AbstractModelSingle {
 

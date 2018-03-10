@@ -13,6 +13,8 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * 
+     * @deprecated
+     * @see ServiceOrg::findByTeXSignature($signature, $contest_id)
      * @param type $signature
      * @return ModelPerson|null
      */
