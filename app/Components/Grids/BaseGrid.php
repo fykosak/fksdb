@@ -22,6 +22,7 @@ abstract class BaseGrid extends Grid {
     }
 
     protected function createTemplate($class = NULL) {
+        $this['paginator']->getTemplate()->setTranslator($this->presenter->getTranslator());
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -35,7 +36,7 @@ abstract class BaseGrid extends Grid {
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
-        if($this->searchTerm) {
+        if ($this->searchTerm) {
             $this->dataSource->applyFilter($this->searchTerm);
         }
         $count = $this->getCount();
@@ -80,14 +81,14 @@ abstract class BaseGrid extends Grid {
         $form->addText('term')->setDefaultValue($this->searchTerm);
 
         $that = $this;
-        $form->onSuccess[] = function(Form $form) use($that) {
-                    $values = $form->getValues();
-                    $that->searchTerm=$values['term'];
-                    $that->dataSource->applyFilter($values['term']);
-                    // TODO is this vv needed? vv
-                    $count = $that->dataSource->getCount();
-                    $this->getPaginator()->itemCount = $count;
-                };
+        $form->onSuccess[] = function (Form $form) use ($that) {
+            $values = $form->getValues();
+            $that->searchTerm = $values['term'];
+            $that->dataSource->applyFilter($values['term']);
+            // TODO is this vv needed? vv
+            $count = $that->dataSource->getCount();
+            $this->getPaginator()->itemCount = $count;
+        };
         return $form;
     }
 

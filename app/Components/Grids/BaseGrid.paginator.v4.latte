@@ -3,11 +3,11 @@
         <ul class="pagination justify-content-center">
             {if $paginator->isFirst()}
                 <li class="page-item disabled">
-                    <span class="page-link">{('Previous')}</span>
+                    <span class="page-link">{_('Previous')}</span>
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->page - 1}">{('Previous')}</a>
+                    <a class="page-link" href="{link this, 'page' => $paginator->page - 1}">{_('Previous')}</a>
                 </li>
             {/if}
 
@@ -29,11 +29,11 @@
 
             {if $paginator->isLast()}
                 <li class="page-item disabled">
-                    <span class="page-link">{('Next')}</span>
+                    <span class="page-link">{_('Next')}</span>
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->page + 1}">{('Next')}</a>
+                    <a class="page-link" href="{link this, 'page' => $paginator->page + 1}">{_('Next')}</a>
                 </li>
             {/if}
         </ul>
