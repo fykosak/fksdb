@@ -7,7 +7,9 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
-
+    /**
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             return;
@@ -19,6 +21,9 @@ class ResultsPresenter extends BasePresenter {
         return $this->getAction() !== 'default';
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function renderDefault() {
 
         if ($this->isAjax()) {

@@ -43,6 +43,10 @@ class TaskPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEventId(), $this->serviceFyziklaniTask);

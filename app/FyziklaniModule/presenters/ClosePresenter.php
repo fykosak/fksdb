@@ -62,6 +62,11 @@ class ClosePresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionTeam($id) {
         $this->team = $this->serviceFyziklaniTeam->findByPrimary($id);
         if (!$this->team) {
@@ -95,6 +100,9 @@ class ClosePresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function closeFormSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
@@ -135,6 +143,10 @@ class ClosePresenter extends BasePresenter {
         return $this->createComponentCloseCategoryForm('F');
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
@@ -150,6 +162,9 @@ class ClosePresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);

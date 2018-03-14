@@ -38,6 +38,10 @@ class RoomsPresenter extends BasePresenter {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
     public function renderEdit() {
         if ($this->isAjax()) {
             $data = Json::decode($this->getHttpRequest()->getPost('data'));
