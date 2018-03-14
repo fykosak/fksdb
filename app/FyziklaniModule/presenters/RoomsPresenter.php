@@ -2,8 +2,8 @@
 
 namespace FyziklaniModule;
 
-use BrawlLib\Components\RoutingDownload;
-use BrawlLib\Components\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
+use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Utils\Json;
 

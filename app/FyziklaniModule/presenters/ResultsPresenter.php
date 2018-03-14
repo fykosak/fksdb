@@ -46,7 +46,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function createComponentResults() {
-        $control = new Results();
+        $control = new \FKSDB\Components\Controls\Fyziklani\Results();
 // TODO set others parameters (game start/end...)
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use BrawlLib\Components\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
 use Nette\Application\UI\Form;
