@@ -27,6 +27,9 @@ class TaskCodeInput extends ReactComponent {
         return $this->tasks = $tasks;
     }
 
+    /**
+     * @throws \Nette\Utils\JsonException
+     */
     public function render() {
         $this->template->tasks = Json::encode($this->tasks);
         $this->template->teams = Json::encode($this->teams);

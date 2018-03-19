@@ -5,6 +5,9 @@ namespace  FKSDB\Components\Controls\Fyziklani;
 use FKS\Application\IJavaScriptCollector;
 use Nette\Utils\Json;
 
+/**
+ * Class Results
+ */
 class Results extends ReactComponent {
     /**
      * @var array
@@ -44,11 +47,14 @@ class Results extends ReactComponent {
         return $this->rooms = $rooms;
     }
 
+    /**
+     * @throws \Nette\Utils\JsonException
+     */
     public function render() {
         $this->template->teams = Json::encode($this->teams);
         $this->template->tasks = Json::encode($this->tasks);
         $this->template->rooms = Json::encode($this->rooms);
-        $this->template->params = Json::encode($this->otherParams);
+        $this->template->otherParams = Json::encode($this->otherParams);
 
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Results.latte');
         $this->template->render();

@@ -2,7 +2,7 @@
 
 namespace FyziklaniModule;
 
-use BrawlLib\Components\Results;
+use FKSDB\Components\Controls\Fyziklani\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
@@ -51,7 +51,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function createComponentResults() {
-        $control = new \FKSDB\Components\Controls\Fyziklani\Results();
+        $control = new Results();
 // TODO set others parameters (game start/end...)
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));

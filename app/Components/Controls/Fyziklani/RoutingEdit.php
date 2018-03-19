@@ -8,7 +8,6 @@ use Nette\Utils\Json;
 
 /**
  * Class Routing
- * @package BrawlLib\Components
  */
 class RoutingEdit extends ReactComponent {
     /**
@@ -25,6 +24,9 @@ class RoutingEdit extends ReactComponent {
         $this->data = $data;
     }
 
+    /**
+     * @throws \Nette\Utils\JsonException
+     */
     public function render() {
         $this->template->data = Json::encode($this->data);
 

@@ -12,7 +12,6 @@ use Nette\Templating\FileTemplate;
 
 /**
  * Class Routing
- * @package BrawlLib\Components
  * @property FileTemplate $template
  *
  */

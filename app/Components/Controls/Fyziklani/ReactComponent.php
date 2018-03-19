@@ -9,7 +9,6 @@ use Nette\Templating\FileTemplate;
 
 /**
  * Class ReactComponent
- * @package BrawlLib\Components
  * @property FileTemplate template
  */
 abstract class ReactComponent extends Control {
