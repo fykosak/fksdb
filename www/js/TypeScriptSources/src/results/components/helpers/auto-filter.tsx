@@ -3,9 +3,9 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { config } from '../../../config/index';
+import { config } from '../../../config';
 import { setNextFilter } from '../../actions/table-filter';
-import { IStore } from '../../reducers/index';
+import { IStore } from '../../reducers';
 
 interface IState {
     autoSwitch?: boolean;

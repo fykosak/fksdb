@@ -7,8 +7,8 @@ import {
     fetchResults,
     waitForFetch,
 } from '../../helpers/fetch';
-import { lang } from '../../lang/index';
-import { IStore } from '../../reducers/index';
+import { lang } from '../../lang';
+import { IStore } from '../../reducers';
 
 interface IState {
     lastUpdated?: string;

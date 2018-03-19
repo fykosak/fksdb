@@ -12,8 +12,8 @@ import {
     setUserFilter,
 } from '../../../../actions/table-filter';
 
-import { lang } from '../../../../lang/index';
-import { IStore } from '../../../../reducers/index';
+import { lang } from '../../../../lang';
+import { IStore } from '../../../../reducers';
 
 interface IState {
     filters?: Filter[];
