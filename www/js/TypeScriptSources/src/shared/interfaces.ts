@@ -14,10 +14,6 @@ export interface ISubmits {
     [id: number]: ISubmit;
 }
 
-export interface IRoom {
-    name: string;
-    roomId: number;
-}
 export interface IPlace {
     room: string;
     x: number;

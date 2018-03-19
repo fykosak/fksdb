@@ -6,15 +6,15 @@ import {
 
 import AutoSwitchCheck from './auto-switch-check';
 
-import { lang } from '../../../../lang/index';
-import { IStore } from '../../../../reducers/index';
+import { lang } from '../../../../lang';
+import { IStore } from '../../../../reducers';
 import FilterButtons from './filter-buttons';
 
 import {
     changePage,
 } from '../../../../actions/options';
-import Options from './options';
 import IsOrgCheck from './is-org-check';
+import Options from './options';
 
 interface IState {
     onChangePage?: (page: string) => void;
