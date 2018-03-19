@@ -6,7 +6,7 @@ import {
     setAutoSwitch,
 } from '../../../../actions/table-filter';
 
-import { IStore } from '../../../../reducers/index';
+import { IStore } from '../../../../reducers';
 
 interface IState {
     onChangeAutoSwitch?: (status: boolean) => void;
