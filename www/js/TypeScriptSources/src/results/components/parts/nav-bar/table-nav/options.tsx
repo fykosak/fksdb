@@ -12,7 +12,7 @@ import {
 import {
     Filter,
 } from '../../../../helpers/filters/filters';
-import { IStore } from '../../../../reducers/index';
+import { IStore } from '../../../../reducers';
 
 interface IState {
     filters?: Filter[];

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     connect,
 } from 'react-redux';
-import { IStore } from '../../../../reducers/index';
+import { IStore } from '../../../../reducers';
 
 import {
     setHardVisible,

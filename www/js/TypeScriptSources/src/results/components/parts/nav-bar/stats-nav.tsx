@@ -4,8 +4,8 @@ import {
     Dispatch,
 } from 'react-redux';
 import { changeSubPage } from '../../../actions/options';
-import { lang } from '../../../lang/index';
-import { IStore } from '../../../reducers/index';
+import { lang } from '../../../lang';
+import { IStore } from '../../../reducers';
 
 interface IState {
     page?: string;

@@ -8,8 +8,8 @@ import Card from '../../../../shared/components/card';
 import {
     changePage,
 } from '../../../actions/options';
-import { lang } from '../../../lang/index';
-import { IStore } from '../../../reducers/index';
+import { lang } from '../../../lang';
+import { IStore } from '../../../reducers';
 import StatsNav from './stats-nav';
 import TableNav from './table-nav/index';
 
