@@ -116,3 +116,9 @@
 ../fykos31/q/aesop.fol?ha=1&format=aesop&p_category=B
 ../fykos31/q/aesop.fol?ha=1&format=aesop&p_category=C
 ../fykos31/q/aesop.fol?ha=1&format=aesop&p_category=zahranicni
+../fykos31/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
+../fykos31/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
+../fykos31/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
+../fykos31/q/aesop.klani.uc?ha=1&format=aesop
+../fykos31/q/aesop.vaf?ha=1&format=aesop
+../fykos31/q/aesop.sous.j?ha=1&format=aesop
