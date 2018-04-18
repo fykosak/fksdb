@@ -5,9 +5,9 @@
         {if count($MAddress)}
             {foreach $MAddress as $address}
                 {if $address->type == 'P'}
-                    <h3>Permanent addres</h3>
+                    <h3>Permanent address</h3>
                 {else}
-                    <h3>Delivery addres</h3>
+                    <h3>Delivery address</h3>
                 {/if}
                 <div>
                     {if !is_null($address->first_row)}
