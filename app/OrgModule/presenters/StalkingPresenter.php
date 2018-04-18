@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\Stalking\EventParticipant;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
+use FKSDB\Components\Controls\Stalking\Role;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use ModelPerson;
 use Nette\Application\BadRequestException;
@@ -60,6 +61,10 @@ class StalkingPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk-search', $this->getSelectedContest()));
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedView($id) {
         $person = $this->getPerson();
         if (!$person) {
@@ -117,6 +122,11 @@ class StalkingPresenter extends BasePresenter {
 
     public function createComponentPersonHistory() {
         $component = new PersonHistory($this->getPerson());
+        return $component;
+    }
+
+    public function createComponentRole() {
+        $component = new Role($this->getPerson());
         return $component;
     }
 

@@ -2,9 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class PersonHistory extends Control {
+class PersonHistory extends StalkingComponent {
     private $mode;
     /**
      * @var \ModelPerson;

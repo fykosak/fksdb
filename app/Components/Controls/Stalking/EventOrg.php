@@ -2,9 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Nette\Application\UI\Control;
-
-class EventOrg extends Control {
+class EventOrg extends StalkingComponent {
     private $mode;
     /**
      * @var \ModelPerson;
