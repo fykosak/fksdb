@@ -1,3 +1,4 @@
+{layout ../../../templates/@layout.v4.latte}
 {block content}
     {if $hasTasks}
         {control uploadForm}
@@ -19,6 +20,6 @@
 
     <h2>{_'Odevzdaná řešení'}</h2>
 
-    <div id="ajax-submit-form"></div>
+    <div id="ajax-submit-form" data-upload-data="{$uploadData}"></div>
 
 {/block}

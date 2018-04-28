@@ -5,6 +5,12 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property DateTime submitted_on
+ * @property string note
+ * @property integer submit_id
+ * @property string source
+ * @property integer raw_points
+ * @property integer ct_id
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 

@@ -196,3 +196,14 @@ body[data-contest="vyfuk"] h6 {
     -webkit-column-count: 3;
     column-count: 2;
 }
+
+
+
+.box.has-advanced-upload {
+    background-color: white;
+    outline: 2px dashed black;
+    outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+    display: inline;
+}

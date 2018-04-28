@@ -27,7 +27,7 @@ class SubmitsGrid extends BaseGrid {
     private $submitStorage;
 
     /**
-     * @var ModelContestant 
+     * @var ModelContestant
      */
     private $contestant;
 
@@ -39,6 +39,10 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
 
@@ -46,7 +50,7 @@ class SubmitsGrid extends BaseGrid {
         // data
         //
         $submits = $this->submitService->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest? 
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
         $this->setDataSource(new NDataSource($submits));
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -55,7 +59,7 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Úloha'))
-                ->setRenderer(function($row) use($presenter) {
+                ->setRenderer(function(ModelSubmit $row) use($presenter) {
                             $row->task_id; // stupid caching...
                             $task = $row->getTask();
                             $FQname = $task->getFQName();
@@ -98,7 +102,15 @@ class SubmitsGrid extends BaseGrid {
         $this->enableSorting = false;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function handleRevoke($id) {
+        /**
+         * @var $submit ModelSubmit
+         */
         $submit = $this->submitService->findByPrimary($id);
 
         if (!$submit) {
@@ -132,7 +144,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param \FKSDB\Components\Grids\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

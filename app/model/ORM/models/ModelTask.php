@@ -3,12 +3,16 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer task_id
+ * @property integer series
+ * @property string label
+ * @property string name_cs
  */
 class ModelTask extends AbstractModelSingle {
 
     /**
      * (Fully qualified) task name for use in GUI.
-     * 
+     *
      * @return string
      */
     public function getFQName() {

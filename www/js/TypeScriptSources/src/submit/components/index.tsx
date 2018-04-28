@@ -1,48 +1,85 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { netteFetch } from '../../shared/helpers/fetch';
+
+import Card from '../../shared/components/card';
+import UploadedFile from './uploaded-file';
 
 const el = document.getElementById('ajax-submit-form');
 
-const netteJQuery: any = $;
+interface ITask {
+    taskId: number;
+    name: string;
+    deadline: string;
+}
 
-class App extends React.Component<any, {}> {
+interface ISubmit {
+    submitId: number;
+    name: string;
+    href: string;
+}
+
+interface IData {
+    [key: number]: { task: ITask; submit?: ISubmit };
+}
+
+interface IProps {
+    data: IData;
+}
+
+class UploadForm extends React.Component<{ task: ITask; submit?: ISubmit }, {}> {
+    public render() {
+        const onUploadFile = (event) => {
+            event.preventDefault();
+            const data2 = event.dataTransfer.files;
+
+            // if (form && form instanceof HTMLFormElement) {
+            const formData = new FormData();
+            for (const i in data2) {
+                if (data2.hasOwnProperty(i)) {
+                    formData.append('task' + this.props.task.taskId, data2[i]);
+                }
+            }
+            uploadFile(formData);
+            // }
+        };
+        return <div className="drop-input"
+                    onDrop={onUploadFile}
+                    onDragOver={(event) => {
+                        event.preventDefault();
+                    }
+                    }>
+            <div className="text-center">
+                <span className="display-1 d-block"><i className="fa fa-download"/></span>
+                <span className="d-block"> <strong>Choose a file</strong>
+                        <span className="box__dragndrop"> or drag it here</span>.</span>
+            </div>
+        </div>;
+    }
+
+}
+
+class App extends React.Component<IProps, {}> {
 
     public render() {
+
+        console.log(this.props.data);
         const form = document.getElementById('frm-uploadForm');
         if (form && form instanceof HTMLFormElement) {
             const boxes = [];
-            form.querySelectorAll('input[type="file"]').forEach((input: HTMLInputElement, index: number) => {
-                const name = input.getAttribute('name');
-                boxes.push(<div key={index} style={{backgroundColor: '#ccc', height: "200px", width: "100%"}} onDrop={(event) => {
-                    event.preventDefault();
-                    const data2 = event.dataTransfer.files;
-                    console.log(data2);
-                    console.log(event);
+            for (const taskId in this.props.data) {
+                if (this.props.data.hasOwnProperty(taskId)) {
+                    const data = this.props.data[taskId];
+                    boxes.push(<div className="col-6 mb-3" key={taskId}>
+                        <Card headline={data.task.name + ' - ' + data.task.deadline} level={'info'}>
+                            {data.submit ? (
+                                    <UploadedFile name={data.submit.name} href={data.submit.href} submitId={data.submit.submitId}/>) :
+                                <UploadForm {...data}/>}
 
-                    console.log(form);
-                    if (form && form instanceof HTMLFormElement) {
-                        const formData = new FormData(form);
-                        for (const i in data2) {
-                            if (data2.hasOwnProperty(i)) {
-                                formData.append(name, data2[i]);
-                            }
-                        }
-                        uploadFile(formData);
-                    }
-
-                }} onDragOver={(event) => {
-                    event.preventDefault();
+                        </Card>
+                    </div>);
                 }
-                }>
-                    <label htmlFor="file">
-                        <strong>Choose a file</strong>
-                        <span className="box__dragndrop"> or drag it here</span>.
-                    </label>
-                </div>);
-
-            });
-            return <>{boxes}</>;
+            }
+            return <div className="row">{boxes}</div>;
 
         }
         return null;
@@ -78,5 +115,6 @@ const uploadFile = (formData: FormData) => {
 };
 
 if (el) {
-    ReactDOM.render(<App/>, el);
+    const data = JSON.parse(el.getAttribute('data-upload-data'));
+    ReactDOM.render(<App data={data}/>, el);
 }

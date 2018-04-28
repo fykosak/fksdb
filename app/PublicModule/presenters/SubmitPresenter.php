@@ -8,6 +8,7 @@ use ModelException;
 use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
+use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
@@ -55,7 +56,14 @@ class SubmitPresenter extends BasePresenter {
         $this->setTitle(_('Odevzdat řešení'));
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedDownload($id) {
+        /**
+         * @var $submit ModelSubmit
+         */
         $submit = $this->submitService->findByPrimary($id);
 
         if (!$submit) {
@@ -71,6 +79,9 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderDefault() {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
@@ -86,16 +97,58 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $taskId integer
+     * @return \ModelTask
+     *
+     */
+    private function isAvailableSubmit($taskId) {
+        /**
+         * @var $task \ModelTask
+         */
+        foreach ($this->getAvailableTasks() as $task) {
+            if ($task->task_id == $taskId) {
+                return $task;
+            };
+        }
+        return null;
+    }
+
+    /**
+     * @param \Nette\Http\FileUpload $file
+     * @param $contestant \ModelContestant
+     * @param $task \ModelTask
+     * @return \AbstractModelSingle|ModelSubmit
+     */
+    private function saveSubmit(\Nette\Http\FileUpload $file, \ModelTask $task, \ModelContestant $contestant) {
+        $submit = $this->submitService->findByContestant($contestant->ct_id, $task->task_id);
+        if (!$submit) {
+            $submit = $this->submitService->createNew([
+                'task_id' => $task->task_id,
+                'ct_id' => $contestant->ct_id,
+            ]);
+        }
+        //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
+        $submit->submitted_on = new DateTime();
+        $submit->source = ModelSubmit::SOURCE_UPLOAD;
+        $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
+
+        $this->submitService->save($submit);
+
+        // store file
+        $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
+        return $submit;
+
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function renderAjax() {
         if ($this->isAjax()) {
             $this->getHttpResponse()->setContentType('Content-Type: text/html; charset=utf-8');
-            var_dump($this->getHttpRequest());
-            //  var_dump($_FILES['files']);
-            FireLogger::log($this->getFullHttpRequest()->getPayload());
-            FireLogger::log($this->getHttpRequest());
-            FireLogger::log($values = $this->getHttpRequest()->getFiles());
-
-            $ctId = $this->getContestant()->ct_id;
+            $contestant = $this->getContestant();
             $files = $this->getHttpRequest()->getFiles();
 
             foreach ($files as $name => $fileContainer) {
@@ -104,41 +157,87 @@ class SubmitPresenter extends BasePresenter {
                 if (!preg_match('/task([0-9]+)/', $name, $matches)) {
                     continue;
                 }
-                FireLogger::log($matches);
-                $taskId = $matches[1];
+
+                $task = $this->isAvailableSubmit($matches[1]);
+                if (!$task) {
+                    $this->getHttpResponse()->setCode('403');
+                    $this->sendResponse(new JsonResponse(['error' => 'upload not allowed']));
+                };
+
                 FireLogger::log($fileContainer);
                 /**
                  * @var $file \Nette\Http\FileUpload
                  */
-                $file = $fileContainer['file'];
-                FireLogger::log($file->isOk());
-                // store submit
-                $submit = $this->submitService->findByContestant($ctId, $taskId);
-                if (!$submit) {
-                    $submit = $this->submitService->createNew([
-                        'task_id' => $taskId,
-                        'ct_id' => $ctId,
-                    ]);
+
+                // $file = $fileContainer['file'];
+
+                $file = $fileContainer;
+                if (!$file->isOk()) {
+                    $this->getHttpResponse()->setCode('500');
+                    $this->sendResponse(new JsonResponse(['error' => 'file is not Ok']));
+                    return;
                 }
-                //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
-                $submit->submitted_on = new DateTime();
-                $submit->source = ModelSubmit::SOURCE_UPLOAD;
-                $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
 
-                $this->submitService->save($submit);
+                // store submit
+                $submit = $this->saveSubmit($file, $task, $contestant);
 
-                // store file
-                $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
                 $this->submitStorage->commit();
                 $this->submitService->getConnection()->commit();
-
+                $this->sendResponse(new JsonResponse(
+                    [
+                        'msg' => 'success',
+                        'data' => [
+                            $task->task_id => [
+                                'task' => $this->serializeTask($task),
+                                'submit' => $this->serializeSubmit($submit),
+                            ],
+                        ],
+                    ]));
             }
             die();
         }
-        return $this->renderDefault();
+        $this->renderDefault();
+
+        $data = [];
+        /**
+         * @var $task \ModelTask
+         */
+        foreach ($this->getAvailableTasks() as $task) {
+            $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
+
+            $data[$task->task_id] = [
+                'task' => $this->serializeTask($task),
+                'submit' => ($submit && $this->submitStorage->existsFile($submit)) ? $this->serializeSubmit($submit) : null,
+            ];
+        };
+        $this->template->uploadData = json_encode($data);
     }
 
+    private function serializeTask(\ModelTask $task) {
+        return [
+            'taskId' => $task->task_id,
+            'name' => $task->getFQName(),
+            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
+        ];
+    }
+
+    private function serializeSubmit(ModelSubmit $submit) {
+        return [
+            'submitId' => $submit->submit_id,
+            'name' => $submit->getTask()->getFQName(),
+            'href' => $this->link('download', ['id' => $submit->submit_id]),
+        ];
+    }
+
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDownload($id) {
+        /**
+         * @var $submit ModelSubmit
+         */
         $submit = $this->submitService->findByPrimary($id);
 
         $filename = $this->submitStorage->retrieveFile($submit);
@@ -213,10 +312,10 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @internal
-     * @param Form $form
+     * @param $form Form
+     * @throws \Nette\Application\AbortException
      */
-    public function handleUploadFormSuccess($form) {
+    public function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
 
         $ctId = $this->getContestant()->ct_id;
