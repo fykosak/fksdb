@@ -11,6 +11,7 @@ use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\FireLogger;
 use ServiceSubmit;
 use ServiceTask;
 use Submits\ISubmitStorage;
@@ -18,7 +19,7 @@ use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
@@ -85,6 +86,58 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    public function renderAjax() {
+        if ($this->isAjax()) {
+            $this->getHttpResponse()->setContentType('Content-Type: text/html; charset=utf-8');
+            var_dump($this->getHttpRequest());
+            //  var_dump($_FILES['files']);
+            FireLogger::log($this->getFullHttpRequest()->getPayload());
+            FireLogger::log($this->getHttpRequest());
+            FireLogger::log($values = $this->getHttpRequest()->getFiles());
+
+            $ctId = $this->getContestant()->ct_id;
+            $files = $this->getHttpRequest()->getFiles();
+
+            foreach ($files as $name => $fileContainer) {
+                $this->submitService->getConnection()->beginTransaction();
+                $this->submitStorage->beginTransaction();
+                if (!preg_match('/task([0-9]+)/', $name, $matches)) {
+                    continue;
+                }
+                FireLogger::log($matches);
+                $taskId = $matches[1];
+                FireLogger::log($fileContainer);
+                /**
+                 * @var $file \Nette\Http\FileUpload
+                 */
+                $file = $fileContainer['file'];
+                FireLogger::log($file->isOk());
+                // store submit
+                $submit = $this->submitService->findByContestant($ctId, $taskId);
+                if (!$submit) {
+                    $submit = $this->submitService->createNew([
+                        'task_id' => $taskId,
+                        'ct_id' => $ctId,
+                    ]);
+                }
+                //TODO handle cases when user modifies already graded submit (i.e. with bad timings)
+                $submit->submitted_on = new DateTime();
+                $submit->source = ModelSubmit::SOURCE_UPLOAD;
+                $submit->ct_id; // stupid... touch the field in order to have it loaded via ActiveRow
+
+                $this->submitService->save($submit);
+
+                // store file
+                $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
+                $this->submitStorage->commit();
+                $this->submitService->getConnection()->commit();
+
+            }
+            die();
+        }
+        return $this->renderDefault();
+    }
+
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -122,8 +175,8 @@ class SubmitPresenter extends BasePresenter {
             $container = $form->addContainer('task' . $task->task_id);
             $upload = $container->addUpload('file', $task->getFQName());
             $conditionedUpload = $upload
-                    ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
             if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                 $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
@@ -161,7 +214,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @internal
-     * @param type $form
+     * @param Form $form
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();
