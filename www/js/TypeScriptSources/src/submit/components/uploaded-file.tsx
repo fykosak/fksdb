@@ -13,12 +13,14 @@ export default class UploadedFile extends React.Component<IProps, {}> {
             <span aria-hidden="true" className="pull-right" onClick={() => {
                 console.log('delete');
             }}>&times;</span>
-            <a href={this.props.href}>
-                <div className="text-center">
-                    <span className="display-1 d-block"><i className="fa fa-file-pdf-o"/></span>
+
+            <div className="text-center">
+                <a href={this.props.href}>
+                    <span className="display-1 w-100"><i className="fa fa-file-pdf-o"/></span>
                     <span className="d-block">{this.props.name}</span>
-                </div>
-            </a>
+                </a>
+            </div>
+
         </div>;
     }
 }

@@ -76,6 +76,7 @@ body[data-contest="vyfuk"] h5,
 body[data-contest="vyfuk"] h6 {
     font-family: 'Gloria Hallelujah', cursive;
 }
+
 .task-code-container input.valid {
     color: #3c763d;
 }
@@ -197,13 +198,46 @@ body[data-contest="vyfuk"] h6 {
     column-count: 2;
 }
 
-
-
 .box.has-advanced-upload {
     background-color: white;
     outline: 2px dashed black;
     outline-offset: -10px;
 }
+
 .box.has-advanced-upload .box__dragndrop {
     display: inline;
+}
+
+.drop-input {
+    background-color: #0cbadf;
+    padding: .5rem;
+}
+
+.drop-input.dragged {
+    background-color: white;
+
+}
+
+@keyframes upload {
+    0% {
+        opacity: .5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: .5;
+    }
+}
+
+.drop-input.dragged .text-center {
+    animation: upload .5s infinite;
+}
+
+.drop-input .drop-input-inner {
+    border: #0b4a8a dashed;
+}
+
+.drop-input.dragged .drop-input-inner {
+    border-color: gray;
 }

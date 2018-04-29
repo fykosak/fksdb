@@ -144,6 +144,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function renderAjax() {
         if ($this->isAjax()) {
@@ -187,10 +188,7 @@ class SubmitPresenter extends BasePresenter {
                     [
                         'msg' => 'success',
                         'data' => [
-                            $task->task_id => [
-                                'task' => $this->serializeTask($task),
-                                'submit' => $this->serializeSubmit($submit),
-                            ],
+                            $task->task_id => $this->serializeData($submit, $task),
                         ],
                     ]));
             }
@@ -205,27 +203,24 @@ class SubmitPresenter extends BasePresenter {
         foreach ($this->getAvailableTasks() as $task) {
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
 
-            $data[$task->task_id] = [
-                'task' => $this->serializeTask($task),
-                'submit' => ($submit && $this->submitStorage->existsFile($submit)) ? $this->serializeSubmit($submit) : null,
-            ];
+            $data[$task->task_id] = $this->serializeData($submit, $task);
         };
         $this->template->uploadData = json_encode($data);
     }
 
-    private function serializeTask(\ModelTask $task) {
+    /**
+     * @param ModelSubmit $submit
+     * @param \ModelTask $task
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    private function serializeData($submit, \ModelTask $task) {
         return [
-            'taskId' => $task->task_id,
+            'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
+            'href' => $submit ? $this->link('download', ['id' => $submit->submit_id]) : null,
+            'taskId' => $task->task_id,
             'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
-        ];
-    }
-
-    private function serializeSubmit(ModelSubmit $submit) {
-        return [
-            'submitId' => $submit->submit_id,
-            'name' => $submit->getTask()->getFQName(),
-            'href' => $this->link('download', ['id' => $submit->submit_id]),
         ];
     }
 
