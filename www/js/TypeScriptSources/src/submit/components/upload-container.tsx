@@ -1,42 +1,45 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Card from '../../shared/components/card';
-import {
-    IUploadData,
-    IUploadDataItem,
-} from '../../shared/interfaces';
+
+import { IStore } from '../reducers';
 import UploadForm from './upload-form';
 import UploadedFile from './uploaded-file';
 
 interface IState {
-    data?: IUploadData;
+    deadline?: string;
+    href?: string;
+    name?: string;
+    submitId?: number;
+    taskId?: number;
+    submitting?: boolean;
 }
 
 class UploadContainer extends React.Component<IState, {}> {
 
     public render() {
-        const boxes = [];
-        for (const taskId in this.props.data) {
-            if (this.props.data.hasOwnProperty(taskId)) {
-                const data: IUploadDataItem = this.props.data[taskId];
-                boxes.push(<div className="col-6 mb-3" key={taskId}>
-                    <Card headline={data.name + ' - ' + data.deadline} level={'info'}>
-                        {data.submitId ? (
-                                <UploadedFile name={data.name} href={data.href} submitId={data.submitId}/>) :
-                            <UploadForm data={data}/>}
 
-                    </Card>
-                </div>);
-            }
-        }
-        return <div className="row">{boxes}</div>;
+        const {deadline, href, name, submitId, taskId, submitting} = this.props;
+        return <div className="col-6 mb-3">
+            <Card headline={name + ' - ' + deadline} level={'info'}>
+                {submitting ? <div>loading</div> :
+                    (submitId ? (
+                            <UploadedFile name={name} href={href} submitId={submitId}/>) :
+                        <UploadForm data={{deadline, href, name, submitId, taskId}}/>)}
 
+            </Card>
+        </div>;
     }
 }
 
-const mapStateToProps = (state): IState => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        data: {...state.uploadData},
+        deadline: state.uploadData.deadline,
+        href: state.uploadData.href,
+        name: state.uploadData.name,
+        submitId: state.uploadData.submitId,
+        submitting: state.submit.submitting,
+        taskId: state.uploadData.taskId,
     };
 };
 const mapDispatchToProps = (): IState => {

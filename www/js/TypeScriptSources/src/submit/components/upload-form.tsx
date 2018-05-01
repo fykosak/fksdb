@@ -3,6 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IUploadDataItem } from '../../shared/interfaces';
 import { newDataArrived } from '../actions/upload-data';
+import {
+    submitFail,
+    submitStart,
+    submitSuccess,
+} from '../../shared/actions/submit';
 
 interface IProps {
     data: IUploadDataItem;
@@ -11,6 +16,9 @@ interface IProps {
 interface IState {
     onNewDataArrived?: (data: IUploadDataItem) => void;
     isSubmitting?: boolean;
+    onSubmitFail?: (error) => void;
+    onSubmitStart?: () => void;
+    onSubmitSuccess?: (data) => void;
 }
 
 class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> {
@@ -41,10 +49,14 @@ class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> 
                     formData.append('task' + this.props.data.taskId, data2[i]);
                 }
             }
+            formData.set('act', 'upload');
+            const {onSubmitSuccess, onNewDataArrived, onSubmitFail, onSubmitStart} = this.props;
+            onSubmitStart();
             uploadFile(formData, (data) => {
-                this.props.onNewDataArrived(data.data);
+                onSubmitSuccess(data);
+                onNewDataArrived(data.data);
             }, (e) => {
-                throw e;
+                onSubmitFail(e);
             });
             // }
         };
@@ -76,6 +88,9 @@ const mapStateToProps = (state): IState => {
 const mapDispatchToProps = (dispatch): IState => {
     return {
         onNewDataArrived: (data: IUploadDataItem) => dispatch(newDataArrived(data)),
+        onSubmitFail: (error) => dispatch(submitFail(error)),
+        onSubmitStart: () => dispatch(submitStart()),
+        onSubmitSuccess: (data) => dispatch(submitSuccess(data)),
     };
 };
 
@@ -94,15 +109,12 @@ const uploadFile = (formData: FormData, success, error) => {
             error: (e) => {
                 reject(e);
                 error(e);
-                // Log the error, show an alert, whatever works for you
             },
             processData: false,
             success: (data) => {
                 resolve(data);
                 console.log(data);
                 success(data);
-                //  $form.addClass( data.success == true ? 'is-success' : 'is-error' );
-                // if (!data.success) $errorMsg.text(data.error);
             },
             type: 'POST',
             url: '#',

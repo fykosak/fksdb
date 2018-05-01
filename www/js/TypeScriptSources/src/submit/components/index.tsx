@@ -1,16 +1,11 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import UploadItem from './upload-item';
 
-import { Provider } from 'react-redux';
 import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
-import { config } from '../../config';
-import { IUploadData } from '../../shared/interfaces';
-import { app } from '../reducers';
-import App from './app';
+    IUploadData,
+    IUploadDataItem,
+} from '../../shared/interfaces';
 
 const el = document.getElementById('ajax-submit-form');
 
@@ -21,9 +16,14 @@ interface IProps {
 class Index extends React.Component<IProps, {}> {
 
     public render() {
-        // const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        const store = createStore(app, applyMiddleware(logger));
-        return <Provider store={store}><App data={this.props.data}/></Provider>;
+        const boxes = [];
+        for (const taskId in this.props.data) {
+            if (this.props.data.hasOwnProperty(taskId)) {
+                const data: IUploadDataItem = this.props.data[taskId];
+                boxes.push(<UploadItem key={taskId} data={data}/>);
+            }
+        }
+        return <div className="row">{boxes}</div>;
     }
 }
 

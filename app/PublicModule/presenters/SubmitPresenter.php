@@ -187,9 +187,8 @@ class SubmitPresenter extends BasePresenter {
                 $this->sendResponse(new JsonResponse(
                     [
                         'msg' => 'success',
-                        'data' => [
-                            $task->task_id => $this->serializeData($submit, $task),
-                        ],
+                        'do' => 'upload',
+                        'data' => $this->serializeData($submit, $task),
                     ]));
             }
             die();

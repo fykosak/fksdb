@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { IUploadData } from '../../shared/interfaces';
-import { addUploadSubmits } from '../actions/upload-data';
+import { IUploadDataItem } from '../../shared/interfaces';
+import { newDataArrived } from '../actions/upload-data';
 import UploadContainer from './upload-container';
 
 interface IProps {
-    data: IUploadData;
+    data: IUploadDataItem;
 }
 
 interface IState {
-    onAddSubmits?: (data: IUploadData) => void;
+    onAddSubmits?: (data: IUploadDataItem) => void;
 }
 
 class App extends React.Component<IProps & IState, {}> {
@@ -30,7 +30,7 @@ const mapStateToProps = (): IState => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<any>): IState => {
     return {
-        onAddSubmits: (data: IUploadData) => dispatch(addUploadSubmits(data)),
+        onAddSubmits: (data: IUploadDataItem) => dispatch(newDataArrived(data)),
     };
 };
 

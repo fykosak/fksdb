@@ -1,22 +1,26 @@
 import {
-    ADD_UPLOAD_SUBMITS,
     NEW_DATA_ARRIVED,
 } from '../actions/upload-data';
 
-const addUploadSubmits = (state, action) => {
-    return {...action.data};
-};
+export interface IState {
+    submitting: false;
+    deadline?: string;
+    href?: string;
+    name?: string;
+    submitId?: number;
+    taskId?: number;
+}
 
-const newDataArrived = (state, action) => {
+const newDataArrived = (state: IState, action): IState => {
     return {
         ...state,
         ...action.data,
     };
 };
-export const uploadData = (state = {}, action) => {
+const defaultState: IState = {submitting: false};
+
+export const uploadData = (state: IState = defaultState, action): IState => {
     switch (action.type) {
-        case ADD_UPLOAD_SUBMITS:
-            return addUploadSubmits(state, action);
         case NEW_DATA_ARRIVED:
             return newDataArrived(state, action);
         default:
