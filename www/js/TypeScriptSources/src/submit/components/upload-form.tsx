@@ -8,6 +8,15 @@ import {
     submitStart,
     submitSuccess,
 } from '../../shared/actions/submit';
+import {
+    dragEnd,
+    dragStart,
+} from '../../shared/actions/dragndrop';
+import { IStore } from '../reducers';
+import {
+    handleFileUpload,
+    uploadFile,
+} from '../middleware/upload';
 
 interface IProps {
     data: IUploadDataItem;
@@ -19,6 +28,9 @@ interface IState {
     onSubmitFail?: (error) => void;
     onSubmitStart?: () => void;
     onSubmitSuccess?: (data) => void;
+    onDragStart?: () => void;
+    onDragEnd?: () => void;
+    dragged?: boolean;
 }
 
 class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> {
@@ -29,44 +41,37 @@ class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> 
     }
 
     public render() {
-        const dragEnd = (event) => {
+        const handleDragEnd = (event) => {
             event.preventDefault();
-            this.setState({dragged: false});
+            this.props.onDragEnd();
         };
-        const dragStart = (event) => {
+        const handleDragStart = (event) => {
             event.preventDefault();
-            this.setState({dragged: true});
+            this.props.onDragStart();
         };
         const onUploadFile = (event) => {
-            dragEnd(event);
+            handleDragEnd(event);
 
-            const data2 = event.dataTransfer.files;
-
-            // if (form && form instanceof HTMLFormElement) {
-            const formData = new FormData();
-            for (const i in data2) {
-                if (data2.hasOwnProperty(i)) {
-                    formData.append('task' + this.props.data.taskId, data2[i]);
-                }
-            }
-            formData.set('act', 'upload');
+            const data: FileList = event.dataTransfer.files;
             const {onSubmitSuccess, onNewDataArrived, onSubmitFail, onSubmitStart} = this.props;
+
             onSubmitStart();
-            uploadFile(formData, (data) => {
-                onSubmitSuccess(data);
-                onNewDataArrived(data.data);
-            }, (e) => {
-                onSubmitFail(e);
-            });
-            // }
+            handleFileUpload(data, (formData) => {
+                return uploadFile(formData,
+                    (d) => {
+                        onSubmitSuccess(d);
+                        onNewDataArrived(d.data);
+                    },
+                    onSubmitFail);
+            }, this.props.data.taskId);
         };
 
         return <div className={'drop-input' + (this.state.dragged ? ' dragged' : '')}
                     onDrop={onUploadFile}
-                    onDragOver={dragStart}
-                    onDragEnter={dragStart}
-                    onDragLeave={dragEnd}
-                    onDragEnd={dragEnd}
+                    onDragOver={handleDragStart}
+                    onDragEnter={handleDragStart}
+                    onDragLeave={handleDragEnd}
+                    onDragEnd={handleDragEnd}
         >
             <div className="drop-input-inner">
                 <div className="text-center">
@@ -80,13 +85,15 @@ class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> 
 
 }
 
-const mapStateToProps = (state): IState => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-        // isSubmitting: state.submit.isSubmitting,
+        dragged: state.dragNDrop.dragged,
     };
 };
 const mapDispatchToProps = (dispatch): IState => {
     return {
+        onDragEnd: () => dispatch(dragEnd()),
+        onDragStart: () => dispatch(dragStart()),
         onNewDataArrived: (data: IUploadDataItem) => dispatch(newDataArrived(data)),
         onSubmitFail: (error) => dispatch(submitFail(error)),
         onSubmitStart: () => dispatch(submitStart()),
@@ -95,29 +102,3 @@ const mapDispatchToProps = (dispatch): IState => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadForm);
-
-const uploadFile = (formData: FormData, success, error) => {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            cache: false,
-            complete: () => {
-                //    $form.removeClass('is-uploading');
-            },
-            contentType: false,
-            data: formData,
-            dataType: 'json',
-            error: (e) => {
-                reject(e);
-                error(e);
-            },
-            processData: false,
-            success: (data) => {
-                resolve(data);
-                console.log(data);
-                success(data);
-            },
-            type: 'POST',
-            url: '#',
-        });
-    });
-};
