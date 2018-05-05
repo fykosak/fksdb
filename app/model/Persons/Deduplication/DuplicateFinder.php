@@ -17,7 +17,7 @@ class DuplicateFinder {
 
     const IDX_PERSON = 'person';
     const IDX_SCORE = 'score';
-    const DIFFERENT_PATTERN = '/not[-_]same\(([0-9]+)\)/i';
+    const DIFFERENT_PATTERN = 'not-same';
 
     /**
      * @var ServicePerson
@@ -114,12 +114,16 @@ class DuplicateFinder {
     }
 
     private function getDifferentPersons(ActiveRow $personInfo = null) {
-        if ($personInfo === null || !isset($personInfo->note)) {
+        if ($personInfo === null || !isset($personInfo->duplicates)) {
             return array();
         }
-        $matches = array();
-        preg_match_all(self::DIFFERENT_PATTERN, $personInfo->note, $matches);
-        return $matches[1];
+        $differentPersonIds = [];
+        foreach (explode(',', $personInfo->duplicates) as $row) {
+            if (strtok($row, '(') === self::DIFFERENT_PATTERN) {
+                $differentPersonIds[] = strtok(')');
+            }
+        }
+        return $differentPersonIds;
     }
 
     private function stringScore($a, $b) {
