@@ -88,6 +88,21 @@ class PersonsGrid extends BaseGrid {
                     'mergedId' => $row->person_id,
                 ));
             });
+        $this->addButton("dontMerge", _('Nejde o duplicitu'))
+            ->setText(_('Nejde o duplicitu'))
+            ->setClass("btn btn-xs btn-primary")
+            ->setLink(function ($row) use ($presenter, $pairs) {
+                return $presenter->link("Person:dontMerge", array(
+                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $row->person_id,
+                ));
+            })
+            ->setShow(function ($row) use ($presenter, $pairs) {
+                return $presenter->authorized("Person:dontMerge", array(
+                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $row->person_id,
+                ));
+            });
     }
 
     private function renderPerson(ModelPerson $person) {
