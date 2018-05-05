@@ -8,8 +8,8 @@ class DispatchPresenter extends AuthenticatedPresenter {
         /**
          * @var $login ModelLogin
          */
-        $login = $this->getPresenter()->getUser()->getIdentity();
-        $query = $this->serviceContest->where('1=1');
+        $login = $this->getUser()->getIdentity();
+        $query = $this->serviceContest->getTable();
         $result = [];
         foreach ($query as $row) {
 
@@ -21,7 +21,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
             $symbol = $contest->getContestSymbol();
             $allowed = [];
             foreach ([ModelRole::ORG, ModelRole::CONTESTANT] as $role) {
-                $allowed[$role] = $this->check($login, $contest, $role);;
+                $allowed[$role] = $this->check($login, $contest, $role);
             }
             $result[$symbol] = ['allowed' => $allowed, 'contest' => $contest];
         }
@@ -31,7 +31,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {
             case ModelRole::ORG:
-                foreach ($login->getActiveOrgsContests($this->yearCalculator) as $contestId => $org) {
+                foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
                     if ($contest->contest_id == $contestId) {
                         return true;
                     }
@@ -67,7 +67,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function getTitle() {
-        return _('Razcestník');
+        return _('Rozcestník');
     }
 
     public function getNavBarVariant() {
