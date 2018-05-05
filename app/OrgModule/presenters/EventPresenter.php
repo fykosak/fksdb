@@ -31,6 +31,7 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceEvent;
 use ServiceEventOrg;
+use ServiceAuthToken;
 use SystemContainer;
 use Utils;
 
@@ -95,10 +96,18 @@ class EventPresenter extends EntityPresenter {
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
+    /**
+     * @var ServiceAuthToken $serviceAuthToken
+     */
+    private $serviceAuthToken;
 
 
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+    }
+    
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
     }
 
 
@@ -348,6 +357,13 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->serviceEvent->save($model);
+            
+            // update also 'until' of authTokens in case that registration end has changed
+            $tokenData = ["until" => $model->registration_end ? : $model->end];
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
+                $this->serviceAuthToken->updateModel($token, $tokenData);
+                $this->serviceAuthToken->save($token);
+            }
 
             /*
              * Finalize
