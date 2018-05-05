@@ -6,28 +6,28 @@ import {
     dragStart,
     dropItem,
 } from '../../../../shared/actions/dragndrop';
+import { addError } from '../../../../shared/actions/error-logger';
 import {
     submitFail,
     submitStart,
     submitSuccess,
 } from '../../../../shared/actions/submit';
+import { uploadFile } from '../../../../shared/helpers/fetch';
 import {
     IReciveData,
     IUploadDataItem,
 } from '../../../../shared/interfaces';
-import { newDataArrived } from '../../../actions/upload-data';
 import {
     handleFileUpload,
 } from '../../../middleware/upload';
-import { IStore } from '../../../reducers/index';
-import { uploadFile } from '../../../../shared/helpers/fetch';
+import { IStore } from '../../../reducers';
 
 interface IProps {
     data: IUploadDataItem;
 }
 
 interface IState {
-    onDropItem?: (item: any) => void,
+    onDropItem?: (item: any) => void;
     isSubmitting?: boolean;
     onSubmitFail?: (error) => void;
     onSubmitStart?: () => void;
@@ -35,33 +35,32 @@ interface IState {
     onDragStart?: () => void;
     onDragEnd?: () => void;
     dragged?: boolean;
+    onAddError?: (error) => void;
 }
 
 class Form extends React.Component<IProps & IState, {}> {
 
     public render() {
+        const {onDropItem, onSubmitSuccess, onDragEnd, onDragStart, onSubmitFail, onSubmitStart, onAddError} = this.props;
         const handleDragEnd = (event) => {
             event.preventDefault();
-            this.props.onDragEnd();
+            onDragEnd();
         };
         const handleDragStart = (event) => {
             event.preventDefault();
-            this.props.onDragStart();
+            onDragStart();
         };
+
         const onUploadFile = (event) => {
-            handleDragEnd(event);
-
+            event.preventDefault();
             const data: FileList = event.dataTransfer.files;
-            const {onSubmitSuccess, onSubmitFail, onSubmitStart} = this.props;
+            onDropItem(data);
 
-            onSubmitStart();
-            handleFileUpload(data, (formData) => {
-                return uploadFile<FormData, IReciveData<any>>(formData,
-                    (d) => {
-                        onSubmitSuccess(d);
-                    },
-                    onSubmitFail);
-            }, this.props.data.taskId);
+            const formData = handleFileUpload(data, this.props.data.taskId, onAddError);
+            if (formData) {
+                onSubmitStart();
+                return uploadFile<FormData, IReciveData<any>>(formData, onSubmitSuccess, onSubmitFail);
+            }
         };
         const {dragged} = this.props;
 
@@ -75,8 +74,8 @@ class Form extends React.Component<IProps & IState, {}> {
             <div className="drop-input-inner">
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fa fa-download"/></span>
-                    <span className="d-block"> <strong>Choose a file</strong>
-                        <span> or drag it here</span>.</span>
+                    <span className="d-block">
+                        <span>Drag file here</span>.</span>
                 </div>
             </div>
         </div>;
@@ -91,6 +90,7 @@ const mapStateToProps = (state: IStore): IState => {
 };
 const mapDispatchToProps = (dispatch): IState => {
     return {
+        onAddError: (error) => dispatch(addError(error)),
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),

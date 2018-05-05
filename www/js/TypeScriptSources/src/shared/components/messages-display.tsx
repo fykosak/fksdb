@@ -4,6 +4,9 @@ import {
     IMessage,
 } from '../interfaces';
 
+import { IState as IErrorLoggerState } from '../reducers/error-logger';
+import { IState as ISubmitState } from '../reducers/submit';
+
 interface IState {
     messages?: IMessage[];
 }
@@ -18,12 +21,13 @@ class MessagesDisplay extends React.Component<IState, {}> {
 }
 
 interface ISubmitStore {
-    submit: IState;
+    submit: ISubmitState;
+    errorLogger: IErrorLoggerState;
 }
 
 const mapStateToProps = (state: ISubmitStore & any): IState => {
     return {
-        messages: state.submit.messages,
+        messages: [...state.submit.messages, ...state.errorLogger.errors],
     };
 };
 const mapDispatchToProps = (): IState => {

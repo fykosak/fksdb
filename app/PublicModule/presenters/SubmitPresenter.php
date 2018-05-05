@@ -17,6 +17,7 @@ use ServiceSubmit;
 use ServiceTask;
 use Submits\ISubmitStorage;
 use Submits\ProcessingException;
+use Submits\StorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -142,55 +143,141 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    private function handleAjaxUpload(\ReactResponse $response) {
+        $contestant = $this->getContestant();
+        $files = $this->getHttpRequest()->getFiles();
+
+        foreach ($files as $name => $fileContainer) {
+
+
+            $this->submitService->getConnection()->beginTransaction();
+            $this->submitStorage->beginTransaction();
+            if (!preg_match('/task([0-9]+)/', $name, $matches)) {
+                $response->addMessage(new \ReactMessage('task not found', 'warning'));
+                continue;
+            }
+
+            $task = $this->isAvailableSubmit($matches[1]);
+            if (!$task) {
+                $this->getHttpResponse()->setCode('403');
+                $response->addMessage(new \ReactMessage('upload not allowed', 'danger'));
+                $this->sendResponse($response);
+            };
+
+            /**
+             * @var $file \Nette\Http\FileUpload
+             */
+            $file = $fileContainer;
+            if (!$file->isOk()) {
+                $this->getHttpResponse()->setCode('500');
+                $response->addMessage(new \ReactMessage('file is not Ok', 'danger'));
+                $this->sendResponse($response);
+                return;
+            }
+
+            // store submit
+            $submit = $this->saveSubmit($file, $task, $contestant);
+
+            $this->submitStorage->commit();
+            $this->submitService->getConnection()->commit();
+
+            $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
+            $response->setAct('upload');
+            $response->setData($this->serializeData($submit, $task));
+            $this->sendResponse($response);
+        }
+        die();
+    }
+
+    /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    public function handleAjaxRevoke(\ReactResponse $response) {
+
+        $submitId = $this->getHttpRequest()->getPost('submitId');
+        /**
+         * @var $submit ModelSubmit
+         */
+        $submit = $this->submitService->findByPrimary($submitId);
+
+        if (!$submit) {
+            $response->addMessage(new \ReactMessage(_('Neexistující submit.'), 'danger'));
+            $this->sendResponse($response);
+        }
+
+        $contest = $submit->getContestant()->getContest();
+        if (!$this->getContestAuthorizator()->isAllowed($submit, 'revoke', $contest)) {
+            $response->addMessage(new \ReactMessage(_('Nedostatečné oprávnění.'), 'danger'));
+            $this->sendResponse($response);
+        }
+
+        if (!$this->canRevokeSubmit($submit)) {
+            $response->addMessage(new \ReactMessage(_('Nelze zrušit submit.'), 'danger'));
+            $this->sendResponse($response);
+        }
+
+        try {
+            $this->submitStorage->deleteFile($submit);
+            $this->submitService->dispose($submit);
+            $data = $this->serializeData(null, $submit->getTask());
+            $response->setData($data);
+            $response->addMessage(new \ReactMessage(sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), 'danger'));
+
+            $this->sendResponse($response);
+
+        } catch (StorageException $e) {
+            $response->addMessage(new \ReactMessage(_('Během mazání úlohy %s došlo k chybě.'), 'danger'));
+            $this->sendResponse($response);
+            Debugger::log($e);
+        } catch (ModelException $e) {
+            $response->addMessage(new \ReactMessage(_('Během mazání úlohy %s došlo k chybě.'), 'danger'));
+            $this->sendResponse($response);
+            Debugger::log($e);
+        }
+        die();
+    }
+
+    /**
+     * @internal
+     * @param ModelSubmit $submit
+     * @return boolean
+     */
+    public function canRevokeSubmit(ModelSubmit $submit) {
+        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
+            return false;
+        }
+
+        $now = time();
+        $start = $submit->getTask()->submit_start ? $submit->getTask()->submit_start->getTimestamp() : 0;
+        $deadline = $submit->getTask()->submit_deadline ? $submit->getTask()->submit_deadline->getTimestamp() : ($now + 1);
+
+        return ($now <= $deadline) && ($now >= $start);
+    }
+
+    /**
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function renderAjax() {
         if ($this->isAjax()) {
+            $response = new \ReactResponse();
 
-
-            $contestant = $this->getContestant();
-            $files = $this->getHttpRequest()->getFiles();
-
-            foreach ($files as $name => $fileContainer) {
-                $response = new \ReactResponse();
-
-                $this->submitService->getConnection()->beginTransaction();
-                $this->submitStorage->beginTransaction();
-                if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                    $response->addMessage(new \ReactMessage('task not found', 'warning'));
-                    continue;
-                }
-
-                $task = $this->isAvailableSubmit($matches[1]);
-                if (!$task) {
-                    $this->getHttpResponse()->setCode('403');
-                    $response->addMessage(new \ReactMessage('upload not allowed', 'danger'));
-                    $this->sendResponse($response);
-                };
-
-                /**
-                 * @var $file \Nette\Http\FileUpload
-                 */
-                $file = $fileContainer;
-                if (!$file->isOk()) {
-                    $this->getHttpResponse()->setCode('500');
-                    $response->addMessage(new \ReactMessage('file is not Ok', 'danger'));
-                    $this->sendResponse($response);
-                    return;
-                }
-
-                // store submit
-                $submit = $this->saveSubmit($file, $task, $contestant);
-
-                $this->submitStorage->commit();
-                $this->submitService->getConnection()->commit();
-
-                $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
-                $response->setAct('upload');
-                $response->setData($this->serializeData($submit, $task));
-                $this->sendResponse($response);
+            FireLogger::log($this->getHttpRequest());
+            FireLogger::log($this->getHttpRequest()->getFiles());
+            switch ($this->getHttpRequest()->getPost('act')) {
+                case 'upload':
+                    $this->handleAjaxUpload($response);
+                    break;
+                case 'revoke':
+                    $this->handleAjaxRevoke($response);
+                    break;
             }
             die();
         }

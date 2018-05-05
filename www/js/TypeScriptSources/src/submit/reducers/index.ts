@@ -13,8 +13,14 @@ import {
     submit,
 } from '../../shared/reducers/submit';
 
+import {
+    errorLogger,
+    IState as IErrorLoggerState,
+} from '../../shared/reducers/error-logger';
+
 export const app = combineReducers({
     dragNDrop,
+    errorLogger,
     submit,
     uploadData,
 });
@@ -23,4 +29,5 @@ export interface IStore {
     uploadData: IUploadDataStore;
     submit: ISubmitState;
     dragNDrop: IDragNDropState;
+    errorLogger: IErrorLoggerState;
 }
