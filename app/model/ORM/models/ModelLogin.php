@@ -43,7 +43,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg indexed by contest_id (i.e. impersonal orgs)
+     * @return array of ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {
@@ -60,7 +60,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     public function isOrg($yearCalculator) {
-        return count($this->getActiveOrgsContests($yearCalculator)) > 0;
+        return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
     public function isContestant($yearCalculator) {
