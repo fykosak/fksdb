@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import UploadItem from './upload-item';
+import ItemIndex from './upload-item/index';
 
 import {
     IUploadData,
@@ -20,7 +20,7 @@ class Index extends React.Component<IProps, {}> {
         for (const taskId in this.props.data) {
             if (this.props.data.hasOwnProperty(taskId)) {
                 const data: IUploadDataItem = this.props.data[taskId];
-                boxes.push(<UploadItem key={taskId} data={data}/>);
+                boxes.push(<ItemIndex key={taskId} data={data}/>);
             }
         }
         return <div className="row">{boxes}</div>;

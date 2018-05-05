@@ -1,12 +1,11 @@
-import { Dispatch } from 'react-redux';
-
 export const ACTION_SUBMIT_SUCCESS = 'ACTION_SUBMIT_SUCCESS';
-export const submitSuccess = (data) => {
+
+export function submitSuccess<D>(data: D) {
     return {
         data,
         type: ACTION_SUBMIT_SUCCESS,
     };
-};
+}
 
 export const ACTION_SUBMIT_FAIL = 'ACTION_SUBMIT_FAIL';
 export const submitFail = (error) => {

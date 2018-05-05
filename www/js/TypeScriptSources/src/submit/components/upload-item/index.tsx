@@ -8,15 +8,15 @@ import {
 import logger from 'redux-logger';
 import {
     IUploadDataItem,
-} from '../../shared/interfaces';
-import { app } from '../reducers';
+} from '../../../shared/interfaces';
+import { app } from '../../reducers';
 import App from './app';
 
 interface IProps {
     data: IUploadDataItem;
 }
 
-export default class UploadItem extends React.Component<IProps, {}> {
+export default class Index extends React.Component<IProps, {}> {
 
     public render() {
         // const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

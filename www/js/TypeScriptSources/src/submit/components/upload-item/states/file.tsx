@@ -6,7 +6,7 @@ interface IProps {
     submitId: number;
 }
 
-export default class UploadedFile extends React.Component<IProps, {}> {
+export default class File extends React.Component<IProps, {}> {
 
     public render() {
         return <div className="updatet-file">

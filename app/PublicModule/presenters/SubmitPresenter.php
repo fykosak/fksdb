@@ -148,34 +148,36 @@ class SubmitPresenter extends BasePresenter {
      */
     public function renderAjax() {
         if ($this->isAjax()) {
-            $this->getHttpResponse()->setContentType('Content-Type: text/html; charset=utf-8');
+
+
             $contestant = $this->getContestant();
             $files = $this->getHttpRequest()->getFiles();
 
             foreach ($files as $name => $fileContainer) {
+                $response = new \ReactResponse();
+
                 $this->submitService->getConnection()->beginTransaction();
                 $this->submitStorage->beginTransaction();
                 if (!preg_match('/task([0-9]+)/', $name, $matches)) {
+                    $response->addMessage(new \ReactMessage('task not found', 'warning'));
                     continue;
                 }
 
                 $task = $this->isAvailableSubmit($matches[1]);
                 if (!$task) {
                     $this->getHttpResponse()->setCode('403');
-                    $this->sendResponse(new JsonResponse(['error' => 'upload not allowed']));
+                    $response->addMessage(new \ReactMessage('upload not allowed', 'danger'));
+                    $this->sendResponse($response);
                 };
 
-                FireLogger::log($fileContainer);
                 /**
                  * @var $file \Nette\Http\FileUpload
                  */
-
-                // $file = $fileContainer['file'];
-
                 $file = $fileContainer;
                 if (!$file->isOk()) {
                     $this->getHttpResponse()->setCode('500');
-                    $this->sendResponse(new JsonResponse(['error' => 'file is not Ok']));
+                    $response->addMessage(new \ReactMessage('file is not Ok', 'danger'));
+                    $this->sendResponse($response);
                     return;
                 }
 
@@ -184,12 +186,11 @@ class SubmitPresenter extends BasePresenter {
 
                 $this->submitStorage->commit();
                 $this->submitService->getConnection()->commit();
-                $this->sendResponse(new JsonResponse(
-                    [
-                        'msg' => 'success',
-                        'do' => 'upload',
-                        'data' => $this->serializeData($submit, $task),
-                    ]));
+
+                $response->addMessage(new \ReactMessage('Upload úspešný', 'success'));
+                $response->setAct('upload');
+                $response->setData($this->serializeData($submit, $task));
+                $this->sendResponse($response);
             }
             die();
         }

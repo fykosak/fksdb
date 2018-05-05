@@ -1,6 +1,7 @@
 import {
     ACTION_DRAG_END,
     ACTION_DRAG_START,
+    ACTION_DROP_ITEM,
 } from '../actions/dragndrop';
 
 const dragStart = (): IState => {
@@ -20,6 +21,7 @@ export const dragNDrop = (state: IState = {dragged: false}, action): IState => {
         case ACTION_DRAG_START:
             return dragStart();
         case ACTION_DRAG_END:
+        case ACTION_DROP_ITEM:
             return dragEnd();
         default:
             return state;

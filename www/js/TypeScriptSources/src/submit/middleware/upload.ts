@@ -1,5 +1,3 @@
-import { netteFetch } from '../../shared/helpers/fetch';
-
 export const handleFileUpload = (data: FileList, upload: (formData: FormData) => Promise<any>, taskId: number) => {
 
     if (data.length > 1) {
@@ -10,6 +8,7 @@ export const handleFileUpload = (data: FileList, upload: (formData: FormData) =>
     if (data.length === 1) {
         if (data.hasOwnProperty(0)) {
             const formData = new FormData();
+            console.log(data[0]);
             formData.append('task' + taskId, data[0]);
             formData.set('act', 'upload');
             upload(formData);
@@ -17,28 +16,3 @@ export const handleFileUpload = (data: FileList, upload: (formData: FormData) =>
     }
 
 };
-
-export const uploadFile = (data: FormData, success: (data) => void, error: (e: any) => void): Promise<any> => {
-    // return netteFetch(data, success, error);
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            cache: false,
-            contentType: false,
-            data,
-            dataType: 'json',
-            error: (e) => {
-                reject(e);
-                error(e);
-            },
-            processData: false,
-            success: (d) => {
-                resolve(d);
-                console.log(d);
-                success(d);
-            },
-            type: 'POST',
-            url: '#',
-        });
-    });
-};
-

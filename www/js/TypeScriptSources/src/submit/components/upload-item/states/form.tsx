@@ -1,29 +1,33 @@
 import * as React from 'react';
 
 import { connect } from 'react-redux';
-import { IUploadDataItem } from '../../shared/interfaces';
-import { newDataArrived } from '../actions/upload-data';
+import {
+    dragEnd,
+    dragStart,
+    dropItem,
+} from '../../../../shared/actions/dragndrop';
 import {
     submitFail,
     submitStart,
     submitSuccess,
-} from '../../shared/actions/submit';
+} from '../../../../shared/actions/submit';
 import {
-    dragEnd,
-    dragStart,
-} from '../../shared/actions/dragndrop';
-import { IStore } from '../reducers';
+    IReciveData,
+    IUploadDataItem,
+} from '../../../../shared/interfaces';
+import { newDataArrived } from '../../../actions/upload-data';
 import {
     handleFileUpload,
-    uploadFile,
-} from '../middleware/upload';
+} from '../../../middleware/upload';
+import { IStore } from '../../../reducers/index';
+import { uploadFile } from '../../../../shared/helpers/fetch';
 
 interface IProps {
     data: IUploadDataItem;
 }
 
 interface IState {
-    onNewDataArrived?: (data: IUploadDataItem) => void;
+    onDropItem?: (item: any) => void,
     isSubmitting?: boolean;
     onSubmitFail?: (error) => void;
     onSubmitStart?: () => void;
@@ -33,12 +37,7 @@ interface IState {
     dragged?: boolean;
 }
 
-class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> {
-
-    constructor() {
-        super();
-        this.state = {dragged: false};
-    }
+class Form extends React.Component<IProps & IState, {}> {
 
     public render() {
         const handleDragEnd = (event) => {
@@ -53,20 +52,20 @@ class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> 
             handleDragEnd(event);
 
             const data: FileList = event.dataTransfer.files;
-            const {onSubmitSuccess, onNewDataArrived, onSubmitFail, onSubmitStart} = this.props;
+            const {onSubmitSuccess, onSubmitFail, onSubmitStart} = this.props;
 
             onSubmitStart();
             handleFileUpload(data, (formData) => {
-                return uploadFile(formData,
+                return uploadFile<FormData, IReciveData<any>>(formData,
                     (d) => {
                         onSubmitSuccess(d);
-                        onNewDataArrived(d.data);
                     },
                     onSubmitFail);
             }, this.props.data.taskId);
         };
+        const {dragged} = this.props;
 
-        return <div className={'drop-input' + (this.state.dragged ? ' dragged' : '')}
+        return <div className={'drop-input' + (dragged ? ' dragged' : '')}
                     onDrop={onUploadFile}
                     onDragOver={handleDragStart}
                     onDragEnter={handleDragStart}
@@ -77,7 +76,7 @@ class UploadForm extends React.Component<IProps & IState, { dragged: boolean }> 
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fa fa-download"/></span>
                     <span className="d-block"> <strong>Choose a file</strong>
-                        <span className="box__dragndrop"> or drag it here</span>.</span>
+                        <span> or drag it here</span>.</span>
                 </div>
             </div>
         </div>;
@@ -94,11 +93,11 @@ const mapDispatchToProps = (dispatch): IState => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
-        onNewDataArrived: (data: IUploadDataItem) => dispatch(newDataArrived(data)),
+        onDropItem: (item) => dispatch(dropItem<any>(item)),
         onSubmitFail: (error) => dispatch(submitFail(error)),
         onSubmitStart: () => dispatch(submitStart()),
-        onSubmitSuccess: (data) => dispatch(submitSuccess(data)),
+        onSubmitSuccess: (data) => dispatch(submitSuccess<IUploadDataItem>(data)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UploadForm);
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

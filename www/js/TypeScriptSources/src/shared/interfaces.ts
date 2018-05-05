@@ -50,3 +50,13 @@ export interface IUploadDataItem {
 export interface IUploadData {
     [key: number]: IUploadDataItem;
 }
+
+export interface IMessage {
+    level: string;
+    text: string;
+}
+
+export interface IReciveData<D> {
+    messages: IMessage[];
+    data: D;
+}

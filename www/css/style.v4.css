@@ -241,3 +241,26 @@ body[data-contest="vyfuk"] h6 {
 .drop-input.dragged .drop-input-inner {
     border-color: gray;
 }
+
+@keyframes react-message {
+    0% {
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    99% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+
+.react-message {
+    animation: react-message 5s forwards;
+}

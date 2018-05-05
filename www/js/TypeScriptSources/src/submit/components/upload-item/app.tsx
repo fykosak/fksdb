@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { IUploadDataItem } from '../../shared/interfaces';
-import { newDataArrived } from '../actions/upload-data';
+import { IUploadDataItem } from '../../../shared/interfaces';
+import { newDataArrived } from '../../actions/upload-data';
 import UploadContainer from './upload-container';
 
 interface IProps {

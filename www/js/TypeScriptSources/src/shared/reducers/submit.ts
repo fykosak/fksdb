@@ -3,18 +3,22 @@ import {
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
 } from '../actions/submit';
+import {
+    IMessage,
+    IReciveData,
+} from '../interfaces';
 
 export interface IState {
     submitting?: boolean;
     error?: any;
-    msg?: string[];
+    messages?: IMessage[];
 }
 
 const submitStart = (state: IState): IState => {
     return {
         ...state,
         error: null,
-        msg: null,
+        messages: [],
         submitting: true,
     };
 };
@@ -22,18 +26,22 @@ const submitFail = (state: IState, action): IState => {
     return {
         ...state,
         error: action.error,
+        messages: [action.error.toString(), 'danger'],
         submitting: false,
     };
 };
 const submitSuccess = (state: IState, action): IState => {
+    const data: IReciveData<any> = action.data;
     return {
         ...state,
-        msg: action.data,
+        messages: data.messages,
         submitting: false,
     };
 };
 
-const initState: IState = {};
+const initState: IState = {
+    messages: [],
+};
 
 export const submit = (state: IState = initState, action): IState => {
     switch (action.type) {

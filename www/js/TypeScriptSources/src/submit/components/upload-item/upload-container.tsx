@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Card from '../../shared/components/card';
+import Card from '../../../shared/components/card';
 
-import { IStore } from '../reducers';
-import UploadForm from './upload-form';
-import UploadedFile from './uploaded-file';
+import { IStore } from '../../reducers';
+import File from './states/file';
+import Form from './states/form';
+
+import MessagesDisplay from '../../../shared/components/messages-display';
 
 interface IState {
     deadline?: string;
@@ -22,11 +24,13 @@ class UploadContainer extends React.Component<IState, {}> {
         const {deadline, href, name, submitId, taskId, submitting} = this.props;
         return <div className="col-6 mb-3">
             <Card headline={name + ' - ' + deadline} level={'info'}>
+                <MessagesDisplay/>
                 {submitting ? <div>loading</div> :
-                    (submitId ? (
-                            <UploadedFile name={name} href={href} submitId={submitId}/>) :
-                        <UploadForm data={{deadline, href, name, submitId, taskId}}/>)}
-
+                    (submitId ?
+                            (<File name={name} href={href} submitId={submitId}/>) :
+                            (<Form data={{deadline, href, name, submitId, taskId}}/>)
+                    )
+                }
             </Card>
         </div>;
     }
