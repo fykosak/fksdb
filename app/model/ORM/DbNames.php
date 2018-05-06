@@ -15,6 +15,8 @@ class DbNames {
     const TAB_EVENT_HAS_ORG = self::TAB_EVENT_ORG;
     const TAB_EVENT_ORG = 'event_org';
     const TAB_EVENT_PARTICIPANT = 'event_participant';
+    const TAB_EVENT_ACCOMMODATION = 'event_accommodation';
+    const TAB_EVENT_PERSON_ACCOMMODATION = 'event_person_accommodation';
     const TAB_EVENT_TYPE = 'event_type';
     const TAB_FLAG = 'flag';
     const TAB_GLOBAL_SESSION = 'global_session';

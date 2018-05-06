@@ -1111,6 +1111,52 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position`(
      ON UPDATE RESTRICT
 ) ENGINE='InnoDB';
 
+
+
+-- -----------------------------------------------------
+-- Table `event_accommodation`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `event_accommodation`(
+  `event_accommodation_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `event_id`  INT(11),
+  `capacity` INT(11),
+  `name` TEXT,
+  `address_id` INT(11),
+  `price` INT(11),
+  `date` DATE,
+  CONSTRAINT `fk_e_event_accommodation_event`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `event` (`event_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_e_event_accommodation_address`
+  FOREIGN KEY (`address_id`)
+  REFERENCES `address` (`address_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+) ENGINE='InnoDB';
+
+-- -----------------------------------------------------
+-- Table `event_person_accommodation`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `event_person_accommodation`(
+  `event_person_accommodation_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `person_id`  INT(11),
+  `event_accommodation_id` INT(11),
+  CONSTRAINT `fk_e_event_event_person_accommodation1`
+  FOREIGN KEY (`person_id`)
+  REFERENCES `person` (`person_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_e_event_event_person_accommodation2`
+  FOREIGN KEY (`event_accommodation_id`)
+  REFERENCES `event_accommodation` (`event_accommodation_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+) ENGINE='InnoDB';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
