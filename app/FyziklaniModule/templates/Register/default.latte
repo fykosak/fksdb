@@ -1,0 +1,69 @@
+{layout '../../../templates/@layout.v4.latte'}
+{block content}
+    <div id="brawl-registration-form"></div>
+    <div class="braw-form">
+        <div class="form-group">
+            <label>
+                <span>Team name</span>
+                <input type="text" class="form-control">
+            </label>
+
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="member1-tab" data-toggle="tab" href="#member1" role="tab" aria-controls="member1"
+               aria-selected="true">1. Member</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="member2-tab" data-toggle="tab" href="#member2" role="tab" aria-controls="member2"
+               aria-selected="false">2. Member</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="member3-tab" data-toggle="tab" href="#member3" role="tab" aria-controls="member3"
+               aria-selected="false">3. Member</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="member4-tab" data-toggle="tab" href="#member4" role="tab" aria-controls="member4"
+               aria-selected="false">4. Member</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="member5-tab" data-toggle="tab" href="#member5" role="tab" aria-controls="member5"
+               aria-selected="false">5. Member</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="teacher-tab" data-toggle="tab" href="#teacher" role="tab" aria-controls="teacher"
+               aria-selected="false">Teacher</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="member1" role="tabpanel" aria-labelledby="member1-tab">
+            <div class="form-group form-horizontal">
+                <label><span>E-mail</span></label>
+                <input type="email" class="form-control" required="required">
+            </div>
+            <button class="btn btn-primary">Search</button>
+        </div>
+        <div class="tab-pane fade show" id="member2" role="tabpanel" aria-labelledby="member2-tab">
+            <div class="form-group form-horizontal">
+                <label><span>E-mail</span></label>
+                <input type="email" class="form-control-plaintext has-success" value="miso@fykos.cz">
+            </div>
+
+        </div>
+        <div class="tab-pane fade show" id="member3" role="tabpanel" aria-labelledby="member3-tab">
+
+        </div>
+        <div class="tab-pane fade show" id="member4" role="tabpanel" aria-labelledby="member4-tab">
+
+        </div>
+        <div class="tab-pane fade show" id="member5" role="tabpanel" aria-labelledby="member5-tab">
+
+        </div>
+        <div class="tab-pane fade show" id="teacher" role="tabpanel" aria-labelledby="teacher-tab">
+
+        </div>
+    </div>
+{/block}
