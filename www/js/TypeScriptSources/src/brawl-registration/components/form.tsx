@@ -93,4 +93,3 @@ export default reduxForm({
      },*/
 
 })(connect(mapStateToProps, mapDispatchToProps)(BrawlForm));
-

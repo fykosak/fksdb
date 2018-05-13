@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { Async } from 'react-select';
-import { netteFetch } from '../../../shared/helpers/fetch';
 import { connect } from 'react-redux';
+import { Async } from 'react-select';
 import { Dispatch } from 'redux';
 import {
     ACTION_SUBMIT_START,
     submitFail,
     submitSuccess,
 } from '../../../entry-form/actions';
+import { netteFetch } from '../../../shared/helpers/fetch';
 
 class SchoolProvider extends React.Component<any, { value?: any }> {
     public render() {

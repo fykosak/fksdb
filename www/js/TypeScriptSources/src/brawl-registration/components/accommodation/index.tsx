@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { Field } from 'redux-form';
+import {
+    Field,
+} from 'redux-form';
 import Row from './row';
+
+import Price from './price';
 
 export interface IAccommodationItem {
     accId: number;
@@ -12,7 +16,7 @@ export interface IAccommodationItem {
     };
 }
 
-const accommodationDef: IAccommodationItem[] = [
+export const accommodationDef: IAccommodationItem[] = [
     {
         accId: 1,
         date: '2017-05-02',
@@ -78,11 +82,17 @@ const accommodationDef: IAccommodationItem[] = [
     },
 ];
 
-export default class Accommodation extends React.Component {
+interface IProps {
+    type: string;
+    index: number;
+}
+
+export default class Accommodation extends React.Component<IProps, {}> {
+
     public render() {
         const dates = {};
         const names = [];
-        accommodationDef.forEach((value, index) => {
+        accommodationDef.forEach((value) => {
             if (names.indexOf(value.name) === -1) {
                 names.push(value.name);
             }
@@ -93,7 +103,6 @@ export default class Accommodation extends React.Component {
         const rows = [];
         for (const date in dates) {
             if (dates.hasOwnProperty(date)) {
-                console.log(dates[date]);
                 rows.push(<Field name={date}
                                  component={Row}
                                  hotels={names}
@@ -103,10 +112,11 @@ export default class Accommodation extends React.Component {
         }
 
         return <div>
+            <label>Accommodation</label>
             <table className="table">
                 <thead>
                 <tr>
-                    <th>dátum</th>
+                    <th>Date</th>
                     {names.map((hotel) => {
                         return <th>{hotel}</th>;
                     })}
@@ -115,10 +125,8 @@ export default class Accommodation extends React.Component {
                 <tbody>
                 {rows}
                 </tbody>
-
+                <Price type={this.props.type} index={this.props.index}/>
             </table>
-
         </div>;
     }
-
 }

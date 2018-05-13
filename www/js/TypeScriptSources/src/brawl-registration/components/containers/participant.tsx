@@ -2,10 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Field,
+    FormSection,
 } from 'redux-form';
 import BaseInput from '../inputs/input';
 import { getFieldName } from './persons';
-import UsersField from '../school-provider';
+import SchoolField from '../school-provider';
+import Accommodation from '../accommodation';
 
 interface IState {
     onSubmitFail?: (e) => void;
@@ -60,12 +62,14 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                    storedValue={email.value}
                    hasValue={email.hasValue}
             />
-            <Field name={'school'} component={UsersField}/>
-
-
+            <FormSection name={'accommodation'}>
+                <Accommodation type={this.props.type} index={this.props.index}/>
+            </FormSection>
         </>;
     }
 }
+
+// <Field name={'school'} component={SchoolField}/>
 
 const mapDispatchToProps = (): IState => {
     return {};
