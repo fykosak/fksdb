@@ -5,7 +5,7 @@ import {
 } from 'redux-form';
 import BaseInput from '../inputs/input';
 import { getFieldName } from './persons';
-
+import UsersField from '../school-provider';
 
 interface IState {
     onSubmitFail?: (e) => void;
@@ -59,8 +59,10 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                    type={'email'}
                    storedValue={email.value}
                    hasValue={email.hasValue}
-
             />
+            <Field name={'school'} component={UsersField}/>
+
+
         </>;
     }
 }

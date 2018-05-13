@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
     Field,
+    FormSection,
 } from 'redux-form';
 import Input from './input';
 
@@ -12,6 +13,8 @@ import {
 } from '../../../entry-form/actions';
 import { Dispatch } from 'redux';
 import { getFieldName } from '../containers/persons';
+import UsersField from '../school-provider';
+import Accommodation from '../accommodation';
 
 interface IProps {
     type: string;
@@ -48,6 +51,10 @@ class PersonProvider extends React.Component<IProps & IState, {}> {
             </div>;
         } else {
             return <>
+                <FormSection name={'accommodation'} component={Accommodation}>
+
+                </FormSection>
+
                 <Field name={'email'}
                        component={Input}
                        validate={[required, isMail]}

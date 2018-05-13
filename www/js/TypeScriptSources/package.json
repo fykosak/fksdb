@@ -17,7 +17,8 @@
     "redux-form": "latest",
     "promise-polyfill": "latest",
     "babel-polyfill": "latest",
-    "redux-logger": "latest"
+    "redux-logger": "latest",
+    "react-select": "latest"
   },
   "devDependencies": {
     "tslint": "latest",
@@ -27,6 +28,7 @@
     "@types/react-redux": "latest",
     "@types/promise-polyfill": "latest",
     "@types/redux-form": "latest",
+    "@types/react-select": "latest",
     "typescript": "latest",
     "awesome-typescript-loader": "5.0.0-1",
     "ts-loader": "latest",
