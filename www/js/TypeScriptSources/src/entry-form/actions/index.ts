@@ -9,7 +9,7 @@ import { IStore } from '../reducers/index';
 export const ACTION_SUBMIT_START = 'ACTION_SUBMIT_START';
 
 export const ACTION_SUBMIT_SUCCESS = 'ACTION_SUBMIT_SUCCESS';
-const submitSuccess = (data) => {
+export const submitSuccess = (data) => {
     return {
         data,
         type: ACTION_SUBMIT_SUCCESS,
@@ -17,7 +17,7 @@ const submitSuccess = (data) => {
 };
 
 export const ACTION_SUBMIT_FAIL = 'ACTION_SUBMIT_FAIL';
-const submitFail = (error) => {
+export const submitFail = (error) => {
     return {
         error,
         type: ACTION_SUBMIT_FAIL,
