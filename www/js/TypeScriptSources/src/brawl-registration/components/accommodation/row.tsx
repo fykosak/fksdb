@@ -18,16 +18,27 @@ export default class Row extends React.Component<IProps & any, {}> {
                 return acc.name === name;
             });
             if (currentAcc.length) {
+                const priceLabel = <small
+                    className="align-bottom text-muted">{currentAcc[0].price.kc + 'Kč /' + currentAcc[0].price.eur + '€'}</small>;
                 if (currentAcc[0].accId === value) {
                     cols.push(<td key={index} className="text-center table-success"
                                   onClick={() => {
                                       onChange(null);
-                                  }}><span className="text-success fa fa-check"/></td>);
+                                  }}>
+                        <div>
+                            <span className="text-success fa fa-check"/>
+                        </div>
+                        <div>
+                            {priceLabel}
+                        </div>
+                    </td>);
                 } else {
 
-                    cols.push(<td key={index} className="table-secondary" onClick={() => {
+                    cols.push(<td key={index} className="text-center table-secondary" onClick={() => {
                         onChange(currentAcc[0].accId);
-                    }}/>);
+                    }}>
+                        <div>{priceLabel}</div>
+                    </td>);
 
                 }
             } else {

@@ -10,7 +10,7 @@ import {
     getPrice,
 } from '../../middleware/price';
 import { FORM_NAME } from '../form';
-import { accommodationDef } from './index';
+import { accommodationDef } from '../accommodation/index';
 
 interface IProps {
     type: string;
@@ -21,7 +21,7 @@ interface IState {
     acc?: any;
 }
 
-class Accommodation extends React.Component<IProps & IState, {}> {
+class Sumary extends React.Component<IProps & IState, {}> {
 
     public render() {
         const price = getPrice(accommodationDef, this.props.acc);
@@ -42,4 +42,4 @@ const mapStateToProps = (state, ownProps: IProps): IState => {
     return getAccommodationFromState(FORM_NAME, state, ownProps);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Accommodation);
+export default connect(mapStateToProps, mapDispatchToProps)(Sumary);

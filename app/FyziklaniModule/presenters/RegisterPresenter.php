@@ -37,9 +37,9 @@ class RegisterPresenter extends BasePresenter {
                 'fields' => [
                     'personId' => ['value' => 324, 'hasValue' => true,],
                     'email' => ['value' => 'miso@fykos.cz', 'hasValue' => true,],
-                    'school' => ['value' => '', 'hasValue' => true,],
+                    'school' => ['value' => ['label' => 'G Púchov', 'id' => 5376], 'hasValue' => true,],
                     'studyYear' => ['value' => '', 'hasValue' => true,],
-                    'idNumber' => ['value' => '', 'hasValue' => false,],
+                    'idNumber' => ['value' => '', 'hasValue' => true,],
                     'familyName' => ['value' => 'Červeňák', 'hasValue' => true,],
                     'otherName' => ['value' => 'Michal', 'hasValue' => true,],
                 ]

@@ -1,4 +1,5 @@
 import { IAccommodationItem } from '../components/accommodation';
+import { formValueSelector } from 'redux-form';
 
 export interface IPrice {
     eur: number;
@@ -28,4 +29,28 @@ export const getPrice = (accommodationDef: IAccommodationItem[], acc): IPrice =>
         }
     }
     return sum;
+};
+
+export interface IPersonSelector {
+    type: string;
+    index: number;
+}
+
+export interface IPersonAccommodation {
+    acc?: any;
+}
+
+export const getAccommodationFromState = (FORM_NAME: string, state, ownProps: IPersonSelector): IPersonAccommodation => {
+    const selector = formValueSelector(FORM_NAME);
+    const participantsValue = selector(state, ownProps.type);
+    if (participantsValue) {
+        if (participantsValue.hasOwnProperty(ownProps.index)) {
+            if (participantsValue[ownProps.index].hasOwnProperty('accommodation')) {
+                return {
+                    acc: participantsValue[ownProps.index].accommodation,
+                };
+            }
+        }
+    }
+    return {};
 };

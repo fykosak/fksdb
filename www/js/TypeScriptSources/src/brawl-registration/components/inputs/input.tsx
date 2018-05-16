@@ -1,41 +1,61 @@
 import * as React from 'react';
+import { Field } from 'redux-form';
+import ErrorDisplay from './error-display';
+import SecureDisplay from './secure-display';
 
 interface IProps {
-    label: boolean;
+    label: string;
     type: string;
-    hasValue: boolean;
-    storedValue: string;
+    secure: boolean;
+    component: any;
+    modifiable: boolean;
+    placeholder?: string;
+    name: string;
+    providerOptions: {
+        hasValue: boolean;
+        value: string;
+    };
 }
 
-export default class Input extends React.Component<IProps & any, {}> {
 
-    public componentDidMount() {
-        if (this.props.hasValue) {
-            this.props.input.onChange(this.props.storedValue);
-        }
-    }
+export default class Input extends React.Component<IProps, {}> {
 
     public render() {
         const {
-            meta: {touched, error, warning},
-            input,
             label,
-            type,
-            readOnly,
+            secure,
             modifiable,
+            providerOptions,
+            type,
+            placeholder,
+            name,
+            component,
         } = this.props;
-
+        if (!name) {
+            return null;
+        }
         return <div className="form-group">
             <label>{label}</label>
-            <div className={modifiable ? 'input-group' : ''}>
-                <input readOnly={readOnly} className="form-control" {...input} type={type}/>
-                {modifiable && (<div className="input-group-apend">
-                    <button className="btn btn-warning" type="button">Clear</button>
-                </div>)}
+            <div>
+                {(secure && providerOptions.hasValue) ?
+                    (<Field name={name}
+                            component={SecureDisplay}
+                            modifiable={modifiable}
+                        />
+                    ) :
+
+                    (<Field providerOptions={providerOptions}
+                            readOnly={!modifiable}
+                            placeholder={placeholder}
+                            type={type}
+                            name={name}
+                            component={component}
+                        />
+                    )
+                }
+
             </div>
-            {touched &&
-            ((error && <span>{error}</span>) ||
-                (warning && <span>{warning}</span>))}
+            <Field name={name} component={ErrorDisplay}/>
         </div>;
     }
 }

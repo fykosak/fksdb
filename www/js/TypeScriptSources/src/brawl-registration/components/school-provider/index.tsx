@@ -10,31 +10,40 @@ import {
 } from '../../../entry-form/actions';
 import { netteFetch } from '../../../shared/helpers/fetch';
 
-class SchoolProvider extends React.Component<any, { value?: any }> {
+interface IProps {
+    hasValue: boolean;
+    storedValue: string;
+}
+
+class SchoolProvider extends React.Component<IProps & any, {}> {
+
+    public componentDidMount() {
+        if (this.props.hasValue) {
+            this.props.input.onChange(this.props.storedValue);
+        }
+    }
+
     public render() {
         const {input: {onChange, value}} = this.props;
 
-        return <div className="form-group">
-            <label>School</label>
-            <Async
-                name="form-field-name"
-                value={value}
-                onChange={onChange}
-                loadOptions={(input, cb) => {
-                    $.nette.ext('unique', null);
-                    netteFetch({
-                        act: 'school-provider',
-                        payload: input,
-                    }, (data) => {
-                        cb(null, {
-                            complete: true,
-                            options: data,
-                        });
-                    }, (e) => {
+        return <Async
+            name="school-provider"
+            value={value}
+            onChange={onChange}
+            loadOptions={(input, cb) => {
+                $.nette.ext('unique', null);
+                netteFetch({
+                    act: 'school-provider',
+                    payload: input,
+                }, (data) => {
+                    cb(null, {
+                        complete: true,
+                        options: data,
                     });
-                }}
-            />
-        </div>;
+                }, (e) => {
+                });
+            }}
+        />;
     }
 
 }
