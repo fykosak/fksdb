@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IAccommodationItem } from './index';
+import { IAccommodationItem } from '../../middleware/iterfaces';
 
 interface IProps {
     names: string[];
@@ -50,5 +50,4 @@ export default class Row extends React.Component<IProps & any, {}> {
             {cols}
         </tr>;
     }
-
 }

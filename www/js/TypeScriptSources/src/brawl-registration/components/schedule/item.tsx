@@ -50,9 +50,8 @@ export default class Item extends React.Component<IProps & any, IState> {
                     </div>
                 </div>
             </div>
-            <div className={'card-body ' + (this.state.showDescription ? 'd-block' : 'd-none')}>
-                {description}
-            </div>
+            <div className={'card-body ' + (this.state.showDescription ? 'd-block' : 'd-none')}
+                 dangerouslySetInnerHTML={{__html: description}}/>
         </div>;
 
     }

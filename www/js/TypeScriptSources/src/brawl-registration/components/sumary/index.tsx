@@ -10,7 +10,6 @@ import {
     getPrice,
 } from '../../middleware/price';
 import { FORM_NAME } from '../form';
-import { accommodationDef } from '../accommodation/index';
 
 interface IProps {
     type: string;
@@ -24,12 +23,12 @@ interface IState {
 class Sumary extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const price = getPrice(accommodationDef, this.props.acc);
+        // const price = getPrice(accommodationDef, this.props.acc);
+        //   <p>{price.eur} €</p>
+        //             <p>{price.kc} Kč</p>
 
         return <div>
             <p>Cena ubytovania.</p>
-            <p>{price.eur} €</p>
-            <p>{price.kc} Kč</p>
         </div>;
     }
 }

@@ -12,13 +12,14 @@ import { config } from '../../config';
 
 import { app } from '../reducers';
 import Container from './container';
+import { IDefinitionsState } from '../reducers/definitions';
 
-class App extends React.Component<{}, {}> {
+class App extends React.Component<{ def: IDefinitionsState }, {}> {
     public render() {
         const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         return (
             <Provider store={store}>
-                <Container/>
+                <Container definitions={this.props.def}/>
             </Provider>
         );
     }
@@ -27,6 +28,8 @@ class App extends React.Component<{}, {}> {
 const el = document.getElementById('brawl-registration-form');
 
 if (el) {
-    ReactDOM.render(<App/>, el);
-
+    const def: IDefinitionsState = {};
+    def.accommodation = JSON.parse(el.getAttribute('data-accommodation-def'));
+    def.schedule = JSON.parse(el.getAttribute('data-schedule-def'));
+    ReactDOM.render(<App def={def}/>, el);
 }

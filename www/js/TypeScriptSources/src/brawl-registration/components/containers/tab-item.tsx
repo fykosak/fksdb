@@ -27,7 +27,6 @@ export default class TabItem extends React.Component<IProps, {}> {
         }
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={this.props.index === 0} name={('member' + this.props.index)}>
-                <h3><NameDisplay type={type} index={index}/></h3>
                 <PersonProvider index={index} type={type}>
                     {form}
                 </PersonProvider>

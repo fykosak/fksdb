@@ -3,96 +3,26 @@ import {
     Field,
 } from 'redux-form';
 import Row from './row';
-
 import Price from './price';
-
-export interface IAccommodationItem {
-    accId: number;
-    date: string;
-    name: string;
-    price: {
-        eur: number;
-        kc: number;
-    };
-}
-
-export const accommodationDef: IAccommodationItem[] = [
-    {
-        accId: 1,
-        date: '2017-05-02',
-        name: 'Elf',
-        price: {
-            eur: 10,
-            kc: 300,
-        },
-    },
-    {
-        accId: 2,
-        date: '2017-05-03',
-        name: 'Elf',
-        price: {
-            eur: 10,
-            kc: 300,
-        },
-    },
-    {
-        accId: 3,
-        date: '2017-05-04',
-        name: 'Elf',
-        price: {
-            eur: 10,
-            kc: 300,
-        },
-    },
-    {
-        accId: 4,
-        date: '2017-05-05',
-        name: 'Elf',
-        price: {
-            eur: 10,
-            kc: 300,
-        },
-    },
-    {
-        accId: 5,
-        date: '2017-05-03',
-        name: 'Duo',
-        price: {
-            eur: 20,
-            kc: 500,
-        },
-    },
-    {
-        accId: 6,
-        date: '2017-05-04',
-        name: 'Duo',
-        price: {
-            eur: 20,
-            kc: 500,
-        },
-    },
-    {
-        accId: 7,
-        date: '2017-05-05',
-        name: 'Duo',
-        price: {
-            eur: 20,
-            kc: 500,
-        },
-    },
-];
+import { connect } from 'react-redux';
+import { IStore } from '../../reducers';
+import { IAccommodationItem } from '../../middleware/iterfaces';
 
 interface IProps {
     type: string;
     index: number;
 }
 
-export default class Accommodation extends React.Component<IProps, {}> {
+interface IState {
+    accommodationDef?: IAccommodationItem[];
+}
+
+class Accommodation extends React.Component<IProps & IState, {}> {
 
     public render() {
         const dates = {};
         const names = [];
-        accommodationDef.forEach((value) => {
+        this.props.accommodationDef.forEach((value) => {
             if (names.indexOf(value.name) === -1) {
                 names.push(value.name);
             }
@@ -112,7 +42,7 @@ export default class Accommodation extends React.Component<IProps, {}> {
         }
 
         return <div>
-            <label>Accommodation</label>
+            <h3>Accommodation</h3>
             <table className="table">
                 <thead>
                 <tr>
@@ -130,3 +60,15 @@ export default class Accommodation extends React.Component<IProps, {}> {
         </div>;
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state: IStore): IState => {
+    return {
+        accommodationDef: state.definitions.accommodation,
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Accommodation);

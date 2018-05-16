@@ -46,7 +46,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
         }
 
         return <>
-
+            <h3>Base info</h3>
             <Input name={'otherName'}
                    label={'Other name'}
                    type={'text'}
@@ -88,7 +88,6 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
 
             <FormSection name={'accommodation'}>
                 <Accommodation type={this.props.type} index={this.props.index}/>
-
             </FormSection>
             {hasAccommodation && (
                 <Input label={'Číslo OP/pasu'}

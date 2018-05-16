@@ -31,7 +31,8 @@ class SchoolProvider extends React.Component<IProps & any, {}> {
             value={value}
             onChange={onChange}
             loadOptions={(input, cb) => {
-                $.nette.ext('unique', null);
+                const netteJQuery: any = $;
+                netteJQuery.nette.ext('unique', null);
                 netteFetch({
                     act: 'school-provider',
                     payload: input,
@@ -41,11 +42,11 @@ class SchoolProvider extends React.Component<IProps & any, {}> {
                         options: data,
                     });
                 }, (e) => {
+                    throw e;
                 });
             }}
         />;
     }
-
 }
 
 const mapStateToProps = () => {

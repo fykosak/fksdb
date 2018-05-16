@@ -1,5 +1,5 @@
-import { IAccommodationItem } from '../components/accommodation';
 import { formValueSelector } from 'redux-form';
+import { IAccommodationItem } from './iterfaces';
 
 export interface IPrice {
     eur: number;

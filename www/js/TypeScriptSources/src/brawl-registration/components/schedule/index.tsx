@@ -19,7 +19,7 @@ interface IState {
 const scheduleDef = [
     {
         date: '2017-05-02',
-        description: 'jeden den s fyzikou',
+        description: '<a href="http://matfyz.cz">viac info</a> jeden den s fyzikou',
         id: 1,
         name: 'JDF',
         time: {
@@ -53,7 +53,8 @@ export default class Schedule extends React.Component<IProps & IState, {}> {
 
     public render() {
         return <div>
-            <label>Schedule</label>
+            <h3>Schedule</h3>
+            <p>Doprovodný program o ktorý mám zaujem.</p>
             {scheduleDef.map((value) => {
                 return <Field
                     name={'schedule' + value.id}
@@ -69,4 +70,3 @@ export default class Schedule extends React.Component<IProps & IState, {}> {
 
     }
 }
-
