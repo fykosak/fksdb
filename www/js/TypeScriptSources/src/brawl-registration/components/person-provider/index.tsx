@@ -1,17 +1,16 @@
 import * as React from 'react';
 import {
     Field,
-    FormSection,
 } from 'redux-form';
 import Input from './input';
 
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import {
     ACTION_SUBMIT_START,
     submitFail,
     submitSuccess,
 } from '../../../entry-form/actions';
-import { Dispatch } from 'redux';
 import { getFieldName } from '../containers/persons';
 
 interface IProps {
@@ -23,14 +22,7 @@ interface IState {
     onSubmitFail?: (e) => void;
     onSubmitStart?: () => void;
     onSubmitSuccess?: (data) => void;
-    accommodation?: { hasValue: boolean; value: string };
-    email?: { hasValue: boolean; value: string };
-    familyName?: { hasValue: boolean; value: string };
-    idNumber?: { hasValue: boolean; value: string };
-    otherName?: { hasValue: boolean; value: string };
     personId?: { hasValue: boolean; value: string };
-    school?: { hasValue: boolean; value: string };
-    studyYear?: { hasValue: boolean; value: string };
 }
 
 const isMail = (value: string): string => {

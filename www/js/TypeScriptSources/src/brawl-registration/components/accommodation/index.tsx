@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
     Field,
 } from 'redux-form';
-import Row from './row';
-import Price from './price';
-import { connect } from 'react-redux';
-import { IStore } from '../../reducers';
 import { IAccommodationItem } from '../../middleware/iterfaces';
+import { IStore } from '../../reducers';
+import Price from './price';
+import Row from './row';
 
 interface IProps {
     type: string;
@@ -42,7 +42,6 @@ class Accommodation extends React.Component<IProps & IState, {}> {
         }
 
         return <>
-
             <table className="table">
                 <thead>
                 <tr>

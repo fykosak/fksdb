@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-
 import { getParticipantValues } from '../../middleware/price';
 import { FORM_NAME } from '../form';
 

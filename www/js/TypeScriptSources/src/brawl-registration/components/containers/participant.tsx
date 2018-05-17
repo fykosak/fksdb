@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    Field,
     FormSection,
 } from 'redux-form';
 import { getAccommodationFromState } from '../../middleware/price';
 import Accommodation from '../accommodation';
 import { FORM_NAME } from '../form';
 
-import Input from '../inputs/input';
 import BaseInput from '../inputs/base-input';
+import Input from '../inputs/input';
 
+import Schedule from '../schedule';
 import SchoolField from '../school-provider';
 import { getFieldName } from './persons';
-import Schedule from '../schedule';
 
 import Price from './price';
 

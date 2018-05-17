@@ -1,6 +1,6 @@
 import * as React from 'react';
+import NameDisplay from '../displays/name';
 import Nav from '../helpers/tabs/nav';
-import NameDisplay from '../displays/name-display';
 
 interface IProps {
     type: string;
@@ -13,6 +13,5 @@ export default class NavItem extends React.Component<IProps, {}> {
         return <Nav active={index === 0} name={('member' + index)}>
             <NameDisplay type={type} index={index}/>
         </Nav>;
-
     }
 }

@@ -25,5 +25,4 @@ export const definitions = (state: IDefinitionsState = {}, event): IDefinitionsS
             return state;
 
     }
-
 };

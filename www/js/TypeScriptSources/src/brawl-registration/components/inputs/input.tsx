@@ -17,7 +17,6 @@ interface IProps {
     };
 }
 
-
 export default class Input extends React.Component<IProps, {}> {
 
     public render() {
@@ -43,7 +42,6 @@ export default class Input extends React.Component<IProps, {}> {
                             modifiable={modifiable}
                         />
                     ) :
-
                     (<Field providerOptions={providerOptions}
                             readOnly={!modifiable}
                             placeholder={placeholder}
@@ -53,7 +51,6 @@ export default class Input extends React.Component<IProps, {}> {
                         />
                     )
                 }
-
             </div>
             <Field name={name} component={ErrorDisplay}/>
         </div>;

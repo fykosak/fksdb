@@ -7,8 +7,8 @@ import {
     getScheduleFromState,
     getSchedulePrice,
 } from '../../middleware/price';
-import { FORM_NAME } from '../form';
 import PriceDisplay from '../displays/price';
+import { FORM_NAME } from '../form';
 
 interface IProps {
     type: string;

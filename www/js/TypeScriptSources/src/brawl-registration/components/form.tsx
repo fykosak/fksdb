@@ -6,8 +6,8 @@ import {
 } from 'redux-form';
 import TeamName from './inputs/team-name';
 
-import PersonsContainer, { getFieldName } from './containers/persons';
 import { connect } from 'react-redux';
+import PersonsContainer, { getFieldName } from './containers/persons';
 
 const persons = [
     {

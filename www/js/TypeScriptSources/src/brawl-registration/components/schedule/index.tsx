@@ -4,10 +4,10 @@ import {
 } from 'redux-form';
 import Price from './price';
 
-import Item from './item';
-import { IScheduleItem } from '../../middleware/iterfaces';
 import { connect } from 'react-redux';
+import { IScheduleItem } from '../../middleware/iterfaces';
 import { IStore } from '../../reducers';
+import Item from './item';
 
 interface IProps {
     type: string;

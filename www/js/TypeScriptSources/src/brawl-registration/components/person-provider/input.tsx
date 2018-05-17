@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { netteFetch } from '../../../shared/helpers/fetch';
 
 export default class Input extends React.Component<any, {}> {

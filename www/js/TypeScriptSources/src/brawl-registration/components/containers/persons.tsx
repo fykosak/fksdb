@@ -1,9 +1,5 @@
 import * as React from 'react';
-import { FormSection } from 'redux-form';
-import PersonProvider from '../person-provider';
 import NavItem from './nav-item';
-import ParticipantForm from './participant';
-import TeacherForm from './teacher';
 import TabItem from './tab-item';
 
 const persons = [

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { FormSection } from 'redux-form';
 import Tab from '../helpers/tabs/tab';
 import PersonProvider from '../person-provider';
-import NameDisplay from '../displays/name-display';
 import ParticipantForm from './participant';
 import { getFieldName } from './persons';
 import TeacherForm from './teacher';
