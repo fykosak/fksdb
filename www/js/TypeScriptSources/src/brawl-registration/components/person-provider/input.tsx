@@ -10,6 +10,7 @@ export default class Input extends React.Component<any, {}> {
             event.preventDefault();
             this.props.onSubmitStart();
             netteFetch({
+                    act: 'person-provider',
                     email: input.value,
                     fields: [],
                 }, this.props.onSubmitSuccess

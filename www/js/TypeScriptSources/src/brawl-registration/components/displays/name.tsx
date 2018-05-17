@@ -1,6 +1,8 @@
-import { connect } from 'react-redux';
 import * as React from 'react';
-import { getFieldName } from './persons';
+import { connect } from 'react-redux';
+
+import { getParticipantValues } from '../../middleware/price';
+import { FORM_NAME } from '../form';
 
 interface IProps {
     type: string;
@@ -8,8 +10,8 @@ interface IProps {
 }
 
 interface IState {
-    familyName?: { hasValue: boolean; value: string };
-    otherName?: { hasValue: boolean; value: string };
+    familyName?: string;
+    otherName?: string;
 }
 
 class NameDisplay extends React.Component<IProps & IState, {}> {
@@ -17,10 +19,9 @@ class NameDisplay extends React.Component<IProps & IState, {}> {
         const {index, type, familyName, otherName} = this.props;
         return <>
             {(otherName && familyName) ?
-                (<span>{otherName.value} {familyName.value}</span>) :
+                (<span>{otherName} {familyName}</span>) :
                 (<span>{index + 1} {type}</span>)}
         </>;
-
     }
 }
 
@@ -29,14 +30,11 @@ const mapDispatchToProps = () => {
 };
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
-    const accessKey = getFieldName(ownProps.type, ownProps.index);
-    if (state.provider.hasOwnProperty(accessKey)) {
-        return {
-            familyName: state.provider[accessKey].familyName,
-            otherName: state.provider[accessKey].otherName,
-        };
-    }
-    return {};
+    const values = getParticipantValues(FORM_NAME, state, ownProps);
+    return {
+        familyName: values.familyName,
+        otherName: values.otherName,
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NameDisplay);

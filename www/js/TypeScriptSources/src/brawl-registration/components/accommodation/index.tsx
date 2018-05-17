@@ -41,8 +41,8 @@ class Accommodation extends React.Component<IProps & IState, {}> {
             }
         }
 
-        return <div>
-            <h3>Accommodation</h3>
+        return <>
+
             <table className="table">
                 <thead>
                 <tr>
@@ -57,7 +57,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 </tbody>
                 <Price type={this.props.type} index={this.props.index}/>
             </table>
-        </div>;
+        </>;
     }
 }
 

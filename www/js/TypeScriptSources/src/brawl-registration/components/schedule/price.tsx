@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IAccommodationItem } from '../../middleware/iterfaces';
 import {
-    getAccommodationFromState,
-    getAccommodationPrice,
+    IScheduleItem,
+} from '../../middleware/iterfaces';
+import {
+    getScheduleFromState,
+    getSchedulePrice,
 } from '../../middleware/price';
 import { FORM_NAME } from '../form';
 import PriceDisplay from '../displays/price';
@@ -14,17 +16,17 @@ interface IProps {
 }
 
 interface IState {
-    acc?: any;
-    accommodationDef?: IAccommodationItem[];
+    schedule?: any;
+    scheduleDef?: IScheduleItem[];
 }
 
 class Price extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const price = getAccommodationPrice(this.props.accommodationDef, this.props.acc);
+        const price = getSchedulePrice(this.props.scheduleDef, this.props.schedule);
 
         return <div>
-            <p>Cena ubytovania.</p>
+            <p>Cena za sprievodné akcie.</p>
             <PriceDisplay eur={price.eur} kc={price.kc}/>
         </div>;
     }
@@ -36,8 +38,8 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
-        accommodationDef: state.definitions.accommodation,
-        ...getAccommodationFromState(FORM_NAME, state, ownProps),
+        scheduleDef: state.definitions.schedule,
+        ...getScheduleFromState(FORM_NAME, state, ownProps),
     };
 };
 

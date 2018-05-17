@@ -1,11 +1,13 @@
 import * as React from 'react';
 import {
     Field,
-    FormSection,
 } from 'redux-form';
+import Price from './price';
 
-import { getFieldName } from '../containers/persons';
 import Item from './item';
+import { IScheduleItem } from '../../middleware/iterfaces';
+import { connect } from 'react-redux';
+import { IStore } from '../../reducers';
 
 interface IProps {
     type: string;
@@ -13,60 +15,41 @@ interface IProps {
 }
 
 interface IState {
-
+    scheduleDef?: IScheduleItem[];
 }
 
-const scheduleDef = [
-    {
-        date: '2017-05-02',
-        description: '<a href="http://matfyz.cz">viac info</a> jeden den s fyzikou',
-        id: 1,
-        name: 'JDF',
-        time: {
-            begin: '12:00',
-            end: '15:00',
-        },
-    },
-    {
-        date: '2017-04-02',
-        description: 'DSEF',
-        id: 2,
-        name: 'DSEF',
-        time: {
-            begin: '12:00',
-            end: '15:00',
-        },
-    },
-    {
-        date: '2017-06-02',
-        description: 'Afterparty',
-        id: 3,
-        name: 'Afterparty',
-        time: {
-            begin: '12:00',
-            end: '15:00',
-        },
-    },
-];
-
-export default class Schedule extends React.Component<IProps & IState, {}> {
+class Schedule extends React.Component<IProps & IState, {}> {
 
     public render() {
-        return <div>
-            <h3>Schedule</h3>
+        const {type, index} = this.props;
+        return <>
             <p>Doprovodný program o ktorý mám zaujem.</p>
-            {scheduleDef.map((value) => {
+            {this.props.scheduleDef.map((value) => {
                 return <Field
-                    name={'schedule' + value.id}
+                    name={value.id}
                     component={Item}
                     date={value.date}
                     description={value.description}
-                    scheduleName={value.name}
+                    scheduleName={value.scheduleName}
+                    price={value.price}
                     id={value.id}
                     time={value.time}
                 />;
             })}
-        </div>;
+            <Price type={type} index={index}/>
+        </>;
 
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state: IStore): IState => {
+    return {
+        scheduleDef: state.definitions.schedule,
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);

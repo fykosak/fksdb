@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IAccommodationItem } from '../../middleware/iterfaces';
+import DateDisplay from '../displays/date';
 
 interface IProps {
     names: string[];
@@ -46,7 +47,7 @@ export default class Row extends React.Component<IProps & any, {}> {
             }
         });
         return <tr>
-            <td><label>{date}</label></td>
+            <td><label><DateDisplay date={date}/></label></td>
             {cols}
         </tr>;
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Nav from '../helpers/tabs/nav';
-import NameDisplay from './name-display';
+import NameDisplay from '../displays/name-display';
 
 interface IProps {
     type: string;

@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IAccommodationItem } from '../../middleware/iterfaces';
+import {
+    IAccommodationItem,
+    IScheduleItem,
+} from '../../middleware/iterfaces';
 import {
     getAccommodationFromState,
     getAccommodationPrice,
+    getScheduleFromState,
+    getSchedulePrice,
 } from '../../middleware/price';
 import { FORM_NAME } from '../form';
 import PriceDisplay from '../displays/price';
@@ -14,6 +19,8 @@ interface IProps {
 }
 
 interface IState {
+    schedule?: any;
+    scheduleDef?: IScheduleItem[];
     acc?: any;
     accommodationDef?: IAccommodationItem[];
 }
@@ -21,11 +28,12 @@ interface IState {
 class Price extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const price = getAccommodationPrice(this.props.accommodationDef, this.props.acc);
+        const schedulePrice = getSchedulePrice(this.props.scheduleDef, this.props.schedule);
+        const accommodationPrice = getAccommodationPrice(this.props.accommodationDef, this.props.acc);
 
         return <div>
-            <p>Cena ubytovania.</p>
-            <PriceDisplay eur={price.eur} kc={price.kc}/>
+            <p>Celková cena pre osobu</p>
+            <PriceDisplay eur={accommodationPrice.eur + schedulePrice.eur} kc={accommodationPrice.kc + schedulePrice.kc}/>
         </div>;
     }
 }
@@ -36,6 +44,8 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
+        scheduleDef: state.definitions.schedule,
+        ...getScheduleFromState(FORM_NAME, state, ownProps),
         accommodationDef: state.definitions.accommodation,
         ...getAccommodationFromState(FORM_NAME, state, ownProps),
     };

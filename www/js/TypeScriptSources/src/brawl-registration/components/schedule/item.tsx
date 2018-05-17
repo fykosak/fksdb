@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IPrice } from '../../middleware/price';
+import DateDisplay from '../displays/date';
 
 interface IProps {
     date: string;
@@ -24,7 +25,7 @@ export default class Item extends React.Component<IProps & any, IState> {
     }
 
     public render() {
-        const {input, input: {value, onChange}, date, description, id, scheduleName, time: {begin, end}} = this.props;
+        const {input: {value, onChange}, date, description, price, scheduleName, time: {begin, end}} = this.props;
         return <div className="card">
             <div className={'card-header'}>
                 <div className="row">
@@ -38,6 +39,7 @@ export default class Item extends React.Component<IProps & any, IState> {
                                 (<i className="fa fa-square-o"/>)
                             }</a>
                             <span className="ml-3">{scheduleName}</span>
+                            <small className="ml-3 text-muted">({price ? (price.kc + ' Kč/' + price.eur + ' €') : ('free')})</small>
                         </h5>
                     </div>
                     <div className="col-6">
@@ -46,7 +48,7 @@ export default class Item extends React.Component<IProps & any, IState> {
                             this.setState({showDescription: !this.state.showDescription});
                         }}><span className="fa fa-info"/>
                         </button>
-                        <small className={'pull-right text-muted'}>{date} {begin}-{end}</small>
+                        <small className={'pull-right text-muted'}><DateDisplay date={date}/> {begin}-{end}</small>
                     </div>
                 </div>
             </div>

@@ -16,8 +16,5 @@ export interface IAccommodationItem {
     accId: number;
     date: string;
     name: string;
-    price: {
-        eur: number;
-        kc: number;
-    };
+    price: IPrice;
 }
