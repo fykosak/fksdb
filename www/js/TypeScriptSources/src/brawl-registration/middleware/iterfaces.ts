@@ -18,3 +18,9 @@ export interface IAccommodationItem {
     name: string;
     price: IPrice;
 }
+
+export interface IPersonDefinition {
+    fields: string[];
+    index: number;
+    type: "participant" | "teacher";
+}

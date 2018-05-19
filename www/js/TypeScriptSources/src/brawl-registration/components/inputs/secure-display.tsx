@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { clearProviderProviderProperty } from '../../actions/load';
+import { WrappedFieldProps } from 'redux-form';
+import { clearProviderProviderProperty } from '../../../person-provider/actions';
 
 interface IProps {
     modifiable: boolean;
@@ -11,7 +12,7 @@ interface IState {
     onClearValue?: () => void;
 }
 
-class SecureDisplay extends React.Component<any & IState & IProps, {}> {
+class SecureDisplay extends React.Component<WrappedFieldProps & IState & IProps, {}> {
 
     public render() {
         const {modifiable, onClearValue} = this.props;

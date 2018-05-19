@@ -9,10 +9,16 @@ import {
     submitSuccess,
 } from '../../../entry-form/actions';
 import { netteFetch } from '../../../shared/helpers/fetch';
+import { IReceiveData } from '../../../shared/interfaces';
 
 interface IProps {
     hasValue: boolean;
     storedValue: string;
+}
+
+interface ISchoolProviderValues {
+    act: string;
+    payload: string;
 }
 
 class SchoolProvider extends React.Component<IProps & any, {}> {
@@ -33,13 +39,13 @@ class SchoolProvider extends React.Component<IProps & any, {}> {
             loadOptions={(input, cb) => {
                 const netteJQuery: any = $;
                 netteJQuery.nette.ext('unique', null);
-                netteFetch({
+                netteFetch<ISchoolProviderValues, IReceiveData<any>>({
                     act: 'school-provider',
                     payload: input,
                 }, (data) => {
                     cb(null, {
                         complete: true,
-                        options: data,
+                        options: data.data,
                     });
                 }, (e) => {
                     throw e;

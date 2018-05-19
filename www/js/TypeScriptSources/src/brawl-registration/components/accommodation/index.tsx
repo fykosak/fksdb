@@ -54,8 +54,9 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 <tbody>
                 {rows}
                 </tbody>
-                <Price type={this.props.type} index={this.props.index}/>
+
             </table>
+            <Price type={this.props.type} index={this.props.index}/>
         </>;
     }
 }

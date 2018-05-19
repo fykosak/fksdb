@@ -12,6 +12,7 @@ import Input from '../inputs/input';
 
 import Schedule from '../schedule';
 import SchoolField from '../school-provider';
+import StudyYearField from '../inputs/study-year';
 import { getFieldName } from './persons';
 
 import Price from './price';
@@ -21,14 +22,16 @@ interface IState {
     onSubmitFail?: (e) => void;
     onSubmitStart?: () => void;
     onSubmitSuccess?: (data) => void;
-    accommodation?: { hasValue: boolean; value: string };
-    email?: { hasValue: boolean; value: string };
-    familyName?: { hasValue: boolean; value: string };
-    idNumber?: { hasValue: boolean; value: string };
-    otherName?: { hasValue: boolean; value: string };
-    personId?: { hasValue: boolean; value: string };
-    school?: { hasValue: boolean; value: string };
-    studyYear?: { hasValue: boolean; value: string };
+    providerOpt?: {
+        accommodation?: { hasValue: boolean; value: string };
+        email?: { hasValue: boolean; value: string };
+        familyName?: { hasValue: boolean; value: string };
+        idNumber?: { hasValue: boolean; value: string };
+        otherName?: { hasValue: boolean; value: string };
+        personId?: { hasValue: boolean; value: string };
+        school?: { hasValue: boolean; value: string };
+        studyYear?: { hasValue: boolean; value: string };
+    };
 }
 
 interface IProps {
@@ -38,7 +41,7 @@ interface IProps {
 
 class ParticipantForm extends React.Component<IState & IProps, {}> {
     public render() {
-        const {otherName, familyName, email, idNumber, acc, school, type, index} = this.props;
+        const {providerOpt: {otherName, familyName, email, idNumber, school, studyYear}, acc, type, index} = this.props;
         let hasAccommodation = false;
         for (const date in acc) {
             if (acc.hasOwnProperty(date)) {
@@ -78,7 +81,9 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                     modifiable={false}
                     secure={false}
                 />
-
+            </div>
+            <div>
+                <h3>School</h3>
                 <Input label={'School'}
                        type={null}
                        secure={true}
@@ -87,7 +92,16 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                        name={'school'}
                        providerOptions={school}
                 />
+                <Input label={'Study year'}
+                       type={null}
+                       secure={true}
+                       component={StudyYearField}
+                       modifiable={true}
+                       name={'studyYear'}
+                       providerOptions={studyYear}
+                />
             </div>
+
             <div>
                 <h3>Accommodation</h3>
                 <FormSection name={'accommodation'}>
@@ -97,6 +111,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                     <Input label={'Číslo OP/pasu'}
                            type={'text'}
                            secure={true}
+                           description={'Kvôli ubytovaniu.'}
                            component={BaseInput}
                            modifiable={true}
                            name={'idNumber'}
@@ -115,6 +130,26 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
     }
 }
 
+// <div>
+//                 <h3>School</h3>
+//                 <Input label={'School'}
+//                        type={null}
+//                        secure={true}
+//                        component={SchoolField}
+//                        modifiable={true}
+//                        name={'school'}
+//                        providerOptions={school}
+//                 />
+//                 <Input label={'Study year'}
+//                        type={null}
+//                        secure={true}
+//                        component={StudyYearField}
+//                        modifiable={true}
+//                        name={'studyYear'}
+//                        providerOptions={studyYear}
+//                 />
+//             </div>
+
 const mapDispatchToProps = (): IState => {
     return {};
 };
@@ -125,14 +160,16 @@ const mapStateToProps = (state, ownProps: IProps): IState => {
         // const fieldNames = ['personId', 'email', 'school', 'studyYear', 'accommodation', 'idNumber', 'familyName', 'otherName'];
         return {
             ...getAccommodationFromState(FORM_NAME, state, ownProps),
-            accommodation: state.provider[accessKey].accommodation,
-            email: state.provider[accessKey].email,
-            familyName: state.provider[accessKey].familyName,
-            idNumber: state.provider[accessKey].idNumber,
-            otherName: state.provider[accessKey].otherName,
-            personId: state.provider[accessKey].personId,
-            school: state.provider[accessKey].school,
-            studyYear: state.provider[accessKey].studyYear,
+            providerOpt: {
+                accommodation: state.provider[accessKey].accommodation,
+                email: state.provider[accessKey].email,
+                familyName: state.provider[accessKey].familyName,
+                idNumber: state.provider[accessKey].idNumber,
+                otherName: state.provider[accessKey].otherName,
+                personId: state.provider[accessKey].personId,
+                school: state.provider[accessKey].school,
+                studyYear: state.provider[accessKey].studyYear,
+            },
         };
     }
     return {};

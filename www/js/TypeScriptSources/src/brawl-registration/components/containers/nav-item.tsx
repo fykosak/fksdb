@@ -5,12 +5,13 @@ import Nav from '../helpers/tabs/nav';
 interface IProps {
     type: string;
     index: number;
+    active: boolean;
 }
 
 export default class NavItem extends React.Component<IProps, {}> {
     public render() {
-        const {index, type} = this.props;
-        return <Nav active={index === 0} name={('member' + index)}>
+        const {index, type, active} = this.props;
+        return <Nav active={active} name={(type + index)}>
             <NameDisplay type={type} index={index}/>
         </Nav>;
     }

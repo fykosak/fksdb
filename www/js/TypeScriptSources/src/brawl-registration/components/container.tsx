@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Form from './form';
-import { IDefinitionsState } from '../reducers/definitions';
 import { setDefinitions } from '../actions/definitions';
+import { IDefinitionsState } from '../reducers/definitions';
+import Form from './form';
 
 interface IState {
     onAddDefinitions?: (def: IDefinitionsState) => void;

@@ -6,31 +6,32 @@ import Input from './input';
 
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+
 import {
-    ACTION_SUBMIT_START,
     submitFail,
+    submitStart,
     submitSuccess,
-} from '../../../entry-form/actions';
-import { getFieldName } from '../containers/persons';
+} from '../../shared/actions/submit';
+import { IReceiveData } from '../../shared/interfaces';
+import {
+    IReceiveProviderData,
+    IStore,
+} from '../interfaces';
+import {
+    isMail,
+    required,
+} from '../validation';
 
 interface IProps {
-    type: string;
-    index: number;
+    accessKey: string;
 }
 
 interface IState {
     onSubmitFail?: (e) => void;
     onSubmitStart?: () => void;
-    onSubmitSuccess?: (data) => void;
+    onSubmitSuccess?: (data: IReceiveData<IReceiveProviderData>) => void;
     personId?: { hasValue: boolean; value: string };
 }
-
-const isMail = (value: string): string => {
-    return /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value) ? undefined : 'is not a valid Mail';
-};
-const required = (value): string => {
-    return (value ? undefined : 'Required');
-};
 
 class PersonProvider extends React.Component<IProps & IState, {}> {
 
@@ -44,14 +45,14 @@ class PersonProvider extends React.Component<IProps & IState, {}> {
                 <Field name={'email'}
                        component={Input}
                        validate={[required, isMail]}
-                       onSubmitError={(e) => {
+                       onSubmitFail={(e) => {
                            this.props.onSubmitFail(e);
                        }}
                        onSubmitStart={() => {
                            this.props.onSubmitStart();
                        }}
                        onSubmitSuccess={(data) => {
-                           data.key = getFieldName(this.props.type, this.props.index);
+                           data.key = this.props.accessKey;
                            this.props.onSubmitSuccess(data);
                        }}
                 />
@@ -60,25 +61,17 @@ class PersonProvider extends React.Component<IProps & IState, {}> {
     }
 }
 
-const submitStart = () => {
-    return {
-        type: ACTION_SUBMIT_START,
-    };
-
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<any>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
         onSubmitFail: (e) => dispatch(submitFail(e)),
         onSubmitStart: () => dispatch(submitStart()),
-        onSubmitSuccess: (data) => dispatch(submitSuccess(data)),
+        onSubmitSuccess: (data: IReceiveData<IReceiveProviderData>) => dispatch(submitSuccess<IReceiveData<IReceiveProviderData>>(data)),
     };
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
-    const accessKey = getFieldName(ownProps.type, ownProps.index);
+const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
+    const accessKey = ownProps.accessKey;
     if (state.provider.hasOwnProperty(accessKey)) {
-        // const fieldNames = ['personId', 'email', 'school', 'studyYear', 'accommodation', 'idNumber', 'familyName', 'otherName'];
         return {
             personId: state.provider[accessKey].personId,
         };

@@ -7,11 +7,3 @@ export const loadData = (data) => {
     };
 };
 
-export const ACTION_CLEAR_PRIVIDER_PROPERTY = 'ACTION_CLEAR_PRIVIDER_PROPERTY';
-
-export const clearProviderProviderProperty = (selector: string) => {
-    return {
-        selector,
-        type: ACTION_CLEAR_PRIVIDER_PROPERTY,
-    };
-};

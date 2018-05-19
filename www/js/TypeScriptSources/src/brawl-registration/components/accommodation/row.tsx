@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IAccommodationItem } from '../../middleware/iterfaces';
 import DateDisplay from '../displays/date';
+import PriceDisplay from '../displays/price';
 
 interface IProps {
     names: string[];
@@ -19,8 +20,9 @@ export default class Row extends React.Component<IProps & any, {}> {
                 return acc.name === name;
             });
             if (currentAcc.length) {
-                const priceLabel = <small
-                    className="align-bottom text-muted">{currentAcc[0].price.kc + 'Kč /' + currentAcc[0].price.eur + '€'}</small>;
+                const priceLabel = <small className="align-bottom text-muted">
+                    <PriceDisplay eur={currentAcc[0].price.eur} kc={currentAcc[0].price.kc}/>
+                </small>;
                 if (currentAcc[0].accId === value) {
                     cols.push(<td key={index} className="text-center table-success"
                                   onClick={() => {

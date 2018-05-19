@@ -2,12 +2,15 @@ import { ACTION_SET_DEFINITIONS } from '../actions/definitions';
 
 import {
     IAccommodationItem,
+    IPersonDefinition,
     IScheduleItem,
 } from '../middleware/iterfaces';
 
 export interface IDefinitionsState {
     accommodation?: IAccommodationItem[];
     schedule?: IScheduleItem[];
+    persons?: IPersonDefinition[];
+    studyYears?: string[][];
 }
 
 const setDefinitions = (state: IDefinitionsState, action): IDefinitionsState => {

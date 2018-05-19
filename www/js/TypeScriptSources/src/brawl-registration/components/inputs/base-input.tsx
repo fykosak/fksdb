@@ -1,6 +1,14 @@
 import * as React from 'react';
+import { WrappedFieldProps } from 'redux-form';
+import { IProviderValue } from '../../../person-provider/reducers/provider';
 
-export default class BaseInput extends React.Component<any, {}> {
+interface IProps {
+    type: string;
+    readOnly: boolean;
+    providerOptions: IProviderValue;
+}
+
+export default class BaseInput extends React.Component<WrappedFieldProps & IProps, {}> {
 
     public componentDidMount() {
         if (this.props.providerOptions.hasValue) {

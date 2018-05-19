@@ -8,35 +8,9 @@ import TeamName from './inputs/team-name';
 
 import { connect } from 'react-redux';
 import PersonsContainer, { getFieldName } from './containers/persons';
+import { IStore } from '../reducers';
 
-const persons = [
-    {
-        personId: null,
-        type: 'participant',
-    },
-    {
-        personId: null,
-        type: 'participant',
-    },
-    {
-        personId: null,
-        type: 'participant',
-    },
-    {
-        personId: null,
-        type: 'participant',
-    },
-    {
-        personId: null,
-        type: 'participant',
-    },
-    {
-        personId: null,
-        type: 'teacher',
-    },
-];
-
-class BrawlForm extends React.Component<any, any> {
+class BrawlForm extends React.Component<any, {}> {
 
     public render() {
         // const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
@@ -62,23 +36,13 @@ const asyncValidate = (values, dispatch) => {
 
 export const FORM_NAME = 'brawlRegistrationForm';
 
-const mapDispatchToProps = () => {
+const mapDispatchToProps = (): any => {
     return {};
 };
 
-const mapStateToProps = (state) => {
-    const data = {};
-    for (const accessKey in state.provider) {
-        if (state.provider.hasOwnProperty(accessKey)) {
-            for (const name in state.provider[accessKey]) {
-                if (state.provider[accessKey].hasOwnProperty(name)) {
-                    data[accessKey + '.' + name] = state.provider[accessKey][name].value;
-                }
-            }
-        }
-    }
+const mapStateToProps = (state: IStore): any => {
     return {
-        initialValues: data,
+        initialValues: null,
     };
 
 };

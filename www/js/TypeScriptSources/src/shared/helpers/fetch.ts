@@ -1,6 +1,6 @@
-export async function netteFetch(data: any = null, success: (data: any) => void, error: (e) => void): Promise<any> {
+export async function netteFetch<F, D>(data: F = null, success: (data: D) => void, error: (e) => void): Promise<D> {
     const netteJQuery: any = $;
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (d: D) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
             error: (e) => {
@@ -8,10 +8,32 @@ export async function netteFetch(data: any = null, success: (data: any) => void,
                 reject(e);
             },
             method: 'POST',
-            success: (d) => {
+            success: (d: D) => {
                 success(d);
                 resolve(d);
             },
+        });
+    });
+}
+
+export async function uploadFile<F, D>(data: F = null, success: (data: D) => void, error: (e: any) => void): Promise<D> {
+    return new Promise((resolve: (d: D) => void, reject) => {
+        $.ajax({
+            cache: false,
+            contentType: false,
+            data,
+            dataType: 'json',
+            error: (e) => {
+                reject(e);
+                error(e);
+            },
+            processData: false,
+            success: (d: D) => {
+                resolve(d);
+                success(d);
+            },
+            type: 'POST',
+            url: '#',
         });
     });
 }
