@@ -10,6 +10,7 @@ export interface ISubmit {
     teamId: number;
     created: any;
 }
+
 export interface ISubmits {
     [id: number]: ISubmit;
 }
@@ -36,4 +37,27 @@ export interface ITeam {
     y?: number;
     roomId?: number;
     room?: string;
+}
+
+export interface IUploadDataItem {
+    taskId: number;
+    deadline: string;
+    submitId: number;
+    name: string;
+    href: string;
+}
+
+export interface IUploadData {
+    [key: number]: IUploadDataItem;
+}
+
+export interface IMessage {
+    level: string;
+    text: string;
+}
+
+export interface IReceiveData<D> {
+    act: string;
+    messages: IMessage[];
+    data: D;
 }
