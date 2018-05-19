@@ -100,6 +100,7 @@ events:
                     participated: _('Účastnil se')
                     cancelled: _('Zrušen')
                     missed: _('Nepřijel')
+                    disqualified: _('Diskvalifikován')
 
                 transitions:
                     __init->pending:
