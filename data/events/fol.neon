@@ -176,6 +176,7 @@ events:
                 - Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
                 - Events\Spec\Fol\FlagCheck()
                 - Events\Spec\Fol\BornCheck()
+                - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
 
 
             processings:
