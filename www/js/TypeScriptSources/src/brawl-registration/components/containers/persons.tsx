@@ -4,6 +4,9 @@ import { IPersonDefinition } from '../../middleware/iterfaces';
 import { IStore } from '../../reducers';
 import NavItem from './nav-item';
 import TabItem from './tab-item';
+import Tab from '../helpers/tabs/tab';
+import Summary from '../sumary';
+import Nav from '../helpers/tabs/nav';
 
 interface IState {
     personsDef?: IPersonDefinition[];
@@ -22,10 +25,11 @@ class PersonsContainer extends React.Component<IState, {}> {
         }
         this.props.personsDef.forEach((member, index) => {
             const active = (index === 0);
-            body.push(<TabItem key={index} active={active} type={member.type} index={index}/>);
+            body.push(<TabItem required={active} key={index} active={active} type={member.type} index={index}/>);
             tabs.push(<NavItem key={index} active={active} type={member.type} index={index}/>);
         });
-
+        body.push(<Tab active={false} name={'summary'}><Summary/></Tab>);
+        tabs.push(<Nav active={false} name={'summary'}>Summary</Nav>);
         return <div>
             <ul className="nav nav-tabs" id="form-tab" role="tablist">
                 {tabs}

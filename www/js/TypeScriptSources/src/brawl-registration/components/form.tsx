@@ -4,43 +4,81 @@ import {
     Form,
     reduxForm,
 } from 'redux-form';
-import TeamName from './inputs/team-name';
 
 import { connect } from 'react-redux';
-import PersonsContainer, { getFieldName } from './containers/persons';
 import { IStore } from '../reducers';
+import PersonsContainer, { getFieldName } from './containers/persons';
 
-class BrawlForm extends React.Component<any, {}> {
+import { InjectedFormProps } from 'redux-form';
+import BaseInput from './inputs/base-input';
+import ErrorDisplay from './inputs/error-display';
+import { netteFetch } from '../../shared/helpers/fetch';
+import {
+    required,
+} from '../../person-provider/validation';
+import { IReceiveData } from '../../shared/interfaces';
+import TeamName from './inputs/team-name';
+
+interface IState {
+    initialValues?: any;
+}
+
+class BrawlForm extends React.Component<IState & InjectedFormProps & any, {}> {
 
     public render() {
         // const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
-
+        const {handleSubmit} = this.props;
 // handleSubmit(onSubmit)
         return (
-            <Form onSubmit={() => {
+            <Form onSubmit={handleSubmit((...args) => {
                 console.log('submit');
-            }}>
-                <Field name="teamName" component={TeamName}/>
+            })}>
+                <Field
+                    validate={[required]}
+                    name={'teamName'}
+                    component={TeamName}
+                />
+
                 <PersonsContainer/>
+                <button type='submit'>Submit</button>
             </Form>
         );
     }
 }
 
+interface ITeamNameResponse {
+    result: boolean;
+}
+
+interface ITeamNameRequest {
+    act: string;
+    name: string;
+}
+
 const asyncValidate = (values, dispatch) => {
     console.log(values);
     return new Promise((resolve) => {
-        setTimeout(resolve, 5000);
+
+        netteFetch<ITeamNameRequest, IReceiveData<ITeamNameResponse>>({
+            act: 'team-name-unique',
+            name: values.teamName,
+        }, (data) => {
+            if (!data.data.result) {
+                resolve({teamName: data.messages[0].text});
+            }
+        }, (e) => {
+            throw e;
+        });
     });
 };
 
 export const FORM_NAME = 'brawlRegistrationForm';
 
-const mapDispatchToProps = (): any => {
+const mapDispatchToProps = (): IState => {
     return {};
 };
 
-const mapStateToProps = (state: IStore): any => {
+const mapStateToProps = (state: IStore): IState => {
     return {
         initialValues: null,
     };

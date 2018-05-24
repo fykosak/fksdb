@@ -60,6 +60,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                        providerOptions={otherName}
                        modifiable={true}
                        secure={false}
+                       required={true}
                 />
 
                 <Input name={'familyName'}
@@ -70,6 +71,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                        providerOptions={familyName}
                        modifiable={true}
                        secure={false}
+                       required={true}
                 />
                 <Input
                     name={'email'}
@@ -80,6 +82,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                     providerOptions={email}
                     modifiable={false}
                     secure={false}
+                    required={true}
                 />
             </div>
             <div>
@@ -91,6 +94,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                        modifiable={true}
                        name={'school'}
                        providerOptions={school}
+                       required={true}
                 />
                 <Input label={'Study year'}
                        type={null}
@@ -99,6 +103,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                        modifiable={true}
                        name={'studyYear'}
                        providerOptions={studyYear}
+                       required={true}
                 />
             </div>
 
@@ -116,6 +121,7 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
                            modifiable={true}
                            name={'idNumber'}
                            providerOptions={idNumber}
+                           required={true}
                     />)
                 }
             </div>

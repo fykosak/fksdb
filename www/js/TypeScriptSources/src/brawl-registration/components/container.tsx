@@ -18,7 +18,7 @@ class Container extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        return <><Form/></>;
+        return <Form/>;
     }
 }
 

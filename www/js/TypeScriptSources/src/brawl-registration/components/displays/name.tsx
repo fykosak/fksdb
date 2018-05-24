@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getParticipantValues } from '../../middleware/price';
+import {
+    getParticipantValues,
+    IPersonSelector,
+} from '../../middleware/price';
 import { FORM_NAME } from '../form';
-
-interface IProps {
-    type: string;
-    index: number;
-}
 
 interface IState {
     familyName?: string;
     otherName?: string;
 }
 
-class NameDisplay extends React.Component<IProps & IState, {}> {
+class NameDisplay extends React.Component<IPersonSelector & IState, {}> {
     public render() {
         const {index, type, familyName, otherName} = this.props;
         return <>
@@ -28,7 +26,7 @@ const mapDispatchToProps = () => {
     return {};
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
+const mapStateToProps = (state, ownProps: IPersonSelector): IState => {
     const values = getParticipantValues(FORM_NAME, state, ownProps);
     return {
         familyName: values.familyName,

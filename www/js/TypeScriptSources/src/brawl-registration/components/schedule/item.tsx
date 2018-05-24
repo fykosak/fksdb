@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IPrice } from '../../middleware/price';
 import DateDisplay from '../displays/date';
+import PriceDisplay from '../displays/price';
 
 interface IProps {
     date: string;
@@ -39,7 +40,8 @@ export default class Item extends React.Component<IProps & any, IState> {
                                 (<i className="fa fa-square-o"/>)
                             }</a>
                             <span className="ml-3">{scheduleName}</span>
-                            <small className="ml-3 text-muted">({price ? (price.kc + ' Kč/' + price.eur + ' €') : ('free')})</small>
+                            <small className="ml-3 text-muted">({price ? (<PriceDisplay eur={price.eur} kc={price.kc}/>) : ('free')})
+                            </small>
                         </h5>
                     </div>
                     <div className="col-6">

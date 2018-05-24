@@ -10,10 +10,8 @@ export default class ErrorDisplay extends React.Component<WrappedFieldProps & IP
         const {
             meta: {touched, error, warning},
         } = this.props;
-        return <div>{touched && (
-            (error && <span>{error}</span>) ||
-            (warning && <span>{warning}</span>))
-        }</div>;
+        // div className={(invalid ? ' is-invalid' : '')}
+        return <span className="invalid-feedback">{touched && (error)}</span>;
 
     }
 }

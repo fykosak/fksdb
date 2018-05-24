@@ -5,13 +5,14 @@ import { IProviderValue } from '../../../person-provider/reducers/provider';
 interface IProps {
     type: string;
     readOnly: boolean;
-    providerOptions: IProviderValue;
+    placeholder: string;
+    providerOptions?: IProviderValue;
 }
 
 export default class BaseInput extends React.Component<WrappedFieldProps & IProps, {}> {
 
     public componentDidMount() {
-        if (this.props.providerOptions.hasValue) {
+        if (this.props.providerOptions && this.props.providerOptions.hasValue) {
             this.props.input.onChange(this.props.providerOptions.value);
         }
     }
@@ -21,8 +22,14 @@ export default class BaseInput extends React.Component<WrappedFieldProps & IProp
             input,
             type,
             readOnly,
+            meta: {invalid, touched},
         } = this.props;
 
-        return <input className="form-control" readOnly={readOnly} {...input} type={type}/>;
+        return <input
+            className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
+            readOnly={readOnly}
+            {...input}
+            type={type}
+        />;
     }
 }

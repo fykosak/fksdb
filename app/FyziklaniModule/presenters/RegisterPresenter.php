@@ -30,6 +30,50 @@ class RegisterPresenter extends BasePresenter {
     }
 
     /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     */
+    private function handleSchoolProvider(\ReactResponse $response) {
+        $data = $this->schoolProvider->getFilteredItems($this->getHttpRequest()->getPost('payload'));
+        FireLogger::log($data);
+        $response->setData($data);
+        $response->setAct('school-provider');
+        $this->sendResponse($response);
+    }
+
+    /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     */
+    private function handlePersonProvider(\ReactResponse $response) {
+        $email = $this->getHttpRequest()->getPost('email');
+        $person = $this->servicePerson->findByEmail($email);
+        $data = $this->getParticipantData($person, $email);
+        $response->setData($data);
+        $response->setAct('person-provider');
+        $this->sendResponse($response);
+    }
+
+    /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     */
+    private function handleTeamNameUnique(\ReactResponse $response) {
+        $name = $this->getHttpRequest()->getPost('name');
+        $count = $this->serviceFyziklaniTeam->getTable()->where('name=?', $name)->where('event_id', $this->getEventId())->count();
+
+        $data = ['result' => true];
+        if ($count) {
+            $data['result'] = false;
+            $response->addMessage(new \ReactMessage(_('Meno je už použité'), 'danger'));
+        }
+        $response->setData($data);
+        $response->setAct('team-name-unique');
+        $this->sendResponse($response);
+
+    }
+
+    /**
      * @throws \Nette\Application\AbortException
      * @throws JsonException
      */
@@ -38,20 +82,18 @@ class RegisterPresenter extends BasePresenter {
         if ($this->isAjax()) {
             FireLogger::log($this->getHttpRequest());
             $response = new \ReactResponse();
-            if ($this->getHttpRequest()->getPost('act') == 'school-provider') {
-                $data = $this->schoolProvider->getFilteredItems($this->getHttpRequest()->getPost('payload'));
-                FireLogger::log($data);
-                $response->setData($data);
-                $response->setAct('school-provider');
-                $this->sendResponse($response);
-            } elseif ($this->getHttpRequest()->getPost('act') == 'person-provider') {
-                $email = $this->getHttpRequest()->getPost('email');
-                $person = $this->servicePerson->findByEmail($email);
-                $data = $this->getParticipantData($person, $email);
-                $response->setData($data);
-                $response->setAct('person-provider');
-                $this->sendResponse($response);
+            switch ($this->getHttpRequest()->getPost('act')) {
+                case 'school-provider':
+                    $this->handleSchoolProvider($response);
+                    break;
+                case 'person-provider' :
+                    $this->handlePersonProvider($response);
+                    break;
+                case 'team-name-unique':
+                    $this->handleTeamNameUnique($response);
+                    break;
             }
+
         } else {
             $this->template->data = [];
             $this->template->accDef = '[{"accId":1,"date":"2017-05-02","name":"Elf","price":{"eur":10,"kc":300}},{"accId":2,"date":"2017-05-03","name":"Elf","price":{"eur":10,"kc":300}},{"accId":3,"date":"2017-05-04","name":"Elf","price":{"eur":10,"kc":300}},{"accId":4,"date":"2017-05-05","name":"Elf","price":{"eur":10,"kc":300}},{"accId":5,"date":"2017-05-03","name":"Duo","price":{"eur":20,"kc":500}},{"accId":6,"date":"2017-05-04","name":"Duo","price":{"eur":20,"kc":500}},{"accId":7,"date":"2017-05-05","name":"Duo","price":{"eur":20,"kc":500}}]';

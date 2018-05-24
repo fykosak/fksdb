@@ -10,6 +10,7 @@ interface IProps {
     type: string;
     index: number;
     active: boolean;
+    required?: boolean;
 }
 
 export default class TabItem extends React.Component<IProps, {}> {
@@ -27,7 +28,7 @@ export default class TabItem extends React.Component<IProps, {}> {
         }
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={active} name={(type + index)}>
-                <PersonProvider accessKey={getFieldName(type, index)}>
+                <PersonProvider required={this.props.required} accessKey={getFieldName(type, index)}>
                     {form}
                 </PersonProvider>
             </Tab>

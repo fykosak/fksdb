@@ -3,6 +3,7 @@ import {
     IProviderStore,
     IProviderValue,
 } from './reducers/provider';
+import { IReceiveData } from '../shared/interfaces';
 
 export interface IResponseValues {
     act: string;
@@ -15,7 +16,11 @@ export interface IStore {
     provider: IProviderStore;
 }
 
-export interface IReceiveProviderData {
+export interface IReceiveProviderData<D> extends IReceiveData<D> {
+    key: string;
+}
+
+export interface IReceiveProviderFields {
     fields: {
         [value: string]: IProviderValue;
     };

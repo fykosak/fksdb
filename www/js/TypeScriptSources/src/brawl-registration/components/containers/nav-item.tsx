@@ -1,5 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import {
+    getFormAsyncErrors,
+    getFormMeta,
+    getFormSyncErrors,
+} from 'redux-form';
 import NameDisplay from '../displays/name';
+import { FORM_NAME } from '../form';
 import Nav from '../helpers/tabs/nav';
 
 interface IProps {
@@ -8,11 +15,51 @@ interface IProps {
     active: boolean;
 }
 
-export default class NavItem extends React.Component<IProps, {}> {
+interface IState {
+    syncErrors?: {
+        [key: string]: string;
+    };
+    asyncErrors?: {
+        [key: string]: string;
+    };
+}
+
+class NavItem extends React.Component<IProps & IState, {}> {
     public render() {
-        const {index, type, active} = this.props;
+        const {index, type, active, syncErrors, asyncErrors} = this.props;
+        const invalid = (syncErrors || asyncErrors);
         return <Nav active={active} name={(type + index)}>
-            <NameDisplay type={type} index={index}/>
+            <span className={invalid ? 'text-danger' : 'text-success'}>
+                <span className={invalid ? 'fa-exclamation-triangle fa mr-1' : 'fa fa-check mr-1'}/>
+                <NameDisplay type={type} index={index}/>
+            </span>
         </Nav>;
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state, ownProps: IProps): IState => {
+    const allSyncErrors = getFormSyncErrors(FORM_NAME)(state);
+    const allAsyncErrors = getFormAsyncErrors(FORM_NAME)(state);
+    console.log(getFormMeta(FORM_NAME)(state));
+    const data = {
+        asyncErrors: undefined,
+        syncErrors: undefined,
+    };
+    if (allSyncErrors && allSyncErrors.hasOwnProperty(ownProps.type)) {
+        if (allSyncErrors[ownProps.type].hasOwnProperty(ownProps.index)) {
+            data.syncErrors = allSyncErrors[ownProps.type][ownProps.index];
+        }
+    }
+    if (allAsyncErrors && allAsyncErrors.hasOwnProperty(ownProps.type)) {
+        if (allAsyncErrors[ownProps.type].hasOwnProperty(ownProps.index)) {
+            data.asyncErrors = allAsyncErrors[ownProps.type][ownProps.index];
+        }
+    }
+    return data;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavItem);

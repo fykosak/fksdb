@@ -1,13 +1,9 @@
-export interface ISendValues {
+export interface ISchoolProviderResponse {
     act: string;
     payload: string;
 }
 
-interface ISchool {
+export interface ISchool {
     id: number;
     name: string;
-}
-
-export interface IRecieveValues {
-    data: ISchool[];
 }

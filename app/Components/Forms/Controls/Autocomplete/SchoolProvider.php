@@ -10,12 +10,13 @@ use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolProvider implements IFilteredDataProvider {
 
     const LIMIT = 50;
+    const REGION = 'region';
 
     /**
      * @var ServiceSchool
@@ -25,7 +26,7 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * School with school_id equal to defaulValue is suggested even when it's not
      * active.
-     * 
+     *
      * @var int
      */
     private $defaultValue;
@@ -36,7 +37,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * Prefix search.
-     * 
+     *
      * @param string $search
      * @return array
      */
@@ -48,12 +49,12 @@ class SchoolProvider implements IFilteredDataProvider {
         foreach ($tokens as $token) {
             $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
         }
-	// For backwards compatibility consider NULLs active
-	if ($this->defaultValue != null) {
-	    $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
-	} else {
-	    $schools->where('active IS NULL OR active = 1');
-	}
+        // For backwards compatibility consider NULLs active
+        if ($this->defaultValue != null) {
+            $schools->where('(active IS NULL OR active = 1) OR school_id = ?', $this->defaultValue);
+        } else {
+            $schools->where('active IS NULL OR active = 1');
+        }
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
@@ -83,6 +84,7 @@ class SchoolProvider implements IFilteredDataProvider {
         return array(
             self::LABEL => $school->name_abbrev,
             self::VALUE => $school->school_id,
+            self::REGION => $school->getAddress()->region->country_iso,
         );
     }
 

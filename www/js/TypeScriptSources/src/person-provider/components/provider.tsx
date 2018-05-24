@@ -3,6 +3,7 @@ import {
     Field,
 } from 'redux-form';
 import Input from './input';
+import HiddenField from './hidden';
 
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -15,6 +16,7 @@ import {
 import { IReceiveData } from '../../shared/interfaces';
 import {
     IReceiveProviderData,
+    IReceiveProviderFields,
     IStore,
 } from '../interfaces';
 import {
@@ -24,49 +26,38 @@ import {
 
 interface IProps {
     accessKey: string;
+    required: boolean;
 }
 
 interface IState {
-    onSubmitFail?: (e) => void;
-    onSubmitStart?: () => void;
-    onSubmitSuccess?: (data: IReceiveData<IReceiveProviderData>) => void;
     personId?: { hasValue: boolean; value: string };
 }
 
 class PersonProvider extends React.Component<IProps & IState, {}> {
 
     public render() {
+        const {children, personId} = this.props;
+        const personIdField = (<Field
+            name={'personId'}
+            validate={this.props.required ? [required] : []}
+            component={HiddenField}
+            providerOptions={personId}
+        />);
         if (this.props.personId) {
             return <div>
-                {this.props.children}
+                {children}
             </div>;
         } else {
             return <>
-                <Field name={'email'}
-                       component={Input}
-                       validate={[required, isMail]}
-                       onSubmitFail={(e) => {
-                           this.props.onSubmitFail(e);
-                       }}
-                       onSubmitStart={() => {
-                           this.props.onSubmitStart();
-                       }}
-                       onSubmitSuccess={(data) => {
-                           data.key = this.props.accessKey;
-                           this.props.onSubmitSuccess(data);
-                       }}
-                />
+                {personIdField}
+                <Input accessKey={this.props.accessKey}/>
             </>;
         }
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
-    return {
-        onSubmitFail: (e) => dispatch(submitFail(e)),
-        onSubmitStart: () => dispatch(submitStart()),
-        onSubmitSuccess: (data: IReceiveData<IReceiveProviderData>) => dispatch(submitSuccess<IReceiveData<IReceiveProviderData>>(data)),
-    };
+const mapDispatchToProps = (): IState => {
+    return {};
 };
 
 const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
