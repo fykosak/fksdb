@@ -1,5 +1,5 @@
 /* general setting */
-.storedQueryTags a:hover, .storedQueryTags a:focus{
+.storedQueryTags a:hover, .storedQueryTags a:focus {
     text-decoration: none;
 }
 
@@ -81,4 +81,16 @@
 .storedQueryTag-11, .label.storedQueryTag-11:hover, .label.storedQueryTag-11:focus {
     color: white;
     background-color: #000000;
+}
+
+/* style 12 */
+.storedQueryTag-12, .label.storedQueryTag-12:hover, .label.storedQueryTag-12:focus {
+    color: white;
+    background-color: #1175da;
+}
+
+/* style 13 */
+.storedQueryTag-13, .label.storedQueryTag-13:hover, .label.storedQueryTag-13:focus {
+    color: white;
+    background-color: #ff4800;
 }
