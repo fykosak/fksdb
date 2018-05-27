@@ -35,9 +35,9 @@ class DuplicateFinder {
     }
 
     public function getPairs() {
-        $buckets = array();
+        $buckets = [];
         /* Create buckets for quadratic search. */
-        foreach ($this->servicePerson->getTable() as $person) {
+        foreach ($this->servicePerson->getTable()->select("person.*, person_info:email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = array();
@@ -81,29 +81,25 @@ class DuplicateFinder {
      * @return float
      */
     private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
-        $piA = $a->getInfo();
-        $piB = $b->getInfo();
-
         /*
          * Check explixit difference
          */
-        if (in_array($a->getPrimary(), $this->getDifferentPersons($piB))) {
+        if (in_array($a->getPrimary(), $this->getDifferentPersons($b))) {
             return 0;
         }
-        if (in_array($b->getPrimary(), $this->getDifferentPersons($piA))) {
+        if (in_array($b->getPrimary(), $this->getDifferentPersons($a))) {
             return 0;
         }
 
         /*
          * Email check
          */
-
-        if (!$piA || !$piB) {
+        if (!$a->PI || !$b->PI) { // if person_info records don't exist
             $emailScore = 0.5; // cannot say anything
-        } else if (!$piA->email || !$piB->email) {
+        } else if (!$a->email || !$b->email) {
             $emailScore = 0.8; // a little bit more
         } else {
-            $emailScore = 1 - $this->relativeDistance($piA->email, $piB->email);
+            $emailScore = 1 - $this->relativeDistance($a->email, $b->email);
         }
 
         $familyScore = $this->stringScore($a->family_name, $b->family_name);
@@ -113,12 +109,12 @@ class DuplicateFinder {
         return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
     }
 
-    private function getDifferentPersons(ActiveRow $personInfo = null) {
-        if ($personInfo === null || !isset($personInfo->duplicates)) {
+    private function getDifferentPersons(ActiveRow $person) {
+        if (!isset($person->duplicates)) {
             return array();
         }
         $differentPersonIds = [];
-        foreach (explode(',', $personInfo->duplicates) as $row) {
+        foreach (explode(',', $person->duplicates) as $row) {
             if (strtok($row, '(') === self::DIFFERENT_PATTERN) {
                 $differentPersonIds[] = strtok(')');
             }
