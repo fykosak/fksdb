@@ -64,7 +64,7 @@ class Summary extends React.Component<IState, {}> {
             </tr>);
         });
 
-        rows.push(<tr className="table-primary">
+        rows.push(<tr key={'sum'} className="table-primary">
             <td>
                 sum
             </td>

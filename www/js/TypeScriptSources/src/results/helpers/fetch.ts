@@ -1,5 +1,5 @@
 import { Dispatch } from 'react-redux';
-import { netteFetch } from '../../shared/helpers/fetch';
+import { netteFetch } from '../../submit/middleware/fetch';
 import {
     fetchFail,
     newDataArrived,

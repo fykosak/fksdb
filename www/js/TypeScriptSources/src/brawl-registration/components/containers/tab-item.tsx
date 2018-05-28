@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { FormSection } from 'redux-form';
-import Tab from '../helpers/tabs/tab';
+import { connect } from 'react-redux';
+import {
+    Field,
+    FormSection,
+} from 'redux-form';
 import PersonProvider from '../../../person-provider/components/provider';
+import { required } from '../../../person-provider/validation';
+import Tab from '../helpers/tabs/tab';
+import HiddenField from '../inputs/hidden';
 import ParticipantForm from './participant';
 import { getFieldName } from './persons';
 import TeacherForm from './teacher';
@@ -13,9 +19,19 @@ interface IProps {
     required?: boolean;
 }
 
-export default class TabItem extends React.Component<IProps, {}> {
+interface IState {
+    providerOpt?: {
+        personId?: { hasValue: boolean; value: string };
+    };
+}
+
+class TabItem extends React.Component<IProps & IState, {}> {
     public render() {
-        const {index, type, active} = this.props;
+        const {index, type, active, providerOpt} = this.props;
+        let personId = null;
+        if (providerOpt) {
+            personId = providerOpt.personId;
+        }
         let form = null;
         switch (type) {
             default:
@@ -28,10 +44,34 @@ export default class TabItem extends React.Component<IProps, {}> {
         }
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={active} name={(type + index)}>
-                <PersonProvider required={this.props.required} accessKey={getFieldName(type, index)}>
+                <Field
+                    name={'personId'}
+                    validate={this.props.required ? [required] : []}
+                    component={HiddenField}
+                    providerOptions={personId}
+                />
+                <PersonProvider accessKey={getFieldName(type, index)}>
                     {form}
                 </PersonProvider>
             </Tab>
         </FormSection>;
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state, ownProps: IProps): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    if (state.provider.hasOwnProperty(accessKey)) {
+        return {
+            providerOpt: {
+                personId: state.provider[accessKey].personId,
+            },
+        };
+    }
+    return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabItem);

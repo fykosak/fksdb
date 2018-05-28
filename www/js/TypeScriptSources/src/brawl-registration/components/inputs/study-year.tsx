@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStore } from '../../reducers';
 import { WrappedFieldProps } from 'redux-form';
 import { IProviderValue } from '../../../person-provider/reducers/provider';
+import { IStore } from '../../reducers';
 
 interface IState {
     studyYearsDef?: any[];
@@ -33,10 +33,10 @@ class StudyYear extends React.Component<WrappedFieldProps & IProps & IState, {}>
                 const opts = [];
                 for (const value in studyYearsDef[name]) {
                     if (studyYearsDef[name].hasOwnProperty(value)) {
-                        opts.push(<option value={value}>{studyYearsDef[name][value]}</option>)
+                        opts.push(<option key={value} value={value}>{studyYearsDef[name][value]}</option>);
                     }
                 }
-                optGroups.push(<optgroup label={name}>
+                optGroups.push(<optgroup key={name} label={name}>
                     {opts}
                 </optgroup>);
             }

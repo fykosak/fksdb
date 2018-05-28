@@ -33,11 +33,14 @@ class Accommodation extends React.Component<IProps & IState, {}> {
         const rows = [];
         for (const date in dates) {
             if (dates.hasOwnProperty(date)) {
-                rows.push(<Field name={date}
-                                 component={Row}
-                                 hotels={names}
-                                 date={date}
-                                 accommodations={dates[date]}/>);
+                rows.push(<Field
+                    key={date}
+                    name={date}
+                    component={Row}
+                    hotels={names}
+                    date={date}
+                    accommodations={dates[date]}
+                />);
             }
         }
 
@@ -46,8 +49,8 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 <thead>
                 <tr>
                     <th>Date</th>
-                    {names.map((hotel) => {
-                        return <th>{hotel}</th>;
+                    {names.map((hotel, index) => {
+                        return <th key={index}>{hotel}</th>;
                     })}
                 </tr>
                 </thead>

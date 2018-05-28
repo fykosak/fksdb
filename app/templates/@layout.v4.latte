@@ -7,13 +7,13 @@
     <title>{block titleHeader}{$title} | FKSDB{/block}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/react-select@1.2.1/dist/react-select.css">
     {control cssLoader
-        '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' => [screen],
+        'css/bootstrap.v4.css' => [screen],
         'css/style.v4.css' => [screen],
-        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
+        'css/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all]
+        'css/font-awesome.4.7.0.css'=>[all],
+        'css/react-select.css' => [all]
         }
     {block head}{/block}
 </head>
@@ -89,10 +89,10 @@
     {*TODO store this library localy*}
     {control jsLoader
         'js/netteForms.js',
-        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
-        'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+        'js/jquery.min.js',
+        'js/jquery-ui.min.js',
+        'js/popper.min.js',
+        'js/bootstrap.v4.min.js',
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
         'js/main.js',

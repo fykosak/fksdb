@@ -5,8 +5,10 @@ import {
 } from 'react-redux';
 import { ITeam } from '../../../../../shared/interfaces';
 import { setTeamId } from '../../../../actions/stats';
+// noinspection TypeScriptPreferShortImport
 import { IStore } from '../../../../reducers/index';
 
+// noinspection TypeScriptPreferShortImport
 import { lang } from '../../../../lang/index';
 import PointsInTime from './line-chart/index';
 import PointsPie from './pie/index';

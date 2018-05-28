@@ -1,17 +1,8 @@
 import * as React from 'react';
-
-import { connect } from 'react-redux';
 import { Async } from 'react-select';
-import { Dispatch } from 'redux';
-import {
-    ACTION_SUBMIT_START,
-    submitFail,
-    submitSuccess,
-} from '../../../entry-form/actions';
-import { netteFetch } from '../../../shared/helpers/fetch';
-import { IReceiveData } from '../../../shared/interfaces';
-
 import { WrappedFieldProps } from 'redux-form';
+import { netteFetch } from '../../../submit/middleware/fetch';
+import { IResponse } from '../../../submit/middleware/interfaces';
 import {
     ISchool,
     ISchoolProviderResponse,
@@ -45,7 +36,7 @@ export default class SchoolProvider extends React.Component<IProps & WrappedFiel
         const loadOptions = (input, cb) => {
             const netteJQuery: any = $;
             netteJQuery.nette.ext('unique', null);
-            netteFetch<ISchoolProviderResponse, IReceiveData<ISchool[]>>({
+            netteFetch<ISchoolProviderResponse, IResponse<ISchool[]>>({
                 act: 'school-provider',
                 payload: input,
             }, (data) => {

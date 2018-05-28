@@ -4,6 +4,7 @@ import ErrorDisplay from './error-display';
 import SecureDisplay from './secure-display';
 import { IProviderValue } from '../../../person-provider/reducers/provider';
 import { required as requiredTest } from '../../../person-provider/validation';
+import Lang from '../../../lang/components/lang';
 
 interface IProps {
     label: string;
@@ -36,9 +37,10 @@ export default class Input extends React.Component<IProps, {}> {
         if (!name) {
             return null;
         }
+
         return <div className="form-group">
-            <label>{label}</label>
-            {description && (<small className="form-text text-muted">{description}</small>)}
+            <label><Lang text={label}/></label>
+            {description && (<small className="form-text text-muted"><Lang text={description}/></small>)}
 
             {(secure && providerOptions.hasValue) ?
                 (<Field name={name}

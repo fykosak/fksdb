@@ -1,10 +1,10 @@
 import { Dispatch } from 'react-redux';
 import { reset } from 'redux-form';
 
-import { netteFetch } from '../../shared/helpers/fetch';
+import { netteFetch } from '../../submit/middleware/fetch';
 import { FORM_NAME } from '../components/form-container';
 import { getFullCode } from '../middleware/form';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
 
 export const ACTION_SUBMIT_START = 'ACTION_SUBMIT_START';
 

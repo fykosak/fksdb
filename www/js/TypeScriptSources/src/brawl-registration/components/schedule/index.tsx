@@ -5,6 +5,7 @@ import {
 import Price from './price';
 
 import { connect } from 'react-redux';
+import Lang from '../../../lang/components/lang';
 import { IScheduleItem } from '../../middleware/iterfaces';
 import { IStore } from '../../reducers';
 import Item from './item';
@@ -23,10 +24,11 @@ class Schedule extends React.Component<IProps & IState, {}> {
     public render() {
         const {type, index} = this.props;
         return <>
-            <p>Doprovodný program o ktorý mám zaujem.</p>
-            {this.props.scheduleDef.map((value) => {
+            <p><Lang text={'Doprovodný program o ktorý mám zaujem.'}/></p>
+            {this.props.scheduleDef.map((value, i) => {
                 return <Field
-                    name={value.id}
+                    key={i}
+                    name={value.id.toString()}
                     component={Item}
                     date={value.date}
                     description={value.description}

@@ -1,22 +1,21 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
     Field,
     Form,
     reduxForm,
+    InjectedFormProps,
 } from 'redux-form';
-
-import { connect } from 'react-redux';
-import { IStore } from '../reducers';
-import PersonsContainer, { getFieldName } from './containers/persons';
-
-import { InjectedFormProps } from 'redux-form';
-import BaseInput from './inputs/base-input';
-import ErrorDisplay from './inputs/error-display';
-import { netteFetch } from '../../shared/helpers/fetch';
 import {
     required,
 } from '../../person-provider/validation';
-import { IReceiveData } from '../../shared/interfaces';
+import { netteFetch } from '../../submit/middleware/fetch';
+import {
+    IRequest,
+    IResponse,
+} from '../../submit/middleware/interfaces';
+import { IStore } from '../reducers';
+import PersonsContainer from './containers/persons';
 import TeamName from './inputs/team-name';
 
 interface IState {
@@ -50,8 +49,7 @@ interface ITeamNameResponse {
     result: boolean;
 }
 
-interface ITeamNameRequest {
-    act: string;
+interface ITeamNameRequest extends IRequest {
     name: string;
 }
 
@@ -59,7 +57,7 @@ const asyncValidate = (values, dispatch) => {
     console.log(values);
     return new Promise((resolve) => {
 
-        netteFetch<ITeamNameRequest, IReceiveData<ITeamNameResponse>>({
+        netteFetch<ITeamNameRequest, IResponse<ITeamNameResponse>>({
             act: 'team-name-unique',
             name: values.teamName,
         }, (data) => {

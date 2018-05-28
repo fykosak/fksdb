@@ -1,32 +1,13 @@
 import * as React from 'react';
-import {
-    Field,
-} from 'redux-form';
-import Input from './input';
-import HiddenField from './hidden';
-
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-
 import {
-    submitFail,
-    submitStart,
-    submitSuccess,
-} from '../../shared/actions/submit';
-import { IReceiveData } from '../../shared/interfaces';
-import {
-    IReceiveProviderData,
-    IReceiveProviderFields,
     IStore,
 } from '../interfaces';
-import {
-    isMail,
-    required,
-} from '../validation';
+import Input from './input';
 
 interface IProps {
     accessKey: string;
-    required: boolean;
+    html?: string;
 }
 
 interface IState {
@@ -36,22 +17,19 @@ interface IState {
 class PersonProvider extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {children, personId} = this.props;
-        const personIdField = (<Field
-            name={'personId'}
-            validate={this.props.required ? [required] : []}
-            component={HiddenField}
-            providerOptions={personId}
-        />);
+        const {children} = this.props;
+
         if (this.props.personId) {
-            return <div>
-                {children}
-            </div>;
+            if (children) {
+                return <div>
+                    {children}
+                </div>;
+            } else {
+                return <div dangerouslySetInnerHTML={{__html: this.props.html}}/>;
+            }
+
         } else {
-            return <>
-                {personIdField}
-                <Input accessKey={this.props.accessKey}/>
-            </>;
+            return <Input accessKey={this.props.accessKey}/>;
         }
     }
 }

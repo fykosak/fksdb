@@ -74,6 +74,30 @@ class RegisterPresenter extends BasePresenter {
     }
 
     /**
+     * @param \ReactResponse $response
+     * @throws \Nette\Application\AbortException
+     */
+    private function handleLangDownload(\ReactResponse $response) {
+        $keys = ['Other name', 'Team name', 'Family name',
+            'E-mail', 'School',
+            'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť',
+            'Opraviť hodnotu',
+            'Study year',
+            'Doprovodný program o ktorý mám zaujem.',
+            'E-mail',
+            'hledat',
+
+        ];
+        $data = [];
+        foreach ($keys as $key) {
+            $data[$key] = _($key);
+        }
+        $response->setAct('lang-downloader');
+        $response->setData($data);
+        $this->sendResponse($response);
+    }
+
+    /**
      * @throws \Nette\Application\AbortException
      * @throws JsonException
      */
@@ -91,6 +115,10 @@ class RegisterPresenter extends BasePresenter {
                     break;
                 case 'team-name-unique':
                     $this->handleTeamNameUnique($response);
+                    break;
+                case 'lang-downloader':
+                    sleep(10);
+                    $this->handleLangDownload($response);
                     break;
             }
 

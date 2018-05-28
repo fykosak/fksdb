@@ -1,6 +1,15 @@
 import * as React from 'react';
-import { netteFetch } from '../../shared/helpers/fetch';
-import { IReceiveData } from '../../shared/interfaces';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import Lang from '../../lang/components/lang';
+import {
+    submitFail,
+    submitStart,
+    submitSuccess,
+} from '../../submit/actions/submit';
+import {
+    netteFetch,
+} from '../../submit/middleware/fetch';
 import {
     IReceiveProviderData,
     IReceiveProviderFields,
@@ -11,15 +20,9 @@ import {
     isMail,
     required,
 } from '../validation';
-import { Dispatch } from 'redux';
-import {
-    submitFail,
-    submitStart,
-    submitSuccess,
-} from '../../shared/actions/submit';
-import { connect } from 'react-redux';
 
 interface IState {
+    submitting?: boolean;
     onSubmitFail?: (e) => void;
     onSubmitStart?: () => void;
     onSubmitSuccess?: (data: IReceiveProviderData<IReceiveProviderFields>) => void;
@@ -32,6 +35,7 @@ interface IProps {
 interface ICustomState {
     value: string;
     error?: string;
+    touched: boolean;
 }
 
 class Input extends React.Component<IProps & IState, ICustomState> {
@@ -39,6 +43,7 @@ class Input extends React.Component<IProps & IState, ICustomState> {
         super();
         this.state = {
             error: undefined,
+            touched: false,
             value: "",
         };
     }
@@ -48,8 +53,9 @@ class Input extends React.Component<IProps & IState, ICustomState> {
     }
 
     public render() {
-        const {onSubmitSuccess, onSubmitFail, onSubmitStart} = this.props;
+        const {onSubmitSuccess, onSubmitFail, onSubmitStart, submitting} = this.props;
         const onSearchButtonClick = (event) => {
+
             event.preventDefault();
             onSubmitStart();
             netteFetch<IResponseValues, IReceiveProviderData<IReceiveProviderFields>>({
@@ -61,21 +67,27 @@ class Input extends React.Component<IProps & IState, ICustomState> {
             }, onSubmitFail);
         };
         const valid = !this.state.error;
+        const {touched} = this.state;
         return <>
             <div className={'form-group was-validated'}>
-                <label>E-mail</label>
+                <label><Lang text={'E-mail'}/></label>
                 <input onChange={(e) => {
                     this.handleOnChange(e.target.value);
                 }}
+                       onFocus={() => {
+                           this.setState({touched: true});
+                       }}
                        type="email"
                        required={true}
-                       className={'form-control' + (valid ? ' is-invalid' : '')}
+                       className={'form-control' + ((touched && valid) ? ' is-invalid' : '')}
                        placeholder="yourmail@example.com"
                 />
                 {this.state.error && <span className="invalid-feedback">{this.state.error}</span>}
 
             </div>
-            <button className="btn btn-primary" disabled={!valid} onClick={onSearchButtonClick}>Search</button>
+            <button className="btn btn-primary" disabled={!valid || submitting} onClick={onSearchButtonClick}>
+                <Lang text={'hledat'}/>
+            </button>
         </>;
     }
 
@@ -91,15 +103,21 @@ class Input extends React.Component<IProps & IState, ICustomState> {
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        onSubmitFail: (e) => dispatch(submitFail(e)),
-        onSubmitStart: () => dispatch(submitStart()),
+        onSubmitFail: (e) => dispatch(submitFail(e, 'personProvider')),
+        onSubmitStart: () => dispatch(submitStart('personProvider')),
         onSubmitSuccess: (data: IReceiveProviderData<IReceiveProviderFields>) =>
-            dispatch(submitSuccess<IReceiveProviderData<IReceiveProviderFields>>(data)),
+            dispatch(submitSuccess<IReceiveProviderData<IReceiveProviderFields>>(data, 'personProvider')),
     };
 };
 
-const mapStateToProps = (): IState => {
+const mapStateToProps = (state: IStore): IState => {
+    if (state.submit.hasOwnProperty('personProvider')) {
+        return {
+            submitting: state.submit.personProvider.submitting,
+        };
+    }
     return {};
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Input);

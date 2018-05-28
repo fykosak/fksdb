@@ -1,9 +1,9 @@
-import { IState as ISubmitStore } from '../shared/reducers/submit';
+import { IState as ISubmitStore } from '../submit/reducers/submit';
 import {
     IProviderStore,
     IProviderValue,
 } from './reducers/provider';
-import { IReceiveData } from '../shared/interfaces';
+import { IResponse } from '../submit/middleware/interfaces';
 
 export interface IResponseValues {
     act: string;
@@ -16,7 +16,7 @@ export interface IStore {
     provider: IProviderStore;
 }
 
-export interface IReceiveProviderData<D> extends IReceiveData<D> {
+export interface IReceiveProviderData<D> extends IResponse<D> {
     key: string;
 }
 

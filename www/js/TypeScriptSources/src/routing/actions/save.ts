@@ -1,7 +1,7 @@
 import { Dispatch } from 'react-redux';
-import { netteFetch } from '../../shared/helpers/fetch';
+import { netteFetch } from '../../submit/middleware/fetch';
 import { ITeam } from '../../shared/interfaces';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers';
 
 export const ACTION_SAVE_ROUTING_START = 'ACTION_SAVE_ROUTING_START';
 

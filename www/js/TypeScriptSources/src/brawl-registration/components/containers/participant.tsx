@@ -41,7 +41,7 @@ interface IProps {
 
 class ParticipantForm extends React.Component<IState & IProps, {}> {
     public render() {
-        const {providerOpt: {otherName, familyName, email, idNumber, school, studyYear}, acc, type, index} = this.props;
+        const {providerOpt: {otherName, familyName, email, idNumber, school, studyYear, personId}, acc, type, index} = this.props;
         let hasAccommodation = false;
         for (const date in acc) {
             if (acc.hasOwnProperty(date)) {
@@ -135,26 +135,6 @@ class ParticipantForm extends React.Component<IState & IProps, {}> {
         </>;
     }
 }
-
-// <div>
-//                 <h3>School</h3>
-//                 <Input label={'School'}
-//                        type={null}
-//                        secure={true}
-//                        component={SchoolField}
-//                        modifiable={true}
-//                        name={'school'}
-//                        providerOptions={school}
-//                 />
-//                 <Input label={'Study year'}
-//                        type={null}
-//                        secure={true}
-//                        component={StudyYearField}
-//                        modifiable={true}
-//                        name={'studyYear'}
-//                        providerOptions={studyYear}
-//                 />
-//             </div>
 
 const mapDispatchToProps = (): IState => {
     return {};

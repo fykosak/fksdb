@@ -6,4 +6,3 @@ export const loadData = (data) => {
         type: ACTION_LOAD_DEFAULT_DATA,
     };
 };
-

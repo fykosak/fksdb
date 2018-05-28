@@ -4,6 +4,8 @@ import { setDefinitions } from '../actions/definitions';
 import { IDefinitionsState } from '../reducers/definitions';
 import Form from './form';
 
+import LangIndex from '../../lang/components/async';
+
 interface IState {
     onAddDefinitions?: (def: IDefinitionsState) => void;
 }
@@ -18,7 +20,10 @@ class Container extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        return <Form/>;
+        return <>
+            <Form/>
+            <LangIndex/>
+        </>;
     }
 }
 

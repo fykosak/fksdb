@@ -1,4 +1,4 @@
-import { ACTION_SUBMIT_SUCCESS } from '../../shared/actions/submit';
+import { ACTION_SUBMIT_SUCCESS } from '../../submit/actions/submit';
 import { ACTION_CLEAR_PROVIDER_PROPERTY } from '../actions';
 
 const providerLoadData = (state: IProviderStore, event): IProviderStore => {

@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import {
     IState as ISubmitStore,
     submit,
-} from '../../shared/reducers/submit';
+} from '../../submit/reducers/submit';
 
 import {
     IProviderStore,

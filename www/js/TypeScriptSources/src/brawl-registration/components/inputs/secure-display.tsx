@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { WrappedFieldProps } from 'redux-form';
 import { clearProviderProviderProperty } from '../../../person-provider/actions';
+import Lang from '../../../lang/components/lang';
 
 interface IProps {
     modifiable: boolean;
@@ -18,14 +19,16 @@ class SecureDisplay extends React.Component<WrappedFieldProps & IState & IProps,
         const {modifiable, onClearValue} = this.props;
         return <div className="row">
             <div className={modifiable ? 'col-8' : 'col-12'}>
-                <span className="text-success">Tento udaj už v systéme máme uložený,
-                                ak ho chcete zmeniť kliknite na tlačítko upraviť</span>
+                <span className="text-success">
+                    <Lang text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/>
+                </span>
             </div>
             {modifiable && (<div className="col-4">
                 <button className="btn btn-warning" onClick={(event) => {
                     event.preventDefault();
                     onClearValue();
-                }}>Opraviť hodnotu
+                }}>
+                    <Lang text={'Opraviť hodnotu'}/>
                 </button>
             </div>)}
         </div>;

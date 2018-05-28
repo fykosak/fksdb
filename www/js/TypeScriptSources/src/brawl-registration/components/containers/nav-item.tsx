@@ -44,7 +44,6 @@ const mapDispatchToProps = (): IState => {
 const mapStateToProps = (state, ownProps: IProps): IState => {
     const allSyncErrors = getFormSyncErrors(FORM_NAME)(state);
     const allAsyncErrors = getFormAsyncErrors(FORM_NAME)(state);
-    console.log(getFormMeta(FORM_NAME)(state));
     const data = {
         asyncErrors: undefined,
         syncErrors: undefined,
