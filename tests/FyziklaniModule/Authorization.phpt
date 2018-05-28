@@ -78,7 +78,7 @@ class AuthorizationTest extends FyziklaniTestCase {
         $params = array(
             'lang' => 'cs',
             'contestId' => 1,
-            'year' => 1,
+            'year' => 2016,
             'eventId' => $this->eventId,
             'action' => $action,
             'id' => 'dummy',
