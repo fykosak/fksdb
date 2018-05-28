@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { dispatchNetteFetch } from '../../submit/middleware/fetch';
+import { dispatchNetteFetch } from '../../fetch-api/middleware/fetch';
 import {
     IRequest,
     IResponse,
-} from '../../submit/middleware/interfaces';
+} from '../../fetch-api/middleware/interfaces';
 import { AJAX_CALL_ACTION } from '../constants';
 import { ILangStore } from '../reducers';
 

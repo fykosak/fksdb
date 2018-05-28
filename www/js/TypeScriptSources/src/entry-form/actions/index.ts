@@ -1,7 +1,7 @@
 import { Dispatch } from 'react-redux';
 import { reset } from 'redux-form';
 
-import { netteFetch } from '../../submit/middleware/fetch';
+import { netteFetch } from '../../fetch-api/middleware/fetch';
 import { FORM_NAME } from '../components/form-container';
 import { getFullCode } from '../middleware/form';
 import { IStore } from '../reducers/';

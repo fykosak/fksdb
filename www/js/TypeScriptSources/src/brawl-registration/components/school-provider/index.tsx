@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Async } from 'react-select';
 import { WrappedFieldProps } from 'redux-form';
-import { netteFetch } from '../../../submit/middleware/fetch';
-import { IResponse } from '../../../submit/middleware/interfaces';
+import { netteFetch } from '../../../fetch-api/middleware/fetch';
+import { IResponse } from '../../../fetch-api/middleware/interfaces';
 import {
     ISchool,
     ISchoolProviderResponse,

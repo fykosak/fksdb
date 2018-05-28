@@ -6,7 +6,11 @@ import {
 import {
     IMessage,
     IResponse,
+    ISubmitAction,
+    ISubmitFailAction,
+    ISubmitSuccessAction,
 } from '../middleware/interfaces';
+import { Action } from 'redux';
 
 export interface IState {
     [accessKey: string]: {
@@ -16,7 +20,7 @@ export interface IState {
     };
 }
 
-const submitStart = (state: IState, action): IState => {
+const submitStart = (state: IState, action: ISubmitAction): IState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -28,7 +32,7 @@ const submitStart = (state: IState, action): IState => {
         },
     };
 };
-const submitFail = (state: IState, action): IState => {
+const submitFail = (state: IState, action: ISubmitFailAction): IState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -40,7 +44,7 @@ const submitFail = (state: IState, action): IState => {
         },
     };
 };
-const submitSuccess = (state: IState, action): IState => {
+const submitSuccess = (state: IState, action: ISubmitSuccessAction<any>): IState => {
     const data: IResponse<any> = action.data;
     const {accessKey} = action;
     return {

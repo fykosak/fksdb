@@ -1,12 +1,10 @@
-import { IState as ISubmitStore } from '../submit/reducers/submit';
+import { IState as ISubmitStore } from '../fetch-api/reducers/submit';
 import {
     IProviderStore,
     IProviderValue,
 } from './reducers/provider';
-import { IResponse } from '../submit/middleware/interfaces';
 
-export interface IResponseValues {
-    act: string;
+export interface IRequestData {
     email: string;
     fields: string[];
 }
@@ -16,11 +14,8 @@ export interface IStore {
     provider: IProviderStore;
 }
 
-export interface IReceiveProviderData<D> extends IResponse<D> {
-    key: string;
-}
-
-export interface IReceiveProviderFields {
+export interface IResponseData {
+    key?: string;
     fields: {
         [value: string]: IProviderValue;
     };

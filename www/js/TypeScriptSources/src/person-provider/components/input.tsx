@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import Lang from '../../lang/components/lang';
 import {
     submitFail,
     submitStart,
     submitSuccess,
-} from '../../submit/actions/submit';
+} from '../../fetch-api/actions/submit';
 import {
     netteFetch,
-} from '../../submit/middleware/fetch';
+} from '../../fetch-api/middleware/fetch';
+import { IResponse } from '../../fetch-api/middleware/interfaces';
+import Lang from '../../lang/components/lang';
 import {
-    IReceiveProviderData,
-    IReceiveProviderFields,
-    IResponseValues,
+    IRequestData,
+    IResponseData,
     IStore,
 } from '../interfaces';
 import {
@@ -25,7 +25,7 @@ interface IState {
     submitting?: boolean;
     onSubmitFail?: (e) => void;
     onSubmitStart?: () => void;
-    onSubmitSuccess?: (data: IReceiveProviderData<IReceiveProviderFields>) => void;
+    onSubmitSuccess?: (data: IResponse<IResponseData>) => void;
 }
 
 interface IProps {
@@ -58,12 +58,15 @@ class Input extends React.Component<IProps & IState, ICustomState> {
 
             event.preventDefault();
             onSubmitStart();
-            netteFetch<IResponseValues, IReceiveProviderData<IReceiveProviderFields>>({
+            netteFetch<IRequestData, IResponseData>({
                 act: 'person-provider',
-                email: this.state.value,
-                fields: [],
+                data: {
+                    email: this.state.value,
+                    fields: [],
+                },
             }, (data) => {
-                onSubmitSuccess({...data, key: this.props.accessKey});
+                data.data.key = this.props.accessKey;
+                onSubmitSuccess({...data});
             }, onSubmitFail);
         };
         const valid = !this.state.error;
@@ -105,8 +108,8 @@ const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
         onSubmitFail: (e) => dispatch(submitFail(e, 'personProvider')),
         onSubmitStart: () => dispatch(submitStart('personProvider')),
-        onSubmitSuccess: (data: IReceiveProviderData<IReceiveProviderFields>) =>
-            dispatch(submitSuccess<IReceiveProviderData<IReceiveProviderFields>>(data, 'personProvider')),
+        onSubmitSuccess: (data) =>
+            dispatch(submitSuccess<IResponseData>(data, 'personProvider')),
     };
 };
 

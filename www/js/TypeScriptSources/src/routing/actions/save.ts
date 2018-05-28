@@ -1,5 +1,5 @@
 import { Dispatch } from 'react-redux';
-import { netteFetch } from '../../submit/middleware/fetch';
+import { netteFetch } from '../../fetch-api/middleware/fetch';
 import { ITeam } from '../../shared/interfaces';
 import { IStore } from '../reducers';
 

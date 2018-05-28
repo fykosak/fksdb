@@ -1,4 +1,4 @@
-import { ACTION_SUBMIT_SUCCESS } from '../../submit/actions/submit';
+import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
 import { AJAX_CALL_ACTION } from '../constants';
 
 const loadData = (state: ILangStore, action): ILangStore => {

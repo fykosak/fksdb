@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 import {
     Field,
     Form,
-    reduxForm,
     InjectedFormProps,
+    reduxForm,
 } from 'redux-form';
-import {
-    required,
-} from '../../person-provider/validation';
-import { netteFetch } from '../../submit/middleware/fetch';
+import { netteFetch } from '../../fetch-api/middleware/fetch';
 import {
     IRequest,
     IResponse,
-} from '../../submit/middleware/interfaces';
+} from '../../fetch-api/middleware/interfaces';
+import {
+    required,
+} from '../../person-provider/validation';
 import { IStore } from '../reducers';
 import PersonsContainer from './containers/persons';
 import TeamName from './inputs/team-name';

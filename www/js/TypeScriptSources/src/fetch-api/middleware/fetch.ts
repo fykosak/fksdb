@@ -4,10 +4,14 @@ import {
     submitStart,
     submitSuccess,
 } from '../actions/submit';
+import {
+    IRequest,
+    IResponse,
+} from './interfaces';
 
-export async function netteFetch<F, D>(data: F = null, success: (data: D) => void, error: (e) => void): Promise<D> {
+export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
     const netteJQuery: any = $;
-    return new Promise((resolve: (d: D) => void, reject) => {
+    return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
             error: (e) => {
@@ -15,7 +19,7 @@ export async function netteFetch<F, D>(data: F = null, success: (data: D) => voi
                 reject(e);
             },
             method: 'POST',
-            success: (d: D) => {
+            success: (d: IResponse<D>) => {
                 success(d);
                 resolve(d);
             },
@@ -23,8 +27,8 @@ export async function netteFetch<F, D>(data: F = null, success: (data: D) => voi
     });
 }
 
-export async function uploadFile<F, D>(data: F = null, success: (data: D) => void, error: (e: any) => void): Promise<D> {
-    return new Promise((resolve: (d: D) => void, reject) => {
+export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
+    return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         $.ajax({
             cache: false,
             contentType: false,
@@ -35,7 +39,7 @@ export async function uploadFile<F, D>(data: F = null, success: (data: D) => voi
                 error(e);
             },
             processData: false,
-            success: (d: D) => {
+            success: (d: IResponse<D>) => {
                 resolve(d);
                 success(d);
             },
@@ -45,9 +49,9 @@ export async function uploadFile<F, D>(data: F = null, success: (data: D) => voi
     });
 }
 
-export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: F = null, success: (data: D) => void, error: (e) => void): Promise<D> {
+export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
     dispatch(submitStart(accessKey));
-    return netteFetch<F, D>(data, (d: D) => {
+    return netteFetch<F, D>(data, (d: IResponse<D>) => {
             dispatch(submitSuccess<D>(d, accessKey));
             success(d);
         },
@@ -57,9 +61,9 @@ export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: D
         });
 }
 
-export async function dispatchUploadFile<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: F = null, success: (data: D) => void, error: (e: any) => void): Promise<D> {
+export async function dispatchUploadFile<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
     dispatch(submitStart(accessKey));
-    return uploadFile<F, D>(data, (d: D) => {
+    return uploadFile<F, D>(data, (d: IResponse<D>) => {
             dispatch(submitSuccess<D>(d, accessKey));
             success(d);
         },
