@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Diagnostics\Debugger;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
@@ -26,10 +27,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     private $event;
 
     /**
-     * @var int $eventID
+     * @var  int $year
      * @persistent
      */
-    public $eventID;
+    public $year;
 
     /**
      * @var FyziklaniFactory
@@ -142,10 +143,17 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return integer
      */
     public function getEventId() {
-        if (!$this->eventID) {
-            $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
+        return $this->getEvent()->event_id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getYear() {
+         if (!$this->year) {
+            $this->year = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('YEAR(begin)');
         }
-        return $this->eventID;
+        return $this->year;
     }
 
     /**
@@ -153,7 +161,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function getEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
+            $this->event = $this->serviceEvent->getTable()->where('event_type_id', 1)->where('YEAR(begin)=?', $this->getYear())->fetch();
             if ($this->event) {
                 $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
