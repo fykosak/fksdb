@@ -91,12 +91,12 @@ fksrouter:
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<year [0-9]+>]/<presenter>/<action=default>[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<acYear [0-9]+>]/<presenter>/<action=default>[/<id>]':
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Fyziklani
             flags: SECURED
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<year [0-9]+>]/s/q[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<acYear [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
             action: qrEntry

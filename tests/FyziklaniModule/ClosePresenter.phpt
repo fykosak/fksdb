@@ -105,7 +105,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
         $post = Helpers::merge($post, array(
                     'lang' => 'cs',
                     'contestId' => 1,
-                    'year' => 2016,
+                    'acYear' => 2016,
                     'eventId' => $this->eventId,
         ));
 

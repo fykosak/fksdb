@@ -7,7 +7,6 @@ use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
@@ -27,10 +26,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     private $event;
 
     /**
-     * @var  int $year
+     * @var  int $acYear
      * @persistent
      */
-    public $year;
+    public $acYear;
 
     /**
      * @var FyziklaniFactory
@@ -150,10 +149,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return integer
      */
     public function getYear() {
-         if (!$this->year) {
-            $this->year = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('YEAR(begin)');
+         if (!$this->acYear) {
+            $this->acYear = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('YEAR(begin)');
         }
-        return $this->year;
+        return $this->acYear;
     }
 
     /**
