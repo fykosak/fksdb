@@ -148,7 +148,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return integer
      */
-    public function getYear() {
+    public function getAcYear() {
          if (!$this->acYear) {
             $this->acYear = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('YEAR(begin)');
         }
@@ -160,7 +160,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function getEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->getTable()->where('event_type_id', 1)->where('YEAR(begin)=?', $this->getYear())->fetch();
+            $this->event = $this->serviceEvent->getTable()->where('event_type_id', 1)->where('YEAR(begin)=?', $this->getAcYear())->fetch();
             if ($this->event) {
                 $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
