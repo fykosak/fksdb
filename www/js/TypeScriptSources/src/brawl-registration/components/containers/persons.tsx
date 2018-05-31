@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IPersonDefinition } from '../../middleware/iterfaces';
 import { IStore } from '../../reducers';
+import Summary from '../form/sumary';
+import Nav from '../helpers/tabs/nav';
+import Tab from '../helpers/tabs/tab';
 import NavItem from './nav-item';
 import TabItem from './tab-item';
-import Tab from '../helpers/tabs/tab';
-import Summary from '../sumary';
-import Nav from '../helpers/tabs/nav';
 
 interface IState {
     personsDef?: IPersonDefinition[];

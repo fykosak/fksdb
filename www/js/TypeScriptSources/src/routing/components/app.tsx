@@ -14,7 +14,7 @@ import {
     ITeam,
 } from '../../shared/interfaces';
 import { addTeams } from '../actions/teams';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
 
 interface IState {
     onAddTeams?: (teams: ITeam[]) => void;

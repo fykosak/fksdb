@@ -1,22 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    Field,
     Form,
     InjectedFormProps,
     reduxForm,
 } from 'redux-form';
-import { netteFetch } from '../../fetch-api/middleware/fetch';
-import {
-    IRequest,
-    IResponse,
-} from '../../fetch-api/middleware/interfaces';
-import {
-    required,
-} from '../../person-provider/validation';
-import { IStore } from '../reducers';
-import PersonsContainer from './containers/persons';
-import TeamName from './inputs/team-name';
+import { IStore } from '../../reducers';
+import PersonsContainer from '../containers/persons';
+import TeamName from './sections/team-name/';
+import { asyncValidate } from './sections/team-name/validate';
 
 interface IState {
     initialValues?: any;
@@ -32,43 +24,13 @@ class BrawlForm extends React.Component<IState & InjectedFormProps & any, {}> {
             <Form onSubmit={handleSubmit((...args) => {
                 console.log('submit');
             })}>
-                <Field
-                    validate={[required]}
-                    name={'teamName'}
-                    component={TeamName}
-                />
-
+                <TeamName/>
                 <PersonsContainer/>
                 <button type='submit'>Submit</button>
             </Form>
         );
     }
 }
-
-interface ITeamNameResponse {
-    result: boolean;
-}
-
-interface ITeamNameRequest extends IRequest {
-    name: string;
-}
-
-const asyncValidate = (values, dispatch) => {
-    console.log(values);
-    return new Promise((resolve) => {
-
-        netteFetch<ITeamNameRequest, IResponse<ITeamNameResponse>>({
-            act: 'team-name-unique',
-            name: values.teamName,
-        }, (data) => {
-            if (!data.data.result) {
-                resolve({teamName: data.messages[0].text});
-            }
-        }, (e) => {
-            throw e;
-        });
-    });
-};
 
 export const FORM_NAME = 'brawlRegistrationForm';
 

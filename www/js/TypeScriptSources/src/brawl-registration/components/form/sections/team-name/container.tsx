@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import BaseInput from './base-input';
-import ErrorDisplay from './error-display';
-import Lang from '../../../lang/components/lang';
+import Lang from '../../../../../lang/components/lang';
+import BaseInput from '../../../inputs/base-input';
+import ErrorDisplay from '../../../inputs/error-display';
 
 interface IProps {
 
 }
 
-export default class TeamName extends React.Component<WrappedFieldProps & IProps, {}> {
+export default class Container extends React.Component<WrappedFieldProps & IProps, {}> {
     public render() {
         const {input, meta, meta: {valid, touched}} = this.props;
         return <div className={'form-group' + ((valid && touched) ? ' was-validated' : '')}>

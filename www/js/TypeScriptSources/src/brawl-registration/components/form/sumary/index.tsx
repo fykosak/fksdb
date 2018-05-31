@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { FORM_NAME } from '../';
 import {
     IAccommodationItem,
     IPersonDefinition,
     IScheduleItem,
-} from '../../middleware/iterfaces';
+} from '../../../middleware/iterfaces';
 import {
     getAccommodationFromState,
     getAccommodationPrice,
     getParticipantValues,
     getScheduleFromState,
     getSchedulePrice,
-} from '../../middleware/price';
-import { IStore } from '../../reducers';
-import NameDisplay from '../displays/name';
-import PriceDisplay from '../displays/price';
-import { FORM_NAME } from '../form';
+} from '../../../middleware/price';
+import { IStore } from '../../../reducers';
+import NameDisplay from '../../displays/name';
+import PriceDisplay from '../../displays/price';
 
 interface IState {
     data?: Array<{

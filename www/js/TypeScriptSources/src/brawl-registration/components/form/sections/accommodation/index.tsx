@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import {
     Field,
 } from 'redux-form';
-import { IAccommodationItem } from '../../middleware/iterfaces';
-import { IStore } from '../../reducers';
+import { IAccommodationItem } from '../../../../middleware/iterfaces';
+import { IStore } from '../../../../reducers';
 import Price from './price';
 import Row from './row';
+import Lang from '../../../../../lang/components/lang';
 
 interface IProps {
     type: string;
@@ -48,7 +49,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
             <table className="table">
                 <thead>
                 <tr>
-                    <th>Date</th>
+                    <th><Lang text={'date'}/></th>
                     {names.map((hotel, index) => {
                         return <th key={index}>{hotel}</th>;
                     })}

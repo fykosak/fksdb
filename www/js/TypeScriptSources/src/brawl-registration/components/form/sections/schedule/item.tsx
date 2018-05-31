@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IPrice } from '../../middleware/price';
-import DateDisplay from '../displays/date';
-import PriceDisplay from '../displays/price';
+import { IPrice } from '../../../../middleware/price';
+import DateDisplay from '../../../displays/date';
+import PriceDisplay from '../../../displays/price';
 
 interface IProps {
     date: string;

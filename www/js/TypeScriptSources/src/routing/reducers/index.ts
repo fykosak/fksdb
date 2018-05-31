@@ -11,9 +11,15 @@ import {
 } from './save';
 import { teams } from './teams';
 
+import {
+    IState as ISubmitState,
+    submit,
+} from '../../fetch-api/reducers/submit';
+
 export const app = combineReducers({
     dragNDrop,
     save,
+    submit,
     teams,
 });
 
@@ -21,4 +27,5 @@ export interface IStore {
     teams: ITeam[];
     dragNDrop: IDragNDropState;
     save: TSaveState;
+    submit: ISubmitState;
 }

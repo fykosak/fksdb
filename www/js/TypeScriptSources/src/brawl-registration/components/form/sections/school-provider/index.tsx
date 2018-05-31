@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Async } from 'react-select';
 import { WrappedFieldProps } from 'redux-form';
-import { netteFetch } from '../../../fetch-api/middleware/fetch';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
+import { netteFetch } from '../../../../../fetch-api/middleware/fetch';
 import {
+    IRequestData,
     ISchool,
-    ISchoolProviderResponse,
 } from './interfaces';
 
 interface IProps {
@@ -36,13 +35,15 @@ export default class SchoolProvider extends React.Component<IProps & WrappedFiel
         const loadOptions = (input, cb) => {
             const netteJQuery: any = $;
             netteJQuery.nette.ext('unique', null);
-            netteFetch<ISchoolProviderResponse, IResponse<ISchool[]>>({
+            return netteFetch<IRequestData, ISchool[]>({
                 act: 'school-provider',
-                payload: input,
-            }, (data) => {
+                data: {
+                    payload: input,
+                },
+            }, (response) => {
                 cb(null, {
                     complete: true,
-                    options: data.data,
+                    options: response.data,
                 });
             }, (e) => {
                 throw e;

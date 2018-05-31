@@ -1,5 +1,4 @@
-export interface ISchoolProviderResponse {
-    act: string;
+export interface IRequestData {
     payload: string;
 }
 

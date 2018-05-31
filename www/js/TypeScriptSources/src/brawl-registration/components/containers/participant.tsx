@@ -1,27 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    FormSection,
-} from 'redux-form';
 import { getAccommodationFromState } from '../../middleware/price';
-import Accommodation from '../accommodation';
-import { FORM_NAME } from '../form';
-
-import BaseInput from '../inputs/base-input';
-import Input from '../inputs/input';
-
-import Schedule from '../schedule';
-import SchoolField from '../school-provider';
-import StudyYearField from '../inputs/study-year';
+import { FORM_NAME } from '../form/';
+import AccommodationGroup from '../form/groups/accommodation';
+import BaseInfoGroup from '../form/groups/base-info';
+import ScheduleGroup from '../form/groups/schedule';
+import SchoolGroup from '../form/groups/school';
 import { getFieldName } from './persons';
-
 import Price from './price';
 
 interface IState {
-    acc?: any;
-    onSubmitFail?: (e) => void;
-    onSubmitStart?: () => void;
-    onSubmitSuccess?: (data) => void;
+    accommodation?: any;
     providerOpt?: {
         accommodation?: { hasValue: boolean; value: string };
         email?: { hasValue: boolean; value: string };
@@ -41,96 +30,12 @@ interface IProps {
 
 class ParticipantForm extends React.Component<IState & IProps, {}> {
     public render() {
-        const {providerOpt: {otherName, familyName, email, idNumber, school, studyYear, personId}, acc, type, index} = this.props;
-        let hasAccommodation = false;
-        for (const date in acc) {
-            if (acc.hasOwnProperty(date)) {
-                hasAccommodation = hasAccommodation || acc[date];
-            }
-        }
-
+        const {providerOpt: {otherName, familyName, email, idNumber, school, studyYear, personId}, accommodation, type, index} = this.props;
         return <>
-            <div>
-                <h3>Base info</h3>
-                <Input name={'otherName'}
-                       label={'Other name'}
-                       type={'text'}
-                       component={BaseInput}
-                       placeholder={'Name'}
-                       providerOptions={otherName}
-                       modifiable={true}
-                       secure={false}
-                       required={true}
-                />
-
-                <Input name={'familyName'}
-                       label={'Family name'}
-                       type={'text'}
-                       component={BaseInput}
-                       placeholder={'Name'}
-                       providerOptions={familyName}
-                       modifiable={true}
-                       secure={false}
-                       required={true}
-                />
-                <Input
-                    name={'email'}
-                    label={'E-mail'}
-                    type={'email'}
-                    component={BaseInput}
-                    placeholder={'youmail@example.com'}
-                    providerOptions={email}
-                    modifiable={false}
-                    secure={false}
-                    required={true}
-                />
-            </div>
-            <div>
-                <h3>School</h3>
-                <Input label={'School'}
-                       type={null}
-                       secure={true}
-                       component={SchoolField}
-                       modifiable={true}
-                       name={'school'}
-                       providerOptions={school}
-                       required={true}
-                />
-                <Input label={'Study year'}
-                       type={null}
-                       secure={true}
-                       component={StudyYearField}
-                       modifiable={true}
-                       name={'studyYear'}
-                       providerOptions={studyYear}
-                       required={true}
-                />
-            </div>
-
-            <div>
-                <h3>Accommodation</h3>
-                <FormSection name={'accommodation'}>
-                    <Accommodation type={this.props.type} index={this.props.index}/>
-                </FormSection>
-                {hasAccommodation && (
-                    <Input label={'Číslo OP/pasu'}
-                           type={'text'}
-                           secure={true}
-                           description={'Kvôli ubytovaniu.'}
-                           component={BaseInput}
-                           modifiable={true}
-                           name={'idNumber'}
-                           providerOptions={idNumber}
-                           required={true}
-                    />)
-                }
-            </div>
-            <div>
-                <h3>Schedule</h3>
-                <FormSection name={'schedule'}>
-                    <Schedule type={this.props.type} index={this.props.index}/>
-                </FormSection>
-            </div>
+            <BaseInfoGroup providerOpt={{familyName, otherName, email}} type={this.props.type} index={this.props.index}/>
+            <SchoolGroup type={this.props.type} index={this.props.index} providerOpt={{school, studyYear}}/>
+            <AccommodationGroup accommodation={accommodation} providerOpt={{idNumber}} type={this.props.type} index={this.props.index}/>
+            <ScheduleGroup type={this.props.type} index={this.props.index} providerOpt={{}}/>
             <Price type={type} index={index}/>
         </>;
     }

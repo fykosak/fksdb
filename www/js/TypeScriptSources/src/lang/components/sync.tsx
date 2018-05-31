@@ -2,21 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { loadLang } from '../actions';
+import { ILanguageDefinition } from '../interfaces';
 import { ILangStore } from '../reducers';
 
-export interface ILanguageDefinition {
-    lang: string;
-    data: {
-        [key: string]: string;
-    };
+interface IState {
+    onLoad?: (data: ILanguageDefinition) => void;
 }
 
 interface IProps {
     languagesDefinition: ILanguageDefinition;
-}
-
-interface IState {
-    onLoad?: (data: ILanguageDefinition) => void;
 }
 
 class Async extends React.Component<IState & IProps, {}> {

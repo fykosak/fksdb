@@ -64,9 +64,9 @@ class Input extends React.Component<IProps & IState, ICustomState> {
                     email: this.state.value,
                     fields: [],
                 },
-            }, (data) => {
-                data.data.key = this.props.accessKey;
-                onSubmitSuccess({...data});
+            }, (response) => {
+                response.data.key = this.props.accessKey;
+                onSubmitSuccess(response);
             }, onSubmitFail);
         };
         const valid = !this.state.error;

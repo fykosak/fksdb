@@ -5,9 +5,9 @@ import {
 import Price from './price';
 
 import { connect } from 'react-redux';
-import Lang from '../../../lang/components/lang';
-import { IScheduleItem } from '../../middleware/iterfaces';
-import { IStore } from '../../reducers';
+import Lang from '../../../../../lang/components/lang';
+import { IScheduleItem } from '../../../../middleware/iterfaces';
+import { IStore } from '../../../../reducers';
 import Item from './item';
 
 interface IProps {

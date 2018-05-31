@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IAccommodationItem } from '../../middleware/iterfaces';
-import DateDisplay from '../displays/date';
-import PriceDisplay from '../displays/price';
+import { IAccommodationItem } from '../../../../middleware/iterfaces';
+import DateDisplay from '../../../displays/date';
+import PriceDisplay from '../../../displays/price';
 
 interface IProps {
     names: string[];
