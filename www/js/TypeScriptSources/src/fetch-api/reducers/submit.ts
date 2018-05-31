@@ -10,8 +10,6 @@ import {
     ISubmitFailAction,
     ISubmitSuccessAction,
 } from '../middleware/interfaces';
-import { Action } from 'redux';
-
 export interface IState {
     [accessKey: string]: {
         submitting?: boolean;

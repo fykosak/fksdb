@@ -13,6 +13,8 @@ use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
+use FKSDB\Components\Controls\Stalking\Flag;
+use FKSDB\Components\Controls\Stalking\EventTeacher;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use ModelPerson;
 use Nette\Application\BadRequestException;
@@ -99,6 +101,11 @@ class StalkingPresenter extends BasePresenter {
         $component = new EventParticipant($this->getPerson());
         return $component;
     }
+    
+    public function createComponentEventTeacher() {
+        $component = new EventTeacher($this->getPerson());
+        return $component;
+    }
 
     public function createComponentEventOrg() {
         $component = new EventOrg($this->getPerson());
@@ -127,6 +134,11 @@ class StalkingPresenter extends BasePresenter {
 
     public function createComponentRole() {
         $component = new Role($this->getPerson());
+        return $component;
+    }
+    
+    public function createComponentFlag() {
+        $component = new Flag($this->getPerson());
         return $component;
     }
 

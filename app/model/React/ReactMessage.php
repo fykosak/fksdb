@@ -19,28 +19,28 @@ class ReactMessage {
     /**
      * @return string
      */
-    public function getText(): string {
+    public function getText() {
         return $this->text;
     }
 
     /**
      * @param string $text
      */
-    public function setText(string $text): void {
+    public function setText(string $text) {
         $this->text = $text;
     }
 
     /**
      * @return string
      */
-    public function getLevel(): string {
+    public function getLevel() {
         return $this->level;
     }
 
     /**
      * @param string $level
      */
-    public function setLevel(string $level): void {
+    public function setLevel(string $level) {
         $this->level = $level;
     }
 
@@ -50,5 +50,4 @@ class ReactMessage {
             'level' => $this->level,
         ];
     }
-
 }
