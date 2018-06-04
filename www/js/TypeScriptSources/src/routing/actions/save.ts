@@ -12,7 +12,7 @@ export const ACTION_REMOVE_UPDATED_TEAMS = 'ACTION_REMOVE_UPDATED_TEAMS';
 
 export const saveTeams = (dispatch: Dispatch<IStore>, teams: ITeam[]): Promise<any> => {
     dispatch(saveStart());
-    return netteFetch({data: JSON.stringify(teams)},
+    return netteFetch({act: 's', data: JSON.stringify(teams)},
         (e) => {
             dispatch(saveFail(e));
             throw e;

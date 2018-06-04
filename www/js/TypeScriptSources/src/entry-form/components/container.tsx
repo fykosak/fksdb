@@ -11,8 +11,8 @@ import Powered from '../../shared/powered';
 
 import FormContainer from './form-container';
 
-import { submitStart } from '../actions/index';
-import { IStore } from '../reducers/index';
+import { submitStart } from '../actions/';
+import { IStore } from '../reducers/';
 
 interface IProps {
     tasks: ITask[];

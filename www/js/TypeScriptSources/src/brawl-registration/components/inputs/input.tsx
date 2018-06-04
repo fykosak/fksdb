@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
-import ErrorDisplay from './error-display';
-import SecureDisplay from './secure-display';
-import { IProviderValue } from '../../../person-provider/reducers/provider';
+import { IProviderValue } from '../../../person-provider/interfaces';
 import { required as requiredTest } from '../../../person-provider/validation';
-import Lang from '../../../lang/components/lang';
+import SecureDisplay from './secure-display';
 
 interface IProps {
-    label: string;
+    label: JSX.Element;
     type: string;
     secure: boolean;
     component: any;
     modifiable: boolean;
     placeholder?: string;
-    description?: string;
+    description?: JSX.Element;
     required: boolean;
     name: string;
-    providerOptions: IProviderValue;
+    providerOptions: IProviderValue<any>;
 }
 
 export default class Input extends React.Component<IProps, {}> {
@@ -37,34 +35,33 @@ export default class Input extends React.Component<IProps, {}> {
         if (!name) {
             return null;
         }
-
-        return <div className="form-group">
-            <label><Lang text={label}/></label>
-            {description && (<small className="form-text text-muted"><Lang text={description}/></small>)}
-
-            {(secure && providerOptions.hasValue) ?
-                (<Field name={name}
-                        component={SecureDisplay}
-                        modifiable={modifiable}
-                    />
-                ) :
-                (<>
-                        <Field providerOptions={providerOptions}
-                               readOnly={!modifiable}
-                               placeholder={placeholder}
-                               type={type}
-                               name={name}
-                               component={component}
-                               required={required}
-                               validate={(required) ? [requiredTest] : []}
-                        />
-                        <Field name={name}
-                               component={ErrorDisplay}
-                               validate={(required) ? [requiredTest] : []}
-                        />
-                    </>
-                )
-            }
-        </div>;
+        if (secure && providerOptions.hasValue) {
+            return <Field
+                name={name}
+                component={SecureDisplay}
+                JSXLabel={label}
+            />;
+        }
+        return <Field
+            providerOptions={providerOptions}
+            readOnly={!modifiable}
+            placeholder={placeholder}
+            type={type}
+            name={name}
+            JSXLabel={label}
+            description={description}
+            component={component}
+            required={required}
+            validate={(required) ? [requiredTest] : []}
+        />;
     }
+}
+
+export interface IInputProps {
+    type?: string;
+    readOnly?: boolean;
+    placeholder?: string;
+    providerOptions?: IProviderValue<any>;
+    JSXLabel?: JSX.Element;
+    description?: JSX.Element;
 }

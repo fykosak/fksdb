@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import Lang from '../../../lang/components/lang';
 import {
     getParticipantValues,
     IPersonSelector,
@@ -17,7 +18,7 @@ class NameDisplay extends React.Component<IPersonSelector & IState, {}> {
         return <>
             {(otherName && familyName) ?
                 (<span>{otherName} {familyName}</span>) :
-                (<span>{index + 1} {type}</span>)}
+                (<span>{index + 1} <Lang text={type}/></span>)}
         </>;
     }
 }
@@ -28,9 +29,12 @@ const mapDispatchToProps = () => {
 
 const mapStateToProps = (state, ownProps: IPersonSelector): IState => {
     const values = getParticipantValues(FORM_NAME, state, ownProps);
+    if (!values.personInfo) {
+        return {};
+    }
     return {
-        familyName: values.familyName,
-        otherName: values.otherName,
+        familyName: values.personInfo.familyName,
+        otherName: values.personInfo.otherName,
     };
 };
 

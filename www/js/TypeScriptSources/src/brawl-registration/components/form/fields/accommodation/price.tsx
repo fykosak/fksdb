@@ -15,19 +15,20 @@ interface IProps {
 }
 
 interface IState {
-    acc?: any;
+    accommodation?: any;
     accommodationDef?: IAccommodationItem[];
 }
 
 class Price extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const price = getAccommodationPrice(this.props.accommodationDef, this.props.acc);
+        const {accommodationDef, accommodation} = this.props;
+        const price = getAccommodationPrice(accommodationDef, accommodation);
 
-        return <div>
+        return <>
             <p><Lang text={'Accommodation price'}/></p>
             <PriceDisplay eur={price.eur} kc={price.kc}/>
-        </div>;
+        </>;
     }
 }
 
@@ -37,8 +38,8 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
+        accommodation: getAccommodationFromState(FORM_NAME, state, ownProps),
         accommodationDef: state.definitions.accommodation,
-        ...getAccommodationFromState(FORM_NAME, state, ownProps),
     };
 };
 

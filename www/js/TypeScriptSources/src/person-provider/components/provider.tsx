@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
     IStore,
 } from '../interfaces';
-import Input from './input';
+import Form from './form';
 
 interface IProps {
     accessKey: string;
@@ -29,7 +29,7 @@ class PersonProvider extends React.Component<IProps & IState, {}> {
             }
 
         } else {
-            return <Input accessKey={this.props.accessKey}/>;
+            return <Form accessKey={this.props.accessKey}/>;
         }
     }
 }
@@ -42,7 +42,7 @@ const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
     const accessKey = ownProps.accessKey;
     if (state.provider.hasOwnProperty(accessKey)) {
         return {
-            personId: state.provider[accessKey].personId,
+            personId: state.provider[accessKey].fields.personId,
         };
     }
     return {};

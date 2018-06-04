@@ -2,40 +2,35 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { WrappedFieldProps } from 'redux-form';
-import { clearProviderProviderProperty } from '../../../person-provider/actions';
 import Lang from '../../../lang/components/lang';
-
-interface IProps {
-    modifiable: boolean;
-}
+import { clearProviderProviderProperty } from '../../../person-provider/actions';
+import { IStore } from '../../reducers';
+import { IInputProps } from './input';
 
 interface IState {
     onClearValue?: () => void;
 }
 
-class SecureDisplay extends React.Component<WrappedFieldProps & IState & IProps, {}> {
+class SecureDisplay extends React.Component<WrappedFieldProps & IInputProps & IState, {}> {
 
     public render() {
-        const {modifiable, onClearValue} = this.props;
-        return <div className="row">
-            <div className={modifiable ? 'col-8' : 'col-12'}>
-                <span className="text-success">
-                    <Lang text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/>
-                </span>
-            </div>
-            {modifiable && (<div className="col-4">
-                <button className="btn btn-warning" onClick={(event) => {
-                    event.preventDefault();
-                    onClearValue();
-                }}>
-                    <Lang text={'Opraviť hodnotu'}/>
-                </button>
-            </div>)}
+        const {onClearValue, JSXLabel} = this.props;
+
+        return <div className="form-group">
+            <label className="text-success">{JSXLabel}<span className="fa fa-check ml-1"/></label>
+            <small className="text-muted form-text"><Lang
+                text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/></small>
+            <button className="btn btn-warning btn-sm" onClick={(event) => {
+                event.preventDefault();
+                onClearValue();
+            }}>
+                <span className="fa fa-edit mr-1"/><Lang text={'Upraviť'}/>
+            </button>
         </div>;
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: any): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: IInputProps & WrappedFieldProps): IState => {
     return {
         onClearValue: () => dispatch(clearProviderProviderProperty(ownProps.input.name)),
     };

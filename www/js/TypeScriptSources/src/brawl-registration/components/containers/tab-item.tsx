@@ -6,11 +6,11 @@ import {
 } from 'redux-form';
 import PersonProvider from '../../../person-provider/components/provider';
 import { required } from '../../../person-provider/validation';
+import { getFieldName } from '../../middleware/person';
+import ParticipantForm from '../form/groups/participant';
+import TeacherForm from '../form/groups/teacher';
 import Tab from '../helpers/tabs/tab';
 import HiddenField from '../inputs/hidden';
-import ParticipantForm from './participant';
-import { getFieldName } from './persons';
-import TeacherForm from './teacher';
 
 interface IProps {
     type: string;

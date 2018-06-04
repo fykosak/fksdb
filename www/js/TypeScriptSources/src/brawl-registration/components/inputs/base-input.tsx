@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { IProviderValue } from '../../../person-provider/reducers/provider';
+import ErrorDisplay from './error-display';
+import { IInputProps } from './input';
 
-interface IProps {
-    type: string;
-    readOnly: boolean;
-    placeholder: string;
-    providerOptions?: IProviderValue;
-}
-
-export default class BaseInput extends React.Component<WrappedFieldProps & IProps, {}> {
+export default class BaseInput extends React.Component<WrappedFieldProps & IInputProps, {}> {
 
     public componentDidMount() {
         if (this.props.providerOptions && this.props.providerOptions.hasValue) {
@@ -22,14 +16,22 @@ export default class BaseInput extends React.Component<WrappedFieldProps & IProp
             input,
             type,
             readOnly,
+            meta,
             meta: {invalid, touched},
+            description,
+            JSXLabel,
         } = this.props;
 
-        return <input
-            className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
-            readOnly={readOnly}
-            {...input}
-            type={type}
-        />;
+        return <div className="form-group">
+            <label>{JSXLabel}</label>
+            {description && (<small className="form-text text-muted">{description}</small>)}
+            <input
+                className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
+                readOnly={readOnly}
+                {...input}
+                type={type}
+            />
+            <ErrorDisplay input={input} meta={meta}/>
+        </div>;
     }
 }

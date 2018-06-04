@@ -7,14 +7,10 @@ import {
 } from 'redux-form';
 import { IStore } from '../../reducers';
 import PersonsContainer from '../containers/persons';
-import TeamName from './sections/team-name/';
-import { asyncValidate } from './sections/team-name/validate';
+import TeamName from './fields/team-name/';
+import { asyncValidate } from './fields/team-name/validate';
 
-interface IState {
-    initialValues?: any;
-}
-
-class BrawlForm extends React.Component<IState & InjectedFormProps & any, {}> {
+class BrawlForm extends React.Component<InjectedFormProps, {}> {
 
     public render() {
         // const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
@@ -34,14 +30,12 @@ class BrawlForm extends React.Component<IState & InjectedFormProps & any, {}> {
 
 export const FORM_NAME = 'brawlRegistrationForm';
 
-const mapDispatchToProps = (): IState => {
+const mapDispatchToProps = (): {} => {
     return {};
 };
 
-const mapStateToProps = (state: IStore): IState => {
-    return {
-        initialValues: null,
-    };
+const mapStateToProps = (state: IStore): {} => {
+    return {};
 
 };
 

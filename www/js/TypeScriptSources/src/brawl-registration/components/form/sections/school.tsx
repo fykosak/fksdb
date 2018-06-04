@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Lang from '../../../../lang/components/lang';
-import SchoolField from '../../form/sections/school-provider';
+import SchoolField from '../fields/school-provider';
 import Input from '../../inputs/input';
 import StudyYearField from '../../inputs/study-year';
+import { FormSection } from 'redux-form';
 
 interface IProps {
     type: string;
@@ -17,9 +18,9 @@ export default class SchoolGroup extends React.Component<IProps, {}> {
     public render() {
         const {providerOpt: {school, studyYear}} = this.props;
 
-        return <div>
+        return <FormSection name={'school'}>
             <h3><Lang text={'School'}/></h3>
-            <Input label={'School'}
+            <Input label={<Lang text={'School'}/>}
                    type={null}
                    secure={true}
                    component={SchoolField}
@@ -28,7 +29,7 @@ export default class SchoolGroup extends React.Component<IProps, {}> {
                    providerOptions={school}
                    required={true}
             />
-            <Input label={'Study year'}
+            <Input label={<Lang text={'Study year'}/>}
                    type={null}
                    secure={true}
                    component={StudyYearField}
@@ -37,6 +38,6 @@ export default class SchoolGroup extends React.Component<IProps, {}> {
                    providerOptions={studyYear}
                    required={true}
             />
-        </div>;
+        </FormSection>;
     }
 }

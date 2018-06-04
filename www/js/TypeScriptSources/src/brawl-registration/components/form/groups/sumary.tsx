@@ -12,21 +12,24 @@ import {
     getParticipantValues,
     getScheduleFromState,
     getSchedulePrice,
+    IPersonAccommodation,
 } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
 import NameDisplay from '../../displays/name';
 import PriceDisplay from '../../displays/price';
 
+interface IDataProps {
+    accommodation: IPersonAccommodation;
+    selector: IPersonDefinition;
+    schedule: boolean[];
+    name: {
+        familyName: string;
+        otherName: string;
+    };
+}
+
 interface IState {
-    data?: Array<{
-        acc: any;
-        selector: IPersonDefinition;
-        schedule: any;
-        name: {
-            familyName: string;
-            otherName: string;
-        };
-    }>;
+    data?: IDataProps[];
     accommodationDef?: IAccommodationItem[];
     scheduleDef?: IScheduleItem[];
 }
@@ -40,7 +43,7 @@ class Summary extends React.Component<IState, {}> {
         const scheduleSum = {kc: 0, eur: 0};
 
         this.props.data.forEach((personData, index) => {
-            const accommodationPrice = getAccommodationPrice(accommodationDef, personData.acc);
+            const accommodationPrice = getAccommodationPrice(accommodationDef, personData.accommodation);
             const schedulePrice = getSchedulePrice(scheduleDef, personData.schedule);
             accSum.kc += accommodationPrice.kc;
             accSum.eur += accommodationPrice.eur;
@@ -101,16 +104,16 @@ const mapDispatchToProps = (): IState => {
 };
 
 const mapStateToProps = (state: IStore): IState => {
-    const data = [];
+    const data: IDataProps[] = [];
     state.definitions.persons.forEach((person) => {
         const formValues = getParticipantValues(FORM_NAME, state, {index: person.index, type: person.type});
         data.push({
-            ...getAccommodationFromState(FORM_NAME, state, {index: person.index, type: person.type}),
+            accommodation: getAccommodationFromState(FORM_NAME, state, {index: person.index, type: person.type}),
             name: {
                 familyName: formValues.familyName,
                 otherName: formValues.otherName,
             },
-            ...getScheduleFromState(FORM_NAME, state, {index: person.index, type: person.type}),
+            schedule: getScheduleFromState(FORM_NAME, state, {index: person.index, type: person.type}),
             selector: {index: person.index, type: person.type},
         });
     });

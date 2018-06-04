@@ -1,5 +1,6 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
 import { ACTION_CLEAR_PROVIDER_PROPERTY } from '../actions';
+import { IProviderValue } from '../interfaces';
 
 const providerLoadData = (state: IProviderStore, event): IProviderStore => {
     // TODO catch only provider request
@@ -8,13 +9,17 @@ const providerLoadData = (state: IProviderStore, event): IProviderStore => {
     }
     return {
         ...state,
-        [event.data.key]: event.data.data.fields,
+        [event.data.data.key]: {
+            ...state[event.data.data.key],
+            fields: event.data.data.fields,
+        },
     };
 
 };
 
 const clearProperty = (state: IProviderStore, action): IProviderStore => {
     const [prefix, property] = action.selector.split('.');
+
     return {
         ...state,
         [prefix]: {
@@ -39,13 +44,10 @@ export const provider = (state: IProviderStore = {}, event): IProviderStore => {
     }
 };
 
-export interface IProviderValue {
-    value: any;
-    hasValue: boolean;
-}
-
 export interface IProviderStore {
     [accessKey: string]: {
-        [value: string]: IProviderValue;
+        fields: {
+            [value: string]: IProviderValue<any>;
+        };
     };
 }

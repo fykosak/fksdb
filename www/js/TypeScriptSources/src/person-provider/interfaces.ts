@@ -1,11 +1,11 @@
 import { IState as ISubmitStore } from '../fetch-api/reducers/submit';
 import {
     IProviderStore,
-    IProviderValue,
 } from './reducers/provider';
 
 export interface IRequestData {
-    email: string;
+    login: string;
+    password: string;
     fields: string[];
 }
 
@@ -14,9 +14,14 @@ export interface IStore {
     provider: IProviderStore;
 }
 
+export interface IProviderValue<D = any> {
+    hasValue: boolean;
+    value: D;
+}
+
 export interface IResponseData {
     key?: string;
     fields: {
-        [value: string]: IProviderValue;
+        [value: string]: IProviderValue<any>;
     };
 }

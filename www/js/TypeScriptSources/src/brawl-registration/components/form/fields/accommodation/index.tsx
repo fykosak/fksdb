@@ -23,7 +23,8 @@ class Accommodation extends React.Component<IProps & IState, {}> {
     public render() {
         const dates = {};
         const names = [];
-        this.props.accommodationDef.forEach((value) => {
+        const {accommodationDef, index, type} = this.props;
+        accommodationDef.forEach((value) => {
             if (names.indexOf(value.name) === -1) {
                 names.push(value.name);
             }
@@ -50,8 +51,8 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 <thead>
                 <tr>
                     <th><Lang text={'date'}/></th>
-                    {names.map((hotel, index) => {
-                        return <th key={index}>{hotel}</th>;
+                    {names.map((hotel, i) => {
+                        return <th key={i}>{hotel}</th>;
                     })}
                 </tr>
                 </thead>
@@ -59,7 +60,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 {rows}
                 </tbody>
             </table>
-            <Price type={this.props.type} index={this.props.index}/>
+            <Price type={type} index={index}/>
         </>;
     }
 }

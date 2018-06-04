@@ -10,6 +10,7 @@ export interface IScheduleItem {
         begin: string;
         end: string;
     };
+    requireIdNumber: boolean;
 }
 
 export interface IAccommodationItem {
@@ -20,7 +21,6 @@ export interface IAccommodationItem {
 }
 
 export interface IPersonDefinition {
-    fields: string[];
     index: number;
     type: "participant" | "teacher";
 }

@@ -1,20 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
-import { IProviderValue } from '../../../person-provider/reducers/provider';
 import { IStore } from '../../reducers';
+import { IInputProps } from './input';
 
 interface IState {
     studyYearsDef?: any[];
 }
 
-interface IProps {
-    type: string;
-    readOnly: boolean;
-    providerOptions: IProviderValue;
-}
-
-class StudyYear extends React.Component<WrappedFieldProps & IProps & IState, {}> {
+class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState, {}> {
 
     public componentDidMount() {
         if (this.props.providerOptions.hasValue) {

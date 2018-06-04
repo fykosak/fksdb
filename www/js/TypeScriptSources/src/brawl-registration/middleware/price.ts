@@ -1,30 +1,30 @@
 import { formValueSelector } from 'redux-form';
+import { IStore } from '../reducers';
 import {
     IAccommodationItem,
     IScheduleItem,
 } from './iterfaces';
-import { IStore } from '../reducers';
 
 export interface IPrice {
     eur: number;
     kc: number;
 }
 
-export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], acc): IPrice => {
+export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], accommodation: IPersonAccommodation): IPrice => {
 
     const sum = {
         eur: 0,
         kc: 0,
     };
 
-    if (!acc) {
+    if (!accommodation) {
         return sum;
     }
 
-    for (const date in acc) {
-        if (acc.hasOwnProperty(date)) {
+    for (const date in accommodation) {
+        if (accommodation.hasOwnProperty(date)) {
             const selectedAcc = accommodationDef.filter((value) => {
-                return value.accId === acc[date];
+                return value.accId === accommodation[date];
             })[0];
             if (selectedAcc) {
                 sum.eur += +selectedAcc.price.eur;
@@ -65,41 +65,33 @@ export interface IPersonSelector {
 }
 
 export interface IPersonAccommodation {
-    accommodation?: any;
+    [date: string]: number;
 }
 
-export const getAccommodationFromState = (FORM_NAME: string, state, ownProps: IPersonSelector): IPersonAccommodation => {
+export const getAccommodationFromState = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector): IPersonAccommodation => {
     const selector = formValueSelector(FORM_NAME);
     const participantsValue = selector(state, ownProps.type);
     if (participantsValue) {
         if (participantsValue.hasOwnProperty(ownProps.index)) {
             if (participantsValue[ownProps.index].hasOwnProperty('accommodation')) {
-                return {
-                    accommodation: participantsValue[ownProps.index].accommodation,
-                };
+                return participantsValue[ownProps.index].accommodation;
             }
         }
     }
-    return {};
+    return null;
 };
 
-export interface IPersonSchedule {
-    schedule?: any;
-}
-
-export const getScheduleFromState = (FORM_NAME: string, state, ownProps: IPersonSelector): IPersonSchedule => {
+export const getScheduleFromState = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector): boolean[] => {
     const selector = formValueSelector(FORM_NAME);
     const participantsValue = selector(state, ownProps.type);
     if (participantsValue) {
         if (participantsValue.hasOwnProperty(ownProps.index)) {
             if (participantsValue[ownProps.index].hasOwnProperty('schedule')) {
-                return {
-                    schedule: participantsValue[ownProps.index].schedule,
-                };
+                return participantsValue[ownProps.index].schedule;
             }
         }
     }
-    return {};
+    return null;
 };
 
 export const getParticipantValues = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector) => {

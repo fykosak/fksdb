@@ -9,6 +9,7 @@ import {
     getSchedulePrice,
 } from '../../../../middleware/price';
 import PriceDisplay from '../../../displays/price';
+import Lang from '../../../../../lang/components/lang';
 
 interface IProps {
     type: string;
@@ -26,7 +27,7 @@ class Price extends React.Component<IProps & IState, {}> {
         const price = getSchedulePrice(this.props.scheduleDef, this.props.schedule);
 
         return <div>
-            <p>Cena za sprievodné akcie.</p>
+            <p><Lang text={'Cena za sprievodné akcie.'}/></p>
             <PriceDisplay eur={price.eur} kc={price.kc}/>
         </div>;
     }
@@ -38,8 +39,8 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
+        schedule: getScheduleFromState(FORM_NAME, state, ownProps),
         scheduleDef: state.definitions.schedule,
-        ...getScheduleFromState(FORM_NAME, state, ownProps),
     };
 };
 

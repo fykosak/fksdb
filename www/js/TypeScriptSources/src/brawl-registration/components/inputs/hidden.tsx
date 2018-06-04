@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { IProviderValue } from '../../../person-provider/reducers/provider';
+import { IInputProps } from './input';
 
-interface IProps {
-    providerOptions?: IProviderValue;
-}
-
-export default class HiddenField extends React.Component<WrappedFieldProps & IProps, {}> {
+export default class HiddenField extends React.Component<WrappedFieldProps & IInputProps, {}> {
 
     public componentDidMount() {
         if (this.props.providerOptions && this.props.providerOptions.hasValue) {
