@@ -1,5 +1,8 @@
 import { Dispatch } from 'react-redux';
-import { netteFetch } from '../../fetch-api/middleware/fetch';
+import {
+    dispatchNetteFetch,
+    netteFetch,
+} from '../../fetch-api/middleware/fetch';
 import { ITeam } from '../../shared/interfaces';
 import { IStore } from '../reducers';
 
@@ -11,7 +14,17 @@ export const ACTION_SAVE_ROUTING_FAIL = 'ACTION_SAVE_ROUTING_FAIL';
 export const ACTION_REMOVE_UPDATED_TEAMS = 'ACTION_REMOVE_UPDATED_TEAMS';
 
 export const saveTeams = (dispatch: Dispatch<IStore>, teams: ITeam[]): Promise<any> => {
-    dispatch(saveStart());
+    return dispatchNetteFetch<string, number[], IStore>('brawl-routing',
+        dispatch,
+        {act: 's', data: JSON.stringify(teams)},
+        () => {
+            setTimeout(() => {
+                dispatch(removeUpdatesTeams());
+            }, 5000);
+        }, () => {
+            return null;
+        });
+    /*dispatch(saveStart());
     return netteFetch({act: 's', data: JSON.stringify(teams)},
         (e) => {
             dispatch(saveFail(e));
@@ -19,10 +32,8 @@ export const saveTeams = (dispatch: Dispatch<IStore>, teams: ITeam[]): Promise<a
         },
         (d) => {
             dispatch(saveSuccess(d));
-            setTimeout(() => {
-                dispatch(removeUpdatesTeams());
-            }, 5000);
-        });
+
+        });*/
 };
 
 const saveStart = () => {

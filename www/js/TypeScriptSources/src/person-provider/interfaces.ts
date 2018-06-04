@@ -3,12 +3,6 @@ import {
     IProviderStore,
 } from './reducers/provider';
 
-export interface IRequestData {
-    login: string;
-    password: string;
-    fields: string[];
-}
-
 export interface IStore {
     submit: ISubmitStore;
     provider: IProviderStore;
@@ -24,4 +18,10 @@ export interface IResponseData {
     fields: {
         [value: string]: IProviderValue<any>;
     };
+}
+
+export interface IRequestData {
+    login: string;
+    password: string;
+    fields: string[];
 }

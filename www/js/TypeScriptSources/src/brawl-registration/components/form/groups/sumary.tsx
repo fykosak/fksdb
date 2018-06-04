@@ -52,6 +52,7 @@ class Summary extends React.Component<IState, {}> {
             scheduleSum.eur += schedulePrice.eur;
 
             rows.push(<tr key={index}>
+                <td><span className={(personData.selector.type === 'teacher') ? 'fa fa-graduation-cap' : 'fa fa-user'}/></td>
                 <td>
                     <NameDisplay type={personData.selector.type} index={personData.selector.index}/>
                 </td>
@@ -68,6 +69,7 @@ class Summary extends React.Component<IState, {}> {
         });
 
         rows.push(<tr key={'sum'} className="table-primary">
+            <td/>
             <td>
                 sum
             </td>
@@ -85,6 +87,7 @@ class Summary extends React.Component<IState, {}> {
             <table className="table table-striped">
                 <thead>
                 <tr>
+                    <th/>
                     <th>name</th>
                     <th>Accommodation price</th>
                     <th>Schedule price</th>

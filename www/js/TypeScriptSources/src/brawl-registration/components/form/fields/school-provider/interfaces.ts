@@ -4,5 +4,6 @@ export interface IRequestData {
 
 export interface ISchool {
     id: number;
-    name: string;
+    label: string;
+    region: string;
 }

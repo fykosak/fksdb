@@ -61,7 +61,7 @@ class Form extends React.Component<IProps & IState, {}> {
             }, onSubmitFail);
         };
         return <FormSection name={'personProvider'}>
-            <div className={'form-group was-validated'}>
+            <div className={'form-group'}>
                 <Field
                     name={'login'}
                     component={Login}

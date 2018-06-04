@@ -1,22 +1,24 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { FormSection } from 'redux-form';
 import Lang from '../../../../lang/components/lang';
-import SchoolField from '../fields/school-provider';
+import { getFieldName } from '../../../middleware/person';
+import { IPersonSelector } from '../../../middleware/price';
+import { IStore } from '../../../reducers';
 import Input from '../../inputs/input';
 import StudyYearField from '../../inputs/study-year';
-import { FormSection } from 'redux-form';
+import SchoolField from '../fields/school-provider';
+import { IProviderValue } from '../../../../person-provider/interfaces';
+import { ISchool } from '../fields/school-provider/interfaces';
 
-interface IProps {
-    type: string;
-    index: number;
-    providerOpt: {
-        school: { hasValue: boolean; value: string };
-        studyYear: { hasValue: boolean; value: string };
-    };
+interface IState {
+    school?: IProviderValue<ISchool>;
+    studyYear?: IProviderValue<number>;
 }
 
-export default class SchoolGroup extends React.Component<IProps, {}> {
+class SchoolSection extends React.Component<IState & IPersonSelector, {}> {
     public render() {
-        const {providerOpt: {school, studyYear}} = this.props;
+        const {school, studyYear} = this.props;
 
         return <FormSection name={'school'}>
             <h3><Lang text={'School'}/></h3>
@@ -41,3 +43,20 @@ export default class SchoolGroup extends React.Component<IProps, {}> {
         </FormSection>;
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    if (state.provider.hasOwnProperty(accessKey)) {
+        return {
+            school: state.provider[accessKey].fields.school,
+            studyYear: state.provider[accessKey].fields.studyYear,
+        };
+    }
+    return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SchoolSection);

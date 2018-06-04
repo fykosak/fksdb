@@ -1,15 +1,10 @@
 import * as React from 'react';
 import { FormSection } from 'redux-form';
-import Schedule from '../fields/schedule';
 import Lang from '../../../../lang/components/lang';
+import { IPersonSelector } from '../../../middleware/price';
+import Schedule from '../fields/schedule';
 
-interface IProps {
-    type: string;
-    index: number;
-    providerOpt: {};
-}
-
-export default class ScheduleGroup extends React.Component<IProps, {}> {
+export default class ScheduleSection extends React.Component<IPersonSelector, {}> {
     public render() {
         const {type, index} = this.props;
 

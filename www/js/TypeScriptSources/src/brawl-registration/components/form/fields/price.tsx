@@ -13,6 +13,7 @@ import {
     getSchedulePrice,
 } from '../../../middleware/price';
 import PriceDisplay from '../../displays/price';
+import { FormSection } from 'redux-form';
 
 interface IProps {
     type: string;
@@ -34,10 +35,10 @@ class Price extends React.Component<IProps & IState, {}> {
         const schedulePrice = getSchedulePrice(scheduleDef, schedule);
         const accommodationPrice = getAccommodationPrice(accommodationDef, accommodation);
 
-        return <div>
-            <p><Lang text={'Celková cena pre osobu'}/></p>
+        return <FormSection name={'price'}>
+            <h3><Lang text={'Celková cena pre osobu'}/></h3>
             <PriceDisplay eur={accommodationPrice.eur + schedulePrice.eur} kc={accommodationPrice.kc + schedulePrice.kc}/>
-        </div>;
+        </FormSection>;
     }
 }
 

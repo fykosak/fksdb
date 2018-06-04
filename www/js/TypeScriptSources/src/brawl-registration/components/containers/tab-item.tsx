@@ -42,14 +42,14 @@ class TabItem extends React.Component<IProps & IState, {}> {
                 form = <TeacherForm index={index} type={type}/>;
 
         }
+        // <Field
+        //                     name={'personId'}
+        //                     validate={this.props.required ? [required] : []}
+        //                     component={HiddenField}
+        //                     providerOptions={personId}
+        //                 />
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={active} name={(type + index)}>
-                <Field
-                    name={'personId'}
-                    validate={this.props.required ? [required] : []}
-                    component={HiddenField}
-                    providerOptions={personId}
-                />
                 <PersonProvider accessKey={getFieldName(type, index)}>
                     {form}
                 </PersonProvider>

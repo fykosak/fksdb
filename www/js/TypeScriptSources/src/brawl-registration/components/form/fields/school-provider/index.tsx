@@ -22,7 +22,7 @@ export default class SchoolProvider extends React.Component<IProps & WrappedFiel
 
     public render() {
         const {input: {onChange, value}} = this.props;
-        const renderer = (v) => {
+        const renderer = (v: ISchool) => {
             return (<span>
                         <img style={{height: '1em'}}
                              className="mr-2"

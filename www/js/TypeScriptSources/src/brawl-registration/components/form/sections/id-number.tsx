@@ -1,26 +1,31 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { FormSection } from 'redux-form';
 import Lang from '../../../../lang/components/lang';
-import { IPersonAccommodation } from '../../../middleware/price';
+import { IProviderValue } from '../../../../person-provider/interfaces';
+import { IScheduleItem } from '../../../middleware/iterfaces';
+import { getFieldName } from '../../../middleware/person';
+import {
+    getAccommodationFromState,
+    getScheduleFromState,
+    IPersonAccommodation,
+    IPersonSelector,
+} from '../../../middleware/price';
+import { IStore } from '../../../reducers';
 import BaseInput from '../../inputs/base-input';
 import Input from '../../inputs/input';
+import { FORM_NAME } from '../index';
 
-import { IScheduleItem } from '../../../middleware/iterfaces';
-
-interface IProps {
-    type: string;
-    index: number;
-    accommodation: IPersonAccommodation;
-    providerOpt: {
-        idNumber: { hasValue: boolean; value: string };
-    };
-    schedule: boolean[];
-    scheduleDef: IScheduleItem[];
+interface IState {
+    accommodation?: IPersonAccommodation;
+    idNumber?: IProviderValue<string>;
+    schedule?: boolean[];
+    scheduleDef?: IScheduleItem[];
 }
 
-export default class IdNumberSection extends React.Component<IProps, {}> {
+class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
     public render() {
-        const {providerOpt: {idNumber}, accommodation, schedule, scheduleDef} = this.props;
+        const {idNumber, accommodation, schedule, scheduleDef} = this.props;
         let requireIdNumber = false;
         const requiredValues = [];
         for (const date in accommodation) {
@@ -52,6 +57,7 @@ export default class IdNumberSection extends React.Component<IProps, {}> {
         // description={<Lang text={'Kvôli ubytovaniu.'}/>}
 
         return <FormSection name={'baseInfo'}>
+            <h3><Lang text={'Číslo OP/Pasu'}/></h3>
             <Input label={<Lang text={'Číslo OP/pasu'}/>}
                    type={'text'}
                    secure={true}
@@ -68,3 +74,23 @@ export default class IdNumberSection extends React.Component<IProps, {}> {
         </FormSection>;
     }
 }
+
+const mapDispatchToProps = (): IState => {
+    return {};
+};
+
+const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    if (state.provider.hasOwnProperty(accessKey)) {
+        // const fieldNames = ['personId', 'email', 'school', 'studyYear', 'accommodation', 'idNumber', 'familyName', 'otherName'];
+        return {
+            accommodation: getAccommodationFromState(FORM_NAME, state, ownProps),
+            idNumber: state.provider[accessKey].fields.idNumber,
+            schedule: getScheduleFromState(FORM_NAME, state, ownProps),
+            scheduleDef: state.definitions.schedule,
+        };
+    }
+    return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(IdNumberSection);

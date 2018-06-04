@@ -22,8 +22,8 @@ class PersonsContainer extends React.Component<IState, {}> {
         }
         this.props.personsDef.forEach((member, index) => {
             const active = (index === 0);
-            body.push(<TabItem required={active} key={index} active={active} type={member.type} index={index}/>);
-            tabs.push(<NavItem key={index} active={active} type={member.type} index={index}/>);
+            body.push(<TabItem required={active} key={index} active={active} type={member.type} index={member.index}/>);
+            tabs.push(<NavItem key={index} active={active} type={member.type} index={member.index}/>);
         });
         body.push(<Tab key={'summary'} active={false} name={'summary'}><Summary/></Tab>);
         tabs.push(<Nav key={'summary'} active={false} name={'summary'}><Lang text={'Summary'}/></Nav>);

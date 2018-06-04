@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { FormSection } from 'redux-form';
 import Lang from '../../../../lang/components/lang';
+import { IPersonSelector } from '../../../middleware/price';
 import Accommodation from '../fields/accommodation';
 
-interface IProps {
-    type: string;
-    index: number;
-}
-
-export default class AccommodationGroup extends React.Component<IProps, {}> {
+export default class AccommodationSection extends React.Component<IPersonSelector, {}> {
     public render() {
         const {index, type} = this.props;
 

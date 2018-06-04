@@ -62,6 +62,6 @@ export interface IInputProps {
     readOnly?: boolean;
     placeholder?: string;
     providerOptions?: IProviderValue<any>;
-    JSXLabel?: JSX.Element;
+    JSXLabel: JSX.Element;
     description?: JSX.Element;
 }
