@@ -30,7 +30,7 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state: { lang: ILangStore }, ownProps: IProps): IState => {
     if (!state.lang.data.hasOwnProperty(ownProps.text)) {
-        console.log(ownProps.text);
+      //  console.log(ownProps.text);
     }
     return {
         isReady: state.lang.isReady,

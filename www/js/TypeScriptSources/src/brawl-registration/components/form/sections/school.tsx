@@ -10,21 +10,26 @@ import StudyYearField from '../../inputs/study-year';
 import SchoolField from '../fields/school-provider';
 import { IProviderValue } from '../../../../person-provider/interfaces';
 import { ISchool } from '../fields/school-provider/interfaces';
+import { Dispatch } from 'redux';
+import { clearProviderProviderProperty } from '../../../../person-provider/actions';
 
 interface IState {
     school?: IProviderValue<ISchool>;
     studyYear?: IProviderValue<number>;
+    removeSchoolValue?: () => void;
+    removeStudyYearValue?: () => void;
 }
 
 class SchoolSection extends React.Component<IState & IPersonSelector, {}> {
     public render() {
-        const {school, studyYear} = this.props;
+        const {school, studyYear, removeSchoolValue, removeStudyYearValue} = this.props;
 
         return <FormSection name={'school'}>
             <h3><Lang text={'School'}/></h3>
             <Input label={<Lang text={'School'}/>}
                    type={null}
                    secure={true}
+                   removeProviderValue={removeSchoolValue}
                    component={SchoolField}
                    modifiable={true}
                    name={'school'}
@@ -35,6 +40,7 @@ class SchoolSection extends React.Component<IState & IPersonSelector, {}> {
                    type={null}
                    secure={true}
                    component={StudyYearField}
+                   removeProviderValue={removeStudyYearValue}
                    modifiable={true}
                    name={'studyYear'}
                    providerOptions={studyYear}
@@ -44,8 +50,12 @@ class SchoolSection extends React.Component<IState & IPersonSelector, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
-    return {};
+const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: IPersonSelector): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    return {
+        removeSchoolValue: () => dispatch(clearProviderProviderProperty(accessKey, 'school')),
+        removeStudyYearValue: () => dispatch(clearProviderProviderProperty(accessKey, 'studyYear')),
+    };
 };
 
 const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {

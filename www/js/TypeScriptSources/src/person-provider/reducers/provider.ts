@@ -18,15 +18,18 @@ const providerLoadData = (state: IProviderStore, event): IProviderStore => {
 };
 
 const clearProperty = (state: IProviderStore, action): IProviderStore => {
-    const [prefix, property] = action.selector.split('.');
+    const {selector, property} = action;
 
     return {
         ...state,
-        [prefix]: {
-            ...state[prefix],
-            [property]: {
-                ...state[prefix][property],
-                hasValue: false,
+        [selector]: {
+            ...state[selector],
+            fields: {
+                ...state[selector].fields,
+                [property]: {
+                    ...state[selector].fields[property],
+                    hasValue: false,
+                },
             },
         },
     };

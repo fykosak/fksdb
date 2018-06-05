@@ -8,11 +8,16 @@ import { IPersonSelector } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
 import BaseInput from '../../inputs/base-input';
 import Input from '../../inputs/input';
+import { Dispatch } from 'redux';
+import { clearProviderProviderProperty } from '../../../../person-provider/actions';
 
 interface IState {
     email?: IProviderValue<string>;
     familyName?: IProviderValue<string>;
     otherName?: IProviderValue<string>;
+    removeMailValue?: () => void;
+    removeFamilyNameValue?: () => void;
+    removeOtherNameValue?: () => void;
 }
 
 class BaseInfoSection extends React.Component<IPersonSelector & IState, {}> {
@@ -57,8 +62,13 @@ class BaseInfoSection extends React.Component<IPersonSelector & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
-    return {};
+const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: IPersonSelector): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    return {
+        removeFamilyNameValue: () => dispatch(clearProviderProviderProperty(accessKey, 'familyName')),
+        removeMailValue: () => dispatch(clearProviderProviderProperty(accessKey, 'email')),
+        removeOtherNameValue: () => dispatch(clearProviderProviderProperty(accessKey, 'otherName')),
+    };
 };
 
 const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {

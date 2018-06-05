@@ -15,6 +15,7 @@ interface IProps {
     required: boolean;
     name: string;
     providerOptions: IProviderValue<any>;
+    removeProviderValue?: () => void;
 }
 
 export default class Input extends React.Component<IProps, {}> {
@@ -31,12 +32,14 @@ export default class Input extends React.Component<IProps, {}> {
             component,
             description,
             required,
+            removeProviderValue,
         } = this.props;
         if (!name) {
             return null;
         }
         if (secure && providerOptions.hasValue) {
             return <Field
+                removeProviderValue={removeProviderValue}
                 name={name}
                 component={SecureDisplay}
                 JSXLabel={label}
@@ -64,4 +67,5 @@ export interface IInputProps {
     providerOptions?: IProviderValue<any>;
     JSXLabel: JSX.Element;
     description?: JSX.Element;
+    removeProviderValue?: () => void;
 }

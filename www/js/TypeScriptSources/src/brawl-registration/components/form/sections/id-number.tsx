@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { FormSection } from 'redux-form';
 import Lang from '../../../../lang/components/lang';
+import { clearProviderProviderProperty } from '../../../../person-provider/actions';
 import { IProviderValue } from '../../../../person-provider/interfaces';
 import { IScheduleItem } from '../../../middleware/iterfaces';
 import { getFieldName } from '../../../middleware/person';
@@ -12,20 +14,21 @@ import {
     IPersonSelector,
 } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
-import BaseInput from '../../inputs/base-input';
 import Input from '../../inputs/input';
 import { FORM_NAME } from '../index';
+import BaseInput from '../../inputs/base-input';
 
 interface IState {
     accommodation?: IPersonAccommodation;
     idNumber?: IProviderValue<string>;
     schedule?: boolean[];
     scheduleDef?: IScheduleItem[];
+    removeIdNumberValue?: () => void;
 }
 
 class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
     public render() {
-        const {idNumber, accommodation, schedule, scheduleDef} = this.props;
+        const {idNumber, accommodation, schedule, scheduleDef, removeIdNumberValue} = this.props;
         let requireIdNumber = false;
         const requiredValues = [];
         for (const date in accommodation) {
@@ -62,6 +65,7 @@ class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
                    type={'text'}
                    secure={true}
                    component={BaseInput}
+                   removeProviderValue={removeIdNumberValue}
                    modifiable={true}
                    name={'idNumber'}
                    providerOptions={idNumber}
@@ -75,8 +79,11 @@ class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
-    return {};
+const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: IPersonSelector): IState => {
+    const accessKey = getFieldName(ownProps.type, ownProps.index);
+    return {
+        removeIdNumberValue: () => dispatch(clearProviderProviderProperty(accessKey, 'idNumber')),
+    };
 };
 
 const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {

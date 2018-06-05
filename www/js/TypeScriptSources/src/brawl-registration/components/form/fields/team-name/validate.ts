@@ -1,4 +1,6 @@
-import { netteFetch } from '../../../../../fetch-api/middleware/fetch';
+import { Dispatch } from 'redux';
+import { dispatchNetteFetch } from '../../../../../fetch-api/middleware/fetch';
+import { IStore } from '../../../../reducers';
 
 interface ITeamNameResponse {
     result: boolean;
@@ -8,21 +10,16 @@ interface ITeamNameRequest {
     name: string;
 }
 
-export const asyncValidate = (values, dispatch) => {
-    console.log(values);
-    return new Promise((resolve) => {
-
-        netteFetch<ITeamNameRequest, ITeamNameResponse>({
-            act: 'team-name-unique',
-            data: {
-                name: values.teamName,
-            },
-        }, (response) => {
+export const asyncValidate = (values, dispatch: Dispatch<IStore>) => {
+    return dispatchNetteFetch<ITeamNameRequest, ITeamNameResponse, IStore>('@@brawl-registration/team-name-unique', dispatch, {
+        act: 'team-name-unique',
+        data: {
+            name: values.teamName,
+        },
+    })
+        .then((response) => {
             if (!response.data.result) {
-                resolve({teamName: response.messages[0].text});
+                throw {teamName: response.messages[0].text};
             }
-        }, (e) => {
-            throw e;
         });
-    });
 };

@@ -29,9 +29,7 @@ class TabItem extends React.Component<IProps & IState, {}> {
     public render() {
         const {index, type, active, providerOpt} = this.props;
         let personId = null;
-        if (providerOpt) {
-            personId = providerOpt.personId;
-        }
+
         let form = null;
         switch (type) {
             default:

@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
+    Field,
     Form,
     InjectedFormProps,
     reduxForm,
 } from 'redux-form';
+import Lang from '../../../lang/components/lang';
+import { required } from '../../../person-provider/validation';
 import { IStore } from '../../reducers';
 import PersonsContainer from '../containers/persons';
-import TeamName from './fields/team-name/';
+import BaseInput from '../inputs/base-input';
 import { asyncValidate } from './fields/team-name/validate';
 
 class BrawlForm extends React.Component<InjectedFormProps, {}> {
@@ -20,7 +23,12 @@ class BrawlForm extends React.Component<InjectedFormProps, {}> {
             <Form onSubmit={handleSubmit((...args) => {
                 console.log('submit');
             })}>
-                <TeamName/>
+                <Field
+                    validate={[required]}
+                    name={'teamName'}
+                    component={BaseInput}
+                    JSXLabel={<Lang text={'Team name'}/>}
+                />
                 <PersonsContainer/>
                 <button type='submit'>Submit</button>
             </Form>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
 import { IStore } from '../../reducers';
 import { IInputProps } from './input';
+import ErrorDisplay from './error-display';
 
 interface IState {
     studyYearsDef?: any[];
@@ -20,6 +21,9 @@ class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState
         const {
             input,
             studyYearsDef,
+            JSXLabel,
+            description,
+            meta,
         } = this.props;
         const optGroups = [];
         for (const name in studyYearsDef) {
@@ -36,9 +40,15 @@ class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState
             }
 
         }
-        return <select className="form-control" {...input}>
-            {optGroups}
-        </select>;
+
+        return <div className="form-group">
+            <label>{JSXLabel}</label>
+            {description && (<small className="form-text text-muted">{description}</small>)}
+            <select className="form-control" {...input}>
+                {optGroups}
+            </select>
+            <ErrorDisplay input={input} meta={meta}/>
+        </div>;
     }
 }
 
