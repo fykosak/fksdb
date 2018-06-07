@@ -23,12 +23,7 @@ class BrawlForm extends React.Component<InjectedFormProps, {}> {
             <Form onSubmit={handleSubmit((...args) => {
                 console.log('submit');
             })}>
-                <Field
-                    validate={[required]}
-                    name={'teamName'}
-                    component={BaseInput}
-                    JSXLabel={<Lang text={'Team name'}/>}
-                />
+
                 <PersonsContainer/>
                 <button type='submit'>Submit</button>
             </Form>
@@ -36,6 +31,14 @@ class BrawlForm extends React.Component<InjectedFormProps, {}> {
     }
 }
 
+/*
+ * <Field
+ validate={[required]}
+ name={'teamName'}
+ component={BaseInput}
+ JSXLabel={<Lang text={'Team name'}/>}
+ />
+ */
 export const FORM_NAME = 'brawlRegistrationForm';
 
 const mapDispatchToProps = (): {} => {

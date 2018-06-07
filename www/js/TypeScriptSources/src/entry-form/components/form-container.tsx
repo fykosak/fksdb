@@ -9,9 +9,7 @@ import {
     ITeam,
 } from '../../shared/interfaces';
 import { validate } from '../middleware/form';
-
 import FormSection from './form-section';
-import { connect } from 'react-redux';
 
 export interface IProps {
     tasks: ITask[];
@@ -19,7 +17,7 @@ export interface IProps {
     onSubmit: (values: any) => Promise<any>;
 }
 
-class FormContainer extends React.Component<InjectedFormProps & IProps, {}> {
+class FormContainer extends React.Component<IProps & InjectedFormProps, {}> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
@@ -44,8 +42,4 @@ export const FORM_NAME = 'codeForm';
 export default reduxForm({
     form: FORM_NAME,
     validate,
-})(connect((): {} => {
-    return {};
-}, (): {} => {
-    return {};
-})(FormContainer));
+})(FormContainer);

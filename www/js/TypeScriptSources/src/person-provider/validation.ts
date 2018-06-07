@@ -3,4 +3,8 @@ export const isMail = (value: string): string => {
 };
 export const required = (value): string => {
     return (value ? undefined : 'Required');
+}
+
+export const getAccessKey = (person: string, property: string): string => {
+    return person + '.' + property;
 };

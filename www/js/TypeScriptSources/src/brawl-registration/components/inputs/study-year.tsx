@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
+import { IInputProps } from '../../../person-provider/components/input-provider';
 import { IStore } from '../../reducers';
-import { IInputProps } from './input';
 import ErrorDisplay from './error-display';
 
 interface IState {
@@ -11,18 +11,12 @@ interface IState {
 
 class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState, {}> {
 
-    public componentDidMount() {
-        if (this.props.providerOptions.hasValue) {
-            this.props.input.onChange(this.props.providerOptions.value);
-        }
-    }
-
     public render() {
         const {
             input,
             studyYearsDef,
             JSXLabel,
-            description,
+            JSXDescription,
             meta,
         } = this.props;
         const optGroups = [];
@@ -43,7 +37,7 @@ class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState
 
         return <div className="form-group">
             <label>{JSXLabel}</label>
-            {description && (<small className="form-text text-muted">{description}</small>)}
+            {JSXDescription && (<small className="form-text text-muted">{JSXDescription}</small>)}
             <select className="form-control" {...input}>
                 {optGroups}
             </select>

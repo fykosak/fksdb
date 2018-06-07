@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { FormSection } from 'redux-form';
+import {
+    Field,
+    FormSection,
+} from 'redux-form';
 import Lang from '../../../../lang/components/lang';
 import { clearProviderProviderProperty } from '../../../../person-provider/actions';
-import { IProviderValue } from '../../../../person-provider/interfaces';
+import InputProvider from '../../../../person-provider/components/input-provider';
 import { IScheduleItem } from '../../../middleware/iterfaces';
 import { getFieldName } from '../../../middleware/person';
 import {
@@ -14,13 +17,11 @@ import {
     IPersonSelector,
 } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
-import Input from '../../inputs/input';
-import { FORM_NAME } from '../index';
 import BaseInput from '../../inputs/base-input';
+import { FORM_NAME } from '../index';
 
 interface IState {
     accommodation?: IPersonAccommodation;
-    idNumber?: IProviderValue<string>;
     schedule?: boolean[];
     scheduleDef?: IScheduleItem[];
     removeIdNumberValue?: () => void;
@@ -28,7 +29,7 @@ interface IState {
 
 class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
     public render() {
-        const {idNumber, accommodation, schedule, scheduleDef, removeIdNumberValue} = this.props;
+        const {accommodation, schedule, scheduleDef, removeIdNumberValue} = this.props;
         let requireIdNumber = false;
         const requiredValues = [];
         for (const date in accommodation) {
@@ -61,15 +62,16 @@ class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
 
         return <FormSection name={'baseInfo'}>
             <h3><Lang text={'Číslo OP/Pasu'}/></h3>
-            <Input label={<Lang text={'Číslo OP/pasu'}/>}
-                   type={'text'}
-                   secure={true}
-                   component={BaseInput}
-                   removeProviderValue={removeIdNumberValue}
-                   modifiable={true}
-                   name={'idNumber'}
-                   providerOptions={idNumber}
-                   required={true}
+            <Field
+                accessKey={getFieldName(this.props.type, this.props.index)}
+                name={'idNumber'}
+                component={InputProvider}
+                JSXLabel={<Lang text={'Číslo OP/pasu'}/>}
+                type={'text'}
+                secure={true}
+                providerInput={BaseInput}
+                modifiable={true}
+                required={true}
             />
             <h6><Lang text={'Akcie vyžadujúve OP'}/></h6>
             <ul>
@@ -92,7 +94,6 @@ const mapStateToProps = (state: IStore, ownProps: IPersonSelector): IState => {
         // const fieldNames = ['personId', 'email', 'school', 'studyYear', 'accommodation', 'idNumber', 'familyName', 'otherName'];
         return {
             accommodation: getAccommodationFromState(FORM_NAME, state, ownProps),
-            idNumber: state.provider[accessKey].fields.idNumber,
             schedule: getScheduleFromState(FORM_NAME, state, ownProps),
             scheduleDef: state.definitions.schedule,
         };

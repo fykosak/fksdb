@@ -1,17 +1,25 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
 import { ACTION_CLEAR_PROVIDER_PROPERTY } from '../actions';
 import { IProviderValue } from '../interfaces';
+import { getAccessKey } from '../validation';
 
-const providerLoadData = (state: IProviderStore, event): IProviderStore => {
+const providerLoadData = (state: IProviderStore, action): IProviderStore => {
     // TODO catch only provider request
-    if (event.data.act !== 'person-provider') {
+    if (action.data.act !== 'person-provider') {
         return state;
+    }
+    const {data: {data: {key, fields}}} = action;
+    const personState = {};
+    for (const field in fields) {
+        if (fields.hasOwnProperty(field)) {
+            personState[getAccessKey(key, field)] = action.data.data.fields[field];
+        }
     }
     return {
         ...state,
-        [event.data.data.key]: {
-            ...state[event.data.data.key],
-            fields: event.data.data.fields,
+        [action.data.data.key]: {
+            ...state[action.data.data.key],
+            fields: personState,
         },
     };
 
@@ -19,7 +27,6 @@ const providerLoadData = (state: IProviderStore, event): IProviderStore => {
 
 const clearProperty = (state: IProviderStore, action): IProviderStore => {
     const {selector, property} = action;
-
     return {
         ...state,
         [selector]: {

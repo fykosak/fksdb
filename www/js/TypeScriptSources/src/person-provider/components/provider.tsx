@@ -4,6 +4,7 @@ import {
     IStore,
 } from '../interfaces';
 import Form from './form';
+import { getAccessKey } from '../validation';
 
 interface IProps {
     accessKey: string;
@@ -42,7 +43,7 @@ const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
     const accessKey = ownProps.accessKey;
     if (state.provider.hasOwnProperty(accessKey)) {
         return {
-            personId: state.provider[accessKey].fields.personId,
+            personId: state.provider[accessKey].fields[getAccessKey(accessKey, 'person.personId')],
         };
     }
     return {};
