@@ -99,6 +99,7 @@ events:
                         description: "Afterparty"
                         id: 3
                         scheduleName: Afterparty
+                        requireIdNumber: true
                         time:
                             begin: 12:00
                             end: 15:00

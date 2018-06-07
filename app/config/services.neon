@@ -30,6 +30,7 @@ services:
     merger:
         class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
+    - FKSDB\Components\Forms\Controls\Autocomplete\ReactPersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKS\Components\Controls\PresenterBuilder
     - Github\EventFactory
@@ -39,7 +40,7 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage: 
+    submitStorage:
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)

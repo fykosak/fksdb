@@ -58,10 +58,13 @@ class SchoolProvider implements IFilteredDataProvider {
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
+        /**
+         * @var $school ModelSchool
+         */
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }
@@ -81,11 +84,7 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     private function getItem(ModelSchool $school) {
-        return array(
-            self::LABEL => $school->name_abbrev,
-            self::VALUE => $school->school_id,
-            self::REGION => $school->getAddress()->region->country_iso,
-        );
+        return $school->__toArray();
     }
 
     public function setDefaultValue($id) {

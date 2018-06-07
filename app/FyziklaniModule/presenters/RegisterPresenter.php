@@ -2,10 +2,9 @@
 
 namespace FyziklaniModule;
 
-
+use FKSDB\Components\Forms\Controls\Autocomplete\ReactPersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
-use Nette\Application\Responses\JsonResponse;
-use Nette\Diagnostics\Debugger;
+use Nette\Application\BadRequestException;
 use Nette\Diagnostics\FireLogger;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -21,6 +20,15 @@ class RegisterPresenter extends BasePresenter {
     }
 
     /**
+     * @var ReactPersonProvider
+     */
+    private $reactPersonProvider;
+
+    public function injectReactPersonProvider(ReactPersonProvider $reactPersonProvider) {
+        $this->reactPersonProvider = $reactPersonProvider;
+    }
+
+    /**
      * @var \ServicePerson
      */
     private $servicePerson;
@@ -33,9 +41,8 @@ class RegisterPresenter extends BasePresenter {
      * @param \ReactResponse $response
      * @throws \Nette\Application\AbortException
      */
-    private function handleSchoolProvider(\ReactResponse $response) {
-        $data = $this->schoolProvider->getFilteredItems($this->getHttpRequest()->getPost('payload'));
-        FireLogger::log($data);
+    private function handleSchoolProvider(\ReactResponse $response, array $requestData) {
+        $data = $this->schoolProvider->getFilteredItems($requestData['payload']);
         $response->setData($data);
         $response->setAct('school-provider');
         $this->sendResponse($response);
@@ -43,12 +50,15 @@ class RegisterPresenter extends BasePresenter {
 
     /**
      * @param \ReactResponse $response
+     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    private function handlePersonProvider(\ReactResponse $response) {
-        $email = $this->getHttpRequest()->getPost('email');
-        $person = $this->servicePerson->findByEmail($email);
-        $data = $this->getParticipantData($person, $email);
+    private function handlePersonProvider(\ReactResponse $response, array $requestData) {
+
+        $email = $requestData['email'];
+        $type = $requestData['form'];
+        $data = $this->reactPersonProvider->getPersonByEmail($email
+            , ['personId', 'school', 'studyYear', 'idNumber', 'familyName', 'otherName'], 2017);
         $response->setData($data);
         $response->setAct('person-provider');
         $this->sendResponse($response);
@@ -58,8 +68,8 @@ class RegisterPresenter extends BasePresenter {
      * @param \ReactResponse $response
      * @throws \Nette\Application\AbortException
      */
-    private function handleTeamNameUnique(\ReactResponse $response) {
-        $name = $this->getHttpRequest()->getPost('name');
+    private function handleTeamNameUnique(\ReactResponse $response, array $requestData) {
+        $name = $requestData['name'];
         $count = $this->serviceFyziklaniTeam->getTable()->where('name=?', $name)->where('event_id', $this->getEventId())->count();
 
         $data = ['result' => true];
@@ -77,7 +87,7 @@ class RegisterPresenter extends BasePresenter {
      * @param \ReactResponse $response
      * @throws \Nette\Application\AbortException
      */
-    private function handleLangDownload(\ReactResponse $response) {
+    private function handleLangDownload(\ReactResponse $response, array $requestData) {
         $keys = ['Other name', 'Team name', 'Family name',
             'E-mail', 'School',
             'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť',
@@ -100,25 +110,26 @@ class RegisterPresenter extends BasePresenter {
     /**
      * @throws \Nette\Application\AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function renderDefault() {
 
         if ($this->isAjax()) {
+            $data = $this->getHttpRequest()->getPost('data');
             FireLogger::log($this->getHttpRequest());
             $response = new \ReactResponse();
             switch ($this->getHttpRequest()->getPost('act')) {
                 case 'school-provider':
-                    $this->handleSchoolProvider($response);
+                    $this->handleSchoolProvider($response, $data);
                     break;
                 case 'person-provider' :
-                    $this->handlePersonProvider($response);
+                    $this->handlePersonProvider($response, $data);
                     break;
                 case 'team-name-unique':
-                    $this->handleTeamNameUnique($response);
+                    $this->handleTeamNameUnique($response, $data);
                     break;
                 case 'lang-downloader':
-                    sleep(10);
-                    $this->handleLangDownload($response);
+                    $this->handleLangDownload($response, $data);
                     break;
             }
 
@@ -150,35 +161,5 @@ class RegisterPresenter extends BasePresenter {
             _('základní škola nebo víceleté gymnázium') => $primaryYears,
         ];
 
-    }
-
-    /**
-     * @param $person \ModelPerson
-     * @param $email string
-     * @return array
-     */
-    private
-    function getParticipantData($person, $email) {
-        $data = ['fields' =>
-            [
-                'email' => ['value' => $email, 'hasValue' => true,],
-            ],
-        ];
-        if (!$person) {
-            $data['fields']['personId'] = ['value' => null, 'hasValue' => true,];
-            $data['fields']['school'] = ['value' => [], 'hasValue' => false,];
-            $data['fields']['studyYear'] = ['value' => null, 'hasValue' => false,];
-            $data['fields']['idNumber'] = ['value' => null, 'hasValue' => false,];
-            $data['fields']['familyName'] = ['value' => null, 'hasValue' => false,];
-            $data['fields']['otherName'] = ['value' => null, 'hasValue' => false,];
-        } else {
-            $data['fields']['personId'] = ['value' => $person->person_id, 'hasValue' => true,];
-            $data['fields']['school'] = ['value' => ['label' => 'G Púchov', 'id' => 5376], 'hasValue' => true,];
-            $data['fields']['studyYear'] = ['value' => '', 'hasValue' => true,];
-            $data['fields']['idNumber'] = ['value' => null, 'hasValue' => $person->getInfo()->id_number ? true : false,];
-            $data['fields']['familyName'] = ['value' => $person->family_name, 'hasValue' => true,];
-            $data['fields']['otherName'] = ['value' => $person->other_name, 'hasValue' => true,];
-        }
-        return $data;
     }
 }

@@ -3,6 +3,10 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer study_year
+ * @property string class
+ * @property integer ac_year
+ * @property integer school_id
  */
 class ModelPersonHistory extends AbstractModelSingle {
 
@@ -12,7 +16,7 @@ class ModelPersonHistory extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-    
+
     /**
      * @return ModelSchool
      */
@@ -26,24 +30,24 @@ class ModelPersonHistory extends AbstractModelSingle {
      */
     public function extrapolate($acYear) {
         $diff = $acYear - $this->ac_year;
-        $data = array(
+        $data = [
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
-        );
-        $result = new self(array(), $this->getTable());
+        ];
+        $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {
             $result->$key = $value; // this is workaround to properly set modfified flag
         }
         return $result;
     }
 
-    private static $classProgress = array(
-        array('prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'),
-        array('I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'),
-        array('1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'),
-    );
+    private static $classProgress = [
+        ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
+        ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
+        ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
+    ];
 
     private function extrapolateClass($class, $diff) {
         if (!$class) {
