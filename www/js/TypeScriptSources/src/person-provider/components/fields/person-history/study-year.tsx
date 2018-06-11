@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { WrappedFieldProps } from 'redux-form';
-import { IInputProps } from '../../../person-provider/components/input-provider';
-import { IStore } from '../../reducers';
-import ErrorDisplay from './error-display';
+import { Field } from 'redux-form';
+import Select, { ISelectInputProps } from '../../../../brawl-registration/components/inputs/select';
+import { IPersonStringSelectror } from '../../../../brawl-registration/middleware/price';
+import { IStore } from '../../../../brawl-registration/reducers';
+import Lang from '../../../../lang/components/lang';
+import { required } from '../../../validation';
+import InputProvider from '../../input-provider';
+
+class Input extends InputProvider<ISelectInputProps> {
+}
 
 interface IState {
     studyYearsDef?: any[];
 }
 
-class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState, {}> {
+class StudyYear extends React.Component<IPersonStringSelectror & IState, {}> {
 
     public render() {
-        const {
-            input,
-            studyYearsDef,
-            JSXLabel,
-            JSXDescription,
-            meta,
-        } = this.props;
+        const {accessKey, studyYearsDef} = this.props;
         const optGroups = [];
         for (const name in studyYearsDef) {
             if (studyYearsDef.hasOwnProperty(name)) {
@@ -32,17 +32,17 @@ class StudyYear extends React.Component<WrappedFieldProps & IInputProps & IState
                     {opts}
                 </optgroup>);
             }
-
         }
-
-        return <div className="form-group">
-            <label>{JSXLabel}</label>
-            {JSXDescription && (<small className="form-text text-muted">{JSXDescription}</small>)}
-            <select className="form-control" {...input}>
-                {optGroups}
-            </select>
-            <ErrorDisplay input={input} meta={meta}/>
-        </div>;
+        return <Field
+            accessKey={accessKey}
+            JSXLabel={<Lang text={'Study year'}/>}
+            secure={true}
+            component={Input}
+            providerInput={Select}
+            children={optGroups}
+            name={'personHistory.studyYear'}
+            validate={[required]}
+        />;
     }
 }
 

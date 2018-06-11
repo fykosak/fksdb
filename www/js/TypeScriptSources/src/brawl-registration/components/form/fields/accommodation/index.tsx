@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Field,
-} from 'redux-form';
+import { Field } from 'redux-form';
+import Lang from '../../../../../lang/components/lang';
 import { IAccommodationItem } from '../../../../middleware/iterfaces';
 import { IStore } from '../../../../reducers';
 import Price from './price';
 import Row from './row';
-import Lang from '../../../../../lang/components/lang';
 
 interface IProps {
     type: string;

@@ -1,31 +1,36 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
 import Lang from '../../../../lang/components/lang';
+import FamilyName from '../../../../person-provider/components/fields/person/family-name';
+import OtherName from '../../../../person-provider/components/fields/person/other-name';
 import InputProvider from '../../../../person-provider/components/input-provider';
 import { getFieldName } from '../../../middleware/person';
 import { IPersonSelector } from '../../../middleware/price';
-import FamilyName from '../../fields/person/family-name';
-import OtherName from '../../fields/person/other-name';
-import BaseInput from '../../inputs/base-input';
+import BaseInput, { IBaseInputProps } from '../../inputs/base-input';
+import { required } from '../../../../person-provider/validation';
+
+class Input extends InputProvider<IBaseInputProps> {
+}
 
 export default class BaseInfoSection extends React.Component<IPersonSelector, {}> {
     public render() {
         const {type, index} = this.props;
+        const accessKey = getFieldName(type, index);
         return <div className={'form-section'}>
             <h3><Lang text={'Base info'}/></h3>
-            <FamilyName type={type} index={index}/>
-            <OtherName type={type} index={index}/>
+            <FamilyName accessKey={accessKey}/>
+            <OtherName accessKey={accessKey}/>
             <Field
                 accessKey={getFieldName(type, index)}
-                component={InputProvider}
+                component={Input}
                 name={'email'}
                 JSXLabel={<Lang text={'E-mail'}/>}
-                type={'email'}
+                inputType={'email'}
                 providerInput={BaseInput}
                 placeholder={'youmail@example.com'}
-                modifiable={false}
+                readOnly={true}
                 secure={false}
-                required={true}
+                validate={[required]}
             />
         </div>;
     }

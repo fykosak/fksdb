@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { WrappedFieldProps } from 'redux-form';
 import { IPrice } from '../../../../middleware/price';
 import DateDisplay from '../../../displays/date';
 import PriceDisplay from '../../../displays/price';
@@ -19,7 +20,7 @@ interface IState {
     showDescription: boolean;
 }
 
-export default class Item extends React.Component<IProps & any, IState> {
+export default class Item extends React.Component<IProps & WrappedFieldProps, IState> {
     constructor() {
         super();
         this.state = {showDescription: false};

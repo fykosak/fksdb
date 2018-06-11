@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { IInputProps } from '../../../person-provider/components/input-provider';
 
-export default class HiddenField extends React.Component<WrappedFieldProps & IInputProps, {}> {
+export default class HiddenField extends React.Component<WrappedFieldProps, {}> {
 
     public render() {
         const {input} = this.props;

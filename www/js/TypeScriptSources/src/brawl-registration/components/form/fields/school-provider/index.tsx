@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Async } from 'react-select';
 import { WrappedFieldProps } from 'redux-form';
-import { netteFetch } from '../../../../../fetch-api/middleware/fetch';
-import { IInputProps } from '../../../../../person-provider/components/input-provider';
 import ErrorDisplay from '../../../inputs/error-display';
-import {
-    IRequestData,
-    ISchool,
-} from './interfaces';
+import { ISchool } from './interfaces';
+import { loadOptions } from './middleware';
+import Option from './option';
 
-export default class SchoolProvider extends React.Component<IInputProps & WrappedFieldProps, {}> {
+export interface ISchoolProviderInputProps {
+    JSXLabel: JSX.Element;
+    JSXDescription?: JSX.Element;
+}
+
+export default class SchoolProvider extends React.Component<ISchoolProviderInputProps & WrappedFieldProps, {}> {
 
     public render() {
         const {
@@ -20,31 +22,7 @@ export default class SchoolProvider extends React.Component<IInputProps & Wrappe
             input,
         } = this.props;
         const renderer = (v: ISchool) => {
-            return (<span>
-                        <img style={{height: '1em'}}
-                             className="mr-2"
-                             alt=""
-                             src={'/flags/4x3/' + v.region.toLowerCase() + '.svg'}
-                        />{v.label}</span>
-            );
-        };
-
-        const loadOptions = (payload, cb) => {
-            const netteJQuery: any = $;
-            netteJQuery.nette.ext('unique', null);
-            return netteFetch<IRequestData, ISchool[]>({
-                act: 'school-provider',
-                data: {
-                    payload,
-                },
-            }, (response) => {
-                cb(null, {
-                    complete: true,
-                    options: response.data,
-                });
-            }, (e) => {
-                throw e;
-            });
+            return (<Option label={v.label} region={v.region}/>);
         };
 
         return <div className="form-group">

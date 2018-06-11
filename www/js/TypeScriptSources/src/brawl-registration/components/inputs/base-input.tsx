@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { IInputProps } from '../../../person-provider/components/input-provider';
 import ErrorDisplay from './error-display';
 
-export default class BaseInput extends React.Component<WrappedFieldProps & IInputProps, {}> {
+export interface IBaseInputProps {
+    inputType: string;
+    readOnly: boolean;
+    placeholder?: string;
+    JSXDescription?: JSX.Element;
+    JSXLabel: JSX.Element;
+}
+
+export default class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}> {
 
     public render() {
         const {
             input,
-            type,
+            inputType,
             readOnly,
             meta,
             meta: {invalid, touched},
@@ -23,7 +30,7 @@ export default class BaseInput extends React.Component<WrappedFieldProps & IInpu
                 className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
                 readOnly={readOnly}
                 {...input}
-                type={type}
+                type={inputType}
             />
             <ErrorDisplay input={input} meta={meta}/>
         </div>;

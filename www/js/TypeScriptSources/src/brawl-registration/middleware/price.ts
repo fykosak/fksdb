@@ -64,6 +64,10 @@ export interface IPersonSelector {
     index: number;
 }
 
+export interface IPersonStringSelectror {
+    accessKey: string;
+}
+
 export interface IPersonAccommodation {
     [date: string]: number;
 }
@@ -103,4 +107,40 @@ export const getParticipantValues = (FORM_NAME: string, state: IStore, ownProps:
         }
     }
     return {};
+};
+
+export const requireIdNumberFromAccommodation = (accommodation: IPersonAccommodation): string[] => {
+    let requireIdNumber = false;
+    const keys = [];
+    for (const date in accommodation) {
+
+        if (accommodation.hasOwnProperty(date)) {
+            requireIdNumber = requireIdNumber || !!accommodation[date];
+        }
+    }
+    if (requireIdNumber) {
+        keys.push('Accommodation');
+    }
+    return keys;
+};
+
+export const requireIdNumberFromSchedule = (schedule: boolean[], scheduleDef: IScheduleItem[]): string[] => {
+    let requireIdNumber = false;
+    const keys = [];
+    if (schedule) {
+        schedule.forEach((scheduleValue, scheduleIndex) => {
+            if (!scheduleValue) {
+                return;
+            }
+            const selectedSchedule = scheduleDef.filter((value) => {
+                return value.id === scheduleIndex;
+            })[0];
+
+            if (selectedSchedule && selectedSchedule.requireIdNumber) {
+                requireIdNumber = true;
+                keys.push(selectedSchedule.scheduleName);
+            }
+        });
+    }
+    return keys;
 };

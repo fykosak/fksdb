@@ -1,25 +1,18 @@
 import * as React from 'react';
-import {
-    Field,
-} from 'redux-form';
-import Price from './price';
-
 import { connect } from 'react-redux';
+import { Field } from 'redux-form';
 import Lang from '../../../../../lang/components/lang';
 import { IScheduleItem } from '../../../../middleware/iterfaces';
+import { IPersonSelector } from '../../../../middleware/price';
 import { IStore } from '../../../../reducers';
 import Item from './item';
-
-interface IProps {
-    type: string;
-    index: number;
-}
+import Price from './price';
 
 interface IState {
     scheduleDef?: IScheduleItem[];
 }
 
-class Schedule extends React.Component<IProps & IState, {}> {
+class Schedule extends React.Component<IPersonSelector & IState, {}> {
 
     public render() {
         const {type, index} = this.props;

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import {
     IStore,
 } from '../interfaces';
-import Form from './form';
 import { getAccessKey } from '../validation';
+import Form from './form';
 
 interface IProps {
     accessKey: string;

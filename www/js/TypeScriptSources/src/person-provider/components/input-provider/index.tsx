@@ -3,47 +3,29 @@ import { WrappedFieldProps } from 'redux-form';
 import Input from './input';
 import SecureDisplay from './secure-display';
 
-interface IProps {
+interface IProps<P = {}> extends IBaseInputProps {
     secure: boolean;
-    providerInput: React.ComponentClass<IInputProps & WrappedFieldProps>;
-    modifiable: boolean;
-    required: boolean;
+    providerInput: React.ComponentClass<WrappedFieldProps & P & IBaseInputProps>;
     accessKey: string;
 }
 
-export interface IInputProps {
-    type?: string;
-    readOnly?: boolean;
-    placeholder?: string;
+interface IBaseInputProps {
     JSXLabel: JSX.Element;
-    JSXDescription?: JSX.Element;
 }
 
-export default class InputProvider extends React.Component<IInputProps & IProps & WrappedFieldProps, {}> {
+export default class InputProvider<P= IBaseInputProps> extends React.Component<IProps<P> & P & WrappedFieldProps, {}> {
 
     public render() {
         const {
             accessKey,
-            JSXLabel,
             secure,
-            modifiable,
-            type,
-            placeholder,
+            JSXLabel,
             providerInput,
-            JSXDescription,
             meta,
             input,
         } = this.props;
-        const props = {
-            JSXDescription,
-            JSXLabel,
-            input,
-            meta,
-            placeholder,
-            readOnly: !modifiable,
-            type,
-        };
-        const child = React.createElement<IInputProps>(providerInput, props);
+
+        const child = React.createElement<any>(providerInput, this.props);
         const inputProvider = <Input input={input} meta={meta} accessKey={accessKey}/>;
         if (secure) {
             return <>

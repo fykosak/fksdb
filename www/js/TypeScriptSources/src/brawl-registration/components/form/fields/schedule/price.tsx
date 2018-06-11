@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { FORM_NAME } from '../../';
+import Lang from '../../../../../lang/components/lang';
 import {
     IScheduleItem,
 } from '../../../../middleware/iterfaces';
@@ -9,7 +10,6 @@ import {
     getSchedulePrice,
 } from '../../../../middleware/price';
 import PriceDisplay from '../../../displays/price';
-import Lang from '../../../../../lang/components/lang';
 
 interface IProps {
     type: string;
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 interface IState {
-    schedule?: any;
+    schedule?: boolean[];
     scheduleDef?: IScheduleItem[];
 }
 
