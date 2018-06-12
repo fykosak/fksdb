@@ -26,10 +26,9 @@ export default class InputProvider<P= IBaseInputProps> extends React.Component<I
         } = this.props;
 
         const child = React.createElement<any>(providerInput, this.props);
-        const inputProvider = <Input input={input} meta={meta} accessKey={accessKey}/>;
         if (secure) {
             return <>
-                {inputProvider}
+                <Input input={input} meta={meta} accessKey={accessKey}/>
                 <SecureDisplay accessKey={accessKey} input={input} meta={meta} JSXLabel={JSXLabel}>
                     {child}
                 </SecureDisplay>
@@ -37,7 +36,7 @@ export default class InputProvider<P= IBaseInputProps> extends React.Component<I
         }
 
         return <>
-            {inputProvider}
+            <Input input={input} meta={meta} accessKey={accessKey}/>
             {child}
         </>;
     }

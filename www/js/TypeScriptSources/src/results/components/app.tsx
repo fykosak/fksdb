@@ -1,21 +1,20 @@
 import * as React from 'react';
-import BrawlDashboard from './dashboard';
-import Downloader from './helpers/downloader';
-
 import {
     connect,
     Dispatch,
 } from 'react-redux';
+import Powered from '../../shared/components/powered';
 import {
     IRoom,
     ITask,
     ITeam,
 } from '../../shared/interfaces';
-import Powered from '../../shared/powered';
 import {
     setInitialParameters,
 } from '../actions/downloader';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
+import BrawlDashboard from './dashboard';
+import Downloader from './helpers/downloader';
 
 export interface IParams {
     gameStart: string;

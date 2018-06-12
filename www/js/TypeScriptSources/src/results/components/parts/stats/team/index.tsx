@@ -3,13 +3,10 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import Lang from '../../../../../lang/components/lang';
 import { ITeam } from '../../../../../shared/interfaces';
 import { setTeamId } from '../../../../actions/stats';
-// noinspection TypeScriptPreferShortImport
-import { IStore } from '../../../../reducers/index';
-
-// noinspection TypeScriptPreferShortImport
-import { lang } from '../../../../lang/index';
+import { IStore } from '../../../../reducers/';
 import PointsInTime from './line-chart/index';
 import PointsPie from './pie/index';
 import TimeLine from './timeline/index';
@@ -39,7 +36,7 @@ class TeamStats extends React.Component<IState, {}> {
         );
 
         return (<div>
-            <h2>{lang.getLang('teamStatistics')}</h2>
+            <h2><Lang text={'teamStatistics'}/></h2>
             {teamSelect}
             {teamId && (<PointsPie/>)}
             {teamId && (<PointsInTime/>)}

@@ -21,6 +21,7 @@ export default class FamilyName extends React.Component<IPersonStringSelectror, 
             providerInput={BaseInput}
             placeholder={'Name'}
             readOnly={false}
+            noChangeMode={true}
             secure={false}
             validate={[required]}
         />;

@@ -12,14 +12,20 @@ interface IState {
     otherName?: string;
 }
 
-class NameDisplay extends React.Component<IPersonSelector & IState, {}> {
+interface IProps {
+    invalid?: boolean;
+}
+
+class NameDisplay extends React.Component<IPersonSelector & IState & IProps, {}> {
     public render() {
-        const {index, type, familyName, otherName} = this.props;
-        return <>
-            {(otherName && familyName) ?
+        const {index, type, familyName, otherName, invalid} = this.props;
+        const hasName = !!(otherName && familyName);
+        return <span className={(invalid ? 'text-danger' : (hasName ? 'text-success' : 'text-muted'))}>
+            <span className={(type === 'teacher') ? 'fa fa-graduation-cap mr-2' : 'fa fa-user mr-2'}/>
+            {(hasName) ?
                 (<span>{otherName} {familyName}</span>) :
                 (<span>{index + 1} <Lang text={type}/></span>)}
-        </>;
+        </span>;
     }
 }
 
@@ -29,12 +35,12 @@ const mapDispatchToProps = () => {
 
 const mapStateToProps = (state, ownProps: IPersonSelector): IState => {
     const values = getParticipantValues(FORM_NAME, state, ownProps);
-    if (!values.personInfo) {
+    if (!values.person) {
         return {};
     }
     return {
-        familyName: values.personInfo.familyName,
-        otherName: values.personInfo.otherName,
+        familyName: values.person.familyName,
+        otherName: values.person.otherName,
     };
 };
 

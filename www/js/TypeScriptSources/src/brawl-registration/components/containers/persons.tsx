@@ -32,6 +32,7 @@ class PersonsContainer extends React.Component<IState, {}> {
                 {tabs}
             </ul>
             <div className="tab-content" id="form-tab-content">
+
                 {body}
             </div>
         </div>;

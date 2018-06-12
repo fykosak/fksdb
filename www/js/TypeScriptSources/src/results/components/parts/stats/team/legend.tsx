@@ -3,14 +3,13 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import Lang from '../../../../../lang/components/lang';
 import {
     setActivePoints,
     setDeActivePoints,
 } from '../../../../actions/stats';
-import { getColorByPoints } from '../../../../helpers/pie/index';
-
-import { lang } from '../../../../lang/index';
-import { IStore } from '../../../../reducers/index';
+import { getColorByPoints } from '../../../../helpers/pie/';
+import { IStore } from '../../../../reducers/';
 
 interface IState {
     onActivePoints?: (points: number) => void;
@@ -25,19 +24,19 @@ class Legend extends React.Component<IProps & IState, {}> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];
-        const { onActivePoints, onDeActivePoints, inline } = this.props;
+        const {onActivePoints, onDeActivePoints, inline} = this.props;
         const legend = availablePoints.map((points: number) => {
-            let pointsLabel = '';
+            let pointsLabel = null;
             switch (points) {
                 case 1:
-                    pointsLabel = lang.getLang('bod');
+                    pointsLabel = <Lang text={'bod'}/>;
                     break;
                 case 2:
                 case 3:
-                    pointsLabel = lang.getLang('body');
+                    pointsLabel = <Lang text={'body'}/>;
                     break;
                 default:
-                    pointsLabel = lang.getLang('bodů');
+                    pointsLabel = <Lang text={'bodů'}/>;
             }
             return (<div key={points}
                          className={inline ? 'legend-item col-3' : 'w-100 legend-item'}
@@ -47,7 +46,7 @@ class Legend extends React.Component<IProps & IState, {}> {
                          onMouseLeave={() => {
                              onDeActivePoints();
                          }}>
-                <i className="icon" style={{ backgroundColor: getColorByPoints(points) }}/>
+                <i className="icon" style={{backgroundColor: getColorByPoints(points)}}/>
                 <strong>{points + ' ' + pointsLabel}</strong>
             </div>);
         });

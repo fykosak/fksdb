@@ -1,14 +1,14 @@
 import {
+    ACTION_SUBMIT_FAIL,
+    ACTION_SUBMIT_START,
+    ACTION_SUBMIT_SUCCESS,
+} from '../../fetch-api/actions/submit';
+import {
     ACTION_REMOVE_UPDATED_TEAMS,
     ACTION_SAVE_ROUTING_FAIL,
     ACTION_SAVE_ROUTING_START,
     ACTION_SAVE_ROUTING_SUCCESS,
 } from '../actions/save';
-import {
-    ACTION_SUBMIT_FAIL,
-    ACTION_SUBMIT_START,
-    ACTION_SUBMIT_SUCCESS,
-} from '../../fetch-api/actions/submit';
 
 const saveStart = (state: IState): IState => {
     return {

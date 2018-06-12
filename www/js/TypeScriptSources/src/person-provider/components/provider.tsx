@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import {
     IStore,
 } from '../interfaces';
-import { getAccessKey } from '../validation';
-import Form from './form';
+import Form from './form/';
 
 interface IProps {
     accessKey: string;
@@ -12,7 +11,7 @@ interface IProps {
 }
 
 interface IState {
-    personId?: { hasValue: boolean; value: string };
+    isServed?: boolean;
 }
 
 class PersonProvider extends React.Component<IProps & IState, {}> {
@@ -20,7 +19,7 @@ class PersonProvider extends React.Component<IProps & IState, {}> {
     public render() {
         const {children} = this.props;
 
-        if (this.props.personId) {
+        if (this.props.isServed) {
             if (children) {
                 return <div>
                     {children}
@@ -43,7 +42,7 @@ const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
     const accessKey = ownProps.accessKey;
     if (state.provider.hasOwnProperty(accessKey)) {
         return {
-            personId: state.provider[accessKey].fields[getAccessKey(accessKey, 'person.personId')],
+            isServed: state.provider[accessKey].isServed,
         };
     }
     return {};

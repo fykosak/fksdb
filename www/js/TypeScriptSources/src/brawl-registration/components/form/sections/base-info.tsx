@@ -4,10 +4,10 @@ import Lang from '../../../../lang/components/lang';
 import FamilyName from '../../../../person-provider/components/fields/person/family-name';
 import OtherName from '../../../../person-provider/components/fields/person/other-name';
 import InputProvider from '../../../../person-provider/components/input-provider';
+import { required } from '../../../../person-provider/validation';
 import { getFieldName } from '../../../middleware/person';
 import { IPersonSelector } from '../../../middleware/price';
 import BaseInput, { IBaseInputProps } from '../../inputs/base-input';
-import { required } from '../../../../person-provider/validation';
 
 class Input extends InputProvider<IBaseInputProps> {
 }

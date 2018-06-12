@@ -22,6 +22,7 @@ export default class OtherName extends React.Component<IPersonStringSelectror, {
             placeholder={'Name'}
             readOnly={false}
             secure={false}
+            noChangeMode={true}
             validate={[required]}
         />;
     }

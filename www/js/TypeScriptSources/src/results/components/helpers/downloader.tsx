@@ -7,8 +7,8 @@ import {
     fetchResults,
     waitForFetch,
 } from '../../helpers/fetch';
-import { lang } from '../../lang';
 import { IStore } from '../../reducers';
+import Lang from '../../../lang/components/lang';
 
 interface IState {
     lastUpdated?: string;
@@ -36,7 +36,7 @@ class Downloader extends React.Component<IState, {}> {
     public render() {
         const {lastUpdated, isRefreshing, onFetch} = this.props;
         return (
-            <div className="last-update-info">{lang.getLang('lastUpdated')}: <span
+            <div className="last-update-info"><Lang text={'lastUpdated'}/>: <span
                 className={isRefreshing ? 'text-success' : 'text-danger'}>
                 {lastUpdated}
                 </span>

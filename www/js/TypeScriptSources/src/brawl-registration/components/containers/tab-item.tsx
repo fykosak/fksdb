@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import NameDisplay from '../displays/name';
 import {
     Field,
     FormSection,
@@ -28,7 +29,7 @@ interface IState {
 class TabItem extends React.Component<IProps & IState, {}> {
     public render() {
         const {index, type, active, providerOpt} = this.props;
-        let personId = null;
+        const personId = null;
 
         let form = null;
         switch (type) {
@@ -40,14 +41,16 @@ class TabItem extends React.Component<IProps & IState, {}> {
                 form = <TeacherForm index={index} type={type}/>;
 
         }
-        // <Field
-        //                     name={'personId'}
-        //                     validate={this.props.required ? [required] : []}
-        //                     component={HiddenField}
-        //                     providerOptions={personId}
-        //                 />
+
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={active} name={(type + index)}>
+                <h2><NameDisplay index={index} type={type}/></h2>
+                <Field
+                    name={'personId'}
+                    validate={this.props.required ? [required] : []}
+                    component={HiddenField}
+                    providerOptions={personId}
+                />
                 <PersonProvider accessKey={getFieldName(type, index)}>
                     {form}
                 </PersonProvider>

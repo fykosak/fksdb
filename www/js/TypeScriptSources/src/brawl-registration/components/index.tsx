@@ -7,6 +7,7 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../config';
+import Powered from '../../shared/components/powered';
 import { app } from '../reducers';
 import { IDefinitionsState } from '../reducers/definitions';
 import Container from './container';
@@ -18,10 +19,12 @@ interface IProps {
 class App extends React.Component<IProps, {}> {
     public render() {
         const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        return (
-            <Provider store={store}>
-                <Container definitions={this.props.definitions}/>
-            </Provider>
+        return (<>
+                <Provider store={store}>
+                    <Container definitions={this.props.definitions}/>
+                </Provider>
+                <Powered/>
+            </>
         );
     }
 }

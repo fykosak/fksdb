@@ -3,8 +3,8 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import Lang from '../../../../lang/components/lang';
 import { changeSubPage } from '../../../actions/options';
-import { lang } from '../../../lang';
 import { IStore } from '../../../reducers';
 
 interface IState {
@@ -24,7 +24,7 @@ class StatsNav extends React.Component<IState, {}> {
                         data-toggle="dropdown"
                 >
                     <span className="fa fa-bar-chart"/>
-                    {' ' + lang.getLang('statistics')}
+                    <Lang text={'statistics'}/>
                 </button>
                 <div className="dropdown-menu">
                     <div

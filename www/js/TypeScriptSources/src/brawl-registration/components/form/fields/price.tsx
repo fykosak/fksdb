@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { FormSection } from 'redux-form';
 import { FORM_NAME } from '../';
 import Lang from '../../../../lang/components/lang';
 import {
@@ -13,7 +14,6 @@ import {
     getSchedulePrice,
 } from '../../../middleware/price';
 import PriceDisplay from '../../displays/price';
-import { FormSection } from 'redux-form';
 
 interface IProps {
     type: string;

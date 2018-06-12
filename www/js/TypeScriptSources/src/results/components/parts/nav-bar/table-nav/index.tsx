@@ -3,16 +3,11 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-
-import AutoSwitchCheck from './auto-switch-check';
-
-import { lang } from '../../../../lang';
+import Lang from '../../../../../lang/components/lang';
+import { changePage } from '../../../../actions/options';
 import { IStore } from '../../../../reducers';
+import AutoSwitchCheck from './auto-switch-check';
 import FilterButtons from './filter-buttons';
-
-import {
-    changePage,
-} from '../../../../actions/options';
 import IsOrgCheck from './is-org-check';
 import Options from './options';
 
@@ -34,7 +29,7 @@ class TableNav extends React.Component<IState, {}> {
                         onClick={() => onChangePage('table')}
                 >
                     <span className="fa-tasks fa"/>
-                    {' ' + lang.getLang('table')}
+                    <Lang text={'table'}/>
                 </button>
             </div>
             {(page === 'table') && (

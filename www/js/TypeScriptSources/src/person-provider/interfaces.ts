@@ -21,7 +21,6 @@ export interface IResponseData {
 }
 
 export interface IRequestData {
-    login: string;
-    password: string;
+    email: string;
     fields: string[];
 }

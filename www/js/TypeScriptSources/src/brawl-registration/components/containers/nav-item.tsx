@@ -28,10 +28,7 @@ class NavItem extends React.Component<IProps & IState, {}> {
         const {index, type, active, syncErrors, asyncErrors} = this.props;
         const invalid = (syncErrors || asyncErrors);
         return <Nav active={active} name={(type + index)}>
-            <span className={invalid ? 'text-danger' : 'text-success'}>
-                <span className={invalid ? 'fa-exclamation-triangle fa mr-1' : 'fa fa-check mr-1'}/>
-                <NameDisplay type={type} index={index}/>
-            </span>
+            <NameDisplay type={type} index={index} invalid={invalid}/>
         </Nav>;
     }
 }

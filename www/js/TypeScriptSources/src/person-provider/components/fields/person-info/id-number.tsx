@@ -22,6 +22,7 @@ export default class IdNumber extends React.Component<IPersonStringSelectror, {}
             secure={true}
             providerInput={BaseInput}
             readOnly={false}
+            noChangeMode={false}
             validate={[required]}
         />;
     }

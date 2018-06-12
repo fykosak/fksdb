@@ -1,20 +1,19 @@
 import * as React from 'react';
-import Powered from '../../shared/powered';
-import Form from './form';
-import Rooms from './rooms';
-import UnRoutedTeams from './unrouted-teams';
-
 import {
     connect,
     Dispatch,
 } from 'react-redux';
 import Card from '../../shared/components/card';
+import Powered from '../../shared/components/powered';
 import {
     IRoom,
     ITeam,
 } from '../../shared/interfaces';
 import { addTeams } from '../actions/teams';
 import { IStore } from '../reducers/';
+import Form from './form';
+import Rooms from './rooms';
+import UnRoutedTeams from './unrouted-teams';
 
 interface IState {
     onAddTeams?: (teams: ITeam[]) => void;

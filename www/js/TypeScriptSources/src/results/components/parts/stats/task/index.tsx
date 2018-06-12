@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { lang } from '../../../../lang/index';
+import Lang from '../../../../../lang/components/lang';
 import Progress from './progress';
 
 export default class TaskStats extends React.Component<{}, {}> {
     public render() {
         return (
             <div>
-                <h2>{lang.getLang('tasksStatistics')}</h2>
+                <h2><Lang text={'tasksStatistics'}/></h2>
                 <Progress/>
             </div>
         );

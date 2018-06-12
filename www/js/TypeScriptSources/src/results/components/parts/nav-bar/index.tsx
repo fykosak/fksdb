@@ -4,11 +4,11 @@ import {
     Dispatch,
 } from 'react-redux';
 
+import Lang from '../../../../lang/components/lang';
 import Card from '../../../../shared/components/card';
 import {
     changePage,
 } from '../../../actions/options';
-import { lang } from '../../../lang';
 import { IStore } from '../../../reducers';
 import StatsNav from './stats-nav';
 import TableNav from './table-nav/index';
@@ -41,7 +41,7 @@ class NavBar extends React.Component<IState, { display: boolean }> {
                 position: 'absolute',
                 zIndex: 100,
             }}>
-                <Card headline={lang.getLang('options')} level="info">
+                <Card headline={<Lang text={'options'}/>} level="info">
                     <nav className="list-group list-group-flush">
                         <StatsNav/>
                         <TableNav/>

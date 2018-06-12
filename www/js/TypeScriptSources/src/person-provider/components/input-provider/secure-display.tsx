@@ -26,8 +26,9 @@ class SecureDisplay extends React.Component<WrappedFieldProps & IProps & IState,
         if (providerProperty && providerProperty.hasValue) {
             return <div className="form-group">
                 <label className="text-success">{JSXLabel}<span className="fa fa-check ml-1"/></label>
-                <small className="text-muted form-text"><Lang
-                    text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/></small>
+                <small className="text-muted form-text">
+                    <Lang text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/>
+                </small>
                 <button className="btn btn-warning btn-sm" onClick={(event) => {
                     event.preventDefault();
                     removeProviderValue();

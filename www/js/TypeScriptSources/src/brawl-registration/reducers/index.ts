@@ -2,6 +2,10 @@ import { combineReducers } from 'redux';
 
 import { reducer as formReducer } from 'redux-form';
 import {
+    IState as ISubmitStore,
+    submit,
+} from '../../fetch-api/reducers/submit';
+import {
     ILangStore,
     lang,
 } from '../../lang/reducers';
@@ -9,10 +13,6 @@ import {
     IProviderStore,
     provider,
 } from '../../person-provider/reducers/provider';
-import {
-    IState as ISubmitStore,
-    submit,
-} from '../../fetch-api/reducers/submit';
 import {
     definitions,
     IDefinitionsState,

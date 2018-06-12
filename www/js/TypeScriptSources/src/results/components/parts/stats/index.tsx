@@ -1,12 +1,10 @@
 import * as React from 'react';
-
+import { connect } from 'react-redux';
+import Lang from '../../../../lang/components/lang';
+import { IStore } from '../../../reducers/';
 import Timer from '../timer';
 import TasksStats from './task/index';
 import TeamStats from './team/index';
-
-import { connect } from 'react-redux';
-import { lang } from '../../../lang/index';
-import { IStore } from '../../../reducers/index';
 
 interface IState {
     subPage?: string;
@@ -27,7 +25,7 @@ class Statistics extends React.Component<IState, {}> {
         }
         return (
             <div className="container">
-                <h1>{lang.getLang('statistics')}</h1>
+                <h1><Lang text={'statistics'}/></h1>
 
                 {content}
                 <Timer/>

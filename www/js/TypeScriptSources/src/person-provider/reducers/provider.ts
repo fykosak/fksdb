@@ -18,8 +18,8 @@ const providerLoadData = (state: IProviderStore, action): IProviderStore => {
     return {
         ...state,
         [action.data.data.key]: {
-            ...state[action.data.data.key],
             fields: personState,
+            isServed: true,
         },
     };
 
@@ -56,6 +56,7 @@ export const provider = (state: IProviderStore = {}, event): IProviderStore => {
 
 export interface IProviderStore {
     [accessKey: string]: {
+        isServed: boolean;
         fields: {
             [value: string]: IProviderValue<any>;
         };

@@ -22,7 +22,7 @@ class Input extends React.Component<WrappedFieldProps & IProps & IState, {}> {
         }
         const {providerProperty: {hasValue, value}, input: {onChange}} = this.props;
         if (hasValue) {
-            onChange(value);
+            onChange(value ? value : true);
         }
     }
 

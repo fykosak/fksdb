@@ -3,16 +3,9 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-
-import {
-    Filter,
-} from '../../../../helpers/filters/filters';
-
-import {
-    setUserFilter,
-} from '../../../../actions/table-filter';
-
-import { lang } from '../../../../lang';
+import Lang from '../../../../../lang/components/lang';
+import { setUserFilter } from '../../../../actions/table-filter';
+import { Filter } from '../../../../helpers/filters/filters';
 import { IStore } from '../../../../reducers';
 
 interface IState {
@@ -40,7 +33,7 @@ class FiltersButtons extends React.Component<IState, {}> {
                         data-toggle="dropdown"
                 >
                     <span className="fa-filter fa"/>
-                    {' ' + lang.getLang('filters')}
+                    <Lang text={'filters'}/>
                 </button>
                 <div className="dropdown-menu">
                     <div className={'dropdown-item '}
