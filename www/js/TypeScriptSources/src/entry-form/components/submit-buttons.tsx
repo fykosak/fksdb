@@ -10,7 +10,7 @@ interface IProps {
 export default class TaskInput extends React.Component<IProps, {}> {
 
     public render() {
-        const { valid, submitting, handleSubmit } = this.props;
+        const {valid, submitting, handleSubmit, onSubmit} = this.props;
 
         const buttons = [5, 3, 2, 1].map((value, index) => {
             return (
@@ -20,7 +20,7 @@ export default class TaskInput extends React.Component<IProps, {}> {
                     type="button"
                     disabled={!valid || submitting}
                     onClick={handleSubmit((values) =>
-                        this.props.onSubmit({
+                        onSubmit({
                             ...values,
                             points: value,
                         }))}

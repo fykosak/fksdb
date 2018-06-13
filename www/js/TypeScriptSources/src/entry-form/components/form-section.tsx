@@ -6,19 +6,17 @@ import {
     Field,
     formValueSelector,
 } from 'redux-form';
-
+import { IMessage } from '../../fetch-api/middleware/interfaces';
+import Card from '../../shared/components/card';
 import {
     ITask,
     ITeam,
 } from '../../shared/interfaces';
-import { IStore } from '../reducers/index';
-
-import Card from '../../shared/components/card';
+import { IStore } from '../reducers/';
 import CodeInputError from './error-block';
+import { FORM_NAME } from './form-container';
 import CodeInput from './input';
 import SubmitButtons from './submit-buttons';
-
-import { FORM_NAME } from './form-container';
 import ValueDisplay from './value-display';
 
 export interface IProps {
@@ -32,17 +30,17 @@ export interface IProps {
 
 interface IState {
     code?: string;
-    msg?: string[];
+    messages?: IMessage[];
 }
 
 class FormSection extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const { valid, submitting, handleSubmit, onSubmit, code, tasks, teams, msg } = this.props;
-
+        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, msgs} = this.props;
+//  {msg && (<div className={'alert alert-' + msgs}> {msg[0]}</div>)}
         return (
             <div>
-                {msg && (<div className={'alert alert-' + msg[1]}> {msg[0]}</div>)}
+
                 <div className="row">
                     <div className="col-6">
                         <Card level="info" headline="Task's code">
@@ -70,7 +68,7 @@ const mapStateToProps = (state: IStore): IState => {
     const selector = formValueSelector(FORM_NAME);
     return {
         code: selector(state, 'code'),
-        msg: state.submit.msg,
+        messages: state.submit['brawl-entry-form'].messages,
     };
 };
 

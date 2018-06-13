@@ -5,7 +5,7 @@ import {
     ACTION_REMOVE_PLACE,
 } from '../actions/teams';
 
-const routeTeam = (state: any[], action): ITeam[] => {
+const routeTeam = (state: ITeam[], action): ITeam[] => {
     const { teamId, place: { x, y, roomId } } = action;
     return state.map((team) => {
         if (team.teamId !== teamId) {

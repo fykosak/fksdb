@@ -1,12 +1,10 @@
 import * as React from 'react';
-
+import { connect } from 'react-redux';
+import { IStore } from '../../../reducers/';
 import AutoFilter from '../../helpers/auto-filter';
 import Timer from '../timer';
 import Images from './images';
 import ResultsTable from './results-table';
-
-import { connect } from 'react-redux';
-import { IStore } from '../../../reducers/index';
 
 interface IState {
     visible?: boolean;

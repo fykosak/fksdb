@@ -1,15 +1,13 @@
 import * as d3 from 'd3';
 import * as React from 'react';
-
 import { connect } from 'react-redux';
-
 import {
     ISubmit,
     ISubmits,
     ITask,
 } from '../../../../../../shared/interfaces';
-import { getColorByPoints } from '../../../../../helpers/pie/index';
-import { IStore } from '../../../../../reducers/index';
+import { getColorByPoints } from '../../../../../helpers/pie/';
+import { IStore } from '../../../../../reducers/';
 
 interface IState {
     activePoints?: number;

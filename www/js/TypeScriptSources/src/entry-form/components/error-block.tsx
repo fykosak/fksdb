@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { WrappedFieldProps } from 'redux-form';
 
-export default class CodeInputErrorsBlock extends React.Component<any, {}> {
+export default class CodeInputErrorsBlock extends React.Component<WrappedFieldProps, {}> {
 
     public render() {
         const { meta: { valid, error } } = this.props;

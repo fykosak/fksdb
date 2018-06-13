@@ -20,11 +20,15 @@ abstract class ReactComponent extends Control {
     /**
      * @param $obj IComponent
      */
-    protected function attached($obj){
+    protected function attached($obj) {
         if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
             static::$reactJSAttached = true;
             $obj->registerJSFile('js/lib/react.min.js');
             $obj->registerJSFile('js/lib/react-dom.min.js');
         }
+    }
+
+    public function createComponentReactLogo() {
+        return new ReactLogo();
     }
 }

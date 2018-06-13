@@ -1,10 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { IStore } from '../reducers/';
 import NavBar from './parts/nav-bar/index';
 import Statistics from './parts/stats/index';
 import Results from './parts/table/index';
-
-import { connect } from 'react-redux';
-import { IStore } from '../reducers/index';
 
 interface IState {
     page?: string;

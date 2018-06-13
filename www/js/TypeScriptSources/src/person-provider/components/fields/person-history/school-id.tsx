@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
-import SchoolProvider, { ISchoolProviderInputProps } from '../../../../brawl-registration/components/form/fields/school-provider';
 import { IPersonStringSelectror } from '../../../../brawl-registration/middleware/price';
 import Lang from '../../../../lang/components/lang';
+import SchoolProvider, { ISchoolProviderInputProps } from '../../../../school-provider/';
 import { required } from '../../../validation';
 import InputProvider from '../../input-provider';
 

@@ -2,7 +2,7 @@ import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
-} from '../actions/index';
+} from '../actions/';
 
 export interface IState {
     submitting?: boolean;

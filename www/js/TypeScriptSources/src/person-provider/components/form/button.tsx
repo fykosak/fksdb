@@ -2,13 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { WrappedFieldProps } from 'redux-form';
-import {
-    submitFail,
-    submitStart,
-    submitSuccess,
-} from '../../../fetch-api/actions/submit';
-import { netteFetch } from '../../../fetch-api/middleware/fetch';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
+import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
 import Lang from '../../../lang/components/lang';
 import {
     IRequestData,
@@ -27,45 +21,40 @@ interface IProps {
 
 interface IState {
     submitting?: boolean;
-    onSubmitFail?: (e) => void;
-    onSubmitStart?: () => void;
-    onSubmitSuccess?: (data: IResponse<IResponseData>) => void;
+    onFindButtonClick?: (value: string) => Promise<any>;
 }
+
+const findButtonClick = (dispatch: Dispatch<IStore>, value: string, accessKey: string) => {
+
+    return dispatchNetteFetch<IRequestData, IResponseData, IStore>('personProvider/' + accessKey, dispatch, {
+        act: 'person-provider',
+        data: {
+            accessKey,
+            email: value,
+            fields: [],
+        },
+    });
+};
 
 class Field extends React.Component<IProps & IState & WrappedFieldProps, {}> {
     public render() {
-        const {onSubmitSuccess, onSubmitFail, onSubmitStart, submitting} = this.props;
-        const onFindButtonClick = (event) => {
-            event.preventDefault();
-            onSubmitStart();
-            netteFetch<IRequestData, IResponseData>({
-                act: 'person-provider',
-                data: {
-                    email: this.props.value,
-                    fields: [],
-                },
-            }, (response) => {
-                response.data.key = this.props.accessKey;
-                onSubmitSuccess(response);
-            }, onSubmitFail);
-        };
+        const {submitting, onFindButtonClick} = this.props;
 
         const valid = ![required, isMail].reduce((init, test) => {
-                return init || test(this.props.value);
+            return init || test(this.props.value);
         }, '');
-        return <button className="btn btn-primary" disabled={submitting || !valid} onClick={onFindButtonClick}>
+        return <button className="btn btn-primary" disabled={submitting || !valid} onClick={(event) => {
+            event.preventDefault();
+            return onFindButtonClick(this.props.value);
+        }}>
             <Lang text={'search'}/>
         </button>;
     }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: IProps): IState => {
-    const key = 'personProvider/' + ownProps.accessKey;
     return {
-        onSubmitFail: (e) => dispatch(submitFail(e, key)),
-        onSubmitStart: () => dispatch(submitStart(key)),
-        onSubmitSuccess: (data) =>
-            dispatch(submitSuccess<IResponseData>(data, key)),
+        onFindButtonClick: (value) => findButtonClick(dispatch, value, ownProps.accessKey),
     };
 };
 

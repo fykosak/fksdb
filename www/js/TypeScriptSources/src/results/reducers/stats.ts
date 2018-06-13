@@ -3,6 +3,7 @@ import {
     SET_STATS_DE_ACTIVE_POINTS,
     SET_STATS_TEAM_ID,
 } from '../actions/stats';
+
 export interface IState {
     teamId?: number;
     activePoints?: number;

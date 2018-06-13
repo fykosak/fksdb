@@ -3,12 +3,12 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import Lang from '../../../lang/components/lang';
 import {
     fetchResults,
     waitForFetch,
 } from '../../helpers/fetch';
 import { IStore } from '../../reducers';
-import Lang from '../../../lang/components/lang';
 
 interface IState {
     lastUpdated?: string;

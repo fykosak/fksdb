@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from '../../helpers/timer';
-import { IStore } from '../../reducers/index';
+import { IStore } from '../../reducers/';
 
 interface IState {
     toStart?: number;

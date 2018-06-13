@@ -56,9 +56,10 @@ class RegisterPresenter extends BasePresenter {
     private function handlePersonProvider(\ReactResponse $response, array $requestData) {
 
         $email = $requestData['email'];
-        $type = $requestData['form'];
+        // $type = $requestData['form'];
+        //'sara.byskova@email.cz'
         $data = $this->reactPersonProvider->getPersonByEmail($email
-            , ['personId', 'school', 'studyYear', 'idNumber', 'familyName', 'otherName'], 2017);
+            , ['person.personId', 'personHistory.schoolId', 'personHistory.studyYear', 'personInfo.idNumber', 'person.familyName', 'person.otherName'], 2017);
         $response->setData($data);
         $response->setAct('person-provider');
         $this->sendResponse($response);
@@ -87,7 +88,7 @@ class RegisterPresenter extends BasePresenter {
      * @param \ReactResponse $response
      * @throws \Nette\Application\AbortException
      */
-    private function handleLangDownload(\ReactResponse $response, array $requestData) {
+    private function handleLangDownload(\ReactResponse $response) {
         $keys = ['Other name', 'Team name', 'Family name',
             'E-mail', 'School',
             'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť',
@@ -120,16 +121,16 @@ class RegisterPresenter extends BasePresenter {
             $response = new \ReactResponse();
             switch ($this->getHttpRequest()->getPost('act')) {
                 case 'school-provider':
-                    $this->handleSchoolProvider($response, $data);
+                    $this->handleSchoolProvider($response, $data ?: []);
                     break;
                 case 'person-provider' :
-                    $this->handlePersonProvider($response, $data);
+                    $this->handlePersonProvider($response, $data ?: []);
                     break;
                 case 'team-name-unique':
-                    $this->handleTeamNameUnique($response, $data);
+                    $this->handleTeamNameUnique($response, $data ?: []);
                     break;
                 case 'lang-downloader':
-                    $this->handleLangDownload($response, $data);
+                    $this->handleLangDownload($response);
                     break;
             }
 

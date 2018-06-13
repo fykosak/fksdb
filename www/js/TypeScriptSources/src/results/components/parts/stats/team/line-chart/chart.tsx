@@ -1,11 +1,9 @@
 import * as d3 from 'd3';
 import * as React from 'react';
-
 import {
     connect,
     Dispatch,
 } from 'react-redux';
-
 import {
     ISubmit,
     ISubmits,
@@ -16,8 +14,8 @@ import {
     setDeActivePoints,
 } from '../../../../../actions/stats';
 import { getLinePath } from '../../../../../helpers/lines';
-import { getColorByPoints } from '../../../../../helpers/pie/index';
-import { IStore } from '../../../../../reducers/index';
+import { getColorByPoints } from '../../../../../helpers/pie/';
+import { IStore } from '../../../../../reducers/';
 
 interface IState {
     submits?: ISubmits;

@@ -1,20 +1,18 @@
 import * as React from 'react';
-
-import logger from 'redux-logger';
-import BrawlApp, { IParams } from './app';
-
 import { Provider } from 'react-redux';
 import {
     applyMiddleware,
     createStore,
 } from 'redux';
-import { config } from '../../config/index';
+import logger from 'redux-logger';
+import { config } from '../../config/';
 import {
     IRoom,
     ITask,
     ITeam,
 } from '../../shared/interfaces';
-import { app } from '../reducers/index';
+import { app } from '../reducers/';
+import BrawlApp, { IParams } from './app';
 
 interface IProps {
     params: IParams;

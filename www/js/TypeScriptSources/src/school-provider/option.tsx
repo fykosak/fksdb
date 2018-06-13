@@ -13,7 +13,7 @@ export default class Option extends React.Component<IProps, {}> {
         return <span><img style={{height: '1em'}}
                           className="mr-2"
                           alt=""
-                          src={'/flags/4x3/' + region.toLowerCase() + '.svg'}
+                          src={'/images/flags/4x3/' + region.toLowerCase() + '.svg'}
         />{label}</span>;
     }
 }

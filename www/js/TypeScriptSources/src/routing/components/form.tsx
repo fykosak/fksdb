@@ -10,7 +10,7 @@ import { ITeam } from '../../shared/interfaces';
 import { IStore } from '../reducers/';
 
 interface IState {
-    onSaveRouting?: (teams: IRequest<ITeam[]>, success: any, error: any) => void;
+    onSaveRouting?: (teams: IRequest<ITeam[]>) => void;
     teams?: ITeam[];
     saving?: boolean;
     error?: any;
@@ -22,7 +22,7 @@ class Form extends React.Component<IState, {}> {
         const {onSaveRouting, teams, saving, error} = this.props;
         return (<div>
             <button disabled={saving} className="btn btn-success" onClick={() => {
-                onSaveRouting({act: 'save-brawl-routing', data: teams}, () => null, () => null);
+                onSaveRouting({act: 'save-brawl-routing', data: teams});
             }}>Save
             </button>
             {error && (<span className="text-danger">{error.statusText}</span>)}
@@ -32,8 +32,8 @@ class Form extends React.Component<IState, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
     return {
-        onSaveRouting: (data: IRequest<ITeam[]>, success, error) =>
-            dispatchNetteFetch<ITeam[], any, IStore>('brawl-routing', dispatch, data, success, error),
+        onSaveRouting: (data: IRequest<ITeam[]>) =>
+            dispatchNetteFetch<ITeam[], any, IStore>('brawl-routing', dispatch, data),
     };
 };
 

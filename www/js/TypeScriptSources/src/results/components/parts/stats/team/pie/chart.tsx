@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as React from 'react';
-
 import { connect } from 'react-redux';
 import {
     ISubmit,
@@ -10,8 +9,8 @@ import {
 import {
     getColorByPoints,
     getPieData,
-} from '../../../../../helpers/pie/index';
-import { IStore } from '../../../../../reducers/index';
+} from '../../../../../helpers/pie/';
+import { IStore } from '../../../../../reducers/';
 
 interface IState {
     teams?: ITeam[];

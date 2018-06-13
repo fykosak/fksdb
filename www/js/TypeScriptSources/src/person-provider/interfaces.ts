@@ -21,6 +21,7 @@ export interface IResponseData {
 }
 
 export interface IRequestData {
+    accessKey: string;
     email: string;
     fields: string[];
 }

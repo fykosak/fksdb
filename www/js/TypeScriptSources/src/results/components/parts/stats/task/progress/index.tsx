@@ -5,8 +5,8 @@ import {
     ISubmits,
     ITask,
 } from '../../../../../../shared/interfaces';
-import { getColorByPoints } from '../../../../../helpers/pie/index';
-import { IStore } from '../../../../../reducers/index';
+import { getColorByPoints } from '../../../../../helpers/pie/';
+import { IStore } from '../../../../../reducers/';
 
 interface IState {
     tasks?: ITask[];

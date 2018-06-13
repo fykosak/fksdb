@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import {
     IState as ISubmitState,
     submit,
-} from './submit';
+} from '../../fetch-api/reducers/submit';
 
 import { reducer as formReducer } from 'redux-form';
 

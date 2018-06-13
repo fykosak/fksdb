@@ -1,4 +1,4 @@
-import { netteFetch } from '../../../../../fetch-api/middleware/fetch';
+import { netteFetch } from '../fetch-api/middleware/fetch';
 import {
     IRequestData,
     ISchool,

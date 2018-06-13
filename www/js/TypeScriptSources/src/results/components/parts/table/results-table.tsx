@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
-
 import {
     ISubmits,
     ITask,
@@ -9,7 +8,7 @@ import {
 } from '../../../../shared/interfaces';
 import { Filter } from '../../../helpers/filters/filters';
 import { createFilter } from '../../../helpers/filters/table-filter';
-import { IStore } from '../../../reducers/index';
+import { IStore } from '../../../reducers/';
 import TeamRow from './team-row';
 
 interface IState {

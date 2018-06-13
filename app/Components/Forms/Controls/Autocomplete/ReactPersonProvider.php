@@ -43,6 +43,7 @@ class ReactPersonProvider {
     private function getDefaultData($email) {
         return [
             'email' => ['value' => $email, 'hasValue' => true,],
+            'person.personId' => ['value' => 0, 'hasValue' => true,],
         ];
     }
 
@@ -94,7 +95,7 @@ class ReactPersonProvider {
                     $fieldsData[$field] = ['value' => $person->other_name, 'hasValue' => true,];
                     break;
                 default:
-                    throw new BadRequestException('pole ' . $field . ' nexistuje');
+                    //throw new BadRequestException('pole ' . $field . ' nexistuje');
                     break;
             }
         }
