@@ -16,7 +16,7 @@ interface IProps {
 
 class App extends React.Component<IProps, {}> {
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         return (
             <Provider store={store}>
                 <PersonProvider accessKey={'person'}/>

@@ -1,22 +1,27 @@
-import { IState as ISubmitStore } from '../shared/reducers/submit';
+import { IState as ISubmitStore } from '../fetch-api/reducers/submit';
 import {
     IProviderStore,
-    IProviderValue,
 } from './reducers/provider';
-
-export interface IResponseValues {
-    act: string;
-    email: string;
-    fields: string[];
-}
 
 export interface IStore {
     submit: ISubmitStore;
     provider: IProviderStore;
 }
 
-export interface IReceiveProviderData {
+export interface IProviderValue<D = any> {
+    hasValue: boolean;
+    value: D;
+}
+
+export interface IResponseData {
+    key?: string;
     fields: {
-        [value: string]: IProviderValue;
+        [value: string]: IProviderValue<any>;
     };
+}
+
+export interface IRequestData {
+    accessKey: string;
+    email: string;
+    fields: string[];
 }
