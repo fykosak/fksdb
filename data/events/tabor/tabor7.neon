@@ -139,6 +139,8 @@ events:
                         label: "Mám zájem o svozy"
                         description: "Místo, ze kterého chci cestovat"
                         factory: Chooser("Zvolit místo", Options(%events.tabor7.arrival.destination%))
+                    arrival_ticket:
+                        label: "Mám zájem o společnou jízenku"
                     swimmer:
                          label: "Umím plavat"
                     note:
