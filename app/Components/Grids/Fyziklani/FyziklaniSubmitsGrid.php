@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
@@ -46,9 +45,12 @@ class FyziklaniSubmitsGrid extends BaseGrid {
 
     /**
      * @param $presenter BasePresenter
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
 
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
