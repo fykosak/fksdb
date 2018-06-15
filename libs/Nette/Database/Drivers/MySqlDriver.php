@@ -44,7 +44,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		if (isset($options['sqlmode'])) {
 			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->query("SET time_zone='" . date('P') . "'");
 	}
 
 
