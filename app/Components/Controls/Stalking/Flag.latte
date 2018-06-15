@@ -1,56 +1,56 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Flags</h4>
-    <div class="card-body">
-        {if count($flags)}
-            {foreach $flags as $flag}
-                <h3 class="card-header">{$flag->name}</h3>
-                <ul class="list-group list-group-flush">
+    {if count($flags)}
+        {foreach $flags as $flag}
+            <h3 class="card-header">{$flag->name}</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">Value</span>
+                        <div class="col-7">
+                            {if $flag->value == 1}
+                                <span class="badge badge-success">1</span>
+                            {elseif $flag->value == 0}
+                                <span class="badge badge-danger">0</span>
+                            {else}
+                                <span class="badge badge-warning">{$flag->value}</span>
+                            {/if}
+                        </div>
+                    </div>
+                </li>
+                {if $flag->type == 'contest' || $flag->type == 'contest_year'}
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Value</span>
+                            <span class="col-5">Contest</span>
                             <div class="col-7">
-                                {if $flag->value == 1}
-                                    <span class="badge badge-success">1</span>
-                                {elseif $flag->value == 0}
-                                    <span class="badge badge-danger">0</span>
-                                {else}
-                                    <span class="badge badge-warning">{$flag->value}</span>
-                                {/if}
+                                {control contestBadge, $org->contest_id}
                             </div>
                         </div>
                     </li>
-                    {if $flag->type == 'contest' || $flag->type == 'contest_year'}
-                        <li class="list-group-item">
-                            <div class="row">
-                                <span class="col-5">Contest</span>
-                                <div class="col-7">
-                                    {control contestBadge, $org->contest_id}
-                                </div>
-                            </div>
-                        </li>
-                    {/if}
-                    {if $flag->type == 'ac_year' || $flag->type == 'contest_year'}
-                        <li class="list-group-item">
-                            <div class="row">
-                                <span class="col-5">Year</span>
-                                <div class="col-7">
-                                    {$flag->ac_year}
-                                </div>
-                            </div>
-                        </li>
-                    {/if}    
+                {/if}
+                {if $flag->type == 'ac_year' || $flag->type == 'contest_year'}
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Modified</span>
+                            <span class="col-5">Year</span>
                             <div class="col-7">
-                                {$flag->modified}
+                                {$flag->ac_year}
                             </div>
                         </div>
                     </li>
-                </ul>
-            {/foreach}
-        {else}
+                {/if}    
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">Modified</span>
+                        <div class="col-7">
+                            {$flag->modified}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        {/foreach}
+    {else}
+        <div class="card-body">
             <span class="badge-warning badge">No records</span>
-        {/if}
-    </div>
+        </div>
+    {/if}
 </div>
