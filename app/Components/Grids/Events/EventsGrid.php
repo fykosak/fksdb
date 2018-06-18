@@ -20,9 +20,16 @@ class EventsGrid extends BaseGrid {
     private $serviceEvent;
 
     function __construct(ServiceEvent $serviceEvent) {
+        parent::__construct();
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param $presenter
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
@@ -81,12 +88,6 @@ class EventsGrid extends BaseGrid {
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel('Přidat akci')
             ->setClass('btn btn-sm btn-primary');
-
-
-        //
-        // appeareance
-        //
-
     }
 
 }
