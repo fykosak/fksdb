@@ -8,6 +8,7 @@ import {
 import {
     getScheduleFromState,
     getSchedulePrice,
+    IPersonStringSelectror,
 } from '../../../../middleware/price';
 import PriceDisplay from '../../../displays/price';
 
@@ -21,7 +22,7 @@ interface IState {
     scheduleDef?: IScheduleItem[];
 }
 
-class Price extends React.Component<IProps & IState, {}> {
+class Price extends React.Component<IPersonStringSelectror & IState, {}> {
 
     public render() {
         const price = getSchedulePrice(this.props.scheduleDef, this.props.schedule);

@@ -22,6 +22,7 @@ interface IState {
 class SecureDisplay extends React.Component<WrappedFieldProps & IProps & IState, {}> {
 
     public render() {
+
         const {removeProviderValue, JSXLabel, providerProperty} = this.props;
         if (providerProperty && providerProperty.hasValue) {
             return <div className="form-group">

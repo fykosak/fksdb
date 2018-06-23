@@ -29,18 +29,43 @@ interface IState {
 class TabItem extends React.Component<IProps & IState, {}> {
     public render() {
         const {index, type, active, providerOpt} = this.props;
+        const accessKey = getFieldName(type, index);
         const personId = null;
 
         let form = null;
         switch (type) {
             default:
             case 'participant':
-                form = <ParticipantForm index={index} type={type}/>;
+                form = <ParticipantForm accessKey={accessKey} index={index} type={type}/>;
                 break;
             case 'teacher':
-                form = <TeacherForm index={index} type={type}/>;
+                form = <TeacherForm accessKey={accessKey} index={index} type={type}/>;
 
         }
+
+        interface IInputDef {
+            required: boolean;
+            secure: boolean;
+
+        };
+        const inputsDef: { [key: string]: { [key: string]: IInputDef } } = {
+            person: {
+                family_name: {
+                    required: true,
+                    secure: false,
+                },
+                other_name: {
+                    required: true,
+                    secure: false,
+                },
+            },
+            person_history: {
+                school_id: {
+                    required: true,
+                    secure: false,
+                },
+            },
+        };
 
         return <FormSection key={index} name={getFieldName(type, index)}>
             <Tab active={active} name={(type + index)}>
@@ -51,7 +76,7 @@ class TabItem extends React.Component<IProps & IState, {}> {
                     component={HiddenField}
                     providerOptions={personId}
                 />
-                <PersonProvider accessKey={getFieldName(type, index)}>
+                <PersonProvider accessKey={getFieldName(type, index)} inputs={}>
                     {form}
                 </PersonProvider>
             </Tab>

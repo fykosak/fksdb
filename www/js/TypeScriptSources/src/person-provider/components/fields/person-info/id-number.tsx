@@ -1,29 +1,38 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
 import BaseInput, { IBaseInputProps } from '../../../../brawl-registration/components/inputs/base-input';
-import { IPersonStringSelectror } from '../../../../brawl-registration/middleware/price';
+import {
+    IPersonSelector,
+} from '../../../../brawl-registration/middleware/price';
 import Lang from '../../../../lang/components/lang';
-import { required } from '../../../validation';
+import { required as requiredTest } from '../../../validation';
 import InputProvider from '../../input-provider';
+import { IInputDefinition } from '../interfaces';
 
 class Input extends InputProvider<IBaseInputProps> {
 }
 
-export default class IdNumber extends React.Component<IPersonStringSelectror, {}> {
+interface IProps {
+    def: IInputDefinition;
+    personSelector: IPersonSelector;
+    name: string;
+}
+
+export default class IdNumber extends React.Component<IProps, {}> {
 
     public render() {
-        const {accessKey} = this.props;
+        const {personSelector: {accessKey}, def: {required, readonly, secure}, name} = this.props;
         return <Field
             accessKey={accessKey}
-            name={'personInfo.idNumber'}
+            name={name}
             component={Input}
             JSXLabel={<Lang text={'Číslo OP/pasu'}/>}
             inputType={'text'}
-            secure={true}
+            secure={secure}
             providerInput={BaseInput}
-            readOnly={false}
+            readOnly={readonly}
             noChangeMode={false}
-            validate={[required]}
+            validate={required ? [requiredTest] : []}
         />;
     }
 }

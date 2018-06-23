@@ -48,7 +48,8 @@ class StoredQueriesGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
@@ -67,7 +68,7 @@ class StoredQueriesGrid extends BaseGrid {
             foreach ($row->getMStoredQueryTags() as $tag) {
                 $baseEl->add(Html::el('span')
                     ->addAttributes([
-                        'class' => 'label storedQueryTag storedQueryTag-' . $tag->color,
+                        'class' => 'label badge storedQueryTag storedQueryTag-' . $tag->color,
                         'title' => $tag->description
                     ])
                     ->add($tag->name));
@@ -98,7 +99,7 @@ class StoredQueriesGrid extends BaseGrid {
             });
 
         $this->addButton("execute", _("Spustit"))
-            ->setClass("btn btn-xs btn-primary")
+            ->setClass("btn btn-sm btn-primary")
             ->setText('Spustit')//todo i18n
             ->setLink(function ($row) use ($that) {
                 return $that->getPresenter()->link("execute", $row->query_id);

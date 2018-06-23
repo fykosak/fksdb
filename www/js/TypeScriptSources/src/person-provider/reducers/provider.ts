@@ -17,7 +17,7 @@ const providerLoadData = (state: IProviderStore, action): IProviderStore => {
     }
     return {
         ...state,
-        [action.data.data.key]: {
+        [action.data.data.accessKey]: {
             fields: personState,
             isServed: true,
         },

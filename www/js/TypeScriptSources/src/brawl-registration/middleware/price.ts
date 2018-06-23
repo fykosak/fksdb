@@ -62,6 +62,7 @@ export const getSchedulePrice = (scheduleDef: IScheduleItem[], schedule: boolean
 export interface IPersonSelector {
     type: string;
     index: number;
+    accessKey: string;
 }
 
 export interface IPersonStringSelectror {

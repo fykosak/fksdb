@@ -9,6 +9,7 @@ import Option from './option';
 export interface ISchoolProviderInputProps {
     JSXLabel: JSX.Element;
     JSXDescription?: JSX.Element;
+    readonly: boolean;
 }
 
 export default class SchoolProvider extends React.Component<ISchoolProviderInputProps & WrappedFieldProps, {}> {

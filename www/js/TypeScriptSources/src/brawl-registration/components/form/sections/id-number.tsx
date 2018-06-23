@@ -21,9 +21,13 @@ interface IState {
     scheduleDef?: IScheduleItem[];
 }
 
-class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
+interface IProps {
+    accessKey: string;
+}
+
+class IdNumberSection extends React.Component<IProps & IState, {}> {
     public render() {
-        const {accommodation, schedule, scheduleDef} = this.props;
+        const {accommodation, schedule, scheduleDef, accessKey} = this.props;
         const requiredValues = requireIdNumberFromAccommodation(accommodation).concat(requireIdNumberFromSchedule(schedule, scheduleDef));
 
         if (requiredValues.length === 0) {
@@ -31,7 +35,7 @@ class IdNumberSection extends React.Component<IPersonSelector & IState, {}> {
         }
         return <div>
             <h3><Lang text={'Číslo OP/Pasu'}/></h3>
-            <IdNumber accessKey={getFieldName(this.props.type, this.props.index)}/>
+            <IdNumber accessKey={accessKey}/>
             <h6><Lang text={'Akcie vyžadujúve OP'}/></h6>
             <ul>
                 {requiredValues.map((value, index) => {
