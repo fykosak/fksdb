@@ -291,7 +291,7 @@ table code {
 	color: #FFF;
 }
 
-#menu p {
+#menu p, #menu ul {
 	border: none;
 	margin: 0 0 4px;
 	padding: 0 0 4px;
@@ -392,7 +392,7 @@ select[name="db"] option {
 	padding-left: 18px;
 }
 
-#menu p a[href*="&select="] {
+#menu ul a[href*="&select="] {
 	display: inline-block;
 	margin-right: 8px;
 	overflow: hidden;
@@ -402,14 +402,14 @@ select[name="db"] option {
 	height: 16px;
 }
 
-#menu p a[href*="&select="]:before {
+#menu ul a[href*="&select="]:before {
 	content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHISURBVDjLpVPNK0RRFP+9D98syMwUspHkm9I0YkFZWBFKkZ0s7a3Ewh+ilChK7FgoZCJFKYlYKB8zk2+Z5t0P577He29kQU7dd+6575zf+d1zztWklPiPmOozt/U4SThjXIoyIQS4AJjSXO0lGGlvcXAm6Vzsz4xUhm0AIeX4QLig+C+ZpxbOG1wGhGYHr1zMUmZGWRgs0ha3PE1nX/8mWmdgWTzLB+DUYbhm9FfZ35IEyrhXA3VXJfPbsV8B9LQUIeUHYJ8ASobag1jcucNgW8g9W4reYSDi2YnnZDoDiwCokDANct6NwTB0LEdj0HRA/wxa2SN25JNBEdWluUhZ366gqmAaGvrCAXKOozccTGPgt8+vn8GYSGcgyTYp3dpBnBg42nbQPRBTo5bTvqYkmxL6AQhNTWQGBXY3B7BxlEBXozcW64dxRKoKUZBju+P06gl5WaaviMJBM3TNDlbypemIZgHYOnlwASsCmW7nHADGnBoQ3c76YmweJ9BR5zFYjsbRHwm4tmJg6PhWA7pCXXk+bu7fURHKweXtq/sWaksz7SC/CCGFrwtyZ3r+rCnFRZ7qr1qc6mLZj4f9OEyPL8lVpbX/PucPv5QPKHB1TdEAAAAASUVORK5CYII=");
 	padding-right: 5px;
 	display: inline-block;
 	margin-top: 2px;
 }
 
-#menu p a[href*="&table="], #menu p a[href*="&view="] {
+#menu ul a[href*="&table="], #menu ul a[href*="&view="] {
 	display: inline-block;
 	text-decoration: none;
 }
@@ -556,6 +556,10 @@ input[name="delete"]:hover, input[name="drop"]:hover {
 	width: 16px;
 }
 
+.logout {
+	position: fixed;
+}
+
 
 /* paginator */
 .pages {
@@ -589,3 +593,9 @@ a[href*="&import="] {background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEU
 	#menu .links a:hover {color:red;}
 }
 
+/* custom FYKOS additions -- get rid of annoying new features */
+
+.footer {
+	border-image: initial;
+	position: initial;
+}
