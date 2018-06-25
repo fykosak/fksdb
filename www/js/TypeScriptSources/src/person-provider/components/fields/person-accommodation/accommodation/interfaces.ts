@@ -1,4 +1,4 @@
-import { IPrice } from '../../../../../brawl-registration/middleware/price';
+import { IPrice } from '../../../../../shared/components/displays/price/interfaces';
 
 export interface IAccommodationItem {
     accId: number;

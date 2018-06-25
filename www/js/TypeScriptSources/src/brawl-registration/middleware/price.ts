@@ -1,12 +1,8 @@
 import { formValueSelector } from 'redux-form';
+import { IPersonAccommodation } from '../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
+import { IPrice } from '../../shared/components/displays/price/interfaces';
 import { IStore } from '../reducers';
 import { IScheduleItem } from './iterfaces';
-import { IPersonAccommodation } from '../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
-
-export interface IPrice {
-    eur: number;
-    kc: number;
-}
 
 export const getSchedulePrice = (scheduleDef: IScheduleItem[], schedule: boolean[]): IPrice => {
     const sum = {
@@ -35,10 +31,6 @@ export const getSchedulePrice = (scheduleDef: IScheduleItem[], schedule: boolean
 export interface IPersonSelector {
     type: string;
     index: number;
-    accessKey: string;
-}
-
-export interface IPersonStringSelectror {
     accessKey: string;
 }
 

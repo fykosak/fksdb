@@ -2,15 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { WrappedFieldProps } from 'redux-form';
+import { IPersonSelector } from '../../../brawl-registration/middleware/price';
 import Lang from '../../../lang/components/lang';
 import { clearProviderProviderProperty } from '../../actions';
-import {
-    IProviderValue,
-    IStore,
-} from '../../interfaces';
+import { IStore } from '../../interfaces';
 
 interface IProps {
-    accessKey: string;
+    personSelector: IPersonSelector;
     JSXLabel: JSX.Element;
 }
 
@@ -41,13 +39,13 @@ class SecureDisplay extends React.Component<WrappedFieldProps & IProps & IState,
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: WrappedFieldProps & IProps): IState => {
-    const {accessKey, input: {name}} = ownProps;
+    const {personSelector: {accessKey}, input: {name}} = ownProps;
     return {
         removeProviderValue: () => dispatch(clearProviderProviderProperty(accessKey, name)),
     };
 };
 
-const mapStateToProps = (state: IStore, ownProps: WrappedFieldProps & IProps): IState => {
+const mapStateToProps = (): IState => {
     return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SecureDisplay);

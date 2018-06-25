@@ -1,17 +1,12 @@
 import { Dispatch } from 'react-redux';
-import {
-    dispatchNetteFetch,
-    netteFetch,
-} from '../../fetch-api/middleware/fetch';
+import { dispatchNetteFetch } from '../../fetch-api/middleware/fetch';
+import { IResponse } from '../../fetch-api/middleware/interfaces';
 import { ITeam } from '../../shared/interfaces';
 import { IStore } from '../reducers';
-import { IResponse } from '../../fetch-api/middleware/interfaces';
 
 export const ACTION_SAVE_ROUTING_START = 'ACTION_SAVE_ROUTING_START';
-
 export const ACTION_SAVE_ROUTING_SUCCESS = 'ACTION_SAVE_ROUTING_SUCCESS';
 export const ACTION_SAVE_ROUTING_FAIL = 'ACTION_SAVE_ROUTING_FAIL';
-
 export const ACTION_REMOVE_UPDATED_TEAMS = 'ACTION_REMOVE_UPDATED_TEAMS';
 
 export const saveTeams = (dispatch: Dispatch<IStore>, teams: ITeam[]): Promise<IResponse<number[]>> => {

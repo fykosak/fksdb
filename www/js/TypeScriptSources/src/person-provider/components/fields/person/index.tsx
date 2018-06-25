@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FormSection } from 'redux-form';
-import FamilyName from './family-name';
-import OtherName from './other-name';
 import { ISectionProps } from '../interfaces';
 import Email from './email';
+import FamilyName from './family-name';
+import OtherName from './other-name';
 
 export default class Person extends React.Component<ISectionProps, {}> {
     public render() {

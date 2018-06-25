@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
-import BaseInput, { IBaseInputProps } from '../../../../brawl-registration/components/inputs/base-input';
 import { IPersonSelector } from '../../../../brawl-registration/middleware/price';
 import Lang from '../../../../lang/components/lang';
 import { required as requiredTest } from '../../../validation';
 import InputProvider from '../../input-provider';
+import BaseInput, { IBaseInputProps } from '../../inputs/base-input';
 import { IInputDefinition } from '../interfaces';
 
 class Input extends InputProvider<IBaseInputProps> {
@@ -18,9 +18,9 @@ interface IProps {
 
 export default class FamilyName extends React.Component<IProps, {}> {
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
+        const {personSelector, def: {required, readonly}, name, def} = this.props;
         return <Field
-            accessKey={accessKey}
+            personSelector={personSelector}
             name={name}
             inputDef={def}
             JSXLabel={<Lang text={'Family name'}/>}
@@ -28,9 +28,7 @@ export default class FamilyName extends React.Component<IProps, {}> {
             component={Input}
             providerInput={BaseInput}
             placeholder={'Name'}
-            readOnly={readonly}
-            noChangeMode={true}
-            secure={secure}
+            readonly={readonly}
             validate={required ? [requiredTest] : []}
         />;
     }

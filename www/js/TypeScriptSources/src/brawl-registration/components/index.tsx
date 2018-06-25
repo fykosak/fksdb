@@ -8,8 +8,8 @@ import {
 import logger from 'redux-logger';
 import { config } from '../../config';
 import Powered from '../../shared/components/powered';
+import { IDefinitionsState } from '../../shared/definitions/interfaces';
 import { app } from '../reducers';
-import { IDefinitionsState } from '../reducers/definitions';
 import Container from './container';
 
 interface IProps {

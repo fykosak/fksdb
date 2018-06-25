@@ -9,7 +9,7 @@ import {
     dragStart,
 } from '../actions/dragndrop';
 import { removeTeamPlace } from '../actions/teams';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
 
 interface IState {
     isUpdated?: boolean;

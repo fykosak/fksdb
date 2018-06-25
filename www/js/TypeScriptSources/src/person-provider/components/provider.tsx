@@ -21,7 +21,7 @@ interface IState {
 class PersonProvider extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {children, personSelector, form} = this.props;
+        const {personSelector, form} = this.props;
 
         if (this.props.isServed) {
             // if (children) {

@@ -1,7 +1,5 @@
-import {
-    IPersonSelector,
-    IPrice,
-} from './price';
+import { IPrice } from '../../shared/components/displays/price/interfaces';
+import { IPersonSelector } from './price';
 
 export interface IScheduleItem {
     date: string;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IPrice } from '../../middleware/price';
+import { IPrice } from './interfaces';
 
 interface IProps {
     price: IPrice;

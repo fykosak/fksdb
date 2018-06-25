@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
+import { IPersonSelector } from '../../../brawl-registration/middleware/price';
+import { IInputDefinition } from '../fields/interfaces';
 import Input from './input';
 import SecureDisplay from './secure-display';
-import { IInputDefinition } from '../fields/interfaces';
 
 interface IProps<P = {}> extends IBaseInputProps {
     inputDef: IInputDefinition;
-    secure: boolean;
     providerInput: React.ComponentClass<WrappedFieldProps & P & IBaseInputProps>;
-    accessKey: string;
+    personSelector: IPersonSelector;
 }
 
 interface IBaseInputProps {
@@ -19,8 +19,7 @@ export default class InputProvider<P= IBaseInputProps> extends React.Component<I
 
     public render() {
         const {
-            accessKey,
-            secure,
+            personSelector,
             JSXLabel,
             providerInput,
             meta,
@@ -30,10 +29,10 @@ export default class InputProvider<P= IBaseInputProps> extends React.Component<I
 
         const child = React.createElement<any>(providerInput, this.props);
 
-        if (secure) {
+        if (inputDef.secure) {
             return <>
                 <Input input={input} meta={meta} inputDef={inputDef}/>
-                <SecureDisplay accessKey={accessKey} input={input} meta={meta} JSXLabel={JSXLabel}/>
+                <SecureDisplay personSelector={personSelector} input={input} meta={meta} JSXLabel={JSXLabel}/>
             </>;
         }
         return <>

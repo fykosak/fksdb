@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { IPrice } from '../../../../middleware/price';
-import DateDisplay from '../../../displays/date';
-import PriceDisplay from '../../../displays/price';
+import DateDisplay from '../../../../../shared/components/displays/date';
+import PriceDisplay from '../../../../../shared/components/displays/price';
+import { IPrice } from '../../../../../shared/components/displays/price/interfaces';
 
 interface IProps {
     date: string;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { FORM_NAME } from '../../';
 import Lang from '../../../../../lang/components/lang';
+import PriceDisplay from '../../../../../shared/components/displays/price';
 import {
     IScheduleItem,
 } from '../../../../middleware/iterfaces';
@@ -10,7 +11,6 @@ import {
     getSchedulePrice,
     IPersonSelector,
 } from '../../../../middleware/price';
-import PriceDisplay from '../../../displays/price';
 
 interface IProps {
     personSelector: IPersonSelector;

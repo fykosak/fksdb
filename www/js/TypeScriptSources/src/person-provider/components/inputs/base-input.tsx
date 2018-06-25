@@ -1,26 +1,22 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
 import ErrorDisplay from './error-display';
-import { IInputDefinition } from '../../../person-provider/components/fields/interfaces';
 
 export interface IBaseInputProps {
-    accessKey: string;
     inputType: string;
-    readOnly: boolean;
+    readonly: boolean;
     placeholder?: string;
     JSXDescription?: JSX.Element;
     JSXLabel: JSX.Element;
-    noChangeMode: boolean;
 }
 
-class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}> {
+export default class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}> {
 
     public render() {
         const {
             input,
             inputType,
-            readOnly,
+            readonly,
             meta,
             meta: {invalid, touched},
             JSXDescription,
@@ -33,7 +29,7 @@ class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}>
             {JSXDescription && (<small className="form-text text-muted">{JSXDescription}</small>)}
             <input
                 className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
-                readOnly={readOnly}
+                readOnly={readonly}
                 {...input}
                 type={inputType}
             />
@@ -41,13 +37,3 @@ class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}>
         </div>;
     }
 }
-
-const mapDispatchToProps = (): {} => {
-    return {};
-};
-
-const mapStateToProps = (): {} => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(BaseInput);

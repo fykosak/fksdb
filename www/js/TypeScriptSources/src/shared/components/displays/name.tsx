@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Lang from '../../../lang/components/lang';
+import { FORM_NAME } from '../../../brawl-registration/components/form';
 import {
     getParticipantValues,
     IPersonSelector,
-} from '../../middleware/price';
-import { FORM_NAME } from '../form';
+} from '../../../brawl-registration/middleware/price';
+import Lang from '../../../lang/components/lang';
 
 interface IState {
     familyName?: string;

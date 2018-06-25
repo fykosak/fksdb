@@ -1,9 +1,7 @@
 import { formValueSelector } from 'redux-form';
-import {
-    IPersonSelector,
-    IPrice,
-} from '../../../../../brawl-registration/middleware/price';
+import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
 import { IStore } from '../../../../../brawl-registration/reducers';
+import { IPrice } from '../../../../../shared/components/displays/price/interfaces';
 import {
     IAccommodationItem,
     IPersonAccommodation,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import Select, { ISelectInputProps } from '../../../../brawl-registration/components/inputs/select';
+import Select, { ISelectInputProps } from '../../inputs/select';
 import { IPersonSelector } from '../../../../brawl-registration/middleware/price';
 import { IStore } from '../../../../brawl-registration/reducers';
 import Lang from '../../../../lang/components/lang';
@@ -25,7 +25,7 @@ interface IProps {
 class StudyYear extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
+        const {personSelector, def: {required, readonly}, name, def} = this.props;
         const {studyYearsDef} = this.props;
         const optGroups = [];
         for (const group in studyYearsDef) {
@@ -42,15 +42,14 @@ class StudyYear extends React.Component<IProps & IState, {}> {
             }
         }
         return <Field
-            accessKey={accessKey}
             inputDef={def}
             JSXLabel={<Lang text={'Study year'}/>}
-            secure={secure}
             component={Input}
             providerInput={Select}
             children={optGroups}
             readonly={readonly}
             name={name}
+            personSelector={personSelector}
             validate={required ? [requiredTest] : []}
         />;
     }

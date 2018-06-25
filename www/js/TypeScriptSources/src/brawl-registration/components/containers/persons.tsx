@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Lang from '../../../lang/components/lang';
+import Nav from '../../../shared/components/tabs/nav';
+import Tab from '../../../shared/components/tabs/tab';
 import { IPersonDefinition } from '../../middleware/iterfaces';
 import { IStore } from '../../reducers';
 import Summary from '../form/groups/sumary';
-import Nav from '../helpers/tabs/nav';
-import Tab from '../helpers/tabs/tab';
 import NavItem from './nav-item';
 import TabItem from './tab-item';
 

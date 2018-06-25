@@ -1,4 +1,4 @@
-import { IDefinitionsState } from '../reducers/definitions';
+import { IDefinitionsState } from '../interfaces';
 
 export const ACTION_SET_DEFINITIONS = 'ACTION_SET_DEFINITIONS';
 

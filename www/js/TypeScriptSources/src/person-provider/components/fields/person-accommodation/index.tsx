@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormSection } from 'redux-form';
-import Accommodation from './accommodation';
 import { ISectionProps } from '../interfaces';
+import Accommodation from './accommodation';
 
 export default class PersonAccommodation extends React.Component<ISectionProps, {}> {
     public render() {

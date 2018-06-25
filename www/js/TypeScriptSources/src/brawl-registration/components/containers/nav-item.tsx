@@ -4,10 +4,10 @@ import {
     getFormAsyncErrors,
     getFormSyncErrors,
 } from 'redux-form';
+import Nav from '../../../shared/components/tabs/nav';
+import { IPersonSelector } from '../../middleware/price';
 import NameDisplay from '../displays/name';
 import { FORM_NAME } from '../form';
-import Nav from '../helpers/tabs/nav';
-import { IPersonSelector } from '../../middleware/price';
 
 interface IProps {
     personSelector: IPersonSelector;

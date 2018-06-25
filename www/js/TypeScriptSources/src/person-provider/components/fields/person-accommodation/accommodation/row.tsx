@@ -1,6 +1,6 @@
 import * as React from 'react';
-import DateDisplay from '../../../../../brawl-registration/components/displays/date';
-import PriceDisplay from '../../../../../brawl-registration/components/displays/price';
+import DateDisplay from '../../../../../shared/components/displays/date';
+import PriceDisplay from '../../../../../shared/components/displays/price';
 import { IAccommodationItem } from './interfaces';
 
 interface IProps {

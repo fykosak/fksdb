@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Field } from 'redux-form';
-import BaseInput, { IBaseInputProps } from '../../../../brawl-registration/components/inputs/base-input';
 import { IPersonSelector } from '../../../../brawl-registration/middleware/price';
 import Lang from '../../../../lang/components/lang';
 import { required as requiredTest } from '../../../validation';
 import InputProvider from '../../input-provider';
+import BaseInput, { IBaseInputProps } from '../../inputs/base-input';
 import { IInputDefinition } from '../interfaces';
 
 class Input extends InputProvider<IBaseInputProps> {
@@ -18,19 +18,17 @@ interface IProps {
 
 export default class Email extends React.Component<IProps, {}> {
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
+        const {personSelector, def: {required, readonly}, name, def} = this.props;
         return <Field
             name={name}
             inputDef={def}
-            accessKey={accessKey}
+            personSelector={personSelector}
             JSXLabel={<Lang text={'E-mail'}/>}
             inputType={'text'}
             component={Input}
             providerInput={BaseInput}
             placeholder={'Name'}
-            readOnly={readonly}
-            secure={secure}
-            noChangeMode={true}
+            readonly={readonly}
             validate={required ? [requiredTest] : []}
         />;
     }

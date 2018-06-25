@@ -13,10 +13,8 @@ import {
     IProviderStore,
     provider,
 } from '../../person-provider/reducers/provider';
-import {
-    definitions,
-    IDefinitionsState,
-} from './definitions';
+import { IDefinitionsState } from '../../shared/definitions/interfaces';
+import { definitions } from '../../shared/definitions/reducers/definitions';
 
 export const app = combineReducers({
     definitions,

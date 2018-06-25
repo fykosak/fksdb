@@ -1,10 +1,9 @@
 import * as React from 'react';
-
 import { IPersonSelector } from '../../../brawl-registration/middleware/price';
 import { ISectionDefinition } from '../fields/interfaces';
-import Person from '../fields/person/';
-import PersonInfo from '../fields/person-info';
 import PersonHistory from '../fields/person-history';
+import PersonInfo from '../fields/person-info';
+import Person from '../fields/person/';
 
 interface IProps {
     personSelector: IPersonSelector;

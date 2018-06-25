@@ -7,7 +7,7 @@ import {
 } from 'react-redux';
 import { ITeam } from '../../shared/interfaces';
 import { dropItem } from '../actions/dragndrop';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
 
 interface IState {
     onDrop?: (teamId: number, place: any) => void;

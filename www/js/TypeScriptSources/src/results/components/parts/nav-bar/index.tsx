@@ -29,8 +29,6 @@ class NavBar extends React.Component<IState, { display: boolean }> {
     }
 
     public render() {
-        const {page, onChangePage, autoSwitch} = this.props;
-
         return (<div>
             <button className={'btn btn-secondary ' + (this.state.display ? 'active' : '')}
                     onClick={() => this.setState({display: !this.state.display})}>

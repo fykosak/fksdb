@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormSection } from 'redux-form';
-import IdNumber from './id-number';
 import { ISectionProps } from '../interfaces';
+import IdNumber from './id-number';
 
 export default class PersonInfo extends React.Component<ISectionProps, {}> {
     public render() {

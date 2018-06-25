@@ -5,7 +5,6 @@ import {
     required,
 } from '../../validation';
 import InputField from './field';
-import HiddenField from '../../../brawl-registration/components/inputs/hidden';
 
 interface IProps {
     accessKey: string;

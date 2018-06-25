@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import PriceDisplay from '../../../../../brawl-registration/components/displays/price';
 import { FORM_NAME } from '../../../../../brawl-registration/components/form';
-import {
-    IPersonSelector,
-} from '../../../../../brawl-registration/middleware/price';
+import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
 import Lang from '../../../../../lang/components/lang';
+import PriceDisplay from '../../../../../shared/components/displays/price';
 import {
     getAccommodationFromState,
     getAccommodationPrice,

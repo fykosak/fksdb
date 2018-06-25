@@ -4,7 +4,6 @@ import {
     ACTION_SUBMIT_SUCCESS,
 } from '../../fetch-api/actions/submit';
 
-
 export interface IState {
     submitting?: boolean;
     error?: any;
