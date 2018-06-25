@@ -1,7 +1,7 @@
 import { ACTION_SET_DEFINITIONS } from '../actions/definitions';
 
+import { IAccommodationItem } from '../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
 import {
-    IAccommodationItem,
     IPersonDefinition,
     IScheduleItem,
 } from '../middleware/iterfaces';

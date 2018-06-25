@@ -9,6 +9,12 @@ export default class Option extends React.Component<IProps, {}> {
 
     public render() {
         const {label, region} = this.props;
+        if (!label) {
+            return null;
+        }
+        if (!region) {
+            return null;
+        }
 
         return <span><img style={{height: '1em'}}
                           className="mr-2"

@@ -8,13 +8,12 @@ import {
 import {
     getScheduleFromState,
     getSchedulePrice,
-    IPersonStringSelectror,
+    IPersonSelector,
 } from '../../../../middleware/price';
 import PriceDisplay from '../../../displays/price';
 
 interface IProps {
-    type: string;
-    index: number;
+    personSelector: IPersonSelector;
 }
 
 interface IState {
@@ -22,14 +21,14 @@ interface IState {
     scheduleDef?: IScheduleItem[];
 }
 
-class Price extends React.Component<IPersonStringSelectror & IState, {}> {
+class Price extends React.Component<IProps & IState, {}> {
 
     public render() {
         const price = getSchedulePrice(this.props.scheduleDef, this.props.schedule);
 
         return <div>
             <p><Lang text={'Cena za sprievodné akcie.'}/></p>
-            <PriceDisplay eur={price.eur} kc={price.kc}/>
+            <PriceDisplay price={price}/>
         </div>;
     }
 }
@@ -40,7 +39,7 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
-        schedule: getScheduleFromState(FORM_NAME, state, ownProps),
+        schedule: getScheduleFromState(FORM_NAME, state, ownProps.personSelector),
         scheduleDef: state.definitions.schedule,
     };
 };

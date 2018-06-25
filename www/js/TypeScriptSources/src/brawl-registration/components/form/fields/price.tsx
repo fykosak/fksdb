@@ -4,20 +4,24 @@ import { FormSection } from 'redux-form';
 import { FORM_NAME } from '../';
 import Lang from '../../../../lang/components/lang';
 import {
-    IAccommodationItem,
+    getAccommodationFromState,
+    getAccommodationPrice,
+} from '../../../../person-provider/components/fields/person-accommodation/accommodation/helpers';
+import { IAccommodationItem } from '../../../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
+import {
+
     IScheduleItem,
 } from '../../../middleware/iterfaces';
 import {
-    getAccommodationFromState,
-    getAccommodationPrice,
+
     getScheduleFromState,
     getSchedulePrice,
+    IPersonSelector,
 } from '../../../middleware/price';
 import PriceDisplay from '../../displays/price';
 
 interface IProps {
-    type: string;
-    index: number;
+    personSelector: IPersonSelector;
 }
 
 interface IState {
@@ -37,7 +41,10 @@ class Price extends React.Component<IProps & IState, {}> {
 
         return <FormSection name={'price'}>
             <h3><Lang text={'Celková cena pre osobu'}/></h3>
-            <PriceDisplay eur={accommodationPrice.eur + schedulePrice.eur} kc={accommodationPrice.kc + schedulePrice.kc}/>
+            <PriceDisplay price={{
+                eur: (accommodationPrice.eur + schedulePrice.eur),
+                kc: (accommodationPrice.kc + schedulePrice.kc),
+            }}/>
         </FormSection>;
     }
 }
@@ -48,9 +55,9 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
-        accommodation: getAccommodationFromState(FORM_NAME, state, ownProps),
+        accommodation: getAccommodationFromState(FORM_NAME, state, ownProps.personSelector),
         accommodationDef: state.definitions.accommodation,
-        schedule: getScheduleFromState(FORM_NAME, state, ownProps),
+        schedule: getScheduleFromState(FORM_NAME, state, ownProps.personSelector),
         scheduleDef: state.definitions.schedule,
     };
 };

@@ -21,10 +21,11 @@ interface IProps {
 export default class IdNumber extends React.Component<IProps, {}> {
 
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name} = this.props;
+        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
         return <Field
             accessKey={accessKey}
             name={name}
+            inputDef={def}
             component={Input}
             JSXLabel={<Lang text={'Číslo OP/pasu'}/>}
             inputType={'text'}

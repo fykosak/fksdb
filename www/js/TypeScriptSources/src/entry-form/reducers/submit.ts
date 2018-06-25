@@ -2,7 +2,8 @@ import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
-} from '../actions/';
+} from '../../fetch-api/actions/submit';
+
 
 export interface IState {
     submitting?: boolean;

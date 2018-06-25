@@ -18,10 +18,11 @@ interface IProps {
 
 export default class FamilyName extends React.Component<IProps, {}> {
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name} = this.props;
+        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
         return <Field
             accessKey={accessKey}
             name={name}
+            inputDef={def}
             JSXLabel={<Lang text={'Family name'}/>}
             inputType={'text'}
             component={Input}

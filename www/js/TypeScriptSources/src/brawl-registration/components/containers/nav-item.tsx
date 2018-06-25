@@ -7,10 +7,10 @@ import {
 import NameDisplay from '../displays/name';
 import { FORM_NAME } from '../form';
 import Nav from '../helpers/tabs/nav';
+import { IPersonSelector } from '../../middleware/price';
 
 interface IProps {
-    type: string;
-    index: number;
+    personSelector: IPersonSelector;
     active: boolean;
 }
 
@@ -25,10 +25,10 @@ interface IState {
 
 class NavItem extends React.Component<IProps & IState, {}> {
     public render() {
-        const {index, type, active, syncErrors, asyncErrors} = this.props;
-        const invalid = (syncErrors || asyncErrors);
-        return <Nav active={active} name={(type + index)}>
-            <NameDisplay type={type} index={index} invalid={invalid}/>
+        const {personSelector, active, syncErrors, asyncErrors} = this.props;
+        const invalid = !!(syncErrors || asyncErrors);
+        return <Nav active={active} name={personSelector.accessKey}>
+            <NameDisplay personSelector={personSelector} invalid={invalid}/>
         </Nav>;
     }
 }
@@ -44,14 +44,14 @@ const mapStateToProps = (state, ownProps: IProps): IState => {
         asyncErrors: undefined,
         syncErrors: undefined,
     };
-    if (allSyncErrors && allSyncErrors.hasOwnProperty(ownProps.type)) {
-        if (allSyncErrors[ownProps.type].hasOwnProperty(ownProps.index)) {
-            data.syncErrors = allSyncErrors[ownProps.type][ownProps.index];
+    if (allSyncErrors && allSyncErrors.hasOwnProperty(ownProps.personSelector.type)) {
+        if (allSyncErrors[ownProps.personSelector.type].hasOwnProperty(ownProps.personSelector.index)) {
+            data.syncErrors = allSyncErrors[ownProps.personSelector.type][ownProps.personSelector.index];
         }
     }
-    if (allAsyncErrors && allAsyncErrors.hasOwnProperty(ownProps.type)) {
-        if (allAsyncErrors[ownProps.type].hasOwnProperty(ownProps.index)) {
-            data.asyncErrors = allAsyncErrors[ownProps.type][ownProps.index];
+    if (allAsyncErrors && allAsyncErrors.hasOwnProperty(ownProps.personSelector.type)) {
+        if (allAsyncErrors[ownProps.personSelector.type].hasOwnProperty(ownProps.personSelector.index)) {
+            data.asyncErrors = allAsyncErrors[ownProps.personSelector.type][ownProps.personSelector.index];
         }
     }
     return data;

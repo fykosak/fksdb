@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IAccommodationItem } from '../../../../middleware/iterfaces';
-import DateDisplay from '../../../displays/date';
-import PriceDisplay from '../../../displays/price';
+import DateDisplay from '../../../../../brawl-registration/components/displays/date';
+import PriceDisplay from '../../../../../brawl-registration/components/displays/price';
+import { IAccommodationItem } from './interfaces';
 
 interface IProps {
     names: string[];
@@ -21,7 +21,7 @@ export default class Row extends React.Component<IProps & any, {}> {
             });
             if (currentAcc.length) {
                 const priceLabel = <small className="align-bottom text-muted">
-                    <PriceDisplay eur={currentAcc[0].price.eur} kc={currentAcc[0].price.kc}/>
+                    <PriceDisplay price={currentAcc[0].price}/>
                 </small>;
                 if (currentAcc[0].accId === value) {
                     cols.push(<td key={index} className="text-center table-success"

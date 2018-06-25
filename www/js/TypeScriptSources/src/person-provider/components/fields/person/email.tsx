@@ -18,9 +18,10 @@ interface IProps {
 
 export default class Email extends React.Component<IProps, {}> {
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name} = this.props;
+        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
         return <Field
             name={name}
+            inputDef={def}
             accessKey={accessKey}
             JSXLabel={<Lang text={'E-mail'}/>}
             inputType={'text'}

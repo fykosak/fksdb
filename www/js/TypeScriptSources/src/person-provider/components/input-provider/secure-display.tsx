@@ -16,29 +16,27 @@ interface IProps {
 
 interface IState {
     removeProviderValue?: () => void;
-    providerProperty?: IProviderValue<any>;
 }
 
 class SecureDisplay extends React.Component<WrappedFieldProps & IProps & IState, {}> {
 
     public render() {
 
-        const {removeProviderValue, JSXLabel, providerProperty} = this.props;
-        if (providerProperty && providerProperty.hasValue) {
-            return <div className="form-group">
-                <label className="text-success">{JSXLabel}<span className="fa fa-check ml-1"/></label>
-                <small className="text-muted form-text">
-                    <Lang text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/>
-                </small>
-                <button className="btn btn-warning btn-sm" onClick={(event) => {
-                    event.preventDefault();
-                    removeProviderValue();
-                }}>
-                    <span className="fa fa-edit mr-1"/><Lang text={'Upraviť'}/>
-                </button>
-            </div>;
-        }
-        return <>{this.props.children}</>;
+        const {removeProviderValue, JSXLabel} = this.props;
+
+        return <div className="form-group">
+            <label className="text-success">{JSXLabel}<span className="fa fa-check ml-1"/></label>
+            <small className="text-muted form-text">
+                <Lang text={'Tento udaj už v systéme máme uložený, ak ho chcete zmeniť kliknite na tlačítko upraviť'}/>
+            </small>
+            <button className="btn btn-warning btn-sm" onClick={(event) => {
+                event.preventDefault();
+                removeProviderValue();
+            }}>
+                <span className="fa fa-edit mr-1"/><Lang text={'Upraviť'}/>
+            </button>
+        </div>;
+
     }
 }
 
@@ -50,13 +48,6 @@ const mapDispatchToProps = (dispatch: Dispatch<IStore>, ownProps: WrappedFieldPr
 };
 
 const mapStateToProps = (state: IStore, ownProps: WrappedFieldProps & IProps): IState => {
-
-    const {accessKey, input: {name}} = ownProps;
-    if (state.provider.hasOwnProperty(accessKey)) {
-        return {
-            providerProperty: state.provider[accessKey].fields[name],
-        };
-    }
     return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SecureDisplay);

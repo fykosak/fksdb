@@ -12,10 +12,14 @@ interface IState {
     scheduleDef?: IScheduleItem[];
 }
 
-class Schedule extends React.Component<IPersonSelector & IState, {}> {
+interface IProps {
+    personSelector: IPersonSelector;
+}
+
+class Schedule extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {type, index} = this.props;
+        const {personSelector} = this.props;
         return <>
             <p><Lang text={'Doprovodný program o ktorý mám zaujem.'}/></p>
             {this.props.scheduleDef.map((value, i) => {
@@ -31,7 +35,7 @@ class Schedule extends React.Component<IPersonSelector & IState, {}> {
                     time={value.time}
                 />;
             })}
-            <Price type={type} index={index}/>
+            <Price personSelector={personSelector}/>
         </>;
 
     }

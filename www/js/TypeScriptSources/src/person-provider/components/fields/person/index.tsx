@@ -23,7 +23,7 @@ export default class Person extends React.Component<ISectionProps, {}> {
                         fields.push(<Email name={inputName} personSelector={personSelector} def={inputDef}/>);
                         break;
                     default:
-                        throw Error('Field no match');
+                    // throw Error('Field no match');
                 }
             }
         }

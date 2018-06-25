@@ -25,7 +25,7 @@ interface IProps {
 class StudyYear extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {personSelector: {accessKey}, def: {required, readonly, secure}, name} = this.props;
+        const {personSelector: {accessKey}, def: {required, readonly, secure}, name, def} = this.props;
         const {studyYearsDef} = this.props;
         const optGroups = [];
         for (const group in studyYearsDef) {
@@ -43,6 +43,7 @@ class StudyYear extends React.Component<IProps & IState, {}> {
         }
         return <Field
             accessKey={accessKey}
+            inputDef={def}
             JSXLabel={<Lang text={'Study year'}/>}
             secure={secure}
             component={Input}

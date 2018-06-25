@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
+import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
+import { IStore } from '../../../../../brawl-registration/reducers';
 import Lang from '../../../../../lang/components/lang';
-import { IAccommodationItem } from '../../../../middleware/iterfaces';
-import { IStore } from '../../../../reducers';
+import { IInputDefinition } from '../../interfaces';
+import { IAccommodationItem } from './interfaces';
 import Price from './price';
 import Row from './row';
 
 interface IProps {
-    type: string;
-    index: number;
+    personSelector: IPersonSelector;
+    inputDef: IInputDefinition;
 }
 
 interface IState {
@@ -21,7 +23,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
     public render() {
         const dates = {};
         const names = [];
-        const {accommodationDef, index, type} = this.props;
+        const {accommodationDef, personSelector} = this.props;
         accommodationDef.forEach((value) => {
             if (names.indexOf(value.name) === -1) {
                 names.push(value.name);
@@ -58,7 +60,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 {rows}
                 </tbody>
             </table>
-            <Price type={type} index={index}/>
+            <Price personSelector={personSelector}/>
         </>;
     }
 }

@@ -1,24 +1,19 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/submit';
 import { ACTION_CLEAR_PROVIDER_PROPERTY } from '../actions';
+import { ISectionDefinition } from '../components/fields/interfaces';
 import { IProviderValue } from '../interfaces';
-import { getAccessKey } from '../validation';
 
 const providerLoadData = (state: IProviderStore, action): IProviderStore => {
     // TODO catch only provider request
     if (action.data.act !== 'person-provider') {
         return state;
     }
-    const {data: {data: {key, fields}}} = action;
-    const personState = {};
-    for (const field in fields) {
-        if (fields.hasOwnProperty(field)) {
-            personState[getAccessKey(key, field)] = action.data.data.fields[field];
-        }
-    }
+    const {data: {data: {accessKey, fields}}} = action;
+
     return {
         ...state,
-        [action.data.data.accessKey]: {
-            fields: personState,
+        [accessKey]: {
+            form: fields,
             isServed: true,
         },
     };
@@ -27,7 +22,8 @@ const providerLoadData = (state: IProviderStore, action): IProviderStore => {
 
 const clearProperty = (state: IProviderStore, action): IProviderStore => {
     const {selector, property} = action;
-    return {
+    return state;
+    /*return {
         ...state,
         [selector]: {
             ...state[selector],
@@ -39,7 +35,7 @@ const clearProperty = (state: IProviderStore, action): IProviderStore => {
                 },
             },
         },
-    };
+    };*/
 };
 
 export const provider = (state: IProviderStore = {}, event): IProviderStore => {
@@ -57,8 +53,8 @@ export const provider = (state: IProviderStore = {}, event): IProviderStore => {
 export interface IProviderStore {
     [accessKey: string]: {
         isServed: boolean;
-        fields: {
-            [value: string]: IProviderValue<any>;
+        form: {
+            [value: string]: ISectionDefinition;
         };
     };
 }

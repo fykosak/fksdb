@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { IPrice } from '../../middleware/price';
 
 interface IProps {
-    eur: number;
-    kc: number;
+    price: IPrice;
 }
 
 export default class PriceDisplay extends React.Component<IProps, {}> {
 
     public render() {
-        return <span>{this.props.eur} €/{this.props.kc} Kč</span>;
+        const {price: {eur, kc}} = this.props;
+        return <span>{eur} €/{kc} Kč</span>;
     }
 }

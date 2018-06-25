@@ -2,17 +2,21 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { FORM_NAME } from '../';
 import {
+    getAccommodationFromState,
+    getAccommodationPrice,
+} from '../../../../person-provider/components/fields/person-accommodation/accommodation/helpers';
+import {
     IAccommodationItem,
-    IPersonDefinition,
+    IPersonAccommodation,
+} from '../../../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
+import {
     IScheduleItem,
 } from '../../../middleware/iterfaces';
 import {
-    getAccommodationFromState,
-    getAccommodationPrice,
     getParticipantValues,
     getScheduleFromState,
     getSchedulePrice,
-    IPersonAccommodation,
+    IPersonSelector,
 } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
 import NameDisplay from '../../displays/name';
@@ -20,7 +24,7 @@ import PriceDisplay from '../../displays/price';
 
 interface IDataProps {
     accommodation: IPersonAccommodation;
-    selector: IPersonDefinition;
+    personSelector: IPersonSelector;
     schedule: boolean[];
     name: {
         familyName: string;
@@ -52,18 +56,21 @@ class Summary extends React.Component<IState, {}> {
             scheduleSum.eur += schedulePrice.eur;
 
             rows.push(<tr key={index}>
-                <td><span className={(personData.selector.type === 'teacher') ? 'fa fa-graduation-cap' : 'fa fa-user'}/></td>
+                <td><span className={(personData.personSelector.type === 'teacher') ? 'fa fa-graduation-cap' : 'fa fa-user'}/></td>
                 <td>
-                    <NameDisplay type={personData.selector.type} index={personData.selector.index}/>
+                    <NameDisplay personSelector={personData.personSelector}/>
                 </td>
                 <td>
-                    <PriceDisplay eur={accommodationPrice.eur} kc={accommodationPrice.kc}/>
+                    <PriceDisplay price={accommodationPrice}/>
                 </td>
                 <td>
-                    <PriceDisplay eur={schedulePrice.eur} kc={schedulePrice.kc}/>
+                    <PriceDisplay price={schedulePrice}/>
                 </td>
                 <td>
-                    <PriceDisplay eur={schedulePrice.eur + accommodationPrice.eur} kc={schedulePrice.kc + accommodationPrice.kc}/>
+                    <PriceDisplay price={{
+                        eur: (schedulePrice.eur + accommodationPrice.eur),
+                        kc: (schedulePrice.kc + accommodationPrice.kc),
+                    }}/>
                 </td>
             </tr>);
         });
@@ -74,13 +81,16 @@ class Summary extends React.Component<IState, {}> {
                 sum
             </td>
             <td>
-                <PriceDisplay eur={accSum.eur} kc={accSum.kc}/>
+                <PriceDisplay price={accSum}/>
             </td>
             <td>
-                <PriceDisplay eur={scheduleSum.eur} kc={scheduleSum.kc}/>
+                <PriceDisplay price={scheduleSum}/>
             </td>
             <td>
-                <PriceDisplay eur={scheduleSum.eur + accSum.eur} kc={scheduleSum.kc + accSum.kc}/>
+                <PriceDisplay price={{
+                    eur: (scheduleSum.eur + accSum.eur),
+                    kc: (scheduleSum.kc + accSum.kc),
+                }}/>
             </td>
         </tr>);
         return <div>
@@ -109,15 +119,15 @@ const mapDispatchToProps = (): IState => {
 const mapStateToProps = (state: IStore): IState => {
     const data: IDataProps[] = [];
     state.definitions.persons.forEach((person) => {
-        const formValues = getParticipantValues(FORM_NAME, state, {index: person.index, type: person.type});
+        const formValues = getParticipantValues(FORM_NAME, state, person.personSelector);
         data.push({
-            accommodation: getAccommodationFromState(FORM_NAME, state, {index: person.index, type: person.type}),
+            accommodation: getAccommodationFromState(FORM_NAME, state, person.personSelector),
             name: {
                 familyName: formValues.familyName,
                 otherName: formValues.otherName,
             },
-            schedule: getScheduleFromState(FORM_NAME, state, {index: person.index, type: person.type}),
-            selector: {index: person.index, type: person.type},
+            personSelector: person.personSelector,
+            schedule: getScheduleFromState(FORM_NAME, state, person.personSelector),
         });
     });
 

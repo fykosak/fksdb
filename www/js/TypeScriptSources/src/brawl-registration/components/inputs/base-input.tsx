@@ -1,11 +1,8 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
 import ErrorDisplay from './error-display';
-import { connect } from 'react-redux';
-import {
-    IProviderValue,
-    IStore,
-} from '../../../person-provider/interfaces';
+import { IInputDefinition } from '../../../person-provider/components/fields/interfaces';
 
 export interface IBaseInputProps {
     accessKey: string;
@@ -17,11 +14,7 @@ export interface IBaseInputProps {
     noChangeMode: boolean;
 }
 
-interface IState {
-    providerProperty?: IProviderValue<any>;
-}
-
-class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps & IState, {}> {
+class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps, {}> {
 
     public render() {
         const {
@@ -32,8 +25,7 @@ class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps & IS
             meta: {invalid, touched},
             JSXDescription,
             JSXLabel,
-            noChangeMode,
-            providerProperty,
+
         } = this.props;
 
         return <div className="form-group">
@@ -41,7 +33,7 @@ class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps & IS
             {JSXDescription && (<small className="form-text text-muted">{JSXDescription}</small>)}
             <input
                 className={'form-control' + (touched && invalid ? ' is-invalid' : '')}
-                readOnly={readOnly || (noChangeMode && providerProperty && providerProperty.hasValue)}
+                readOnly={readOnly}
                 {...input}
                 type={inputType}
             />
@@ -50,18 +42,11 @@ class BaseInput extends React.Component<WrappedFieldProps & IBaseInputProps & IS
     }
 }
 
-const mapDispatchToProps = (): IState => {
+const mapDispatchToProps = (): {} => {
     return {};
 };
 
-const mapStateToProps = (state: IStore, ownProps: WrappedFieldProps & IBaseInputProps): IState => {
-
-    const {accessKey, input: {name}} = ownProps;
-    if (state.provider.hasOwnProperty(accessKey)) {
-        return {
-            providerProperty: state.provider[accessKey].fields[name],
-        };
-    }
+const mapStateToProps = (): {} => {
     return {};
 };
 

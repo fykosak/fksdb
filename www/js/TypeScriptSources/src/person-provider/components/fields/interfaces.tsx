@@ -7,11 +7,14 @@ export interface ISectionDefinition {
     };
 }
 
-export interface IInputDefinition {
+export interface IInputDefinition<D = string> {
     readonly: boolean;
     secure: boolean;
-    description?: string;
+    description?: string | JSX.Element;
     required: boolean;
+    filled: boolean;
+    value: D;
+    userChange?: boolean;
 }
 
 export interface ISectionProps {

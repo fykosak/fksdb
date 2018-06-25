@@ -1,39 +1,12 @@
 import { formValueSelector } from 'redux-form';
 import { IStore } from '../reducers';
-import {
-    IAccommodationItem,
-    IScheduleItem,
-} from './iterfaces';
+import { IScheduleItem } from './iterfaces';
+import { IPersonAccommodation } from '../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
 
 export interface IPrice {
     eur: number;
     kc: number;
 }
-
-export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], accommodation: IPersonAccommodation): IPrice => {
-
-    const sum = {
-        eur: 0,
-        kc: 0,
-    };
-
-    if (!accommodation) {
-        return sum;
-    }
-
-    for (const date in accommodation) {
-        if (accommodation.hasOwnProperty(date)) {
-            const selectedAcc = accommodationDef.filter((value) => {
-                return value.accId === accommodation[date];
-            })[0];
-            if (selectedAcc) {
-                sum.eur += +selectedAcc.price.eur;
-                sum.kc += +selectedAcc.price.kc;
-            }
-        }
-    }
-    return sum;
-};
 
 export const getSchedulePrice = (scheduleDef: IScheduleItem[], schedule: boolean[]): IPrice => {
     const sum = {
@@ -68,23 +41,6 @@ export interface IPersonSelector {
 export interface IPersonStringSelectror {
     accessKey: string;
 }
-
-export interface IPersonAccommodation {
-    [date: string]: number;
-}
-
-export const getAccommodationFromState = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector): IPersonAccommodation => {
-    const selector = formValueSelector(FORM_NAME);
-    const participantsValue = selector(state, ownProps.type);
-    if (participantsValue) {
-        if (participantsValue.hasOwnProperty(ownProps.index)) {
-            if (participantsValue[ownProps.index].hasOwnProperty('accommodation')) {
-                return participantsValue[ownProps.index].accommodation;
-            }
-        }
-    }
-    return null;
-};
 
 export const getScheduleFromState = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector): boolean[] => {
     const selector = formValueSelector(FORM_NAME);

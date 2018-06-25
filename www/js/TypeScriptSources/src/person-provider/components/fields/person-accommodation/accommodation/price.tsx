@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import PriceDisplay from '../../../../../brawl-registration/components/displays/price';
+import { FORM_NAME } from '../../../../../brawl-registration/components/form';
+import {
+    IPersonSelector,
+} from '../../../../../brawl-registration/middleware/price';
 import Lang from '../../../../../lang/components/lang';
-import { IAccommodationItem } from '../../../../middleware/iterfaces';
 import {
     getAccommodationFromState,
     getAccommodationPrice,
-} from '../../../../middleware/price';
-import PriceDisplay from '../../../displays/price';
-import { FORM_NAME } from '../../index';
+} from './helpers';
+import { IAccommodationItem } from './interfaces';
 
 interface IProps {
-    type: string;
-    index: number;
+    personSelector: IPersonSelector;
 }
 
 interface IState {
@@ -27,7 +29,7 @@ class Price extends React.Component<IProps & IState, {}> {
 
         return <>
             <p><Lang text={'Accommodation price'}/></p>
-            <PriceDisplay eur={price.eur} kc={price.kc}/>
+            <PriceDisplay price={price}/>
         </>;
     }
 }
@@ -38,7 +40,7 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state, ownProps: IProps): IState => {
     return {
-        accommodation: getAccommodationFromState(FORM_NAME, state, ownProps),
+        accommodation: getAccommodationFromState(FORM_NAME, state, ownProps.personSelector),
         accommodationDef: state.definitions.accommodation,
     };
 };

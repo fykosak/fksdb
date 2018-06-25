@@ -1,49 +1,24 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { WrappedFieldProps } from 'redux-form';
-import {
-    IProviderValue,
-    IStore,
-} from '../../interfaces';
-
-interface IState {
-    providerProperty?: IProviderValue<any>;
-}
 
 interface IProps {
-    accessKey: string;
+    inputDef: {
+        value: any;
+        filled: boolean;
+    };
 }
 
-class Input extends React.Component<WrappedFieldProps & IProps & IState, {}> {
+export default class Input extends React.Component<WrappedFieldProps & IProps, {}> {
 
     public componentDidMount() {
-        if (!this.props.providerProperty) {
+        if (!this.props.inputDef.filled) {
             return;
         }
-        const {providerProperty: {hasValue, value}, input: {onChange}} = this.props;
-        if (hasValue) {
-            onChange(value ? value : true);
-        }
+        const {inputDef: {value}, input: {onChange}} = this.props;
+        onChange(value ? value : true);
     }
 
     public render() {
         return null;
     }
 }
-
-const mapDispatchToProps = (): IState => {
-    return {};
-};
-
-const mapStateToProps = (state: IStore, ownProps: WrappedFieldProps & IProps): IState => {
-
-    const {accessKey, input: {name}} = ownProps;
-    if (state.provider.hasOwnProperty(accessKey)) {
-        return {
-            providerProperty: state.provider[accessKey].fields[name],
-        };
-    }
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Input);

@@ -1,4 +1,7 @@
-import { IPrice } from './price';
+import {
+    IPersonSelector,
+    IPrice,
+} from './price';
 
 export interface IScheduleItem {
     date: string;
@@ -13,14 +16,8 @@ export interface IScheduleItem {
     requireIdNumber: boolean;
 }
 
-export interface IAccommodationItem {
-    accId: number;
-    date: string;
-    name: string;
-    price: IPrice;
-}
-
 export interface IPersonDefinition {
+    personSelector: IPersonSelector;
     index: number;
     type: "participant" | "teacher";
 }

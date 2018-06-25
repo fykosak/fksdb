@@ -4,13 +4,17 @@ import Lang from '../../../../lang/components/lang';
 import { IPersonSelector } from '../../../middleware/price';
 import Schedule from '../fields/schedule';
 
-export default class ScheduleSection extends React.Component<IPersonSelector, {}> {
+interface IProps {
+    personSelector: IPersonSelector;
+}
+
+export default class ScheduleSection extends React.Component<IProps, {}> {
     public render() {
-        const {type, index} = this.props;
+        const {personSelector} = this.props;
 
         return <FormSection name={'schedule'}>
             <h3><Lang text={'Schedule'}/></h3>
-            <Schedule type={type} index={index}/>
+            <Schedule personSelector={personSelector}/>
         </FormSection>;
     }
 }

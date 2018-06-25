@@ -41,7 +41,7 @@ export default class Item extends React.Component<IProps & WrappedFieldProps, IS
                                 (<i className="fa fa-square-o"/>)
                             }</a>
                             <span className="ml-3">{scheduleName}</span>
-                            <small className="ml-3 text-muted">({price ? (<PriceDisplay eur={price.eur} kc={price.kc}/>) : ('free')})
+                            <small className="ml-3 text-muted">({price ? (<PriceDisplay price={price}/>) : ('free')})
                             </small>
                         </h5>
                     </div>
