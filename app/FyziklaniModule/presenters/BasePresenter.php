@@ -108,6 +108,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function startup() {
 
         $this->event = $this->getEvent();
@@ -117,8 +120,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::startup();
     }
 
-    /** Vrati true ak pre daný ročník existuje fyzikláni */
-    public function eventExist() {
+    /**
+     * @return bool
+     */
+    protected function eventExist() {
         return $this->getEvent() ? true : false;
     }
 
@@ -143,7 +148,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->eventID;
     }
 
-    /** vráti paramtre daného eventu
+    /**
      * @return ModelEvent
      */
     public function getEvent() {

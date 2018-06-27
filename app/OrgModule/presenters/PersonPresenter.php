@@ -169,10 +169,29 @@ class PersonPresenter extends EntityPresenter {
                 $this->getContestAuthorizator()->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
         $this->setAuthorized($authorized);
     }
+    
+    public function authorizedDontMerge($trunkId, $mergedId) {
+        $this->authorizedMerge($trunkId, $mergedId);
+    }
 
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this['mergeForm']);
+    }
+    
+    public function actionDontMerge($trunkId, $mergedId) {        
+        $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
+        $mergedData = ['duplicates' => trim($mergedPI->duplicates.",not-same($trunkId)", ',')];
+        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
+        $this->servicePersonInfo->save($mergedPI);
+        
+        $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);        
+        $trunkData = ['duplicates' => trim($trunkPI->duplicates.",not-same($mergedId)", ',')];        
+        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);        
+        $this->servicePersonInfo->save($trunkPI);
+        
+        $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
+        $this->backlinkRedirect(true);
     }
 
     public function titleMerge() {

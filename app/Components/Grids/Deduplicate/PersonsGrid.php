@@ -31,8 +31,15 @@ class PersonsGrid extends BaseGrid {
         $this->pairs = $pairs;
     }
 
+    /**
+     * @param $presenter \AuthenticatedPresenter
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
+
 
         /***** data ****/
 
@@ -61,7 +68,7 @@ class PersonsGrid extends BaseGrid {
 
         $this->addButton("mergeAB", _('Sloučit A<-B'))
             ->setText(_('Sloučit A<-B'))
-            ->setClass("btn btn-xs btn-primary")
+            ->setClass("btn btn-sm btn-primary")
             ->setLink(function ($row) use ($presenter, $pairs) {
                 return $presenter->link("Person:merge", array(
                     'trunkId' => $row->person_id,
@@ -88,8 +95,28 @@ class PersonsGrid extends BaseGrid {
                     'mergedId' => $row->person_id,
                 ));
             });
+        $this->addButton("dontMerge", _('Nejde o duplicitu'))
+            ->setText(_('Nejde o duplicitu'))
+            ->setClass("btn btn-sm btn-primary")
+            ->setLink(function ($row) use ($presenter, $pairs) {
+                return $presenter->link("Person:dontMerge", array(
+                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $row->person_id,
+                ));
+            })
+            ->setShow(function ($row) use ($presenter, $pairs) {
+                return $presenter->authorized("Person:dontMerge", array(
+                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $row->person_id,
+                ));
+            });
     }
 
+    /**
+     * @param ModelPerson $person
+     * @return Html
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     private function renderPerson(ModelPerson $person) {
         $el = Html::el('a');
         $el->addAttributes(['href' => $this->presenter->link(':Org:Stalking:view', ['id' => $person->person_id,])]);

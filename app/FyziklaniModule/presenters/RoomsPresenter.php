@@ -2,8 +2,8 @@
 
 namespace FyziklaniModule;
 
-use BrawlLib\Components\RoutingDownload;
-use BrawlLib\Components\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
+use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Utils\Json;
 
@@ -38,6 +38,10 @@ class RoomsPresenter extends BasePresenter {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
     public function renderEdit() {
         if ($this->isAjax()) {
             $data = Json::decode($this->getHttpRequest()->getPost('data'));

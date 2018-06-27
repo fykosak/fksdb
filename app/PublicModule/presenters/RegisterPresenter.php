@@ -153,11 +153,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->person;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDefault() {
         $this->redirect('contest');
     }
 
-
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionContestant() {
 
         if ($this->user->isLoggedIn()) {
@@ -174,7 +179,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                 if ($person->getLogin()) {
                     $session = $this->session->getSection(self::SESSION_KEY);
                     $session->email = $email;
-                    $this->flashMessage('Bol nájdený účet, pre pokračovanie sa prihláste');
+                    $this->flashMessage('Byl nalezen existující účet, pro pokračování se přihlaste.');
                     $this->redirect(':Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }
@@ -244,10 +249,18 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->template->years[] = $this->yearCalculator->getCurrentYear($contest);
     }
 
+    /**
+     * @param $contestId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeContest($contestId) {
         $this->redirect('this', ['contestId' => $contestId,]);
     }
 
+    /**
+     * @param $year
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeYear($year) {
         $this->redirect('this', ['year' => $year,]);
     }
@@ -262,6 +275,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
 
@@ -368,7 +385,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(),'dark'];
+            return [$contest->getContestSymbol(), 'dark'];
         }
         return null;
     }

@@ -103,6 +103,19 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->dispose($token);
         }
     }
+    
+    public function findTokensByEventId($eventId) {
+        $res = $this->getTable()
+            ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
+            ->where('since <= NOW()')
+            ->where('until IS NULL OR until >= NOW()')
+            ->where('data LIKE ?', $eventId.':%');
+        $tokens = [];
+        foreach($res as $token) {
+            $tokens[] = ModelAuthToken::createFromTableRow($token);
+        }
+        return $tokens;
+    }
 
     //TODO garbage collection
 }

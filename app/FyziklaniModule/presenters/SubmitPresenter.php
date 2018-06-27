@@ -140,6 +140,9 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function renderEntry() {
 
         if ($this->isAjax()) {
@@ -170,6 +173,10 @@ class SubmitPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function entryFormSucceeded(Form $form) {
         $values = $form->getValues();
         $httpData = $form->getHttpData();
@@ -234,6 +241,11 @@ class SubmitPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionEdit($id) {
         $this->editSubmit = $this->serviceFyziklaniSubmit->findByPrimary($id);
 
@@ -267,6 +279,10 @@ class SubmitPresenter extends BasePresenter {
         ]);
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function editFormSucceeded(Form $form) {
         $values = $form->getValues();
 

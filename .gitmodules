@@ -22,6 +22,3 @@
 [submodule "www/css/bootstrap"]
 	path = www/css/bootstrap
 	url = https://github.com/twbs/bootstrap.git
-[submodule "libs/BrawlLib"]
-	path = libs/BrawlLib
-	url = https://github.com/fykosak/nette-brawl-lib.git

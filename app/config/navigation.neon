@@ -23,6 +23,7 @@ navigation:
             - org.tasks.import
             - org.contestant.list
             - org.school.list
+            - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list

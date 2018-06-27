@@ -70,7 +70,23 @@ parameters:
                 family_name: true
             person_info:
                 email: true
-
+        adminTeacher:
+            person:
+                other_name: true
+                family_name: true
+            post_contact_d:
+                address: false
+            post_contact_p:
+                address: false
+            person_info:
+                email: false
+                phone: false
+                career: false
+                note: false
+                born: false
+                born_id: false
+                id_number: false
+                birthplace: false
     vyfuk:
         registerContestant:
             person:
@@ -85,7 +101,7 @@ parameters:
             person_info:
                 email: true
                 phone_parent_m: false
-                phone_parent_d: false  
+                phone_parent_d: false
                 origin: false
                 agreed: true
             person_has_flag:
@@ -110,7 +126,7 @@ parameters:
                 id_number: false
                 note: false
                 phone_parent_m: false
-                phone_parent_d: false  
+                phone_parent_d: false
                 origin: false
                 agreed: false
             person_has_flag:
@@ -127,5 +143,5 @@ parameters:
                 homepage: false
                 note: false
                 phone_parent_m: false
-                phone_parent_d: false  
+                phone_parent_d: false
 
