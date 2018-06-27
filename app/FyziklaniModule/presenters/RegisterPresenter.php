@@ -60,6 +60,52 @@ class RegisterPresenter extends BasePresenter {
         //'sara.byskova@email.cz'
         $data = $this->reactPersonProvider->getPersonByEmail($email
             , ['person.personId', 'personHistory.schoolId', 'personHistory.studyYear', 'personInfo.idNumber', 'person.familyName', 'person.otherName'], 2017);
+        $data['accessKey'] = $requestData['accessKey'];
+        $data['fields'] = [
+            'person' => [
+                'name' => 'Base info',
+                'fields' => [
+                    'person_id' => [
+                        'required' => true,
+                    ],
+                    'family_name' => [
+                        'required' => true,
+                        'filled' => true,
+                        'secure' => false,
+                        'value' => 'Michal',
+                        'readonly' => true,
+                    ],
+                    'other_name' => [
+                        'required' => true,
+                        'filled' => true,
+                        'secure' => false,
+                        'value' => 'Michal',
+                        'readonly' => true,
+                    ],
+                ],
+            ],
+            'person_history' => [
+                'name' => 'Person History',
+                'fields' => [
+
+                    'school_id' => [
+                        'required' => true,
+                        'filled' => true,
+                        'secure' => true,
+                        'value' => [],
+                        'readonly' => true,
+                    ],
+                    'study_year' => [
+                        'required' => true,
+                        'filled' => true,
+                        'secure' => false,
+                        'value' => '9',
+                        'readonly' => true,
+                    ],
+                ],
+            ]
+
+        ];
         $response->setData($data);
         $response->setAct('person-provider');
         $this->sendResponse($response);
@@ -139,7 +185,59 @@ class RegisterPresenter extends BasePresenter {
             $this->template->accDef = '[{"accId":1,"date":"2017-05-02","name":"Elf","price":{"eur":10,"kc":300}},{"accId":2,"date":"2017-05-03","name":"Elf","price":{"eur":10,"kc":300}},{"accId":3,"date":"2017-05-04","name":"Elf","price":{"eur":10,"kc":300}},{"accId":4,"date":"2017-05-05","name":"Elf","price":{"eur":10,"kc":300}},{"accId":5,"date":"2017-05-03","name":"Duo","price":{"eur":20,"kc":500}},{"accId":6,"date":"2017-05-04","name":"Duo","price":{"eur":20,"kc":500}},{"accId":7,"date":"2017-05-05","name":"Duo","price":{"eur":20,"kc":500}}]';
 
             $this->template->scheduleDef = Json::encode($this->getEvent()->getParameter('schedule'));
-            $this->template->personsDef = '[{"fields":[],"index":0,"type":"participant"},{"fields":[],"index":1,"type":"participant"},{"fields":[],"index":2,"type":"participant"},{"fields":[],"index":3,"type":"participant"},{"fields":[],"index":4,"type":"participant"},{"fields":[],"index":0,"type":"teacher"}]';
+            $pDef = [
+                [
+                    'personSelector' => [
+                        'type' => 'participant',
+                        'index' => 0,
+                        'accessKey' => 'participant[0]',
+                    ],
+                    'index' => 0,
+                    'type' => 'participant',
+                ], [
+                    'personSelector' => [
+                        'type' => 'participant',
+                        'index' => 1,
+                        'accessKey' => 'participant[1]',
+                    ],
+                    'index' => 1,
+                    'type' => 'participant',
+                ], [
+                    'personSelector' => [
+                        'type' => 'participant',
+                        'index' => 2,
+                        'accessKey' => 'participant[2]',
+                    ],
+                    'index' => 2,
+                    'type' => 'participant',
+                ], [
+                    'personSelector' => [
+                        'type' => 'participant',
+                        'index' => 3,
+                        'accessKey' => 'participant[3]',
+                    ],
+                    'index' => 3,
+                    'type' => 'participant',
+                ], [
+                    'personSelector' => [
+                        'type' => 'participant',
+                        'index' => 4,
+                        'accessKey' => 'participant[4]',
+                    ],
+                    'index' => 4,
+                    'type' => 'participant',
+                ], [
+                    'personSelector' => [
+                        'type' => 'teacher',
+                        'index' => 0,
+                        'accessKey' => 'teacher[0]',
+                    ],
+                    'index' => 0,
+                    'type' => 'teacher',
+                ],
+            ];
+            // $this->template->personsDef = '[{"fields":[],"index":0,"type":"participant"},{"fields":[],"index":1,"type":"participant"},{"fields":[],"index":2,"type":"participant"},{"fields":[],"index":3,"type":"participant"},{"fields":[],"index":4,"type":"participant"},{"fields":[],"index":0,"type":"teacher"}]';
+            $this->template->personsDef = Json::encode($pDef);
             $this->template->studyYearsDef = Json::encode($this->getStudyYears());
         }
 
