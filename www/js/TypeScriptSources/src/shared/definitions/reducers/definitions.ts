@@ -8,7 +8,7 @@ function setDefinitions(state: IDefinitionsState, action): IDefinitionsState {
     };
 }
 
-export function definitions(state: IDefinitionsState, event): IDefinitionsState {
+export function definitions(state: IDefinitionsState = {}, event): IDefinitionsState {
     switch (event.type) {
         case ACTION_SET_DEFINITIONS:
             return setDefinitions(state, event);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Async } from 'react-select';
 import { WrappedFieldProps } from 'redux-form';
-import ErrorDisplay from '../brawl-registration/components/inputs/error-display';
+import ErrorDisplay from '../person-provider/components/inputs/error-display';
 import { ISchool } from './interfaces';
 import { loadOptions } from './middleware';
 import Option from './option';

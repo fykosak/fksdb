@@ -6,7 +6,7 @@ import {
 } from 'redux-form';
 import Nav from '../../../shared/components/tabs/nav';
 import { IPersonSelector } from '../../middleware/price';
-import NameDisplay from '../displays/name';
+import NameDisplay from '../../../shared/components/displays/name';
 import { FORM_NAME } from '../form';
 
 interface IProps {

@@ -9,16 +9,14 @@ import {
 } from '../../../../person-provider/components/fields/person-accommodation/accommodation/helpers';
 import { IAccommodationItem } from '../../../../person-provider/components/fields/person-accommodation/accommodation/interfaces';
 import {
-
     IScheduleItem,
 } from '../../../middleware/iterfaces';
 import {
-
     getScheduleFromState,
     getSchedulePrice,
     IPersonSelector,
 } from '../../../middleware/price';
-import PriceDisplay from '../../displays/price';
+import PriceDisplay from '../../../../shared/components/displays/price/';
 
 interface IProps {
     personSelector: IPersonSelector;

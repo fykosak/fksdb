@@ -19,8 +19,8 @@ import {
     IPersonSelector,
 } from '../../../middleware/price';
 import { IStore } from '../../../reducers';
-import NameDisplay from '../../displays/name';
-import PriceDisplay from '../../displays/price';
+import NameDisplay from '../../../../shared/components/displays/name';
+import PriceDisplay from '../../../../shared/components/displays/price';
 
 interface IDataProps {
     accommodation: IPersonAccommodation;
