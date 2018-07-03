@@ -8,6 +8,7 @@ use FKS\Components\Forms\Controls\URLTextBox;
 use FKS\Components\Forms\Controls\WriteonlyDatePicker;
 use FKS\Components\Forms\Controls\WriteonlyInput;
 use FKS\Localization\GettextTranslator;
+use FKSDB\Components\Controls\Fyziklani\ReactLogo;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\PersonInfoContainer;
 use FKSDB\Components\Forms\Rules\BornNumber;
@@ -95,7 +96,7 @@ class PersonFactory {
      * @var AddressFactory
      */
     private $addressFactory;
-    
+
     /**
      * @var FlagFactory
      */
@@ -130,9 +131,9 @@ class PersonFactory {
 
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
         if (in_array($sub, array(
-                    ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-                    ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-                ))) {
+            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
+            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
+        ))) {
             if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
                 if ($required) {
@@ -145,8 +146,7 @@ class PersonFactory {
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        }
-        else if ($sub == 'person_has_flag') {
+        } else if ($sub == 'person_has_flag') {
             $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
             return $control;
         } else {
@@ -192,12 +192,12 @@ class PersonFactory {
 
     public function createDisplayName($acYear = null) {
         return (new TextInput(_('Zobrazované jméno')))
-                        ->setOption('description', _('Pouze pokud je odlišené od "jméno příjmení".'));
+            ->setOption('description', _('Pouze pokud je odlišené od "jméno příjmení".'));
     }
 
     public function createGender($acYear = null) {
         return (new RadioList(_('Pohlaví'), array('M' => 'muž', 'F' => 'žena')))
-                        ->setDefaultValue('M');
+            ->setDefaultValue('M');
     }
 
     /*
@@ -206,63 +206,61 @@ class PersonFactory {
 
     public function createBorn($acYear = null) {
         return (new WriteonlyDatePicker(_('Datum narození')))
-                ->setDefaultDate((new DateTime())->modify('-16 years'));
+            ->setDefaultDate((new DateTime())->modify('-16 years'));
     }
 
     public function createIdNumber($acYear = null) {
         return (new WriteonlyInput(_('Číslo OP')))
-                        ->setOption('description', _('U cizinců číslo pasu.'))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+            ->setOption('description', _('U cizinců číslo pasu.'))
+            ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
     public function createBornId($acYear = null) {
         $control = new WriteonlyInput(_('Rodné číslo'));
         $control->setOption('description', _('U cizinců prázdné.'))
-                ->addCondition(Form::FILLED)
-                ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
+            ->addCondition(Form::FILLED)
+            ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
         return $control;
     }
 
-   
-    
+
     public function createPhoneParentM($acYear = null) {
         return $this->rawPhone(_('Telefonní číslo (matka)'), $acYear);
     }
-    
+
     public function createPhoneParentD($acYear = null) {
         return $this->rawPhone(_('Telefonní číslo (otec)'), $acYear);
     }
-    
+
     public function createPhone($acYear = null) {
         return $this->rawPhone(_('Telefonní číslo'), $acYear);
     }
 
     public function createIm($acYear = null) {
         return (new WriteonlyInput(_('ICQ, Jabber, apod.')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+            ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
     public function createBirthplace($acYear = null) {
         return (new WriteonlyInput(_('Místo narození')))
-                        ->setOption('description', _('Město a okres (kvůli diplomům).'))
-                        ->addRule(Form::MAX_LENGTH, null, 255);
+            ->setOption('description', _('Město a okres (kvůli diplomům).'))
+            ->addRule(Form::MAX_LENGTH, null, 255);
     }
 
     public function createUkLogin($acYear = null) {
         return (new WriteonlyInput(_('Login UK')))
-                        ->addRule(Form::MAX_LENGTH, null, 8);
+            ->addRule(Form::MAX_LENGTH, null, 8);
     }
 
     public function createAccount($acYear = null) {
         return (new WriteonlyInput(_('Číslo bankovního účtu')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+            ->addRule(Form::MAX_LENGTH, null, 32);
     }
 
-   
 
     public function createCareer($acYear = null) {
         return (new TextArea(_('Co právě dělá')))
-                        ->setOption('description', _('Zobrazeno v seznamu organizátorů'));
+            ->setOption('description', _('Zobrazeno v seznamu organizátorů'));
     }
 
     public function createHomepage($acYear = null) {
@@ -283,13 +281,13 @@ class PersonFactory {
         $link->href = _("http://fykos.cz/doc/souhlas.pdf");
 
         return (new Checkbox(_('Souhlasím se zpracováním osobních údajů')))
-                        ->setOption('description', $link);
+            ->setOption('description', $link);
     }
 
     public function createEmail($acYear = null) {
         $control = new TextInput(_('E-mail'));
         $control->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+            ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         return $control;
     }
 
@@ -297,9 +295,9 @@ class PersonFactory {
         $control = new WriteonlyInput($label);
         $control->setAttribute("placeholder", 've tvaru +420123456789');
         $control->addRule(Form::MAX_LENGTH, null, 32)
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/\+42[01]\d{9}/');
-	return $control;
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'), '/\+42[01]\d{9}/');
+        return $control;
     }
 
     /*
@@ -320,10 +318,10 @@ class PersonFactory {
         }
 
         $studyYear->setItems(array(
-                    _('střední škola') => $hsYears,
-                    _('základní škola nebo víceleté gymnázium') => $primaryYears,
-                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
-                ->setPrompt(_('Zvolit ročník'));
+            _('střední škola') => $hsYears,
+            _('základní škola nebo víceleté gymnázium') => $primaryYears,
+        ))->setOption('description', _('Kvůli zařazení do kategorie.'))
+            ->setPrompt(_('Zvolit ročník'));
 
         return $studyYear;
     }
@@ -334,7 +332,11 @@ class PersonFactory {
 
     public function createClass($acYear = null) {
         return (new TextInput(_('Třída')))
-                        ->addRule(Form::MAX_LENGTH, null, 16);
+            ->addRule(Form::MAX_LENGTH, null, 16);
+    }
+
+    public function createAccommodation() {
+        return (new MultiAccommodationField());
     }
 
 }

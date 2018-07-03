@@ -11,12 +11,13 @@ use FKS\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationComponent extends Control {
@@ -122,6 +123,7 @@ class ApplicationComponent extends Control {
         /*
          * Create containers
          */
+        Debugger::barDump($this->holder);
         foreach ($this->holder as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible($baseMachine)) {
@@ -139,10 +141,10 @@ class ApplicationComponent extends Control {
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Uložit'));
             $saveSubmit->setOption('row', 1);
-            $saveSubmit->onClick[] = function(SubmitButton $button) use($that) {
-                        $form = $button->getForm();
-                        $that->handleSubmit($form);
-                    };
+            $saveSubmit->onClick[] = function (SubmitButton $button) use ($that) {
+                $form = $button->getForm();
+                $that->handleSubmit($form);
+            };
         }
         /*
          * Create transition buttons
@@ -153,10 +155,10 @@ class ApplicationComponent extends Control {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
-                        $form = $button->getForm();
-                        $that->handleSubmit($form, $transitionName);
-                    };
+            $submit->onClick[] = function (SubmitButton $button) use ($transitionName, $that) {
+                $form = $button->getForm();
+                $that->handleSubmit($form, $transitionName);
+            };
 
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-success');
@@ -185,9 +187,9 @@ class ApplicationComponent extends Control {
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-link');
-        $submit->onClick[] = function(SubmitButton $button) use($that) {
-                    $that->finalRedirect();
-                };
+        $submit->onClick[] = function (SubmitButton $button) use ($that) {
+            $that->finalRedirect();
+        };
 
         /*
          * Custom adjustments
