@@ -70,6 +70,15 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $mailTemplateFactory;
 
+    /**
+     * @var \ServicePerson
+     */
+    protected $servicePerson;
+    /**
+     * @var string
+     */
+    private $login;
+
 
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
@@ -93,6 +102,10 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
+    }
+
+    public function injectServicePerson(\ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
     public function startup() {
@@ -159,6 +172,8 @@ final class AuthenticationPresenter extends BasePresenter {
                         break;
                 }
             }
+            $this->login = $this->getParameter('login');
+
         }
     }
 
@@ -306,6 +321,9 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     private function initialRedirect(ModelLogin $login) {
+        if ($this->backlink) {
+            $this->restoreRequest($this->backlink);
+        }
         if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
             $this->redirect(':Org:Dashboard:', [self::PARAM_DISPATCH => 1]);
         } else {
@@ -313,5 +331,10 @@ final class AuthenticationPresenter extends BasePresenter {
         }
         // or else redirect to page suggesting registration
     }
+
+    public function renderLogin() {
+        $this->template->login = $this->login;
+    }
+
 
 }
