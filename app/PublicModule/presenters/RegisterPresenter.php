@@ -98,9 +98,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var \SeriesCalculator
      */
     protected $seriesCalculator;
-
-    const SESSION_KEY = 'register';
-
+    
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -177,8 +175,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             $person = $this->servicePerson->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {
-                    $session = $this->session->getSection(self::SESSION_KEY);
-                    $session->email = $email;
                     $this->flashMessage('Byl nalezen existující účet, pro pokračování se přihlaste.');
                     $this->redirect(':Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
