@@ -13,3 +13,5 @@ ROOT=`dirname ${BASH_SOURCE[0]}`/..
 for file in `find $ROOT/$LOCALE -iname "messages.po"` ; do
   msgfmt -o ${file%.po}.mo $file
 done
+
+python3 compile-js.py
