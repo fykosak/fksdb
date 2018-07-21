@@ -176,55 +176,55 @@ events:
                         label: Zrušit přihlášku
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
                         condition: role('admin')
-                        label: Riešit sa mimo FKSDB
+                        label: Řešit mimo FKSDB
                     out_of_db->invited:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Pozvaný
+                        label: Vrátit zpět do DB jako Pozvaný
                     out_of_db->invited1:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako PozvanýI.upomínka
+                        label: Vrátit zpět do DB jako Pozvaný I.upomínka
                     out_of_db->invited2:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako PozvanýII.upomínka
+                        label: Vrátit zpět do DB jako Pozvaný II.upomínka
                     out_of_db->invited3:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Pozvanýlastcall
+                        label: Vrátit zpět do DB jako Pozvaný last call
                     out_of_db->auto.invited:
                         condition: role('admin')
-                        label: "Vráťit spať do DB ako Pozvaný(auto)"
+                        label: "Vrátit zpět do DB jako Pozvaný (auto)"
                     out_of_db->spare:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Náhradník
+                        label: Vrátit zpět do DB jako Náhradník
                     out_of_db->spare1:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako NahradníkI.upomínka
+                        label: Vrátit zpět do DB jako Nahradník I.upomínka
                     out_of_db->spare2:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako NahradníkII.upomínka
+                        label: Vrátit zpět do DB jako Nahradník II.upomínka
                     out_of_db->spare3:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Nahradníklastcall
+                        label: Vrátit zpět do DB jako Nahradník last call
                     out_of_db->auto.spare:
                         condition: role('admin')
-                        label: "Vráťit spať do DB ako Náhradník(auto)"
+                        label: "Vrátit zpět do DB jako Náhradník (auto)"
                     out_of_db->applied:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Účastníse
+                        label: Vrátit zpět do DB jako Účastní se
                     out_of_db->interested:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Chcejet
+                        label: Vrátit zpět do DB jako Chce jet
                     out_of_db->participated:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Účastnil se
+                        label: Vrátit zpět do DB jako Účastnil se
                     out_of_db->rejected:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Odmítl
+                        label: Vrátit zpět do DB jako Odmítl
                     out_of_db->missed:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Nepřijel
+                        label: Vrátit zpět do DB jako Nepřijel
                     out_of_db->cancelled:
                         condition: role('admin')
-                        label: Vráťit spať do DB ako Zrušen
+                        label: Vrátit zpět do DB jako Zrušen
 
                     cancelled->__terminated:
                         condition: role('admin')
