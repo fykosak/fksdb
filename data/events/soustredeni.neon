@@ -8,7 +8,7 @@ parameters:
                     other_name: true
                     family_name: true
                 person_info:
-                    born_id: 
+                    born_id:
                         required: %events.soustredeni.requiredCond%
                         description: "Kvůli pojišťovně."
                     birthplace: state('participated')
@@ -31,7 +31,7 @@ parameters:
                 F_M: M dámské
                 F_L: L dámské
                 F_XL: XL dámské
-                
+
 
 events:
     soustredeni:
@@ -63,8 +63,8 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMSousParticipant
-                
-                states:                    
+
+                states:
                     invited: Pozvaný
                     invited1: "Pozvaný I. upomínka"
                     invited2: "Pozvaný II. upomínka"
@@ -81,6 +81,7 @@ events:
                     rejected: Odmítl
                     missed: Nepřijel
                     cancelled: Zrušen
+                    out_of_db: Řeší se mimo FKSDB
 
                 transitions:
                     __init->invited:
@@ -107,7 +108,7 @@ events:
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Potrvrdit učast
                     spare|spare1|spare2|spare3->interested:
-                        condition: before(param('deadline1')) 
+                        condition: before(param('deadline1'))
                         label: Chci jet
                     invited|invited1|invited2|invited3->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
@@ -173,6 +174,58 @@ events:
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
+                    invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
+                        condition: role('admin')
+                        label: Riešit sa mimo FKSDB
+                    out_of_db->invited:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Pozvaný
+                    out_of_db->invited1:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako PozvanýI.upomínka
+                    out_of_db->invited2:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako PozvanýII.upomínka
+                    out_of_db->invited3:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Pozvanýlastcall
+                    out_of_db->auto.invited:
+                        condition: role('admin')
+                        label: "Vráťit spať do DB ako Pozvaný(auto)"
+                    out_of_db->spare:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Náhradník
+                    out_of_db->spare1:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako NahradníkI.upomínka
+                    out_of_db->spare2:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako NahradníkII.upomínka
+                    out_of_db->spare3:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Nahradníklastcall
+                    out_of_db->auto.spare:
+                        condition: role('admin')
+                        label: "Vráťit spať do DB ako Náhradník(auto)"
+                    out_of_db->applied:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Účastníse
+                    out_of_db->interested:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Chcejet
+                    out_of_db->participated:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Účastnil se
+                    out_of_db->rejected:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Odmítl
+                    out_of_db->missed:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Nepřijel
+                    out_of_db->cancelled:
+                        condition: role('admin')
+                        label: Vráťit spať do DB ako Zrušen
+
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
@@ -213,8 +266,8 @@ events:
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")      
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
-                
+
             processings:
                 - @events.privacyPolicy
