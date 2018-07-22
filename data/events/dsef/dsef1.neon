@@ -5,19 +5,19 @@ parameters:
             person:
                 person:
                     other_name:
-                        requierd: true
+                        required: true
                     family_name:
-                        requierd: true
+                        required: true
                 person_info:
                     email:
-                        requierd: true
+                        required: true
                     id_number:
-                        requierd: true
+                        required: true
                     born:
-                        requierd: true
+                        required: true
                 post_contact_p:
                     address:
-                        requierd: true
+                        required: true
 
 events:
     dsef1:

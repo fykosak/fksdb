@@ -6,21 +6,21 @@ parameters:
             person:
                 person:
                     other_name:
-                        requierd: true
+                        required: true
                     family_name:
-                        requierd: true
+                        required: true
                 person_info:
                     born_id:
                         required: %events.soustredeni.requiredCond%
                         description: "Kvůli pojišťovně."
                     birthplace:
-                        requierd: state('participated')
+                        required: state('participated')
                     phone:
                         required: %events.soustredeni.requiredCond%
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
                 post_contact_p:
                     address:
-                        requierd: %events.soustredeni.requiredCond%
+                        required: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:
                         required: state('participated')

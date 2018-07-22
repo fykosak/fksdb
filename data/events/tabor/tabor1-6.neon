@@ -6,12 +6,12 @@ parameters:
             person:
                 person:
                     other_name:
-                        requierd: true
+                        required: true
                     family_name:
-                        requierd: true
+                        required: true
                 person_info:
                     email:
-                        requierd: true
+                        required: true
                     born:
                         required: %events.tabor.requiredCond%
                     born_id:
@@ -22,9 +22,9 @@ parameters:
                         required: %events.tabor.requiredCond%
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
                     phone_parent_m:
-                        requierd: false
+                        required: false
                     phone_parent_d:
-                        requierd: false
+                        required: false
                 post_contact_p:
                     address: %events.tabor.requiredCond%
                 person_history:

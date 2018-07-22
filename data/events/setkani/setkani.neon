@@ -7,21 +7,21 @@ parameters:
 
                 person:
                     other_name:
-                        requierd: true
+                        required: true
                     family_name:
-                        requierd: true
+                        required: true
                 person_history:
                     school_id:
-                        requierd: true
+                        required: true
                 person_info:
                     email:
-                        requierd: true
+                        required: true
                     born:
-                        requierd: true
+                        required: true
                     phone_parent_m:
-                        requierd: false
+                        required: false
                     phone_parent_d:
-                        requierd: false
+                        required: false
                     phone:
                         required: true
                         description: "Telefon (i s předvolbou státu), který budeš mít s sebou."

@@ -6,12 +6,12 @@ parameters:
             participant:
                 person:
                     other_name:
-                        requierd: true
+                        required: true
                     family_name:
-                        requierd: true
+                        required: true
                 person_info:
                     email:
-                        requierd: true
+                        required: true
                     born:
                         required: false
                         description: _('Pouze pro české a slovenské studenty.')

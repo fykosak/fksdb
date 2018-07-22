@@ -68,37 +68,37 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $form = $this->createForm([
             'person' => [
                 'other_name' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
                 'family_name' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
             ],
             'person_history' => [
                 'school_id' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
                 'study_year' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
                 'class' => [
-                    'requierd' => false,
+                    'required' => false,
                 ],
             ],
             'post_contact_p' => [
                 'address' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
             ],
             'person_info' => [
                 'email' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
                 'origin' => [
-                    'requierd' => false,
+                    'required' => false,
                 ],
                 'agreed' => [
-                    'requierd' => true,
+                    'required' => true,
                 ],
             ],
         ], 2000);

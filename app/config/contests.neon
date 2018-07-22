@@ -7,237 +7,237 @@ parameters:
         registerContestant:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             person_history:
                 school_id:
-                  requierd: true
+                  required: true
                 study_year:
-                  requierd: true
+                  required: true
                 class:
-                  requierd: false
+                  required: false
             post_contact_d:
                 address:
-                  requierd: true
+                  required: true
             person_info:
                 email:
-                  requierd: true
+                  required: true
                 origin:
-                  requierd: false
+                  required: false
                 agreed:
-                  requierd: true
+                  required: true
             person_has_flag:
                 spam_mff:
-                  requierd: true
+                  required: true
         adminContestant:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
                 display_name:
-                  requierd: false
+                  required: false
                 gender:
-                  requierd: true
+                  required: true
             person_history:
                 school_id:
-                  requierd: true
+                  required: true
                 study_year:
-                  requierd: true
+                  required: true
             post_contact_d:
                 address:
-                  requierd: false
+                  required: false
             post_contact_p:
                 address:
-                  requierd: false
+                  required: false
             person_info:
                 email:
-                  requierd: true
+                  required: true
                 born:
-                  requierd: false
+                  required: false
                 birthplace:
-                  requierd: false
+                  required: false
                 id_number:
-                  requierd: false
+                  required: false
                 note:
-                  requierd: false
+                  required: false
                 origin:
-                  requierd: false
+                  required: false
                 agreed:
-                  requierd: false
+                  required: false
             person_has_flag:
                 spam_mff:
-                  requierd: false
+                  required: false
 
         adminOrg:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             post_contact_d:
                 address:
-                  requierd: false
+                  required: false
             post_contact_p:
                 address:
-                  requierd: false
+                  required: false
             person_info:
                 email:
-                  requierd: false
+                  required: false
                 phone:
-                  requierd: false
+                  required: false
                 career:
-                  requierd: false
+                  required: false
                 uk_login:
-                  requierd: false
+                  required: false
                 account:
-                  requierd: false
+                  required: false
                 homepage:
-                  requierd: false
+                  required: false
                 note:
-                  requierd: false
+                  required: false
                 born:
-                  requierd: false
+                  required: false
                 born_id:
-                  requierd: false
+                  required: false
                 id_number:
-                  requierd: false
+                  required: false
                 birthplace:
-                  requierd: false
+                  required: false
         adminEventOrg:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             person_info:
                 email:
-                  requierd: true
+                  required: true
         adminTeacher:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             post_contact_d:
                 address:
-                  requierd: false
+                  required: false
             post_contact_p:
                 address:
-                  requierd: false
+                  required: false
             person_info:
                 email:
-                  requierd: false
+                  required: false
                 phone:
-                  requierd: false
+                  required: false
                 career:
-                  requierd: false
+                  required: false
                 note:
-                  requierd: false
+                  required: false
                 born:
-                  requierd: false
+                  required: false
                 born_id:
-                  requierd: false
+                  required: false
                 id_number:
-                  requierd: false
+                  required: false
                 birthplace:
-                  requierd: false
+                  required: false
     vyfuk:
         registerContestant:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             person_history:
                 school_id:
-                  requierd: true
+                  required: true
                 study_year:
-                  requierd: true
+                  required: true
                 class:
-                  requierd: false
+                  required: false
             post_contact_d:
                 address:
-                  requierd: true
+                  required: true
             person_info:
                 email:
-                  requierd: true
+                  required: true
                 phone_parent_m:
-                  requierd: false
+                  required: false
                 phone_parent_d:
-                  requierd: false
+                  required: false
                 origin:
-                  requierd: false
+                  required: false
                 agreed:
-                  requierd: true
+                  required: true
             person_has_flag:
                 spam_mff:
-                  requierd: true
+                  required: true
         adminContestant:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
                 display_name:
-                  requierd: false
+                  required: false
                 gender:
-                  requierd: true
+                  required: true
             person_history:
                 school_id:
-                  requierd: true
+                  required: true
                 study_year:
-                  requierd: true
+                  required: true
             post_contact_d:
                 address:
-                  requierd: false
+                  required: false
             post_contact_p:
                 address:
-                  requierd: false
+                  required: false
             person_info:
                 email:
-                  requierd: true
+                  required: true
                 born:
-                  requierd: false
+                  required: false
                 birthplace:
-                  requierd: false
+                  required: false
                 id_number:
-                  requierd: false
+                  required: false
                 note:
-                  requierd: false
+                  required: false
                 phone_parent_m:
-                  requierd: false
+                  required: false
                 phone_parent_d:
-                  requierd: false
+                  required: false
                 origin:
-                  requierd: false
+                  required: false
                 agreed:
-                  requierd: false
+                  required: false
             person_has_flag:
                 spam_mff:
-                  requierd: false
+                  required: false
         adminOrg:
             person:
                 other_name:
-                  requierd: true
+                  required: true
                 family_name:
-                  requierd: true
+                  required: true
             person_info:
                 email:
-                  requierd: false
+                  required: false
                 career:
-                  requierd: false
+                  required: false
                 uk_login:
-                  requierd: false
+                  required: false
                 account:
-                  requierd: false
+                  required: false
                 homepage:
-                  requierd: false
+                  required: false
                 note:
-                  requierd: false
+                  required: false
                 phone_parent_m:
-                  requierd: false
+                  required: false
                 phone_parent_d:
-                  requierd: false
+                  required: false
 
