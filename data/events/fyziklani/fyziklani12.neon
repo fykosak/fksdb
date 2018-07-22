@@ -14,25 +14,37 @@ parameters:
 
             teacher:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_info:
-                    email: true
-                    id_number: false
+                    email:
+                        requierd: true
+                    id_number:
+                        requierd: false
                 person_has_flag:
-                    spam_mff: true
+                    spam_mff:
+                        requierd: true
             participant:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_info:
-                    email: true
-                    id_number: false
+                    email:
+                        requierd: true
+                    id_number:
+                        requierd: false
                 person_history:
-                    school_id: true
-                    study_year: true
+                    school_id:
+                        requierd: true
+                    study_year:
+                        requierd: true
                 person_has_flag:
-                    spam_mff: true
+                    spam_mff:
+                        requierd: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_accomodation

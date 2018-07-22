@@ -7,17 +7,25 @@ parameters:
 
             person:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_info:
-                    email: true
-                    phone: %events.tsaf9.requiredCond%
-                    id_number: %events.tsaf9.requiredCond%
-                    born: %events.tsaf9.requiredCond%
+                    email:
+                        requierd: true
+                    phone:
+                        requierd: %events.tsaf9.requiredCond%
+                    id_number:
+                        requierd: %events.tsaf9.requiredCond%
+                    born:
+                        requierd: %events.tsaf9.requiredCond%
                 post_contact_d:
-                    address: %events.tsaf9.requiredCond%
+                    address:
+                        requierd: %events.tsaf9.requiredCond%
                 post_contact_p:
-                    address: false
+                    address:
+                        requierd: false
             clothes:
                 M_S: S pánské
                 M_M: M pánské

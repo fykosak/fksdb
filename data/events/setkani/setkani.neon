@@ -4,17 +4,24 @@ parameters:
             appCond: or(regOpen(), role('admin'))
             cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
             person:
-                        
+
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        requierd: true
                 person_info:
-                    email: true
-                    born: true
-                    phone_parent_m: false
-                    phone_parent_d: false 
+                    email:
+                        requierd: true
+                    born:
+                        requierd: true
+                    phone_parent_m:
+                        requierd: false
+                    phone_parent_d:
+                        requierd: false
                     phone:
                         required: true
                         description: "Telefon (i s předvolbou státu), který budeš mít s sebou."
@@ -40,13 +47,13 @@ parameters:
                 destination:
                     aut: "ÚAN Florenc"
                     phl: "Hlavní nádraží"
-                    
+
                 time:
                     start: 17:30
                     end: 18:00
-                   
-                    
-                
+
+
+
 events:
     setkani:
         event_type_id: [11,12]
@@ -64,7 +71,7 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMVikendParticipant
-                
+
                 states:
                     applied: Přihlášen
                     participated: Účastnil se
@@ -105,10 +112,10 @@ events:
                         modifiable: %events.setkani.appCond%
                     arrival_time:
                        label: "Předpokládaný příjezd"
-                       description: "Čas příjezdu" 
+                       description: "Čas příjezdu"
                     departure_time:
                        label: "Předpokládaný odjezd"
-                       description: "Čas odjezdu" 
+                       description: "Čas odjezdu"
                     tshirt_size:
                         label: "Jaké tričko nosíš?"
                         required: true
@@ -141,6 +148,6 @@ events:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-                
+
             processings:
                 - @events.privacyPolicy

@@ -8,17 +8,25 @@ parameters:
             accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
             person:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_info:
-                    email: true
-                    phone: %events.tsaf7.requiredCond%
-                    id_number: %events.tsaf7.requiredCond%
-                    born: %events.tsaf7.requiredCond%
+                    email:
+                        requierd: true
+                    phone:
+                        requierd: %events.tsaf7.requiredCond%
+                    id_number:
+                        requierd: %events.tsaf7.requiredCond%
+                    born:
+                        requierd: %events.tsaf7.requiredCond%
                 post_contact_d:
-                    address: %events.tsaf7.requiredCond%
+                    address:
+                        requierd: %events.tsaf7.requiredCond%
                 post_contact_p:
-                    address: false
+                    address:
+                        requierd: false
             clothes:
                 M_S: S pánské
                 M_M: M pánské
@@ -49,7 +57,7 @@ events:
         baseMachines:
             PARTICIPANT_TSAF:
                 service: @event.ServiceMTsafParticipant
-                
+
                 states:
                     auto.invited: "Pozvaný (auto)"
                     invited: Pozvaný
@@ -106,7 +114,7 @@ events:
                     invited->rejected:
                         condition: %events.tsaf7.appCond%
                         label: Odmítnout účast
-                        dangerous: true      
+                        dangerous: true
                     # to cancelled/termination
                     auto.invited|invited|applied|applied.nodsef->cancelled:
                         condition: role('admin')
@@ -146,7 +154,7 @@ events:
                         label: "Cena zájezdu (CZK)"
                         modifiable: false
                         description: "Cena v spočtená dle pravidel (http://fykos.cz/archiv/rocnik28/tsaf-pozvanka)."
-            
+
             PARTICIPANT_DSEF:
                 prototype: dsef20.PARTICIPANT_DSEF
                 joinOn: person_id
@@ -183,7 +191,7 @@ events:
                 - Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování před akcí je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
-                
+
             processings:
                 - @events.privacyPolicy
             joins:

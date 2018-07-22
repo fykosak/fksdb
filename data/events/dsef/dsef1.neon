@@ -4,14 +4,20 @@ parameters:
             appCond: or(regOpen(), role('admin'))
             person:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        requierd: true
+                    family_name:
+                        requierd: true
                 person_info:
-                    email: true
-                    id_number: true
-                    born: true
+                    email:
+                        requierd: true
+                    id_number:
+                        requierd: true
+                    born:
+                        requierd: true
                 post_contact_p:
-                    address: true
+                    address:
+                        requierd: true
 
 events:
     dsef1:
@@ -25,12 +31,12 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMDsefParticipant
-                
+
                 states:
                     participated: Účastnil se
- 
+
                 transitions: []
- 
+
                 fields:
                     person_id:
                         label: Osoba
@@ -44,7 +50,7 @@ events:
                         modifiable: %events.dsef1.appCond%
                         factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     lunch_count:
-                        label:  Počet baget k obědu                        
+                        label:  Počet baget k obědu
                         modifiable: %events.dsef1.appCond%
                         description:  à 30 Kč
                     message:
@@ -67,6 +73,6 @@ events:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-                
+
             processings:
                 - @events.privacyPolicy
