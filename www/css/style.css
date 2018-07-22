@@ -81,35 +81,3 @@ fieldset .well {
     /*content: '* ';*/
     display: inline;
 }
-
-.task-code-container input.valid {
-    color: #3c763d;
-}
-
-.task-code-container input.invalid {
-    color: #a94442;
-}
-
-.task-code-container .team {
-    width: 6em;
-}
-
-.task-code-container .task {
-    width: 2em;
-}
-
-.task-code-container .control {
-    width: 1em;
-}
-
-.task-code-container .control, .task-code-container .task, .task-code-container .team {
-    border: none;
-    outline-offset: 0;
-    outline-color: transparent;
-}
-
-.task-code-container > div {
-    font-size: 120%;
-    border: 1px solid #66afe9;
-}
-

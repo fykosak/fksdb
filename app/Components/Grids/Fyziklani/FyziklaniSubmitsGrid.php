@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use Nette\Diagnostics\Debugger;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use \FKSDB\Components\Grids\BaseGrid;
@@ -31,6 +30,12 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      */
     private $eventID;
 
+    /**
+     * FyziklaniSubmitsGrid constructor.
+     * @param integer $eventID
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct($eventID, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -38,8 +43,14 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         parent::__construct();
     }
 
+    /**
+     * @param $presenter BasePresenter
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
 
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
@@ -50,16 +61,17 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('modified', _('Zadané'));
         $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
-        })->setText(_('Upravit'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
+        })->setText(_('Upravit'))->setShow(function (\ModelFyziklaniSubmit $row) use ($that) {
+            return $row->getTeam()->hasOpenSubmit() && !is_null($row->points);
         });
 
         $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) use ($that) {
             return $that->link("delete!", $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
-        })->setText(_('Smazat'))->setShow(function ($row) use ($that) {
-            return $that->serviceFyziklaniTeam->isOpenSubmit($row->e_fyziklani_team_id) && !is_null($row->points);
+        })->setText(_('Smazat'))->setShow(function (\ModelFyziklaniSubmit $row) use ($that) {
+
+            return $row->getTeam()->hasOpenSubmit() && !is_null($row->points);
         });
 
         $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
@@ -75,12 +87,17 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     }
 
     public function handleDelete($id) {
-        $teamID = $this->serviceFyziklaniSubmit->findByPrimary($id)->e_fyziklani_team_id;
-        if (!$teamID) {
+        /**
+         * @var $submit \ModelFyziklaniSubmit
+         */
+        $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $teamId = $submit->e_fyziklani_team_id;
+        if (!$teamId) {
             $this->flashMessage(_('Submit neexistuje'), 'danger');
             return;
         }
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($teamID)) {
+        if (!$submit->getTeam()->hasOpenSubmit()) {
+
             $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
             return;
         }

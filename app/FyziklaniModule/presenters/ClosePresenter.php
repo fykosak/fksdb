@@ -5,7 +5,9 @@ namespace FyziklaniModule;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
@@ -30,32 +32,48 @@ class ClosePresenter extends BasePresenter {
         $this->authorizedTable();
     }
 
-    public function renderTeam($id) {
+    public function renderTeam() {
         $this->template->submits = $this->team->getSubmits();
     }
 
     public function actionTable() {
+        /**
+         * @var $button Button
+         */
         if (!$this->isReadyToClose('A')) {
-            $this['closeCategoryAForm']['send']->setDisabled();
+            $button = $this['closeCategoryAForm']['send'];
+            $button->setDisabled();
         }
         if (!$this->isReadyToClose('B')) {
-            $this['closeCategoryBForm']['send']->setDisabled();
+            $button = $this['closeCategoryBForm']['send'];
+            $button->setDisabled();
         }
         if (!$this->isReadyToClose('C')) {
-            $this['closeCategoryCForm']['send']->setDisabled();
+            $button = $this['closeCategoryCForm']['send'];
+            $button->setDisabled();
+        }
+        if (!$this->isReadyToClose('F')) {
+            $button = $this['closeCategoryFForm']['send'];
+            $button->setDisabled();
         }
         if (!$this->isReadyToClose()) {
-            $this['closeGlobalForm']['send']->setDisabled();
+            $button = $this['closeGlobalForm']['send'];
+            $button->setDisabled();
         }
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionTeam($id) {
         $this->team = $this->serviceFyziklaniTeam->findByPrimary($id);
         if (!$this->team) {
-            throw new \Nette\Application\BadRequestException('Tým neexistuje', 404);
+            throw new BadRequestException('Tým neexistuje', 404);
         }
-        //TODO replace isOpenSubmit with method of team object
-        if (!$this->serviceFyziklaniTeam->isOpenSubmit($id)) {
+
+        if (!$this->team->hasOpenSubmit()) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name), 'danger');
             $this->backlinkRedirect();
             $this->redirect('table'); // if there's no backlink
@@ -63,7 +81,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGrid() {
-        $grid = new FyziklaniTeamsGrid($this->eventID, $this->serviceFyziklaniTeam);
+        $grid = new FyziklaniTeamsGrid($this->getEventId(), $this->serviceFyziklaniTeam);
         return $grid;
     }
 
@@ -71,18 +89,21 @@ class ClosePresenter extends BasePresenter {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-                ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
+            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydavačů'))
-                ->setDisabled()
-                ->setDefaultValue($this->getNextTask());
+            ->setDisabled()
+            ->setDefaultValue($this->getNextTask());
         $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-                ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
+            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
         return $form;
     }
 
-    public function closeFormSucceeded(Form $form) {
+    /**
+     * @throws \Nette\Application\AbortException
+     */
+    public function closeFormSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
@@ -118,8 +139,16 @@ class ClosePresenter extends BasePresenter {
         return $this->createComponentCloseCategoryForm('C');
     }
 
+    public function createComponentCloseCategoryFForm() {
+        return $this->createComponentCloseCategoryForm('F');
+    }
+
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -133,15 +162,18 @@ class ClosePresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStrategy($this->eventID, $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
     }
 
     private function isReadyToClose($category = null) {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEventId());
         if ($category) {
             $query->where('category', $category);
         }
@@ -152,8 +184,12 @@ class ClosePresenter extends BasePresenter {
 
     private function getNextTask() {
         $submits = count($this->team->getSubmits());
-        $tasksOnBoard = $this->getCurrentEvent()->getParameter('tasksOnBoard');        
-        $nextTask = $this->serviceFyziklaniTask->findAll($this->eventID)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+
+        $tasksOnBoard = $this->getEvent()->getParameter('tasksOnBoard');
+        /**
+         * @var $nextTask \ModelFyziklaniTask
+         */
+        $nextTask = $this->serviceFyziklaniTask->findAll($this->getEventId())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 

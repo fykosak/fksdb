@@ -23,13 +23,15 @@ navigation:
             - org.tasks.import
             - org.contestant.list
             - org.school.list
+            - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list
             - org.deduplicate.person
+            - org.stalking.default
         public.dashboard.default:
             - public.submit.default
-            - public.application.list           
+            - public.application.list
             - fykos
             - vyfuk
         fyziklani.dashboard.default:
@@ -39,6 +41,6 @@ navigation:
             - fyziklani.results.default
             - fyziklani.task.table
             - fyziklani.task.import
-            - fyziklani.rooms.import
-            
-        
+            - fyziklani.rooms.default
+
+

@@ -177,9 +177,21 @@ class DatePicker extends Forms\Controls\BaseControl
 	{
 		return $this->rawValue;
 	}
+        
+        /**
+         * Sets default date in UI widget,
+         * but does not set it as a form value.
+         * 
+         * @param DateTime $date
+         * @return self
+         */
+        public function setDefaultDate(DateTime $date)
+        {
+            $this->setAttribute('default-date', $date->format('Y-m-d'));
+            return $this;
+        }
 
-
-
+        
 	/**
 	 * Does user enter anything? (the value doesn't have to be valid)
 	 *

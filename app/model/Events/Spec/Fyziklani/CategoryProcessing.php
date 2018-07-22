@@ -9,7 +9,6 @@ use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
 use FKS\Logging\ILogger;
 use Nette\ArrayHash;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use YearCalculator;
 
@@ -19,21 +18,24 @@ use YearCalculator;
  * @author Aleš Podolník <ales@fykos.cz>
  * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
-class CategoryProcessing extends AbstractProcessing
-{
+class CategoryProcessing extends AbstractProcessing {
 
     /**
      * @var YearCalculator
      */
     private $yearCalculator;
 
-    function __construct(YearCalculator $yearCalculator)
-    {
+    /**
+     * @var \ServiceSchool
+     */
+    private $serviceSchool;
+
+    function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
+        $this->serviceSchool = $serviceSchool;
     }
 
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null)
-    {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
             return;
@@ -50,36 +52,61 @@ class CategoryProcessing extends AbstractProcessing
             if ($name == 'team') {
                 continue;
             }
-            $formControl = $this->getControl("$name.person_id.person_history.study_year");
-            $formControl = reset($formControl);
-            $formValue = $formControl ? $formControl->getValue() : null;
+            $studyYearControl = $this->getControl("$name.person_id.person_history.study_year");
+            $schoolControl = $this->getControl("$name.person_id.person_history.school_id");
 
-            if (!$formValue) {
+            $studyYearControl = reset($studyYearControl);
+            $schoolControl = reset($schoolControl);
+            
+            $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
+            $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
+
+            if (!$studyYearValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /**
+                 * @var $person \ModelPerson
+                 */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                $studyYear = $person->related('person_history')->where('ac_year', $acYear)->fetch()->study_year;
+                $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
+                $participantData = [
+                    'school_id' => $history->school_id,
+                    'study_year' => $history->study_year,
+                ];
+
             } else {
-                $studyYear = $formValue;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];
             }
-            $participants[] = $studyYear;
+            $participants[] = $participantData;
         }
 
-        $result = $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
+        $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+
         if ($original != $result) {
             $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
         }
     }
 
-    private function getCategory($participants)
-    {
+    private function getCategory($participants) {
         $coefficient_sum = 0;
         $count_4 = 0;
         $count_3 = 0;
+        $abroad = 0;
 
-        foreach ($participants as $studyYear) {
+        foreach ($participants as $participant) {            
+            $country = $this->serviceSchool->getTable()
+                    ->select('address.region.country_iso')
+                    ->where(['school_id' => $participant['school_id']])->fetch();
+            if (!in_array($country->country_iso, array('CZ', 'SK'))) {
+                $abroad += 1;
+            }            
+            
+            $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficient_sum += $coefficient;
 
@@ -92,7 +119,9 @@ class CategoryProcessing extends AbstractProcessing
 
         $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
-        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        if ($abroad > 0) {
+            $result = 'F';
+        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';

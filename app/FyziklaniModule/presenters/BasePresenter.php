@@ -68,6 +68,24 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $serviceFyziklaniSubmit;
 
+    /**
+     * @var \ServiceBrawlRoom
+     */
+    protected $serviceBrawlRoom;
+    /**
+     * @var \ServiceBrawlTeamPosition
+     */
+    protected $serviceBrawlTeamPosition;
+
+
+    public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
+        $this->serviceBrawlRoom = $serviceBrawlRoom;
+    }
+
+    public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
+        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
+    }
+
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
@@ -107,6 +125,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $control;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function startup() {
         /**
          * @var $languageChooser LanguageChooser
@@ -115,40 +136,51 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $languageChooser = $this['languageChooser'];
         $brawlChooser = $this['brawlChooser'];
         $languageChooser->syncRedirect();
-        $brawlChooser->setEvent($this->getCurrentEvent());
+        $brawlChooser->setEvent($this->getEvent());
 
-        $this->event = $this->getCurrentEvent();
+        $this->event = $this->getEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
         parent::startup();
     }
 
-    /** Vrati true ak pre daný ročník existuje fyzikláni */
-    public function eventExist() {
-        return $this->getCurrentEvent() ? true : false;
+    /**
+     * @return bool
+     */
+    protected function eventExist() {
+        return $this->getEvent() ? true : false;
     }
 
     public function getSubtitle() {
-        return (' ' . $this->getCurrentEvent()->event_year . '. FYKOSí Fyziklání');
+        return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
     }
 
-    public function getCurrentEventID() {
+    /**
+     * @return \ModelBrawlRoom[]
+     */
+    protected function getRooms() {
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
+    }
+
+    /**
+     * @return integer
+     */
+    public function getEventId() {
         if (!$this->eventID) {
             $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
         return $this->eventID;
     }
 
-    /** vráti paramtre daného eventu
-     * TODO rename to getEvent()
+    /**
      * @return ModelEvent
      */
-    public function getCurrentEvent() {
+    public function getEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getCurrentEventID());
+            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
             if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getCurrentEvent());
+                $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
             }
         }
@@ -156,11 +188,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function eventIsAllowed($resource, $privilege) {
-        $event = $this->getCurrentEvent();
+        $event = $this->getEvent();
         if (!$event) {
             return false;
         }
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
+    }
+
+    public function getNavBarVariant() {
+        return ['brawl brawl' . $this->getEventId(), 'dark'];
     }
 
 }

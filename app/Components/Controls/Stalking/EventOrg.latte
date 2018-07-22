@@ -1,0 +1,24 @@
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">Event Org</h4>
+
+    {if count($orgs)}
+        <ul class="list-group list-group-flush">
+            {foreach $orgs as $eventOrg}
+                <li class="list-group-item">
+                <span class="row">
+                    <span class="col-3">{$eventOrg->event->event_year}. {$eventOrg->event->event_type->name}</span>
+                    <span class="col-3">{$eventOrg->event->name}</span>
+                    <span class="col-2">{$eventOrg->event->year}. year</span>
+                    <span class="col-4">{$eventOrg->note} </span>
+                </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            <span class="badge-warning badge">No records</span>
+        </div>
+    {/if}
+
+
+</div>

@@ -4,6 +4,8 @@
 services:
     ServiceAuthToken:        ServiceAuthToken
     ServiceAddress:          ServiceAddress
+    ServiceBrawlRoom:        ServiceBrawlRoom
+    ServiceBrawlTeamPosition: ServiceBrawlTeamPosition
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
@@ -35,6 +37,7 @@ services:
     ServiceTask:             ServiceTask
     ServiceTaskContribution: ServiceTaskContribution
     ServiceTaskStudyYear:    ServiceTaskStudyYear
+    ServiceTeacher:          ServiceTeacher
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup

@@ -25,7 +25,8 @@ class ContestantsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
@@ -46,16 +47,16 @@ class ContestantsGrid extends BaseGrid {
         // operations
         //
         $this->addButton("editPerson", _("Upravit"))
-                ->setText(_('Upravit'))
-                ->setLink(function($row) use ($presenter) {
-                            return $presenter->link("Contestant:edit", array(
-                                        'id' => $row->ct_id,
-                            ));
-                        });
+            ->setText(_('Upravit'))
+            ->setLink(function ($row) use ($presenter) {
+                return $presenter->link("Contestant:edit", array(
+                    'id' => $row->ct_id,
+                ));
+            });
 
         $this->addGlobalButton('add')
-                ->setLabel('Založit řešitele')
-                ->setLink($this->getPresenter()->link('create'));
+            ->setLabel('Založit řešitele')
+            ->setLink($this->getPresenter()->link('create'));
 
 
         //

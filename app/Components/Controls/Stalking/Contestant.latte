@@ -1,0 +1,23 @@
+<div class="card mb-3 border-primary">
+    <h4 class="card-header bg-primary text-white">Contestant</h4>
+
+    {if count($contestants)}
+        <ul class="list-group list-group-flush">
+            {foreach $contestants as $contestant}
+                <li class="list-group-item">
+                <span class="row">
+                    <span class="col-4">{$contestant->ct_id}</span>
+                    <span class="col-4">
+                {control contestBadge, $contestant->contest_id}
+                        <span class="col-4">{$contestant->year}. year</span>
+                </span>
+                </li>
+            {/foreach}
+        </ul>
+    {else}
+        <div class="card-body">
+            <span class="badge-warning badge">No records</span>
+        </div>
+    {/if}
+
+</div>

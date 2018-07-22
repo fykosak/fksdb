@@ -16,27 +16,34 @@ class FyziklaniTaskGrid extends BaseGrid {
 
     /**
      *
-     * @var ServiceFyziklaniTask 
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
     /**
      * @var int
      */
-    private $eventID;
+    private $eventId;
 
-    public function __construct($eventID, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    /**
+     * FyziklaniTaskGrid constructor.
+     * @param integer $eventId
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     */
+    public function __construct($eventId, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->eventID = $eventID;
+        $this->eventId = $eventId;
         parent::__construct();
     }
 
     protected function configure($presenter) {
         parent::configure($presenter);
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
         $this->addColumn('fyziklani_task_id',_('ID úlohy'));
         $this->addColumn('label',_('#'));
         $this->addColumn('name',_('Název úlohy'));
 
-        $submits = $this->serviceFyziklaniTask->findAll($this->eventID);
+        $submits = $this->serviceFyziklaniTask->findAll($this->eventId);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function(Selection $table, $value) {
                     $tokens = preg_split('/\s+/', $value);

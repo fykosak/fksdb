@@ -10,6 +10,7 @@ services:
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
     FyziklaniFactory: FKSDB\Components\Forms\Factories\FyziklaniFactory
+    TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
 
     - FKSDB\Components\Forms\Rules\UniqueEmailFactory
     - FKSDB\Components\Forms\Rules\UniqueLoginFactory

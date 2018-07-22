@@ -43,9 +43,13 @@ class TaskPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->eventID, $this->serviceFyziklaniTask);
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEventId(), $this->serviceFyziklaniTask);
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -55,6 +59,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        return new FyziklaniTaskGrid($this->eventID, $this->serviceFyziklaniTask);
+        return new FyziklaniTaskGrid($this->getEventId(), $this->serviceFyziklaniTask);
     }
 }
