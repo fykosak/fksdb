@@ -65,60 +65,78 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         /*
          * Define a form
          */
-        $form = $this->createForm(array(
-            'person' => array(
-                'other_name' => true,
-                'family_name' => true,
-            ),
-            'person_history' => array(
-                'school_id' => true,
-                'study_year' => true,
-                'class' => false,
-            ),
-            'post_contact_p' => array(
-                'address' => true,
-            ),
-            'person_info' => array(
-                'email' => true,
-                'origin' => false,
-                'agreed' => true,
-            ),
-                ), 2000);
+        $form = $this->createForm([
+            'person' => [
+                'other_name' => [
+                    'requierd' => true,
+                ],
+                'family_name' => [
+                    'requierd' => true,
+                ],
+            ],
+            'person_history' => [
+                'school_id' => [
+                    'requierd' => true,
+                ],
+                'study_year' => [
+                    'requierd' => true,
+                ],
+                'class' => [
+                    'requierd' => false,
+                ],
+            ],
+            'post_contact_p' => [
+                'address' => [
+                    'requierd' => true,
+                ],
+            ],
+            'person_info' => [
+                'email' => [
+                    'requierd' => true,
+                ],
+                'origin' => [
+                    'requierd' => false,
+                ],
+                'agreed' => [
+                    'requierd' => true,
+                ],
+            ],
+        ], 2000);
 
         /*
          * Fill user data
          */
-        $form->setValues(array(
-            ExtendedPersonHandler::CONT_AGGR => array(
+        $form->setValues([
+            ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => array(
+                ExtendedPersonHandler::CONT_PERSON => [
                     '_c_compact' => " ",
-                    'person' => array(
+                    'person' => [
                         'other_name' => "Jana",
                         'family_name' => "Triková",
-                    ),
-                    'person_history' => array(
+                    ],
+                    'person_history' => [
                         'school_id__meta' => "JS",
                         'school_id' => "1",
                         'study_year' => "2",
                         'class' => "2.F",
-                    ),
-                    'post_contact_p' => array(
-                        'address' => array(
+                    ],
+                    'post_contact_p' => [
+                        'address' => [
                             'target' => "Krtkova 12",
                             'city' => "Pohádky",
                             'postal_code' => "43243",
                             'country_iso' => "",
-                        ),
-                    ),
-                    'person_info' => array(
+                        ],
+                    ],
+                    'person_info' => [
                         'email' => "jana@sfsd.com",
                         'origin' => "dfsd",
                         'agreed' => "on",
-                    ),
-                ),
-            )
-        ));
+                    ],
+                ],
+            ]
+        ]);
         $form->validate();
 
         /*
@@ -136,12 +154,12 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
-        
+
         $address = $person->getPermanentAddress();
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);
-    }    
+    }
 
     private function createForm($fieldsDefinition, $acYear) {
         $form = new Form();
@@ -168,27 +186,27 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 class PersonPresenter extends Control implements IExtendedPersonPresenter {
 
     public function getModel() {
-        
+
     }
 
     public function messageCreate() {
-        
+
     }
 
     public function messageEdit() {
-        
+
     }
 
     public function messageError() {
-        
+
     }
-    
+
     public function messageExists() {
-        
+
     }
 
     public function flashMessage($message, $type = 'info') {
-        
+
     }
 
 }
