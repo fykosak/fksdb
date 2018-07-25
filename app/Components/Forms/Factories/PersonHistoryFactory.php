@@ -31,7 +31,8 @@ class PersonHistoryFactory {
 
     public function __construct(GettextTranslator $translator, SchoolFactory $factorySchool, \YearCalculator $yearCalculator) {
         $this->translator = $translator;
-        $this->schoolFactory = $factorySchool;;
+        $this->schoolFactory = $factorySchool;
+        $this->yearCalculator = $yearCalculator;
     }
 
     private function createStudyYear($acYear) {

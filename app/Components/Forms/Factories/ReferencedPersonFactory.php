@@ -7,9 +7,7 @@ use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
-use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -27,7 +25,6 @@ use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
 use ServicePerson;
-use ServiceFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -65,28 +62,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     private $personProvider;
 
     /**
-     * @var ServiceFlag
-     */
-    private $serviceFlag;
-
-
-    /**
-     *
-     * @var GettextTranslator
-     */
-    private $translator;
-
-    /**
-     * @var UniqueEmailFactory
-     */
-    private $uniqueEmailFactory;
-
-    /**
-     * @var SchoolFactory
-     */
-    private $schoolFactory;
-
-    /**
      * @var AddressFactory
      */
     private $addressFactory;
@@ -95,12 +70,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @var FlagFactory
      */
     private $flagFactory;
-
-    /**
-     *
-     * @var \YearCalculator
-     */
-    private $yearCalculator;
 
     /**
      * @var PersonHistoryFactory
@@ -112,18 +81,19 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      */
     private $personInfoFactory;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, \YearCalculator $yearCalculator, PersonHistoryFactory $personHistoryFactory, PersonInfoFactory $personInfoFactory, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
+    /**
+     * @var PersonAccommodationFactory
+     */
+    private $personAccommodationFactory;
+
+    function __construct(PersonAccommodationFactory $personAccommodationFactory, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, PersonHistoryFactory $personHistoryFactory, PersonInfoFactory $personInfoFactory, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider) {
+        $this->personAccommodationFactory = $personAccommodationFactory;
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
-        $this->serviceFlag = $serviceFlag;
-        $this->translator = $translator;
-        $this->uniqueEmailFactory = $uniqueEmailFactory;
-        $this->schoolFactory = $factorySchool;
         $this->addressFactory = $addressFactory;
         $this->flagFactory = $flagFactory;
-        $this->yearCalculator = $yearCalculator;
         $this->personHistoryFactory = $personHistoryFactory;
         $this->personInfoFactory = $personInfoFactory;
     }
@@ -138,7 +108,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $globalMetadata = []) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
@@ -171,11 +141,13 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             }
 
             foreach ($fields as $fieldName => $metadata) {
+                // first merge metadata with global meta
+                $options = array_merge($globalMetadata, $metadata);
                 if (is_scalar($metadata)) {
                     // old system
                     throw new \InvalidArgumentException('Metadata must be a vector');
                 }
-                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $options);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
@@ -328,8 +300,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 };
                 break;
             case self::SEARCH_ID:
-                return function ($term) {
-                    return array();
+                return function () {
+                    return [];
                 };
         }
     }
@@ -366,12 +338,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 break;
             case 'person_has_flag':
                 return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
+            case 'person_accommodation':
+                return null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
 
-    private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+    private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
@@ -389,7 +363,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 break;
             case 'person_has_flag':
-                $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->flagFactory->createFlag($hiddenField, $metadata);
                 return $control;
             default:
                 switch ($sub) {
@@ -403,7 +377,9 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                         $control = $this->personFactory->createField($fieldName);
                         break;
                     case 'person_accommodation':
-                        throw new NotImplementedException('Ubytovanie ešte nieje implentované');
+                        $control = $this->personAccommodationFactory->createMatrixSelect($metadata);
+                        break;
+                    //throw new NotImplementedException('Ubytovanie ešte nieje implentované');
                     default:
                         throw new InvalidArgumentException('Pre ' . $sub . ' neexistuje továrnička');
 
