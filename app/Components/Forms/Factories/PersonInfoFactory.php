@@ -98,7 +98,7 @@ class PersonInfoFactory {
         return (new TextArea(_('Jak jsi se o nás dozvěděl(a)?')));
     }
 
-    private function createAgreed() {
+    public function createAgreed() {
         $link = Html::el('a');
         $link->setText(_('Text souhlasu'));
         $link->addAttributes(['href' => _("http://fykos.cz/doc/souhlas.pdf")]);
