@@ -172,8 +172,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($fields as $fieldName => $metadata) {
                 if (is_scalar($metadata)) {
-                    // old compatibility
-                    throw new \BadMethodCallException('metadata muss be vector');
+                    // old system 
+                    throw new \InvalidArgumentException('Metadata must be a vector');
                 }
                 $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
