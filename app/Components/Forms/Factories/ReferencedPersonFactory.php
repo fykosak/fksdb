@@ -7,15 +7,20 @@ use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
+use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\NotImplementedException;
 use Nette\Object;
+use Nette\Utils\Arrays;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
 use Persons\IVisibilityResolver;
@@ -64,20 +69,71 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      */
     private $serviceFlag;
 
-    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
+
+    /**
+     *
+     * @var GettextTranslator
+     */
+    private $translator;
+
+    /**
+     * @var UniqueEmailFactory
+     */
+    private $uniqueEmailFactory;
+
+    /**
+     * @var SchoolFactory
+     */
+    private $schoolFactory;
+
+    /**
+     * @var AddressFactory
+     */
+    private $addressFactory;
+
+    /**
+     * @var FlagFactory
+     */
+    private $flagFactory;
+
+    /**
+     *
+     * @var \YearCalculator
+     */
+    private $yearCalculator;
+
+    /**
+     * @var PersonHistoryFactory
+     */
+    private $personHistoryFactory;
+
+    /**
+     * @var PersonInfoFactory
+     */
+    private $personInfoFactory;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, \YearCalculator $yearCalculator, PersonHistoryFactory $personHistoryFactory, PersonInfoFactory $personInfoFactory, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
         $this->serviceFlag = $serviceFlag;
+        $this->translator = $translator;
+        $this->uniqueEmailFactory = $uniqueEmailFactory;
+        $this->schoolFactory = $factorySchool;
+        $this->addressFactory = $addressFactory;
+        $this->flagFactory = $flagFactory;
+        $this->yearCalculator = $yearCalculator;
+        $this->personHistoryFactory = $personHistoryFactory;
+        $this->personInfoFactory = $personInfoFactory;
     }
 
     /**
      *
-     * @param type $fieldsDefinition
-     * @param type $acYear
-     * @param type $searchType
-     * @param type $allowClear
+     * @param mixed $fieldsDefinition
+     * @param int $acYear
+     * @param mixed $searchType
+     * @param bool $allowClear
      * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
@@ -119,7 +175,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     // old compatibility
                     throw new \BadMethodCallException('metadata muss be vector');
                 }
-                $control = $this->personFactory->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
@@ -315,5 +371,69 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-}
+    private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+        switch ($sub) {
+            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
+            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
+                if ($fieldName == 'address') {
+                    $required = Arrays::get($metadata, 'required', false);
+                    if ($required) {
+                        $options = AddressFactory::REQUIRED;
+                    } else {
+                        $options = 0;
+                    }
+                    $container = $this->addressFactory->createAddress($options, $hiddenField);
+                    return $container;
+                } else {
+                    throw new InvalidArgumentException("Only 'address' field is supported.");
+                }
+                break;
+            case 'person_has_flag':
+                $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+                return $control;
+            default:
+                switch ($sub) {
+                    case 'person_history' :
+                        $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                        break;
+                    case 'person_info':
+                        $control = $this->personInfoFactory->createField($fieldName);
+                        break;
+                    case 'person' :
+                        $control = $this->personFactory->createField($fieldName);
+                        break;
+                    case 'person_accommodation':
+                        throw new NotImplementedException('Ubytovanie ešte nieje implentované');
+                    default:
+                        throw new InvalidArgumentException('Pre ' . $sub . ' neexistuje továrnička');
 
+                }
+                foreach ($metadata as $key => $value) {
+
+                    switch ($key) {
+                        case 'required':
+                            if ($value) {
+                                if ($hiddenField) {
+                                    $control->addConditionOn($hiddenField, Form::FILLED);
+                                }
+                                if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                                    $control->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                                } else {
+                                    $control->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                                }
+                            }
+                            break;
+                        case 'caption':
+                            $control->caption = $value;
+                            break;
+                        case 'description':
+                            $control->setOption('description', $value);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return $control;
+        }
+    }
+}
