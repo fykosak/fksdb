@@ -9,6 +9,7 @@ use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -346,6 +347,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
+
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:

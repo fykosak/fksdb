@@ -1,10 +1,14 @@
-import { IPrice } from '../../../../../shared/components/displays/price/interfaces';
+import { IPrice } from '../../shared/components/displays/price/interfaces';
 
 export interface IAccommodationItem {
-    accId: number;
-    date: string;
+    eventAccommodationId: number;
+    eventId: number;
+    capacity: number;
+    usedCapacity: number;
     name: string;
+    addressId: number;
     price: IPrice;
+    date: string;
 }
 
 export interface IPersonAccommodation {

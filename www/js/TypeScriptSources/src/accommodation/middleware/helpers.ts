@@ -1,7 +1,7 @@
-import { formValueSelector } from 'redux-form';
+/*import { formValueSelector } from 'redux-form';
 import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
 import { IStore } from '../../../../../brawl-registration/reducers';
-import { IPrice } from '../../../../../shared/components/displays/price/interfaces';
+import { IPrice } from './interfaces';
 import {
     IAccommodationItem,
     IPersonAccommodation,
@@ -34,7 +34,7 @@ export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], ac
     for (const date in accommodation) {
         if (accommodation.hasOwnProperty(date)) {
             const selectedAcc = accommodationDef.filter((value) => {
-                return value.accId === accommodation[date];
+                return value.eventAccommodationId === accommodation[date];
             })[0];
             if (selectedAcc) {
                 sum.eur += +selectedAcc.price.eur;
@@ -43,4 +43,4 @@ export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], ac
         }
     }
     return sum;
-};
+};*/

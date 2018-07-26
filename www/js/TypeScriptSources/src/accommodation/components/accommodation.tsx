@@ -1,21 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Field } from 'redux-form';
-import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
-import { IStore } from '../../../../../brawl-registration/reducers';
-import Lang from '../../../../../lang/components/lang';
-import { IInputDefinition } from '../../interfaces';
-import { IAccommodationItem } from './interfaces';
+// import Lang from '../../../../../lang/components/lang';
+import { IAccommodationItem } from '../middleware/interfaces';
 import Price from './price';
 import Row from './row';
 
 interface IProps {
-    personSelector: IPersonSelector;
-    inputDef: IInputDefinition;
+    accommodationDef?: IAccommodationItem[];
 }
 
 interface IState {
-    accommodationDef?: IAccommodationItem[];
+
 }
 
 class Accommodation extends React.Component<IProps & IState, {}> {
@@ -23,7 +18,10 @@ class Accommodation extends React.Component<IProps & IState, {}> {
     public render() {
         const dates = {};
         const names = [];
-        const {accommodationDef, personSelector} = this.props;
+        const {accommodationDef} = this.props;
+        if (!accommodationDef) {
+            return null;
+        }
         accommodationDef.forEach((value) => {
             if (names.indexOf(value.name) === -1) {
                 names.push(value.name);
@@ -35,10 +33,8 @@ class Accommodation extends React.Component<IProps & IState, {}> {
         const rows = [];
         for (const date in dates) {
             if (dates.hasOwnProperty(date)) {
-                rows.push(<Field
+                rows.push(<Row
                     key={date}
-                    name={date}
-                    component={Row}
                     hotels={names}
                     date={date}
                     accommodations={dates[date]}
@@ -50,7 +46,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
             <table className="table">
                 <thead>
                 <tr>
-                    <th><Lang text={'date'}/></th>
+                    <th>Date</th>
                     {names.map((hotel, i) => {
                         return <th key={i}>{hotel}</th>;
                     })}
@@ -60,18 +56,18 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 {rows}
                 </tbody>
             </table>
-            <Price personSelector={personSelector}/>
+            <Price/>
         </>;
     }
-}
+} // <Lang text={'date'}/>
 
 const mapDispatchToProps = (): IState => {
     return {};
 };
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state): IState => {
     return {
-        accommodationDef: state.definitions.accommodation,
+        //   accommodationDef: state.definitions.accommodation,
     };
 };
 
