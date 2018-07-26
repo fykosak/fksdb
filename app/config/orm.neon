@@ -38,6 +38,8 @@ services:
     ServiceTaskContribution: ServiceTaskContribution
     ServiceTaskStudyYear:    ServiceTaskStudyYear
     ServiceTeacher:          ServiceTeacher
+    ServiceEventAccommodation: ServiceEventAccommodation
+    ServiceEventPersonAccommodation: ServiceEventPersonAccommodation
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup
