@@ -13,6 +13,11 @@ body[data-bg="2"] {
     background-size: cover;
 }
 
+body[data-bg="3"] {
+    background: url(/images/bg/3.jpg) 0 10%;
+    background-size: cover;
+}
+
 .form-signin {
     background-color: white;
     max-width: 330px;
