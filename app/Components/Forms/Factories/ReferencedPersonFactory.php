@@ -340,6 +340,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case 'person_has_flag':
                 return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             case 'person_accommodation':
+                // TODO
                 return null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");

@@ -15,6 +15,8 @@ use Nette\DateTime;
  * @property DateTime date,
  */
 class ModelEventAccommodation extends \AbstractModelSingle {
+    const ACC_DATE_FORMAT = 'Y-m-d';
+
     /**
      * @return \ModelEvent
      */
@@ -64,7 +66,7 @@ class ModelEventAccommodation extends \AbstractModelSingle {
                 'kc' => $this->price_kc,
                 'eur' => $this->price_eur,
             ],
-            'date' => $this->date->__toString(),
+            'date' => $this->date->format(self::ACC_DATE_FORMAT),
         ];
     }
 }

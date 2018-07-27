@@ -1,43 +1,42 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-// import Lang from '../../../../../lang/components/lang';
-// import PriceDisplay from '../../shared/components/displays/price';
-/*import {
-    getAccommodationFromState,
-    getAccommodationPrice,
-} from './helpers';*/
-// import { IAccommodationItem } from './interfaces';
+import PriceDisplay from '../../shared/components/displays/price';
+import { getAccommodationPrice } from '../middleware/helpers';
+import { IAccommodationItem } from '../middleware/interfaces';
+import { IStore } from '../reducer';
+import { IAccommodationState } from '../reducer/accommodation';
 
 interface IProps {
+    accommodationDef?: IAccommodationItem[];
 }
 
 interface IState {
-  //  accommodation?: any;
- //   accommodationDef?: IAccommodationItem[];
+    accommodation?: IAccommodationState;
 }
 
 class Price extends React.Component<IProps & IState, {}> {
 
     public render() {
-        return null;
-      /*  const {accommodationDef, accommodation} = this.props;
+        const {accommodationDef, accommodation} = this.props;
         const price = getAccommodationPrice(accommodationDef, accommodation);
 
         return <>
-            <p><Lang text={'Accommodation price'}/></p>
+            <p>Price</p>
             <PriceDisplay price={price}/>
-        </>;*/
+        </>;
     }
 }
+
+// import Lang from '../../../../../lang/components/lang';
+// <Lang text={'Accommodation price'}/>
 
 const mapDispatchToProps = (): IState => {
     return {};
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
+const mapStateToProps = (state: IStore): IState => {
     return {
-      //  accommodation: getAccommodationFromState(FORM_NAME, state, ownProps.personSelector),
-       // accommodationDef: state.definitions.accommodation,
+        accommodation: state.accommodation,
     };
 };
 

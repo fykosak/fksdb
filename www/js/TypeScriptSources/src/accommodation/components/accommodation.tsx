@@ -56,7 +56,7 @@ class Accommodation extends React.Component<IProps & IState, {}> {
                 {rows}
                 </tbody>
             </table>
-            <Price/>
+            <Price accommodationDef={accommodationDef}/>
         </>;
     }
 } // <Lang text={'date'}/>

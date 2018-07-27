@@ -1,12 +1,10 @@
-/*import { formValueSelector } from 'redux-form';
-import { IPersonSelector } from '../../../../../brawl-registration/middleware/price';
-import { IStore } from '../../../../../brawl-registration/reducers';
-import { IPrice } from './interfaces';
+// import { formValueSelector } from 'redux-form';
 import {
     IAccommodationItem,
     IPersonAccommodation,
 } from './interfaces';
-
+import { IPrice } from '../../shared/components/displays/price/interfaces';
+/*
 export const getAccommodationFromState = (FORM_NAME: string, state: IStore, ownProps: IPersonSelector): IPersonAccommodation => {
     const selector = formValueSelector(FORM_NAME);
     const participantsValue = selector(state, ownProps.type);
@@ -19,7 +17,7 @@ export const getAccommodationFromState = (FORM_NAME: string, state: IStore, ownP
     }
     return null;
 };
-
+*/
 export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], accommodation: IPersonAccommodation): IPrice => {
 
     const sum = {
@@ -43,4 +41,4 @@ export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], ac
         }
     }
     return sum;
-};*/
+};

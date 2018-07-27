@@ -10,9 +10,11 @@ import { config } from '../../config/';
 import { IAccommodationItem } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Accommodation from './accommodation';
+import InputConnector from './input-connector';
 
 interface IProps {
     accommodationDef: IAccommodationItem[];
+    input: HTMLInputElement;
 }
 
 class Index extends React.Component<IProps, {}> {
@@ -22,13 +24,18 @@ class Index extends React.Component<IProps, {}> {
 
         return (
             <Provider store={store}>
-                <Accommodation accommodationDef={this.props.accommodationDef}/>
+                <>
+                    <InputConnector input={this.props.input}/>
+                    <Accommodation accommodationDef={this.props.accommodationDef}/>
+                </>
             </Provider>
         );
     }
 }
 
-document.querySelectorAll('[data-id=person-accommodation-matrix]').forEach((el: Element) => {
+document.querySelectorAll('[data-id=person-accommodation-matrix]').forEach((el: HTMLInputElement) => {
     const accommodationDef = JSON.parse(el.getAttribute('data-accommodation-def'));
-    ReactDOM.render(<Index accommodationDef={accommodationDef}/>, el.parentElement.parentElement);
+    const container = document.createElement('div');
+    el.parentElement.parentElement.appendChild(container);
+    ReactDOM.render(<Index accommodationDef={accommodationDef} input={el}/>, container);
 });
