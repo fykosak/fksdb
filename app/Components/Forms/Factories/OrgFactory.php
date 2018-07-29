@@ -11,7 +11,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class OrgFactory {
@@ -37,7 +37,7 @@ class OrgFactory {
 
 
         $min = $this->yearCalculator->getFirstYear($contest);
-        $max = $this->yearCalculator->getCurrentYear($contest);
+        $max = $this->yearCalculator->getLastYear($contest);
 
         $container->addText('since',_('Od ročníku'))
                 ->addRule(Form::NUMERIC)
