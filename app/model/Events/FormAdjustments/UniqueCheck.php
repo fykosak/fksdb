@@ -5,7 +5,7 @@ namespace Events\FormAdjustments;
 use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKS\Components\Forms\Controls\ReferencedIdField;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -39,7 +39,7 @@ class UniqueCheck extends AbstractAdjustment {
             $control->addRule(function(IControl $control) use($baseHolder, $field) {
                         $table = $baseHolder->getService()->getTable();
                         $column = BaseHolder::getBareColumn($field);
-                        if ($control instanceof ReferencedId) {
+                        if ($control instanceof ReferencedIdField) {
                             /* We don't want to fullfil potential promise
                              * as it would be out of transaction here.
                              */

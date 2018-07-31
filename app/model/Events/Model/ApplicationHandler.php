@@ -226,7 +226,7 @@ class ApplicationHandler {
 
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedIdField') as $referencedId) {
                 $referencedId->rollback();
             }
         }

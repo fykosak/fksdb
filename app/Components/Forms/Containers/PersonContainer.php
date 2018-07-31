@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Persons\PersonHandler2;
 use Persons\ResolutionException;
@@ -17,7 +16,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonContainer extends Container {

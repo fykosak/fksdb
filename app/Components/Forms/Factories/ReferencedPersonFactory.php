@@ -6,7 +6,7 @@ use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKS\Components\Forms\Controls\ReferencedIdField;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
 use Nette\Diagnostics\Debugger;
@@ -17,7 +17,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
 use Nette\Object;
 use Nette\Utils\Arrays;
 use ORM\IModel;
@@ -107,13 +106,19 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @param bool $allowClear
      * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
+     * @param array $globalMetadata
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $globalMetadata = []) {
-
+    public function createReferencedPerson($fieldsDefinition,
+                                           $acYear,
+                                           $searchType,
+                                           $allowClear,
+                                           IModifialibityResolver $modifiabilityResolver,
+                                           IVisibilityResolver $visibilityResolver,
+                                           $globalMetaData = []) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
-        $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
+        $hiddenField = new ReferencedIdField($this->servicePerson, $handler, $this);
 
         $container = new ReferencedContainer($hiddenField);
         if ($searchType == self::SEARCH_NONE) {
@@ -143,7 +148,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($fields as $fieldName => $metadata) {
                 // first merge metadata with global meta
-                $options = array_merge($globalMetadata, $metadata);
+                $options = array_merge($globalMetaData, $metadata);
                 if (is_scalar($metadata)) {
                     // old system
                     throw new \InvalidArgumentException('Metadata must be a vector');
@@ -157,14 +162,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
                     $control->addCondition(function () use ($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
                         $personId = $hiddenField->getValue(false);
-                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
+                        return $personId && $personId != ReferencedIdField::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler) {
+                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler, $globalMetaData) {
                             $personId = $hiddenField->getValue(false);
 
                             $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
                             if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE, $globalMetaData);
                                 return false;
                             }
                             return true;
@@ -176,13 +181,14 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             $container->addComponent($subcontainer, $sub);
         }
 
-        return array(
+        return [
             $hiddenField,
             $container,
-        );
+        ];
     }
 
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL, $globalMetaData = []) {
+
         $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
         $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -207,8 +213,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 } else {
                     $options = self::TARGET_FORM;
                 }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options, $globalMetaData); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE, $globalMetaData);
 
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteonly($component) ? $visible : true;
@@ -297,7 +303,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) {
-                    return array('person_info' => array('email' => $term));
+                    return ['person_info' => ['email' => $term]];
                 };
                 break;
             case self::SEARCH_ID:
@@ -307,12 +313,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
-        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
+    public final function isFilled(ModelPerson $person, $sub, $field, $acYear, $globalMetaData) {
+        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION, $globalMetaData);
         return !($value === null || $value === '');
     }
 
-    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options, $globalMetaData = []) {
         if (!$person) {
             return null;
         }
@@ -340,8 +346,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case 'person_has_flag':
                 return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             case 'person_accommodation':
-                // TODO
                 return null;
+                //return $person->getAccommodationByEventId($globalMetaData['event_id']);
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }

@@ -22,7 +22,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandler extends Object {
@@ -204,6 +204,7 @@ class ExtendedPersonHandler extends Object {
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
+            Debugger::barDump($data);
             $this->service->updateModel($model, $data);
         }
 

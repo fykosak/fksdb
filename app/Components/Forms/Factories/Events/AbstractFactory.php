@@ -11,7 +11,7 @@ use Nette\Forms\IControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractFactory implements IFieldFactory {
@@ -50,7 +50,7 @@ abstract class AbstractFactory implements IFieldFactory {
         }
     }
 
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator, $globalMetaData = []) {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
         }

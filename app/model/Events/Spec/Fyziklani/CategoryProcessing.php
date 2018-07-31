@@ -57,7 +57,7 @@ class CategoryProcessing extends AbstractProcessing {
 
             $studyYearControl = reset($studyYearControl);
             $schoolControl = reset($schoolControl);
-            
+
             $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
             $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
 
@@ -87,8 +87,8 @@ class CategoryProcessing extends AbstractProcessing {
         $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
-        if ($original != $result) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $result), ILogger::INFO);
+        if ($original != $values['team']['category']) {
+            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO);
         }
     }
 
@@ -98,14 +98,14 @@ class CategoryProcessing extends AbstractProcessing {
         $count_3 = 0;
         $abroad = 0;
 
-        foreach ($participants as $participant) {            
+        foreach ($participants as $participant) {
             $country = $this->serviceSchool->getTable()
-                    ->select('address.region.country_iso')
-                    ->where(['school_id' => $participant['school_id']])->fetch();
+                ->select('address.region.country_iso')
+                ->where(['school_id' => $participant['school_id']])->fetch();
             if (!in_array($country->country_iso, array('CZ', 'SK'))) {
                 $abroad += 1;
-            }            
-            
+            }
+
             $studyYear = $participant['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficient_sum += $coefficient;

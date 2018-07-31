@@ -6,7 +6,7 @@ use BasePresenter as CoreBasePresenter;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKS\Components\Forms\Controls\ReferencedIdField;
 use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;
@@ -98,7 +98,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var \SeriesCalculator
      */
     protected $seriesCalculator;
-    
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -292,7 +292,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
-            $referencedId->setDefaultValue(ReferencedId::VALUE_PROMISE);
+            $referencedId->setDefaultValue(ReferencedIdField::VALUE_PROMISE);
         }
     }
 

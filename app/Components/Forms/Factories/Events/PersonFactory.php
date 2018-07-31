@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\HiddenField;
 use Nette\InvalidArgumentException;
 use Nette\Security\User;
 use Persons\SelfResolver;
@@ -93,6 +94,12 @@ class PersonFactory extends AbstractFactory {
         return $components;
     }
 
+    /**
+     * @param HiddenField[] $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $hiddenField = reset($component);
         $default = $field->getValue();
@@ -103,8 +110,7 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-
-        $hiddenField->setDefaultValue($default);
+        $hiddenField->setDefaultValue($default, ['event_id' => $field->getBaseHolder()->getEvent()->event_id]);
     }
 
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
@@ -116,7 +122,7 @@ class PersonFactory extends AbstractFactory {
         return $component;
     }
 
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator, $globalMetaData = []) {
         // check person ID itself
         parent::validate($field, $validator);
 
@@ -135,7 +141,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = array('required' => $metadata);
                 }
-                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear, $globalMetaData)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }
@@ -149,7 +155,7 @@ class PersonFactory extends AbstractFactory {
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {
                 if (!is_array($metadata)) {
-                    $metadata = array('required' => $metadata);
+                    $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
                     $value = $this->evaluator->evaluate($value, $field);

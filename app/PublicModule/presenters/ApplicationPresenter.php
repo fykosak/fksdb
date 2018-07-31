@@ -26,7 +26,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
@@ -44,7 +44,7 @@ class ApplicationPresenter extends BasePresenter {
     private $eventApplication = false;
 
     /**
-     * @var Holder 
+     * @var Holder
      */
     private $holder;
 
@@ -108,7 +108,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedDefault($eventId, $id) {
-        
+
     }
 
     public function authorizedList() {
