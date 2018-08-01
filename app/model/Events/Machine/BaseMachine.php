@@ -8,7 +8,7 @@ use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BaseMachine extends FreezableObject {
@@ -114,7 +114,7 @@ class BaseMachine extends FreezableObject {
             case self::STATE_TERMINATED:
                 return _('zaniklý');
             default:
-                return $this->states[$state];
+                return _($state);
         }
     }
 

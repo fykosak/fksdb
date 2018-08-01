@@ -7,6 +7,7 @@ use FKS\Components\Forms\Containers\IReferencedSetter;
 use FKS\Components\Forms\Containers\IWriteonly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
+use FKS\Components\Forms\Controls\ReferencedIdField;
 use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
@@ -142,7 +143,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
-        $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
+        $hiddenField = new ReferencedIdField($this->servicePerson, $handler, $this);
 
         $container = new ReferencedContainer($hiddenField);
         if ($searchType == self::SEARCH_NONE) {
@@ -209,7 +210,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         );
     }
 
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL, $globalMetaData = []) {
         $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
         $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -324,12 +325,12 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) {
-                    return array('person_info' => array('email' => $term));
+                    return ['person_info' => ['email' => $term]];
                 };
                 break;
             case self::SEARCH_ID:
-                return function ($term) {
-                    return array();
+                return function () {
+                    return [];
                 };
         }
     }

@@ -33,7 +33,7 @@
 
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">                
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
                     {control navigation:navbar}
 
                     {block user-info}
@@ -51,7 +51,7 @@
                                     <li><a n:href=":Authentication:logout">{_'Odhlásit'}</a></li>
                                 </ul>
                             </li>
-                        </ul>                
+                        </ul>
                         {/block}
 
                     </div><!-- /.navbar-collapse -->
@@ -83,14 +83,17 @@
 
             <div id="spinner"></div>
             {block scripts}
-            {control jsLoader 
+            {control jsLoader
         'js/netteForms.js',
         'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
         'js/bootstrap.min.js',
         'js/nette.ajax.js',
         'js/jquery.confirm.js',
-        'js/main.js'
+        'js/main.js',
+         'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/bundle-person-provider.min.js'
             }
 
             {* CSS files are only collected at the end of rendering, so we use this

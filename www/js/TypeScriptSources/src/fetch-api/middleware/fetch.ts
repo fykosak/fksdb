@@ -9,7 +9,8 @@ import {
     IResponse,
 } from './interfaces';
 
-export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
+export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void):
+    Promise<IResponse<D>> {
     const netteJQuery: any = $;
     return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         netteJQuery.nette.ajax({
@@ -27,7 +28,8 @@ export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IRespo
     });
 }
 
-export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
+export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void):
+    Promise<IResponse<D>> {
     return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         $.ajax({
             cache: false,
@@ -49,7 +51,9 @@ export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IRespo
     });
 }
 
-export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
+export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: Dispatch<S>,
+                                                  data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void):
+    Promise<IResponse<D>> {
     dispatch(submitStart(accessKey));
     return netteFetch<F, D>(data, (d: IResponse<D>) => {
             dispatch(submitSuccess<D>(d, accessKey));
@@ -61,7 +65,8 @@ export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: D
         });
 }
 
-export async function dispatchUploadFile<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
+export async function dispatchUploadFile<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>,
+                                                  success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
     dispatch(submitStart(accessKey));
     return uploadFile<F, D>(data, (d: IResponse<D>) => {
             dispatch(submitSuccess<D>(d, accessKey));
