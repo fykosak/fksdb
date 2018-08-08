@@ -20,7 +20,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory extends AbstractFactory {
@@ -84,10 +84,9 @@ class PersonFactory extends AbstractFactory {
         $event = $field->getBaseHolder()->getHolder()->getEvent();
         $acYear = $event->getAcYear();
 
-        $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
-        $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
+        $resolver = new PersonContainerResolver($field, $this->modifiable,$this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $resolver);
         $components[1]->setOption('label', $field->getLabel());
         $components[1]->setOption('description', $field->getDescription());
         return $components;

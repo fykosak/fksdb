@@ -20,6 +20,7 @@ use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
+use Persons\IResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
@@ -28,7 +29,7 @@ use ServiceFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonFactory extends Object implements IReferencedSetter {
@@ -60,7 +61,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @var PersonProvider
      */
     private $personProvider;
-    
+
     /**
      * @var ServiceFlag
      */
@@ -75,16 +76,15 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     /**
-     * 
-     * @param type $fieldsDefinition
-     * @param type $acYear
-     * @param type $searchType
-     * @param type $allowClear
-     * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
-     * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
+     *
+     * @param mixed $fieldsDefinition
+     * @param integer $acYear
+     * @param string $searchType
+     * @param boolean $allowClear
+     * @param IResolver $resolver is person's filled field modifiable?
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear,IResolver $resolver) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
@@ -99,8 +99,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
         $container->setAllowClear($allowClear);
         $container->setOption('acYear', $acYear);
-        $container->setOption('modifiabilityResolver', $modifiabilityResolver);
-        $container->setOption('visibilityResolver', $visibilityResolver);
+        $container->setOption('resolver', $resolver);
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
@@ -158,9 +157,9 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
-        $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
-        $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $container->getOption('visibilityResolver')->isVisible($model) : true;
+        $modifiable = $model ? $container->getOption('resolver')->isModifiable($model) : true;
+        $resolution = $model ? $container->getOption('resolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $container->getOption('resolver')->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
         $force = ($mode == self::MODE_FORCE);
         if ($mode == self::MODE_ROLLBACK) {
