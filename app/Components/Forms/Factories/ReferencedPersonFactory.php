@@ -347,14 +347,21 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             case 'person_accommodation':
                 return null;
-                //return $person->getAccommodationByEventId($globalMetaData['event_id']);
+            //return $person->getAccommodationByEventId($globalMetaData['event_id']);
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
 
-    private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
+    private function createFieldReact($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
+        return ;
 
+    }
+
+    private function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = [], $mode = 'normal') {
+        if ($mode == 'react') {
+            return $this->createFieldReact($sub, $fieldName, $acYear, $hiddenField, $metadata = []);
+        }
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:

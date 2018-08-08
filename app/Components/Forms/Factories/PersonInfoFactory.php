@@ -13,6 +13,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
 use Nette\DateTime;
+use \ReactField;
 
 /**
  * Class PersonHistoryFactory
@@ -20,12 +21,6 @@ use Nette\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonInfoFactory {
-
-
-    function __construct() {
-
-    }
-
 
     private function createBorn() {
         return (new WriteonlyDatePicker(_('Datum narození')))
@@ -160,6 +155,140 @@ class PersonInfoFactory {
                 return $this->createAgreed();
             case    'email':
                 return $this->createEmail();
+            default:
+                throw new InvalidArgumentException();
+        }
+
+    }
+
+    private function createReactBorn() {
+        return new ReactField(true, _('Datum narození'));
+    }
+
+    private function createReactIdNumber() {
+        return new ReactField(true, _('Číslo OP'), _('U cizinců číslo pasu.'));
+        //->addRule(Form::MAX_LENGTH, null, 32);
+    }
+
+    private function createReactBornId() {
+        return new ReactField(true, _('Rodné číslo'), _('U cizinců prázdné.'));
+
+        //->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
+
+    }
+
+
+    private function createReactPhoneParentM() {
+        throw new \Nette\NotImplementedException();
+        // return $this->rawPhone(_('Telefonní číslo (matka)'));
+    }
+
+    private function createReactPhoneParentD() {
+        throw new \Nette\NotImplementedException();
+        // return $this->rawPhone(_('Telefonní číslo (otec)'));
+    }
+
+    private function createReactPhone() {
+        throw new \Nette\NotImplementedException();
+        // return $this->rawPhone(_('Telefonní číslo'));
+    }
+
+    private function createReactIm() {
+        throw new \Nette\NotImplementedException();
+        /*return (new WriteonlyInput(_('ICQ, Jabber, apod.')))
+            ->addRule(Form::MAX_LENGTH, null, 32);*/
+    }
+
+    private function createReactBirthplace() {
+        throw new \Nette\NotImplementedException();
+        /*return (new WriteonlyInput(_('Místo narození')))
+            ->setOption('description', _('Město a okres (kvůli diplomům).'))
+            ->addRule(Form::MAX_LENGTH, null, 255);*/
+    }
+
+    private function createReactUkLogin() {
+        throw new \Nette\NotImplementedException();
+        /*return (new WriteonlyInput(_('Login UK')))
+            ->addRule(Form::MAX_LENGTH, null, 8);*/
+    }
+
+    private function createReactAccount() {
+        throw new \Nette\NotImplementedException();
+        /*return (new WriteonlyInput(_('Číslo bankovního účtu')))
+            ->addRule(Form::MAX_LENGTH, null, 32);*/
+    }
+
+
+    private function createReactCareer() {
+        throw new \Nette\NotImplementedException();
+        /*return (new TextArea(_('Co právě dělá')))
+            ->setOption('description', _('Zobrazeno v seznamu organizátorů'));*/
+    }
+
+    private function createReactHomepage() {
+        throw new \Nette\NotImplementedException();
+        // return (new URLTextBox(_('Homepage')));
+    }
+
+    private function createReactNote() {
+        return new ReactField(false, _('Poznámka'));
+    }
+
+    private function createReactOrigin() {
+        return new ReactField(false, _('Jak jsi se o nás dozvěděl(a)?'));
+    }
+
+    public function createReactAgreed() {
+        throw new \Nette\NotImplementedException();
+        /*$link = Html::el('a');
+        $link->setText(_('Text souhlasu'));
+        $link->addAttributes(['href' => _("http://fykos.cz/doc/souhlas.pdf")]);
+        return (new Checkbox(_('Souhlasím se zpracováním osobních údajů')))
+            ->setOption('description', $link);*/
+    }
+
+    private function createReactEmail() {
+        return new ReactField(false, _('E-mail'));
+    }
+
+    /**
+     * @param string $fieldName
+     * @return ReactField
+     */
+    public function createReactField($fieldName) {
+        switch ($fieldName) {
+            case 'born':
+                return $this->createReactBorn();
+            case   'id_number':
+                return $this->createReactIdNumber();
+            case    'born_id':
+                return $this->createReactBornId();
+            //case    'phone_parent_m':
+            //    return $this->createReactPhoneParentM();
+            //case    'phone_parent_d':
+            //    return $this->createReactPhoneParentD();
+            //case    'phone':
+            //    return $this->createReactPhone();
+            //case    'im':
+            //    return $this->createReactIm();
+            //case    'birthplace':
+            //    return $this->createReactBirthplace();
+            //case   'uk_login':
+            //    return $this->createReactUkLogin();
+            //case    'account':
+            //    return $this->createReactAccount();
+            //case    'career':
+            //    return $this->createReactCareer();
+            //case    'homepage':
+            //    return $this->createReactHomepage();
+            case    'note':
+                return $this->createReactNote();
+            case    'origin':
+                return $this->createReactOrigin();
+            //case    'aggred':
+            //    return $this->createReactAgreed();
+            case    'email':
+                return $this->createReactEmail();
             default:
                 throw new InvalidArgumentException();
         }
