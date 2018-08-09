@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\Components\Forms\Factories\Events\PersonFactory;
+use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
@@ -49,7 +49,6 @@ class MainPersonFactory {
      * @param $acYear
      * @param ReactField $hiddenField
      * @param array $metadata
-     * @param string $mode
      * @return ReactField
      */
     public function createField($sub, $fieldName, $acYear, ReactField $hiddenField, $metadata = []) {
@@ -75,9 +74,8 @@ class MainPersonFactory {
             }
             break;*/
             case 'person_has_flag':
-                $control = $this->personFlagFactory->createReactField($hiddenField, $metadata);
-                return $control;
-
+                $control = $this->personFlagFactory->createReactField();
+                break;
             case 'person_history' :
                 $control = $this->personHistoryFactory->createReactField($fieldName, $acYear);
                 break;

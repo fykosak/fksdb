@@ -37,5 +37,9 @@ class FlagFactory {
         return $control;
     }
 
+    public function createReactField() {
+        return new \ReactField();
+    }
+
 }
 

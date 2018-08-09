@@ -88,4 +88,8 @@ class PersonHistoryFactory {
 
     }
 
+    public function createReactField($fieldName, $acYear) {
+        return new \ReactField();
+    }
+
 }
