@@ -46,7 +46,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         }
 
 
-        $control = $this->personInfoFactory->createAgreed();
+        $control = $this->personInfoFactory->createField('agreed');
         $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);

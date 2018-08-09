@@ -18,8 +18,9 @@ use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
 use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
+use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
-use \ReactField;
+use ReactField;
 
 /**
  * Class PersonHistoryFactory
@@ -28,8 +29,8 @@ use \ReactField;
  */
 class PersonInfoFactory {
     /**
-     * @param string $fieldName
-     * @return \IReactField
+     * @param $fieldName
+     * @return BaseControl | \IReactField
      */
     public function createField($fieldName) {
         switch ($fieldName) {

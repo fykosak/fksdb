@@ -9,7 +9,7 @@ class BornField extends WriteonlyDatePicker implements \IReactField {
 
     public function __construct() {
         parent::__construct(_('Datum narození'));
-        $this->setDefaultDate((new DateTime())->modify('-16 years'));
+        $this->setDefaultDate((new \DateTime())->modify('-16 years'));
     }
 
     public function getReactDefinition(): \ReactField {
