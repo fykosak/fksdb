@@ -12,8 +12,6 @@ use ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\IExtendedPersonPresenter;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -136,12 +134,12 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
-        
+
         $address = $person->getPermanentAddress();
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);
-    }    
+    }
 
     private function createForm($fieldsDefinition, $acYear) {
         $form = new Form();
@@ -150,8 +148,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $searchType = ReferencedPersonFactory::SEARCH_NONE;
         $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+         $resolver = new TestResolver();
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $resolver);
 
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
@@ -168,32 +166,32 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 class PersonPresenter extends Control implements IExtendedPersonPresenter {
 
     public function getModel() {
-        
+
     }
 
     public function messageCreate() {
-        
+
     }
 
     public function messageEdit() {
-        
+
     }
 
     public function messageError() {
-        
+
     }
-    
+
     public function messageExists() {
-        
+
     }
 
     public function flashMessage($message, $type = 'info') {
-        
+
     }
 
 }
 
-class TestResolver implements IVisibilityResolver, IModifialibityResolver {
+class TestResolver implements IResolver {
 
     public function getResolutionMode(ModelPerson $person) {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
