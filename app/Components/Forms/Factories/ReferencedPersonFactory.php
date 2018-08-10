@@ -357,7 +357,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 break;
             case 'person_has_flag':
-                $control = $this->flagFactory->createFlag($hiddenField, $metadata);
+                $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
                 return $control;
             default:
                 switch ($sub) {
