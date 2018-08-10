@@ -22,6 +22,7 @@ class ReactField implements IReactComponent {
     private $value = null;
     private $required = false;
     private $rules = [];
+    private $data = null;
 
     public function __construct($secure = false, $label = null, $description = null) {
         $this->setSecure($secure);
@@ -80,8 +81,12 @@ class ReactField implements IReactComponent {
         $this->required = $required;
     }
 
-    public function addRules($rules = []) {
+    public function setRules($rules = []) {
         $this->rules = $rules;
+    }
+
+    public function setData($data) {
+        $this->data = $data;
     }
 
     public function __toArray() {

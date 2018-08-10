@@ -4,8 +4,10 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
-use Nette\Forms\Controls\RadioList;
-use Nette\Forms\Controls\TextInput;
+use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
+use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
+use FKSDB\Components\Forms\Factories\Person\GenderField;
+use FKSDB\Components\Forms\Factories\Person\OtherNameField;
 use Nette\InvalidArgumentException;
 
 
@@ -29,55 +31,25 @@ class PersonFactory {
     }
 
     /**
-     * @return TextInput
-     */
-    public function createOtherName() {
-        return (new TextInput(_('Jméno')));
-    }
-
-    /**
-     * @return TextInput
-     */
-    public function createFamilyName() {
-        return (new TextInput(_('Příjmení')));
-    }
-
-    /**
-     * @return \Nette\Forms\Controls\BaseControl
-     */
-    public function createDisplayName() {
-        return (new TextInput(_('Zobrazované jméno')))
-            ->setOption('description', _('Pouze pokud je odlišené od "jméno příjmení".'));
-    }
-
-    /**
-     * @return \Nette\Forms\Controls\BaseControl
-     */
-    public function createGender() {
-        return (new RadioList(_('Pohlaví'), ['M' => 'muž', 'F' => 'žena']))
-            ->setDefaultValue('M');
-    }
-
-    /**
      * @param $fieldName
-     * @return \Nette\Forms\Controls\BaseControl|TextInput
+     * @return DisplayNameField|FamilyNameField|GenderField|OtherNameField
      */
     public function createField($fieldName) {
         switch ($fieldName) {
             case 'other_name':
-                return $this->createOtherName();
+                return new OtherNameField();
             case 'family_name':
-                return $this->createFamilyName();
+                return new FamilyNameField();
             case 'display_name':
-                return $this->createDisplayName();
+                return new DisplayNameField();
             case 'gender':
-                return $this->createGender();
+                return new GenderField();
             default:
                 throw new InvalidArgumentException();
         }
     }
 
     public function createReactField($fieldName) {
-        return new \ReactField();
+        return $this->createField($fieldName)->getReactDefinition();
     }
 }

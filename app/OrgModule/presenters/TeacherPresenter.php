@@ -2,6 +2,7 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
@@ -28,6 +29,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      */
     private $schoolFactory;
 
+    /**
+     * @var SchoolProvider
+     */
+    private $schoolProvider;
+
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
     }
@@ -38,6 +44,10 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
+    }
+
+    function injectSchoolProvider(SchoolProvider $schoolProvider) {
+        $this->schoolProvider = $schoolProvider;
     }
 
     public function titleEdit() {
@@ -64,6 +74,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     protected function appendExtendedContainer(Form $form) {
         $container = $this->teacherFactory->createTeacher();
+
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
 
