@@ -98,7 +98,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var \SeriesCalculator
      */
     protected $seriesCalculator;
-    
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -305,7 +305,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentContestantForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
