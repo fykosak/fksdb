@@ -8,6 +8,7 @@ use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
 use FKS\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FormUtils;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
@@ -17,7 +18,7 @@ use ServicePersonInfo;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editations).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
@@ -45,7 +46,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         }
 
 
-        $control = $this->personFactory->createAgreed();
+        $control = new AgreedField();
         $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);
@@ -66,7 +67,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
                     $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                     if ($personInfo) {
                         $this->servicePersonInfo->updateModel($personInfo, array('agreed' => 1));
-			// This is done in ApplicationHandler transaction, still can be rolled back.
+                        // This is done in ApplicationHandler transaction, still can be rolled back.
                         $this->servicePersonInfo->save($personInfo);
                         $values[$key . '_1']['person_info']['agreed'] = 1;
                     }

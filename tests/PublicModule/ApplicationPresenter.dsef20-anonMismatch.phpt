@@ -50,7 +50,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         Assert::type('Nette\Templating\ITemplate', $source);
 
         $html = (string) $source;
-        Assert::contains('<div id="frmform-participant-person_id_1-person_info-born-pair" class="form-group has-error">', $html);
+        Assert::contains('<div id="frmform-participant-person_id_1-person_info-born-pair" class="form-group has-error', $html);
 
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal(null, $info->id_number); // shouldn't be rewritten

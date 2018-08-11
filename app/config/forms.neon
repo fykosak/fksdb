@@ -8,6 +8,8 @@ services:
     LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
     OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
+    PersonInfoFactory:  FKSDB\Components\Forms\Factories\PersonInfoFactory
+    PersonHistoryFactory: FKSDB\Components\Forms\Factories\PersonHistoryFactory
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
     FyziklaniFactory: FKSDB\Components\Forms\Factories\FyziklaniFactory
     TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
