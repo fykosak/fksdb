@@ -11,7 +11,7 @@ class BornIdField extends WriteonlyInput {
     public function __construct() {
         parent::__construct(_('Rodné číslo'));
         $this->setOption('description', _('U cizinců prázdné.'));
-        $this->addCondition(Form::FILLED);
-        $this->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
+        $this->addCondition(Form::FILLED)
+            ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
     }
 }
