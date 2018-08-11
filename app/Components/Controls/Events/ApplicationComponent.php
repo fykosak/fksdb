@@ -16,7 +16,7 @@ use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationComponent extends Control {
@@ -116,7 +116,6 @@ class ApplicationComponent extends Control {
 
     protected function createComponentForm($name) {
         $result = new FormControl();
-        $result->setGroupMode(FormControl::GROUP_CONTAINER);
         $form = $result['form'];
 
         /*

@@ -72,7 +72,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private function createComponentFormControl($create) {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);

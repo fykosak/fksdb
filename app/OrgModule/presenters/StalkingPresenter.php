@@ -101,7 +101,7 @@ class StalkingPresenter extends BasePresenter {
         $component = new EventParticipant($this->getPerson());
         return $component;
     }
-    
+
     public function createComponentEventTeacher() {
         $component = new EventTeacher($this->getPerson());
         return $component;
@@ -136,7 +136,7 @@ class StalkingPresenter extends BasePresenter {
         $component = new Role($this->getPerson());
         return $component;
     }
-    
+
     public function createComponentFlag() {
         $component = new Flag($this->getPerson());
         return $component;
@@ -145,7 +145,6 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentFormSearch() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
