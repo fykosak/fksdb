@@ -216,7 +216,7 @@ class PersonFactory {
     }
 
     public function createBornId() {
-        new BornIdField();
+        return new BornIdField();
     }
 
 
@@ -270,7 +270,7 @@ class PersonFactory {
     }
 
     public function createEmail() {
-        new EmailField();
+        return new EmailField();
     }
 
     /*
