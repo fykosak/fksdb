@@ -4,28 +4,34 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKS\Components\Forms\Controls\URLTextBox;
-use FKS\Components\Forms\Controls\WriteonlyDatePicker;
-use FKS\Components\Forms\Controls\WriteonlyInput;
 use FKS\Localization\GettextTranslator;
-use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Containers\PersonInfoContainer;
-use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
+use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
+use FKSDB\Components\Forms\Factories\Person\GenderField;
+use FKSDB\Components\Forms\Factories\Person\OtherNameField;
+use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
+use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
+use FKSDB\Components\Forms\Factories\PersonInfo\AccountField;
+use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
+use FKSDB\Components\Forms\Factories\PersonInfo\BirthplaceField;
+use FKSDB\Components\Forms\Factories\PersonInfo\BornField;
+use FKSDB\Components\Forms\Factories\PersonInfo\BornIdField;
+use FKSDB\Components\Forms\Factories\PersonInfo\CareerField;
+use FKSDB\Components\Forms\Factories\PersonInfo\EmailField;
+use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
+use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
+use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
+use FKSDB\Components\Forms\Factories\PersonInfo\NoteField;
+use FKSDB\Components\Forms\Factories\PersonInfo\OriginField;
+use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
+use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
+use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
+use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use ModelPerson;
-use Nette\Forms\Container;
-use Nette\Forms\ControlGroup;
-use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\HiddenField;
-use Nette\Forms\Controls\RadioList;
-use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\TextArea;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
-use Nette\Utils\Html;
-use Nette\DateTime;
 use Persons\ReferencedPersonHandler;
 use ServicePerson;
 use YearCalculator;
@@ -95,7 +101,7 @@ class PersonFactory {
      * @var AddressFactory
      */
     private $addressFactory;
-    
+
     /**
      * @var FlagFactory
      */
@@ -130,9 +136,9 @@ class PersonFactory {
 
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
         if (in_array($sub, array(
-                    ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-                    ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-                ))) {
+            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
+            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
+        ))) {
             if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
                 if ($required) {
@@ -145,8 +151,7 @@ class PersonFactory {
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
-        }
-        else if ($sub == 'person_has_flag') {
+        } else if ($sub == 'person_has_flag') {
             $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
             return $control;
         } else {
@@ -182,159 +187,106 @@ class PersonFactory {
      * Person
      */
 
-    public function createOtherName($acYear = null) {
-        return (new TextInput(_('Jméno')));
+    public function createOtherName() {
+        return new OtherNameField();
     }
 
-    public function createFamilyName($acYear = null) {
-        return (new TextInput(_('Příjmení')));
+    public function createFamilyName() {
+        return new FamilyNameField();
     }
 
-    public function createDisplayName($acYear = null) {
-        return (new TextInput(_('Zobrazované jméno')))
-                        ->setOption('description', _('Pouze pokud je odlišené od "jméno příjmení".'));
+    public function createDisplayName() {
+        return new DisplayNameField();
     }
 
-    public function createGender($acYear = null) {
-        return (new RadioList(_('Pohlaví'), array('M' => 'muž', 'F' => 'žena')))
-                        ->setDefaultValue('M');
+    public function createGender() {
+        return new GenderField();
     }
 
     /*
      * Person info
      */
 
-    public function createBorn($acYear = null) {
-        return (new WriteonlyDatePicker(_('Datum narození')))
-                ->setDefaultDate((new DateTime())->modify('-16 years'));
+    public function createBorn() {
+        return new BornField();
     }
 
-    public function createIdNumber($acYear = null) {
-        return (new WriteonlyInput(_('Číslo OP')))
-                        ->setOption('description', _('U cizinců číslo pasu.'))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+    public function createIdNumber() {
+        return new IdNumberField();
     }
 
-    public function createBornId($acYear = null) {
-        $control = new WriteonlyInput(_('Rodné číslo'));
-        $control->setOption('description', _('U cizinců prázdné.'))
-                ->addCondition(Form::FILLED)
-                ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
-        return $control;
+    public function createBornId() {
+        new BornIdField();
     }
 
-   
-    
-    public function createPhoneParentM($acYear = null) {
-        return $this->rawPhone(_('Telefonní číslo (matka)'), $acYear);
-    }
-    
-    public function createPhoneParentD($acYear = null) {
-        return $this->rawPhone(_('Telefonní číslo (otec)'), $acYear);
-    }
-    
-    public function createPhone($acYear = null) {
-        return $this->rawPhone(_('Telefonní číslo'), $acYear);
+
+    public function createPhoneParentM() {
+        return new PhoneParentMField();
     }
 
-    public function createIm($acYear = null) {
-        return (new WriteonlyInput(_('ICQ, Jabber, apod.')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+    public function createPhoneParentD() {
+        return new PhoneParentDField();
     }
 
-    public function createBirthplace($acYear = null) {
-        return (new WriteonlyInput(_('Místo narození')))
-                        ->setOption('description', _('Město a okres (kvůli diplomům).'))
-                        ->addRule(Form::MAX_LENGTH, null, 255);
+    public function createPhone() {
+        return new PhoneField();
     }
 
-    public function createUkLogin($acYear = null) {
-        return (new WriteonlyInput(_('Login UK')))
-                        ->addRule(Form::MAX_LENGTH, null, 8);
+    public function createIm() {
+        return new ImField();
     }
 
-    public function createAccount($acYear = null) {
-        return (new WriteonlyInput(_('Číslo bankovního účtu')))
-                        ->addRule(Form::MAX_LENGTH, null, 32);
+    public function createBirthplace() {
+        return new BirthplaceField();
     }
 
-   
-
-    public function createCareer($acYear = null) {
-        return (new TextArea(_('Co právě dělá')))
-                        ->setOption('description', _('Zobrazeno v seznamu organizátorů'));
+    public function createUkLogin() {
+        return new UkLoginField();
     }
 
-    public function createHomepage($acYear = null) {
-        return (new URLTextBox(_('Homepage')));
+    public function createAccount() {
+        return new AccountField();
     }
 
-    public function createNote($acYear = null) {
-        return (new TextArea(_('Poznámka')));
+
+    public function createCareer() {
+        return new CareerField();
     }
 
-    public function createOrigin($acYear = null) {
-        return (new TextArea(_('Jak jsi se o nás dozvěděl(a)?')));
+    public function createHomepage() {
+        return new HomepageField();
     }
 
-    public function createAgreed($acYear = null) {
-        $link = Html::el('a');
-        $link->setText(_('Text souhlasu'));
-        $link->href = _("http://fykos.cz/doc/souhlas.pdf");
-
-        return (new Checkbox(_('Souhlasím se zpracováním osobních údajů')))
-                        ->setOption('description', $link);
+    public function createNote() {
+        return new NoteField();
     }
 
-    public function createEmail($acYear = null) {
-        $control = new TextInput(_('E-mail'));
-        $control->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-        return $control;
+    public function createOrigin() {
+        return new OriginField();
     }
 
-    private function rawPhone($label, $acYear = null) {
-        $control = new WriteonlyInput($label);
-        $control->setAttribute("placeholder", 've tvaru +420123456789');
-        $control->addRule(Form::MAX_LENGTH, null, 32)
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím +421 nebo +420.'),'/\+42[01]\d{9}/');
-	return $control;
+    public function createAgreed() {
+        return new AgreedField();
+    }
+
+    public function createEmail() {
+        new EmailField();
     }
 
     /*
-     * Person history
-     */
+    * Person history
+    */
 
     public function createStudyYear($acYear) {
-        $studyYear = new SelectBox(_('Ročník'));
-
-        $hsYears = array();
-        foreach (range(1, 4) as $study_year) {
-            $hsYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $this->yearCalculator->getGraduationYear($study_year, $acYear));
-        }
-
-        $primaryYears = array();
-        foreach (range(6, 9) as $study_year) {
-            $primaryYears[$study_year] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'), $study_year, $this->yearCalculator->getGraduationYear($study_year, $acYear));
-        }
-
-        $studyYear->setItems(array(
-                    _('střední škola') => $hsYears,
-                    _('základní škola nebo víceleté gymnázium') => $primaryYears,
-                ))->setOption('description', _('Kvůli zařazení do kategorie.'))
-                ->setPrompt(_('Zvolit ročník'));
-
-        return $studyYear;
+        return new StudyYearField($this->yearCalculator, $acYear);
     }
 
-    public function createSchoolId($acYear = null) {
+    public function createSchoolId() {
         return $this->factorySchool->createSchoolSelect(SchoolFactory::SHOW_UNKNOWN_SCHOOL_HINT);
     }
 
-    public function createClass($acYear = null) {
-        return (new TextInput(_('Třída')))
-                        ->addRule(Form::MAX_LENGTH, null, 16);
+    public function createClass() {
+        return new ClassField();
     }
 
 }
