@@ -113,7 +113,16 @@ class PersonFactory {
      */
     private $yearCalculator;
 
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, YearCalculator $yearCalculator) {
+    /**
+     * @var PersonHistoryFactory
+     */
+    private $personHistoryFactory;
+    /**
+     * @var PersonInfoFactory
+     */
+    private $personInfoFactory;
+
+    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, YearCalculator $yearCalculator, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->translator = $translator;
         $this->uniqueEmailFactory = $uniqueEmailFactory;
         $this->factorySchool = $factorySchool;
@@ -121,6 +130,8 @@ class PersonFactory {
         $this->addressFactory = $addressFactory;
         $this->flagFactory = $flagFactory;
         $this->yearCalculator = $yearCalculator;
+        $this->personHistoryFactory = $personHistoryFactory;
+        $this->personInfoFactory = $personInfoFactory;
     }
 
     public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
@@ -155,8 +166,19 @@ class PersonFactory {
             $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
             return $control;
         } else {
-            $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
-            $control = call_user_func(array($this, $methodName), $acYear);
+            $control = null;
+            switch ($sub) {
+                case 'person_info':
+                    $control = $this->personInfoFactory->createField($fieldName);
+                    break;
+                case 'person_history':
+                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                    break;
+                default:
+                    $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
+                    $control = call_user_func(array($this, $methodName), $acYear);
+            }
+
 
             if (Arrays::get($metadata, 'required', false)) {
                 $conditioned = $control;
