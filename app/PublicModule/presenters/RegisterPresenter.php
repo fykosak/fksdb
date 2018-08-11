@@ -98,7 +98,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var \SeriesCalculator
      */
     protected $seriesCalculator;
-    
+
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -331,17 +331,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
         $submit = $form->addSubmit('register', _('Registrovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that, $handler) {
+        $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($result = $handler->handleForm($form, $that)) { // intentionally =
+            if ($result = $handler->handleForm($form, $this)) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.
                  * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
                  */
-                if (!$that->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
+                if (!$this->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
                     $login = $handler->getPerson()->getLogin();
-                    $that->getUser()->login($login);
+                    $this->getUser()->login($login);
                 }
                 $this->redirect(':Dashboard:default');
             }

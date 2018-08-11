@@ -101,7 +101,7 @@ class StalkingPresenter extends BasePresenter {
         $component = new EventParticipant($this->getPerson());
         return $component;
     }
-    
+
     public function createComponentEventTeacher() {
         $component = new EventTeacher($this->getPerson());
         return $component;
@@ -136,7 +136,7 @@ class StalkingPresenter extends BasePresenter {
         $component = new Role($this->getPerson());
         return $component;
     }
-    
+
     public function createComponentFlag() {
         $component = new Flag($this->getPerson());
         return $component;
@@ -163,8 +163,7 @@ class StalkingPresenter extends BasePresenter {
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that) {
+        $submit->onClick[] = function (SubmitButton $button) {
             $form = $button->getForm();
             $values = $form->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
