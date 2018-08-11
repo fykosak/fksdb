@@ -48,8 +48,4 @@ class PersonFactory {
                 throw new InvalidArgumentException();
         }
     }
-
-    public function createReactField($fieldName) {
-        return $this->createField($fieldName)->getReactDefinition();
-    }
 }

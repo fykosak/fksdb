@@ -9,7 +9,7 @@ class EmailField extends TextInput {
 
     public function __construct() {
         parent::__construct(_('E-mail'));
-        $this->addCondition(Form::FILLED);
-        $this->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+        $this->addCondition(Form::FILLED)
+            ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
     }
 }
