@@ -4,20 +4,11 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKS\Localization\GettextTranslator;
 use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
 use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;
 use FKSDB\Components\Forms\Factories\Person\OtherNameField;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\HiddenField;
-use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\Utils\Arrays;
-use Persons\ReferencedPersonHandler;
-use ServicePerson;
-use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -59,64 +50,6 @@ class PersonFactory {
     const EL_CREATE_LOGIN = 'createLogin';
     const EL_CREATE_LOGIN_LANG = 'lang';
 
-    /**
-     *
-     * @var GettextTranslator
-     */
-    private $translator;
-
-    /**
-     * @var UniqueEmailFactory
-     */
-    private $uniqueEmailFactory;
-
-    /**
-     * @var SchoolFactory
-     */
-    private $factorySchool;
-
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
-
-    /**
-     * @var AddressFactory
-     */
-    private $addressFactory;
-
-    /**
-     * @var FlagFactory
-     */
-    private $flagFactory;
-
-    /**
-     *
-     * @var YearCalculator
-     */
-    private $yearCalculator;
-
-    /**
-     * @var PersonHistoryFactory
-     */
-    private $personHistoryFactory;
-    /**
-     * @var PersonInfoFactory
-     */
-    private $personInfoFactory;
-
-    function __construct(GettextTranslator $translator, UniqueEmailFactory $uniqueEmailFactory, SchoolFactory $factorySchool, ServicePerson $servicePerson, AddressFactory $addressFactory, FlagFactory $flagFactory, YearCalculator $yearCalculator, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
-        $this->translator = $translator;
-        $this->uniqueEmailFactory = $uniqueEmailFactory;
-        $this->factorySchool = $factorySchool;
-        $this->servicePerson = $servicePerson;
-        $this->addressFactory = $addressFactory;
-        $this->flagFactory = $flagFactory;
-        $this->yearCalculator = $yearCalculator;
-        $this->personHistoryFactory = $personHistoryFactory;
-        $this->personInfoFactory = $personInfoFactory;
-    }
-
     public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
@@ -128,96 +61,23 @@ class PersonFactory {
         return $select;
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
-        if (in_array($sub, array(
-            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ))) {
-            if ($fieldName == 'address') {
-                $required = Arrays::get($metadata, 'required', false);
-                if ($required) {
-                    $options = AddressFactory::REQUIRED;
-                } else {
-                    $options = 0;
-                }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
-                return $container;
-            } else {
-                throw new InvalidArgumentException("Only 'address' field is supported.");
-            }
-        } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
-            return $control;
-        } else {
-            $control = null;
-            switch ($sub) {
-                case 'person_info':
-                    $control = $this->personInfoFactory->createField($fieldName);
-                    break;
-                case 'person_history':
-                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
-                    break;
-                default:
-                    $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
-                    $control = call_user_func(array($this, $methodName), $acYear);
-            }
-            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
-
-            return $control;
-        }
-    }
-
-    private function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
-        foreach ($metadata as $key => $value) {
-            switch ($key) {
-                case 'required':
-                    if ($value) {
-                        $conditioned = $control;
-                        if ($hiddenField) {
-                            $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
-                        }
-                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
-                        } else {
-                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
-                        }
-                    }
-                    break;
-                case 'caption':
-                    if ($value) {
-                        $control->caption = $value;
-                    }
-                    break;
-                case 'description':
-                    if ($value) {
-                        $control->setOption('description', $value);
-                    }
-            }
-        }
-    }
-
-    /*     * ******************************
-     * Single field factories
-     * ****************************** */
-
-    /*
-     * Person
+    /**
+     * @param $fieldName
+     * @return DisplayNameField|FamilyNameField|GenderField|OtherNameField
      */
-
-    public function createOtherName() {
-        return new OtherNameField();
-    }
-
-    public function createFamilyName() {
-        return new FamilyNameField();
-    }
-
-    public function createDisplayName() {
-        return new DisplayNameField();
-    }
-
-    public function createGender() {
-        return new GenderField();
+    public function createField($fieldName) {
+        switch ($fieldName) {
+            case 'other_name':
+                return new OtherNameField();
+            case 'family_name':
+                return new FamilyNameField();
+            case 'display_name':
+                return new DisplayNameField();
+            case 'gender':
+                return new GenderField();
+            default:
+                throw new InvalidArgumentException();
+        }
     }
 }
 

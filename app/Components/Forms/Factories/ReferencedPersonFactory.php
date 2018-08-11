@@ -9,26 +9,26 @@ use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
-use ModelPostContact;
-use Nette\DeprecatedException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
+use Nette\Utils\Arrays;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
-use ServicePerson;
 use ServiceFlag;
+use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonFactory extends Object implements IReferencedSetter {
@@ -52,6 +52,16 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     private $personFactory;
 
     /**
+     * @var PersonHistoryFactory
+     */
+    private $personHistoryFactory;
+    /**
+     * @var PersonInfoFactory
+     */
+    private $personInfoFactory;
+
+
+    /**
      * @var ReferencedPersonHandlerFactory
      */
     private $referencedPersonHandlerFactory;
@@ -60,26 +70,34 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @var PersonProvider
      */
     private $personProvider;
-    
+
     /**
      * @var ServiceFlag
      */
     private $serviceFlag;
 
-    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
+    /**
+     * @var FlagFactory
+     */
+    private $flagFactory;
+
+    function __construct(FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
         $this->serviceFlag = $serviceFlag;
+        $this->personHistoryFactory = $personHistoryFactory;
+        $this->personInfoFactory = $personInfoFactory;
+        $this->flagFactory = $flagFactory;
     }
 
     /**
-     * 
-     * @param type $fieldsDefinition
-     * @param type $acYear
-     * @param type $searchType
-     * @param type $allowClear
+     *
+     * @param array $fieldsDefinition
+     * @param integer $acYear
+     * @param string $searchType
+     * @param boolean $allowClear
      * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
@@ -122,27 +140,27 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                         'required' => $metadata,
                     );
                 }
-                $control = $this->personFactory->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function() use($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
-                                        $personId = $hiddenField->getValue(false);
-                                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
-                                    })
-                            ->addRule(function(BaseControl $control) use($fullFieldName, $hiddenField, $handler) {
-                                        $personId = $hiddenField->getValue(false);
+                    $control->addCondition(function () use ($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
+                        $personId = $hiddenField->getValue(false);
+                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
+                    })
+                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler) {
+                            $personId = $hiddenField->getValue(false);
 
-                                        $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
-                                        if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                            $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
-                                            return false;
-                                        }
-                                        return true;
-                                    }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                            $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
+                            if ($foundPerson && $foundPerson->getPrimary() != $personId) {
+                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                return false;
+                            }
+                            return true;
+                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
                 }
 
                 $subcontainer->addComponent($control, $fieldName);
@@ -155,6 +173,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             $container,
         );
     }
+
 
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
@@ -215,6 +234,77 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+        if (in_array($sub, array(
+            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
+            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
+        ))) {
+            if ($fieldName == 'address') {
+                $required = Arrays::get($metadata, 'required', false);
+                if ($required) {
+                    $options = AddressFactory::REQUIRED;
+                } else {
+                    $options = 0;
+                }
+                $container = $this->addressFactory->createAddress($options, $hiddenField);
+                return $container;
+            } else {
+                throw new InvalidArgumentException("Only 'address' field is supported.");
+            }
+        } else if ($sub == 'person_has_flag') {
+            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+            return $control;
+        } else {
+            $control = null;
+            switch ($sub) {
+                case 'person_info':
+                    $control = $this->personInfoFactory->createField($fieldName);
+                    break;
+                case 'person_history':
+                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                    break;
+                case 'person':
+                    $this->personFactory->createField($fieldName);
+                    break;
+                default:
+                    throw new InvalidArgumentException();
+
+            }
+            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
+
+            return $control;
+        }
+    }
+
+    private function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+        foreach ($metadata as $key => $value) {
+            switch ($key) {
+                case 'required':
+                    if ($value) {
+                        $conditioned = $control;
+                        if ($hiddenField) {
+                            $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+                        }
+                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                        } else {
+                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                        }
+                    }
+                    break;
+                case 'caption':
+                    if ($value) {
+                        $control->caption = $value;
+                    }
+                    break;
+                case 'description':
+                    if ($value) {
+                        $control->setOption('description', $value);
+                    }
+            }
+        }
+    }
+
     private function setWriteonly($component, $value) {
         if ($component instanceof IWriteonly) {
             $component->setWriteonly($value);
@@ -242,7 +332,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
-                        ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+                    ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
                 break;
             case self::SEARCH_ID:
@@ -255,29 +345,29 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function($term) use($service) {
-                            return $service->findByEmail($term);
-                        };
+                return function ($term) use ($service) {
+                    return $service->findByEmail($term);
+                };
 
                 break;
             case self::SEARCH_ID:
-                return function($term) use($service) {
-                            return $service->findByPrimary($term);
-                        };
+                return function ($term) use ($service) {
+                    return $service->findByPrimary($term);
+                };
         }
     }
 
     private function createTermToValuesCallback($searchType) {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function($term) {
-                            return array('person_info' => array('email' => $term));
-                        };
+                return function ($term) {
+                    return array('person_info' => array('email' => $term));
+                };
                 break;
             case self::SEARCH_ID:
-                return function($term) {
-                            return array();
-                        };
+                return function ($term) {
+                    return array();
+                };
         }
     }
 
@@ -301,7 +391,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, (bool) ($options & self::EXTRAPOLATE))) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear, (bool)($options & self::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
                 return $person->getDeliveryAddress();
                 break;
@@ -312,7 +402,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 return $person->getPermanentAddress(true);
                 break;
             case 'person_has_flag':
-                return ($flag = $person->getMPersonHasFlag($field)) ? (bool) $flag['value'] : null;
+                return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
