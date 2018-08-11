@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;
 use FKSDB\Components\Forms\Factories\Person\OtherNameField;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -160,33 +161,38 @@ class PersonFactory {
                     $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
                     $control = call_user_func(array($this, $methodName), $acYear);
             }
-            foreach ($metadata as $key => $value) {
-                switch ($key) {
-                    case 'required':
-                        if ($value) {
-                            $conditioned = $control;
-                            if ($hiddenField) {
-                                $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
-                            }
-                            if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                                $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
-                            } else {
-                                $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
-                            }
-                        }
-                        break;
-                    case 'caption':
-                        if ($value) {
-                            $control->caption = $value;
-                        }
-                        break;
-                    case 'description':
-                        if ($value) {
-                            $control->setOption('description', $value);
-                        }
-                }
-            }
+            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
+
             return $control;
+        }
+    }
+
+    private function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+        foreach ($metadata as $key => $value) {
+            switch ($key) {
+                case 'required':
+                    if ($value) {
+                        $conditioned = $control;
+                        if ($hiddenField) {
+                            $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+                        }
+                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                        } else {
+                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                        }
+                    }
+                    break;
+                case 'caption':
+                    if ($value) {
+                        $control->caption = $value;
+                    }
+                    break;
+                case 'description':
+                    if ($value) {
+                        $control->setOption('description', $value);
+                    }
+            }
         }
     }
 
