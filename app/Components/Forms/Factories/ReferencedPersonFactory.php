@@ -269,7 +269,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     $control = $this->personHistoryFactory->createField($fieldName, $acYear);
                     break;
                 case 'person':
-                    $this->personFactory->createField($fieldName);
+                    $control = $this->personFactory->createField($fieldName);
                     break;
                 default:
                     throw new InvalidArgumentException();
