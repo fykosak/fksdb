@@ -9,24 +9,6 @@ use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
 use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;
 use FKSDB\Components\Forms\Factories\Person\OtherNameField;
-use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
-use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
-use FKSDB\Components\Forms\Factories\PersonInfo\AccountField;
-use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
-use FKSDB\Components\Forms\Factories\PersonInfo\BirthplaceField;
-use FKSDB\Components\Forms\Factories\PersonInfo\BornField;
-use FKSDB\Components\Forms\Factories\PersonInfo\BornIdField;
-use FKSDB\Components\Forms\Factories\PersonInfo\CareerField;
-use FKSDB\Components\Forms\Factories\PersonInfo\EmailField;
-use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
-use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
-use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
-use FKSDB\Components\Forms\Factories\PersonInfo\NoteField;
-use FKSDB\Components\Forms\Factories\PersonInfo\OriginField;
-use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
-use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
-use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
-use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -178,24 +160,31 @@ class PersonFactory {
                     $methodName = 'create' . str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)));
                     $control = call_user_func(array($this, $methodName), $acYear);
             }
-
-
-            if (Arrays::get($metadata, 'required', false)) {
-                $conditioned = $control;
-                if ($hiddenField) {
-                    $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+            foreach ($metadata as $key => $value) {
+                switch ($key) {
+                    case 'required':
+                        if ($value) {
+                            $conditioned = $control;
+                            if ($hiddenField) {
+                                $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+                            }
+                            if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                                $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                            } else {
+                                $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                            }
+                        }
+                        break;
+                    case 'caption':
+                        if ($value) {
+                            $control->caption = $value;
+                        }
+                        break;
+                    case 'description':
+                        if ($value) {
+                            $control->setOption('description', $value);
+                        }
                 }
-                if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                    $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
-                } else {
-                    $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
-                }
-            }
-            if ($caption = Arrays::get($metadata, 'caption', null)) { // intentionally =
-                $control->caption = $caption;
-            }
-            if ($description = Arrays::get($metadata, 'description', null)) { // intentionally =
-                $control->setOption('description', $description);
             }
             return $control;
         }
