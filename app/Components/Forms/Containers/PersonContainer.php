@@ -17,7 +17,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonContainer extends Container {
@@ -181,16 +181,15 @@ class PersonContainer extends Container {
         if (!$personId) {
             return;
         }
-        $that = $this;
         $values = $this->getValues();
-        $promise = new Promise(function() use($form, $that, $personId, $values) {
+        $promise = new Promise(function() use($form,$personId, $values) {
                     if ($personId === PersonId::VALUE_PROMISE) {
                         try {
-                            $person = $this->handler->createFromValues($values, $that->acYear, $that->getCreateResolution());
+                            $person = $this->handler->createFromValues($values, $this->acYear, $this->getCreateResolution());
                             return $person;
                         } catch (ResolutionException $e) {
                             $form->addError(_('Data se neshodují s evidovanou osobou. Byla doplněna evidovaná data.')); //TODO should contain GUI name of the container
-                            $that->personId->setValue($e->getPerson());
+                            $this->personId->setValue($e->getPerson());
                             throw $e;
                         }
                     } else if ($personId) {
@@ -208,37 +207,34 @@ class PersonContainer extends Container {
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate[] = function(Form $form) use($that) {
-                        $that->createOrUpdatePerson($form);
+            $obj->onValidate[] = function(Form $form) {
+                        $this->createOrUpdatePerson($form);
                     };
             $this->attachedOnValidate = true;
         }
     }
 
     private function createClearButton() {
-        $that = $this;
         $this->addSubmit(self::SUBMIT_CLEAR, 'X')
                         ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->personId->setValue(null);
+                ->onClick[] = function(SubmitButton $submit) {
+                    $this->personId->setValue(null);
                 };
     }
 
     private function createSearchButton() {
-        $that = $this;
         $this->addSubmit(self::SUBMIT_SEARCH, 'Najít')
                         ->setValidationScope(false)
-                ->onClick[] = function(SubmitButton $submit) use($that) {
-                    $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
-                    $person = $that->findPerson($term);
+                ->onClick[] = function(SubmitButton $submit) {
+                    $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
+                    $person = $this->findPerson($term);
                     $values = array();
                     if (!$person) {
                         $person = PersonId::VALUE_PROMISE;
-                        $values = $that->getPersonSearchData($term);
+                        $values = $this->getPersonSearchData($term);
                     }
-                    $that->personId->setValue($person);
-                    $that->setValues($values);
+                    $this->personId->setValue($person);
+                    $this->setValues($values);
                 };
     }
 

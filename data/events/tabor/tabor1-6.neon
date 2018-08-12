@@ -5,10 +5,13 @@ parameters:
             requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
             person:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_info:
-                    email: true
+                    email:
+                        required: true
                     born:
                         required: %events.tabor.requiredCond%
                     born_id:
@@ -18,8 +21,10 @@ parameters:
                     phone:
                         required: %events.tabor.requiredCond%
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-                    phone_parent_m: false
-                    phone_parent_d: false
+                    phone_parent_m:
+                        required: false
+                    phone_parent_d:
+                        required: false
                 post_contact_p:
                     address: %events.tabor.requiredCond%
                 person_history:

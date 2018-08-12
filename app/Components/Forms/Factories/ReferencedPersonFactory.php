@@ -98,7 +98,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     /**
-     *
      * @param array $fieldsDefinition
      * @param integer $acYear
      * @param string $searchType
@@ -141,9 +140,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($fields as $fieldName => $metadata) {
                 if (is_scalar($metadata)) {
-                    $metadata = array(
-                        'required' => $metadata,
-                    );
+                    // old compatibility
+                    throw new \InvalidArgumentException('Metadata must be a vector');
                 }
                 $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";

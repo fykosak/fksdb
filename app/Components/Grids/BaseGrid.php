@@ -80,13 +80,13 @@ abstract class BaseGrid extends Grid {
         $form->setMethod(Form::GET);
         $form->addText('term')->setDefaultValue($this->searchTerm);
 
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
+
+        $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
-            $that->searchTerm = $values['term'];
-            $that->dataSource->applyFilter($values['term']);
+            $this->searchTerm = $values['term'];
+            $this->dataSource->applyFilter($values['term']);
             // TODO is this vv needed? vv
-            $count = $that->dataSource->getCount();
+            $count = $this->dataSource->getCount();
             $this->getPaginator()->itemCount = $count;
         };
         return $form;
