@@ -9,8 +9,6 @@ use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
-use ModelPostContact;
-use Nette\DeprecatedException;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -28,7 +26,7 @@ use ServiceFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonFactory extends Object implements IReferencedSetter {
@@ -60,7 +58,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @var PersonProvider
      */
     private $personProvider;
-    
+
     /**
      * @var ServiceFlag
      */
@@ -75,7 +73,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     }
 
     /**
-     * 
+     *
      * @param type $fieldsDefinition
      * @param type $acYear
      * @param type $searchType
@@ -118,9 +116,8 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
 
             foreach ($fields as $fieldName => $metadata) {
                 if (is_scalar($metadata)) {
-                    $metadata = array(
-                        'required' => $metadata,
-                    );
+                    // old compatibility
+                    throw new \InvalidArgumentException('Metadata must be a vector');
                 }
                 $control = $this->personFactory->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
@@ -129,20 +126,20 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function() use($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
-                                        $personId = $hiddenField->getValue(false);
-                                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
-                                    })
-                            ->addRule(function(BaseControl $control) use($fullFieldName, $hiddenField, $handler) {
-                                        $personId = $hiddenField->getValue(false);
+                    $control->addCondition(function () use ($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
+                        $personId = $hiddenField->getValue(false);
+                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
+                    })
+                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler) {
+                            $personId = $hiddenField->getValue(false);
 
-                                        $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
-                                        if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                            $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
-                                            return false;
-                                        }
-                                        return true;
-                                    }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                            $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
+                            if ($foundPerson && $foundPerson->getPrimary() != $personId) {
+                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                return false;
+                            }
+                            return true;
+                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
                 }
 
                 $subcontainer->addComponent($control, $fieldName);
@@ -242,7 +239,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
-                        ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+                    ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
                 $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
                 break;
             case self::SEARCH_ID:
@@ -255,29 +252,29 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function($term) use($service) {
-                            return $service->findByEmail($term);
-                        };
+                return function ($term) use ($service) {
+                    return $service->findByEmail($term);
+                };
 
                 break;
             case self::SEARCH_ID:
-                return function($term) use($service) {
-                            return $service->findByPrimary($term);
-                        };
+                return function ($term) use ($service) {
+                    return $service->findByPrimary($term);
+                };
         }
     }
 
     private function createTermToValuesCallback($searchType) {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function($term) {
-                            return array('person_info' => array('email' => $term));
-                        };
+                return function ($term) {
+                    return array('person_info' => array('email' => $term));
+                };
                 break;
             case self::SEARCH_ID:
-                return function($term) {
-                            return array();
-                        };
+                return function ($term) {
+                    return array();
+                };
         }
     }
 
@@ -301,7 +298,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, (bool) ($options & self::EXTRAPOLATE))) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear, (bool)($options & self::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
                 return $person->getDeliveryAddress();
                 break;
@@ -312,7 +309,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 return $person->getPermanentAddress(true);
                 break;
             case 'person_has_flag':
-                return ($flag = $person->getMPersonHasFlag($field)) ? (bool) $flag['value'] : null;
+                return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }
