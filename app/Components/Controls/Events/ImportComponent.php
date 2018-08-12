@@ -8,6 +8,7 @@ use Events\Model\ApplicationHandler;
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\ImportHandler;
 use Events\Model\ImportHandlerException;
+use FKS\Components\Controls\FormControl;
 use FKS\Logging\FlashMessageDump;
 use FKS\Utils\CSVParser;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -20,7 +21,7 @@ use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ImportComponent extends Control {
@@ -60,7 +61,8 @@ class ImportComponent extends Control {
     }
 
     protected function createComponentFormImport($name) {
-        $form = new Form();
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->setRenderer(new BootstrapRenderer());
 
         $form->addUpload('file', _('Soubor s přihláškami'))
@@ -97,7 +99,7 @@ class ImportComponent extends Control {
                     $that->handleFormImport($submit->getForm());
                 };
 
-        return $form;
+        return $control;
     }
 
     public function render() {
@@ -125,7 +127,7 @@ class ImportComponent extends Control {
             Debugger::timer();
             $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
             $elapsedTime = Debugger::timer();
-            
+
 
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {

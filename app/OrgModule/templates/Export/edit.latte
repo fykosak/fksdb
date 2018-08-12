@@ -1,16 +1,13 @@
-
-
 {block user-info}
-{include #parent}
-{control seriesChooser}
+    {include #parent}
+    {control seriesChooser}
 {/block}
-
 {block content}
-{control editForm}
+    {control editForm}
 
-{if $control->getStoredQuery()}
-    <h2>{_'Výsledek dotazu'}</h2>
-    {control adhocResultsComponent}
-{/if}
+    {if $control->getStoredQuery()}
+        <h2>{_'Výsledek dotazu'}</h2>
+        {control adhocResultsComponent}
+    {/if}
 
 {/block}

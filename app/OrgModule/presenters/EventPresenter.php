@@ -4,6 +4,7 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
+use FKS\Components\Controls\FormControl;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -29,9 +30,9 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
+use ServiceAuthToken;
 use ServiceEvent;
 use ServiceEventOrg;
-use ServiceAuthToken;
 use SystemContainer;
 use Utils;
 
@@ -105,7 +106,7 @@ class EventPresenter extends EntityPresenter {
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
-    
+
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
@@ -176,22 +177,22 @@ class EventPresenter extends EntityPresenter {
         $this->setTitle(_('Přidat akci'));
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
@@ -201,7 +202,8 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function createComponentCreateComponent($name) {
-        $form = $this->createForm();
+        $control = $this->createForm();
+        $form = $control->getForm();
 
         $form->addSubmit('send', _('Přidat'));
         $that = $this;
@@ -209,25 +211,23 @@ class EventPresenter extends EntityPresenter {
             $that->handleFormSuccess($form, true);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentEditComponent($name) {
-        $form = $this->createForm();
-
+        $control = $this->createForm();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
         $that = $this;
         $form->onSuccess[] = function (Form $form) use ($that) {
             $that->handleFormSuccess($form, false);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentGrid($name) {
-        $grid = new EventsGrid($this->serviceEvent);
-
-        return $grid;
+        return new EventsGrid($this->serviceEvent);
     }
 
     protected function createComponentApplicationsGrid($name) {
@@ -263,7 +263,8 @@ class EventPresenter extends EntityPresenter {
     }
 
     private function createForm() {
-        $form = new Form();
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->setRenderer(new BootstrapRenderer());
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
@@ -292,7 +293,7 @@ class EventPresenter extends EntityPresenter {
             }, _('Parametry nesplňují Neon schéma'));
         }
 
-        return $form;
+        return $control;
     }
 
     private function createParamDescription($scheme) {
@@ -357,9 +358,9 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->serviceEvent->save($model);
-            
+
             // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ["until" => $model->registration_end ? : $model->end];
+            $tokenData = ["until" => $model->registration_end ?: $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
                 $this->serviceAuthToken->updateModel($token, $tokenData);
                 $this->serviceAuthToken->save($token);

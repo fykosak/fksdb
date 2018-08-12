@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use Authentication\AccountManager;
+use FKS\Components\Controls\FormControl;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -16,7 +17,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use ORM\IModel;
 use Persons\Deduplication\Merger;
 use ServiceLogin;
 use ServiceMPostContact;
@@ -26,7 +26,7 @@ use ServicePersonInfo;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @deprecated Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
@@ -166,30 +166,30 @@ class PersonPresenter extends EntityPresenter {
             throw new BadRequestException('Neexistující osoba.', 404);
         }
         $authorized = $this->getContestAuthorizator()->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
-                $this->getContestAuthorizator()->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
+            $this->getContestAuthorizator()->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
         $this->setAuthorized($authorized);
     }
-    
+
     public function authorizedDontMerge($trunkId, $mergedId) {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm($this['mergeForm']);
+        $this->updateMergeForm($this['mergeForm']->getForm());
     }
-    
-    public function actionDontMerge($trunkId, $mergedId) {        
+
+    public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
-        $mergedData = ['duplicates' => trim($mergedPI->duplicates.",not-same($trunkId)", ',')];
+        $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
         $this->servicePersonInfo->save($mergedPI);
-        
-        $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);        
-        $trunkData = ['duplicates' => trim($trunkPI->duplicates.",not-same($mergedId)", ',')];        
-        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);        
+
+        $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
+        $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
+        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
         $this->servicePersonInfo->save($trunkPI);
-        
+
         $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
         $this->backlinkRedirect(true);
     }
@@ -217,14 +217,15 @@ class PersonPresenter extends EntityPresenter {
     }
 
     protected function createComponentMergeForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
-        $form->addSubmit('send', _('Sloučit osoby'));
+        $form->addSubmit('send', _('Sloučit osoby'))->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
+
         $form->addSubmit('cancel', _('Storno'))
-                ->getControlPrototype()->addClass('btn-default');
+            ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
         $form->onSuccess[] = array($this, 'handleMergeFormSuccess');
-        return $form;
+        return $control;
     }
 
     private function updateMergeForm(Form $form) {
@@ -257,7 +258,7 @@ class PersonPresenter extends EntityPresenter {
                     }
 
                     $textElement = $pairContainer->addText($column, $column . $pairSuffix)
-                            ->setDefaultValue($default);
+                        ->setDefaultValue($default);
 
                     $description = Html::el('div');
 

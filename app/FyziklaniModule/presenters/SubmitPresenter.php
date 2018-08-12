@@ -2,6 +2,7 @@
 
 namespace FyziklaniModule;
 
+use FKS\Components\Controls\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use ModelFyziklaniSubmit;
@@ -161,9 +162,7 @@ class SubmitPresenter extends BasePresenter {
     public function createComponentEntryForm() {
         $teams = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
         $tasks = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-
-        $form = $this->fyziklaniFactory->createEntryForm($teams, $tasks);
-        return $form;
+        return $this->fyziklaniFactory->createEntryForm($teams, $tasks);
     }
 
     public function createComponentEntryQRForm() {
@@ -236,9 +235,9 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->getEvent());
-        $form->onSuccess[] = [$this, 'editFormSucceeded'];
-        return $form;
+        $control = $this->fyziklaniFactory->createEditForm($this->getEvent());
+        $control->getForm()->onSuccess[] = [$this, 'editFormSucceeded'];
+        return $control;
     }
 
     /**
@@ -268,10 +267,10 @@ class SubmitPresenter extends BasePresenter {
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
         /**
-         * @var $form Form
+         * @var $control FormControl
          */
-        $form = $this['fyziklaniEditForm'];
-        $form->setDefaults([
+        $control = $this['fyziklaniEditForm'];
+        $control->getForm()->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
             'points' => $submit->points,

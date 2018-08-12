@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use DbNames;
+use FKS\Components\Controls\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -154,12 +155,12 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        $this['handoutForm']->setDefaults($values);
+        $this['handoutForm']->getForm()->setDefaults($values);
     }
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -186,7 +187,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/datePicker.js');
         $this->registerJSFile('js/jquery.ui.swappable.js');
         $this->registerJSFile('js/inbox.js');
@@ -195,7 +196,8 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     protected function createComponentHandoutForm() {
-        $form = new Form();
+        $formControl = new FormControl();
+        $form = $formControl->getForm();
         $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
@@ -207,7 +209,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
-        return $form;
+        return $formControl;
     }
 
     public function inboxFormSuccess(Form $form) {
@@ -282,9 +284,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $uploadSubmits = array();
         $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
+            DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
+            DbNames::TAB_TASK . '.series' => $series
+        ))->order(DbNames::TAB_TASK . '.tasknr');
         foreach ($submits as $row) {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
@@ -370,7 +372,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

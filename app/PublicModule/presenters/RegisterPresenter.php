@@ -342,7 +342,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $login = $handler->getPerson()->getLogin();
                     $that->getUser()->login($login);
                 }
-                $this->redirect(':Dashboard:default');
+                $this->redirect(':Public:Dashboard:default');
             }
         };
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
