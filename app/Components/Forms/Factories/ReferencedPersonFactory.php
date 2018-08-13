@@ -11,18 +11,20 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Object;
+use Nette\Utils\Arrays;
 use ORM\IModel;
 use Persons\IModifialibityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
-use ServicePerson;
 use ServiceFlag;
+use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -50,6 +52,16 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     private $personFactory;
 
     /**
+     * @var PersonHistoryFactory
+     */
+    private $personHistoryFactory;
+    /**
+     * @var PersonInfoFactory
+     */
+    private $personInfoFactory;
+
+
+    /**
      * @var ReferencedPersonHandlerFactory
      */
     private $referencedPersonHandlerFactory;
@@ -64,20 +76,32 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      */
     private $serviceFlag;
 
-    function __construct(ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag) {
+    /**
+     * @var FlagFactory
+     */
+    private $flagFactory;
+    /**
+     * @var AddressFactory
+     */
+    private $addressFactory;
+
+    function __construct(AddressFactory $addressFactory, FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
         $this->serviceFlag = $serviceFlag;
+        $this->personHistoryFactory = $personHistoryFactory;
+        $this->personInfoFactory = $personInfoFactory;
+        $this->flagFactory = $flagFactory;
+        $this->addressFactory = $addressFactory;
     }
 
     /**
-     *
-     * @param type $fieldsDefinition
-     * @param type $acYear
-     * @param type $searchType
-     * @param type $allowClear
+     * @param array $fieldsDefinition
+     * @param integer $acYear
+     * @param string $searchType
+     * @param boolean $allowClear
      * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
@@ -119,7 +143,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                     // old compatibility
                     throw new \InvalidArgumentException('Metadata must be a vector');
                 }
-                $control = $this->personFactory->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
@@ -152,6 +176,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
             $container,
         );
     }
+
 
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
@@ -208,6 +233,77 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
+            }
+        }
+    }
+
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+        if (in_array($sub, array(
+            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
+            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
+        ))) {
+            if ($fieldName == 'address') {
+                $required = Arrays::get($metadata, 'required', false);
+                if ($required) {
+                    $options = AddressFactory::REQUIRED;
+                } else {
+                    $options = 0;
+                }
+                $container = $this->addressFactory->createAddress($options, $hiddenField);
+                return $container;
+            } else {
+                throw new InvalidArgumentException("Only 'address' field is supported.");
+            }
+        } else if ($sub == 'person_has_flag') {
+            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+            return $control;
+        } else {
+            $control = null;
+            switch ($sub) {
+                case 'person_info':
+                    $control = $this->personInfoFactory->createField($fieldName);
+                    break;
+                case 'person_history':
+                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                    break;
+                case 'person':
+                    $control = $this->personFactory->createField($fieldName);
+                    break;
+                default:
+                    throw new InvalidArgumentException();
+
+            }
+            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
+
+            return $control;
+        }
+    }
+
+    private function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+        foreach ($metadata as $key => $value) {
+            switch ($key) {
+                case 'required':
+                    if ($value) {
+                        $conditioned = $control;
+                        if ($hiddenField) {
+                            $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+                        }
+                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                        } else {
+                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                        }
+                    }
+                    break;
+                case 'caption':
+                    if ($value) {
+                        $control->caption = $value;
+                    }
+                    break;
+                case 'description':
+                    if ($value) {
+                        $control->setOption('description', $value);
+                    }
             }
         }
     }
