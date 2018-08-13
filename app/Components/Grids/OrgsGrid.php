@@ -68,11 +68,10 @@ class OrgsGrid extends BaseGrid {
         //
         // operations
         //
-        $that = $this;
         $this->addButton("edit", _("Upravit"))
             ->setText('Upravit')//todo i18n
-            ->setLink(function ($row) use ($that) {
-                return $that->getPresenter()->link("edit", $row->org_id);
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link("edit", $row->org_id);
             })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized("edit", array('id' => $row->org_id));

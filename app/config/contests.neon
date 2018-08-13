@@ -6,142 +6,238 @@ parameters:
     fykos:
         registerContestant:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             person_history:
-                school_id: true
-                study_year: true
-                class: false
+                school_id:
+                  required: true
+                study_year:
+                  required: true
+                class:
+                  required: false
             post_contact_d:
-                address: true
+                address:
+                  required: true
             person_info:
-                email: true
-                origin: false
-                agreed: true
+                email:
+                  required: true
+                origin:
+                  required: false
+                agreed:
+                  required: true
             person_has_flag:
-                spam_mff: true
+                spam_mff:
+                  required: true
         adminContestant:
             person:
-                other_name: true
-                family_name: true
-                display_name: false
-                gender: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
+                display_name:
+                  required: false
+                gender:
+                  required: true
             person_history:
-                school_id: true
-                study_year: true
+                school_id:
+                  required: true
+                study_year:
+                  required: true
             post_contact_d:
-                address: false
+                address:
+                  required: false
             post_contact_p:
-                address: false
+                address:
+                  required: false
             person_info:
-                email: true
-                born: false
-                birthplace: false
-                id_number: false
-                note: false
-                origin: false
-                agreed: false
+                email:
+                  required: true
+                born:
+                  required: false
+                birthplace:
+                  required: false
+                id_number:
+                  required: false
+                note:
+                  required: false
+                origin:
+                  required: false
+                agreed:
+                  required: false
             person_has_flag:
-                spam_mff: false
+                spam_mff:
+                  required: false
 
         adminOrg:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             post_contact_d:
-                address: false
+                address:
+                  required: false
             post_contact_p:
-                address: false
+                address:
+                  required: false
             person_info:
-                email: false
-                phone: false
-                career: false
-                uk_login: false
-                account: false
-                homepage: false
-                note: false
-                born: false
-                born_id: false
-                id_number: false
-                birthplace: false
+                email:
+                  required: false
+                phone:
+                  required: false
+                career:
+                  required: false
+                uk_login:
+                  required: false
+                account:
+                  required: false
+                homepage:
+                  required: false
+                note:
+                  required: false
+                born:
+                  required: false
+                born_id:
+                  required: false
+                id_number:
+                  required: false
+                birthplace:
+                  required: false
         adminEventOrg:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             person_info:
-                email: true
+                email:
+                  required: true
         adminTeacher:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             post_contact_d:
-                address: false
+                address:
+                  required: false
             post_contact_p:
-                address: false
+                address:
+                  required: false
             person_info:
-                email: false
-                phone: false
-                career: false
-                note: false
-                born: false
-                born_id: false
-                id_number: false
-                birthplace: false
+                email:
+                  required: false
+                phone:
+                  required: false
+                career:
+                  required: false
+                note:
+                  required: false
+                born:
+                  required: false
+                born_id:
+                  required: false
+                id_number:
+                  required: false
+                birthplace:
+                  required: false
     vyfuk:
         registerContestant:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             person_history:
-                school_id: true
-                study_year: true
-                class: false
+                school_id:
+                  required: true
+                study_year:
+                  required: true
+                class:
+                  required: false
             post_contact_d:
-                address: true
+                address:
+                  required: true
             person_info:
-                email: true
-                phone_parent_m: false
-                phone_parent_d: false
-                origin: false
-                agreed: true
+                email:
+                  required: true
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
+                origin:
+                  required: false
+                agreed:
+                  required: true
             person_has_flag:
-                spam_mff: true
+                spam_mff:
+                  required: true
         adminContestant:
             person:
-                other_name: true
-                family_name: true
-                display_name: false
-                gender: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
+                display_name:
+                  required: false
+                gender:
+                  required: true
             person_history:
-                school_id: true
-                study_year: true
+                school_id:
+                  required: true
+                study_year:
+                  required: true
             post_contact_d:
-                address: false
+                address:
+                  required: false
             post_contact_p:
-                address: false
+                address:
+                  required: false
             person_info:
-                email: true
-                born: false
-                birthplace: false
-                id_number: false
-                note: false
-                phone_parent_m: false
-                phone_parent_d: false
-                origin: false
-                agreed: false
+                email:
+                  required: true
+                born:
+                  required: false
+                birthplace:
+                  required: false
+                id_number:
+                  required: false
+                note:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
+                origin:
+                  required: false
+                agreed:
+                  required: false
             person_has_flag:
-                spam_mff: false
+                spam_mff:
+                  required: false
         adminOrg:
             person:
-                other_name: true
-                family_name: true
+                other_name:
+                  required: true
+                family_name:
+                  required: true
             person_info:
-                email: false
-                career: false
-                uk_login: false
-                account: false
-                homepage: false
-                note: false
-                phone_parent_m: false
-                phone_parent_d: false
+                email:
+                  required: false
+                career:
+                  required: false
+                uk_login:
+                  required: false
+                account:
+                  required: false
+                homepage:
+                  required: false
+                note:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
 
