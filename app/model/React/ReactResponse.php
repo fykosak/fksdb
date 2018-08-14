@@ -71,6 +71,7 @@ class ReactResponse extends Nette\Object implements Nette\Application\IResponse 
                 return $value->__toArray();
             }, $this->messages),
             'do' => $this->act,
+            'act' => $this->act,
             'data' => $this->data,
         ];
         echo Nette\Utils\Json::encode($response);

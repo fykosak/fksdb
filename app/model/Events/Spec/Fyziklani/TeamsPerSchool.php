@@ -15,7 +15,7 @@ use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
@@ -63,20 +63,19 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
-        $that = $this;
         $first = true;
         $msgMulti = sprintf(_('Škola nemůže mít v soutěži více týmů než %d.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($first, $that, $schoolControls, $personControls, $holder) {
-                        $schools = $that->getSchools($schoolControls, $personControls);
-                        return $that->checkMulti($first, $control, $schools, $holder);
+            $control->addRule(function(IControl $control) use ($first, $schoolControls, $personControls, $holder) {
+                        $schools = $this->getSchools($schoolControls, $personControls);
+                        return $this->checkMulti($first, $control, $schools, $holder);
                     }, $msgMulti);
             $first = false;
         }
-        $form->onValidate[] = function(Form $form) use($that, $schoolControls, $personControls, $msgMulti) {
+        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMulti) {
                     if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $that->getSchools($schoolControls, $personControls);
-                        if (!$that->checkMulti(true, NULL, $schools)) {
+                        $schools = $this->getSchools($schoolControls, $personControls);
+                        if (!$this->checkMulti(true, NULL, $schools)) {
                             $form->addError($msgMulti);
                         }
                     }

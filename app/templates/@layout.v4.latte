@@ -12,12 +12,13 @@
         'css/style.v4.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
         'css/fyziklani.css' => [all],
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all]
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
+        'css/storedquery-tag.css'=>[all]
         }
     {block head}{/block}
 </head>
 <!-- Radnom background generator -->
-<body data-bg="{rand(1,2)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
+<body data-bg="{rand(1,3)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
 {block body}
     <nav n:class="'fixed-top navbar navbar-expand-md ',!is_null($contestSymbol)?('bg-'.$contestSymbol.' navbar-'.$navVariant):('bg-light navbar-light')"
             role="navigation">

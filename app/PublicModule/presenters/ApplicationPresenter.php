@@ -26,7 +26,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
@@ -44,7 +44,7 @@ class ApplicationPresenter extends BasePresenter {
     private $eventApplication = false;
 
     /**
-     * @var Holder 
+     * @var Holder
      */
     private $holder;
 
@@ -108,7 +108,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedDefault($eventId, $id) {
-        
+
     }
 
     public function authorizedList() {
@@ -215,10 +215,9 @@ class ApplicationPresenter extends BasePresenter {
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
-        $that = $this;
-        $component->setRedirectCallback(function($modelId, $eventId) use($that) {
-                    $that->backlinkRedirect();
-                    $that->redirect('this', array(
+        $component->setRedirectCallback(function($modelId, $eventId) {
+                    $this->backlinkRedirect();
+                    $this->redirect('this', array(
                         'eventId' => $eventId,
                         'id' => $modelId,
                         self::PARAM_AFTER => true,

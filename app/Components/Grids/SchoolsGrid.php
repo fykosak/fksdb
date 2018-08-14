@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\BaseGrid;
 use Nette\Database\Table\Selection;
+use Nette\Utils\Html;
 use ServiceSchool;
 use SQL\SearchableDataSource;
 
@@ -25,19 +26,20 @@ class SchoolsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
+        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
         $schools = $this->serviceSchool->getSchools();
 
         $dataSource = new SearchableDataSource($schools);
-        $dataSource->setFilterCallback(function(Selection $table, $value) {
-                    $tokens = preg_split('/\s+/', $value);
-                    foreach ($tokens as $token) {
-                        $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
-                    }
-                });
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+            }
+        });
         $this->setDataSource($dataSource);
 
         //
@@ -45,25 +47,26 @@ class SchoolsGrid extends BaseGrid {
         //
         $this->addColumn('name', _('Název'));
         $this->addColumn('city', _('Město'));
-        $this->addColumn('active', _('Existuje?'));
+        $this->addColumn('active', _('Existuje?'))->setRenderer(function ($row) {
+            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->add(($row->active));
+        });
 
         //
         // operations
         //
-        $that = $this;
         $this->addButton("edit", _("Upravit"))
-                ->setText('Upravit') //todo i18n
-                ->setLink(function($row) use ($that) {
-                            return $that->getPresenter()->link("edit", $row->school_id);
-                        });
+            ->setText('Upravit')//todo i18n
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link("edit", $row->school_id);
+            });
         $this->addGlobalButton('add')
-                ->setLink($this->getPresenter()->link('create'))
-                ->setLabel('Vložit školu')
-                ->setClass('btn btn-sm btn-primary');
+            ->setLink($this->getPresenter()->link('create'))
+            ->setLabel('Vložit školu')
+            ->setClass('btn btn-sm btn-primary');
 
         //
         // appeareance
-    //
+        //
 
     }
 

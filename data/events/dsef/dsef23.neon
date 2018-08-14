@@ -4,14 +4,20 @@ parameters:
             appCond: or(regOpen(), role('admin'))
             person:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_info:
-                    email: true
-                    id_number: true
-                    born: true
+                    email:
+                        required: true
+                    id_number:
+                        required: true
+                    born:
+                        required: true
                 post_contact_p:
-                    address: true
+                    address:
+                        required: true
 
 events:
     dsef23:
@@ -28,7 +34,7 @@ events:
         baseMachines:
             PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
-                
+
                 states:
                     applied: Přihlášen
                     applied.tsaf: "Přihlášen (TSAF)"
@@ -93,7 +99,7 @@ events:
                         modifiable: %events.dsef23.appCond%
                         factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
                     lunch_count:
-                        label:  Počet baget k obědu                        
+                        label:  Počet baget k obědu
                         modifiable: %events.dsef23.appCond%
                         description:  à 30 Kč
 
@@ -110,9 +116,9 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")               
+                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-                
+
             processings:
                 - @events.privacyPolicy

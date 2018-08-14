@@ -49,7 +49,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         if ($this->getPerson()) {
             return $this->getPerson()->getActiveOrgs($yearCalculator);
         } else {
-            $result = array();
+            $result = [];
             foreach ($this->getRoles() as $grant) {
                 if ($grant->getRoleId() == ModelRole::ORG) {
                     $result[$grant->getContestId()] = null;
@@ -59,7 +59,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-  
     public function isOrg($yearCalculator) {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
@@ -75,13 +74,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @return string Human readable identification of the login.
      */
     public function getName() {
         $person = $this->getPerson();
         if ($person) {
-            return (string) $person;
+            return (string)$person;
         }
         if ($this->login) {
             return $this->login;
@@ -96,9 +95,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * Sets hash of the instance with correct hashing function.
-     * 
+     *
      * @note Must be called after setting login_id.
-     * 
+     *
      * @param string $password password
      */
     public function setHash($password) {
@@ -112,7 +111,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @var array   cache
+     * @var Grant[]   cache
      */
     private $roles;
 
@@ -146,5 +145,3 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
 }
-
-?>

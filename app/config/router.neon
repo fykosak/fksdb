@@ -71,18 +71,27 @@ fksrouter:
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
+            year: null
+
         '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: [ONE_WAY, SECURED]
+
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%':
+            subdomain: %subdomain.db%
+            presenter: Dispatch
+            tld: %domain.tld%
+            action: default
+            flags:  SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]':

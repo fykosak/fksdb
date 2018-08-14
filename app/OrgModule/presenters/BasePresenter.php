@@ -8,10 +8,11 @@ use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
 use ModelRole;
 use Nette\Application\BadRequestException;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
@@ -51,6 +52,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $control;
     }
 
+    /**
+     * @return \ModelContest
+     * @throws BadRequestException
+     */
     public function getSelectedContest() {
         $contestChooser = $this['contestChooser'];
         if (!$contestChooser->isValid()) {
@@ -59,6 +64,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $contestChooser->getContest();
     }
 
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
     public function getSelectedYear() {
         $contestChooser = $this['contestChooser'];
         if (!$contestChooser->isValid()) {
@@ -67,10 +76,18 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $contestChooser->getYear();
     }
 
+    /**
+     * @return int|mixed
+     * @throws BadRequestException
+     */
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
+    /**
+     * @return mixed
+     * @throws BadRequestException
+     */
     public function getSelectedLanguage() {
         $languageChooser = $this['languageChooser'];
         if (!$languageChooser->isValid()) {
@@ -78,5 +95,15 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         }
         return $languageChooser->getLanguage();
     }
-    
+
+    protected function getNavBarVariant() {
+        /**
+         * @var $contest \ModelContest
+         */
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        if ($contest) {
+            return [$contest->getContestSymbol(), 'dark'];
+        }
+        return [null, null];
+    }
 }

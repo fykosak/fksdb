@@ -12,7 +12,7 @@ use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
@@ -54,22 +54,21 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
-        $that = $this;
         $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($that, $schoolControls, $personControls, $form, $msgMixture) {
-                        $schools = $that->getSchools($schoolControls, $personControls);
-                        if (!$that->checkMixture($schools)) {
+            $control->addRule(function(IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
+                        $schools = $this->getSchools($schoolControls, $personControls);
+                        if (!$this->checkMixture($schools)) {
                             $form->addError($msgMixture);
                             return false;
                         }
                         return true;
                     }, $msgMixture);
         }
-        $form->onValidate[] = function(Form $form) use($that, $schoolControls, $personControls, $msgMixture) {
+        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMixture) {
                     if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $that->getSchools($schoolControls, $personControls);
-                        if (!$that->checkMixture($schools)) {
+                        $schools = $this->getSchools($schoolControls, $personControls);
+                        if (!$this->checkMixture($schools)) {
                             $form->addError($msgMixture);
                         }
                     }

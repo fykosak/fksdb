@@ -20,7 +20,7 @@ use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ImportComponent extends Control {
@@ -92,9 +92,8 @@ class ImportComponent extends Control {
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $that = $this;
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->handleFormImport($submit->getForm());
+        $form->addSubmit('import', _('Importovat'))->onClick[] = function(SubmitButton $submit) {
+                    $this->handleFormImport($submit->getForm());
                 };
 
         return $form;
@@ -125,7 +124,7 @@ class ImportComponent extends Control {
             Debugger::timer();
             $result = $importHandler->import($this->handler, $transitions, $errorMode, $stateless);
             $elapsedTime = Debugger::timer();
-            
+
 
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
