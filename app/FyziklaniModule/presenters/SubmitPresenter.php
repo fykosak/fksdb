@@ -47,7 +47,7 @@ class SubmitPresenter extends BasePresenter {
             /**
              * @var $form Form
              */
-            $form = $this['entryQRForm'];
+            $form = $this['entryQRForm']->getForm();
             $form->setDefaults(['taskCode' => $code]);
             foreach ($this->getEvent()->getParameter('availablePoints') as $points) {
                 /**
