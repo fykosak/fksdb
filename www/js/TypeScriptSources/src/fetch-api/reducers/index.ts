@@ -2,7 +2,7 @@ import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
-} from '../actions/submit';
+} from '../actions/';
 import {
     IMessage,
     IResponse,
@@ -11,7 +11,7 @@ import {
     ISubmitSuccessAction,
 } from '../middleware/interfaces';
 
-export interface IState {
+export interface IFetchApiState {
     [accessKey: string]: {
         submitting?: boolean;
         error?: any;
@@ -19,7 +19,7 @@ export interface IState {
     };
 }
 
-const submitStart = (state: IState, action: ISubmitAction): IState => {
+const submitStart = (state: IFetchApiState, action: ISubmitAction): IFetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -31,7 +31,7 @@ const submitStart = (state: IState, action: ISubmitAction): IState => {
         },
     };
 };
-const submitFail = (state: IState, action: ISubmitFailAction): IState => {
+const submitFail = (state: IFetchApiState, action: ISubmitFailAction): IFetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -43,7 +43,7 @@ const submitFail = (state: IState, action: ISubmitFailAction): IState => {
         },
     };
 };
-const submitSuccess = (state: IState, action: ISubmitSuccessAction<any>): IState => {
+const submitSuccess = (state: IFetchApiState, action: ISubmitSuccessAction<any>): IFetchApiState => {
     const data: IResponse<any> = action.data;
     const {accessKey} = action;
     return {
@@ -56,9 +56,9 @@ const submitSuccess = (state: IState, action: ISubmitSuccessAction<any>): IState
     };
 };
 
-const initState: IState = {};
+const initState: IFetchApiState = {};
 
-export const submit = (state: IState = initState, action): IState => {
+export const fetchApi = (state: IFetchApiState = initState, action): IFetchApiState => {
     switch (action.type) {
         case ACTION_SUBMIT_START:
             return submitStart(state, action);

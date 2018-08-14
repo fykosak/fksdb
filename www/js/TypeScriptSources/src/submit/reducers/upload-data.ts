@@ -1,4 +1,4 @@
-import { ACTION_SUBMIT_SUCCESS } from '../../shared/actions/submit';
+import { ACTION_SUBMIT_SUCCESS } from '../../fetch-api/actions/';
 import { NEW_DATA_ARRIVED } from '../actions/upload-data';
 
 export interface IState {

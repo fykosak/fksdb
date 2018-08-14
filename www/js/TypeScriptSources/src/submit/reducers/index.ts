@@ -9,9 +9,9 @@ import {
 } from './upload-data';
 
 import {
-    IState as ISubmitState,
-    submit,
-} from '../../shared/reducers/submit';
+    fetchApi,
+    IFetchApiState,
+} from '../../fetch-api/reducers/';
 
 import {
     errorLogger,
@@ -21,13 +21,13 @@ import {
 export const app = combineReducers({
     dragNDrop,
     errorLogger,
-    submit,
+    fetchApi,
     uploadData,
 });
 
 export interface IStore {
     uploadData: IUploadDataStore;
-    submit: ISubmitState;
+    fetchApi: IFetchApiState;
     dragNDrop: IDragNDropState;
     errorLogger: IErrorLoggerState;
 }

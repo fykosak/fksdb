@@ -21,7 +21,8 @@ class App extends React.Component<IProps & IState, {}> {
     }
 
     public render() {
-        return <UploadContainer/>;
+        const accessKey = '@@submit-api/' + this.props.data.taskId;
+        return <UploadContainer accessKey={accessKey}/>;
     }
 }
 

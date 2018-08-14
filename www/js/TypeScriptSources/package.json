@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "webpack --color",
-    "dev": "webpack --color --watch"
+    "dev": "webpack --watch --mode=\"development\""
   },
   "author": "",
   "license": "ISC",

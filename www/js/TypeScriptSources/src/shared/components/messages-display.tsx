@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    IMessage,
-} from '../interfaces';
-
+    IFetchApiState,
+} from '../../fetch-api/reducers';
+import { IMessage } from '../interfaces';
 import { IState as IErrorLoggerState } from '../reducers/error-logger';
-import { IState as ISubmitState } from '../reducers/submit';
 
 interface IState {
     messages?: IMessage[];
 }
 
-class MessagesDisplay extends React.Component<IState, {}> {
+interface IProps {
+    accessKey: string;
+}
+
+class MessagesDisplay extends React.Component<IState & IProps, {}> {
     public render() {
         const {messages} = this.props;
         return <>{messages.map((message, index) => {
@@ -20,14 +23,17 @@ class MessagesDisplay extends React.Component<IState, {}> {
     }
 }
 
-interface ISubmitStore {
-    submit: ISubmitState;
+interface IStore {
+    fetchApi: IFetchApiState;
     errorLogger: IErrorLoggerState;
 }
 
-const mapStateToProps = (state: ISubmitStore & any): IState => {
+const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
+    const messages = state.fetchApi.hasOwnProperty(ownProps.accessKey) ? state.fetchApi[ownProps.accessKey].messages : [];
     return {
-        messages: [...state.submit.messages, ...state.errorLogger.errors],
+        messages: [
+            ...messages,
+            ...state.errorLogger.errors],
     };
 };
 const mapDispatchToProps = (): IState => {

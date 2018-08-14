@@ -8,7 +8,6 @@ use ModelException;
 use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
-use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
@@ -151,9 +150,8 @@ class SubmitPresenter extends BasePresenter {
         $contestant = $this->getContestant();
         $files = $this->getHttpRequest()->getFiles();
 
+
         foreach ($files as $name => $fileContainer) {
-
-
             $this->submitService->getConnection()->beginTransaction();
             $this->submitStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
@@ -200,7 +198,7 @@ class SubmitPresenter extends BasePresenter {
      */
     public function handleAjaxRevoke(\ReactResponse $response) {
 
-        $submitId = $this->getHttpRequest()->getPost('submitId');
+        $submitId = $this->getHttpRequest()->getPost('data')['submitId'];
         /**
          * @var $submit ModelSubmit
          */
@@ -268,7 +266,7 @@ class SubmitPresenter extends BasePresenter {
     public function renderAjax() {
         if ($this->isAjax()) {
             $response = new \ReactResponse();
-
+            sleep(10);
             FireLogger::log($this->getHttpRequest());
             FireLogger::log($this->getHttpRequest()->getFiles());
             switch ($this->getHttpRequest()->getPost('act')) {
@@ -388,9 +386,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid($name) {
-        $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
-
-        return $grid;
+        return new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
     }
 
     /**
