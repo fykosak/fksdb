@@ -11,6 +11,7 @@ use Nette\Security\IResource;
  * @property string source
  * @property integer raw_points
  * @property integer ct_id
+ * @property integer task_id
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 

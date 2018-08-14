@@ -7,6 +7,8 @@
  * @property integer series
  * @property string label
  * @property string name_cs
+ * @property DateTime submit_deadline
+ * @property DateTime submit_start
  */
 class ModelTask extends AbstractModelSingle {
 

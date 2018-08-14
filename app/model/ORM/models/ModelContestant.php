@@ -5,6 +5,7 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer ct_id
  */
 class ModelContestant extends AbstractModelSingle implements IResource {
 
@@ -16,7 +17,7 @@ class ModelContestant extends AbstractModelSingle implements IResource {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
-    
+
     /**
      * @return ModelContest
      */

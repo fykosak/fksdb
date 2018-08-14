@@ -11,7 +11,7 @@ use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
-use Nette\Diagnostics\FireLogger;
+use Nette\Http\FileUpload;
 use ServiceSubmit;
 use ServiceTask;
 use Submits\ISubmitStorage;
@@ -83,18 +83,24 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderDefault() {
-        $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
-        $this->template->canRegister = false;
-        $this->template->hasForward = false;
-        if (!$this->template->hasTasks) {
+        $hasTasks = count($this->getAvailableTasks()) > 0;
+        $this->template->hasTasks = $hasTasks;
+        $canRegister = false;
+        $hasForward = false;
+        if (!$hasTasks) {
+            /**
+             * @var $person \ModelPerson
+             */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
             $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
-            $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
+            $canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
+            $hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
         }
+        $this->template->canRegister = $canRegister;
+        $this->template->hasForward = $hasForward;
     }
 
     /**
@@ -115,12 +121,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param \Nette\Http\FileUpload $file
+     * @param FileUpload $file
      * @param $contestant \ModelContestant
      * @param $task \ModelTask
      * @return \AbstractModelSingle|ModelSubmit
      */
-    private function saveSubmit(\Nette\Http\FileUpload $file, \ModelTask $task, \ModelContestant $contestant) {
+    private function saveSubmit(FileUpload $file, \ModelTask $task, \ModelContestant $contestant) {
         $submit = $this->submitService->findByContestant($contestant->ct_id, $task->task_id);
         if (!$submit) {
             $submit = $this->submitService->createNew([
@@ -167,7 +173,7 @@ class SubmitPresenter extends BasePresenter {
             };
 
             /**
-             * @var $file \Nette\Http\FileUpload
+             * @var $file FileUpload
              */
             $file = $fileContainer;
             if (!$file->isOk()) {
@@ -266,9 +272,6 @@ class SubmitPresenter extends BasePresenter {
     public function renderAjax() {
         if ($this->isAjax()) {
             $response = new \ReactResponse();
-            sleep(10);
-            FireLogger::log($this->getHttpRequest());
-            FireLogger::log($this->getHttpRequest()->getFiles());
             switch ($this->getHttpRequest()->getPost('act')) {
                 case 'upload':
                     $this->handleAjaxUpload($response);
@@ -335,7 +338,7 @@ class SubmitPresenter extends BasePresenter {
         $form->setRenderer(new BootstrapRenderer());
 
         $prevDeadline = null;
-        $taskIds = array();
+        $taskIds = [];
         $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
@@ -385,7 +388,7 @@ class SubmitPresenter extends BasePresenter {
         return $form;
     }
 
-    public function createComponentSubmitsGrid($name) {
+    public function createComponentSubmitsGrid() {
         return new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
     }
 
@@ -405,6 +408,9 @@ class SubmitPresenter extends BasePresenter {
             $this->submitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
+                /**
+                 * @var $task \ModelTask
+                 */
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
@@ -414,11 +420,16 @@ class SubmitPresenter extends BasePresenter {
 
                 $taskValues = $values['task' . $task->task_id];
 
-                if (!isset($taskValues['file'])) { // upload field was disabled
+                /**
+                 * @var $file FileUpload
+                 */
+                $file = $taskValues['file'];
+
+                if (!isset($file)) { // upload field was disabled
                     continue;
                 }
-                if (!$taskValues['file']->isOk()) {
-                    Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                if (!$file->isOk()) {
+                    Debugger::log(sprintf("Uploaded file error %s.", $file->getError()), Debugger::WARNING);
                     continue;
                 }
 
@@ -438,7 +449,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->submitService->save($submit);
 
                 // store file
-                $this->submitStorage->storeFile($taskValues['file']->getTemporaryFile(), $submit);
+                $this->submitStorage->storeFile($file->getTemporaryFile(), $submit);
 
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
