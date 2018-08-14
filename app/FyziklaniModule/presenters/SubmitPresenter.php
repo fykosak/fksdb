@@ -168,7 +168,7 @@ class SubmitPresenter extends BasePresenter {
     public function createComponentEntryQRForm() {
         $form = $this->fyziklaniFactory->createEntryQRForm($this->getEvent());
 
-        $form->onSuccess[] = [$this, 'entryFormSucceeded'];
+        $form->getForm()->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
 
