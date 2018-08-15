@@ -14,7 +14,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Http\FileUpload;
 use ServiceSubmit;
 use ServiceTask;
-use Submits\ISubmitStorage;
+use Submits\FilesystemSubmitStorage;
 use Submits\ProcessingException;
 use Submits\StorageException;
 
@@ -32,7 +32,7 @@ class SubmitPresenter extends BasePresenter {
     private $submitService;
 
     /**
-     * @var ISubmitStorage
+     * @var FilesystemSubmitStorage
      */
     private $submitStorage;
 
@@ -44,7 +44,7 @@ class SubmitPresenter extends BasePresenter {
         $this->submitService = $submitService;
     }
 
-    public function injectSubmitStorage(ISubmitStorage $submitStorage) {
+    public function injectFilesystemSubmitStorage(FilesystemSubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
 

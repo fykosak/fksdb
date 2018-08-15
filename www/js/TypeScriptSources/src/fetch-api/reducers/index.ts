@@ -38,7 +38,7 @@ const submitFail = (state: IFetchApiState, action: ISubmitFailAction): IFetchApi
         [accessKey]: {
             ...state[accessKey],
             error: action.error,
-            messages: [action.error.toString(), 'danger'],
+            messages: [{text: action.error.toString(), level: 'danger'}],
             submitting: false,
         },
     };

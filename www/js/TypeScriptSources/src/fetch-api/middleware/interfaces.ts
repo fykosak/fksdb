@@ -21,7 +21,7 @@ export interface ISubmitAction extends Action {
 }
 
 export interface ISubmitFailAction extends ISubmitAction {
-    error: any;
+    error: Error;
 }
 
 export interface ISubmitSuccessAction<D> extends ISubmitAction {

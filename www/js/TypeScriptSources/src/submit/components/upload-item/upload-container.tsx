@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Card from '../../../shared/components/card';
-
+import MessagesDisplay from '../../../shared/components/messages-display';
 import { IStore } from '../../reducers';
 import File from './states/file';
 import Form from './states/form';
-
-import MessagesDisplay from '../../../shared/components/messages-display';
 
 interface IProps {
     accessKey: string;
