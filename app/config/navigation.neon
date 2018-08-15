@@ -30,7 +30,7 @@ navigation:
             - org.deduplicate.person
             - org.stalking.default
         public.dashboard.default:
-            - public.submit.default
+            - public.submit.ajax
             - public.application.list
             - fykos
             - vyfuk
