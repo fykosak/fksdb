@@ -1,22 +1,39 @@
-import {data} from "./i18n-data.ts"
+import { data } from './i18n-data';
 
-let currentLocale = 'cs';
-
-export function getCurrentLocale() {
-    return locale;
+interface ILanguageData {
+    [lang: string]: {
+        [msqId: string]: string;
+    };
 }
 
-export function setLocale(locale) {
-    currentLocale = locale;
-}
+class Lang {
 
-export function getAvailableLocales() {
-    return Object.keys(data);
-}
+    private readonly data: ILanguageData = {};
 
-export function gettext(msgid) {
-    if (data[currentLocale].hasOwnProperty(msgid)) {
-        return data[currentLocale][msgid];
+    private currentLocale: string = 'cs';
+
+    public constructor(langData: ILanguageData) {
+        this.data = langData;
     }
-    return msgid;
+
+    public getCurrentLocale(): string {
+        return this.currentLocale;
+    }
+
+    public setLocale(locale: string): void {
+        this.currentLocale = locale;
+    }
+
+    public getAvailableLocales(): string[] {
+        return Object.keys(this.data);
+    }
+
+    public getText(msgId: string): string {
+        if (this.data[this.currentLocale].hasOwnProperty(msgId)) {
+            return this.data[this.currentLocale][msgId];
+        }
+        return msgId;
+    }
 }
+
+export const lang = new Lang(data);
