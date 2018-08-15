@@ -6,9 +6,7 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config';
-import {
-    IUploadDataItem,
-} from '../../../shared/interfaces';
+import { IUploadDataItem } from '../../../shared/interfaces';
 import { app } from '../../reducers';
 import App from './app';
 
@@ -19,7 +17,7 @@ interface IProps {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         return <Provider store={store}><App data={this.props.data}/></Provider>;
     }
 }

@@ -19,7 +19,7 @@ class File extends React.Component<IProps & IState, {}> {
     public render() {
         return <div className="uploaded-file">
             <button aria-hidden="true" className="pull-right btn btn-danger" onClick={() => {
-                if (window.confirm(lang.getLang('Vymazať submit'))) {
+                if (window.confirm(lang.getLang('Remove submit'))) {
                     this.props.onDeleteFile(this.props.accessKey, this.props.submitId);
                 }
             }}>&times;</button>

@@ -18,7 +18,7 @@ export const handleFileUpload = (data: FileList, taskId: number, setError: (erro
                 formData.set('act', 'upload');
                 return formData;
             } else {
-                setError({text: 'Nepodorovaný formát', level: 'danger'});
+                setError({text: 'Nepodporovaný formát', level: 'danger'});
             }
 
         }
