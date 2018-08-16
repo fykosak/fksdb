@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentDelta } from '../../../helpers/timer';
-import { IStore } from '../../../reducers/index';
+import { getCurrentDelta } from '../../../../results/helpers/timer';
+import { IFyziklaniResultsStore } from '../../reducers';
 
 interface IState {
     toStart?: number;
@@ -55,13 +55,13 @@ class Images extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore): IState => {
-    return {
-        inserted: state.timer.inserted,
-        toEnd: state.timer.toEnd,
-        toStart: state.timer.toStart,
-        visible: state.timer.visible,
-    };
+const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+     return {
+         inserted: state.timer.inserted,
+         toEnd: state.timer.toEnd,
+         toStart: state.timer.toStart,
+         visible: state.timer.visible,
+     };
 };
 
 export default connect(mapStateToProps, (): IState => {

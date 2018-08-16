@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
-
+import { Filter } from '../../../../results/helpers/filters/filters';
 import {
     ISubmits,
     ITask,
     ITeam,
 } from '../../../../shared/interfaces';
-import { Filter } from '../../../helpers/filters/filters';
-import { createFilter } from '../../../helpers/filters/table-filter';
-import { IStore } from '../../../reducers/index';
+import { IFyziklaniResultsStore } from '../../reducers';
 import TeamRow from './team-row';
 
 interface IState {
@@ -43,12 +41,12 @@ class ResultsTable extends React.Component<IState, {}> {
     }
 
     public render() {
-        const { submits, teams, tasks, filter } = this.props;
+        const {submits, teams, tasks, filter} = this.props;
         const submitsForTeams = {};
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit = submits[index];
-                const { teamId, taskId: taskId } = submit;
+                const {teamId, taskId: taskId} = submit;
                 submitsForTeams[teamId] = submitsForTeams[teamId] || {};
                 submitsForTeams[teamId][taskId] = submit;
             }
@@ -60,7 +58,7 @@ class ResultsTable extends React.Component<IState, {}> {
 
         return (
             <div className="mb-3">
-                <h1>{filter.getHeadline()}</h1>
+                <h1>{filter ? filter.getHeadline() : 'Výsledky Fyzikláni'}</h1>
                 <table ref={(table) => {
                     this.table = table;
                 }} className="tablesorter table-striped table-hover">
@@ -82,7 +80,7 @@ class ResultsTable extends React.Component<IState, {}> {
                                 submits={submitsForTeams[team.teamId] || {}}
                                 team={team}
                                 key={teamIndex}
-                                visible={(filter && filter.match(team))}
+                                visible={(filter ? filter.match(team) : true)}
                             />
                         );
                     })}
@@ -93,13 +91,13 @@ class ResultsTable extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore): IState => {
-    const { filterId, roomId, category, userFilter, autoSwitch } = state.tableFilter;
+const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+    const {index, filters} = state.tableFilter;
     return {
-        filter: createFilter(filterId, autoSwitch, { roomId, category }, userFilter),
-        submits: state.results.submits,
-        tasks: state.results.tasks,
-        teams: state.results.teams,
+        filter: filters.hasOwnProperty(index) ? filters[index] : null,
+        submits: state.data.submits,
+        tasks: state.data.tasks,
+        teams: state.data.teams,
     };
 };
 

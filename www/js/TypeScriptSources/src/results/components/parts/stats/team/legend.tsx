@@ -6,7 +6,7 @@ import {
 import {
     setActivePoints,
     setDeActivePoints,
-} from '../../../../actions/stats';
+} from '../../../../../fyziklani/statistics/actions/stats';
 import { getColorByPoints } from '../../../../helpers/pie/index';
 
 import { lang } from '../../../../lang/index';

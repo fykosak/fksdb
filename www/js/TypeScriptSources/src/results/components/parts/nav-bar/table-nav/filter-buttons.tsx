@@ -10,7 +10,7 @@ import {
 
 import {
     setUserFilter,
-} from '../../../../actions/table-filter';
+} from '../../../../../fyziklani/results/actions/table-filter';
 
 import { lang } from '../../../../lang';
 import { IStore } from '../../../../reducers';

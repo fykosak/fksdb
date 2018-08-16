@@ -4,7 +4,7 @@ import {
 } from 'react-redux';
 import {
     setAutoSwitch,
-} from '../../../../actions/table-filter';
+} from '../../../../../fyziklani/results/actions/table-filter';
 
 import { IStore } from '../../../../reducers';
 

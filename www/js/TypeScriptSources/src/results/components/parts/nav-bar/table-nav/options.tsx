@@ -7,7 +7,7 @@ import {
 import {
     setCategory,
     setRoom,
-} from '../../../../actions/table-filter';
+} from '../../../../../fyziklani/results/actions/table-filter';
 
 import {
     Filter,

@@ -1,12 +1,10 @@
 import * as React from 'react';
-
-import AutoFilter from '../../helpers/auto-filter';
-import Timer from '../timer';
+import { connect } from 'react-redux';
+import Timer from '../../../../results/components/parts/timer';
+import { IFyziklaniResultsStore } from '../../reducers';
+import AutoFilter from './filter/index';
 import Images from './images';
 import ResultsTable from './results-table';
-
-import { connect } from 'react-redux';
-import { IStore } from '../../../reducers/index';
 
 interface IState {
     visible?: boolean;
@@ -15,12 +13,13 @@ interface IState {
 
 interface IProps {
     basePath: string;
+    accessKey: string;
 }
 
 class Results extends React.Component<IState & IProps, {}> {
 
     public render() {
-        const { visible, hardVisible, basePath } = this.props;
+        const {visible, hardVisible, basePath} = this.props;
 
         const msg = [];
         // TODO do samostatného componentu všetky messages
@@ -40,7 +39,7 @@ class Results extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     return {
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,

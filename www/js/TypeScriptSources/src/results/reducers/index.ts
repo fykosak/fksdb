@@ -3,16 +3,16 @@ import { combineReducers } from 'redux';
 import {
     downloader,
     IState as IDownloaderState,
-} from './downloader';
+} from '../../fyziklani/helpers/reducers/downloader';
 import {
     IState as IOptionsState,
     options,
-} from './options';
+} from '../../fyziklani/helpers/reducers/options';
 
 import {
     IState as IResultsState,
     results,
-} from './results';
+} from '../../fyziklani/helpers/reducers/results';
 
 import {
     IState as IStatsState,
@@ -22,12 +22,12 @@ import {
 import {
     IState as ITableFilterState,
     tableFilter,
-} from './table-filter';
+} from '../../fyziklani/results/reducers/table-filter';
 
 import {
     IState as ITimerState,
     timer,
-} from './timer';
+} from '../../fyziklani/results/reducers/timer';
 
 export const app = combineReducers({
     downloader,

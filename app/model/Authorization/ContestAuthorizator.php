@@ -44,7 +44,7 @@ class ContestAuthorizator extends Object {
      * of the queried contest.
      *
      * @param mixed $resource
-     * @param enum $privilege
+     * @param string $privilege
      * @param int|ModelContest $contest queried contest
      * @return boolean
      */

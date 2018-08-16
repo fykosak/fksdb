@@ -43,14 +43,3 @@ export const fetchFail = (e: ExceptionInformation) => {
     };
 };
 
-export const SET_INITIAL_PARAMS = 'SET_INITIAL_PARAMS';
-
-export const setInitialParameters = (rooms: IRoom[], tasks: ITask[], teams: ITeam[], params: IParams) => {
-    return {
-        rooms,
-        tasks,
-        teams,
-        ...params,
-        type: SET_INITIAL_PARAMS,
-    };
-};

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import NavBar from './parts/nav-bar/index';
 import Statistics from './parts/stats/index';
-import Results from './parts/table/index';
+import Results from '../../fyziklani/results/components/results/index';
 
 import { connect } from 'react-redux';
 import { IStore } from '../reducers/index';

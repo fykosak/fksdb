@@ -3,18 +3,19 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { config } from '../../../config';
-import { setNextFilter } from '../../actions/table-filter';
-import { IStore } from '../../reducers';
+import { config } from '../../../../../config';
+import { setNextFilter } from '../../../actions/table-filter';
+import { IFyziklaniResultsStore } from '../../../reducers';
 
 interface IState {
     autoSwitch?: boolean;
     onSetNextFilter?: () => any;
 }
 
-class Clock extends React.Component<IState, {}> {
+class AutoFilter extends React.Component<IState, {}> {
+
     public componentDidMount() {
-        this.scroll();
+        return this.scroll();
     }
 
     public render() {
@@ -24,27 +25,12 @@ class Clock extends React.Component<IState, {}> {
     private async scroll() {
         if (this.props.autoSwitch) {
             await  window.scroll(0, 0);
-            /* await new Promise<void>((resolve) => {
-                 $('html, body').animate({
-                     scrollTop: 0,
-                 }, config.filterDelay / 3, "linear", () => {
-                     resolve();
-                 });
-             });*/
             $(document).scrollTop(0);
             const {onSetNextFilter} = this.props;
             const documentHeight = $(document).height();
             const screenHeight = $(window).height() - 100;
             for (let i = 0; i <= Math.floor(documentHeight / screenHeight); i++) {
-                /*await new Promise<void>((resolve) => {
-                    $('html, body').animate({
-                        scrollTop: i * screenHeight,
-                    }, config.filterDelay / 3, "linear", () => {
-                        resolve();
-                    });
-                });*/
                 await window.scroll(0, i * screenHeight);
-
                 await new Promise<void>((resolve) => {
                     setTimeout(() => {
                         resolve();
@@ -59,16 +45,16 @@ class Clock extends React.Component<IState, {}> {
                 }, config.filterDelay);
             });
         }
-        this.scroll();
+        return this.scroll();
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
     return {
         onSetNextFilter: () => dispatch(setNextFilter()),
     };
 };
-const mapStateToPros = (state: IStore): IState => {
+const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     return {
         autoSwitch: state.tableFilter.autoSwitch,
     };
@@ -77,4 +63,4 @@ const mapStateToPros = (state: IStore): IState => {
 export default connect(
     mapStateToPros,
     mapDispatchToProps,
-)(Clock);
+)(AutoFilter);

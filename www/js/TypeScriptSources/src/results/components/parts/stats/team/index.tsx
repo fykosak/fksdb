@@ -4,7 +4,7 @@ import {
     Dispatch,
 } from 'react-redux';
 import { ITeam } from '../../../../../shared/interfaces';
-import { setTeamId } from '../../../../actions/stats';
+import { setTeamId } from '../../../../../fyziklani/statistics/actions/stats';
 import { IStore } from '../../../../reducers/index';
 
 import { lang } from '../../../../lang/index';
