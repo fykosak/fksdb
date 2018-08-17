@@ -1,5 +1,5 @@
-import { Filter } from '../../../../../results/helpers/filters/filters';
 import { IRoom } from '../../../../../shared/interfaces';
+import { Filter } from './filter';
 
 export const createFilters = (rooms: IRoom[] = [], categories: string[] = []): Filter[] => {
     const roomFilters = rooms.map((room: IRoom) => {

@@ -2,14 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
-import { IFyziklaniResultsStore } from '../reducers';
-import HardVisibleSwitch from './hard-visible-switch/';
-import Results from './results/';
-import FilterSelect from './results/filter/select';
+import { IFyziklaniStatisticsStore } from '../reducers';
+import ChartsContainer from './charts/';
 
 interface IState {
     isReady?: boolean;
-    isOrg?: boolean;
 }
 
 interface IProps {
@@ -19,23 +16,20 @@ interface IProps {
 
 class App extends React.Component<IState & IProps, {}> {
     public render() {
-        // <NavBar/>
-        const {isReady, mode, accessKey, isOrg} = this.props;
+        const {isReady, mode} = this.props;
         if (!isReady) {
             return <Loading/>;
         }
+
         return (<>
-            {isOrg && <HardVisibleSwitch/>}
-            <FilterSelect mode={mode}/>
-            <Results accessKey={accessKey} basePath={'/'} mode={mode}/>
+            <ChartsContainer mode={mode}/>
             <Powered/>
         </>);
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
-        isOrg: state.options.isOrg,
         isReady: state.options.isReady,
     };
 };

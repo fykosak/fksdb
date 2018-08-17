@@ -20,24 +20,24 @@ import {
     IFyziklaniTimerState,
 } from '../../helpers/reducers/timer';
 import {
-    fyziklaniTableFilter,
-    IFyziklaniTableFilterState,
-} from './table-filter';
+    IFyziklaniStatisticsState,
+    stats,
+} from './stats';
 
 export const app = combineReducers({
     data: fyziklaniData,
     downloader: fyziklaniDownloader,
     fetchApi: submit,
     options: fyziklaniOptions,
-    tableFilter: fyziklaniTableFilter,
+    statistics: stats,
     timer: fyziklaniTimer,
 });
 
-export interface IFyziklaniResultsStore {
+export interface IFyziklaniStatisticsStore {
     data: IFyziklaniDataState;
-    tableFilter: IFyziklaniTableFilterState;
-    timer: IFyziklaniTimerState;
     options: IFyziklaniOptionsState;
     downloader: IFyziklaniDownloaderState;
     fetchApi: IState;
+    statistics: IFyziklaniStatisticsState;
+    timer: IFyziklaniTimerState;
 }

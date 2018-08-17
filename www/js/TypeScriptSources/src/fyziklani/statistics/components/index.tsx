@@ -1,31 +1,31 @@
 import * as React from 'react';
-// import { Provider } from 'react-redux';
-// import {
-//     applyMiddleware,
-//    createStore,
-// } from 'redux';
-// import logger from 'redux-logger';
-// import Powered from '../../../shared/powered';
-// import { config } from '../../../config/';
-// import Downloader from '../../helpers/components/downloader';
-//  import { app } from '../reducers';
-// import NavBar from './nav-bar/';
+import { Provider } from 'react-redux';
+import {
+    applyMiddleware,
+    createStore,
+} from 'redux';
+import logger from 'redux-logger';
+import { config } from '../../../config';
+import Downloader from '../../helpers/components/downloader';
+import { app } from '../reducers';
+import App from './app';
 
-export default class StatisticApp extends React.Component<{}, {}> {
+interface IProps {
+    mode: string;
+}
+
+export default class StatisticApp extends React.Component<IProps, {}> {
     public render() {
-        return null;
-        /* const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
-        // <NavBar/>
+        const {mode} = this.props;
         return (
             <Provider store={store}>
                 <>
                     <Downloader accessKey={accessKey}/>
-
-                    <Results basePath={'/'}/>
-                    <Powered/>
+                    <App mode={mode} accessKey={accessKey}/>
                 </>
             </Provider>
-        );*/
+        );
     }
 }

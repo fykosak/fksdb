@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
-import { Filter } from '../../../../results/helpers/filters/filters';
 import {
     ISubmits,
     ITask,
     ITeam,
 } from '../../../../shared/interfaces';
 import { IFyziklaniResultsStore } from '../../reducers';
+import { Filter } from './filter/filter';
 import TeamRow from './team-row';
 
 interface IState {
@@ -94,7 +94,7 @@ class ResultsTable extends React.Component<IState, {}> {
 const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     const {index, filters} = state.tableFilter;
     return {
-        filter: filters.hasOwnProperty(index) ? filters[index] : null,
+        filter: (filters.hasOwnProperty(index)) ? filters[index] : null,
         submits: state.data.submits,
         tasks: state.data.tasks,
         teams: state.data.teams,

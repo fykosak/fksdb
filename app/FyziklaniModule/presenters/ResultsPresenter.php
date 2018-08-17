@@ -58,7 +58,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function renderDefault() {
+    public function renderResultsView() {
         if ($this->isAjax()) {
             $this->handleAjaxCall();
         }
@@ -67,7 +67,25 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function renderStatistics() {
+    public function renderResultsPresentation() {
+        if ($this->isAjax()) {
+            $this->handleAjaxCall();
+        }
+    }
+
+    /**
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderTeamStatistics() {
+        if ($this->isAjax()) {
+            $this->handleAjaxCall();
+        }
+    }
+
+    /**
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderTaskStatistics() {
         if ($this->isAjax()) {
             $this->handleAjaxCall();
         }
@@ -114,9 +132,20 @@ class ResultsPresenter extends BasePresenter {
         $this->sendResponse($response);
     }
 
-    public function createComponentResults() {
-        return new Results();
-// TODO set others parameters (game start/end...)
+    public function createComponentResultsView() {
+        return new Results('results-view');
+    }
+
+    public function createComponentResultsPresentation() {
+        return new Results('results-presentation');
+    }
+
+    public function createComponentTeamStatistics() {
+        return new Results('team-statistics');
+    }
+
+    public function createComponentTaskStatistics() {
+        return new Results('task-statistics');
     }
 
     /**

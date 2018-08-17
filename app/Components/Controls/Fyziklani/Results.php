@@ -14,9 +14,20 @@ class Results extends ReactComponent {
     private static $JSAttached = false;
 
     /**
+     * @var string
+     */
+    private $mode;
+
+    public function __construct($mode) {
+        parent::__construct();
+        $this->mode = $mode;
+    }
+
+    /**
      * @throws \Nette\Utils\JsonException
      */
     public function render() {
+        $this->template->mode = $this->mode;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Results.latte');
         $this->template->render();
     }
