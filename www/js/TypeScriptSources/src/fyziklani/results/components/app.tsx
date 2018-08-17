@@ -19,7 +19,7 @@ interface IProps {
 
 class App extends React.Component<IState & IProps, {}> {
     public render() {
-        // <NavBar/>
+
         const {isReady, mode, accessKey, isOrg} = this.props;
         if (!isReady) {
             return <Loading/>;

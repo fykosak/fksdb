@@ -3,10 +3,10 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { IStore } from '../../../../../results/reducers/';
 import { setActivePoints } from '../../../actions/';
 import { getColorByPoints } from '../../../middleware/charts/colors';
 import { lang } from '../../../../../i18n/i18n';
+import { IFyziklaniStatisticsStore } from '../../../reducers';
 
 interface IState {
     onActivePoints?: (points: number) => void;
@@ -55,7 +55,7 @@ class Legend extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
     return {
         onActivePoints: (points) => dispatch(setActivePoints(+points)),
     };

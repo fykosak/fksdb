@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IFyziklaniOptionsState } from '../../reducers/options';
+import { IFyziklaniOptionsState } from '../../options/reducers/';
 import { IFyziklaniTimerState } from '../../reducers/timer';
 import { getCurrentDelta } from './timer';
 

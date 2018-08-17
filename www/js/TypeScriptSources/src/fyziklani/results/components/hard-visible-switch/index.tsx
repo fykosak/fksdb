@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { setHardVisible } from '../../../../results/actions/options';
+
 import { IFyziklaniResultsStore } from '../../reducers';
+import { setHardVisible } from '../../../helpers/options/actions';
 
 interface IState {
     onHardDisplayChange?: (status: boolean) => void;

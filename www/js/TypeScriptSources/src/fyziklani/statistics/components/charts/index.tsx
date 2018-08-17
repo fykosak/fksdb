@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { lang } from '../../../../i18n/i18n';
-import Timer from '../../../helpers/components/timer/timer';
+import Timer from '../../../helpers/components/timer/';
 import TasksStats from './task/index';
 import TeamStats from './team/index';
 
