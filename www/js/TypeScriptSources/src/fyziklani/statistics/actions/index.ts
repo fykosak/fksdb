@@ -26,7 +26,7 @@ export const setTeamId = (teamId: number): IActionSetTeamId => {
     };
 };
 
-export const ACTION_SET_TASK_ID = '@@fyziklani/ACTION_SET_TEAM_ID';
+export const ACTION_SET_TASK_ID = '@@fyziklani/ACTION_SET_TASK_ID';
 
 export interface IActionSetTaskId extends Action {
     taskId: number;
@@ -35,7 +35,7 @@ export interface IActionSetTaskId extends Action {
 export const setTaskId = (taskId: number): IActionSetTaskId => {
     return {
         taskId,
-        type: ACTION_SET_TEAM_ID,
+        type: ACTION_SET_TASK_ID,
     };
 };
 
