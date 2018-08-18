@@ -3,8 +3,6 @@ var path = require('path');
 module.exports = {
     devtool: 'inline-source-map',
     entry: {
-        routing: './src/routing/index.tsx',
-        'entry-form': './src/entry-form/index.tsx',
         all: './src/index.ts'
     },
     output: {
