@@ -11,9 +11,9 @@ import {
 } from '../../helpers/interfaces';
 import { addTeams } from '../actions/teams';
 import { IFyziklaniRoutingStore } from '../reducers/';
-import Form from './form';
-import Rooms from './rooms';
-import UnRoutedTeams from './unrouted-teams';
+import Form from './form/index';
+import Rooms from './rooms/index';
+import UnRoutedTeams from './unrouted-teams/';
 
 interface IState {
     onAddTeams?: (teams: ITeam[]) => void;
@@ -47,7 +47,7 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
                     </div>
                 </Card>
                 <div>
-                    <Form/>
+                    <Form accessKey={'@@fyziklani/routing'}/>
                 </div>
                 <Powered/>
             </div>

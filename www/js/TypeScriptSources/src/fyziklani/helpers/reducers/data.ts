@@ -1,6 +1,6 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
 import { ISubmitSuccessAction } from '../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../components/downloader/fetch';
+import { IFyziklaniResponse } from '../downloader/actions/';
 import {
     IRoom,
     ISubmits,

@@ -6,7 +6,7 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config';
-import Downloader from '../../helpers/components/downloader';
+import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
 import App from './app';
 

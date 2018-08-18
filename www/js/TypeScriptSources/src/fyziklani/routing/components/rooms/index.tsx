@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IRoom } from '../../helpers/interfaces';
+import { IRoom } from '../../../helpers/interfaces/';
 import Room from './room';
 
 interface IProps {

@@ -4,6 +4,10 @@ import {
     submit,
 } from '../../../fetch-api/reducers/submit';
 import {
+    fyziklaniDownloader,
+    IFyziklaniDownloaderState,
+} from '../../helpers/downloader/reducers/';
+import {
     fyziklaniOptions,
     IFyziklaniOptionsState,
 } from '../../helpers/options/reducers/';
@@ -11,10 +15,6 @@ import {
     fyziklaniData,
     IFyziklaniDataState,
 } from '../../helpers/reducers/data';
-import {
-    fyziklaniDownloader,
-    IFyziklaniDownloaderState,
-} from '../../helpers/reducers/downloader';
 import {
     fyziklaniTimer,
     IFyziklaniTimerState,

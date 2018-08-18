@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ITeam } from '../../helpers/interfaces';
-import { IFyziklaniRoutingStore } from '../reducers/';
-import Team from './team';
+import { ITeam } from '../../../helpers/interfaces/';
+import { IFyziklaniRoutingStore } from '../../reducers/';
+import Team from '../team/';
 
 interface IState {
     stateTeams?: ITeam[];

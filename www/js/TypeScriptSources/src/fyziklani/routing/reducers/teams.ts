@@ -9,6 +9,8 @@ import { ACTION_REMOVE_UPDATED_TEAMS } from '../actions/save';
 import {
     ACTION_ADD_TEAMS,
     ACTION_REMOVE_PLACE,
+    IActionAddTeams,
+    IActionRemoveTeamPlace,
 } from '../actions/teams';
 import {
     IResponse,
@@ -39,14 +41,14 @@ function routeTeam(state: IFyziklaniRoutingTeamsState, action: IActionDropItem<I
     };
 }
 
-const addTeams = (state: IFyziklaniRoutingTeamsState, action): IFyziklaniRoutingTeamsState => {
+const addTeams = (state: IFyziklaniRoutingTeamsState, action: IActionAddTeams): IFyziklaniRoutingTeamsState => {
     return {
         ...state,
         availableTeams: action.teams,
     };
 };
 
-const removePlace = (state: IFyziklaniRoutingTeamsState, action): IFyziklaniRoutingTeamsState => {
+const removePlace = (state: IFyziklaniRoutingTeamsState, action: IActionRemoveTeamPlace): IFyziklaniRoutingTeamsState => {
     const {teamId} = action;
 
     const newTeams = state.availableTeams.map((team) => {

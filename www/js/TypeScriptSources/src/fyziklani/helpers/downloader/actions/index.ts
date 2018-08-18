@@ -8,7 +8,7 @@ import {
     ISubmits,
     ITask,
     ITeam,
-} from '../../interfaces';
+} from '../../interfaces/';
 
 export const fetchResults = (accessKey: string, dispatch: Dispatch<any>, oldLastUpdated: string = null): Promise<any> => {
     const data: IRequest<string> = {

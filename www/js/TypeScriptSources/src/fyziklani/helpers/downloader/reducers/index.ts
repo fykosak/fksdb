@@ -1,9 +1,9 @@
 import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_SUCCESS,
-} from '../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../components/downloader/fetch';
+} from '../../../../fetch-api/actions/submit';
+import { ISubmitSuccessAction } from '../../../../fetch-api/middleware/interfaces';
+import { IFyziklaniResponse } from '../actions/';
 
 export interface IFyziklaniDownloaderState {
     lastUpdated?: string;

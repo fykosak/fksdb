@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-
-import { IFyziklaniResultsStore } from '../../reducers';
-import { setHardVisible } from '../../../helpers/options/actions';
+import { setHardVisible } from '../actions/';
+import { IFyziklaniOptionsState } from '../reducers';
 
 interface IState {
     onHardDisplayChange?: (status: boolean) => void;
@@ -28,7 +27,7 @@ class HardVisibleSwitch extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+const mapStateToProps = (state: { options: IFyziklaniOptionsState }): IState => {
     return {
         hardVisible: state.options.hardVisible,
     };

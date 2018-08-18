@@ -6,11 +6,11 @@ import {
 import {
     IPlace,
     ITeam,
-} from '../../helpers/interfaces';
-import { dropItem } from '../actions/dragndrop';
-import { IRoutingDragNDropData } from '../middleware/interfaces';
-import { IFyziklaniRoutingStore } from '../reducers/';
-import Team from './team';
+} from '../../../helpers/interfaces/';
+import { dropItem } from '../../actions/dragndrop';
+import { IRoutingDragNDropData } from '../../middleware/interfaces';
+import { IFyziklaniRoutingStore } from '../../reducers/';
+import Team from '../team/';
 
 interface IState {
     onDrop?: (teamId: number, place: IPlace) => void;

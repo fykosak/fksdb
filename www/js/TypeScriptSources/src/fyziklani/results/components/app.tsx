@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
+import HardVisibleSwitch from '../../helpers/options/compoents/hard-visible-switch';
 import { IFyziklaniResultsStore } from '../reducers';
-import HardVisibleSwitch from './hard-visible-switch/';
 import Results from './results/';
 import FilterSelect from './results/filter/select';
 

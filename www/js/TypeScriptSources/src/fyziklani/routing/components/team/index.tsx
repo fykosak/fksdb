@@ -3,14 +3,14 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { ITeam } from '../../helpers/interfaces';
+import { ITeam } from '../../../helpers/interfaces/';
 import {
     dragEnd,
     dragStart,
-} from '../actions/dragndrop';
-import { removeTeamPlace } from '../actions/teams';
-import { IRoutingDragNDropData } from '../middleware/interfaces';
-import { IFyziklaniRoutingStore } from '../reducers/';
+} from '../../actions/dragndrop';
+import { removeTeamPlace } from '../../actions/teams';
+import { IRoutingDragNDropData } from '../../middleware/interfaces';
+import { IFyziklaniRoutingStore } from '../../reducers/';
 
 interface IState {
     isUpdated?: boolean;

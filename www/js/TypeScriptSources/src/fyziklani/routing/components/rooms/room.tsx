@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { IRoom } from '../../../helpers/interfaces/';
 import Place from './place';
-import { IRoom } from '../../helpers/interfaces';
 
 interface IProps {
     info: IRoom;
@@ -9,8 +9,8 @@ interface IProps {
 export default class Room extends React.Component<IProps, {}> {
 
     public render() {
-        const { info } = this.props;
-        const { roomId, name, x: maxX, y: maxY } = info;
+        const {info} = this.props;
+        const {roomId, name, x: maxX, y: maxY} = info;
         const rows = [];
         for (let y = 0; y < maxY; y++) {
             const row = [];

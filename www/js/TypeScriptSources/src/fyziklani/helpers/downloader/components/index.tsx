@@ -4,11 +4,11 @@ import {
     Dispatch,
 } from 'react-redux';
 import { lang } from '../../../../i18n/i18n';
-import { IFyziklaniResultsStore } from '../../../results/reducers';
+import { IFyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,
     waitForFetch,
-} from './fetch';
+} from '../actions/';
 
 interface IState {
     isSubmitting?: boolean;
@@ -55,7 +55,6 @@ class Downloader extends React.Component<IState & IProps, {}> {
 }
 
 const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IState => {
-
     const {accessKey} = ownProps;
     return {
         isRefreshing: state.downloader.isRefreshing,
@@ -66,7 +65,6 @@ const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IStat
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>, ownProps: IProps): IState => {
-    // const accessKey = '@@fyziklani-results/';
     const {accessKey} = ownProps;
     return {
         onFetch: () => fetchResults(accessKey, dispatch, null),
