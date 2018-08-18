@@ -6,7 +6,7 @@ import {
 import {
     ITask,
     ITeam,
-} from '../../fyziklani/helpers/interfaces';
+} from '../../helpers/interfaces/';
 import { validate } from '../middleware/form';
 import FormSection from './form-section';
 

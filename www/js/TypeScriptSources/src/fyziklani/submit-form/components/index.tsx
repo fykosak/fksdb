@@ -5,11 +5,11 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { config } from '../../config/';
+import { config } from '../../../config/';
 import {
     ITask,
     ITeam,
-} from '../../fyziklani/helpers/interfaces';
+} from '../../helpers/interfaces/';
 import { app } from '../reducers/';
 import Container from './container';
 

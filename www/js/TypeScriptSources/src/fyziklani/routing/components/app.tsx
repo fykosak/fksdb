@@ -10,7 +10,7 @@ import {
     ITeam,
 } from '../../helpers/interfaces';
 import { addTeams } from '../actions/teams';
-import { IStore } from '../reducers/';
+import { IFyziklaniRoutingStore } from '../reducers/';
 import Form from './form';
 import Rooms from './rooms';
 import UnRoutedTeams from './unrouted-teams';
@@ -59,7 +59,7 @@ const mapStateToProps = (): IState => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

@@ -3,17 +3,17 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-
-import Powered from '../../shared/powered';
-
-import FormContainer from './form-container';
-
-import { submitStart } from '../actions/';
-import { IStore } from '../reducers/';
+import Powered from '../../../shared/powered';
 import {
     ITask,
     ITeam,
-} from '../../fyziklani/helpers/interfaces';
+} from '../../helpers/interfaces/';
+import { submitStart } from '../actions/';
+import {
+    IFyziklaniSubmitStore,
+
+} from '../reducers/';
+import FormContainer from './form-container';
 
 interface IProps {
     tasks: ITask[];
@@ -38,7 +38,7 @@ class TaskCode extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniSubmitStore>): IState => {
     return {
         onSubmit: (values) => submitStart(dispatch, values),
     };

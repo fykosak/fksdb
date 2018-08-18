@@ -3,13 +3,17 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { ITeam } from '../../helpers/interfaces';
+import {
+    IPlace,
+    ITeam,
+} from '../../helpers/interfaces';
 import { dropItem } from '../actions/dragndrop';
-import { IStore } from '../reducers/';
+import { IRoutingDragNDropData } from '../middleware/interfaces';
+import { IFyziklaniRoutingStore } from '../reducers/';
 import Team from './team';
 
 interface IState {
-    onDrop?: (teamId: number, place: any) => void;
+    onDrop?: (teamId: number, place: IPlace) => void;
     teams?: ITeam[];
     draggedTeamId?: number;
 }
@@ -24,7 +28,7 @@ class Place extends React.Component<IState & IProps, {}> {
 
     public render() {
 
-        const { x, y, onDrop, teams, draggedTeamId, roomId } = this.props;
+        const {x, y, onDrop, teams, draggedTeamId, roomId} = this.props;
         const team = teams && teams.filter((currentTeam) => {
             return (currentTeam.x === x) && (currentTeam.y === y) && (currentTeam.roomId === roomId);
         })[0];
@@ -34,9 +38,9 @@ class Place extends React.Component<IState & IProps, {}> {
                     e.preventDefault();
                 }
             }}
-            onClick={() => draggedTeamId ? onDrop(draggedTeamId, { x, y, roomId }) : null}
+            onClick={() => draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null}
             onDrop={() => {
-                onDrop(draggedTeamId, { x, y, roomId });
+                onDrop(draggedTeamId, {x, y, roomId, room: null});
             }}>
             {team && <Team
                 team={team}
@@ -45,16 +49,16 @@ class Place extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
     return {
-        onDrop: (teamId, place) => dispatch(dropItem(teamId, place)),
+        onDrop: (teamId, place) => dispatch(dropItem<IRoutingDragNDropData>({teamId, place})),
     };
 };
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IFyziklaniRoutingStore): IState => {
     return {
-        draggedTeamId: state.dragNDrop.draggedTeamId,
-        teams: state.teams,
+        draggedTeamId: state.dragNDrop.data.teamId,
+        teams: state.teams.availableTeams,
     };
 };
 

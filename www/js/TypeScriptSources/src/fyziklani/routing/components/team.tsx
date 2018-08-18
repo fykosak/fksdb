@@ -3,13 +3,14 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import { ITeam } from '../../helpers/interfaces';
 import {
     dragEnd,
     dragStart,
 } from '../actions/dragndrop';
 import { removeTeamPlace } from '../actions/teams';
-import { IStore } from '../reducers/';
-import { ITeam } from '../../helpers/interfaces';
+import { IRoutingDragNDropData } from '../middleware/interfaces';
+import { IFyziklaniRoutingStore } from '../reducers/';
 
 interface IState {
     isUpdated?: boolean;
@@ -62,17 +63,17 @@ class Team extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: IFyziklaniRoutingStore, ownProps: IProps): IState => {
     return {
-        isDragged: state.dragNDrop.draggedTeamId === ownProps.team.teamId,
-        isUpdated: (state.save.updatedTeams.indexOf(ownProps.team.teamId) !== -1),
+        isDragged: state.dragNDrop.data.teamId === ownProps.team.teamId,
+        isUpdated: (state.teams.updatedTeams.indexOf(ownProps.team.teamId) !== -1),
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
-        onDragStart: (teamId) => dispatch(dragStart(teamId)),
+        onDragStart: (teamId) => dispatch(dragStart<IRoutingDragNDropData>({teamId})),
         onRemovePlace: (teamId) => dispatch(removeTeamPlace(teamId)),
     };
 };

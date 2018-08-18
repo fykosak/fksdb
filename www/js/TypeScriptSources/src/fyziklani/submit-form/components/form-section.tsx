@@ -4,12 +4,13 @@ import {
     Field,
     formValueSelector,
 } from 'redux-form';
+import { IMessage } from '../../../fetch-api/middleware/interfaces';
 import {
     ITask,
     ITeam,
-} from '../../fyziklani/helpers/interfaces';
-import Card from '../../shared/components/card';
-import { IStore } from '../reducers/';
+} from '../../helpers/interfaces/';
+import Card from '../../../shared/components/card';
+import { IFyziklaniSubmitStore } from '../reducers/';
 import CodeInputError from './error-block';
 import { FORM_NAME } from './form-container';
 import CodeInput from './input';
@@ -27,7 +28,7 @@ export interface IProps {
 
 interface IState {
     code?: string;
-    msg?: string[];
+    msg?: IMessage[];
 }
 
 class FormSection extends React.Component<IProps & IState, {}> {
@@ -61,11 +62,12 @@ class FormSection extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IFyziklaniSubmitStore): IState => {
     const selector = formValueSelector(FORM_NAME);
+    const accessKey = '@@fyziklani';
     return {
         code: selector(state, 'code'),
-        msg: state.submit.msg,
+        msg: state.fetchApi[accessKey].messages,
     };
 };
 

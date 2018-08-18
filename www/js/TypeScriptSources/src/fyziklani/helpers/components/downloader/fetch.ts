@@ -1,6 +1,9 @@
 import { Dispatch } from 'react-redux';
 import { dispatchNetteFetch } from '../../../../fetch-api/middleware/fetch';
 import {
+    IRequest,
+} from '../../../../fetch-api/middleware/interfaces';
+import {
     IRoom,
     ISubmits,
     ITask,
@@ -8,11 +11,15 @@ import {
 } from '../../interfaces';
 
 export const fetchResults = (accessKey: string, dispatch: Dispatch<any>, oldLastUpdated: string = null): Promise<any> => {
-    const data: any = {};
+    const data: IRequest<string> = {
+        act: '@@fyziklani/results',
+        data: null,
+    };
+
     if (oldLastUpdated) {
-        data.lastUpdated = oldLastUpdated;
+        data.data = oldLastUpdated;
     }
-    return dispatchNetteFetch<{ lastUpdated: string }, any, any>(accessKey, dispatch, data, () => null, () => null);
+    return dispatchNetteFetch<string, any, any>(accessKey, dispatch, data, () => null, () => null);
 };
 
 export const waitForFetch = (accessKey: string, dispatch: Dispatch<any>, delay: number, lastUpdated: string = null): any => {

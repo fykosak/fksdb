@@ -2,35 +2,36 @@ import {
     ACTION_DRAG_END,
     ACTION_DRAG_START,
     ACTION_DROP_ITEM,
+    IActionDragStart,
 } from '../actions/dragndrop';
 
-const dragStart = (state: IState, action): IState => {
-    const { teamId } = action;
+export interface IState<D> {
+    data?: D;
+}
+
+function dragStart<D>(state: IState<D>, action: IActionDragStart<D>): IState<D> {
+    const {data} = action;
     return {
         ...state,
-        draggedTeamId: teamId,
+        data,
     };
-};
+}
 
-const dragEnd = (state: IState): IState => {
+function dragEnd<D>(state: IState<D>): IState<D> {
     return {
         ...state,
-        draggedTeamId: null,
+        data: null,
     };
-};
+}
 
-export const dragNDrop = (state: IState = {}, action): IState => {
+export function dragNDrop<D = any>(state: IState<D> = {}, action): IState<D> {
     switch (action.type) {
         case ACTION_DRAG_START:
-            return dragStart(state, action);
+            return dragStart<D>(state, action);
         case ACTION_DROP_ITEM:
         case ACTION_DRAG_END:
-            return dragEnd(state);
+            return dragEnd<D>(state);
         default:
             return state;
     }
-};
-
-export interface IState {
-    draggedTeamId?: number;
 }

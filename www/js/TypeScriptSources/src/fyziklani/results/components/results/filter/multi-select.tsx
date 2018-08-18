@@ -27,7 +27,7 @@ interface IState {
 class Select extends React.Component<IState, {}> {
 
     public render() {
-        const {categories, filters, index, rooms} = this.props;
+        const {categories, filters, index, rooms,autoSwitch,onRemoveFilter,onAddFilter} = this.props;
         const availableFilters = createFilters(rooms, categories);
 
         return <div className="form-group">
@@ -46,14 +46,14 @@ class Select extends React.Component<IState, {}> {
                         <div className="modal-body">
                             <AutoSwitchControl/>
                             <hr/>
-                            {this.props.autoSwitch ? (
+                            {autoSwitch ? (
                                 <>
                                     <h5 className="text-success">Aktívne filtre</h5>
                                     <div>
                                         {filters.map((filter, key) => {
                                             return <FilterComponent
                                                 filter={filter}
-                                                onCloseClick={this.props.onRemoveFilter}
+                                                onCloseClick={onRemoveFilter}
                                                 active={(key === index)}
                                             />;
                                         })}
@@ -69,7 +69,7 @@ class Select extends React.Component<IState, {}> {
                                         }).map((filter, key) => {
                                             return <FilterComponent
                                                 filter={filter}
-                                                onClick={this.props.onAddFilter}
+                                                onClick={onAddFilter}
                                                 active={false}
                                             />;
 

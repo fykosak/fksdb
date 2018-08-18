@@ -30,7 +30,8 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 
     public componentWillReceiveProps(nextProps: IState & IProps) {
-        if (this.props.lastUpdated !== nextProps.lastUpdated) {
+        const {lastUpdated: oldLastUpdated} = this.props;
+        if (oldLastUpdated !== nextProps.lastUpdated) {
             const {onWaitForFetch, refreshDelay, lastUpdated} = nextProps;
             if (refreshDelay) {
                 onWaitForFetch(lastUpdated, refreshDelay);

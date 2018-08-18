@@ -9,11 +9,12 @@ export interface IProps {
 export default class Card extends React.Component<IProps, {}> {
 
     public render() {
+        const {level, headline, children} = this.props;
         return (
-            <div className={'card card-outline-' + this.props.level}>
-                <div className={'card-header card-' + this.props.level}>{this.props.headline}</div>
+            <div className={'card card-outline-' + level}>
+                <div className={'card-header card-' + level}>{headline}</div>
                 <div className="card-block card-body">
-                    {this.props.children}
+                    {children}
                 </div>
             </div>
         );

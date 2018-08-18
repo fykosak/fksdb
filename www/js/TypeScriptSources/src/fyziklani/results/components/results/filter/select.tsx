@@ -9,7 +9,8 @@ interface IProps {
 export default class Select extends React.Component<IProps, {}> {
 
     public render() {
-        if (this.props.mode === 'presentation') {
+        const {mode} = this.props;
+        if (mode === 'presentation') {
             return <MultiSelect/>;
         }
         return <SingleSelect/>;

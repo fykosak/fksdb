@@ -10,12 +10,14 @@ export interface ISubmit {
     teamId: number;
     created: any;
 }
+
 export interface ISubmits {
     [id: number]: ISubmit;
 }
 
 export interface IPlace {
     room: string;
+    roomId: number;
     x: number;
     y: number;
 }

@@ -5,7 +5,7 @@ import {
 } from 'react-redux';
 import { ITeam } from '../../helpers/interfaces';
 import { saveTeams } from '../actions/save';
-import { IStore } from '../reducers/';
+import { IFyziklaniRoutingStore } from '../reducers/';
 
 interface IState {
     onSaveRouting?: (teams: ITeam[]) => void;
@@ -28,17 +28,17 @@ class Form extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
     return {
         onSaveRouting: (data: ITeam[]) => saveTeams(dispatch, data),
     };
 };
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IFyziklaniRoutingStore): IState => {
     return {
-        error: state.save.error,
-        saving: state.save.saving,
-        teams: state.teams,
+        error: state.fetchApi['accessKey'].error,
+        saving: state.fetchApi['accessKey'].submitting,
+        teams: state.teams.availableTeams,
     };
 };
 

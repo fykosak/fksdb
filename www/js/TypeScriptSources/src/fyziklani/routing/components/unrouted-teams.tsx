@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Team from './team';
 import { connect } from 'react-redux';
-import { IStore } from '../reducers/';
 import { ITeam } from '../../helpers/interfaces';
+import { IFyziklaniRoutingStore } from '../reducers/';
+import Team from './team';
 
 interface IState {
     stateTeams?: ITeam[];
@@ -11,7 +11,7 @@ interface IState {
 class UnRoutedTeams extends React.Component<IState, {}> {
 
     public render() {
-        const { stateTeams } = this.props;
+        const {stateTeams} = this.props;
 
         return (
             <div className="row">
@@ -28,9 +28,9 @@ class UnRoutedTeams extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IFyziklaniRoutingStore): IState => {
     return {
-        stateTeams: state.teams,
+        stateTeams: state.teams.availableTeams,
     };
 };
 

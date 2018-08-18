@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import Results from './results/components/';
 import Routing from './routing/components/index';
 import Statistics from './statistics/components/';
+import TaskCodeApp from './submit-form/components/index';
 
 const registerRouting = () => {
     document.querySelectorAll('.room-edit').forEach((container: HTMLDivElement) => {
@@ -15,9 +16,18 @@ const registerRouting = () => {
                 return className + ' ' + name;
             }, '');
         }
-
         const data = JSON.parse(container.getAttribute('data-data'));
         ReactDOM.render(<Routing teams={data.teams} rooms={data.rooms}/>, container);
+    });
+};
+
+const registerSubmitForm = () => {
+    document.querySelectorAll('#taskcode').forEach((element: HTMLDivElement) => {
+        const c = document.createElement('div');
+        const tasks = JSON.parse(element.getAttribute('data-tasks'));
+        const teams = JSON.parse(element.getAttribute('data-teams'));
+        element.appendChild(c);
+        ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams}/>, c);
     });
 };
 
@@ -52,6 +62,5 @@ export const fyziklani = () => {
         }
     });
     registerRouting();
-
-
+    registerSubmitForm();
 };

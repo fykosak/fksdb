@@ -1,24 +1,27 @@
 import { combineReducers } from 'redux';
 import {
+    IFetchApiState,
+    submit,
+} from '../../../fetch-api/reducers/submit';
+import { IRoutingDragNDropData } from '../middleware/interfaces';
+import {
     dragNDrop,
     IState as IDragNDropState,
 } from './dragndrop';
-
 import {
-    IState as TSaveState,
-    save,
-} from './save';
-import { teams } from './teams';
-import { ITeam } from '../../helpers/interfaces';
+    IFyziklaniRoutingTeamsState,
+    teams,
+} from './teams';
 
 export const app = combineReducers({
     dragNDrop,
-    save,
+    fetchApi: submit,
     teams,
+
 });
 
-export interface IStore {
-    teams: ITeam[];
-    dragNDrop: IDragNDropState;
-    save: TSaveState;
+export interface IFyziklaniRoutingStore {
+    teams: IFyziklaniRoutingTeamsState;
+    dragNDrop: IDragNDropState<IRoutingDragNDropData>;
+    fetchApi: IFetchApiState;
 }

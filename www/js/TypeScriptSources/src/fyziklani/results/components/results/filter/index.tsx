@@ -23,7 +23,8 @@ class AutoFilter extends React.Component<IState, {}> {
     }
 
     private async scroll() {
-        if (this.props.autoSwitch) {
+        const {autoSwitch} = this.props;
+        if (autoSwitch) {
             await  window.scroll(0, 0);
             $(document).scrollTop(0);
             const {onSetNextFilter} = this.props;

@@ -1,16 +1,19 @@
 import { Action } from 'redux';
-import { IPlace } from '../../helpers/interfaces';
 
-export const ACTION_DRAG_START = 'ACTION_DRAG_START';
+export const ACTION_DRAG_START = '@@drag-n-drop/ACTION_DRAG_START';
 
-export const dragStart = (teamId: number) => {
+export interface IActionDragStart<D> extends Action {
+    data: D;
+}
+
+export function dragStart<D>(data: D): IActionDragStart<D> {
     return {
-        teamId,
+        data,
         type: ACTION_DRAG_START,
     };
-};
+}
 
-export const ACTION_DRAG_END = 'ACTION_DRAG_END';
+export const ACTION_DRAG_END = '@@drag-n-drop/ACTION_DRAG_END';
 
 export const dragEnd = (): Action => {
     return {
@@ -18,12 +21,15 @@ export const dragEnd = (): Action => {
     };
 };
 
-export const ACTION_DROP_ITEM = 'ACTION_DROP_ITEM';
+export interface IActionDropItem<D> extends Action {
+    data: D;
+}
 
-export const dropItem = (teamId: number, place: IPlace) => {
+export const ACTION_DROP_ITEM = '@@drag-n-drop/ACTION_DROP_ITEM';
+
+export function dropItem<D>(data: D): IActionDropItem<D> {
     return {
-        place,
-        teamId,
+        data,
         type: ACTION_DROP_ITEM,
     };
-};
+}

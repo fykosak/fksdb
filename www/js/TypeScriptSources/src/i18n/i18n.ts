@@ -10,7 +10,7 @@ class Lang {
 
     private readonly data: ILanguageData = {};
 
-    private currentLocale: string = 'cs';
+    private currentLocale = 'cs';
 
     public constructor(langData: ILanguageData) {
         this.data = langData;

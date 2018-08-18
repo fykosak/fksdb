@@ -19,6 +19,9 @@ export interface IState {
     };
 }
 
+export interface IFetchApiState extends IState {
+};
+
 const submitStart = (state: IState, action: ISubmitAction): IState => {
     const {accessKey} = action;
     return {

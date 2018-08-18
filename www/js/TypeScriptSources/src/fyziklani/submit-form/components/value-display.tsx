@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     ITask,
     ITeam,
-} from '../../fyziklani/helpers/interfaces';
+} from '../../helpers/interfaces/';
 
 interface IProps {
     code: string;

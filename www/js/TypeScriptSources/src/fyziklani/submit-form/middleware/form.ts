@@ -2,7 +2,7 @@ import { IProps } from '../components/form-section';
 
 export const getFullCode = (values): string => {
     const length = values.code.length;
-    return ('0'.repeat(9 - length) + values.code).toLocaleUpperCase();
+    return (('0').repeat(9 - length) + values.code).toLocaleUpperCase();
 };
 
 const isValidFullCode = (code: string): boolean => {
