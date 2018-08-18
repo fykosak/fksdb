@@ -5,6 +5,7 @@ import {
 } from 'react-redux';
 import { setAutoSwitch } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
+import { lang } from '../../../../../i18n/i18n';
 
 interface IState {
     autoSwitch?: boolean;
@@ -17,7 +18,7 @@ class AutoSwitchControl extends React.Component<IState, {}> {
         const {autoSwitch, onAutoSwitch} = this.props;
 
         return <>
-            <h5>Automatické prepíanie</h5>
+            <h5>{lang.getText('Auto switch')}</h5>
             <button
                 className={'btn ' + (autoSwitch ? 'btn-danger' : 'btn-success')}
                 onClick={() => {

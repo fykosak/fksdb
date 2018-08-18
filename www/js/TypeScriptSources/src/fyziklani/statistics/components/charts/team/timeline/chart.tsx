@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
 import {
     ISubmit,
     ISubmits,
     ITask,
 } from '../../../../../helpers/interfaces';
+import { getColorByPoints } from '../../../../middleware/charts/colors';
+import { IFyziklaniStatisticsStore } from '../../../../reducers';
 
 interface IState {
     activePoints?: number;

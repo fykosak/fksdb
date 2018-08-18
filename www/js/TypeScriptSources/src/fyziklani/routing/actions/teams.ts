@@ -1,5 +1,5 @@
-import { ITeam } from '../../helpers/interfaces';
 import { Action } from 'redux';
+import { ITeam } from '../../helpers/interfaces';
 
 export const ACTION_ADD_TEAMS = 'ACTION_ADD_TEAMS';
 

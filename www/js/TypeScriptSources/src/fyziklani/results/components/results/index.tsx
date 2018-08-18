@@ -6,7 +6,6 @@ import AutoFilter from './filter/index';
 import Images from './images';
 import ResultsTable from './results-table';
 
-
 interface IState {
     visible?: boolean;
     hardVisible?: boolean;

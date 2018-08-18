@@ -8,7 +8,7 @@ import { IFyziklaniRoutingStore } from '../reducers/';
 export const saveTeams = (accessKey: string, dispatch: Dispatch<IFyziklaniRoutingStore>, teams: ITeam[]): Promise<any> => {
     const data = {act: 'routing-save', data: JSON.stringify(teams)};
     return dispatchNetteFetch<string, IResponse, IFyziklaniRoutingStore>
-    (accessKey, dispatch, data, () => null, (d) => {
+    (accessKey, dispatch, data, () => null, () => {
         setTimeout(() => {
             dispatch(removeUpdatesTeams());
         }, 5000);

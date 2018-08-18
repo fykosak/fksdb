@@ -1,17 +1,17 @@
 import * as React from 'react';
-import logger from 'redux-logger';
-import App from './app';
 import { Provider } from 'react-redux';
 import {
     applyMiddleware,
     createStore,
 } from 'redux';
+import logger from 'redux-logger';
 import { config } from '../../../config/';
-import { app } from '../reducers/';
 import {
     IRoom,
     ITeam,
 } from '../../helpers/interfaces';
+import { app } from '../reducers/';
+import App from './app';
 
 interface IProps {
     teams: ITeam[];

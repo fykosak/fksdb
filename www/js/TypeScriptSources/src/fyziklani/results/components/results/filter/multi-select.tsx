@@ -13,6 +13,7 @@ import AutoSwitchControl from './auto-switch-control';
 import { Filter } from './filter';
 import FilterComponent from './filter-component';
 import { createFilters } from './filters';
+import { lang } from '../../../../../i18n/i18n';
 
 interface IState {
     filters?: Filter[];
@@ -27,7 +28,7 @@ interface IState {
 class Select extends React.Component<IState, {}> {
 
     public render() {
-        const {categories, filters, index, rooms,autoSwitch,onRemoveFilter,onAddFilter} = this.props;
+        const {categories, filters, index, rooms, autoSwitch, onRemoveFilter, onAddFilter} = this.props;
         const availableFilters = createFilters(rooms, categories);
 
         return <div className="form-group">
@@ -48,7 +49,7 @@ class Select extends React.Component<IState, {}> {
                             <hr/>
                             {autoSwitch ? (
                                 <>
-                                    <h5 className="text-success">Aktívne filtre</h5>
+                                    <h5 className="text-success">{lang.getText('Active filters')}</h5>
                                     <div>
                                         {filters.map((filter, key) => {
                                             return <FilterComponent
@@ -59,7 +60,7 @@ class Select extends React.Component<IState, {}> {
                                         })}
                                     </div>
                                     <hr/>
-                                    <h5>Dostupné filtre</h5>
+                                    <h5>{lang.getText('Available filters')}</h5>
 
                                     <div>
                                         {availableFilters.filter((filter) => {
@@ -68,6 +69,7 @@ class Select extends React.Component<IState, {}> {
                                             });
                                         }).map((filter, key) => {
                                             return <FilterComponent
+                                                key={key}
                                                 filter={filter}
                                                 onClick={onAddFilter}
                                                 active={false}

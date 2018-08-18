@@ -1,5 +1,5 @@
-import { Filter } from '../components/results/filter/filter';
 import { Action } from 'redux';
+import { Filter } from '../components/results/filter/filter';
 
 export const ACTION_SET_NEXT_TABLE_FILTER = '@@fyziklani/ACTION_SET_NEXT_TABLE_FILTER';
 

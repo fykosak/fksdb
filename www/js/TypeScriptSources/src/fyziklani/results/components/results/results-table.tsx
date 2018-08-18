@@ -9,6 +9,7 @@ import {
 import { IFyziklaniResultsStore } from '../../reducers';
 import { Filter } from './filter/filter';
 import TeamRow from './team-row';
+import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     filter?: Filter;
@@ -58,7 +59,7 @@ class ResultsTable extends React.Component<IState, {}> {
 
         return (
             <div className="mb-3">
-                <h1>{filter ? filter.getHeadline() : 'Výsledky Fyzikláni'}</h1>
+                <h1>{filter ? filter.getHeadline() : lang.getText('Results of Fyziklani')}</h1>
                 <table ref={(table) => {
                     this.table = table;
                 }} className="tablesorter table-striped table-hover">

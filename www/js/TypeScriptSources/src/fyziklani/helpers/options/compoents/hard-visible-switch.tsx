@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { setHardVisible } from '../actions/';
 import { IFyziklaniOptionsState } from '../reducers';
+import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     onHardDisplayChange?: (status: boolean) => void;
@@ -18,11 +19,11 @@ class HardVisibleSwitch extends React.Component<IState, {}> {
                 className={'btn btn-waring'}
                 onClick={(event) => {
                     event.preventDefault();
-                    onHardDisplayChange(!hardVisible)
+                    onHardDisplayChange(!hardVisible);
                 }}>
-                {hardVisible ? 'vyponout' : 'zapnout'}"Neveřejné výsledkovky"
+                {hardVisible ? lang.getText('turn off') : lang.getText('turn on')} {lang.getText('"Not public results"')}
             </button>
-            <span className="text-danger">Tuto funkci nezapínejte pokud jsou výsledkovky promítané!!!</span>
+            <span className="text-danger">{lang.getText('This function don\'t turn on id results are projected!')}</span>
         </div>;
     }
 }

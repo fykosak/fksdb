@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { lang } from '../../../../../../i18n/i18n';
 import Legend from '../legend';
 import Chart from './chart';
-import { lang } from '../../../../../../i18n/i18n';
 
 export default class PointsPie extends React.Component<{}, {}> {
 

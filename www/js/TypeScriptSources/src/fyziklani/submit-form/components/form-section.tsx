@@ -5,11 +5,11 @@ import {
     formValueSelector,
 } from 'redux-form';
 import { IMessage } from '../../../fetch-api/middleware/interfaces';
+import Card from '../../../shared/components/card';
 import {
     ITask,
     ITeam,
 } from '../../helpers/interfaces/';
-import Card from '../../../shared/components/card';
 import { IFyziklaniSubmitStore } from '../reducers/';
 import CodeInputError from './error-block';
 import { FORM_NAME } from './form-container';

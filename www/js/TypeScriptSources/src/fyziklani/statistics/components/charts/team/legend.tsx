@@ -3,9 +3,9 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import { lang } from '../../../../../i18n/i18n';
 import { setActivePoints } from '../../../actions/';
 import { getColorByPoints } from '../../../middleware/charts/colors';
-import { lang } from '../../../../../i18n/i18n';
 import { IFyziklaniStatisticsStore } from '../../../reducers';
 
 interface IState {
