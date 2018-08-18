@@ -3,16 +3,17 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import {
-    ITask,
-    ITeam,
-} from '../../shared/interfaces';
+
 import Powered from '../../shared/powered';
 
 import FormContainer from './form-container';
 
-import { submitStart } from '../actions/index';
-import { IStore } from '../reducers/index';
+import { submitStart } from '../actions/';
+import { IStore } from '../reducers/';
+import {
+    ITask,
+    ITeam,
+} from '../../fyziklani/helpers/interfaces';
 
 interface IProps {
     tasks: ITask[];

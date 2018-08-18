@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import {
     ISubmit,
     ISubmits,
-} from '../../../../../../shared/interfaces';
+    ITeam,
+} from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
-import { ITeam } from '../../../../../helpers/interfaces';
 
 interface IState {
     submits?: ISubmits;

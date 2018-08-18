@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     ITask,
     ITeam,
-} from '../../shared/interfaces';
+} from '../../fyziklani/helpers/interfaces';
 
 interface IProps {
     code: string;
@@ -13,7 +13,7 @@ interface IProps {
 export default class TaskInput extends React.Component<IProps, {}> {
 
     public render() {
-        const { code: value, tasks, teams } = this.props;
+        const {code: value, tasks, teams} = this.props;
 
         if (!value) {
             return null;

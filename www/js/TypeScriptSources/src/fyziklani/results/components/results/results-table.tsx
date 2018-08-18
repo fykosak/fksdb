@@ -5,7 +5,7 @@ import {
     ISubmits,
     ITask,
     ITeam,
-} from '../../../../shared/interfaces';
+} from '../../../helpers/interfaces';
 import { IFyziklaniResultsStore } from '../../reducers';
 import { Filter } from './filter/filter';
 import TeamRow from './team-row';

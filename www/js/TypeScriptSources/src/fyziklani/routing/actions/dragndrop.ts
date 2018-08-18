@@ -1,4 +1,6 @@
-import { IPlace } from '../../shared/interfaces';
+import { Action } from 'redux';
+import { IPlace } from '../../helpers/interfaces';
+
 export const ACTION_DRAG_START = 'ACTION_DRAG_START';
 
 export const dragStart = (teamId: number) => {
@@ -10,7 +12,7 @@ export const dragStart = (teamId: number) => {
 
 export const ACTION_DRAG_END = 'ACTION_DRAG_END';
 
-export const dragEnd = () => {
+export const dragEnd = (): Action => {
     return {
         type: ACTION_DRAG_END,
     };

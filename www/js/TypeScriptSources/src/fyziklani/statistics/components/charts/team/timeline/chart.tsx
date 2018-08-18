@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { getColorByPoints } from '../../../../middleware/charts/colors';
+import { IFyziklaniStatisticsStore } from '../../../../reducers';
 import {
     ISubmit,
     ISubmits,
     ITask,
-} from '../../../../../../shared/interfaces';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+} from '../../../../../helpers/interfaces';
 
 interface IState {
     activePoints?: number;
@@ -35,7 +35,7 @@ class TimeLine extends React.Component<IState, {}> {
     }
 
     public render() {
-        const { teamId, submits, tasks, gameStart, gameEnd, activePoints } = this.props;
+        const {teamId, submits, tasks, gameStart, gameEnd, activePoints} = this.props;
         const taskOnBoard = 7;
         const taskBuffer = [...(tasks.slice(taskOnBoard))];
 
@@ -51,7 +51,7 @@ class TimeLine extends React.Component<IState, {}> {
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ISubmit = submits[index];
-                const {teamId: submitTeamId, created } = submit;
+                const {teamId: submitTeamId, created} = submit;
                 if (teamId === submitTeamId) {
                     teamSubmits.push(submit);
                     const task = taskBuffer.shift();
@@ -73,7 +73,7 @@ class TimeLine extends React.Component<IState, {}> {
         this.yScale = d3.scaleLinear().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
 
         const dots = activeTasks.map((task, index: number) => {
-            const { taskId, from } = task;
+            const {taskId, from} = task;
             const submit = teamSubmits.filter((fSubmit) => {
                 return fSubmit.taskId === taskId;
             })[0];
@@ -93,7 +93,7 @@ class TimeLine extends React.Component<IState, {}> {
             }
 
             return (
-                <g style={{ opacity: (active) ? 1 : 0.1 }} key={index}>
+                <g style={{opacity: (active) ? 1 : 0.1}} key={index}>
                     <polyline
                         points={`${fromCoordinates},${yCoordinates} ${toCoordinates},${yCoordinates}`}
                         strokeWidth="2"

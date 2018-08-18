@@ -3,13 +3,13 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { ITeam } from '../../shared/interfaces';
 import {
     dragEnd,
     dragStart,
 } from '../actions/dragndrop';
 import { removeTeamPlace } from '../actions/teams';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
+import { ITeam } from '../../helpers/interfaces';
 
 interface IState {
     isUpdated?: boolean;

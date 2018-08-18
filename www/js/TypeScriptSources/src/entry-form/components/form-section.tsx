@@ -1,24 +1,19 @@
 import * as React from 'react';
-import {
-    connect,
-} from 'react-redux';
+import { connect } from 'react-redux';
 import {
     Field,
     formValueSelector,
 } from 'redux-form';
-
 import {
     ITask,
     ITeam,
-} from '../../shared/interfaces';
-import { IStore } from '../reducers/index';
-
+} from '../../fyziklani/helpers/interfaces';
 import Card from '../../shared/components/card';
+import { IStore } from '../reducers/';
 import CodeInputError from './error-block';
+import { FORM_NAME } from './form-container';
 import CodeInput from './input';
 import SubmitButtons from './submit-buttons';
-
-import { FORM_NAME } from './form-container';
 import ValueDisplay from './value-display';
 
 export interface IProps {
@@ -38,7 +33,7 @@ interface IState {
 class FormSection extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const { valid, submitting, handleSubmit, onSubmit, code, tasks, teams, msg } = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, msg} = this.props;
 
         return (
             <div>

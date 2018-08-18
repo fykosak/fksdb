@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Team from './team';
-
 import { connect } from 'react-redux';
-import { ITeam } from '../../shared/interfaces';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
+import { ITeam } from '../../helpers/interfaces';
 
 interface IState {
     stateTeams?: ITeam[];

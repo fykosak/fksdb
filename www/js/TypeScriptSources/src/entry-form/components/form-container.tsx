@@ -6,9 +6,8 @@ import {
 import {
     ITask,
     ITeam,
-} from '../../shared/interfaces';
+} from '../../fyziklani/helpers/interfaces';
 import { validate } from '../middleware/form';
-
 import FormSection from './form-section';
 
 export interface IProps {
@@ -20,7 +19,7 @@ export interface IProps {
 class FormContainer extends React.Component<IProps & any, {}> {
 
     public render() {
-        const { valid, submitting, handleSubmit, onSubmit, tasks, teams } = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
 
         return (
             <Form onSubmit={handleSubmit(onSubmit)}>

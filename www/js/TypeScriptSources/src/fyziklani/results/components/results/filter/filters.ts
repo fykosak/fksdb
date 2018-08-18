@@ -1,4 +1,4 @@
-import { IRoom } from '../../../../../shared/interfaces';
+import { IRoom } from '../../../../helpers/interfaces';
 import { Filter } from './filter';
 
 export const createFilters = (rooms: IRoom[] = [], categories: string[] = []): Filter[] => {

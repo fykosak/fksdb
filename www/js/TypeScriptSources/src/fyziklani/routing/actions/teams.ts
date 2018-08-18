@@ -1,4 +1,4 @@
-import { ITeam } from '../../shared/interfaces';
+import { ITeam } from '../../helpers/interfaces';
 
 export const ACTION_ADD_TEAMS = 'ACTION_ADD_TEAMS';
 

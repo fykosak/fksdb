@@ -3,7 +3,7 @@ import {
     ISubmits,
     ITask,
     ITeam,
-} from '../../../../shared/interfaces';
+} from '../../../helpers/interfaces';
 
 interface IProps {
     submits: ISubmits;

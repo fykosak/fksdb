@@ -1,8 +1,6 @@
 import * as React from 'react';
-
+import { IRoom } from '../../helpers/interfaces';
 import Room from './room';
-
-import { IRoom } from '../../shared/interfaces';
 
 interface IProps {
     rooms: IRoom[];

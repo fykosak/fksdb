@@ -1,8 +1,6 @@
 import * as React from 'react';
-
 import Place from './place';
-
-import { IRoom } from '../../shared/interfaces';
+import { IRoom } from '../../helpers/interfaces';
 
 interface IProps {
     info: IRoom;

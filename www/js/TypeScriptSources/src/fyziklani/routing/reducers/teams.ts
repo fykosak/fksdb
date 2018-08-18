@@ -1,4 +1,4 @@
-import { ITeam } from '../../shared/interfaces';
+import { ITeam } from '../../helpers/interfaces';
 import { ACTION_DROP_ITEM } from '../actions/dragndrop';
 import {
     ACTION_ADD_TEAMS,

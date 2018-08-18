@@ -1,13 +1,12 @@
 import * as React from 'react';
-import Team from './team';
-
 import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { ITeam } from '../../shared/interfaces';
+import { ITeam } from '../../helpers/interfaces';
 import { dropItem } from '../actions/dragndrop';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
+import Team from './team';
 
 interface IState {
     onDrop?: (teamId: number, place: any) => void;

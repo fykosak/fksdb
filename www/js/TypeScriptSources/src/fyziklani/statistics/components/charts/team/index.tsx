@@ -4,12 +4,12 @@ import {
     Dispatch,
 } from 'react-redux';
 import { lang } from '../../../../../i18n/i18n';
-import { ITeam } from '../../../../../shared/interfaces';
 import { setTeamId } from '../../../actions';
 import { IFyziklaniStatisticsStore } from '../../../reducers';
 import PointsInTime from './line-chart/index';
 import PointsPie from './pie/index';
 import TimeLine from './timeline/index';
+import { ITeam } from '../../../../helpers/interfaces';
 
 interface IState {
     teams?: ITeam[];

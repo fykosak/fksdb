@@ -5,7 +5,7 @@ import {
     ISubmit,
     ISubmits,
     ITeam,
-} from '../../../../../../shared/interfaces';
+} from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { getPieData } from '../../../../middleware/charts/pie';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';

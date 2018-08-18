@@ -1,19 +1,17 @@
 import * as React from 'react';
-import logger from 'redux-logger';
-import Container from './container';
-
 import { Provider } from 'react-redux';
-
 import {
     applyMiddleware,
     createStore,
 } from 'redux';
-import { config } from '../../config/index';
+import logger from 'redux-logger';
+import { config } from '../../config/';
 import {
     ITask,
     ITeam,
-} from '../../shared/interfaces';
-import { app } from '../reducers/index';
+} from '../../fyziklani/helpers/interfaces';
+import { app } from '../reducers/';
+import Container from './container';
 
 interface ITaskCodeProps {
     tasks: ITask[];
@@ -22,7 +20,7 @@ interface ITaskCodeProps {
 
 export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
     public render() {
-        const { tasks, teams } = this.props;
+        const {tasks, teams} = this.props;
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (

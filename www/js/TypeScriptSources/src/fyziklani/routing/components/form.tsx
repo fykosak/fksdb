@@ -1,12 +1,11 @@
 import * as React from 'react';
-
 import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { ITeam } from '../../shared/interfaces';
+import { ITeam } from '../../helpers/interfaces';
 import { saveTeams } from '../actions/save';
-import { IStore } from '../reducers/index';
+import { IStore } from '../reducers/';
 
 interface IState {
     onSaveRouting?: (teams: ITeam[]) => void;

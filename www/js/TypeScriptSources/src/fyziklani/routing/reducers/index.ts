@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { ITeam } from '../../shared/interfaces';
 import {
     dragNDrop,
     IState as IDragNDropState,
@@ -10,6 +9,7 @@ import {
     save,
 } from './save';
 import { teams } from './teams';
+import { ITeam } from '../../helpers/interfaces';
 
 export const app = combineReducers({
     dragNDrop,

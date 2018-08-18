@@ -8,7 +8,7 @@ import {
     ISubmit,
     ISubmits,
     ITask,
-} from '../../../../../../shared/interfaces';
+} from '../../../../../helpers/interfaces';
 import { setActivePoints } from '../../../../actions/';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { getLinePath } from '../../../../middleware/charts/lines';
