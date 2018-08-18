@@ -1,8 +1,38 @@
 {layout '../../../templates/@layout.v4.latte'}
-{*layout './@layout.latte'*}
 {block content}
-    <a href="{plink resultsPresentation}">Presentácia</a>
-    <a href="{plink resultsView}">Náhlad</a>
-    <a href="{plink teamStatistics}">team</a>
-    <a href="{plink taskStatistics}">task</a>
+    <a href="//fyziklani.cz" class="btn btn-link mb-3">{_('Spať na stránku Fyzikláni')}</a>
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-img-top"
+                     style="height: 10rem;background-image: url({$basePath}/images/fof/results.png)">
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Výsledky Fyzikláni</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                    <a href="{plink resultsView}" class="btn btn-primary">{_('Náhled')}</a>
+                    <a href="{plink resultsPresentation}" class="btn btn-primary">{_('Prezentace')}</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-img-top"
+                     style="height: 10rem;background-image: url({$basePath}/images/fof/results.png)">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Statistiky</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's
+                        content.</p>
+                    <a href="{plink teamStatistics}" class="btn btn-primary">{_('Teamové statistiky')}</a>
+                    <a href="{plink taskStatistics}" class="btn btn-primary">{_('Statistiky úloh')}</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
 {/block}
