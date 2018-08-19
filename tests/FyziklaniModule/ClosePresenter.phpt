@@ -172,7 +172,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'send' => 'Uzavřít kategorii ' . $category . '.',
                 ), array(
             'action' => 'table',
-            'do' => 'closeCategory' . $category . 'Form-submit',
+            'do' => 'closeCategory' . $category . 'Form-form-submit',
         ));
 
         $response = $this->fixture->run($request);
@@ -199,7 +199,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
             'send' => 'Uzavřít celé Fyziklání',
                 ), array(
             'action' => 'table',
-            'do' => 'closeGlobalForm-submit',
+            'do' => 'closeGlobalForm-form-submit',
         ));
 
         $response = $this->fixture->run($request);
