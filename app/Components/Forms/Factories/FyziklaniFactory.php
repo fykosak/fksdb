@@ -4,8 +4,6 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Controls\FormControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
-use FKSDB\Components\Forms\Containers\ModelContainer;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
@@ -62,7 +60,6 @@ class FyziklaniFactory {
     public function createEntryQRForm(ModelEvent $event) {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->setRenderer(new BootstrapRenderer());
         $form->addText('taskCode')->setAttribute('readonly', true);
         foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));

@@ -234,7 +234,7 @@ class SubmitPresenter extends BasePresenter {
         return true;
     }
 
-    public function createComponentFyziklaniEditForm() {
+    public function createComponentSubmitEditForm() {
         $control = $this->fyziklaniFactory->createEditForm($this->getEvent());
         $control->getForm()->onSuccess[] = [$this, 'editFormSucceeded'];
         return $control;
@@ -269,7 +269,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $control FormControl
          */
-        $control = $this['fyziklaniEditForm'];
+        $control = $this['submitEditForm'];
         $control->getForm()->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
