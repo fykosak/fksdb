@@ -16,7 +16,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
@@ -265,7 +264,6 @@ class EventPresenter extends EntityPresenter {
     private function createForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);

@@ -15,7 +15,6 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FormUtils;
 use IResultsModel;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelException;
 use ModelPerson;
@@ -369,7 +368,6 @@ class ExportPresenter extends SeriesPresenter {
     private function createDesignForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         $group = $form->addGroup(_('SQL'));
 
