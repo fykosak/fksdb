@@ -147,7 +147,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
                 ), array(
             'id' => $teamId,
             'action' => 'team',
-            'do' => 'closeForm-submit',
+            'do' => 'closeForm-form-submit',
         ));
 
         $response = $this->fixture->run($request);
