@@ -159,7 +159,7 @@ class InboxPresenter extends SeriesPresenter {
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -186,10 +186,11 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/datePicker.js');
         $this->registerJSFile('js/jquery.ui.swappable.js');
-        $this->registerJSFile('js/inbox.js');
+        //$this->registerJSFile('js/inbox.js');
+        $this->registerJSFile('js/bundle-inbox.min.js');
 
         return $form;
     }
@@ -282,9 +283,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $uploadSubmits = array();
         $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
+            DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
+            DbNames::TAB_TASK . '.series' => $series
+        ))->order(DbNames::TAB_TASK . '.tasknr');
         foreach ($submits as $row) {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
@@ -370,7 +371,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

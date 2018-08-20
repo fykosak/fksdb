@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         results: './src/results/index.tsx',
         routing: './src/routing/index.tsx',
-        'entry-form': './src/entry-form/index.tsx'
+        'entry-form': './src/entry-form/index.tsx',
+        inbox: './src/inbox/index.tsx'
     },
     output: {
         path: path.resolve(__dirname, '../'),
