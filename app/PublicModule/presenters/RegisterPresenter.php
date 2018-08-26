@@ -129,7 +129,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
-        return $this->year + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this->year;
     }
 
     public function getSelectedAcademicYear() {
@@ -242,7 +242,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function renderYear() {
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         $this->template->years = [];
-        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest);
+        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
 
     /**
@@ -265,8 +265,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('email', _('email'));
-        $form->addSubmit('submit', _('Search'));
+        $form->addText('email', _('e-mail'));
+        $form->addSubmit('submit', _('Vyhledat'));
         $form->onSuccess[] = [$this, 'emailFormSucceeded'];
         return $form;
     }
@@ -316,11 +316,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
         $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-
+        
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
-
+        
         /*
          * CAPTCHA
          */
@@ -342,7 +342,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $login = $handler->getPerson()->getLogin();
                     $this->getUser()->login($login);
                 }
-                $this->redirect(':Dashboard:default');
+                $this->redirect('Dashboard:default');
             }
         };
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
