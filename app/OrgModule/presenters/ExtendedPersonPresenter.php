@@ -95,7 +95,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
         $submit->onClick[] = function(SubmitButton $button) use($handler) {
                     $form = $button->getForm();
-                    if ($handler->handleForm($form)) {
+                    if ($handler->handleForm($form, $this)) {
                         $this->backlinkRedirect();
                         $this->redirect('list');
                     }
