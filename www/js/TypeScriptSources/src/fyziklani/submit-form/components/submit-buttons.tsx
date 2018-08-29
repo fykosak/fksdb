@@ -3,14 +3,16 @@ import * as React from 'react';
 interface IProps {
     valid: boolean;
     submitting: boolean;
-    handleSubmit: (values: any) => any;
-    onSubmit: any;
+
+    handleSubmit(values: any): any;
+
+    onSubmit(args: any): any;
 }
 
 export default class TaskInput extends React.Component<IProps, {}> {
 
     public render() {
-        const { valid, submitting, handleSubmit, onSubmit } = this.props;
+        const {valid, submitting, handleSubmit, onSubmit} = this.props;
 
         const buttons = [5, 3, 2, 1].map((value, index) => {
             return (

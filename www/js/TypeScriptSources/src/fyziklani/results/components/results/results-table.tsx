@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
+import { lang } from '../../../../i18n/i18n';
 import {
     ISubmits,
     ITask,
@@ -9,7 +10,6 @@ import {
 import { IFyziklaniResultsStore } from '../../reducers';
 import { Filter } from './filter/filter';
 import TeamRow from './team-row';
-import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     filter?: Filter;

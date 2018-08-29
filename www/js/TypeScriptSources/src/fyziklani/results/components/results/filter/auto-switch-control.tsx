@@ -3,13 +3,13 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import { lang } from '../../../../../i18n/i18n';
 import { setAutoSwitch } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
-import { lang } from '../../../../../i18n/i18n';
 
 interface IState {
     autoSwitch?: boolean;
-    onAutoSwitch?: (state: boolean) => void;
+    onAutoSwitch?(state: boolean): void;
 }
 
 class AutoSwitchControl extends React.Component<IState, {}> {

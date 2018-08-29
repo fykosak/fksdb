@@ -1,7 +1,6 @@
-import { Action } from 'redux';
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../downloader/actions/';
+import { IActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
+import { IResponseData } from '../downloader/actions/';
 
 export interface IFyziklaniTimerState {
     gameEnd?: Date;
@@ -12,8 +11,8 @@ export interface IFyziklaniTimerState {
     visible?: boolean;
 }
 
-const updateTimes = (state: IFyziklaniTimerState, action: ISubmitSuccessAction<IFyziklaniResponse>): IFyziklaniTimerState => {
-    const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.data;
+const updateTimes = (state: IFyziklaniTimerState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniTimerState => {
+    const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.responseData;
     return {
         ...state,
         ...times,
@@ -25,7 +24,7 @@ const updateTimes = (state: IFyziklaniTimerState, action: ISubmitSuccessAction<I
     };
 };
 
-export const fyziklaniTimer = (state: IFyziklaniTimerState = {}, action: Action & any): IFyziklaniTimerState => {
+export const fyziklaniTimer = (state: IFyziklaniTimerState = {}, action): IFyziklaniTimerState => {
     switch (action.type) {
         case ACTION_SUBMIT_SUCCESS:
             return updateTimes(state, action);

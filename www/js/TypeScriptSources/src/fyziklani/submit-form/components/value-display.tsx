@@ -37,14 +37,12 @@ export default class TaskInput extends React.Component<IProps, {}> {
         }
 
         return (
-
             <ul>
                 <li>Team: {team ? (<span className="text-success">{team.name}</span>) : (
                     <span className="text-danger">Invalid team</span>)}</li>
                 <li>Task: {task ? (<span className="text-success">{task.name}</span>) : (
                     <span className="text-danger">Invalid task</span>)}</li>
             </ul>
-
         );
     }
 }

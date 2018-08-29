@@ -23,9 +23,6 @@ class Results extends ReactComponent {
         $this->mode = $mode;
     }
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     */
     public function render() {
         $this->template->mode = $this->mode;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Results.latte');
@@ -37,7 +34,6 @@ class Results extends ReactComponent {
         if (!static::$JSAttached && $obj instanceof IJavaScriptCollector) {
             static::$JSAttached = true;
             $obj->registerJSFile('js/tablesorter.min.js');
-            $obj->registerJSFile('js/bundle-all.min.js');
         }
     }
 }

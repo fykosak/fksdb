@@ -65,7 +65,7 @@ class Team extends React.Component<IProps & IState, {}> {
 
 const mapStateToProps = (state: IFyziklaniRoutingStore, ownProps: IProps): IState => {
     return {
-        isDragged: state.dragNDrop.data.teamId === ownProps.team.teamId,
+        isDragged: state.dragNDrop.data && (state.dragNDrop.data.teamId === ownProps.team.teamId),
         isUpdated: (state.teams.updatedTeams.indexOf(ownProps.team.teamId) !== -1),
     };
 };

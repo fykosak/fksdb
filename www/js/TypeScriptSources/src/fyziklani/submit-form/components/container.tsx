@@ -9,10 +9,7 @@ import {
     ITeam,
 } from '../../helpers/interfaces/';
 import { submitStart } from '../actions/';
-import {
-    IFyziklaniSubmitStore,
-
-} from '../reducers/';
+import { IFyziklaniSubmitStore } from '../reducers/';
 import FormContainer from './form-container';
 
 interface IProps {
@@ -21,7 +18,7 @@ interface IProps {
 }
 
 interface IState {
-    onSubmit?: (values: any) => Promise<any>;
+    onSubmit?(values: any): Promise<any>;
 }
 
 class TaskCode extends React.Component<IProps & IState, {}> {

@@ -1,7 +1,7 @@
 import { IRoom } from '../../../../helpers/interfaces';
 import { Filter } from './filter';
 
-export const createFilters = (rooms: IRoom[] = [], categories: string[] = []): Filter[] => {
+export const createFilters = (rooms: IRoom[] = [], categories: string[] = [], includeAll: boolean = true): Filter[] => {
     const roomFilters = rooms.map((room: IRoom) => {
         return new Filter({roomId: room.roomId, category: null, name: 'Room ' + room.name});
     });
@@ -9,7 +9,9 @@ export const createFilters = (rooms: IRoom[] = [], categories: string[] = []): F
     const categoriesFilters = categories.map((category: string) => {
         return new Filter({roomId: null, category, name: 'Category ' + category});
     });
-
-    return [new Filter({roomId: null, category: null, name: 'All'})].concat(roomFilters).concat(categoriesFilters);
-
+    const filters = [];
+    if (includeAll) {
+        filters.push(new Filter({roomId: null, category: null, name: 'All'}));
+    }
+    return filters.concat(roomFilters).concat(categoriesFilters);
 };

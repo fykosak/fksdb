@@ -12,14 +12,15 @@ import { createFilters } from './filters';
 interface IState {
     filters?: Filter[];
     categories?: string[];
-    onSetFilter?: (filter: Filter) => void;
+
+    onSetFilter?(filter: Filter): void;
 }
 
 class Select extends React.Component<IState, {}> {
 
     public render() {
         const {categories, filters, onSetFilter} = this.props;
-        const availableFilters = createFilters([], categories);
+        const availableFilters = createFilters([], categories, false);
 
         return <>
             {availableFilters.map((filter, key) => {

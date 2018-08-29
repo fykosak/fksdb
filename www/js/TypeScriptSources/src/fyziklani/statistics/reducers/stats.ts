@@ -49,7 +49,7 @@ const setChartType = (state: IFyziklaniStatisticsState, action: IActionSetChartT
     };
 };
 
-export const stats = (state: IFyziklaniStatisticsState = {}, action: Action & any): IFyziklaniStatisticsState => {
+export const stats = (state: IFyziklaniStatisticsState = {}, action): IFyziklaniStatisticsState => {
     switch (action.type) {
         case ACTION_SET_TEAM_ID:
             return setTeamId(state, action);

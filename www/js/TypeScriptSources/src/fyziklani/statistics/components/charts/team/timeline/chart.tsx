@@ -18,13 +18,17 @@ interface IState {
     gameEnd?: Date;
 }
 
+interface IExtendedTask extends ITask {
+    from: Date;
+}
+
 class TimeLine extends React.Component<IState, {}> {
 
     private xAxis: any;
     private ySize: number;
 
-    private xScale: d3.ScaleTime<any, any>;
-    private yScale: d3.ScaleLinear<any, any>;
+    private xScale: d3.ScaleTime<number, number>;
+    private yScale: d3.ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -36,41 +40,13 @@ class TimeLine extends React.Component<IState, {}> {
 
     public render() {
         const {teamId, submits, tasks, gameStart, gameEnd, activePoints} = this.props;
-        const taskOnBoard = 7;
-        const taskBuffer = [...(tasks.slice(taskOnBoard))];
 
-        const activeTasks: Array<ITask & { from: Date }> = [];
-
-        for (let i = 0; i < taskOnBoard; i++) {
-            activeTasks.push({
-                ...tasks[i],
-                from: gameStart,
-            });
-        }
-        const teamSubmits = [];
-        for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
-                const {teamId: submitTeamId, created} = submit;
-                if (teamId === submitTeamId) {
-                    teamSubmits.push(submit);
-                    const task = taskBuffer.shift();
-                    activeTasks.push({
-                        ...task,
-                        from: new Date(created),
-                    });
-                }
-            }
-        }
-
-        taskBuffer.sort((a, b) => {
-            return a.taskId - b.taskId;
-        });
+        const {activeTasks, teamSubmits} = reconstructTeamGame(submits, tasks, 7, gameStart, teamId);
 
         this.ySize = (activeTasks.length * 12) + 20;
 
-        this.xScale = d3.scaleTime().domain([gameStart, gameEnd]).range([30, 580]);
-        this.yScale = d3.scaleLinear().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
+        this.xScale = d3.scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
+        this.yScale = d3.scaleLinear<number, number>().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
 
         const dots = activeTasks.map((task, index: number) => {
             const {taskId, from} = task;
@@ -141,3 +117,35 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
 };
 
 export default connect(mapStateToProps, null)(TimeLine);
+
+const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: number, gameStart: Date, teamId: number): { activeTasks: IExtendedTask[]; teamSubmits: ISubmit[] } => {
+    const taskBuffer = [...(tasks.slice(taskOnBoard))];
+    const teamSubmits = [];
+    const activeTasks: IExtendedTask[] = [];
+
+    for (let i = 0; i < taskOnBoard; i++) {
+        activeTasks.push({
+            ...tasks[i],
+            from: gameStart,
+        });
+    }
+    for (const index in submits) {
+        if (submits.hasOwnProperty(index)) {
+            const submit: ISubmit = submits[index];
+            const {teamId: submitTeamId, created} = submit;
+            if (teamId === submitTeamId) {
+                teamSubmits.push(submit);
+                const task = taskBuffer.shift();
+                activeTasks.push({
+                    ...task,
+                    from: new Date(created),
+                });
+            }
+        }
+    }
+    taskBuffer.sort((a, b) => {
+        return a.taskId - b.taskId;
+    });
+
+    return {activeTasks, teamSubmits};
+};

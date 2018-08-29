@@ -18,27 +18,31 @@ import SubmitButtons from './submit-buttons';
 import ValueDisplay from './value-display';
 
 export interface IProps {
+    accessKey: string;
     tasks: ITask[];
     teams: ITeam[];
-    onSubmit: (values: any) => Promise<any>;
     valid: boolean;
     submitting: boolean;
-    handleSubmit: any;
+    handleSubmit: (args: any) => any;
+
+    onSubmit(values: any): Promise<any>;
 }
 
 interface IState {
     code?: string;
-    msg?: IMessage[];
+    messages?: IMessage[];
 }
 
 class FormSection extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, msg} = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages} = this.props;
 
         return (
             <div>
-                {msg && (<div className={'alert alert-' + msg[1]}> {msg[0]}</div>)}
+                {messages.map((message, key) => {
+                    return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
+                })}
                 <div className="row">
                     <div className="col-6">
                         <Card level="info" headline="Task's code">
@@ -62,12 +66,12 @@ class FormSection extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniSubmitStore): IState => {
+const mapStateToProps = (state: IFyziklaniSubmitStore, ownProps: IProps): IState => {
     const selector = formValueSelector(FORM_NAME);
-    const accessKey = '@@fyziklani';
+    const {accessKey} = ownProps;
     return {
         code: selector(state, 'code'),
-        msg: state.fetchApi[accessKey].messages,
+        messages: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].messages : [],
     };
 };
 

@@ -5,8 +5,9 @@ import { IFyziklaniOptionsState } from '../reducers';
 import { lang } from '../../../../i18n/i18n';
 
 interface IState {
-    onHardDisplayChange?: (status: boolean) => void;
     hardVisible?: boolean;
+
+    onHardDisplayChange?(status: boolean): void;
 }
 
 class HardVisibleSwitch extends React.Component<IState, {}> {

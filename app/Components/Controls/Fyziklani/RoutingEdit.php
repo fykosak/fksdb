@@ -15,11 +15,6 @@ class RoutingEdit extends ReactComponent {
      */
     private $data;
 
-    /**
-     * @var bool
-     */
-    private static $JSAttached = false;
-
     public function setData($data) {
         $this->data = $data;
     }
@@ -29,16 +24,7 @@ class RoutingEdit extends ReactComponent {
      */
     public function render() {
         $this->template->data = Json::encode($this->data);
-
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingEdit.latte');
         $this->template->render();
-    }
-
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!self::$JSAttached && $obj instanceof IJavaScriptCollector) {
-            self::$JSAttached = true;
-            $obj->registerJSFile('js/bundle-routing.min.js');
-        }
     }
 }

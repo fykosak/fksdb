@@ -57,7 +57,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState 
 
 const mapStateToProps = (state: IFyziklaniRoutingStore): IState => {
     return {
-        draggedTeamId: state.dragNDrop.data.teamId,
+        draggedTeamId: (state.dragNDrop.data && state.dragNDrop.data.hasOwnProperty('teamId')) ? state.dragNDrop.data.teamId : null,
         teams: state.teams.availableTeams,
     };
 };

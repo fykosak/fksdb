@@ -8,7 +8,8 @@ import { IFyziklaniStatisticsStore } from '../../reducers';
 
 interface IState {
     chartType?: string;
-    onChangeChartsType?: (subPage: string) => void;
+
+    onChangeChartsType?(subPage: string): void;
 }
 
 class Select extends React.Component<IState, {}> {

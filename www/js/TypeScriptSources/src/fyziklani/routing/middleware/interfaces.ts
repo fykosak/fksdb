@@ -5,6 +5,6 @@ export interface IRoutingDragNDropData {
     place?: IPlace;
 }
 
-export interface IResponse {
+export interface IResponseData {
     updatedTeams: number[];
 }

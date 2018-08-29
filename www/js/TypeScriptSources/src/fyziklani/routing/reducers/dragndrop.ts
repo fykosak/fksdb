@@ -24,7 +24,7 @@ function dragEnd<D>(state: IState<D>): IState<D> {
     };
 }
 
-export function dragNDrop<D = any>(state: IState<D> = {}, action): IState<D> {
+export function dragNDrop<D = any>(state: IState<D> = {data: null}, action): IState<D> {
     switch (action.type) {
         case ACTION_DRAG_START:
             return dragStart<D>(state, action);

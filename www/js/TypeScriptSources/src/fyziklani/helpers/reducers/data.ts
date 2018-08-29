@@ -1,6 +1,6 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../downloader/actions/';
+import { IActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
+import { IResponseData } from '../downloader/actions/';
 import {
     IRoom,
     ISubmits,
@@ -16,8 +16,8 @@ export interface IFyziklaniDataState {
     categories?: string[];
 }
 
-const addData = (state: IFyziklaniDataState, action: ISubmitSuccessAction<IFyziklaniResponse>): IFyziklaniDataState => {
-    const {submits, tasks, teams, rooms, categories} = action.data.data;
+const addData = (state: IFyziklaniDataState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniDataState => {
+    const {submits, tasks, teams, rooms, categories} = action.data.responseData;
     return {
         ...state,
         categories,

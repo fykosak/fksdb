@@ -6,12 +6,14 @@ import {
 import { ITeam } from '../../../helpers/interfaces/';
 import { saveTeams } from '../../actions/save';
 import { IFyziklaniRoutingStore } from '../../reducers/';
+import jqXHR = JQuery.jqXHR;
 
 interface IState {
-    onSaveRouting?: (teams: ITeam[]) => void;
     teams?: ITeam[];
     saving?: boolean;
-    error?: any;
+    error?: jqXHR<any>;
+
+    onSaveRouting?(teams: ITeam[]): void;
 }
 
 interface IProps {

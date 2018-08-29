@@ -23,7 +23,7 @@ interface IExtendedSubmit extends ISubmit {
 
 class Timeline extends React.Component<IState, {}> {
 
-    private xAxis: any;
+    private xAxis: SVGGElement;
 
     private xScale: d3.ScaleTime<number, number>;
 
@@ -64,7 +64,7 @@ class Timeline extends React.Component<IState, {}> {
             }
         }
         taskSubmits.sort((a, b) => {
-            return a.created - b.created;
+            return (new Date(a.created)).getTime() - (new Date(b.created)).getTime();
         });
         const dots = taskSubmits.map((submit, index: number) => {
 

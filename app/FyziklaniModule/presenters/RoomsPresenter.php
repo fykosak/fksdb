@@ -4,7 +4,6 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
-use Nette\Utils\Json;
 
 /**
  *
@@ -39,16 +38,15 @@ class RoomsPresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
      */
     public function renderEdit() {
         if ($this->isAjax()) {
-            $data = Json::decode($this->getHttpRequest()->getPost('data'));
+            $data = $this->getHttpRequest()->getPost('requestData');
             $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
             $response = new \ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new \ReactMessage(_('zmeny boli uložené'), 'success'));
+            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
             $this->sendResponse($response);
         }
     }

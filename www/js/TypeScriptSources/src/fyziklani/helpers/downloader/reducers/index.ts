@@ -2,8 +2,8 @@ import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_SUCCESS,
 } from '../../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../actions/';
+import { IActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
+import { IResponseData } from '../actions/';
 
 export interface IFyziklaniDownloaderState {
     lastUpdated?: string;
@@ -11,8 +11,8 @@ export interface IFyziklaniDownloaderState {
     isRefreshing?: boolean;
 }
 
-const updateOptions = (state: IFyziklaniDownloaderState, action: ISubmitSuccessAction<IFyziklaniResponse>): IFyziklaniDownloaderState => {
-    const {lastUpdated, refreshDelay} = action.data.data;
+const updateOptions = (state: IFyziklaniDownloaderState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniDownloaderState => {
+    const {lastUpdated, refreshDelay} = action.data.responseData;
     return {
         ...state,
         isRefreshing: true,

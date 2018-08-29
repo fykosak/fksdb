@@ -8,7 +8,7 @@ export interface ISubmit {
     points: number | null;
     taskId: number;
     teamId: number;
-    created: any;
+    created: string;
 }
 
 export interface ISubmits {

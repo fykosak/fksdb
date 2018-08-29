@@ -15,8 +15,8 @@ interface IState {
     lastUpdated?: string;
     refreshDelay?: number;
     isRefreshing?: boolean;
-    onFetch?: () => void;
-    onWaitForFetch?: (lastUpdated: string, delay: number) => any;
+    onWaitForFetch?: (lastUpdated: string, delay: number) => void;
+    onFetch?(): void;
 }
 
 interface IProps {
@@ -68,7 +68,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>, ownProps
     const {accessKey} = ownProps;
     return {
         onFetch: () => fetchResults(accessKey, dispatch, null),
-        onWaitForFetch: (lastUpdated: string, delay: number): any => waitForFetch(accessKey, dispatch, delay, lastUpdated),
+        onWaitForFetch: (lastUpdated: string, delay: number): void => waitForFetch(accessKey, dispatch, delay, lastUpdated),
     };
 };
 

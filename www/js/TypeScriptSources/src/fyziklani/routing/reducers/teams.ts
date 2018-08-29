@@ -1,5 +1,5 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../fetch-api/middleware/interfaces';
+import { IActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
 import { ITeam } from '../../helpers/interfaces';
 import {
     ACTION_DROP_ITEM,
@@ -13,7 +13,7 @@ import {
     IActionRemoveTeamPlace,
 } from '../actions/teams';
 import {
-    IResponse,
+    IResponseData,
     IRoutingDragNDropData,
 } from '../middleware/interfaces';
 
@@ -75,10 +75,10 @@ const removeUpdatedTeams = (state: IFyziklaniRoutingTeamsState): IFyziklaniRouti
     };
 };
 
-const addUpdatedTeams = (state: IFyziklaniRoutingTeamsState, action: ISubmitSuccessAction<IResponse>): IFyziklaniRoutingTeamsState => {
+const addUpdatedTeams = (state: IFyziklaniRoutingTeamsState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniRoutingTeamsState => {
     return {
         ...state,
-        updatedTeams: action.data.data.updatedTeams,
+        updatedTeams: action.data.responseData.updatedTeams,
     };
 };
 

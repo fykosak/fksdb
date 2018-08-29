@@ -8,13 +8,18 @@ import {
     IRequest,
     IResponse,
 } from './interfaces';
+import jqXHR = JQuery.jqXHR;
 
-export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
+export async function netteFetch<F, D, T= any>(
+    data: IRequest<F>,
+    success: (data: IResponse<D>) => void,
+    error: (e: jqXHR<T>) => void,
+): Promise<IResponse<D>> {
     const netteJQuery: any = $;
     return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
-            error: (e) => {
+            error: (e: jqXHR<T>) => {
                 error(e);
                 reject(e);
             },
@@ -27,14 +32,18 @@ export async function netteFetch<F, D>(data: IRequest<F>, success: (data: IRespo
     });
 }
 
-export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
+export async function uploadFile<F, D, T>(
+    data: IRequest<F>,
+    success: (data: IResponse<D>) => void,
+    error: (e: jqXHR<T>) => void,
+): Promise<IResponse<D>> {
     return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         $.ajax({
             cache: false,
             contentType: false,
             data,
             dataType: 'json',
-            error: (e) => {
+            error: (e: jqXHR<T>) => {
                 reject(e);
                 error(e);
             },
@@ -49,26 +58,40 @@ export async function uploadFile<F, D>(data: IRequest<F>, success: (data: IRespo
     });
 }
 
-export async function dispatchNetteFetch<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e) => void): Promise<IResponse<D>> {
+export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= any>(
+    accessKey: string,
+    dispatch: Dispatch<TStore>,
+    data: IRequest<TFormData>,
+    success: (data: IResponse<TResponseData>) => void,
+    error: (e: jqXHR<T>) => void,
+): Promise<IResponse<TResponseData>> {
+
     dispatch(submitStart(accessKey));
-    return netteFetch<F, D>(data, (d: IResponse<D>) => {
-            dispatch(submitSuccess<D>(d, accessKey));
+    return netteFetch<TFormData, TResponseData, T>(data, (d: IResponse<TResponseData>) => {
+            dispatch(submitSuccess<TResponseData>(d, accessKey));
             success(d);
         },
-        (e) => {
-            dispatch(submitFail(e, accessKey));
+        (e: jqXHR<T>) => {
+            dispatch(submitFail<T>(e, accessKey));
             error(e);
         });
 }
 
-export async function dispatchUploadFile<F, D, S>(accessKey: string, dispatch: Dispatch<S>, data: IRequest<F>, success: (data: IResponse<D>) => void, error: (e: any) => void): Promise<IResponse<D>> {
+export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= any>(
+    accessKey: string,
+    dispatch: Dispatch<TStore>,
+    data: IRequest<TFormData>,
+    success: (data: IResponse<TResponseData>) => void,
+    error: (e: jqXHR<T>) => void,
+): Promise<IResponse<TResponseData>> {
+
     dispatch(submitStart(accessKey));
-    return uploadFile<F, D>(data, (d: IResponse<D>) => {
-            dispatch(submitSuccess<D>(d, accessKey));
+    return uploadFile<TFormData, TResponseData, T>(data, (d: IResponse<TResponseData>) => {
+            dispatch(submitSuccess<TResponseData>(d, accessKey));
             success(d);
         },
-        (e) => {
-            dispatch(submitFail(e, accessKey));
+        (e: jqXHR<T>) => {
+            dispatch(submitFail<T>(e, accessKey));
             error(e);
         });
 }

@@ -2,19 +2,24 @@ import * as React from 'react';
 import { Filter } from './filter';
 
 interface IProps {
+    active: boolean;
     filter: Filter;
-    onClick?: (filter: Filter) => void;
-    onCloseClick?: (filter: Filter) => void;
-    active?: boolean;
+    type?: 'primary' | 'danger' | 'warning';
+
+    onClick?(filter: Filter): void;
+
+    onCloseClick?(filter: Filter): void;
+
 }
 
 export default class FilterComponent extends React.Component<IProps, {}> {
 
     public render() {
-        const {active, onClick, onCloseClick, filter} = this.props;
+        const {active, onClick, onCloseClick, filter, type} = this.props;
 
-        return <span
-            className={'btn ' + (active ? 'btn-primary' : 'btn-secondary')}
+        return <a
+            href="#"
+            className={'badge ml-3 ' + (active ? 'badge-success' : ('badge-' + (type ? type : 'secondary')))}
             onClick={() => {
                 if (onClick) {
                     onClick(filter);
@@ -24,6 +29,6 @@ export default class FilterComponent extends React.Component<IProps, {}> {
             {onCloseClick && (<span className="ml-3" onClick={() => {
                 onCloseClick(filter);
             }}>&times;</span>)}
-            </span>;
+        </a>;
     }
 }

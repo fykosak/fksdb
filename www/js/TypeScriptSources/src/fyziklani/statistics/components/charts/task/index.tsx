@@ -10,8 +10,9 @@ import Timeline from './timeline/';
 
 interface IState {
     tasks?: ITask[];
-    onChangeTask?: (id: number) => void;
     taskId?: number;
+
+    onChangeTask?(id: number): void;
 }
 
 class TaskStats extends React.Component<IState, {}> {

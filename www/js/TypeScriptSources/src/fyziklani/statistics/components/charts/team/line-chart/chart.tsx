@@ -24,7 +24,7 @@ interface IState {
     activePoints?: number;
 }
 
-interface IExtendedSubmit extends ISubmit {
+export interface IExtendedSubmit extends ISubmit {
     totalPoints: number;
     currentTask: ITask;
 }
@@ -34,8 +34,8 @@ class PointsInTime extends React.Component<IState, {}> {
     private xAxis: any;
     private yAxis: any;
 
-    private xScale: d3.ScaleTime<any, any>;
-    private yScale: d3.ScaleLinear<any, any>;
+    private xScale: d3.ScaleTime<number, number>;
+    private yScale: d3.ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -90,8 +90,8 @@ class PointsInTime extends React.Component<IState, {}> {
             return new Date(element.created);
         });
 
-        this.xScale = d3.scaleTime().domain([minDate, maxDate]).range([30, 580]);
-        this.yScale = d3.scaleLinear().domain([0, maxPoints]).range([370, 20]);
+        this.xScale = d3.scaleTime<number, number>().domain([minDate, maxDate]).range([30, 580]);
+        this.yScale = d3.scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
         const dots = teamSubmits.map((submit, index) => {
             return (
                 <circle

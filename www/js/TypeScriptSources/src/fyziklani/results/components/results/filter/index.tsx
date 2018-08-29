@@ -9,7 +9,8 @@ import { IFyziklaniResultsStore } from '../../../reducers';
 
 interface IState {
     autoSwitch?: boolean;
-    onSetNextFilter?: () => any;
+
+    onSetNextFilter?(): void;
 }
 
 class AutoFilter extends React.Component<IState, {}> {

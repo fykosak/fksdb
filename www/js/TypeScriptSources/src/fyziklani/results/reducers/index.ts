@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import {
-    IState,
+    IFetchApiState,
     submit,
 } from '../../../fetch-api/reducers/submit';
 import {
@@ -39,5 +39,5 @@ export interface IFyziklaniResultsStore {
     timer: IFyziklaniTimerState;
     options: IFyziklaniOptionsState;
     downloader: IFyziklaniDownloaderState;
-    fetchApi: IState;
+    fetchApi: IFetchApiState;
 }

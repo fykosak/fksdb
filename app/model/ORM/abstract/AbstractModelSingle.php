@@ -27,5 +27,3 @@ abstract class AbstractModelSingle extends TableRow implements IModel {
     }
 
 }
-
-?>

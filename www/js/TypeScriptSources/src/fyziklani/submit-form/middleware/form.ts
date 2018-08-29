@@ -1,8 +1,8 @@
 import { IProps } from '../components/form-section';
 
-export const getFullCode = (values): string => {
-    const length = values.code.length;
-    return (('0').repeat(9 - length) + values.code).toLocaleUpperCase();
+export const getFullCode = (code): string => {
+    const length = code.length;
+    return (('0').repeat(9 - length) + code).toLocaleUpperCase();
 };
 
 const isValidFullCode = (code: string): boolean => {
@@ -28,10 +28,10 @@ const getControl = (subCode: Array<string | number>): number => {
 };
 
 export const validate = (values, props: IProps) => {
-    const errors: { code?: any } = {};
+    const errors: { code?: { type: string; msg: string; } } = {};
 
     if (!values.code) {
-        errors.code = { type: 'danger', msg: 'Code is empty' };
+        errors.code = {type: 'danger', msg: 'Code is empty'};
         return errors;
     }
     const length = values.code.length;
@@ -40,28 +40,28 @@ export const validate = (values, props: IProps) => {
     const matchedTeam = code.match(/^([0-9]+)/);
 
     if (!props.teams.some((currentTeam) => {
-            return currentTeam.teamId === +matchedTeam[1];
-        })) {
-        errors.code = { type: 'danger', msg: 'Team does not exist' };
+        return currentTeam.teamId === +matchedTeam[1];
+    })) {
+        errors.code = {type: 'danger', msg: 'Team does not exist'};
     }
 
     const matchedLabel = code.match(/([a-zA-Z]{2})/);
     if (matchedLabel) {
         // const label = extractTaskLabel(code);
         if (!props.tasks.some((currentTask) => {
-                return currentTask.label === matchedLabel[1].toUpperCase();
-            })) {
-            errors.code = { type: 'danger', msg: 'Task does not exist' };
+            return currentTask.label === matchedLabel[1].toUpperCase();
+        })) {
+            errors.code = {type: 'danger', msg: 'Task does not exist'};
         }
     }
     const matchedControl = code.match(/[a-zA-Z]{2}([0-9])/);
     if (matchedControl) {
         if (!isValidFullCode(code)) {
-            errors.code = { type: 'danger', msg: 'Invalid control' };
+            errors.code = {type: 'danger', msg: 'Invalid control'};
         }
     }
     if (!code.match(/([0-9]{6}[a-zA-Z]{2}[0-9])/)) {
-        errors.code = { type: 'danger', msg: 'Code is too sort' };
+        errors.code = {type: 'danger', msg: 'Code is too sort'};
     }
 
     return errors;

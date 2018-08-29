@@ -117,7 +117,7 @@ class ResultsPresenter extends BasePresenter {
         /**
          * @var DateTime $lastUpdated
          */
-        $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
+        $lastUpdated = $this->getHttpRequest()->getPost('requestData')['lastUpdated'];
         $response = new \ReactResponse();
         $response->setAct('results-update');
 

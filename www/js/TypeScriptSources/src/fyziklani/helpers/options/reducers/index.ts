@@ -1,6 +1,6 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../../fetch-api/actions/submit';
-import { ISubmitSuccessAction } from '../../../../fetch-api/middleware/interfaces';
-import { IFyziklaniResponse } from '../../downloader/actions/';
+import { IActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
+import { IResponseData } from '../../downloader/actions/';
 import {
     ACTION_SET_HARD_VISIBLE,
     IActionSetHardVisible,
@@ -19,8 +19,8 @@ const setHardVisible = (state: IFyziklaniOptionsState, action: IActionSetHardVis
     };
 };
 
-const setStatuses = (state: IFyziklaniOptionsState, action: ISubmitSuccessAction<IFyziklaniResponse>): IFyziklaniOptionsState => {
-    const {isOrg} = action.data.data;
+const setStatuses = (state: IFyziklaniOptionsState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniOptionsState => {
+    const {isOrg} = action.data.responseData;
     return {
         ...state,
         isOrg,

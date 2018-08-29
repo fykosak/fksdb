@@ -26,7 +26,7 @@ class Chart extends React.Component<IState, {}> {
             return (<div/>);
         }
         const teamSubmits = [];
-        const pointsCategories = [
+        const pointsCategories: Array<{ points: number; count: number }> = [
             {points: 0, count: 0},
             {points: 1, count: 0},
             {points: 2, count: 0},
