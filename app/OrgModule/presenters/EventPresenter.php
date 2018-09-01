@@ -205,9 +205,8 @@ class EventPresenter extends EntityPresenter {
         $form = $control->getForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, true);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, true);
         };
 
         return $control;
@@ -217,9 +216,8 @@ class EventPresenter extends EntityPresenter {
         $control = $this->createForm();
         $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, false);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, false);
         };
 
         return $control;

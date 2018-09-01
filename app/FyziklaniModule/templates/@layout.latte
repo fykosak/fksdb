@@ -1,0 +1,12 @@
+{layout '../../templates/@layout.v4.latte'}
+
+{block user-info}
+    <ul class="nav navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" n:href=":Fyziklani:Dashboard:default">{_('Pultík')}</a>
+        </li>
+    </ul>
+    {control brawlChooser}
+    {control languageChooser,null}
+    {include #parent}
+{/block}

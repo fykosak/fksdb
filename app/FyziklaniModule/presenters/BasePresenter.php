@@ -3,6 +3,8 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Choosers\BrawlChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use ModelEvent;
 use Nette\Application\BadRequestException;
@@ -109,9 +111,32 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
+     * @return BrawlChooser
+     */
+    protected function createComponentBrawlChooser() {
+        $control = new BrawlChooser($this->serviceEvent);
+
+        return $control;
+    }
+
+    protected function createComponentLanguageChooser() {
+        $control = new LanguageChooser($this->session);
+
+        return $control;
+    }
+
+    /**
      * @throws BadRequestException
      */
     public function startup() {
+        /**
+         * @var $languageChooser LanguageChooser
+         * @var $brawlChooser BrawlChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        $brawlChooser = $this['brawlChooser'];
+        $languageChooser->syncRedirect();
+        $brawlChooser->setEvent($this->getEvent());
 
         $this->event = $this->getEvent();
         if (!$this->eventExist()) {

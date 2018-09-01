@@ -94,9 +94,8 @@ class ImportComponent extends Control {
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $that = $this;
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->handleFormImport($submit->getForm());
+        $form->addSubmit('import', _('Importovat'))->onClick[] = function(SubmitButton $submit) {
+                    $this->handleFormImport($submit->getForm());
                 };
 
         return $control;

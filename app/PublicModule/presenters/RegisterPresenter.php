@@ -128,7 +128,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
-        return $this->year + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this->year;
     }
 
     public function getSelectedAcademicYear() {
@@ -241,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function renderYear() {
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         $this->template->years = [];
-        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest);
+        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
 
     /**
@@ -264,8 +264,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('email', _('email'));
-        $form->addSubmit('submit', _('Search'));
+        $form->addText('email', _('e-mail'));
+        $form->addSubmit('submit', _('Vyhledat'));
         $form->onSuccess[] = [$this, 'emailFormSucceeded'];
         return $form;
     }
@@ -329,19 +329,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
         $submit = $form->addSubmit('register', _('Registrovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that, $handler) {
+        $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($result = $handler->handleForm($form, $that)) { // intentionally =
+            if ($result = $handler->handleForm($form, $this)) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.
                  * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
                  */
-                if (!$that->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
+                if (!$this->getPerson() && $result !== ExtendedPersonHandler::RESULT_OK_EXISTING_LOGIN) {
                     $login = $handler->getPerson()->getLogin();
-                    $that->getUser()->login($login);
+                    $this->getUser()->login($login);
                 }
-                $this->redirect(':Public:Dashboard:default');
+                $this->redirect('Dashboard:default');
+
             }
         };
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
