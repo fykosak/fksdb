@@ -71,11 +71,10 @@ class TeachersGrid extends BaseGrid {
         //
         // operations
         //
-        $that = $this;
         $this->addButton('edit', _('Edit'))
             ->setText('Edit')//todo i18n
-            ->setLink(function ($row) use ($that) {
-                return $that->getPresenter()->link('edit', $row->teacher_id);
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('edit', $row->teacher_id);
             })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('edit', ['id' => $row->teacher_id]);

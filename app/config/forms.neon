@@ -7,9 +7,9 @@ services:
     FlagFactory:        FKSDB\Components\Forms\Factories\FlagFactory
     LoginFactory:       FKSDB\Components\Forms\Factories\LoginFactory
     OrgFactory:         FKSDB\Components\Forms\Factories\OrgFactory
+    PersonInfoFactory:      FKSDB\Components\Forms\Factories\PersonInfoFactory
+    PersonHistoryFactory:      FKSDB\Components\Forms\Factories\PersonHistoryFactory
     PersonFactory:      FKSDB\Components\Forms\Factories\PersonFactory
-    PersonInfoFactory:  FKSDB\Components\Forms\Factories\PersonInfoFactory
-    PersonHistoryFactory: FKSDB\Components\Forms\Factories\PersonHistoryFactory
     PersonAccommodationFactory: FKSDB\Components\Forms\Factories\PersonAccommodationFactory
     SchoolFactory:      FKSDB\Components\Forms\Factories\SchoolFactory
     FyziklaniFactory: FKSDB\Components\Forms\Factories\FyziklaniFactory

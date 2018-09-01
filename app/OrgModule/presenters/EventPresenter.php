@@ -11,7 +11,7 @@ use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedEventPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
@@ -89,10 +89,6 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
-    /**
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
@@ -105,7 +101,7 @@ class EventPresenter extends EntityPresenter {
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
-    
+
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
@@ -121,10 +117,6 @@ class EventPresenter extends EntityPresenter {
 
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
-    }
-
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
     public function injectContainer(Container $container) {
@@ -204,9 +196,8 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, true);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, true);
         };
 
         return $form;
@@ -216,9 +207,8 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Uložit'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, false);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, false);
         };
 
         return $form;
@@ -357,7 +347,7 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->serviceEvent->save($model);
-            
+
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ["until" => $model->registration_end ? : $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {

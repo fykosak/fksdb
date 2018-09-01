@@ -67,13 +67,12 @@ class FyziklaniTeamsGrid extends BaseGrid {
             return $room->name;
         });
         $this->addColumn('category', _('Kategorie'));
-        $that = $this;
         $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
                 'eventID' => $this->eventId
             ]);
-        })->setText(_('Uzavřít bodování'))->setShow(function ($row) use ($that) {
+        })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
             /**
              * @var $row ModelFyziklaniTeam
              */

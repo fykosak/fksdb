@@ -18,7 +18,7 @@
     {block head}{/block}
 </head>
 <!-- Radnom background generator -->
-<body data-bg="{rand(1,2)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
+<body data-bg="{rand(1,3)}" data-contest="{!is_null($contestSymbol)?$contestSymbol:''}">
 {block body}
     <nav n:class="'fixed-top navbar navbar-expand-md ',!is_null($contestSymbol)?('bg-'.$contestSymbol.' navbar-'.$navVariant):('bg-light navbar-light')"
             role="navigation">

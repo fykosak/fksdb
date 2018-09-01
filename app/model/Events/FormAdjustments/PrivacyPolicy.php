@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
 use FKS\Logging\ILogger;
-use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FormUtils;
 use Nette\ArrayHash;
@@ -45,8 +45,7 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
             return;
         }
 
-
-        $control = $this->personInfoFactory->createAgreed();
+        $control = new AgreedField();
         $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);

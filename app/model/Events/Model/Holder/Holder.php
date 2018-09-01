@@ -18,15 +18,16 @@ use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
+use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
 
 /**
  * A bit bloated class.
- * 
+ *
  * It takes care of data loading/storing and also provides event's metadata.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
@@ -62,7 +63,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     private $connection;
 
     /**
-     * @var Machine 
+     * @var Machine
      */
     private $machine;
 
@@ -88,9 +89,9 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function setPrimaryHolder($name) {
         $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function(BaseHolder $baseHolder) use($primaryHolder) {
-                    return $baseHolder !== $primaryHolder;
-                });
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
+            return $baseHolder !== $primaryHolder;
+        });
     }
 
     public function getPrimaryHolder() {
@@ -194,7 +195,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * Apply processings to the values and sets them to the ORM model.
-     * 
+     *
      * @param ArrayHash $values
      * @param \Events\Model\Machine $machine
      * @param Transition[] $transitions
@@ -221,6 +222,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
                 $baseHolder->updateModel($values[$name]); // terminated models may not be correctly updated
             }
         }
+        die();
         return $newStates;
     }
 
