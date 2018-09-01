@@ -12,6 +12,7 @@ use ModelContest;
 use ModelException;
 use ModelPerson;
 use Nette\Database\Connection;
+
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -204,7 +205,7 @@ class ExtendedPersonHandler extends Object {
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            Debugger::barDump($data);
+
             $this->service->updateModel($model, $data);
         }
 

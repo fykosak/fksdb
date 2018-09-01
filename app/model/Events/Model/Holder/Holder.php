@@ -18,7 +18,6 @@ use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -222,8 +221,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
                 $baseHolder->updateModel($values[$name]); // terminated models may not be correctly updated
             }
         }
-        die();
-        return $newStates;
+          return $newStates;
     }
 
     public function adjustForm(Form $form, Machine $machine) {

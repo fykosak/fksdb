@@ -1,8 +1,14 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories;
+namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Factories\AddressFactory;
+use FKSDB\Components\Forms\Factories\FlagFactory;
+use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
+use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
+use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use ModelPerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifialibityResolver;
@@ -14,7 +20,7 @@ use ServicePerson;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
- * @author Michal Koutný <michal@fykos.cz>
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 

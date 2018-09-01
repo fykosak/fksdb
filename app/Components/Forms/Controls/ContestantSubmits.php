@@ -17,7 +17,7 @@ use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestantSubmits extends BaseControl {
@@ -60,10 +60,13 @@ class ContestantSubmits extends BaseControl {
     private $className;
 
     /**
-     * 
-     * @param Traversable|array $tasks
-     * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
-     * @param string|null $label
+     * ContestantSubmits constructor.
+     * @param $tasks
+     * @param ModelContestant $contestant
+     * @param ServiceSubmit $submitService
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     * @param $acYear
+     * @param null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, ServiceTaskStudyYear $serviceTaskStudyYear, $acYear, $label = null) {
         parent::__construct($label);
@@ -144,7 +147,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     /**
-     * 
+     *
      * @param array|Traversable|string $value of ModelTask
      * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
      * @throws InvalidArgumentException
@@ -243,7 +246,7 @@ class ContestantSubmits extends BaseControl {
 
     /**
      * Workaround to perform server-side conversion of dates.
-     * 
+     *
      * @todo Improve client side so that this is not needed anymore.
      * @param string $source
      * @return string

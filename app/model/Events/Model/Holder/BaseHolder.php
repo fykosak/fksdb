@@ -266,9 +266,6 @@ class BaseHolder extends FreezableObject {
 
     public function updateModel($values) {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        Debugger::barDump($this->getModel());
-        Debugger::barDump($values);
-        Debugger::barDump($this->getService());
 
         $this->getService()->updateModel($this->getModel(), $values);
     }

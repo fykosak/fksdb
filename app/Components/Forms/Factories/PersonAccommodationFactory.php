@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\PersonAccommodationMatrix;
-use Nette\Diagnostics\Debugger;
 
 class PersonAccommodationFactory {
     /**
@@ -17,7 +16,7 @@ class PersonAccommodationFactory {
 
     public function createMatrixSelect($eventId) {
 
-        $accommodations = $this->serviceEventAccommodation->getAccommodationFroEvent($eventId);
+        $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($eventId);
 
 
         $accommodationDef = [];

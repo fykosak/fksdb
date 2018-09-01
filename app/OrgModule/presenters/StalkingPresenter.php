@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;

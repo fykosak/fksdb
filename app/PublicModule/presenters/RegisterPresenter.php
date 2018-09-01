@@ -4,11 +4,11 @@ namespace PublicModule;
 
 use BasePresenter as CoreBasePresenter;
 use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
-use FKS\Components\Forms\Controls\ReferencedIdField;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use IContestPresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
@@ -292,7 +292,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
-            $referencedId->setDefaultValue(ReferencedIdField::VALUE_PROMISE);
+            $referencedId->setDefaultValue(ReferencedId::VALUE_PROMISE);
         }
     }
 
@@ -316,11 +316,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
         $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        
+
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
-        
+
         /*
          * CAPTCHA
          */

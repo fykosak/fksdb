@@ -98,7 +98,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
-            //   \Nette\Diagnostics\Debugger::barDump($table);
             $table->where($firstHolder->getEventId(),$event->getPrimary());
             if($this->includeStates !== BaseMachine::STATE_ANY){
                 $table->where(BaseHolder::STATE_COLUMN,$this->includeStates);
@@ -133,7 +132,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
             //$usage += $table->sum($column);
         }
-        //  \Nette\Diagnostics\Debugger::barDump($usage);
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
         foreach ($o as $key => $option) {
@@ -167,7 +165,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
 
             }
-            \Nette\Diagnostics\Debugger::barDump($controlsUsages);
+
             foreach ($controlsUsages as $k =>$u ){
                 $us = (array_key_exists($k,$usage) ? $usage[$k] : 0)+$u;
                 if($capacities[$k]-$us<0){

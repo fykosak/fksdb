@@ -1,10 +1,10 @@
 import * as React from 'react';
-import DateDisplay from '../../shared/components/displays/date';
-import PriceDisplay from '../../shared/components/displays/price';
-import { IAccommodationItem } from '../middleware/interfaces';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import DateDisplay from '../../shared/components/displays/date';
+import PriceDisplay from '../../shared/components/displays/price';
 import { changeAccommodation } from '../actions';
+import { IAccommodationItem } from '../middleware/interfaces';
 
 interface IProps {
     accommodations: IAccommodationItem[];
@@ -32,7 +32,10 @@ class Row extends React.Component<IProps & IState, {}> {
                 const priceLabel = <small className="align-bottom text-muted">
                     <PriceDisplay price={currentAcc[0].price}/>
                 </small>;
-                const capacityLabel = <small>{currentAcc[0].capacity}/{currentAcc[0].usedCapacity}</small>;
+                const capacityLabel = <small
+                    className={(currentAcc[0].capacity === currentAcc[0].usedCapacity) ? 'text-danger' : ''}>
+                    {currentAcc[0].capacity}/{currentAcc[0].usedCapacity}
+                </small>;
                 if (currentAcc[0].eventAccommodationId === value) {
                     cols.push(<td key={index} className="text-center table-success"
                                   onClick={() => {
