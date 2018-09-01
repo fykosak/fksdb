@@ -14,7 +14,6 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
@@ -316,11 +315,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
         $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        
+
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
-        
+
         /*
          * CAPTCHA
          */
@@ -383,5 +382,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             return [$contest->getContestSymbol(), 'dark'];
         }
         return null;
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 }
