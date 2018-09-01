@@ -2,7 +2,7 @@
 
 namespace FyziklaniModule;
 
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
 use Nette\Application\UI\Form;

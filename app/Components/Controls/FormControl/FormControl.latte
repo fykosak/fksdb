@@ -1,0 +1,127 @@
+{*
+    General help macros.
+*}
+{define errors}
+    {if $form instanceof Nette\Forms\Form}
+        {var $fieldErrors = array()}
+        {foreach $form->getControls() as $control}
+            {foreach $control->getErrors() as $error}
+                {var $fieldErrors[$error] = 1}
+            {/foreach}
+        {/foreach}
+        {foreach $form->getErrors() as $error}
+            <div n:if="!isset($fieldErrors[$error])" class="alert alert-danger">{$error}</div>
+        {/foreach}
+    {/if}
+{/define}
+
+{define metadata}
+    {foreach $field->getErrors() as $error}
+        {continueIf !$error}
+        <div class="alert alert-danger">{$error}</div>
+    {/foreach}
+    {if $description = $field->getOption('description')}<span class="text-muted">{$description}</span>{/if}
+
+{/define}
+
+{define plain}
+    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required" id="{$field->getHtmlId()}-pair">
+        {label $field/}
+        <div>
+            {? $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
+            {input $field}
+            {include #metadata field => $field}
+        </div>
+    </div>
+{/define}
+
+{define checkbox}
+    <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+        <div>
+            <div class="checkbox">
+                {label $field}
+                    {input $field} {$field->getLabel()->setName(null)}
+                {/label}
+            </div>
+            {include #metadata field => $field}
+        </div>
+    </div>
+{/define}
+
+{define radiolist}
+    <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+        {label $field /}
+        <div>
+            {foreach $field->getItems() as $key => $item}
+                <div class="form-check">
+                    <label>{$field->getControl($key)}</label>
+                </div>
+            {/foreach}
+            {include #metadata field => $field}
+        </div>
+    </div>
+{/define}
+
+{define button}
+    {? $field->getControlPrototype()->addClass('btn')}
+    {if !Nette\Utils\Arrays::grep(array_keys($field->getControlPrototype()->getClass()), '/btn-/')}
+        {? $field->getControlPrototype()->addClass('btn-primary')}
+    {/if}
+    {input $field}
+{/define}
+
+{define buttonArray}
+    {var $buttonRows = array()}
+    {foreach $buttons as $button}
+        {? if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = array()}
+        {var $buttonRows[$button->getOption('row')][] = $button}
+    {/foreach}
+    {? ksort($buttonRows)}
+    {foreach $buttonRows as $row}
+        <div n:if="$row">
+            <div class="btn-group col-12">
+                {foreach $row as $button}
+                    {include #button field => $button}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+{/define}
+
+{define hidden}
+    <div n:tag-if="$field->hasErrors()" n:class="form-group, $field->hasErrors() ? has-error"
+            id="{$field->getHtmlId()}-pair">
+        <div n:tag-if="$field->hasErrors()">
+            {input $field}
+            {include #metadata field => $field}
+        </div>
+
+    </div>
+{/define}
+
+
+{define controls}
+    {var $buttons = array()}
+    {foreach $controls as $name => $field}
+        {if method_exists($field,'getOption')}
+            {continueIf !$field->getOption('visible', true)}
+            {if !$field instanceof Nette\Forms\Controls\Button}
+                {include #buttonArray buttons => $buttons}
+                {var $buttons = array()}
+            {/if}
+            {if $field instanceof Nette\Forms\Controls\Checkbox}
+                {include #checkbox field => $field}
+            {elseif $field instanceof Nette\Forms\Controls\HiddenField}
+                {include #hidden field => $field}
+            {elseif $field instanceof Nette\Forms\Controls\RadioList}
+                {include #radiolist field => $field}
+            {elseif $field instanceof Nette\Forms\Controls\Button}
+                {var $buttons[] = $field}
+            {else}
+                {include #plain field => $field}
+            {/if}
+        {/if}
+    {/foreach}
+    {include #buttonArray buttons => $buttons}
+{/define}
+

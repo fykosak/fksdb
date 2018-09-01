@@ -3,7 +3,7 @@
 namespace PublicModule;
 
 use BasePresenter as CoreBasePresenter;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKS\Components\Forms\Controls\ReferencedId;

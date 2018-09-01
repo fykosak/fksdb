@@ -8,7 +8,7 @@ use Events\Model\ApplicationHandler;
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\ImportHandler;
 use Events\Model\ImportHandlerException;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Logging\FlashMessageDump;
 use FKS\Utils\CSVParser;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;

@@ -2,7 +2,7 @@
 
 namespace FyziklaniModule;
 
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use Nette\Application\BadRequestException;

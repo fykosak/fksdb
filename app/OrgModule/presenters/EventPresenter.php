@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;

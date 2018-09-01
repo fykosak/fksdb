@@ -2,14 +2,13 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\Expressions\Helpers;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
-use OrgModule\EntityPresenter;
 use ORM\IModel;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
@@ -93,13 +92,13 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
         $that = $this;
-        $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
-                    $form = $button->getForm();
-                    if ($handler->handleForm($form, $that)) {
-                        $that->backlinkRedirect();
-                        $that->redirect('list');
-                    }
-                };
+        $submit->onClick[] = function (SubmitButton $button) use ($that, $handler) {
+            $form = $button->getForm();
+            if ($handler->handleForm($form, $that)) {
+                $that->backlinkRedirect();
+                $that->redirect('list');
+            }
+        };
 
         return $control;
     }
