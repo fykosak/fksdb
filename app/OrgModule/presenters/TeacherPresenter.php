@@ -46,14 +46,17 @@ class TeacherPresenter extends ExtendedPersonPresenter {
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullname()));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Create new teacher'));
+        $this->setIcon('fa fa-plus');
     }
 
     public function titleList() {
         $this->setTitle(_('Teacher'));
+        $this->setIcon('fa fa-graduation-cap');
     }
 
     protected function createComponentGrid($name) {
