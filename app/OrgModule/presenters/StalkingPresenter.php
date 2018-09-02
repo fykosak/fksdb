@@ -15,7 +15,7 @@ use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
 use FKSDB\Components\Controls\Stalking\Flag;
 use FKSDB\Components\Controls\Stalking\EventTeacher;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;

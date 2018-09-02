@@ -122,6 +122,10 @@ class BaseMachine extends FreezableObject {
         return $this->transitions;
     }
 
+    /**
+     * @param int $mode
+     * @return Transition[]
+     */
     public function getAvailableTransitions($mode = self::EXECUTABLE) {
         return array_filter($this->getMatchingTransitions(), function(Transition $transition) use($mode) {
                     return

@@ -365,5 +365,19 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return \Nette\Utils\Json::encode($accommodations);
     }
 
+    /**
+     * @param $eventId
+     * Definitely ugly but, there is only this way... Mišo
+     */
+    public function removeAccommodationForEvent($eventId) {
+        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
+        /**
+         * @var $row ModelEventPersonAccommodation
+         */
+        foreach ($query as $row) {
+            $row->delete();
+        }
+    }
+
 }
 

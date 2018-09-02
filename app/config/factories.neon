@@ -9,9 +9,9 @@ services:
     - Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
-        class: FKSDB\Components\Forms\Factories\ReferencedEventPersonFactory
+        class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory
     referencedPersonFactory:
-        class: FKSDB\Components\Forms\Factories\ReferencedPersonFactory
+        class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - Persons\ReferencedPersonHandlerFactory
     - FKSDB\Model\Fyziklani\Rooms\PipelineFactory
     breadcrumbFactory:

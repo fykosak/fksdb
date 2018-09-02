@@ -5,7 +5,7 @@ namespace OrgModule;
 use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;

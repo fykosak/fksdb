@@ -11,7 +11,7 @@ use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Forms\Factories\ReferencedEventPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;

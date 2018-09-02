@@ -9,6 +9,7 @@ use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
@@ -116,7 +117,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     public function setConflicts(ArrayHash $conflicts, $container = null) {
-        $container = $container ? : $this;
+        $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
@@ -135,8 +136,8 @@ class ReferencedContainer extends ContainerWithOptions {
      */
     public function setSearchButton($value) {
         static $searchComponents = array(
-    self::CONTROL_SEARCH,
-    self::SUBMIT_SEARCH,
+            self::CONTROL_SEARCH,
+            self::SUBMIT_SEARCH,
         );
 
         $value = $value && $this->hasSearch;
@@ -178,34 +179,34 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createClearButton() {
-        $that = $this;
+
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
-                ->setValidationScope(false);
+            ->setValidationScope(false);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->referencedId->setValue(null);
-                    $that->invalidateFormGroup();
-                };
+        $submit->onClick[] = function () {
+            $this->referencedId->setValue(null);
+            $this->invalidateFormGroup();
+        };
     }
 
     private function createSearchButton() {
         $that = $this;
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
-                ->setValidationScope(false);
+            ->setValidationScope(false);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function(SubmitButton $submit) use($that) {
-                    $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
-                    $model = $that->searchCallback->invoke($term);
+        $submit->onClick[] = function (SubmitButton $submit) use ($that) {
+            $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
+            $model = $that->searchCallback->invoke($term);
 
-                    $values = new ArrayHash();
-                    if (!$model) {
-                        $model = ReferencedId::VALUE_PROMISE;
-                        $values = $that->termToValuesCallback->invoke($term);
-                    }
-                    $that->referencedId->setValue($model);
-                    $that->setValues($values);
-                    $that->invalidateFormGroup();
-                };
+            $values = new ArrayHash();
+            if (!$model) {
+                $model = ReferencedId::VALUE_PROMISE;
+                $values = $that->termToValuesCallback->invoke($term);
+            }
+            $that->referencedId->setValue($model);
+            $that->setValues($values);
+            $that->invalidateFormGroup();
+        };
     }
 
     private function createCompactValue() {
@@ -221,9 +222,9 @@ class ReferencedContainer extends ContainerWithOptions {
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object) array(
-                        'id' => $this->referencedId->getHtmlId(),
-                        'value' => $this->referencedId->getValue(),
+            $payload->{self::JSON_DATA} = (object)array(
+                'id' => $this->referencedId->getHtmlId(),
+                'value' => $this->referencedId->getValue(),
             );
         }
     }
@@ -260,7 +261,7 @@ class ReferencedContainer extends ContainerWithOptions {
         $referencedId = $this->referencedId->getHtmlId();
         $this->setOption('data', array(
             'referenced-id' => $referencedId,
-            'referenced' => (int) true,
+            'referenced' => (int)true,
         ));
     }
 

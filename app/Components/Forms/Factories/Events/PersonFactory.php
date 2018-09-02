@@ -9,12 +9,11 @@ use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedEventPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
-use Nette\InvalidArgumentException;
 use Nette\Security\User;
 use Persons\SelfResolver;
 use ServicePerson;
@@ -112,7 +111,7 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-        $hiddenField->setDefaultValue($default, ['event_id' => $field->getBaseHolder()->getEvent()->event_id]);
+        $hiddenField->setDefaultValue($default);
     }
 
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
@@ -143,7 +142,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = array('required' => $metadata);
                 }
-                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear, $globalMetaData)) {
+                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear, $globalMetaData)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }

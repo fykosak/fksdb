@@ -24,6 +24,17 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
+    public function updateModel(IModel $model, $data, $alive = true) {
+        if (!$alive) {
+            /**
+             * @var $model ModelEventParticipant
+             */
+            \Nette\Diagnostics\Debugger::barDump('Die', 'alive updateModel');
+            $model->getPerson()->removeAccommodationForEvent($model->event_id);
+        }
+        parent::updateModel($model, $data, $alive);
+    }
+
 }
 
 class DuplicateApplicationException extends ModelException {

@@ -96,9 +96,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Updates values in model from given data.
      *
      * @param AbstractModelSingle $model
+     * @param boolean $alive
      * @param array $data
      */
-    public function updateModel(IModel $model, $data) {
+    public function updateModel(IModel $model, $data, $alive = true) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }

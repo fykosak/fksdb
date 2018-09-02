@@ -4,14 +4,14 @@ namespace ORM;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait CachingServiceTrait {
 
     private $modelCache = array();
 
-    public function updateModel(IModel $model, $data) {
+    public function updateModel(IModel $model, $data, $alive = true) {
         unset($this->modelCache[$this->getKey($model->getPrimary(false))]);
         parent::updateModel($model, $data);
     }

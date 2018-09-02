@@ -264,10 +264,9 @@ class BaseHolder extends FreezableObject {
         $this->getService()->updateModel($this->getModel(), array(self::STATE_COLUMN => $state));
     }
 
-    public function updateModel($values) {
+    public function updateModel($values, $alive = true) {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-
-        $this->getService()->updateModel($this->getModel(), $values);
+        $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
     public function resolveMultipleSecondaries($conflicts) {

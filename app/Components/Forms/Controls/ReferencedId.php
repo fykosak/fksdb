@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKS\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKS\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Mail\Message;
@@ -103,6 +103,7 @@ class ReferencedId extends HiddenField {
     }
 
     public function setValue($pvalue, $force = false) {
+
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
@@ -119,6 +120,8 @@ class ReferencedId extends HiddenField {
             $container->setSearchButton(false);
             $container->setClearButton(true);
         }
+
+
         $this->referencedSetter->setModel($container, $pvalue, $force);
 
         if ($isPromise) {
@@ -163,32 +166,32 @@ class ReferencedId extends HiddenField {
     private function createPromise() {
         $referencedId = $this->getValue();
 
-        $referencedIdControl = $this;
         $values = $this->referencedContainer->getValues();
-        $handler = $this->handler;
-        $promise = new Promise(function () use ($handler, $referencedId, $values, $referencedIdControl) {
+
+        $promise = new Promise(function () use ($referencedId, $values) {
             $messages = [];
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $handler->createFromValues($values, $messages);
+                    $model = $this->handler->createFromValues($values, $messages);
 
                     $this->addMessages($messages);
-                    $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
-                    $referencedIdControl->setModelCreated(true);
+                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $this->setModelCreated(true);
                     return $model->getPrimary();
                 } else if ($referencedId) {
-                    $model = $referencedIdControl->getService()->findByPrimary($referencedId);
-                    $handler->update($model, $values, $messages);
+                    $model = $this->getService()->findByPrimary($referencedId);
+
+                    $this->handler->update($model, $values, $messages);
                     $this->addMessages($messages);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-                    $model = $referencedIdControl->getService()->findByPrimary($model->getPrimary());
-                    $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $model = $this->getService()->findByPrimary($model->getPrimary());
+                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     return $referencedId;
                 } else {
-                    $referencedIdControl->setValue(null, IReferencedSetter::MODE_FORCE);
+                    $this->setValue(null, IReferencedSetter::MODE_FORCE);
                 }
             } catch (ModelDataConflictException $e) {
-                $e->setReferencedId($referencedIdControl);
+                $e->setReferencedId($this);
                 throw $e;
             }
 
@@ -214,9 +217,8 @@ class ReferencedId extends HiddenField {
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate[] = function (Form $form) use ($that) {
-                $that->createPromise();
+            $obj->onValidate[] = function () {
+                $this->createPromise();
             };
             $this->attachedOnValidate = true;
         }

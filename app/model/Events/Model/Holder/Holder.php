@@ -215,10 +215,10 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
 
         foreach ($this->baseHolders as $name => $baseHolder) {
-            //$alive = isset($newStates[$name]) && $newStates[$name] != BaseMachine::STATE_TERMINATED;
-            $alive = true;
-            if (isset($values[$name]) && $alive) {
-                $baseHolder->updateModel($values[$name]); // terminated models may not be correctly updated
+            $alive = isset($newStates[$name]) && $newStates[$name] != BaseMachine::STATE_TERMINATED;
+
+            if (isset($values[$name])) {
+                $baseHolder->updateModel($values[$name],$alive); // terminated models may not be correctly updated
             }
         }
           return $newStates;
