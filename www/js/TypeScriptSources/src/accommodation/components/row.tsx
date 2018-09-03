@@ -4,10 +4,10 @@ import { Dispatch } from 'redux';
 import DateDisplay from '../../shared/components/displays/date';
 import PriceDisplay from '../../shared/components/displays/price';
 import { changeAccommodation } from '../actions';
-import { IAccommodationItem } from '../middleware/interfaces';
+import { IEventAccommodation } from '../middleware/interfaces';
 
 interface IProps {
-    accommodations: IAccommodationItem[];
+    accommodations: IEventAccommodation[];
     hotels: string[];
     date: string;
 }

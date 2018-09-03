@@ -1,6 +1,6 @@
 // import { formValueSelector } from 'redux-form';
 import {
-    IAccommodationItem,
+    IEventAccommodation,
     IPersonAccommodation,
 } from './interfaces';
 import { IPrice } from '../../shared/components/displays/price/interfaces';
@@ -18,7 +18,7 @@ export const getAccommodationFromState = (FORM_NAME: string, state: IStore, ownP
     return null;
 };
 */
-export const getAccommodationPrice = (accommodationDef: IAccommodationItem[], accommodation: IPersonAccommodation): IPrice => {
+export const getAccommodationPrice = (accommodationDef: IEventAccommodation[], accommodation: IPersonAccommodation): IPrice => {
 
     const sum = {
         eur: 0,

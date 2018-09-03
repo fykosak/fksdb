@@ -7,13 +7,13 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../config/';
-import { IAccommodationItem } from '../middleware/interfaces';
+import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Accommodation from './accommodation';
 import InputConnector from './input-connector';
 
 interface IProps {
-    accommodationDef: IAccommodationItem[];
+    accommodationDef: IEventAccommodation[];
     input: HTMLInputElement;
 }
 

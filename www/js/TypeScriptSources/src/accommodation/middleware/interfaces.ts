@@ -1,6 +1,6 @@
 import { IPrice } from '../../shared/components/displays/price/interfaces';
 
-export interface IAccommodationItem {
+export interface IEventAccommodation {
     eventAccommodationId: number;
     eventId: number;
     capacity: number;

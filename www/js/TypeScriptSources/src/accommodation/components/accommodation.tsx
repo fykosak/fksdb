@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 // import Lang from '../../../../../lang/components/lang';
-import { IAccommodationItem } from '../middleware/interfaces';
+import { IEventAccommodation } from '../middleware/interfaces';
 import Price from './price';
 import Row from './row';
 
 interface IProps {
-    accommodationDef?: IAccommodationItem[];
+    accommodationDef?: IEventAccommodation[];
 }
 
 interface IState {
