@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -118,7 +118,6 @@ class ApplicationComponent extends Control {
 
     protected function createComponentForm($name) {
         $result = new FormControl();
-        $result->setGroupMode(FormControl::GROUP_CONTAINER);
         /**
          * @var $form Form
          */

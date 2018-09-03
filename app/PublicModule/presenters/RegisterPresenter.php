@@ -3,7 +3,8 @@
 namespace PublicModule;
 
 use BasePresenter as CoreBasePresenter;
-use FKS\Components\Controls\FormControl;
+
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKS\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -14,7 +15,6 @@ use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
@@ -305,7 +305,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentContestantForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -343,6 +342,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $this->getUser()->login($login);
                 }
                 $this->redirect('Dashboard:default');
+
             }
         };
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));

@@ -1,16 +1,16 @@
 <?php
 
 use Authentication\PasswordAuthenticator;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SettingsPresenter extends AuthenticatedPresenter {
@@ -63,7 +63,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $defaults = array(
             self::CONT_LOGIN => $login->toArray(),
         );
-        $this->getComponent('settingsForm')->setDefaults($defaults);
+        $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
@@ -75,8 +75,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     protected function createComponentSettingsForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
@@ -84,7 +84,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
                 $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Autentizace'));
-        $emailRule = $this->uniqueEmailFactory->create($login->getPerson(), $login); //TODO em use it somewhere
+        $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
         $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
@@ -111,7 +111,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $form->addSubmit('send', _('Uložit'));
 
         $form->onSuccess[] = array($this, 'handleSettingsFormSuccess');
-        return $form;
+        return $control;
     }
 
     /**
@@ -134,7 +134,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->loginService->save($login);
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID            
+            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
             $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
