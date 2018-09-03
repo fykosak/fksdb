@@ -25,7 +25,7 @@ use Nette\InvalidStateException;
 use Nette\Object;
 use Nette\Utils\Arrays;
 use ORM\IModel;
-use Persons\IModifialibityResolver;
+use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
@@ -107,11 +107,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param integer $acYear
      * @param string $searchType
      * @param boolean $allowClear
-     * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
+     * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 

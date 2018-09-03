@@ -220,6 +220,7 @@ class ReferencedId extends HiddenField {
             $obj->onValidate[] = function () {
                 $this->createPromise();
             };
+
             $this->attachedOnValidate = true;
         }
     }

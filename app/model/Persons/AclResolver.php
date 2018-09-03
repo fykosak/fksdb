@@ -9,10 +9,10 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class AclResolver extends Object implements IVisibilityResolver, IModifialibityResolver {
+class AclResolver extends Object implements IVisibilityResolver, IModifiabilityResolver {
 
     /**
      * @var ContestAuthorizator

@@ -38,19 +38,18 @@ class ServiceEventPersonAccommodation extends \AbstractServiceSingle {
             }
         }
         foreach ($newAccommodationIds as $id) {
-            $query = $this->getTable()->getReferencedTable(DbNames::TAB_EVENT_ACCOMMODATION, 'event_accommodation')->where('event_accommodation_id', $id)->fetch();
-            $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
-
-            if ($eventAccommodation->getAvailableCapacity() > 0) {
-                $model = $this->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
-                $this->save($model);
-            } else {
-                $messages[] = new Message(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
-                    $person->getFullName(),
-                    $eventAccommodation->name,
-                    $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
-                ), 'danger');
-            }
+            $model = $this->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
+            // $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
+            // if ($eventAccommodation->getAvailableCapacity() > 0) {
+            $this->save($model);
+            /* } else {
+                  $model->delete();
+                  $messages[] = new Message(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
+                      $person->getFullName(),
+                      $eventAccommodation->name,
+                      $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
+                  ), 'danger');
+              }*/
         }
         return $messages;
     }
