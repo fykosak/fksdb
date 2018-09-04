@@ -14,17 +14,9 @@ class ServiceEventPersonAccommodation extends \AbstractServiceSingle {
      */
     public function prepareAndUpdate(\Nette\ArrayHash $data, ModelPerson $person, $eventId) {
         $messages = [];
-        foreach ($data as $type => $datum) {
-            switch ($type) {
-                case 'matrix':
-                    $data = (array)json_decode($datum);
-                    break;
-                default:
-                    throw new \Nette\NotImplementedException("Type $type is not implement");
-            }
-        }
         $oldRows = $this->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
-        $newAccommodationIds = array_values($data);
+
+        $newAccommodationIds = $this->prepareData($data);
         /**
          * @var $row ModelEventPersonAccommodation
          */
@@ -52,5 +44,23 @@ class ServiceEventPersonAccommodation extends \AbstractServiceSingle {
               }*/
         }
         return $messages;
+    }
+
+    /**
+     * @param \Nette\ArrayHash $data
+     * @return integer[]
+     */
+    private function prepareData(\Nette\ArrayHash $data){
+        foreach ($data as $type => $datum) {
+            switch ($type) {
+                case 'matrix':
+                    $data = (array)json_decode($datum);
+                    break;
+                default:
+                    throw new \Nette\NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
+            }
+        }
+
+        return array_values($data);
     }
 }

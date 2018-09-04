@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="{$robots}" n:ifset="$robots">
@@ -71,7 +70,7 @@
 {/block body}
 {block footer}
     <footer>
-        <div class="container text-center text-light py-3">
+        <div class="container text-center text-muted py-3">
         <span class="list-piped">
             <a class="text-light" href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a>
             <span>| </span>
@@ -89,8 +88,8 @@
     {*TODO store this library localy*}
     {control jsLoader
         'js/netteForms.js',
-        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.js',
         'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
         'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
         'js/nette.ajax.js',
