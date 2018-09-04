@@ -4,14 +4,14 @@ use FKS\Application\IJavaScriptCollector;
 use FKS\Application\IStylesheetCollector;
 use FKS\Components\Controls\JavaScriptLoader;
 use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
-use FKS\Components\Controls\Navigation\INavigablePresenter;
-use FKS\Components\Controls\Navigation\Navigation;
 use FKS\Components\Controls\PresenterBuilder;
 use FKS\Components\Controls\StylesheetLoader;
 use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKS\Config\GlobalParameters;
 use FKS\Localization\GettextTranslator;
+use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Components\Controls\Navigation\Navigation;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -70,6 +70,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var string|null
      */
     protected $title = false;
+    /**
+     * @var string
+     */
+    protected $icon = '';
 
     /**
      * @var boolean
@@ -239,6 +243,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->title = $title;
     }
 
+    public function getIcon() {
+        return $this->icon;
+    }
+
+    protected function setIcon($icon) {
+        $this->icon = $icon;
+    }
+
     protected function setSubtitle($subtitle) {
         $this->subtitle = $subtitle;
     }
@@ -268,10 +280,14 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->template->navVariant = $type;
 
         $this->template->subtitle = $this->getSubtitle();
+        $this->template->icon = $this->getIcon();
+        $this->template->navRoot = $this->getNavRoot();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }
+
+    abstract function getNavRoot();
 
     /**
      * @return array

@@ -18,7 +18,7 @@ use Nette\Application\BadRequestException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
     const PRESETS_KEY = 'publicPresets';
 
@@ -108,6 +108,9 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
             return [$contest->getContestSymbol(), 'dark'];
         }
         return [null, null];
+    }
+    public function getNavRoot() {
+        return 'public.dashboard.default';
     }
 
 }

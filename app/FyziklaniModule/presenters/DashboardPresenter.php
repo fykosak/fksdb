@@ -6,6 +6,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('FYKOSí Fyziklání'));
+        $this->setIcon('fa fa-dashboard');
     }
 
     public function authorizedDefault() {

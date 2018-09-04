@@ -66,11 +66,16 @@ class DispatchPresenter extends AuthenticatedPresenter {
         }
     }
 
-    public function getTitle() {
-        return _('Rozcestník');
+    public function titleDefault() {
+        $this->setTitle(_('Rozcestník'));
+        $this->setIcon('fa fa-home');
     }
 
     public function getNavBarVariant() {
         return ['dark', 'dark'];
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 }

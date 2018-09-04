@@ -29,9 +29,9 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
+use ServiceAuthToken;
 use ServiceEvent;
 use ServiceEventOrg;
-use ServiceAuthToken;
 use SystemContainer;
 use Utils;
 
@@ -170,25 +170,30 @@ class EventPresenter extends EntityPresenter {
 
     public function titleList() {
         $this->setTitle(_('Akce'));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Přidat akci'));
+        $this->setIcon('fa fa-calendar-plus-o');
     }
 
     public function titleEdit($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleApplications($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleModel($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
+        $this->setIcon('fa fa-cubes');
     }
 
     public function actionDelete($id) {
@@ -357,7 +362,7 @@ class EventPresenter extends EntityPresenter {
             $this->serviceEvent->save($model);
 
             // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ["until" => $model->registration_end ? : $model->end];
+            $tokenData = ["until" => $model->registration_end ?: $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
                 $this->serviceAuthToken->updateModel($token, $tokenData);
                 $this->serviceAuthToken->save($token);

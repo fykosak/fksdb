@@ -67,6 +67,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-trophy');
     }
 
     public function authorizedDefault() {
