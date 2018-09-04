@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\LanguageChooser;
 use IContestPresenter;
 use ModelRole;
 use Nette\Application\BadRequestException;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
@@ -105,5 +104,12 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
             return [$contest->getContestSymbol(), 'dark'];
         }
         return [null, null];
+    }
+
+    public function getSubtitle() {
+        return sprintf(_('%d. ročník'), $this->year);
+    }
+    public function getNavRoot() {
+        return 'org.dashboard.default';
     }
 }

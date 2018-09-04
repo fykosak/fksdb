@@ -1,0 +1,49 @@
+/* use https://www.sassmeister.com/ */
+@mixin navigation-item($color,$background) {
+  border-color: $color;
+  background-color: $background;
+  transition-duration: 200ms;
+  color: $color;
+  a {
+    color: $color;
+  }
+  &:hover, &:focus {
+    transition-duration: 200ms;
+    //border-color: $background;
+    background-color: $color;
+    color: $background;
+    a {
+      color: $background;
+    }
+  }
+}
+
+.navigation-item .card {
+  height: 12rem;
+  width: 12rem;
+
+  &[data-background-id="0"] {
+    @include navigation-item(#1175da, white);
+  }
+
+  &[data-background-id="1"] {
+    @include navigation-item(#75da11, white);
+  }
+
+  &[data-background-id="2"] {
+    @include navigation-item(#da1175, white);
+  }
+
+  &[data-background-id="3"] {
+    @include navigation-item(#7511da, white);
+  }
+
+  &[data-background-id="4"] {
+    @include navigation-item(#11da75, white);
+  }
+
+  &[data-background-id="5"] {
+    @include navigation-item(#da7511, white);
+  }
+}
+

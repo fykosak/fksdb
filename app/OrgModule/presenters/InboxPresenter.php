@@ -117,6 +117,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Příjem řešení'));
+        $this->setIcon('fa fa-envelope-open');
     }
 
     public function renderDefault() {
@@ -125,6 +126,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
+        $this->setIcon('fa fa-inbox');
     }
 
     public function actionHandout() {
@@ -186,7 +188,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/datePicker.js');
         $this->registerJSFile('js/jquery.ui.swappable.js');
         $this->registerJSFile('js/inbox.js');
@@ -370,7 +372,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

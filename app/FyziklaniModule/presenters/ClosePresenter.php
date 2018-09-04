@@ -18,10 +18,12 @@ class ClosePresenter extends BasePresenter {
 
     public function titleTable() {
         $this->setTitle(_('Uzavírání bodování'));
+        $this->setIcon('fa fa-check');
     }
 
     public function titleTeam($id) {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->serviceFyziklaniTeam->findByPrimary($id)->__toString()));
+        $this->setIcon('fa fa-check-square-o');
     }
 
     public function authorizedTable() {

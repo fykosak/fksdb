@@ -22,14 +22,17 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullname()));
+        $this->setIcon('fa fa-user');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Založit řešitele'));
+        $this->setIcon('fa fa-user-plus');
     }
 
     public function titleList() {
         $this->setTitle(_('Řešitelé'));
+        $this->setIcon('fa fa-users');
     }
 
     protected function createComponentGrid($name) {
@@ -52,8 +55,8 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         }
         return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
     }
-    
-        public function messageCreate() {
+
+    public function messageCreate() {
         return _('Řešitel %s založen.');
     }
 
@@ -64,7 +67,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání řešitele.');
     }
-    
+
     public function messageExists() {
         return _('Řešitel už existuje.');
     }
