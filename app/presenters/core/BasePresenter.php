@@ -289,7 +289,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function getNavRoot(){
         return null;
-    };
+    }
 
     /**
      * @return array
