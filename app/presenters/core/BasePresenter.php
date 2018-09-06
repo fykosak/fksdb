@@ -287,7 +287,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
-    abstract function getNavRoot();
+    public function getNavRoot(){
+        return null;
+    };
 
     /**
      * @return array
