@@ -4,12 +4,12 @@ namespace Persons;
 
 use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FormUtils;
 use ModelException;
 use ModelPerson;
 use ModelPostContact;
 use Nette\ArrayHash;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Mail\Message;
 use Nette\Object;
@@ -65,15 +65,19 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     private $eventId;
 
     /**
-     * @var enum
+     * @var mixed
      */
     private $resolution;
     /**
      * @var \ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
+    /**
+     * @var Handler
+     */
+    private $eventAccommodationHandler;
 
-    function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag, $acYear, $resolution) {
+    function __construct(Handler $eventAccommodation, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag, $acYear, $resolution) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
@@ -82,6 +86,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->acYear = $acYear;
         $this->resolution = $resolution;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+        $this->eventAccommodationHandler = $eventAccommodation;
     }
 
     public function getResolution() {
@@ -102,7 +107,15 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         return $person;
     }
 
+    /**
+     * @param IModel $model
+     * @param ArrayHash $values
+     * @param $messages
+     */
     public function update(IModel $model, ArrayHash $values, &$messages) {
+        /**
+         * @var ModelPerson $model
+         */
         $messages = $this->store($model, $values);
     }
 
@@ -131,7 +144,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
                 'person_accommodation' => null,
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
+                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
             $services = [
@@ -174,7 +187,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     continue;
                 }
                 if ($t == 'person_accommodation' && isset($data[$t])) {
-                    $ms = $this->serviceEventPersonAccommodation->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
+                    $ms = $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
                     $messages = array_merge($messages, $ms);
                     continue;
                 }

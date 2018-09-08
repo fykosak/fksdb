@@ -1,15 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKS\Application\IJavaScriptCollector;
-use Nette\ComponentModel\IComponent;
-use Nette\Diagnostics\Debugger;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
-class PersonAccommodationMatrix extends TextInput {
+class Matrix extends TextInput {
     const ID = 'person-accommodation-matrix';
+    const ResolutionId = 'matrix';
 
     public function __construct() {
         parent::__construct(_('Accommodation'));
@@ -17,8 +14,7 @@ class PersonAccommodationMatrix extends TextInput {
     }
 
     public function setAccommodationDefinition($accommodationDef) {
-        $this->setAttribute('data-accommodation-def', json_encode($accommodationDef));
-
+        $this->setAttribute('data-accommodation-def', count($accommodationDef) ? json_encode($accommodationDef) : NULL);
     }
 
     public function setValue($value) {

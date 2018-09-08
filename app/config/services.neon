@@ -39,7 +39,7 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage: 
+    submitStorage:
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
@@ -62,6 +62,8 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+
+    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
 
 
     #

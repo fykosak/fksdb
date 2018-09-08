@@ -8,6 +8,6 @@ export const app = combineReducers({
     accommodation,
 });
 
-export interface IStore {
+export interface IAccommodationStore {
     accommodation: IAccommodationState;
 }

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import PriceDisplay from '../../shared/components/displays/price';
 import { getAccommodationPrice } from '../middleware/helpers';
 import { IEventAccommodation } from '../middleware/interfaces';
-import { IStore } from '../reducer';
 import { IAccommodationState } from '../reducer/accommodation';
+import { IAccommodationStore } from '../reducer';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];
@@ -27,14 +27,11 @@ class Price extends React.Component<IProps & IState, {}> {
     }
 }
 
-// import Lang from '../../../../../lang/components/lang';
-// <Lang text={'Accommodation price'}/>
-
 const mapDispatchToProps = (): IState => {
     return {};
 };
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: IAccommodationStore): IState => {
     return {
         accommodation: state.accommodation,
     };

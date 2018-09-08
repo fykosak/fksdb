@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-// import Lang from '../../../../../lang/components/lang';
 import { IEventAccommodation } from '../middleware/interfaces';
 import Price from './price';
 import Row from './row';
@@ -9,11 +7,7 @@ interface IProps {
     accommodationDef?: IEventAccommodation[];
 }
 
-interface IState {
-
-}
-
-class Accommodation extends React.Component<IProps & IState, {}> {
+export default class Accommodation extends React.Component<IProps, {}> {
 
     public render() {
         const dates = {};
@@ -59,16 +53,4 @@ class Accommodation extends React.Component<IProps & IState, {}> {
             <Price accommodationDef={accommodationDef}/>
         </>;
     }
-} // <Lang text={'date'}/>
-
-const mapDispatchToProps = (): IState => {
-    return {};
-};
-
-const mapStateToProps = (state): IState => {
-    return {
-        //   accommodationDef: state.definitions.accommodation,
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Accommodation);
+}

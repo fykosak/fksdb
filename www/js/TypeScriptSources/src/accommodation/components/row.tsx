@@ -5,6 +5,7 @@ import DateDisplay from '../../shared/components/displays/date';
 import PriceDisplay from '../../shared/components/displays/price';
 import { changeAccommodation } from '../actions';
 import { IEventAccommodation } from '../middleware/interfaces';
+import { IAccommodationStore } from '../reducer';
 
 interface IProps {
     accommodations: IEventAccommodation[];
@@ -68,7 +69,7 @@ class Row extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>, ownProps: IProps): IState => {
     return {
         onChange: (value) => dispatch(changeAccommodation(ownProps.date, value)),
     };

@@ -2,6 +2,7 @@
 
 namespace Persons;
 
+use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use Nette\Object;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
@@ -44,20 +45,25 @@ class ReferencedPersonHandlerFactory extends Object {
      * @var \ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
+    /**
+     * @var Handler
+     */
+    private $eventAccommodationHandler;
 
 
-    function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag) {
+    function __construct(Handler $eventAccommodationAdjustment, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+        $this->eventAccommodationHandler = $eventAccommodationAdjustment;
     }
 
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
-            $this->serviceEventPersonAccommodation, $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
+            $this->eventAccommodationHandler, $this->serviceEventPersonAccommodation, $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
         );
         $handler->setEventId($eventId);
         return $handler;

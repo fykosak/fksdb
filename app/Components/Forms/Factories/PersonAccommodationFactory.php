@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\PersonAccommodationMatrix;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\Matrix;
+use Nette\Forms\Controls\BaseControl;
+use Nette\InvalidArgumentException;
 
 class PersonAccommodationFactory {
     /**
@@ -15,9 +17,7 @@ class PersonAccommodationFactory {
     }
 
     public function createMatrixSelect($eventId) {
-
         $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($eventId);
-
 
         $accommodationDef = [];
         /**
@@ -26,10 +26,23 @@ class PersonAccommodationFactory {
         foreach ($accommodations as $accommodation) {
             $accommodationDef[] = $accommodation->__toArray();
         }
-        $this->serviceEventAccommodation;
-        $control = new PersonAccommodationMatrix();
+        $control = new Matrix();
         $control->setAccommodationDefinition($accommodationDef);
         return $control;
 
+    }
+
+    /**
+     * @param string $fieldName
+     * @param integer $eventId
+     * @return BaseControl
+     */
+    public function createField($fieldName, $eventId) {
+        switch ($fieldName) {
+            case Matrix::ResolutionId:
+                return $this->createMatrixSelect($eventId);
+            default:
+                throw new InvalidArgumentException();
+        }
     }
 }

@@ -362,6 +362,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
             $accommodations[$key] = $eventAcc->event_accommodation_id;
         }
+        if (!count($accommodations)) {
+            return null;
+        }
         return \Nette\Utils\Json::encode($accommodations);
     }
 

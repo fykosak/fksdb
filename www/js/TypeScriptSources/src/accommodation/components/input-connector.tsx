@@ -2,14 +2,19 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { setInitialData } from '../actions';
+import { IAccommodationStore } from '../reducer';
 
 interface IProps {
     input: HTMLInputElement;
 }
 
+interface IValues {
+    [key: string]: number;
+}
+
 interface IState {
     onSetInitialData?: (value: any) => void;
-    data?: any;
+    data?: IValues;
 }
 
 class InputConnector extends React.Component<IProps & IState, {}> {
@@ -21,8 +26,17 @@ class InputConnector extends React.Component<IProps & IState, {}> {
         }
     }
 
-    public componentWillReceiveProps(newProps) {
-        this.props.input.value = JSON.stringify(newProps.data);
+    public componentWillReceiveProps(newProps: IProps & IState) {
+        const data: IValues = {};
+        let hasValue = false;
+
+        for (const key in newProps.data) {
+            if (newProps.data.hasOwnProperty(key) && (newProps.data[key] !== null)) {
+                data[key] = newProps.data[key];
+                hasValue = true;
+            }
+        }
+        this.props.input.value = hasValue ? JSON.stringify(data) : null;
     }
 
     public render() {
@@ -30,13 +44,13 @@ class InputConnector extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>): IState => {
     return {
         onSetInitialData: (data) => dispatch(setInitialData(data)),
     };
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
+const mapStateToProps = (state): IState => {
 
     return {
         data: state.accommodation,
