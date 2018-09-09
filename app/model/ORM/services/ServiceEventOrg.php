@@ -1,10 +1,8 @@
 <?php
 
-use ORM\CachingServiceTrait;
 use ORM\IModel;
 
 class ServiceEventOrg extends AbstractServiceSingle {
-    use CachingServiceTrait;
 
     protected $tableName = DbNames::TAB_EVENT_ORG;
     protected $modelClassName = 'ModelEventOrg';
