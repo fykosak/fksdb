@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Fyziklani\Results;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
+    use \ReactRequest;
     /**
      * @throws \Nette\Application\ForbiddenRequestException
      */
@@ -40,18 +41,22 @@ class ResultsPresenter extends BasePresenter {
 
     public function titleResultsView() {
         $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-trophy');
     }
 
     public function titleResultsPresentation() {
-        return $this->titleResultsView();
+        $this->setIcon('fa fa-table');
+        return $this->setTitle(_('Presentace FYKOSího Fyziklání'));
     }
 
     public function titleTeamStatistics() {
         $this->setTitle(_('Tímové statistiky FYKOSího Fyzikláni'));
+        $this->setIcon('fa fa-line-chart');
     }
 
     public function titleTaskStatistics() {
         $this->setTitle(_('Statistiky úloh FYKOSího Fyzikláni'));
+        $this->setIcon('fa fa-pie-chart');
     }
 
     public function authorizedDefault() {
@@ -118,7 +123,9 @@ class ResultsPresenter extends BasePresenter {
         /**
          * @var DateTime $lastUpdated
          */
-        $lastUpdated = $this->getHttpRequest()->getPost('requestData')['lastUpdated'];
+        $request = $this->getReactRequest();
+        $requestData = $request->requestData;
+        $lastUpdated = $requestData ? $requestData['lastUpdated'] : null;
         $response = new \ReactResponse();
         $response->setAct('results-update');
 

@@ -1,32 +1,3 @@
 {block content}
-    <a href="//fyziklani.cz" class="btn btn-link mb-3">{_('Spať na stránku Fyzikláni')}</a>
-    <div class="row">
-        <div class="col-lg-6 col-sm-12 mb-3">
-            <div class="card">
-                <div class="card-img-top"
-                     style="height: 10rem;background-image: url({$basePath}/images/fof/results.png)">
-                </div>
-
-                <div class="card-body">
-                    <h5 class="card-title">{_('Výsledky Fyzikláni')}</h5>
-                    <p class="card-text">TODO</p>
-                    <a href="{link resultsView}" class="btn btn-primary">{_('Náhled')}</a>
-                    <a href="{link resultsPresentation}" class="btn btn-primary">{_('Prezentace')}</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-sm-12 mb-3">
-            <div class="card">
-                <div class="card-img-top"
-                     style="height: 10rem;background-image: url({$basePath}/images/fof/results.png)">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{_('Statistiky')}</h5>
-                    <p class="card-text">TODO</p>
-                    <a href="{link teamStatistics}" class="btn btn-primary">{_('Teamové statistiky')}</a>
-                    <a href="{link taskStatistics}" class="btn btn-primary">{_('Statistiky úloh')}</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {control navigation 'fyziklani.results.default'}
 {/block}
