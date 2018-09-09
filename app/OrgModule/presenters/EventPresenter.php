@@ -162,25 +162,30 @@ class EventPresenter extends EntityPresenter {
 
     public function titleList() {
         $this->setTitle(_('Akce'));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Přidat akci'));
+        $this->setIcon('fa fa-calendar-plus-o');
     }
 
     public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
+        $this->setIcon('fa fa-cubes');
     }
 
     public function actionDelete() {

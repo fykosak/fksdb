@@ -53,6 +53,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
+        $this->setIcon('fa fa-cloud-upload');
     }
 
     public function authorizedDownload($id) {

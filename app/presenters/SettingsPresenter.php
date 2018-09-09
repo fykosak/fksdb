@@ -80,8 +80,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Autentizace'));
         $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
@@ -99,11 +99,11 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
         if ($loginContainer->getComponent('old_password', false)) {
             $loginContainer['old_password']
-                    ->addCondition(Form::FILLED)
-                    ->addRule(function(BaseControl $control) use($login) {
-                                $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
-                                return $hash == $login->hash;
-                            }, 'Špatně zadané staré heslo.');
+                ->addCondition(Form::FILLED)
+                ->addRule(function (BaseControl $control) use ($login) {
+                    $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
+                    return $hash == $login->hash;
+                }, 'Špatně zadané staré heslo.');
         }
 
         $form->setCurrentGroup();
@@ -121,8 +121,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
         $tokenAuthentication =
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-                $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
@@ -138,6 +138,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
             $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 
 }

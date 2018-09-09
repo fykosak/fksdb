@@ -108,6 +108,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Příjem řešení'));
+        $this->setIcon('fa fa-envelope-open');
     }
 
     public function renderDefault() {
@@ -116,6 +117,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
+        $this->setIcon('fa fa-inbox');
     }
 
     public function actionHandout() {

@@ -64,6 +64,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleEntry() {
         $this->setTitle(_('Zadávání bodů'));
+        $this->setIcon('fa fa-pencil-square-o');
     }
 
     public function titleQrEntry() {
@@ -84,6 +85,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleEdit() {
         $this->setTitle(_('Úprava bodování'));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function authorizedEdit() {
@@ -92,6 +94,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleTable() {
         $this->setTitle(_('Submits'));
+        $this->setIcon('fa fa-table');
     }
 
     public function authorizedTable() {
