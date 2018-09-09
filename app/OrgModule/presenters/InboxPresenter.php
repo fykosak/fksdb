@@ -19,7 +19,6 @@ use ServiceContestant;
 use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
@@ -55,11 +54,6 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceContestant;
 
     /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -87,10 +81,6 @@ class InboxPresenter extends SeriesPresenter {
 
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
-    }
-
-    public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
     }
 
     public function injectSeriesTable(SeriesTable $seriesTable) {
@@ -169,15 +159,11 @@ class InboxPresenter extends SeriesPresenter {
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $this->serviceTaskStudyYear->preloadCache(array(
-            'task_id' => $tasks,
-        ));
-
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
             $control->setClassName('inbox');
 
             $namingContainer = $container->addContainer($contestant->ct_id);

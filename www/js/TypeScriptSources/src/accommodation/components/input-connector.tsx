@@ -2,19 +2,16 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { setInitialData } from '../actions';
+import { IAccommodationState } from '../reducer/accommodation';
 import { IAccommodationStore } from '../reducer';
 
 interface IProps {
     input: HTMLInputElement;
 }
 
-interface IValues {
-    [key: string]: number;
-}
-
 interface IState {
-    onSetInitialData?: (value: any) => void;
-    data?: IValues;
+    onSetInitialData?: (value: IAccommodationState) => void;
+    data?: IAccommodationState;
 }
 
 class InputConnector extends React.Component<IProps & IState, {}> {
@@ -27,7 +24,7 @@ class InputConnector extends React.Component<IProps & IState, {}> {
     }
 
     public componentWillReceiveProps(newProps: IProps & IState) {
-        const data: IValues = {};
+        const data: IAccommodationState = {};
         let hasValue = false;
 
         for (const key in newProps.data) {
@@ -46,7 +43,7 @@ class InputConnector extends React.Component<IProps & IState, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>): IState => {
     return {
-        onSetInitialData: (data) => dispatch(setInitialData(data)),
+        onSetInitialData: (data: IAccommodationState) => dispatch(setInitialData(data)),
     };
 };
 

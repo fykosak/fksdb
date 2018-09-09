@@ -12,7 +12,6 @@ use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
-use ServiceTaskStudyYear;
 use Traversable;
 
 /**
@@ -40,11 +39,6 @@ class ContestantSubmits extends BaseControl {
     private $submitService;
 
     /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
-    /**
      * @var ModelContestant
      */
     private $contestant;
@@ -64,18 +58,16 @@ class ContestantSubmits extends BaseControl {
      * @param $tasks
      * @param ModelContestant $contestant
      * @param ServiceSubmit $submitService
-     * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param $acYear
      * @param null $label
      */
-    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, ServiceTaskStudyYear $serviceTaskStudyYear, $acYear, $label = null) {
+    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
         $this->monitor('FKS\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->acYear = $acYear;
     }
 
@@ -110,19 +102,8 @@ class ContestantSubmits extends BaseControl {
         return null;
     }
 
-    private function isTaskDisabled($taskId) {
+    private function isTaskDisabled() {
         return false;
-        // TODO loading person history took too long, implement better study_year detection
-//        $history = $this->contestant->getPerson()->getHistory($this->acYear);
-//        $studyYear = ($history && isset($history->study_year)) ? $history->study_year : null;
-//        if ($studyYear === null) {
-//            return false;
-//        }
-//        $taskStudyYear = $this->serviceTaskStudyYear->findByPrimary(array(
-//            'task_id' => $taskId,
-//            'study_year' => $studyYear,
-//        ));
-//        return $taskStudyYear === null;
     }
 
     /**
@@ -180,7 +161,7 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
         $dummySubmit = $this->submitService->createNew();
@@ -220,7 +201,7 @@ class ContestantSubmits extends BaseControl {
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
         $data['task'] = array(
             'label' => $this->getTask($submit->task_id)->label,
-            'disabled' => $this->isTaskDisabled($submit->task_id),
+            'disabled' => $this->isTaskDisabled(),
         ); // ORM workaround
         return $data;
     }

@@ -11,9 +11,9 @@ use ORM\IModel;
  */
 interface IReferencedSetter {
 
-    const MODE_NORMAL = 0;
-    const MODE_FORCE = 1;
-    const MODE_ROLLBACK = 2;
+    const MODE_NORMAL = 'MODE_NORMAL';
+    const MODE_FORCE = 'MODE_FORCE';
+    const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
     public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL, $metaData);
 }

@@ -331,9 +331,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      */
     public function inferGender() {
         if (mb_substr($this->family_name, -1) == 'á') {
-            return 'F';
+            $this->gender = 'F';
         } else {
-            return 'M';
+            $this->gender = 'M';
         }
     }
 

@@ -3,16 +3,14 @@
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKS\Application\IJavaScriptCollector;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
@@ -182,7 +180,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             $this->referencedId->setValue(null);
             $this->invalidateFormGroup();
@@ -190,22 +188,22 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createSearchButton() {
-        $that = $this;
+
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
             ->setValidationScope(false);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function (SubmitButton $submit) use ($that) {
-            $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
-            $model = $that->searchCallback->invoke($term);
+        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->onClick[] = function () {
+            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
+            $model = $this->searchCallback->invoke($term);
 
             $values = new ArrayHash();
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
-                $values = $that->termToValuesCallback->invoke($term);
+                $values = $this->termToValuesCallback->invoke($term);
             }
-            $that->referencedId->setValue($model);
-            $that->setValues($values);
-            $that->invalidateFormGroup();
+            $this->referencedId->setValue($model);
+            $this->setValues($values);
+            $this->invalidateFormGroup();
         };
     }
 
@@ -241,7 +239,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+            // $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 
@@ -259,10 +257,10 @@ class ReferencedContainer extends ContainerWithOptions {
     private function updateHtmlData() {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
-        $this->setOption('data', array(
+        $this->setOption('data', [
             'referenced-id' => $referencedId,
             'referenced' => (int)true,
-        ));
+        ]);
     }
 
     private function hideComponent($name, $component) {

@@ -1,6 +1,5 @@
 <?php
 
-use ORM\CachingServiceTrait;
 use ORM\IModel;
 
 /**
@@ -8,13 +7,13 @@ use ORM\IModel;
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
 
-    use CachingServiceTrait;
-
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
     protected $modelClassName = 'ModelEventParticipant';
 
     public function save(IModel &$model) {
         try {
+            \Nette\Diagnostics\Debugger::barDump($model, 'model');
+            \Nette\Diagnostics\Debugger::barDump($model->isNew(), 'isNev?');
             parent::save($model);
         } catch (ModelException $e) {
             if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
@@ -28,10 +27,13 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         /**
          * @var $model ModelEventParticipant
          */
-
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
-            $model->getPerson()->removeAccommodationForEvent($model->event_id);
+            $person = $model->getPerson();
+            if ($person) {
+                $person->removeAccommodationForEvent($model->event_id);
+            }
+
         }
     }
 
