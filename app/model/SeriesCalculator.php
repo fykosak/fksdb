@@ -26,8 +26,13 @@ class SeriesCalculator extends Object {
      * @return int
      */
     public function getCurrentSeries(ModelContest $contest) {
-        $lastSeries = $this->getLastSeries($contest, $this->yearCalculator->getCurrentYear($contest));
-        return ($lastSeries == 1) ? 1 : $lastSeries - 1;
+        $year = $this->yearCalculator->getCurrentYear($contest);
+        $currentSeries = $this->serviceTask->getTable()->where([
+                    'contest_id' => $contest->contest_id,
+                    'year' => $year,
+                    '(submit_deadline < ? OR submit_deadline IS NULL)' => new Nette\DateTime()
+                ])->max('series');
+        return ($currentSeries === null) ? 1 : $currentSeries;
     }
 
     /**
@@ -37,10 +42,10 @@ class SeriesCalculator extends Object {
      * @return int
      */
     public function getLastSeries(ModelContest $contest, $year) {
-        $row = $this->serviceTask->getTable()->where(array(
+        $row = $this->serviceTask->getTable()->where([
                     'contest_id' => $contest->contest_id,
                     'year' => $year
-                ))->max('series');
+                ])->max('series');
         return $row;
     }
 

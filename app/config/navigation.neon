@@ -9,31 +9,42 @@ navigation:
         vyfuk:
             title: Web Výfuku
             link: http://vyfuk.mff.cuni.cz/
+            icon: 'fa fa-external-link'
         fykos:
             title: Web FYKOSu
             link: http://%domain.cz%/
+            icon: 'fa fa-external-link'
+        fyziklani:
+            title: Web Fyziklani
+            link: http://fyziklani.cz/
+            icon: 'fa fa-external-link'
         public.submit.default:
             visible: true
 
     structure:
         org.dashboard.default:
+            - dispatch.default
             - org.inbox.default
             - org.inbox.handout
             - org.points.default
             - org.tasks.import
             - org.contestant.list
             - org.school.list
+            - org.teacher.list
             - org.export.list
             - org.org.list
             - org.event.list
             - org.deduplicate.person
             - org.stalking.default
         public.dashboard.default:
+            - dispatch.default
             - public.submit.default
             - public.application.list
             - fykos
             - vyfuk
+            - fyziklani
         fyziklani.dashboard.default:
+            - dispatch.default
             - fyziklani.submit.entry
             - fyziklani.submit.table
             - fyziklani.close.table
@@ -41,5 +52,8 @@ navigation:
             - fyziklani.task.table
             - fyziklani.task.import
             - fyziklani.rooms.default
+        fyziklani.rooms.default:
+            - fyziklani.rooms.edit
+            - fyziklani.rooms.download
 
 

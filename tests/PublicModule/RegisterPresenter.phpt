@@ -36,7 +36,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
 
     public function testDispatch() {
         $request = new Request('Public:Register', 'GET', array(
-            'action' => 'contestant',
+            'action' => 'contest',
             'lang' => 'cs',
         ));
 
@@ -54,6 +54,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $request = new Request('Public:Register', 'GET', array(
             'action' => 'contestant',
             'contestId' => 1,
+            'year'=>1,
             'lang' => 'cs',
         ));
 

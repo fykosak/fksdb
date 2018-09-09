@@ -16,7 +16,7 @@ use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationComponent extends Control {
@@ -131,7 +131,6 @@ class ApplicationComponent extends Control {
             $form->addComponent($container, $name);
         }
 
-        $that = $this;
         /*
          * Create save (no transition) button
          */
@@ -139,9 +138,9 @@ class ApplicationComponent extends Control {
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Uložit'));
             $saveSubmit->setOption('row', 1);
-            $saveSubmit->onClick[] = function(SubmitButton $button) use($that) {
+            $saveSubmit->onClick[] = function(SubmitButton $button) {
                         $form = $button->getForm();
-                        $that->handleSubmit($form);
+                        $this->handleSubmit($form);
                     };
         }
         /*
@@ -153,9 +152,9 @@ class ApplicationComponent extends Control {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
+            $submit->onClick[] = function(SubmitButton $button) use($transitionName) {
                         $form = $button->getForm();
-                        $that->handleSubmit($form, $transitionName);
+                        $this->handleSubmit($form, $transitionName);
                     };
 
             if ($transition->isCreating()) {
@@ -185,8 +184,8 @@ class ApplicationComponent extends Control {
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-link');
-        $submit->onClick[] = function(SubmitButton $button) use($that) {
-                    $that->finalRedirect();
+        $submit->onClick[] = function(SubmitButton $button) {
+                    $this->finalRedirect();
                 };
 
         /*

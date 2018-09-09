@@ -26,10 +26,6 @@ class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Organizátorský pultík'));
+        $this->setIcon('fa fa-dashboard');
     }
-
-    public function renderDefault() {
-        
-    }
-
 }

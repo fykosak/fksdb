@@ -17,16 +17,16 @@ use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory {
-    
+
     /**
      * @var ServiceStoredQueryTagType
      */
     private $serviceStoredQueryTagType;
-    
+
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
@@ -54,7 +54,7 @@ class StoredQueryFactory {
                 ->addCondition(Form::FILLED)
                 ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 16)
                 ->addRule(Form::REGEXP, _('QID může být jen z písmen anglické abecedy a číslic a tečky.'), '/^[a-z][a-z0-9.]*$/i');
-        
+
         $container->addComponent($this->createTagSelect(false, _('Štítky'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
 
         $container->addTextArea('description', _('Popis dotazu'));
@@ -68,9 +68,8 @@ class StoredQueryFactory {
     }
 
     public function createParametersMetadata($options = 0, ControlGroup $group = null) {
-        $that = $this;
-        $replicator = new Replicator(function($replContainer) use($that, $group) {
-                    $that->buildParameterMetadata($replContainer, $group);
+        $replicator = new Replicator(function($replContainer) use ($group) {
+                    $this->buildParameterMetadata($replContainer, $group);
 
                     $submit = $replContainer->addSubmit('remove', _('Odebrat parametr'));
                     $submit->getControlPrototype()->addClass('btn-danger');
@@ -143,7 +142,7 @@ class StoredQueryFactory {
 
         return $container;
     }
-    
+
     private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")

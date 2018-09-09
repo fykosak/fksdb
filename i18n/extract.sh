@@ -21,6 +21,7 @@ LOCALE=i18n/locale
 LATTE_SUFFIX=latte2php
 NEON_SUFFIX=neon2php
 TSX_SUFFIX=tsx2php
+TS_SUFFIX=ts2php
 ROOT=`dirname ${BASH_SOURCE[0]}`/..
 
 function latte2php {
@@ -33,7 +34,10 @@ function neon2php {
 	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
 function tsx2php {
-    sed "s/<Lang\stext={\('.*'\)}\/>/\<\?php _(\1)\?\>/" $1 >$1.$TSX_SUFFIX
+    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" $1 >$1.$TSX_SUFFIX
+}
+function ts2php {
+    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" $1 >$1.$TS_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`
@@ -64,10 +68,15 @@ find $NEON_FILES -iname "*.$NEON_SUFFIX" | xargs rm
 for file in `find $TSX_FILES -iname "*.tsx"` ; do
 	tsx2php "$file"
 done
-
 find $TSX_FILES -iname "*.$TSX_SUFFIX" | xargs xgettext -L PHP --from-code=utf-8 -j -o $POT_FILE
 find $TSX_FILES -iname "*.$TSX_SUFFIX" | xargs rm
 
+for file in `find $TSX_FILES -iname "*.ts"` ; do
+	ts2php "$file"
+done
+
+find $TSX_FILES -iname "*.$TS_SUFFIX" | xargs xgettext -L PHP --from-code=utf-8 -j -o $POT_FILE
+find $TSX_FILES -iname "*.$TS_SUFFIX" | xargs rm
 
 #
 # Merge to PO files

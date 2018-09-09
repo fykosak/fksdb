@@ -2,13 +2,16 @@ parameters:
     events:
         fol:
             appCond: or(regOpen(), role('admin'))
-            modCond: or(neg(param('migrated')), role('admin'))   
+            modCond: or(neg(param('migrated')), role('admin'))
             participant:
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_info:
-                    email: true
+                    email:
+                        required: true
                     born:
                         required: false
                         description: _('Pouze pro české a slovenské studenty.')
@@ -20,7 +23,7 @@ parameters:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
                 person_has_flag:
-                    spam_mff: 
+                    spam_mff:
                         required: false
                         description: _('Pouze pro české a slovenské studenty.')
 
@@ -42,12 +45,12 @@ events:
         baseMachines:
             #
             #   TEAM
-            #    
+            #
             TEAM:
                 service: @event.ServiceFyziklaniTeam
                 personIds: []
                 eventId: e_fyziklani_team.event_id
-                
+
                 states:
                     applied: _('Přihlášen')
                     cancelled: _('Zrušen')
@@ -103,7 +106,7 @@ events:
 
             #
             #   PARTICIPANT
-            #    
+            #
             PARTICIPANT:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
@@ -149,7 +152,7 @@ events:
         machine:
             baseMachines:
                 team:
-                    bmName: TEAM 
+                    bmName: TEAM
                     label: _('Tým')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine

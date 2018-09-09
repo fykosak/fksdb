@@ -17,7 +17,7 @@ use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolPresenter extends EntityPresenter {
@@ -65,15 +65,18 @@ class SchoolPresenter extends EntityPresenter {
 
     public function titleList() {
         $this->setTitle(_('Školy'));
+        $this->setIcon('fa fa-university');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Založit školu'));
+        $this->setIcon('fa fa-plus');
     }
 
     public function titleEdit($id) {
         $school = $this->getModel();
         $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function actionDelete($id) {

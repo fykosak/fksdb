@@ -71,12 +71,14 @@ fksrouter:
             flags: SECURED
 
         # Registration must be at the same domain as central authentication.
-        '//%subdomain.auth%.%domain.cz%%path%[<contestId %contests%>/]<presenter register>/<action=default>':
+        '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>':
             module: Public
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
+            year: null
+
         '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>':
             module: Public
             subdomain: %subdomain.auth%
@@ -111,8 +113,7 @@ fksrouter:
             module: Fyziklani
             flags: SECURED
 
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][<module %modules%>/]<presenter>/<action=default>[/<id>]':
-            module: Public
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]':
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%

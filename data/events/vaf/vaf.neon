@@ -6,14 +6,20 @@ parameters:
             person:
 
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
                 person_info:
-                    email: true
-                    id_number: true
-                    born: true
+                    email:
+                        required: true
+                    id_number:
+                        required: true
+                    born:
+                        required: true
                     born_id:
                         required: %events.soustredeni.requiredCond%
                         description: "Kvůli pojišťovně."

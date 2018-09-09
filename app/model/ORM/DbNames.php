@@ -39,6 +39,7 @@ class DbNames {
     const TAB_TASK = 'task';
     const TAB_TASK_CONTRIBUTION = 'task_contribution';
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
+    const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
 
     /* Specified tables for events */
