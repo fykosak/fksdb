@@ -26,7 +26,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
@@ -44,7 +44,7 @@ class ApplicationPresenter extends BasePresenter {
     private $eventApplication = false;
 
     /**
-     * @var Holder 
+     * @var Holder
      */
     private $holder;
 
@@ -108,7 +108,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function authorizedDefault($eventId, $id) {
-        
+
     }
 
     public function authorizedList() {
@@ -121,6 +121,7 @@ class ApplicationPresenter extends BasePresenter {
         } else {
             $this->setTitle("{$this->getEvent()}");
         }
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleList() {
@@ -130,6 +131,7 @@ class ApplicationPresenter extends BasePresenter {
         } else {
             $this->setTitle(_('Moje přihlášky'));
         }
+        $this->setIcon('fa fa-calendar');
     }
 
     protected function unauthorizedAccess() {
@@ -215,15 +217,14 @@ class ApplicationPresenter extends BasePresenter {
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
-        $that = $this;
-        $component->setRedirectCallback(function($modelId, $eventId) use($that) {
-                    $that->backlinkRedirect();
-                    $that->redirect('this', array(
-                        'eventId' => $eventId,
-                        'id' => $modelId,
-                        self::PARAM_AFTER => true,
-                    ));
-                });
+        $component->setRedirectCallback(function ($modelId, $eventId) {
+            $this->backlinkRedirect();
+            $this->redirect('this', array(
+                'eventId' => $eventId,
+                'id' => $modelId,
+                self::PARAM_AFTER => true,
+            ));
+        });
         $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
     }
@@ -246,8 +247,8 @@ class ApplicationPresenter extends BasePresenter {
     protected function createComponentNewApplicationsGrid($name) {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
-                ->where('registration_begin <= NOW()')
-                ->where('registration_end >= NOW()');
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
 
         $source = new InitSource($events, $this->container);
         $flashDump = $this->flashDumpFactory->createApplication();
@@ -267,7 +268,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ? : $this->getParameter('eventId');
+            $eventId = $eventId ?: $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
@@ -284,7 +285,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['id'];
                 }
             }
-            $id = $id ? : $this->getParameter('id');
+            $id = $id ?: $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
             $this->eventApplication = $service->findByPrimary($id);
         }

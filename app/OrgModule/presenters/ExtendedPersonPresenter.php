@@ -93,12 +93,11 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
-        $that = $this;
-        $submit->onClick[] = function(SubmitButton $button) use($that, $handler) {
+        $submit->onClick[] = function(SubmitButton $button) use($handler) {
                     $form = $button->getForm();
-                    if ($handler->handleForm($form, $that)) {
-                        $that->backlinkRedirect();
-                        $that->redirect('list');
+                    if ($handler->handleForm($form, $this)) {
+                        $this->backlinkRedirect();
+                        $this->redirect('list');
                     }
                 };
 

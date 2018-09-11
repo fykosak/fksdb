@@ -9,9 +9,12 @@ use FKSDB\Components\Controls\Stalking\BaseInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;
 use FKSDB\Components\Controls\Stalking\EventOrg;
 use FKSDB\Components\Controls\Stalking\EventParticipant;
+use FKSDB\Components\Controls\Stalking\EventTeacher;
+use FKSDB\Components\Controls\Stalking\Flag;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
+use FKSDB\Components\Controls\Stalking\Role;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use ModelPerson;
 use Nette\Application\BadRequestException;
@@ -60,6 +63,10 @@ class StalkingPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk-search', $this->getSelectedContest()));
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedView($id) {
         $person = $this->getPerson();
         if (!$person) {
@@ -95,6 +102,11 @@ class StalkingPresenter extends BasePresenter {
         return $component;
     }
 
+    public function createComponentEventTeacher() {
+        $component = new EventTeacher($this->getPerson());
+        return $component;
+    }
+
     public function createComponentEventOrg() {
         $component = new EventOrg($this->getPerson());
         return $component;
@@ -120,6 +132,16 @@ class StalkingPresenter extends BasePresenter {
         return $component;
     }
 
+    public function createComponentRole() {
+        $component = new Role($this->getPerson());
+        return $component;
+    }
+
+    public function createComponentFlag() {
+        $component = new Flag($this->getPerson());
+        return $component;
+    }
+
     public function createComponentFormSearch() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -141,8 +163,7 @@ class StalkingPresenter extends BasePresenter {
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that) {
+        $submit->onClick[] = function (SubmitButton $button) {
             $form = $button->getForm();
             $values = $form->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
@@ -154,10 +175,12 @@ class StalkingPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Stalking'));
+        $this->setIcon('fa fa-search');
     }
 
     public function titleView($id) {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+        $this->setIcon('fa fa-eye');
     }
 
     protected function getNavBarVariant() {

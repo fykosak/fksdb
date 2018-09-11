@@ -14,5 +14,9 @@ class MockPresenter extends BasePresenter {
         return 'cs';
     }
 
+    public function getNavRoot() {
+        return '';
+    }
+
 }
 

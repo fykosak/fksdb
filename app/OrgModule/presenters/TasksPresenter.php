@@ -8,8 +8,8 @@ use FKS\Application\UploadException;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
-use Nette\Diagnostics\Debugger;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 use Pipeline\PipelineException;
 use SeriesCalculator;
 use SimpleXMLElement;
@@ -18,7 +18,7 @@ use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksPresenter extends BasePresenter {
@@ -44,7 +44,7 @@ class TasksPresenter extends BasePresenter {
     private $pipelineFactory;
 
     /**
-     * @var FlashDumpFactory 
+     * @var FlashDumpFactory
      */
     private $flashDumpFactory;
 
@@ -75,6 +75,7 @@ class TasksPresenter extends BasePresenter {
 
     public function titleImport() {
         $this->setTitle(_('Import úloh'));
+        $this->setIcon('fa fa-upload');
     }
 
     protected function createComponentSeriesForm() {
@@ -91,7 +92,7 @@ class TasksPresenter extends BasePresenter {
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $seriesForm->addSelect('series', _('Série'))
-                ->setItems($seriesItems, false);
+            ->setItems($seriesItems, false);
 
         // File upload
         $language = $seriesForm->addSelect('lang', _('Jazyk'));

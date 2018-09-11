@@ -29,6 +29,7 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
+use ServiceAuthToken;
 use ServiceEvent;
 use ServiceEventOrg;
 use SystemContainer;
@@ -95,10 +96,18 @@ class EventPresenter extends EntityPresenter {
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
+    /**
+     * @var ServiceAuthToken $serviceAuthToken
+     */
+    private $serviceAuthToken;
 
 
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
+    }
+
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
     }
 
 
@@ -161,25 +170,30 @@ class EventPresenter extends EntityPresenter {
 
     public function titleList() {
         $this->setTitle(_('Akce'));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Přidat akci'));
+        $this->setIcon('fa fa-calendar-plus-o');
     }
 
     public function titleEdit($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleApplications($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleModel($id) {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
+        $this->setIcon('fa fa-cubes');
     }
 
     public function actionDelete($id) {
@@ -195,9 +209,8 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, true);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, true);
         };
 
         return $form;
@@ -207,9 +220,8 @@ class EventPresenter extends EntityPresenter {
         $form = $this->createForm();
 
         $form->addSubmit('send', _('Uložit'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, false);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, false);
         };
 
         return $form;
@@ -348,6 +360,13 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->serviceEvent->save($model);
+
+            // update also 'until' of authTokens in case that registration end has changed
+            $tokenData = ["until" => $model->registration_end ?: $model->end];
+            foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
+                $this->serviceAuthToken->updateModel($token, $tokenData);
+                $this->serviceAuthToken->save($token);
+            }
 
             /*
              * Finalize
