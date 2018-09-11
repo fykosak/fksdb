@@ -2,7 +2,7 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
@@ -145,7 +145,6 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentFormSearch() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
