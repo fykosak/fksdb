@@ -106,7 +106,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
                     'lang' => 'cs',
                     'contestId' => 1,
                     'year' => 1,
-                    'do' => 'uploadForm-submit',
+                    'do' => 'uploadForm-form-submit',
         ));
 
         $request = new Request('Public:Submit', 'POST', $post, $postData);

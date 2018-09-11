@@ -8,6 +8,7 @@ use Events\Model\ApplicationHandler;
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\ImportHandler;
 use Events\Model\ImportHandlerException;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Logging\FlashMessageDump;
 use FKS\Utils\CSVParser;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
@@ -60,7 +61,8 @@ class ImportComponent extends Control {
     }
 
     protected function createComponentFormImport($name) {
-        $form = new Form();
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->setRenderer(new BootstrapRenderer());
 
         $form->addUpload('file', _('Soubor s přihláškami'))
@@ -96,7 +98,7 @@ class ImportComponent extends Control {
                     $this->handleFormImport($submit->getForm());
                 };
 
-        return $form;
+        return $control;
     }
 
     public function render() {

@@ -4,14 +4,13 @@ namespace Pipeline;
 
 use FKS\Logging\ILogger;
 use Nette\InvalidStateException;
-use RuntimeException;
 
 /**
  * Represents a simple pipeline where each stage has its input and output and they
  * comprise a linear chain.
- * 
+ *
  * @todo Implement generic ILogger.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {
@@ -46,7 +45,7 @@ class Pipeline {
 
     /**
      * Stages can be added only in the build phase (not after setting the data).
-     * 
+     *
      * @param Stage $stage
      * @throws InvalidStateException
      */
@@ -60,7 +59,7 @@ class Pipeline {
 
     /**
      * Input to the pipeline.
-     * 
+     *
      * @param mixed $input
      */
     public function setInput($input) {
@@ -70,7 +69,7 @@ class Pipeline {
 
     /**
      * Starts the pipeline.
-     * 
+     *
      * @return mixed    output of the last stage
      */
     public function run() {
@@ -90,8 +89,4 @@ class Pipeline {
         }
     }
 
-}
-
-class PipelineException extends RuntimeException {
-    
 }

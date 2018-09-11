@@ -7,6 +7,7 @@ use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
@@ -14,14 +15,12 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FormUtils;
 use IResultsModel;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelException;
 use ModelPerson;
 use ModelPostContact;
 use ModelStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
@@ -266,7 +265,7 @@ class ExportPresenter extends SeriesPresenter {
             }
         }
 
-        $this['editForm']->setDefaults($values);
+        $this['editForm']->getForm()->setDefaults($values);
     }
 
     public function titleCompose() {
@@ -279,7 +278,7 @@ class ExportPresenter extends SeriesPresenter {
 
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this['composeForm']->setDefaults($values);
+            $this['composeForm']->getForm()->setDefaults($values);
         }
     }
 
@@ -358,22 +357,22 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     protected function createComponentComposeForm($name) {
-        $form = $this->createDesignForm();
-        $form->addSubmit('save', _('Uložit'))
-            ->onClick[] = array($this, 'handleComposeSuccess');
-        return $form;
+        $control = $this->createDesignForm();
+        $control->getForm()->addSubmit('save', _('Uložit'))
+            ->onClick[] = [$this, 'handleComposeSuccess'];
+        return $control;
     }
 
     protected function createComponentEditForm($name) {
-        $form = $this->createDesignForm();
-        $form->addSubmit('save', _('Uložit'))
-            ->onClick[] = array($this, 'handleEditSuccess');
-        return $form;
+        $control = $this->createDesignForm();
+        $control->getForm()->addSubmit('save', _('Uložit'))
+            ->onClick[] = [$this, 'handleEditSuccess'];
+        return $control;
     }
 
     private function createDesignForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $group = $form->addGroup(_('SQL'));
 
@@ -396,7 +395,7 @@ class ExportPresenter extends SeriesPresenter {
         $submit->getControlPrototype()->addClass('btn-success');
         $submit->onClick[] = array($this, 'handleComposeExecute');
 
-        return $form;
+        return $control;
     }
 
     public function handleComposeExecute(SubmitButton $button) {

@@ -60,7 +60,6 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      */
     private $personInfoFactory;
 
-
     /**
      * @var ReferencedPersonHandlerFactory
      */

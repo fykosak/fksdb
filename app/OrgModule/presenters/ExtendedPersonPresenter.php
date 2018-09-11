@@ -2,14 +2,13 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
-use OrgModule\EntityPresenter;
 use ORM\IModel;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
@@ -72,7 +71,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private function createComponentFormControl($create) {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -93,14 +91,14 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
         $submit = $form->addSubmit('send', $create ? _('Založit') : _('Uložit'));
-        $submit->onClick[] = function(SubmitButton $button) use($handler) {
-                    $form = $button->getForm();
-                    if ($handler->handleForm($form, $this)) {
-                        $this->backlinkRedirect();
-                        $this->redirect('list');
-                    }
-                };
 
+        $submit->onClick[] = function (SubmitButton $button) use ($handler) {
+            $form = $button->getForm();
+            if ($handler->handleForm($form, $this)) {
+                $this->backlinkRedirect();
+                $this->redirect('list');
+            }
+        };
         return $control;
     }
 
