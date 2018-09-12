@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
 use Nette\Application\UI\Form;
