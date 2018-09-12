@@ -34,10 +34,15 @@ class TeamStats extends React.Component<IState, {}> {
                 </select>
             </p>
         );
-
+        const selectedTeam = teams.filter((team) => {
+            return team.teamId === teamId;
+        })[0];
+//
+        const headline = (<h3>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h3>);
         return (<div>
-            <h2>{lang.getText('teamStatistics')}</h2>
+
             {teamSelect}
+            {teamId && headline}
             {teamId && (<PointsPie/>)}
             {teamId && (<PointsInTime/>)}
             {teamId && (<TimeLine/>)}

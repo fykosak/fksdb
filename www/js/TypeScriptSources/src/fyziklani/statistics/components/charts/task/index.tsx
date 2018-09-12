@@ -32,10 +32,10 @@ class TaskStats extends React.Component<IState, {}> {
         );
         return (
             <div>
-                <h2>{lang.getText('Global statistics')}</h2>
+                <h3>{lang.getText('Global statistics')}</h3>
                 <Progress/>
 
-                <h2>{lang.getText('Statistics from single problem')}</h2>
+                <h3>{lang.getText('Statistics from single problem')}</h3>
                 {taskSelect}
                 {taskId && <Timeline/>}
             </div>

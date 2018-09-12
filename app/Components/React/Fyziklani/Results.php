@@ -1,13 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\React\Fyziklani;
 
 use FKS\Application\IJavaScriptCollector;
 
-/**
- * Class Results
- */
-class Results extends ReactComponent {
+class Results extends FyziklaniModule {
     /**
      * @var bool
      */
@@ -23,11 +20,10 @@ class Results extends ReactComponent {
         $this->mode = $mode;
     }
 
-    public function render() {
-        $this->template->mode = $this->mode;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Results.latte');
-        $this->template->render();
+    public function getData() {
+        return null;
     }
+
 
     protected function attached($obj) {
         parent::attached($obj);
@@ -35,5 +31,13 @@ class Results extends ReactComponent {
             static::$JSAttached = true;
             $obj->registerJSFile('js/tablesorter.min.js');
         }
+    }
+
+    protected function getMode() {
+        return $this->mode;
+    }
+
+    protected function getComponentName() {
+        return 'results';
     }
 }

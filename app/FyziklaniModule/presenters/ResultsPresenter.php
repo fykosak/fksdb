@@ -2,7 +2,7 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\Results;
+use FKSDB\Components\React\Fyziklani\Results;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {

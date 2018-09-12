@@ -23,7 +23,6 @@ export default class Statistics extends React.Component<IProps, {}> {
         }
         return (
             <div className="container">
-                <h1>{lang.getText('statistics')}</h1>
                 {content}
                 <Timer/>
             </div>

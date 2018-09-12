@@ -6,7 +6,7 @@ trait ReactRequest {
      */
     protected function getReactRequest() {
         $requestData = $this->getHttpRequest()->getPost('requestData');
-        $act = $this->getFullHttpRequest()->getPost('act');
+        $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
     }
 }
