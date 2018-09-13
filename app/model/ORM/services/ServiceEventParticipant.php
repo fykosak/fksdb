@@ -36,5 +36,4 @@ class ServiceEventParticipant extends AbstractServiceSingle {
 
         }
     }
-
 }

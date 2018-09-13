@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use ModelEvent;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
