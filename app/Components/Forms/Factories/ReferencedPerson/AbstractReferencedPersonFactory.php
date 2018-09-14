@@ -111,8 +111,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
-
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
