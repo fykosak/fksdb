@@ -4,6 +4,7 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Config\NeonScheme;
 use FKS\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
@@ -15,7 +16,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
@@ -178,25 +178,25 @@ class EventPresenter extends EntityPresenter {
         $this->setIcon('fa fa-calendar-plus-o');
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
         $this->setIcon('fa fa-pencil');
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
         $this->setIcon('fa fa-cubes');
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
@@ -206,31 +206,30 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function createComponentCreateComponent($name) {
-        $form = $this->createForm();
+        $control = $this->createForm();
+        $form = $control->getForm();
 
         $form->addSubmit('send', _('Přidat'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, true);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentEditComponent($name) {
-        $form = $this->createForm();
-
+        $control = $this->createForm();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form, false);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentGrid($name) {
-        $grid = new EventsGrid($this->serviceEvent);
-
-        return $grid;
+        return new EventsGrid($this->serviceEvent);
     }
 
     protected function createComponentApplicationsGrid($name) {
@@ -266,8 +265,8 @@ class EventPresenter extends EntityPresenter {
     }
 
     private function createForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
@@ -295,7 +294,7 @@ class EventPresenter extends EntityPresenter {
             }, _('Parametry nesplňují Neon schéma'));
         }
 
-        return $form;
+        return $control;
     }
 
     private function createParamDescription($scheme) {

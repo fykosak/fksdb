@@ -2,7 +2,7 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use ORM\IModel;
@@ -12,7 +12,7 @@ use ORM\IModel;
  *   - check ACL
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class EntityPresenter extends BasePresenter {
