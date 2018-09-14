@@ -368,7 +368,6 @@ class ExportPresenter extends SeriesPresenter {
         $control->getForm()->addSubmit('save', _('Uložit'))
             ->onClick[] = [$this, 'handleEditSuccess'];
         return $control;
-
     }
 
     private function createDesignForm() {
