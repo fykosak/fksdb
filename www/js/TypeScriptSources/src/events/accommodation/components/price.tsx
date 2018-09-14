@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import PriceDisplay from '../../shared/components/displays/price';
+import PriceDisplay from '../../../shared/components/displays/price';
 import { getAccommodationPrice } from '../middleware/helpers';
 import { IEventAccommodation } from '../middleware/interfaces';
+import { IAccommodationStore } from '../reducer/';
 import { IAccommodationState } from '../reducer/accommodation';
-import { IAccommodationStore } from '../reducer';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];

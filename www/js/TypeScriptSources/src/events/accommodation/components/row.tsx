@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import DateDisplay from '../../shared/components/displays/date';
 import PriceDisplay from '../../shared/components/displays/price';
-import { changeAccommodation } from '../actions';
+import { changeAccommodation } from '../actions/index';
 import { IEventAccommodation } from '../middleware/interfaces';
-import { IAccommodationStore } from '../reducer';
+import { IAccommodationStore } from '../reducer/index';
 
 interface IProps {
     accommodations: IEventAccommodation[];
