@@ -5,8 +5,6 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
-use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
-use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
 use Nette\Application\UI\Form;
 
 class TaskPresenter extends BasePresenter {
