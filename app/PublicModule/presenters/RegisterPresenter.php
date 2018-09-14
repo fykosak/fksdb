@@ -383,4 +383,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
         return null;
     }
+
+    public function getNavRoot() {
+        return '';
+    }
 }

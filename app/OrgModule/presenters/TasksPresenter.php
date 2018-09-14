@@ -9,8 +9,8 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
-use Nette\Diagnostics\Debugger;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 use Pipeline\PipelineException;
 use SeriesCalculator;
 use SimpleXMLElement;
@@ -76,6 +76,7 @@ class TasksPresenter extends BasePresenter {
 
     public function titleImport() {
         $this->setTitle(_('Import úloh'));
+        $this->setIcon('fa fa-upload');
     }
 
     protected function createComponentSeriesForm() {

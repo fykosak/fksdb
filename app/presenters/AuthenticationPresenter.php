@@ -336,5 +336,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->template->login = $this->login;
     }
 
+    public function getNavRoot() {
+        return '';
+    }
+
 
 }

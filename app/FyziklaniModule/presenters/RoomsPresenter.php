@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\Components\React\Fyziklani\RoutingEdit;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Utils\Json;
 
@@ -15,14 +15,17 @@ class RoomsPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Rozdělení do místností'));
+        $this->setIcon('fa fa-arrows');
     }
 
     public function titleEdit() {
         $this->setTitle(_('Edit routing'));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleDownload() {
         $this->setTitle(_('Download routing'));
+        $this->setIcon('fa fa-download');
     }
 
     public function authorizedEdit() {

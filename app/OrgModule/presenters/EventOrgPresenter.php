@@ -47,6 +47,17 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
+    $this->setIcon('fa fa-user');
+    }
+
+    public function titleCreate() {
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
+        $this->setIcon('fa fa-user-plus');
+    }
+
+    public function titleList() {
+        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
+        $this->setIcon('fa fa-users');
     }
 
     public function renderEdit($id) {
@@ -58,14 +69,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
             $this->flashMessage(_('Editace organizátora akce mimo zvolenou akci.'), self::FLASH_ERROR);
             $this->redirect('list');
         }
-    }
-
-    public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
-    }
-
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
     }
 
     public function actionDelete($id) {

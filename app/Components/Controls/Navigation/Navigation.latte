@@ -1,0 +1,26 @@
+{define #link}
+    <a href="{$control->getLink($node)}" class="card mb-3" data-background-id="{rand(0,5)}">
+
+            <div class="card-body text-center">
+                <span class="display-3 d-block card-text"><i class="{$control->getIcon($node)}"></i></span>
+                <span class="d-block card-text">{$control->getTitle($node)}</span>
+            </div>
+        </a>
+{/define}
+
+{var level => 0}
+{block #menu}
+    <div class="align-items-center d-flex justify-content-around flex-wrap">
+        {foreach $nodes as $nodeId => $item}
+            {var node => is_array($item) ? $control->getNode($nodeId) : $control->getNode($item)}
+            {if $control->isVisible($node)}
+                {*col-lg-3 col-md-4 col-sm-6 mb-3 *}
+                <div class="navigation-item">
+                    {include #link, node => $node, level => $level}
+                </div>
+            {/if}
+        {/foreach}
+    </div>
+{/block}
+
+

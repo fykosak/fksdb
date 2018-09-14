@@ -37,6 +37,17 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
+     * @return \ORM\Models\Events\ModelEventAccommodation[]
+     */
+    public function getEventAccommodations() {
+        $data = [];
+        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
+            $data[] = \ORM\Models\Events\ModelEventAccommodation::createFromTableRow($item);
+        }
+        return $data;
+    }
+
+    /**
      * @return ModelContest
      */
     public function getContest() {

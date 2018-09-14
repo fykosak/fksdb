@@ -5,6 +5,8 @@ namespace FyziklaniModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
+use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
 use Nette\Application\UI\Form;
 
 class TaskPresenter extends BasePresenter {
@@ -15,6 +17,7 @@ class TaskPresenter extends BasePresenter {
 
     public function titleTable() {
         $this->setTitle(_('Úlohy FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-tasks');
     }
 
     public function authorizedTable() {
@@ -23,6 +26,7 @@ class TaskPresenter extends BasePresenter {
 
     public function titleImport() {
         $this->setTitle(_('Import úloh FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-upload');
     }
 
     public function authorizedImport() {

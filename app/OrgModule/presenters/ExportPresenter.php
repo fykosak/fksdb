@@ -242,6 +242,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function renderEdit($id) {
@@ -269,6 +270,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleCompose() {
         $this->setTitle(sprintf(_('Napsat dotaz')));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function renderCompose() {
@@ -282,6 +284,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleList() {
         $this->setTitle(_('Exporty'));
+        $this->setIcon('fa fa-database');
     }
 
     public function titleShow($id) {
@@ -291,6 +294,7 @@ class ExportPresenter extends SeriesPresenter {
         }
 
         $this->setTitle($title);
+        $this->setIcon('fa fa-database');
     }
 
     public function renderShow($id) {
@@ -299,6 +303,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
+    $this->setIcon('fa fa-play-circle-o');
     }
 
     public function renderExecute($id) {
