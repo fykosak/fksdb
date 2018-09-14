@@ -5,7 +5,7 @@ namespace OrgModule;
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKS\Application\UploadException;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
