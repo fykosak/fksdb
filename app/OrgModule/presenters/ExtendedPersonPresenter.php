@@ -2,9 +2,9 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
