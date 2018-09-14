@@ -1,11 +1,12 @@
+{layout '../@layout.v4.latte'}
 {block content}
 {? $presenter->registerJSFile('js/codemirror.min.js')}
 {? $presenter->registerJSFile('js/sqlconsole.js')}
 {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
-<div class="btn-toolbar">
-    <a n:href="execute $storedQuery->getPrimary()" class="btn btn-sm btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
-    <a n:if="$presenter->authorized('edit', array('id' => $storedQuery->getPrimary()))" n:href="edit $storedQuery->getPrimary()" class="btn btn-sm btn-default" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+<div class="btn-group">
+    <a n:href="execute $storedQuery->getPrimary()" class="btn btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+    <a n:if="$presenter->authorized('edit', ['id' => $storedQuery->getPrimary()])" n:href="edit $storedQuery->getPrimary()" class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
 </div>
 
 <p>{!$storedQuery->description|escape|nl2br}</p>
@@ -18,7 +19,7 @@
 
 {if count($storedQuery->getParameters())}
 <h3>{_'Parametry'}</h3>
-<table>
+<table class="table table-hover table-striped">
     <tr><th>Název</th><th>Popis</th><th>Výchozí hodnota</th></tr>
     {foreach $storedQuery->getParameters() as $param}
     <tr>
