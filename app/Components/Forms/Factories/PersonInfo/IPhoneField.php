@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
-abstract class IPhoneField extends WriteonlyInput {
+abstract class IPhoneField extends WriteOnlyInput {
 
     public function __construct($label) {
         parent::__construct($label);

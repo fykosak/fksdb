@@ -103,7 +103,6 @@ class ReferencedId extends HiddenField {
     }
 
     public function setValue($pvalue, $force = false) {
-
         $isPromise = ($pvalue === self::VALUE_PROMISE);
         if (!($pvalue instanceof IModel) && !$isPromise) {
             $pvalue = $this->service->findByPrimary($pvalue);
@@ -120,8 +119,6 @@ class ReferencedId extends HiddenField {
             $container->setSearchButton(false);
             $container->setClearButton(true);
         }
-
-
         $this->referencedSetter->setModel($container, $pvalue, $force);
 
         if ($isPromise) {
@@ -220,7 +217,6 @@ class ReferencedId extends HiddenField {
             $obj->onValidate[] = function () {
                 $this->createPromise();
             };
-
             $this->attachedOnValidate = true;
         }
     }
