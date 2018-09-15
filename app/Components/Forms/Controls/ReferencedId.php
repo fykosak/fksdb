@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Components\Forms\Containers\IReferencedSetter;
-use FKS\Components\Forms\Containers\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKS\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
