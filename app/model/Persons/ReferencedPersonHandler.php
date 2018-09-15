@@ -2,9 +2,9 @@
 
 namespace Persons;
 
-use FKS\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
 use ModelException;
 use ModelPerson;
@@ -286,7 +286,6 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             if ($value === null) {
                 continue;
             }
-
             $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
 
             $data[$fid] = new ArrayHash();

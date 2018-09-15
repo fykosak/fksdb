@@ -6,8 +6,8 @@ use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -181,7 +181,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
 
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL, $metaData = []) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->getOption('modifiabilityResolver')->isModifiable($model) : true;
         $resolution = $model ? $container->getOption('modifiabilityResolver')->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -206,8 +206,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 } else {
                     $options = self::TARGET_FORM;
                 }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options, $metaData); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE, $metaData);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;

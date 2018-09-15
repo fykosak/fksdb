@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKS\Components\Forms\Controls\ModelDataConflictException;
-use FKS\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKS\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Mail\Message;

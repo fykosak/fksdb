@@ -5,7 +5,7 @@ namespace Persons;
 $container = require '../bootstrap.php';
 
 use DatabaseTestCase;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use ModelContest;
 use ModelPerson;

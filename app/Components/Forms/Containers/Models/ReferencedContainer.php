@@ -2,20 +2,19 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKS\Application\IJavaScriptCollector;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\ArrayHash;
-use Nette\Callback;
 use Nette\ComponentModel\Component;
-use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-
+use FKS\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use Nette\ArrayHash;
+use Nette\Callback;
+use Nette\ComponentModel\IComponent;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -34,7 +33,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * @var Component[]
      */
-    private $hiddenComponents = array();
+    private $hiddenComponents = [];
 
     /**
      * @var ReferencedId
@@ -115,7 +114,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     public function setConflicts(ArrayHash $conflicts, $container = null) {
-        $container = $container ?: $this;
+        $container = $container ? : $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
@@ -177,7 +176,6 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createClearButton() {
-
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
         //$submit->getControlPrototype()->class[] = self::CSS_AJAX;

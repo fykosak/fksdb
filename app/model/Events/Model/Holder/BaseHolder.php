@@ -4,7 +4,7 @@ namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKS\Config\NeonScheme;
 use ModelEvent;
 use Nette\Diagnostics\Debugger;

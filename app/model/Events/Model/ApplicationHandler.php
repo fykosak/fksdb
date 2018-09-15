@@ -11,7 +11,7 @@ use Events\Model\Holder\Holder;
 use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use Events\SubmitProcessingException;
 use Exception;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKS\Logging\ILogger;
 use FormUtils;
 use ModelEvent;
