@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
-use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -110,8 +110,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $eventId) {
+        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $eventId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
 
