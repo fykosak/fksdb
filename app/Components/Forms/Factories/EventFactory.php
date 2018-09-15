@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKS\Components\Forms\Controls\DateTimeBox;
+use FKSDB\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use ModelContest;
 use Nette\Forms\ControlGroup;
@@ -12,7 +12,7 @@ use ServiceEventType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventFactory {

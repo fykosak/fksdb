@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories\PersonHistory;
 
 
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 
 class SchoolIdSelectField extends AutocompleteSelectBox {

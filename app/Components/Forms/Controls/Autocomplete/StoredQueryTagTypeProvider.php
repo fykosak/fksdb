@@ -2,17 +2,16 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use Nette\Database\Table\Selection;
 use ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class StoredQueryTagTypeProvider implements IFilteredDataProvider {
-    
+
     const DESCRIPTION = 'description';
 
     /**
@@ -32,7 +31,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     /**
      * Prefix search.
-     * 
+     *
      * @param string $search
      * @return array
      */

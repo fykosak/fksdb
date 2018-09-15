@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKS\Components\Forms\Containers\IReferencedSetter;
-use FKS\Components\Forms\Containers\IWriteonly;
+use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKS\Components\Forms\Containers\ReferencedContainer;
 use FKS\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -207,22 +207,22 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
-                $controlVisible = $this->isWriteonly($component) ? $visible : true;
+                $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
-                    $this->setWriteonly($component, true);
+                    $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                 } else if ($controlVisible && $controlModifiable) {
-                    $this->setWriteonly($component, false);
+                    $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
                 if ($mode == self::MODE_ROLLBACK) {
                     $component->setDisabled(false);
-                    $this->setWriteonly($component, false);
+                    $this->setWriteOnly($component, false);
                 } else {
                     if ($submittedBySearch || $force) {
                         $component->setValue($value);
@@ -308,22 +308,22 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    private function setWriteonly($component, $value) {
-        if ($component instanceof IWriteonly) {
-            $component->setWriteonly($value);
+    private function setWriteOnly($component, $value) {
+        if ($component instanceof IWriteOnly) {
+            $component->setWriteOnly($value);
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                $this->setWriteonly($subcomponent, $value);
+                $this->setWriteOnly($subcomponent, $value);
             }
         }
     }
 
-    private function isWriteonly($component) {
-        if ($component instanceof IWriteonly) {
+    private function isWriteOnly($component) {
+        if ($component instanceof IWriteOnly) {
             return true;
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                if ($this->isWriteonly($subcomponent)) {
+                if ($this->isWriteOnly($subcomponent)) {
                     return true;
                 }
             }
