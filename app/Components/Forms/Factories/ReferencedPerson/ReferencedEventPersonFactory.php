@@ -76,14 +76,14 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
         return parent::createField($sub, $fieldName, $acYear, $hiddenField);
     }
 
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options, $metaData) {
+    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
         if ($sub === 'person_accommodation') {
             return $person->getAccommodationByEventId($this->eventId);
         }
-        return parent::getPersonValue($person, $sub, $field, $acYear, $options, $metaData);
+        return parent::getPersonValue($person, $sub, $field, $acYear, $options);
 
     }
 
