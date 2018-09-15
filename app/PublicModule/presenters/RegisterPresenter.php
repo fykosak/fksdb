@@ -6,7 +6,7 @@ use BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use IContestPresenter;

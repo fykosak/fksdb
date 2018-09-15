@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKS\Application\IJavaScriptCollector;
 use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
