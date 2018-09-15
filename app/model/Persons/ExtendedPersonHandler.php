@@ -4,7 +4,7 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use BasePresenter;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
@@ -22,7 +22,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandler extends Object {

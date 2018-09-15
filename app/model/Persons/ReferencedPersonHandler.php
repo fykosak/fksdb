@@ -2,9 +2,8 @@
 
 namespace Persons;
 
-use Nette\DateTime;
-use FKS\Components\Forms\Controls\IReferencedHandler;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\IReferencedHandler;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FormUtils;
 use ModelException;
 use ModelPerson;
@@ -21,7 +20,7 @@ use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonHandler extends Object implements IReferencedHandler {
@@ -48,7 +47,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @var ServiceMPostContact
      */
     private $serviceMPostContact;
-    
+
     /**
      * @var ServiceMPersonHasFlag
      */
@@ -107,7 +106,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
              * Person & its extensions
              */
 
-            
+
             $models = array(
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
@@ -122,9 +121,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             );
-            
+
             $originalModels = array_keys(iterator_to_array($data));
-            
+
             $this->prepareFlagServices($data, $services);
             $this->prepareFlagModels($person, $data, $models);
 
@@ -236,33 +235,33 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             }
         }
     }
-    
+
     private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
         if (!isset($data['person_has_flag'])) {
             return;
         }
-        
+
         foreach ($data['person_has_flag'] as $fid => $value) {
             if ($value === null) {
                 continue;
             }
-            
+
             $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
-            
+
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;
         }
         unset($data['person_has_flag']);
     }
-    
+
     private function prepareFlagServices(ArrayHash &$data, &$services) {
         if (!isset($data['person_has_flag'])) {
             return;
         }
-        
+
         foreach ($data['person_has_flag'] as $fid => $value) {
             $services[$fid] = $this->serviceMPersonHasFlag;
-        }        
+        }
     }
 
     private function beginTransaction() {
