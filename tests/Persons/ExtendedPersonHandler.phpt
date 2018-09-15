@@ -6,14 +6,12 @@ $container = require '../bootstrap.php';
 
 use DatabaseTestCase;
 use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use ModelContest;
 use ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\IExtendedPersonPresenter;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -169,7 +167,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $searchType = ReferencedPersonFactory::SEARCH_NONE;
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver, null);
 
         $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
