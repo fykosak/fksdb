@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\WriteonlyDatePicker;
+use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
 
-class BornField extends WriteonlyDatePicker {
+class BornField extends WriteOnlyDatePicker {
 
     public function __construct() {
         parent::__construct(_('Datum narození'));

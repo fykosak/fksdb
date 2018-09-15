@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
-class ImField extends WriteonlyInput {
+class ImField extends WriteOnlyInput {
 
     public function __construct() {
         parent::__construct(_('ICQ, Jabber, apod.'));

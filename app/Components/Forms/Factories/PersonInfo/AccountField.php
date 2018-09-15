@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
-class AccountField extends WriteonlyInput {
+class AccountField extends WriteOnlyInput {
 
     public function __construct() {
         parent::__construct(_('Číslo bankovního účtu'));
