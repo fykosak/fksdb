@@ -35,7 +35,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * @var Component[]
      */
-    private $hiddenComponents = array();
+    private $hiddenComponents = [];
 
     /**
      * @var ReferencedId
