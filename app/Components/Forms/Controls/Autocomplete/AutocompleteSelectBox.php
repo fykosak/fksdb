@@ -56,7 +56,7 @@ class AutocompleteSelectBox extends TextBase {
     function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
-        $this->monitor('FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
+        $this->monitor('FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
         $this->monitor('FKS\Application\IJavaScriptCollector');
         $this->ajax = $ajax;
         $this->renderMethod = $renderMethod;
@@ -69,7 +69,7 @@ class AutocompleteSelectBox extends TextBase {
         parent::attached($obj);
         if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
             $this->attachedJSON = true;
-            $name = $this->lookupPath('FKS\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
+            $name = $this->lookupPath('FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider');
 
             $this->ajaxUrl = $obj->link('autocomplete!', array(
                 self::PARAM_NAME => $name,
