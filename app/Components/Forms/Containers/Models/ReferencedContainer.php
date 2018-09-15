@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKS\Application\IJavaScriptCollector;
-use FKS\Components\Controls\FormControl;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
