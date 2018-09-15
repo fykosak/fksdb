@@ -12,6 +12,7 @@ use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
+use ServiceTaskStudyYear;
 use Traversable;
 
 /**
@@ -37,7 +38,6 @@ class ContestantSubmits extends BaseControl {
      * @var ServiceSubmit
      */
     private $submitService;
-
     /**
      * @var ModelContestant
      */
@@ -54,12 +54,10 @@ class ContestantSubmits extends BaseControl {
     private $className;
 
     /**
-     * ContestantSubmits constructor.
-     * @param $tasks
-     * @param ModelContestant $contestant
-     * @param ServiceSubmit $submitService
-     * @param $acYear
-     * @param null $label
+     *
+     * @param Traversable|array $tasks
+     * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
+     * @param string|null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
@@ -161,7 +159,7 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int)$tasknr] = $this->serializeSubmit($submit);
+            $result[(int) $tasknr] = $this->serializeSubmit($submit);
         }
 
         $dummySubmit = $this->submitService->createNew();

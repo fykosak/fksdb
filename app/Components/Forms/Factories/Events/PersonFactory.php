@@ -123,7 +123,7 @@ class PersonFactory extends AbstractFactory {
         return $component;
     }
 
-    public function validate(Field $field, DataValidator $validator, $globalMetaData = []) {
+    public function validate(Field $field, DataValidator $validator) {
         // check person ID itself
         parent::validate($field, $validator);
 
@@ -142,7 +142,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = array('required' => $metadata);
                 }
-                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear, $globalMetaData)) {
+                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }

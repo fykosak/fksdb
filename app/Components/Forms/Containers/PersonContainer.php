@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Persons\PersonHandler2;
 use Persons\ResolutionException;

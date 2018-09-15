@@ -38,5 +38,5 @@ interface IFieldFactory {
      *
      * @return bool
      */
-    public function validate(Field $field, DataValidator $validator, $globalMetaData = []);
+    public function validate(Field $field, DataValidator $validator);
 }

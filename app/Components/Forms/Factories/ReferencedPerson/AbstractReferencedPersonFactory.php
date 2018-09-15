@@ -383,12 +383,12 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public final function isFilled(ModelPerson $person, $sub, $field, $acYear, $metaData) {
-        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION, $metaData);
+    public final function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }
 
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options, $metaData) {
+    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
