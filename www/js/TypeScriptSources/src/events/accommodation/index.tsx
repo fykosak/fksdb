@@ -9,11 +9,14 @@ export const eventAccommodation = (element: Element, module: string, component: 
     if (component !== 'accommodation') {
         return false;
     }
-    document.querySelectorAll('[data-id=person-accommodation-matrix]').forEach((el: HTMLInputElement) => {
-        const accommodationDef = JSON.parse(el.getAttribute('data-accommodation-def'));
-        const container = document.createElement('div');
-        el.parentElement.parentElement.appendChild(container);
-        ReactDOM.render(<Index accommodationDef={accommodationDef} input={el}/>, container);
-    });
+
+    const accommodationDef = JSON.parse(element.getAttribute('data-data'));
+    const container = document.createElement('div');
+    element.parentElement.parentElement.appendChild(container);
+    if (!(element instanceof HTMLInputElement)) {
+        return false;
+    }
+    ReactDOM.render(<Index accommodationDef={accommodationDef} input={element}/>, container);
+
     return true;
 };
