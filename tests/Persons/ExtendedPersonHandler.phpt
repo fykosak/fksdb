@@ -211,7 +211,7 @@ class PersonPresenter extends Control implements IExtendedPersonPresenter {
 
 }
 
-class TestResolver implements IVisibilityResolver, IModifialibityResolver {
+class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     public function getResolutionMode(ModelPerson $person) {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;

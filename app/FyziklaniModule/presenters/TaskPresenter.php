@@ -2,9 +2,9 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 
 class TaskPresenter extends BasePresenter {
@@ -32,8 +32,9 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskImportForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer);
+        $control = new FormControl();
+        $form = $control->getForm();
+
         $form->addUpload('csvfile')->setRequired();
         $form->addSelect('state', _('Vyberte akci'), [
             self::IMPORT_STATE_UPDATE_N_INSERT => _('Updatovat úlohy a přidat pokud neexistuje'),
@@ -42,7 +43,7 @@ class TaskPresenter extends BasePresenter {
         ]);
         $form->addSubmit('import', _('Importovat'));
         $form->onSuccess[] = [$this, 'taskImportFormSucceeded'];
-        return $form;
+        return $control;
     }
 
     /**
