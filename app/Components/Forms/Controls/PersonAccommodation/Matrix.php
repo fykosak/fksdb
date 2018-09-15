@@ -5,16 +5,18 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 use Nette\Forms\Controls\TextInput;
 
 class Matrix extends TextInput {
-    const ID = 'person-accommodation-matrix';
     const ResolutionId = 'matrix';
 
     public function __construct() {
         parent::__construct(_('Accommodation'));
-        $this->setAttribute('data-id', self::ID);
+        $this->setAttribute('data-react-root', true);
+        $this->setAttribute('data-module', 'events');
+        $this->setAttribute('data-component', 'accommodation');
+        $this->setAttribute('data-mode', null);
     }
 
     public function setAccommodationDefinition($accommodationDef) {
-        $this->setAttribute('data-accommodation-def', count($accommodationDef) ? json_encode($accommodationDef) : NULL);
+        $this->setAttribute('data-data', count($accommodationDef) ? json_encode($accommodationDef) : NULL);
     }
 
     public function setValue($value) {
