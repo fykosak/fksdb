@@ -1,7 +1,5 @@
 <?php
 
-namespace ORM\Models\Events;
-
 use Nette\DateTime;
 
 /**
