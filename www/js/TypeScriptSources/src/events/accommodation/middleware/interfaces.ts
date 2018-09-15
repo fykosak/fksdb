@@ -1,4 +1,4 @@
-import { IPrice } from '../../shared/components/displays/price/interfaces';
+import { IPrice } from '../../../shared/components/displays/price/interfaces';
 
 export interface IEventAccommodation {
     eventAccommodationId: number;

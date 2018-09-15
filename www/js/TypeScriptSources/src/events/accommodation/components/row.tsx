@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import DateDisplay from '../../shared/components/displays/date';
-import PriceDisplay from '../../shared/components/displays/price';
-import { changeAccommodation } from '../actions/index';
+import DateDisplay from '../../../shared/components/displays/date';
+import PriceDisplay from '../../../shared/components/displays/price';
+import { changeAccommodation } from '../actions/';
 import { IEventAccommodation } from '../middleware/interfaces';
-import { IAccommodationStore } from '../reducer/index';
+import { IAccommodationStore } from '../reducer/';
 
 interface IProps {
     accommodations: IEventAccommodation[];

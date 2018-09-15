@@ -1,7 +1,7 @@
 import {
     ACTION_CHANGE_ACCOMMODATION,
     ACTION_SET_INITIAL_DATA,
-} from '../actions/index';
+} from '../actions/';
 
 export interface IAccommodationState {
     [date: string]: number;
