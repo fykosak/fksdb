@@ -10,10 +10,13 @@ use Nette\DateTime;
  * @property integer capacity
  * @property string name
  * @property integer address_id
- * @property integer price
+ * @property integer price_kc
+ * @property integer price_eur
  * @property DateTime date,
  */
 class ModelEventAccommodation extends \AbstractModelSingle {
+    const ACC_DATE_FORMAT = 'Y-m-d';
+
     /**
      * @return \ModelEvent
      */
@@ -49,5 +52,21 @@ class ModelEventAccommodation extends \AbstractModelSingle {
      */
     public function getUsedCapacity() {
         return $this->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
+    }
+
+    public function __toArray() {
+        return [
+            'eventAccommodationId' => $this->event_accommodation_id,
+            'eventId' => $this->event_id,
+            'capacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'name' => $this->name,
+            'addressId' => $this->address_id,
+            'price' => [
+                'kc' => $this->price_kc,
+                'eur' => $this->price_eur,
+            ],
+            'date' => $this->date->format(self::ACC_DATE_FORMAT),
+        ];
     }
 }

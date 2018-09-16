@@ -5,13 +5,18 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer person_id
+ * @property string other_name
+ * @property string family_name
+ * @property string display_name
+ * @property string gender
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
-     * 
+     *
      * @return ModelLogin|null
      */
     public function getLogin() {
@@ -44,15 +49,16 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param int $acYear
-     * @return null
+     * @param $acYear
+     * @param bool $extrapolated
+     * @return ModelPersonHistory|null
      */
     public function getHistory($acYear, $extrapolated = false) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
         $histories = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
-                ->where('ac_year', $acYear);
+            ->where('ac_year', $acYear);
         $history = $histories->fetch();
         if ($history) {
             return ModelPersonHistory::createFromTableRow($history);
@@ -70,7 +76,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return TableSelection untyped
+     * @param null $contestId
+     * @return \Nette\Database\Table\GroupedSelection
      */
     public function getContestants($contestId = null) {
         if (!isset($this->person_id)) {
@@ -84,7 +91,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return TableSelection untyped
+     * @param null $contestId
+     * @return \Nette\Database\Table\GroupedSelection
      */
     public function getOrgs($contestId = null) {
         if (!isset($this->person_id)) {
@@ -96,25 +104,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
         return $related;
     }
-    
+
     public function getFlags() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
-    
+
     /**
      * @return ModelMPersonHasFlag[]
      */
     public function getMPersonHasFlags() {
         $personFlags = $this->getFlags();
-        
+
         if (!$personFlags || count($personFlags) == 0) {
             return null;
         }
-        
-        $result = array();
+
+        $result = [];
         foreach ($personFlags as $personFlag) {
             $personFlag->flag_id; // stupid touch
             $flag = $personFlag->ref(DbNames::TAB_FLAG, 'flag_id');
@@ -124,17 +132,18 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
         return $result;
     }
-    
+
     /**
+     * @param $fid
      * @return ModelMPersonHasFlag|null
      */
     public function getMPersonHasFlag($fid) {
         $flags = $this->getMPersonHasFlags();
-        
+
         if (!$flags || count($flags) == 0) {
             return null;
         }
-        
+
         foreach ($flags as $flag) {
             if ($flag->getFlag()->fid == $fid) {
                 return $flag;
@@ -151,24 +160,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return MPostContact[]
+     * @param null $type
+     * @return array
      */
     public function getMPostContacts($type = null) {
         $postContacts = $this->getPostContacts();
         if ($postContacts && $type !== null) {
-            $postContacts->where(array('type' => $type));
+            $postContacts->where(['type' => $type]);
         }
 
         if (!$postContacts || count($postContacts) == 0) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         foreach ($postContacts as $postContact) {
             $postContact->address_id; // stupid touch
             $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
-                            ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
+                ModelAddress::createFromTableRow($address), ModelPostContact::createFromTableRow($postContact)
             );
         }
         return $result;
@@ -176,10 +186,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * Main delivery address of the contestant.
-     * 
-     * @return MPostContact|null
+     *
+     * @return ModelPostContact|null
      */
-    public function getDeliveryAddress($noFallback = false) {
+    public function getDeliveryAddress() {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
         if (count($dAddresses)) {
             return reset($dAddresses);
@@ -189,9 +199,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * Main permanent address of the contestant.
-     * 
-     * @return MPostContact|null
+     * @param bool $noFallback
+     * @return mixed|ModelPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
@@ -247,12 +256,12 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    public function getFullname() {
-        return $this->display_name ? : $this->other_name . ' ' . $this->family_name;
+    public function getFullName() {
+        return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
     }
 
     public function __toString() {
-        return $this->getFullname();
+        return $this->getFullName();
     }
 
     /**
@@ -261,7 +270,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return array of ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
-        $result = array();
+        $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
             $org = ModelOrg::createFromTableRow($org);
             $year = $yearCalculator->getCurrentYear($org->getContest());
@@ -274,12 +283,12 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
-     * 
+     *
      * @param YearCalculator $yearCalculator
      * @return array of ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
-        $result = array();
+        $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromTableRow($contestant);
             $currentYear = $yearCalculator->getCurrentYear($contestant->getContest());
@@ -297,11 +306,11 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * 
-     * @param str $fullname
+     *
+     * @param string $fullname
      * @return array
      */
-    public static function parseFullname($fullname) {
+    public static function parseFullName($fullname) {
         $names = explode(' ', $fullname);
         $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
         $familyName = $names[count($names) - 1];
@@ -310,11 +319,11 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         } else {
             $gender = 'M';
         }
-        return array(
+        return [
             'other_name' => $otherName,
             'family_name' => $familyName,
             'gender' => $gender,
-        );
+        ];
     }
 
     /**
@@ -334,6 +343,43 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     public function getResourceId() {
         return 'person';
+    }
+
+    /**
+     * @param integer eventId
+     * @return string
+     * @throws \Nette\Utils\JsonException
+     */
+    public function getAccommodationByEventId($eventId) {
+        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
+        $accommodations = [];
+        foreach ($query as $row) {
+            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            /**
+             * @var ModelEventAccommodation $eventAcc
+             */
+            $eventAcc = $model->getEventAccommodation();
+            $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
+            $accommodations[$key] = $eventAcc->event_accommodation_id;
+        }
+        if (!count($accommodations)) {
+            return null;
+        }
+        return \Nette\Utils\Json::encode($accommodations);
+    }
+
+    /**
+     * @param $eventId
+     * Definitely ugly but, there is only this way... Mišo
+     */
+    public function removeAccommodationForEvent($eventId) {
+        $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
+        /**
+         * @var $row ModelEventPersonAccommodation
+         */
+        foreach ($query as $row) {
+            $row->delete();
+        }
     }
 
 }
