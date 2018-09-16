@@ -7,8 +7,8 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\IProcessing;
 use FKS\Logging\ILogger;
-use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
+use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FormUtils;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
@@ -26,17 +26,17 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var PersonFactory
+     * @var PersonInfoFactory
      */
-    private $personFactory;
+    private $personInfoFactory;
 
     /**
      * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
-    function __construct(PersonFactory $personFactory, ServicePersonInfo $servicePersonInfo) {
-        $this->personFactory = $personFactory;
+    function __construct(PersonInfoFactory $personFactory, ServicePersonInfo $servicePersonInfo) {
+        $this->personInfoFactory = $personFactory;
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
@@ -44,7 +44,6 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT) {
             return;
         }
-
 
         $control = new AgreedField();
         $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));

@@ -19,7 +19,6 @@ use ServiceContestant;
 use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
