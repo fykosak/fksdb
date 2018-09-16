@@ -47,7 +47,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $invitationLang = 'cs';
         $this->fixture = $handlerFactory->create($service, $contest, $year, $invitationLang);
 
-        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPersonFactory');
+        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory');
     }
 
     protected function tearDown() {
