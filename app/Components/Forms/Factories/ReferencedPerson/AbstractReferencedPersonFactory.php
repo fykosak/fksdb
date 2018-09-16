@@ -1,13 +1,18 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories;
+namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
-use FKSDB\Components\Forms\Containers\IWriteOnly;
+use FKSDB\Components\Forms\Containers\IWriteonly;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Factories\AddressFactory;
+use FKSDB\Components\Forms\Factories\FlagFactory;
+use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
+use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -31,7 +36,7 @@ use ServicePerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonFactory extends Object implements IReferencedSetter {
+abstract class AbstractReferencedPersonFactory extends Object implements IReferencedSetter {
 
     const SEARCH_EMAIL = 'email';
     const SEARCH_ID = 'id';
@@ -44,45 +49,45 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
     /**
      * @var ServicePerson
      */
-    private $servicePerson;
+    protected $servicePerson;
 
     /**
      * @var PersonFactory
      */
-    private $personFactory;
+    protected $personFactory;
 
     /**
      * @var PersonHistoryFactory
      */
-    private $personHistoryFactory;
+    protected $personHistoryFactory;
     /**
      * @var PersonInfoFactory
      */
-    private $personInfoFactory;
+    protected $personInfoFactory;
 
     /**
      * @var ReferencedPersonHandlerFactory
      */
-    private $referencedPersonHandlerFactory;
+    protected $referencedPersonHandlerFactory;
 
     /**
      * @var PersonProvider
      */
-    private $personProvider;
+    protected $personProvider;
 
     /**
      * @var ServiceFlag
      */
-    private $serviceFlag;
+    protected $serviceFlag;
 
     /**
      * @var FlagFactory
      */
-    private $flagFactory;
+    protected $flagFactory;
     /**
      * @var AddressFactory
      */
-    private $addressFactory;
+    protected $addressFactory;
 
     function __construct(AddressFactory $addressFactory, FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->servicePerson = $servicePerson;
@@ -105,7 +110,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
@@ -206,22 +211,22 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
-                $controlVisible = $this->isWriteOnly($component) ? $visible : true;
+                $controlVisible = $this->isWriteonly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
-                    $this->setWriteOnly($component, true);
+                    $this->setWriteonly($component, true);
                     $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                 } else if ($controlVisible && $controlModifiable) {
-                    $this->setWriteOnly($component, false);
+                    $this->setWriteonly($component, false);
                     $component->setDisabled(false);
                 }
                 if ($mode == self::MODE_ROLLBACK) {
                     $component->setDisabled(false);
-                    $this->setWriteOnly($component, false);
+                    $this->setWriteonly($component, false);
                 } else {
                     if ($submittedBySearch || $force) {
                         $component->setValue($value);
@@ -278,7 +283,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    private function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -307,29 +312,29 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    private function setWriteOnly($component, $value) {
-        if ($component instanceof IWriteOnly) {
-            $component->setWriteOnly($value);
+    protected function setWriteonly($component, $value) {
+        if ($component instanceof IWriteonly) {
+            $component->setWriteonly($value);
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                $this->setWriteOnly($subcomponent, $value);
+                $this->setWriteonly($subcomponent, $value);
             }
         }
     }
 
-    private function isWriteOnly($component) {
-        if ($component instanceof IWriteOnly) {
+    protected function isWriteonly($component) {
+        if ($component instanceof IWriteonly) {
             return true;
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                if ($this->isWriteOnly($subcomponent)) {
+                if ($this->isWriteonly($subcomponent)) {
                     return true;
                 }
             }
         }
     }
 
-    private function createSearchControl($searchType) {
+    protected function createSearchControl($searchType) {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
@@ -343,7 +348,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         return $control;
     }
 
-    private function createSearchCallback($searchType) {
+    protected function createSearchCallback($searchType) {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
@@ -359,11 +364,11 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         }
     }
 
-    private function createTermToValuesCallback($searchType) {
+    protected function createTermToValuesCallback($searchType) {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) {
-                    return array('person_info' => array('email' => $term));
+                    return ['person_info' => ['email' => $term]];
                 };
                 break;
             case self::SEARCH_ID:
@@ -378,7 +383,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
         return !($value === null || $value === '');
     }
 
-    private function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
