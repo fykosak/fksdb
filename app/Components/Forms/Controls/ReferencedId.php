@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKS\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKS\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use ORM\IModel;
@@ -160,29 +160,27 @@ class ReferencedId extends HiddenField {
 
     private function createPromise() {
         $referencedId = $this->getValue();
-
-        $referencedIdControl = $this;
         $values = $this->referencedContainer->getValues();
-        $handler = $this->handler;
-        $promise = new Promise(function () use ($handler, $referencedId, $values, $referencedIdControl) {
+        $promise = new Promise(function () use ($referencedId, $values) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $handler->createFromValues($values);
-                    $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
-                    $referencedIdControl->setModelCreated(true);
+
+                    $model = $this->handler->createFromValues($values);
+                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $this->setModelCreated(true);
                     return $model->getPrimary();
                 } else if ($referencedId) {
-                    $model = $referencedIdControl->getService()->findByPrimary($referencedId);
-                    $handler->update($model, $values);
+                    $model = $this->getService()->findByPrimary($referencedId);
+                    $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-                    $model = $referencedIdControl->getService()->findByPrimary($model->getPrimary());
-                    $referencedIdControl->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $model = $this->getService()->findByPrimary($model->getPrimary());
+                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     return $referencedId;
                 } else {
-                    $referencedIdControl->setValue(null, IReferencedSetter::MODE_FORCE);
+                    $this->setValue(null, IReferencedSetter::MODE_FORCE);
                 }
             } catch (ModelDataConflictException $e) {
-                $e->setReferencedId($referencedIdControl);
+                $e->setReferencedId($this);
                 throw $e;
             }
         });
