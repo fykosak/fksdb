@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
-use FKSDB\Components\Forms\Containers\IWriteonly;
+use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -107,7 +107,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param string $searchType
      * @param boolean $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
-     * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
+     * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @return array
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
@@ -211,22 +211,22 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
 
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
-                $controlVisible = $this->isWriteonly($component) ? $visible : true;
+                $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
                 if (!$controlVisible && !$controlModifiable) {
                     $container[$sub]->removeComponent($component);
                 } else if (!$controlVisible && $controlModifiable) {
-                    $this->setWriteonly($component, true);
+                    $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
                 } else if ($controlVisible && $controlModifiable) {
-                    $this->setWriteonly($component, false);
+                    $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
                 if ($mode == self::MODE_ROLLBACK) {
                     $component->setDisabled(false);
-                    $this->setWriteonly($component, false);
+                    $this->setWriteOnly($component, false);
                 } else {
                     if ($submittedBySearch || $force) {
                         $component->setValue($value);
@@ -312,22 +312,22 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    protected function setWriteonly($component, $value) {
-        if ($component instanceof IWriteonly) {
-            $component->setWriteonly($value);
+    protected function setWriteOnly($component, $value) {
+        if ($component instanceof IWriteOnly) {
+            $component->setWriteOnly($value);
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                $this->setWriteonly($subcomponent, $value);
+                $this->setWriteOnly($subcomponent, $value);
             }
         }
     }
 
-    protected function isWriteonly($component) {
-        if ($component instanceof IWriteonly) {
+    protected function isWriteOnly($component) {
+        if ($component instanceof IWriteOnly) {
             return true;
         } else if ($component instanceof Container) {
             foreach ($component->getComponents() as $subcomponent) {
-                if ($this->isWriteonly($subcomponent)) {
+                if ($this->isWriteOnly($subcomponent)) {
                     return true;
                 }
             }
