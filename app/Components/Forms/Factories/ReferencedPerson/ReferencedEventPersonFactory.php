@@ -27,14 +27,14 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
     /**
      * @var PersonAccommodationFactory
      */
-    // private $personAccommodationFactory;
+    private $personAccommodationFactory;
     /**
      * @var integer
      */
     private $eventId;
 
-    function __construct(
-        //PersonAccommodationFactory $personAccommodationFactory,
+    public function __construct(
+        PersonAccommodationFactory $personAccommodationFactory,
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
@@ -54,7 +54,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             $serviceFlag,
             $personInfoFactory,
             $personHistoryFactory);
-        // $this->personAccommodationFactory = $personAccommodationFactory;
+        $this->personAccommodationFactory = $personAccommodationFactory;
     }
 
     public function setEventId($eventId) {
@@ -68,11 +68,11 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
 
-      /*  if ($sub === 'person_accommodation') {
+        if ($sub === 'person_accommodation') {
             $control = $this->personAccommodationFactory->createField('matrix', $this->eventId);
             $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
             return $control;
-        }*/
+        }
         return parent::createField($sub, $fieldName, $acYear, $hiddenField);
     }
 
@@ -80,12 +80,9 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
         if (!$person) {
             return null;
         }
-       /* if ($sub === 'person_accommodation') {
-            return $person->getAccommodationByEventId($this->eventId);
-        }*/
+        if ($sub === 'person_accommodation') {
+            //   return $person->getAccommodationByEventId($this->eventId);
+        }
         return parent::getPersonValue($person, $sub, $field, $acYear, $options);
-
     }
-
 }
-
