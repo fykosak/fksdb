@@ -5,8 +5,8 @@ namespace Persons;
 $container = require '../bootstrap.php';
 
 use DatabaseTestCase;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use ModelContest;
 use ModelPerson;
 use Nette\Application\UI\Control;
@@ -209,7 +209,7 @@ class PersonPresenter extends Control implements IExtendedPersonPresenter {
 
 }
 
-class TestResolver implements IVisibilityResolver, IModifialibityResolver {
+class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     public function getResolutionMode(ModelPerson $person) {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;

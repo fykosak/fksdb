@@ -2,8 +2,9 @@
 
 namespace PublicModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use ModelSubmit;
 use Nette\Application\BadRequestException;
@@ -100,8 +101,8 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentUploadForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $prevDeadline = null;
         $taskIds = array();
@@ -119,8 +120,9 @@ class SubmitPresenter extends BasePresenter {
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
-
-            $container = $form->addContainer('task' . $task->task_id);
+            $container = new ModelContainer();
+            $form->addComponent($container, 'task' . $task->task_id);
+            //$container = $form->addContainer();
             $upload = $container->addUpload('file', $task->getFQName());
             $conditionedUpload = $upload
                 ->addCondition(Form::FILLED)
@@ -151,7 +153,7 @@ class SubmitPresenter extends BasePresenter {
             $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
-        return $form;
+        return $control;
     }
 
     public function createComponentSubmitsGrid($name) {

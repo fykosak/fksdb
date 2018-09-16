@@ -44,7 +44,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
     $this->setIcon('fa fa-user');

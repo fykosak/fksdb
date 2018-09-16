@@ -1,17 +1,16 @@
-
-
+{layout '../@layout.v4.latte'}
 {block user-info}
     {include #parent}
     {control seriesChooser}
 {/block}
 
 {block content}
-{control composeForm}
+    {control composeForm}
 
-{if $control->getStoredQuery()}
-    <h2>{_'Výsledek dotazu'}</h2>
-    {control adhocResultsComponent}
-{/if}
+    {if $control->getStoredQuery()}
+        <h2>{_'Výsledek dotazu'}</h2>
+        {control adhocResultsComponent}
+    {/if}
 
 {/block}
 
