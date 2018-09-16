@@ -26,17 +26,11 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
     const CONTROL_NAME = 'privacy';
 
     /**
-     * @var PersonInfoFactory
-     */
-    private $personInfoFactory;
-
-    /**
      * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
     function __construct(PersonInfoFactory $personFactory, ServicePersonInfo $servicePersonInfo) {
-        $this->personInfoFactory = $personFactory;
         $this->servicePersonInfo = $servicePersonInfo;
     }
 

@@ -10,9 +10,10 @@ use ORM\IModel;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IReferencedSetter {
+
     const MODE_NORMAL = 'MODE_NORMAL';
     const MODE_FORCE = 'MODE_FORCE';
     const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL);
+  public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL);
 }
