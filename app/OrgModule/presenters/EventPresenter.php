@@ -58,18 +58,13 @@ class EventPresenter extends EntityPresenter {
     private $eventFactory;
 
     /**
-     * @var \ServicePerson
-     */
-    private $servicePerson;
-
-    /**
      *
      * @var LayoutResolver
      */
     private $layoutResolver;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -89,22 +84,9 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
-    /**
      * @var ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
-
-
-    public function injectServicePerson(\ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
-    }
 
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
@@ -123,10 +105,6 @@ class EventPresenter extends EntityPresenter {
         $this->layoutResolver = $layoutResolver;
     }
 
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
@@ -141,10 +119,6 @@ class EventPresenter extends EntityPresenter {
 
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
-        $this->serviceEventOrg = $serviceEventOrg;
     }
 
     public function authorizedApplications($id) {
