@@ -17,12 +17,12 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
         parent::__construct($label, $cols, $maxLength);
-        $this->writeonlyAppendMonitors();
+        $this->writeOnlyAppendMonitors();
     }
 
     public function getControl() {
         $control = parent::getControl();
-        $control = $this->writeonlyAdjustControl($control);
+        $control = $this->writeOnlyAdjustControl($control);
         return $control;
     }
 
@@ -37,12 +37,12 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     public function loadHttpData() {
         parent::loadHttpData();
-        $this->writeonlyLoadHttpData();
+        $this->writeOnlyLoadHttpData();
     }
 
     protected function attached($obj) {
         parent::attached($obj);
-        $this->writeonlyAttached($obj);
+        $this->writeOnlyAttached($obj);
     }
 
 }

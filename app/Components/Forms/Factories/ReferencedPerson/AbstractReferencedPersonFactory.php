@@ -107,7 +107,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param string $searchType
      * @param boolean $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
-     * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
+     * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @return array
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $eventId) {
@@ -321,8 +321,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
             }
         }
     }
-
-
+    
     protected function isWriteOnly($component) {
         if ($component instanceof IWriteOnly) {
             return true;
