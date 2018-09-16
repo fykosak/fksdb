@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
-use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKS\Components\Forms\Containers\IReferencedSetter;
-use FKS\Components\Forms\Containers\IWriteonly;
-use FKS\Components\Forms\Containers\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
+use FKSDB\Components\Forms\Containers\IWriteonly;
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -24,7 +24,7 @@ use Nette\InvalidStateException;
 use Nette\Object;
 use Nette\Utils\Arrays;
 use ORM\IModel;
-use Persons\IModifialibityResolver;
+use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
@@ -106,11 +106,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param integer $acYear
      * @param string $searchType
      * @param boolean $allowClear
-     * @param IModifialibityResolver $modifiabilityResolver is person's filled field modifiable?
+     * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeonly field visible? (i.e. not writeonly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifialibityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear);
 
@@ -259,7 +259,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
         } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
             return $control;
         } else {
             $control = null;
