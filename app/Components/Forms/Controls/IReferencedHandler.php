@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Controls;
 
 use Nette\ArrayHash;
 use ORM\IModel;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

@@ -3,8 +3,9 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use Nette\ArrayHash;
+use RuntimeException;
 
-class ModelDataConflictException extends \RuntimeException {
+class ModelDataConflictException extends RuntimeException {
 
     /** @var ArrayHash */
     private $conflicts;
@@ -28,5 +29,4 @@ class ModelDataConflictException extends \RuntimeException {
     public function setReferencedId(ReferencedId $referencedId) {
         $this->referencedId = $referencedId;
     }
-
 }
