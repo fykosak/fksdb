@@ -2,19 +2,21 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\ComponentModel\Component;
-use Nette\Forms\Form;
-use Nette\Forms\IControl;
-use Nette\InvalidStateException;
-use Nette\Utils\Arrays;
 use FKS\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use Nette\ComponentModel\Component;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
+use Nette\InvalidStateException;
+use Nette\Utils\Arrays;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -186,7 +188,6 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createSearchButton() {
-
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
             ->setValidationScope(false);
         //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
@@ -218,9 +219,9 @@ class ReferencedContainer extends ContainerWithOptions {
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object)array(
-                'id' => $this->referencedId->getHtmlId(),
-                'value' => $this->referencedId->getValue(),
+            $payload->{self::JSON_DATA} = (object) array(
+                        'id' => $this->referencedId->getHtmlId(),
+                        'value' => $this->referencedId->getValue(),
             );
         }
     }
@@ -237,7 +238,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-            // $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 
@@ -257,7 +258,7 @@ class ReferencedContainer extends ContainerWithOptions {
         $referencedId = $this->referencedId->getHtmlId();
         $this->setOption('data', [
             'referenced-id' => $referencedId,
-            'referenced' => (int)true,
+            'referenced' => 1,
         ]);
     }
 

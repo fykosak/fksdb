@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\URLTextBox;
+use FKSDB\Components\Forms\Controls\URLTextBox;
 
 class HomepageField extends URLTextBox {
 

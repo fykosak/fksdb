@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use Nette\Application\UI\Form;
 use Nette\Forms\ControlGroup;
@@ -13,7 +13,7 @@ use ServiceRegion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AddressFactory {
@@ -46,7 +46,7 @@ class AddressFactory {
     /**
      * Appends elements to an existing container.
      * (Created because of KdybyReplicator.)
-     * 
+     *
      * @param \FKSDB\Components\Forms\Factories\Container $container
      * @param ControlGroup $group
      */
@@ -62,7 +62,7 @@ class AddressFactory {
                     ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
-        $target = new WriteonlyInput(_('Místo'));
+        $target = new WriteOnlyInput(_('Místo'));
         $container->addComponent($target, 'target');
         $target->setOption('description', _('Typicky ulice a číslo popisné.'));
         if ($options & self::REQUIRED) {
@@ -70,17 +70,17 @@ class AddressFactory {
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'));
         }
         if ($options & self::NOT_WRITEONLY) {
-            $target->setWriteonly(false);
+            $target->setWriteOnly(false);
         }
 
-        $city = new WriteonlyInput(_('Město'));
+        $city = new WriteOnlyInput(_('Město'));
         $container->addComponent($city, 'city');
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $city->addConditionOn($conditioningField, Form::FILLED) : $city;
             $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
         }
         if ($options & self::NOT_WRITEONLY) {
-            $city->setWriteonly(false);
+            $city->setWriteOnly(false);
         }
 
 
