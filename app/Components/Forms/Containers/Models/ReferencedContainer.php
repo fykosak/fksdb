@@ -4,18 +4,18 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKS\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
-use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SubmitButton;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -135,8 +135,8 @@ class ReferencedContainer extends ContainerWithOptions {
      */
     public function setSearchButton($value) {
         static $searchComponents = array(
-    self::CONTROL_SEARCH,
-    self::SUBMIT_SEARCH,
+            self::CONTROL_SEARCH,
+            self::SUBMIT_SEARCH,
         );
 
         $value = $value && $this->hasSearch;
@@ -178,34 +178,32 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createClearButton() {
-        $that = $this;
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
-                ->setValidationScope(false);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function(SubmitButton $submit) use($that) {
-                    $that->referencedId->setValue(null);
-                    $that->invalidateFormGroup();
-                };
+            ->setValidationScope(false);
+        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->onClick[] = function () {
+            $this->referencedId->setValue(null);
+            $this->invalidateFormGroup();
+        };
     }
 
     private function createSearchButton() {
-        $that = $this;
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
-                ->setValidationScope(false);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function(SubmitButton $submit) use($that) {
-                    $term = $that->getComponent(self::CONTROL_SEARCH)->getValue();
-                    $model = $that->searchCallback->invoke($term);
+            ->setValidationScope(false);
+        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->onClick[] = function () {
+            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
+            $model = $this->searchCallback->invoke($term);
 
-                    $values = new ArrayHash();
-                    if (!$model) {
-                        $model = ReferencedId::VALUE_PROMISE;
-                        $values = $that->termToValuesCallback->invoke($term);
-                    }
-                    $that->referencedId->setValue($model);
-                    $that->setValues($values);
-                    $that->invalidateFormGroup();
-                };
+            $values = new ArrayHash();
+            if (!$model) {
+                $model = ReferencedId::VALUE_PROMISE;
+                $values = $this->termToValuesCallback->invoke($term);
+            }
+            $this->referencedId->setValue($model);
+            $this->setValues($values);
+            $this->invalidateFormGroup();
+        };
     }
 
     private function createCompactValue() {
@@ -258,10 +256,10 @@ class ReferencedContainer extends ContainerWithOptions {
     private function updateHtmlData() {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
-        $this->setOption('data', array(
+        $this->setOption('data', [
             'referenced-id' => $referencedId,
-            'referenced' => (int) true,
-        ));
+            'referenced' => 1,
+        ]);
     }
 
     private function hideComponent($name, $component) {

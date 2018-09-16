@@ -255,7 +255,7 @@ class ReferencedPersonFactory extends Object implements IReferencedSetter {
                 throw new InvalidArgumentException("Only 'address' field is supported.");
             }
         } else if ($sub == 'person_has_flag') {
-            $control = $this->flagFactory->createFlag($fieldName, $acYear, $hiddenField, $metadata);
+            $control = $this->flagFactory->createFlag($hiddenField, $metadata);
             return $control;
         } else {
             $control = null;

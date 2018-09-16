@@ -1179,31 +1179,9 @@ CREATE TABLE IF NOT EXISTS `brawl_team_position` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `teacher`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `brawl_team_position` (
-  `position_id` INT NOT NULL AUTO_INCREMENT,
-  `e_fyziklani_team_id` INT NOT NULL,
-  `row` INT NOT NULL,
-  `col` INT NOT NULL,
-  `room_id` INT NOT NULL,
-  PRIMARY KEY (`position_id`),
-  UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
-  INDEX `fk_brawl_team_position_2_idx` (`room_id` ASC),
-  CONSTRAINT `fk_brawl_team_position_1`
-    FOREIGN KEY (`e_fyziklani_team_id`)
-    REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_brawl_team_position_2`
-    FOREIGN KEY (`room_id`)
-    REFERENCES `brawl_room` (`room_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `teacher`(
   `teacher_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `person_id`  INT(11) NOT NULL,

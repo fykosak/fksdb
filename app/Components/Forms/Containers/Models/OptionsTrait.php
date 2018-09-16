@@ -9,7 +9,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 trait OptionsTrait {
 
     /** @var array user options */
-    private $options = array();
+    private $options = [];
 
     /**
      * Sets user-specific option.
