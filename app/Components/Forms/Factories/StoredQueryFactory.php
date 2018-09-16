@@ -12,8 +12,8 @@ use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use ServiceStoredQueryTagType;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

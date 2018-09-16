@@ -5,6 +5,7 @@ namespace OrgModule;
 use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKS\Application\UploadException;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Logging\FlashDumpFactory;
 use ModelException;
@@ -79,10 +80,11 @@ class TasksPresenter extends BasePresenter {
     }
 
     protected function createComponentSeriesForm() {
-        $seriesForm = new Form();
-        $seriesForm->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
+        $form->setRenderer(new BootstrapRenderer());
 
-        $source = $seriesForm->addRadioList('source', _('Zdroj úloh'), array(
+        $source = $form->addRadioList('source', _('Zdroj úloh'), array(
             self::SOURCE_ASTRID => _('Astrid'),
             self::SOURCE_ASTRID_2 => _('Astrid (nové XML)'),
             self::SOURCE_FILE => _('XML soubor'),
@@ -91,23 +93,23 @@ class TasksPresenter extends BasePresenter {
 
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        $seriesForm->addSelect('series', _('Série'))
-            ->setItems($seriesItems, false);
+        $form->addSelect('series', _('Série'))
+                ->setItems($seriesItems, false);
 
         // File upload
-        $language = $seriesForm->addSelect('lang', _('Jazyk'));
+        $language = $form->addSelect('lang', _('Jazyk'));
         $language->setItems(self::$languages, false);
         $language->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($language->getHtmlId() . '-pair');
 
-        $upload = $seriesForm->addUpload('file', _('XML soubor úloh'));
+        $upload = $form->addUpload('file', _('XML soubor úloh'));
         $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
 
 
-        $seriesForm->addSubmit('submit', _('Importovat'));
+        $form->addSubmit('submit', _('Importovat'));
 
-        $seriesForm->onSuccess[] = callback($this, 'validSubmitSeriesForm');
+        $form->onSuccess[] = callback($this, 'validSubmitSeriesForm');
 
-        return $seriesForm;
+        return $control;
     }
 
     private function isLegacyXml(SimpleXMLElement $xml) {

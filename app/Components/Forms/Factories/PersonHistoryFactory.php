@@ -45,6 +45,5 @@ class PersonHistoryFactory {
             default:
                 throw new InvalidArgumentException();
         }
-
     }
 }

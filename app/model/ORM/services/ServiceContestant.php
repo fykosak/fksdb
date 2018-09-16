@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Database\Table\Selection;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
@@ -11,7 +13,7 @@ class ServiceContestant extends AbstractServiceSingle {
 
     /**
      * @note Read-only (loads data from view).
-     * 
+     *
      * @param int $contest_id
      * @param int $year
      * @return Selection
