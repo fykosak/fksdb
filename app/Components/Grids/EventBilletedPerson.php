@@ -77,19 +77,23 @@ class EventBilletedPerson extends BaseGrid {
         $model = $this->serviceEventPersonAccommodation->findByPrimary($id);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
+            $this->redirect('this');
             return;
         }
         $model->update(['status' => \ModelEventPersonAccommodation::STATUS_PAID]);
         $this->serviceEventPersonAccommodation->save($model);
+        $this->redirect('this');
     }
 
     public function handleDeletePayment($id) {
         $model = $this->serviceEventPersonAccommodation->findByPrimary($id);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
+            $this->redirect('this');
             return;
         }
         $model->update(['status' => \ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
         $this->serviceEventPersonAccommodation->save($model);
+        $this->redirect('this');
     }
 }

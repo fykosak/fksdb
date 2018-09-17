@@ -121,18 +121,37 @@ class EventAccommodationPresenter extends EntityPresenter {
          * @var $model \ModelEventAccommodation
          */
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Úprava ubytovaní v hoteli %s v dni akce %s'), $model->name, $model->date->format('Y-m-d'), $model->getEvent()->name));
-        // $this->setIcon('fa fa-user');
+        $this->setTitle(sprintf(
+            _('Úprava ubytovaní v hoteli "%s" v dni %s akce "%s"'),
+            $model->name,
+            $model->date->format('Y-m-d'),
+            $model->getEvent()->name
+        ));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit ubytovaní akce %s'), $this->getEvent()->name));
-        //  $this->setIcon('fa fa-user-plus');
+        $this->setTitle(sprintf(_('Založit ubytovaní akce "%s"'), $this->getEvent()->name));
+        $this->setIcon('fa fa-plus');
     }
 
     public function titleList() {
-        $this->setTitle(sprintf(_('Ubytovaní akce %s'), $this->getEvent()->name));
-        //  $this->setIcon('fa fa-users');
+        $this->setTitle(sprintf(_('Ubytovaní akce "%s"'), $this->getEvent()->name));
+        $this->setIcon('fa fa-table');
+    }
+
+    public function titleBilleted() {
+        /**
+         * @var $model \ModelEventAccommodation
+         */
+        $model = $this->serviceEventAccommodation->findByPrimary($this->eventAccommodationId);
+        $this->setTitle(
+            sprintf(_('List of accommodated people of hostel "%s" at %s of event "%s"'),
+                $model->name,
+                $model->date->format('Y-m-d'),
+                $model->getEvent()->name
+            ));
+        $this->setIcon('fa fa-users');
     }
 
     private function createAccommodationContainer() {
@@ -180,8 +199,8 @@ class EventAccommodationPresenter extends EntityPresenter {
     }
 
     /**
-     * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -203,7 +222,11 @@ class EventAccommodationPresenter extends EntityPresenter {
             /*
              * Accommodation
              */
-            $data = $this->getAccommodationFormData($values);;
+            $data = $this->getAccommodationFormData($values);
+            /**
+             * @var $accommodation \ModelEventAccommodation
+             * @var $address \ModelAddress
+             */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
             $accommodation->event_id = $this->eventId;
             $accommodation->address_id = $address->address_id;
@@ -235,8 +258,8 @@ class EventAccommodationPresenter extends EntityPresenter {
     }
 
     /**
-     * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
@@ -247,7 +270,11 @@ class EventAccommodationPresenter extends EntityPresenter {
             if (!$connection->beginTransaction()) {
                 throw new \ModelException();
             }
+            /**
+             * @var $accommodation \ModelEventAccommodation
+             */
             $accommodation = $this->getModel();
+
             /*
              * Address
              */
