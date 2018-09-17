@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKS\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
 use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;

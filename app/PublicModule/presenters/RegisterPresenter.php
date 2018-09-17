@@ -4,11 +4,11 @@ namespace PublicModule;
 
 use BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKS\Components\Forms\Controls\CaptchaBox;
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use IContestPresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;

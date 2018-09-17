@@ -9,18 +9,17 @@ use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
 use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
-use Nette\InvalidArgumentException;
 use Nette\Security\User;
 use Persons\SelfResolver;
 use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory extends AbstractFactory {
@@ -34,9 +33,9 @@ class PersonFactory extends AbstractFactory {
     private $visible;
 
     /**
-     * @var ReferencedPersonFactory
+     * @var ReferencedEventPersonFactory
      */
-    private $referencedPersonFactory;
+    private $referencedEventPersonFactory;
 
     /**
      * @var SelfResolver
@@ -63,13 +62,13 @@ class PersonFactory extends AbstractFactory {
      */
     private $container;
 
-    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
         $this->modifiable = $modifiable;
         $this->visible = $visible;
-        $this->referencedPersonFactory = $referencedPersonFactory;
+        $this->referencedEventPersonFactory = $referencedEventPersonFactory;
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
@@ -82,12 +81,13 @@ class PersonFactory extends AbstractFactory {
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getHolder()->getEvent();
+        $this->referencedEventPersonFactory->setEventId($event->event_id);
         $acYear = $event->getAcYear();
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
+        $components = $this->referencedEventPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
         $components[1]->setOption('label', $field->getLabel());
         $components[1]->setOption('description', $field->getDescription());
         return $components;
@@ -135,7 +135,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = array('required' => $metadata);
                 }
-                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }
@@ -149,7 +149,7 @@ class PersonFactory extends AbstractFactory {
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {
                 if (!is_array($metadata)) {
-                    $metadata = array('required' => $metadata);
+                    $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
                     $value = $this->evaluator->evaluate($value, $field);

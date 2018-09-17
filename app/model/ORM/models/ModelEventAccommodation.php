@@ -1,8 +1,7 @@
 <?php
 
-namespace ORM\Models\Events;
-
 use Nette\DateTime;
+use Nette\Security\IResource;
 
 /**
  * Class ModelEventAccommodation
@@ -12,24 +11,34 @@ use Nette\DateTime;
  * @property integer capacity
  * @property string name
  * @property integer address_id
- * @property integer price
- * @property DateTime date,
+ * @property integer price_kc
+ * @property integer price_eur
+ * @property DateTime date
+ * @property \Nette\Database\Table\ActiveRow address
+ * @property \Nette\Database\Table\ActiveRow event
  */
-class ModelEventAccommodation extends \AbstractModelSingle {
+class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
+    const ACC_DATE_FORMAT = 'Y-m-d';
+
+    public function getResourceId() {
+        return 'eventAccommodation';
+    }
+
     /**
      * @return \ModelEvent
      */
     public function getEvent() {
-        $data = $this->event;
-        return \ModelEvent::createFromTableRow($data);
+        return \ModelEvent::createFromTableRow($this->event);
     }
 
     /**
      * @return \ModelAddress
      */
     public function getAddress() {
-        $data = $this->address;
-        return \ModelAddress::createFromTableRow($data);
+        if ($this->address) {
+            return \ModelAddress::createFromTableRow($this->address);
+        }
+        return null;
     }
 
     /**
@@ -51,5 +60,21 @@ class ModelEventAccommodation extends \AbstractModelSingle {
      */
     public function getUsedCapacity() {
         return $this->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
+    }
+
+    public function __toArray() {
+        return [
+            'eventAccommodationId' => $this->event_accommodation_id,
+            'eventId' => $this->event_id,
+            'capacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'name' => $this->name,
+            'addressId' => $this->address_id,
+            'price' => [
+                'kc' => $this->price_kc,
+                'eur' => $this->price_eur,
+            ],
+            'date' => $this->date->format(self::ACC_DATE_FORMAT),
+        ];
     }
 }

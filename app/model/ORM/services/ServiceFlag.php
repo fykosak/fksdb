@@ -7,11 +7,11 @@ class ServiceFlag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FLAG;
     protected $modelClassName = 'ModelFlag';
-    
+
     /**
      * Syntactic sugar.
-     * 
-     * @param type $fid
+     *
+     * @param integer $fid
      * @return ModelFlag|null
      */
     public function findByFid($fid) {
