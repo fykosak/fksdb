@@ -1127,6 +1127,7 @@ CREATE TABLE IF NOT EXISTS `event_person_accommodation` (
   `event_person_accommodation_id` INT NOT NULL AUTO_INCREMENT,
   `person_id` INT NOT NULL,
   `event_accommodation_id` INT NOT NULL,
+  `status` VARCHAR(14) NULL,
   PRIMARY KEY (`event_person_accommodation_id`),
   INDEX `fk_event_person_accommodation_1_idx` (`event_accommodation_id` ASC),
   INDEX `fk_event_person_accommodation_2_idx` (`person_id` ASC),
