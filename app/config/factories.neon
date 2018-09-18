@@ -23,7 +23,7 @@ services:
     pipelineFactory:
         class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     flashDumpFactory:
-        class: Logging\FlashDumpFactory(%logToFlash%)
+        class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 
