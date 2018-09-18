@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use Nette\ArrayHash;
 use Nette\Forms\Form;

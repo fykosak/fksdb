@@ -7,9 +7,9 @@ use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
-use FKS\Application\IJavaScriptCollector;
-use FKS\Logging\FlashMessageDump;
-use FKS\Logging\MemoryLogger;
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -18,7 +18,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationsGrid extends Control {
@@ -78,7 +78,7 @@ class ApplicationsGrid extends Control {
 
     function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;

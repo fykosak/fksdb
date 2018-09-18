@@ -39,6 +39,7 @@ class DeduplicatePresenter extends BasePresenter {
 
     public function titlePerson() {
         $this->setTitle(_('Duplicitní osoby'));
+        $this->setIcon('fa fa-exchange');
     }
 
     public function actionPerson() {

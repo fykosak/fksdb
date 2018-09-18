@@ -4,8 +4,8 @@ namespace Events\Model\Holder;
 
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKS\Config\NeonScheme;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Config\NeonScheme;
 use ModelEvent;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
@@ -17,7 +17,7 @@ use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BaseHolder extends FreezableObject {
@@ -86,13 +86,13 @@ class BaseHolder extends FreezableObject {
     private $fields = array();
 
     /**
-     * @var IModel 
+     * @var IModel
      */
     private $model;
 
     /**
      * Relation to the primary holder's event.
-     * 
+     *
      * @var IEventRelation|null
      */
     private $eventRelation;

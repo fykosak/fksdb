@@ -3,8 +3,8 @@
 namespace Events;
 
 use Events\Machine\Transition;
-use FKS\Config\Expressions\Helpers;
-use FKS\Config\NeonScheme;
+use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Config\NeonScheme;
 use Nette\Config\CompilerExtension;
 use Nette\Config\Helpers as ConfigHelpers;
 use Nette\Config\Loader;

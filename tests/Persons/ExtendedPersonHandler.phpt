@@ -5,15 +5,13 @@ namespace Persons;
 $container = require '../bootstrap.php';
 
 use DatabaseTestCase;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use ModelContest;
 use ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\IExtendedPersonPresenter;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -49,7 +47,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $invitationLang = 'cs';
         $this->fixture = $handlerFactory->create($service, $contest, $year, $invitationLang);
 
-        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPersonFactory');
+        $this->referencedPersonFactory = $this->container->getByType('FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory');
     }
 
     protected function tearDown() {
@@ -211,7 +209,7 @@ class PersonPresenter extends Control implements IExtendedPersonPresenter {
 
 }
 
-class TestResolver implements IVisibilityResolver, IModifialibityResolver {
+class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     public function getResolutionMode(ModelPerson $person) {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;

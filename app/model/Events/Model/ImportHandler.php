@@ -4,7 +4,7 @@ namespace Events\Model;
 
 use Events\Model\Grid\SingleEventSource;
 use Events\Model\Holder\BaseHolder;
-use FKS\Utils\CSVParser;
+use FKSDB\Utils\CSVParser;
 use Nette\ArrayHash;
 use Nette\DI\Container;
 use Nette\Object;
@@ -12,7 +12,7 @@ use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ImportHandler extends Object {
@@ -141,5 +141,5 @@ class ImportHandler extends Object {
 }
 
 class ImportHandlerException extends RuntimeException {
-    
+
 }

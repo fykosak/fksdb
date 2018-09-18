@@ -7,27 +7,26 @@ use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\StoredQueryComponent;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FormUtils;
 use IResultsModel;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelContest;
 use ModelException;
 use ModelPerson;
 use ModelPostContact;
 use ModelStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
+use ServiceMStoredQueryTag;
 use ServiceStoredQuery;
 use ServiceStoredQueryParameter;
-use ServiceMStoredQueryTag;
 
 class ExportPresenter extends SeriesPresenter {
 
@@ -58,7 +57,7 @@ class ExportPresenter extends SeriesPresenter {
      * @var ServiceStoredQueryParameter
      */
     private $serviceStoredQueryParameter;
-    
+
     /**
      * @var ServiceMStoredQueryTag
      */
@@ -96,7 +95,7 @@ class ExportPresenter extends SeriesPresenter {
     public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
     }
-    
+
     public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
@@ -178,7 +177,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function authorizedCompose() {
         $this->setAuthorized(
-                ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
+            ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
                 $this->getContestAuthorizator()->isAllowed('export.adhoc', 'execute', $this->getSelectedContest()))
         );
     }
@@ -243,6 +242,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function renderEdit($id) {
@@ -264,12 +264,13 @@ class ExportPresenter extends SeriesPresenter {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
-        
-        $this['editForm']->setDefaults($values);
+
+        $this['editForm']->getForm()->setDefaults($values);
     }
 
     public function titleCompose() {
         $this->setTitle(sprintf(_('Napsat dotaz')));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function renderCompose() {
@@ -277,12 +278,13 @@ class ExportPresenter extends SeriesPresenter {
 
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this['composeForm']->setDefaults($values);
+            $this['composeForm']->getForm()->setDefaults($values);
         }
     }
 
     public function titleList() {
         $this->setTitle(_('Exporty'));
+        $this->setIcon('fa fa-database');
     }
 
     public function titleShow($id) {
@@ -292,6 +294,7 @@ class ExportPresenter extends SeriesPresenter {
         }
 
         $this->setTitle($title);
+        $this->setIcon('fa fa-database');
     }
 
     public function renderShow($id) {
@@ -300,6 +303,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
+    $this->setIcon('fa fa-play-circle-o');
     }
 
     public function renderExecute($id) {
@@ -339,13 +343,13 @@ class ExportPresenter extends SeriesPresenter {
         $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory);
         return $grid;
     }
-    
+
     protected function createComponentTagCloudList($name) {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
         $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
         return $tagCloud;
     }
-    
+
     protected function createComponentTagCloudDetail($name) {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
         $tagCloud->setModelStoredQuery($this->getPatternQuery());
@@ -353,22 +357,22 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     protected function createComponentComposeForm($name) {
-        $form = $this->createDesignForm();
-        $form->addSubmit('save', _('Uložit'))
-                ->onClick[] = array($this, 'handleComposeSuccess');
-        return $form;
+        $control = $this->createDesignForm();
+        $control->getForm()->addSubmit('save', _('Uložit'))
+            ->onClick[] = [$this, 'handleComposeSuccess'];
+        return $control;
     }
 
     protected function createComponentEditForm($name) {
-        $form = $this->createDesignForm();
-        $form->addSubmit('save', _('Uložit'))
-                ->onClick[] = array($this, 'handleEditSuccess');
-        return $form;
+        $control = $this->createDesignForm();
+        $control->getForm()->addSubmit('save', _('Uložit'))
+            ->onClick[] = [$this, 'handleEditSuccess'];
+        return $control;
     }
 
     private function createDesignForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $group = $form->addGroup(_('SQL'));
 
@@ -387,11 +391,11 @@ class ExportPresenter extends SeriesPresenter {
         $form->setCurrentGroup();
 
         $submit = $form->addSubmit('execute', _('Spustit'))
-                ->setValidationScope(false);
+            ->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-success');
         $submit->onClick[] = array($this, 'handleComposeExecute');
 
-        return $form;
+        return $control;
     }
 
     public function handleComposeExecute(SubmitButton $button) {
@@ -458,12 +462,12 @@ class ExportPresenter extends SeriesPresenter {
         $metadata = $values[self::CONT_META];
         $metadata = FormUtils::emptyStrToNull($metadata);
         $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
-        
+
         $sqlData = $values[self::CONT_CONSOLE];
         $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
 
         $this->serviceStoredQuery->save($storedQuery);
-        
+
         $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where(array(
             'query_id' => $storedQuery->query_id,
         ))->delete();
@@ -477,7 +481,7 @@ class ExportPresenter extends SeriesPresenter {
         }
 
         $this->serviceStoredQueryParameter->getTable()
-                ->where(array('query_id' => $storedQuery->query_id))->delete();
+            ->where(array('query_id' => $storedQuery->query_id))->delete();
 
         foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
@@ -494,8 +498,8 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * Very ineffective solution that provides data in
      * specified format.
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
     public function renderOvvp() {
         $modelFactory = $this->getService('resultsModelFactory');
@@ -533,7 +537,7 @@ class ExportPresenter extends SeriesPresenter {
                 $contestant = $serviceContestant->getTable()->getConnection()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
                 $person = ModelPerson::createFromTableRow($contestant->person);
 
-                // jména                
+                // jména
                 $row[] = $person->other_name;
                 $row[] = $person->family_name;
 

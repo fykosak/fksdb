@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use DbNames;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -18,7 +19,6 @@ use ServiceContestant;
 use ServicePerson;
 use ServiceSubmit;
 use ServiceTaskContribution;
-use ServiceTaskStudyYear;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
@@ -54,11 +54,6 @@ class InboxPresenter extends SeriesPresenter {
     private $serviceContestant;
 
     /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
-    /**
      * @var SeriesTable
      */
     private $seriesTable;
@@ -88,10 +83,6 @@ class InboxPresenter extends SeriesPresenter {
         $this->serviceContestant = $serviceContestant;
     }
 
-    public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
-    }
-
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
@@ -117,6 +108,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Příjem řešení'));
+        $this->setIcon('fa fa-envelope-open');
     }
 
     public function renderDefault() {
@@ -125,6 +117,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'));
+        $this->setIcon('fa fa-inbox');
     }
 
     public function actionHandout() {
@@ -154,12 +147,12 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        $this['handoutForm']->setDefaults($values);
+        $this['handoutForm']->getForm()->setDefaults($values);
     }
 
     protected function createComponentInboxForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -168,15 +161,11 @@ class InboxPresenter extends SeriesPresenter {
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
-        $this->serviceTaskStudyYear->preloadCache(array(
-            'task_id' => $tasks,
-        ));
-
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
         foreach ($contestants as $contestant) {
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
             $control->setClassName('inbox');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
@@ -186,7 +175,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'inboxFormSuccess');
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/datePicker.js');
         $this->registerJSFile('js/jquery.ui.swappable.js');
         $this->registerJSFile('js/inbox.js');
@@ -195,7 +184,8 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     protected function createComponentHandoutForm() {
-        $form = new Form();
+        $formControl = new FormControl();
+        $form = $formControl->getForm();
         $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
@@ -207,7 +197,7 @@ class InboxPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = callback($this, 'handoutFormSuccess');
 
-        return $form;
+        return $formControl;
     }
 
     public function inboxFormSuccess(Form $form) {
@@ -282,9 +272,9 @@ class InboxPresenter extends SeriesPresenter {
 
         $uploadSubmits = array();
         $submits = $this->serviceSubmit->getSubmits()->where(array(
-                    DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
-                    DbNames::TAB_TASK . '.series' => $series
-                ))->order(DbNames::TAB_TASK . '.tasknr');
+            DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
+            DbNames::TAB_TASK . '.series' => $series
+        ))->order(DbNames::TAB_TASK . '.tasknr');
         foreach ($submits as $row) {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
@@ -370,7 +360,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $oldSubmit
      * @param ModelSubmit $newSubmit
      * @return void

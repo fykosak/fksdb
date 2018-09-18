@@ -9,6 +9,7 @@ use Nette\Security\IResource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property integer event_year
  * @property integer year
+ * @property string name
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
@@ -34,6 +35,17 @@ class ModelEvent extends AbstractModelSingle implements IResource {
             $this->eventType = ModelEventType::createFromTableRow($this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id'));
         }
         return $this->eventType;
+    }
+
+    /**
+     * @return \ORM\Models\Events\ModelEventAccommodation[]
+     */
+    public function getEventAccommodations() {
+        $data = [];
+        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
+            $data[] = \ORM\Models\Events\ModelEventAccommodation::createFromTableRow($item);
+        }
+        return $data;
     }
 
     /**

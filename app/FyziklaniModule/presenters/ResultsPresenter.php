@@ -2,7 +2,7 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\Fyziklani\Results;
+use FKSDB\Components\React\Fyziklani\Results;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DateTime;
 
@@ -67,6 +67,7 @@ class ResultsPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-trophy');
     }
 
     public function authorizedDefault() {

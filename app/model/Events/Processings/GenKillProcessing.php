@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use Events\SubmitProcessingException;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
@@ -15,10 +15,10 @@ use Nette\Object;
 /**
  * Checks determining fields in sent data and either terminates the application
  * or tries to find unambiguous transition from the initial state.
- * 
+ *
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class GenKillProcessing extends Object implements IProcessing {

@@ -2,20 +2,20 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;
 use FKSDB\Components\Controls\Stalking\EventOrg;
 use FKSDB\Components\Controls\Stalking\EventParticipant;
+use FKSDB\Components\Controls\Stalking\EventTeacher;
+use FKSDB\Components\Controls\Stalking\Flag;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
-use FKSDB\Components\Controls\Stalking\Flag;
-use FKSDB\Components\Controls\Stalking\EventTeacher;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -145,7 +145,6 @@ class StalkingPresenter extends BasePresenter {
     public function createComponentFormSearch() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -175,10 +174,12 @@ class StalkingPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Stalking'));
+        $this->setIcon('fa fa-search');
     }
 
     public function titleView($id) {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+        $this->setIcon('fa fa-eye');
     }
 
     protected function getNavBarVariant() {

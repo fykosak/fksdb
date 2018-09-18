@@ -2,13 +2,13 @@
 
 namespace FKSDB\model\Fyziklani\Rooms;
 
-use FKS\Logging\MemoryLogger;
+use FKSDB\Logging\MemoryLogger;
 use ModelEvent;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use Pipeline\Pipeline;
 
 /**
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
@@ -23,7 +23,7 @@ class PipelineFactory {
     }
 
     /**
-     * 
+     *
      * @return Pipeline
      */
     public function create(ModelEvent $event) {

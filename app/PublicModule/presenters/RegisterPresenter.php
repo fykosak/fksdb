@@ -3,18 +3,17 @@
 namespace PublicModule;
 
 use BasePresenter as CoreBasePresenter;
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
-use FKS\Components\Forms\Controls\CaptchaBox;
-use FKS\Components\Forms\Controls\ReferencedId;
-use FKS\Config\Expressions\Helpers;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use IContestPresenter;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Persons\ExtendedPersonHandler;
@@ -129,7 +128,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedYear() {
-        return $this->year + $this->yearCalculator->getForwardShift($this->getSelectedContest());
+        return $this->year;
     }
 
     public function getSelectedAcademicYear() {
@@ -242,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function renderYear() {
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         $this->template->years = [];
-        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest);
+        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
     }
 
     /**
@@ -265,8 +264,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentEmailForm() {
         $form = new Form();
         $form->setRenderer(new BootstrapRenderer());
-        $form->addText('email', _('email'));
-        $form->addSubmit('submit', _('Search'));
+        $form->addText('email', _('e-mail'));
+        $form->addSubmit('submit', _('Vyhledat'));
         $form->onSuccess[] = [$this, 'emailFormSucceeded'];
         return $form;
     }
@@ -305,7 +304,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function createComponentContestantForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -342,7 +340,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $login = $handler->getPerson()->getLogin();
                     $this->getUser()->login($login);
                 }
-                $this->redirect(':Dashboard:default');
+                $this->redirect('Dashboard:default');
+
             }
         };
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
@@ -383,5 +382,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             return [$contest->getContestSymbol(), 'dark'];
         }
         return null;
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 }

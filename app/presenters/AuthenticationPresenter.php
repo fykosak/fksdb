@@ -6,8 +6,8 @@ use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
-use FKS\Authentication\SSO\IGlobalSession;
-use FKS\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\Authentication\SSO\ServiceSide\Authentication;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\UI\Form;
@@ -334,6 +334,10 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function renderLogin() {
         $this->template->login = $this->login;
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 
 
