@@ -8,7 +8,7 @@ use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
-use FKS\Config\Expressions\Helpers;
+use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;

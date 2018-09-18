@@ -3,7 +3,7 @@
 namespace Persons;
 
 use Authentication\AccountManager;
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use Mail\MailTemplateFactory;
 use ModelContest;
 use Nette\Database\Connection;
@@ -13,7 +13,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandlerFactory extends Object {

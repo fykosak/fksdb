@@ -4,10 +4,10 @@ namespace OrgModule;
 
 use Astrid\Downloader;
 use Astrid\DownloadException;
-use FKS\Application\UploadException;
+use FKSDB\Application\UploadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -32,7 +32,7 @@ class TasksPresenter extends BasePresenter {
 
     const LANG_ALL = '_all';
 
-    private static $languages = array('cs', 'en');
+    private static $languages = ['cs', 'en'];
 
     /**
      * @var SeriesCalculator

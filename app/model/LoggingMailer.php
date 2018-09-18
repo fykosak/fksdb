@@ -1,6 +1,6 @@
 <?php
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
@@ -8,7 +8,7 @@ use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class LoggingMailer extends Object implements IMailer {

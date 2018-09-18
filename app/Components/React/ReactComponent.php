@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\React;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\Templating\FileTemplate;

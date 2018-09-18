@@ -12,7 +12,7 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use FormUtils;
 use ModelEvent;
 use Nette\ArrayHash;
@@ -226,7 +226,7 @@ class ApplicationHandler {
 
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
                 $referencedId->rollback();
             }
         }

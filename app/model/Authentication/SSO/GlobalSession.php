@@ -2,8 +2,8 @@
 
 namespace Authentication\SSO;
 
-use FKS\Authentication\SSO\IGlobalSession;
-use FKS\Authentication\SSO\IGSIDHolder;
+use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\Authentication\SSO\IGSIDHolder;
 use ModelGlobalSession;
 use Nette\DateTime;
 use Nette\InvalidArgumentException;
@@ -13,7 +13,7 @@ use ServiceGlobalSession;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class GlobalSession implements IGlobalSession {
@@ -77,7 +77,7 @@ class GlobalSession implements IGlobalSession {
              */
             // This must pass silently...
             // throw new NotImplementedException();
-            // user_error("Cannot get session ID of session without data. Return null.", E_USER_NOTICE);            
+            // user_error("Cannot get session ID of session without data. Return null.", E_USER_NOTICE);
             return null;
         }
     }

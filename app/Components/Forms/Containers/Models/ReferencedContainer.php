@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\ArrayHash;
 use Nette\Callback;
@@ -64,7 +64,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->monitor('Nette\Forms\Form');
 
         $this->referencedId = $referencedId;

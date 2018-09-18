@@ -2,14 +2,14 @@
 
 namespace Astrid;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use ModelContest;
 use Nette\InvalidStateException;
 use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Downloader {
@@ -108,5 +108,5 @@ class Downloader {
 }
 
 class DownloadException extends RuntimeException {
-    
+
 }

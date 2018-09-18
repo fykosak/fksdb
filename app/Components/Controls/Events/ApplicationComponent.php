@@ -7,7 +7,7 @@ use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKS\Logging\FlashMessageDump;
+use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;

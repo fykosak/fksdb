@@ -2,18 +2,17 @@
 
 namespace Events\Spec\Fol;
 
-use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use ServiceSchool;
 use YearCalculator;
 
 class FlagProcessing extends AbstractProcessing {
-    
+
     /**
      * @var YearCalculator
      */
@@ -23,7 +22,7 @@ class FlagProcessing extends AbstractProcessing {
      * @var ServiceSchool
      */
     private $serviceSchool;
-    
+
     function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
@@ -33,12 +32,12 @@ class FlagProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
-        
+
         $event = $holder->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
-        
+
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
@@ -54,7 +53,7 @@ class FlagProcessing extends AbstractProcessing {
                 'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
                 'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
             );
-            
+
             if (!$formValues['school_id']) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
@@ -78,7 +77,7 @@ class FlagProcessing extends AbstractProcessing {
             }
         }
     }
-    
+
     private function isCzSkSchool($school_id) {
         $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(array('school_id' => $school_id))->fetch();
         if (in_array($country->country_iso, array('CZ', 'SK'))) {
@@ -86,7 +85,7 @@ class FlagProcessing extends AbstractProcessing {
         }
         return false;
     }
-    
+
     private function isStudent($study_year) {
         return ($study_year === null) ? false : true;
     }
