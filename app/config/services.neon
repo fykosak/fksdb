@@ -19,7 +19,7 @@ services:
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
-    - FKSDB\Config\GlobalParameters
+    globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: YearCalculator
     news: News
     seriesCalculator: SeriesCalculator

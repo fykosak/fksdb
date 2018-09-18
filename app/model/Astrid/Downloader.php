@@ -54,7 +54,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \ModelContest $contest
      * @param int $year
      * @param int $series
      * @param string $language
@@ -73,7 +73,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \ModelContest $contest
      * @param int $year
      * @param int $series
      * @return string filename of downloaded XML file
