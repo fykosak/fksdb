@@ -15,7 +15,7 @@ services:
     - Persons\ReferencedPersonHandlerFactory
     - FKSDB\Model\Fyziklani\Rooms\PipelineFactory
     breadcrumbFactory:
-        class: FKS\Components\Controls\Navigation\BreadcrumbsFactory(%navigation.expiration%, ...)
+        class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
         class: Exports\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: ResultsModelFactory
