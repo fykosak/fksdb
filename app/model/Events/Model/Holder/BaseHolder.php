@@ -5,7 +5,7 @@ namespace Events\Model\Holder;
 use Events\Machine\BaseMachine;
 use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKS\Config\NeonScheme;
+use FKSDB\Config\NeonScheme;
 use ModelEvent;
 use Nette\Forms\Container;
 use Nette\FreezableObject;

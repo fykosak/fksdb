@@ -2,8 +2,8 @@
 
 namespace Persons\Deduplication;
 
-use FKS\Logging\DevNullLogger;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\DevNullLogger;
+use FKSDB\Logging\ILogger;
 use Nette\Caching\Cache;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
@@ -11,7 +11,7 @@ use Nette\MemberAccessException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @todo refactor to ConflictResolver, TableMergerFactory
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -79,7 +79,7 @@ class Merger {
 
     /**
      * Form values with proper resoluted values.
-     * 
+     *
      * @param mixed $rawValues
      */
     public function setConflictResolution($rawValues) {
@@ -134,7 +134,7 @@ class Merger {
     }
 
     /**
-     * 
+     *
      * @internal Friend of Merger class.
      * @param string $table
      * @return TableMerger

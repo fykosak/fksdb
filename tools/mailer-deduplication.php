@@ -1,11 +1,11 @@
 <?php
 
-use FKS\Utils\CSVParser;
+use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\Mail\Message;
 
 /**
- * @var Container $container 
+ * @var Container $container
  */
 $container = require './bootstrap.php';
 
@@ -41,9 +41,9 @@ EOD;
     $message->addTo($row['email2'], $row['name2']);
     $message->setSubject('FKSDB identita');
     $message->addReplyTo('webmaster@fykos.cz');
-    
-    $mailer->send($message);    
-    
+
+    $mailer->send($message);
+
     echo "Mail to {$row['email1']} and {$row['email2']} sent.\n";
     sleep(rand(0, 4));
 }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -26,7 +26,7 @@ trait WriteOnlyTrait {
 
     private function writeOnlyAppendMonitors() {
         $this->monitor('Nette\Forms\Form');
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
     }
 
     public function getWriteOnly() {

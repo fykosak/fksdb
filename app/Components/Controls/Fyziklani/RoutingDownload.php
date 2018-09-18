@@ -2,10 +2,9 @@
 
 namespace  FKSDB\Components\Controls\Fyziklani;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

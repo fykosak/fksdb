@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class GraphComponent extends Control {
@@ -21,7 +21,7 @@ class GraphComponent extends Control {
 
     function __construct(BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->baseMachine = $baseMachine;
         $this->expressionPrinter = $expressionPrinter;
     }

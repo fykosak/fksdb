@@ -11,7 +11,7 @@ use Events\Machine\Transition;
 use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;
@@ -24,9 +24,9 @@ use ORM\IModel;
 
 /**
  * A bit bloated class.
- * 
+ *
  * It takes care of data loading/storing and also provides event's metadata.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
@@ -62,7 +62,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     private $connection;
 
     /**
-     * @var Machine 
+     * @var Machine
      */
     private $machine;
 
@@ -194,7 +194,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
 
     /**
      * Apply processings to the values and sets them to the ORM model.
-     * 
+     *
      * @param ArrayHash $values
      * @param \Events\Model\Machine $machine
      * @param Transition[] $transitions

@@ -1,15 +1,15 @@
 <?php
 
-use FKS\Application\IJavaScriptCollector;
-use FKS\Application\IStylesheetCollector;
-use FKS\Components\Controls\JavaScriptLoader;
-use FKS\Components\Controls\Navigation\BreadcrumbsFactory;
-use FKS\Components\Controls\PresenterBuilder;
-use FKS\Components\Controls\StylesheetLoader;
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Application\IStylesheetCollector;
+use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
+use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
+use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
-use FKS\Config\GlobalParameters;
-use FKS\Localization\GettextTranslator;
+use FKSDB\Config\GlobalParameters;
+use FKSDB\Localization\GettextTranslator;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use Nette\Application\BadRequestException;

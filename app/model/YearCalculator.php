@@ -1,6 +1,6 @@
 <?php
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Object;
