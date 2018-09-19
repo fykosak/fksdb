@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use Nette\DateTime;
 use Pipeline\Stage;
 use ServiceTask;
-use Tasks\SeriesData;
+
 
 /**
  * @note Assumes TasksFromXML has been run previously.

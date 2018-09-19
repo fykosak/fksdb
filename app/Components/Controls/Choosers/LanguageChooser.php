@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use Nette\Application\BadRequestException;
+
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
+
 use Nette\Http\Session;
 use Nette\Templating\Template;
-use OrgModule\BasePresenter;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

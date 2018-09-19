@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use ServiceContestant;
+
 use ServiceOrg;
 use SQL\SearchableDataSource;
 

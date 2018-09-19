@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
-use ModelPerson;
+
 use ServiceContestant;
 use SQL\ViewDataSource;
 
