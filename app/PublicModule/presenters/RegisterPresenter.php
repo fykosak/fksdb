@@ -7,10 +7,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Config\Expressions\Helpers;
 use IContestPresenter;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelPerson;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -262,12 +261,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     public function createComponentEmailForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
+        // $form = new Form();
+        // $form->setRenderer(new BootstrapRenderer());
         $form->addText('email', _('e-mail'));
         $form->addSubmit('submit', _('Vyhledat'));
         $form->onSuccess[] = [$this, 'emailFormSucceeded'];
-        return $form;
+        return $control;
     }
 
     /**

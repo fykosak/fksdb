@@ -11,7 +11,6 @@ use Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -63,40 +62,38 @@ class ImportComponent extends Control {
     protected function createComponentFormImport($name) {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         $form->addUpload('file', _('Soubor s přihláškami'))
-                ->addRule(Form::FILLED)
-                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(Form::FILLED)
+            ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Chování při chybě'))
-                ->setItems(array(
-                    ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
-                    ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
-                ))
-                ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
-
+            ->setItems(array(
+                ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
+                ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
+            ))
+            ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
 
         $form->addRadioList('transitions', _('Přechody přihlášek'))
-                ->setItems(array(
-                    ApplicationHandler::STATE_TRANSITION => _('Vykonat přechod, pokud je možný (jinak chyba).'),
-                    ApplicationHandler::STATE_OVERWRITE => _('Pouze nastavit stav.'),
-                ))
-                ->setDefaultValue(ApplicationHandler::STATE_TRANSITION);
+            ->setItems(array(
+                ApplicationHandler::STATE_TRANSITION => _('Vykonat přechod, pokud je možný (jinak chyba).'),
+                ApplicationHandler::STATE_OVERWRITE => _('Pouze nastavit stav.'),
+            ))
+            ->setDefaultValue(ApplicationHandler::STATE_TRANSITION);
 
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
-                ->setItems(array(
-                    ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
-                    ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
-                ))
-                ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
+            ->setItems(array(
+                ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
+                ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
+            ))
+            ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
         $form->addComponent($this->createKeyElement(), 'key');
 
-        $form->addSubmit('import', _('Importovat'))->onClick[] = function(SubmitButton $submit) {
-                    $this->handleFormImport($submit->getForm());
-                };
+        $form->addSubmit('import', _('Importovat'))->onClick[] = function (SubmitButton $submit) {
+            $this->handleFormImport($submit->getForm());
+        };
 
         return $control;
     }

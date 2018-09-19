@@ -3,6 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use ModelStoredQuery;
@@ -11,9 +14,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use ServiceStoredQueryTagType;
-use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -114,12 +114,14 @@ class StoredQueryFactory {
     }
 
     public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
-        $container = new Container();
+        $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
         foreach ($queryPattern->getParameters() as $parameter) {
             $name = $parameter->name;
-            $subcontainer = $container->addContainer($name);
+            $subcontainer = new ModelContainer();
+            $container->addComponent($subcontainer,$name);
+            // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
