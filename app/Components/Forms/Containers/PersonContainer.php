@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKS\Components\Forms\Controls\PersonId;
-use FKS\Utils\Promise;
+use FKSDB\Components\Forms\Controls\PersonId;
+use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use Nette\Forms\Container;

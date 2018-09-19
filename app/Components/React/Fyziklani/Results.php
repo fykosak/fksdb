@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\React\Fyziklani;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 
 class Results extends FyziklaniModule {
     /**

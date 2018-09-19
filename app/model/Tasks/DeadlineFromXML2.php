@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\DateTime;
 use Pipeline\Stage;
 use ServiceTask;
@@ -10,7 +10,7 @@ use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML2 extends Stage {

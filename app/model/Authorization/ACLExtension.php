@@ -2,12 +2,12 @@
 
 namespace Authorization;
 
-use FKS\Config\Expressions\Helpers;
+use FKSDB\Config\Expressions\Helpers;
 use Nette\Config\CompilerExtension;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ACLExtension extends CompilerExtension {

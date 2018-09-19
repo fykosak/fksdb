@@ -6,7 +6,7 @@ $container = require '../../bootstrap.php';
 
 use Events\EventTestCase;
 use Events\Model\Holder\Holder;
-use FKS\Logging\DevNullLogger;
+use FKSDB\Logging\DevNullLogger;
 use MockEnvironment\MockApplicationTrait;
 use Nette\ArrayHash;
 use Nette\DI\Container;

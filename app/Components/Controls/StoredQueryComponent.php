@@ -6,9 +6,9 @@ use Authorization\ContestAuthorizator;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory as StoredQueryFactorySQL;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -18,7 +18,7 @@ use PDOException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryComponent extends Control {
@@ -64,6 +64,7 @@ class StoredQueryComponent extends Control {
     private $showParametrize = true;
 
     function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+        parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
@@ -95,23 +96,22 @@ class StoredQueryComponent extends Control {
     }
 
     protected function createComponentParametrizeForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $queryPattern = $this->storedQuery->getQueryPattern();
         $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
         $form->addComponent($parameters, self::CONT_PARAMS);
 
         $form->addSubmit('execute', _('Parametrizovat'));
-        $form->onSuccess[] = function(Form $form) {
-                    $this->parameters = array();
-                    $values = $form->getValues();
-                    foreach ($values[self::CONT_PARAMS] as $key => $values) {
-                        $this->parameters[$key] = $values['value'];
-                    }
-                };
-
-        return $form;
+        $form->onSuccess[] = function (Form $form) {
+            $this->parameters = [];
+            $values = $form->getValues();
+            foreach ($values[self::CONT_PARAMS] as $key => $values) {
+                $this->parameters[$key] = $values['value'];
+            }
+        };
+        return $control;
     }
 
     public function getSqlError() {
@@ -134,7 +134,7 @@ class StoredQueryComponent extends Control {
                 $defaults[$key] = array('value' => $value);
             }
             $defaults = array(self::CONT_PARAMS => $defaults);
-            $this['parametrizeForm']->setDefaults($defaults);
+            $this['parametrizeForm']->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
             $this->template->error = _('Nedostatečné oprávnění.');

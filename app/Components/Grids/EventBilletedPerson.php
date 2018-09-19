@@ -67,6 +67,20 @@ class EventBilletedPerson extends BaseGrid {
                 return $row->status == \ModelEventPersonAccommodation::STATUS_PAID;
             });
 
+        /*/
+                $this->addButton('confirmPaymentAll', _('Confirm all payment'))
+                    ->setClass('btn btn-sm btn-success')
+                    ->setText(_('Confirm all payment'))
+                    ->setLink(function ($row) {
+                        return $this->link('confirmPaymentAll!', $row->person_id);
+                    });
+
+                        $this->addButton('deletePaymentAll', _('Delete all payment'))->setText(_('Delete all payment'))
+                            ->setClass('btn btn-sm btn-warning')
+                            ->setLink(function ($row) {
+                                return $this->link('deletePaymentAll!', $row->person_id);
+                            });
+        */
         $this->addGlobalButton('list')
             ->setLabel(_('Zoznam ubytovaní'))
             ->setLink($this->getPresenter()->link('list'));
@@ -96,4 +110,24 @@ class EventBilletedPerson extends BaseGrid {
         $this->serviceEventPersonAccommodation->save($model);
         $this->redirect('this');
     }
+    /*
+        public function handleConfirmPaymentAll($personId) {
+            $rows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $personId);
+            foreach ($rows as $row) {
+                $model = \ModelEventPersonAccommodation::createFromTableRow($row);
+                $model->update(['status' => \ModelEventPersonAccommodation::STATUS_PAID]);
+                $this->serviceEventPersonAccommodation->save($model);
+            }
+            $this->redirect('this');
+        }
+
+        public function handleDeletePaymentAll($personId) {
+            $rows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $personId);
+            foreach ($rows as $row) {
+                $model = \ModelEventPersonAccommodation::createFromTableRow($row);
+                $model->update(['status' => \ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
+                $this->serviceEventPersonAccommodation->save($model);
+            }
+            $this->redirect('this');
+        }*/
 }
