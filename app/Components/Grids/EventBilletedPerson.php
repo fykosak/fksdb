@@ -27,8 +27,6 @@ class EventBilletedPerson extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
 
         $accommodations = $this->serviceEventPersonAccommodation->getTable()->where('event_accommodation_id', $this->eventAccommodationId);
 

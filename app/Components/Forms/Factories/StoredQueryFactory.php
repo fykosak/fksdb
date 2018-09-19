@@ -79,8 +79,7 @@ class StoredQueryFactory {
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
-        //$submit->getControlPrototype()->addClass('btn-default'); //TODO doesn't work
-        $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+        $submit->getControlPrototype()->addClass('btn-sm btn-success');
 
         $submit->setValidationScope(false)
                 ->addCreateOnClick();
