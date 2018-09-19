@@ -15,7 +15,7 @@ use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SubmitButton;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

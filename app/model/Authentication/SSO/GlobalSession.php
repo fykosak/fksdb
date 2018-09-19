@@ -8,7 +8,7 @@ use ModelGlobalSession;
 use Nette\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
+
 use ServiceGlobalSession;
 
 /**

@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
-use Nette\Database\Table\Selection;
+use /** @noinspection PhpUnusedAliasInspection */
+    Nette\Database\Table\Selection;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
 

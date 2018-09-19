@@ -3,7 +3,7 @@
 namespace Authentication;
 
 use AuthenticatedPresenter;
-use Authentication\LoginUserStorage;
+
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use ModelLogin;
@@ -79,7 +79,7 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @internal Used internally or for testing purposes only.
-     * 
+     *
      * @param IPresenter $presenter
      */
     public function setPresenter(IPresenter $presenter) {

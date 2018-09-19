@@ -3,7 +3,7 @@
 namespace ORM\ModelsMulti\Events;
 
 use AbstractModelMulti;
-use Nette\InvalidStateException;
+
 
 /**
  *

@@ -21,7 +21,7 @@ class AutocompleteSelectBox extends TextBase {
     const SELECTOR_CLASS = 'autocompleteSelect';
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
-    const INTERNAL_DELIMITER  = ',';
+    const INTERNAL_DELIMITER = ',';
     const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
     /**
@@ -195,7 +195,7 @@ class AutocompleteSelectBox extends TextBase {
         $this->multiselect = $multiselect;
     }
 
-    public function setItems(array $items, $useKeys = TRUE) {
+    public function setItems() {
         throw new NotImplementedException('Use setDataProvider instead.');
     }
 

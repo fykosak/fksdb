@@ -2,8 +2,7 @@
 
 namespace FKSDB\Logging;
 
-use FKSDB\Logging\FlashMessageDump;
-use Nette\InvalidArgumentException;
+
 use Nette\MemberAccessException;
 use Nette\Utils\Strings;
 
