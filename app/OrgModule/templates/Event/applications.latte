@@ -1,9 +1,9 @@
 {layout '../@layout.v4.latte'}
 {block content}
-    <div class="btn-toolbar">
+    <div class="btn-group">
         <a n:href=":Public:Application:default eventId => $event->getPrimary()"
                 class="btn btn-sm btn-primary">{_'Nová přihláška'}</a>
-        <a href="#import" class="btn btn-sm btn-default">{_'Import přihlášek'}</a>
+        <a href="#import" class="btn btn-sm btn-secondary">{_'Import přihlášek'}</a>
     </div>
     {control applicationsGrid}
 

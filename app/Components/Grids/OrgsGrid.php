@@ -33,8 +33,6 @@ class OrgsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
