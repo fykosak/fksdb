@@ -6,7 +6,6 @@ use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKSDB\Application\UploadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use FKSDB\Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\UI\Form;
@@ -82,7 +81,6 @@ class TasksPresenter extends BasePresenter {
     protected function createComponentSeriesForm() {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         $source = $form->addRadioList('source', _('Zdroj úloh'), array(
             self::SOURCE_ASTRID => _('Astrid'),
