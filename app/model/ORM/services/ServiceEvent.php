@@ -10,13 +10,13 @@ class ServiceEvent extends AbstractServiceSingle {
 
     public function getEvents(ModelContest $contest, $year) {
         $result = $this->getTable()
-                ->select(DbNames::TAB_EVENT . '.*')
-                ->select(DbNames::TAB_EVENT_TYPE . '.name AS `type_name`');
+            ->select(DbNames::TAB_EVENT . '.*')
+            ->select(DbNames::TAB_EVENT_TYPE . '.name AS `type_name`');
         $result->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contest->contest_id)
-                ->where(DbNames::TAB_EVENT . '.year', $year);
+            ->where(DbNames::TAB_EVENT . '.year', $year);
         return $result;
     }
-    
+
     public function getByEventTypeId(ModelContest $contest, $year, $eventTypeId) {
         return $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
     }

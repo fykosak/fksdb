@@ -10,8 +10,8 @@ class ServiceSchool extends AbstractServiceSingle {
 
     public function getSchools() {
         $schools = $this->getTable()
-                ->select(DbNames::TAB_SCHOOL . '.*')
-                ->select(DbNames::TAB_ADDRESS . '.*');
+            ->select(DbNames::TAB_SCHOOL . '.*')
+            ->select(DbNames::TAB_ADDRESS . '.*');
         return $schools;
     }
 

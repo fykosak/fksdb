@@ -109,6 +109,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     public function getSubtitle() {
         return sprintf(_('%d. ročník'), $this->year);
     }
+
     public function getNavRoot() {
         return 'org.dashboard.default';
     }

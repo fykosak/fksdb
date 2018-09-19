@@ -21,7 +21,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
-	const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
     /**
      * @var GlobalParameters

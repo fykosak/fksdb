@@ -10,12 +10,12 @@ use ORM\IModel;
 abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
-     * @var AbstractModelSingle 
+     * @var AbstractModelSingle
      */
     protected $mainModel;
 
     /**
-     * @var AbstractModelSingle 
+     * @var AbstractModelSingle
      */
     protected $joinedModel;
 
@@ -26,7 +26,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
      * @note DO NOT use directly, use AbstracServiceMulti::composeModel or AbstractModelMulti::createFromExistingModels.
-     * 
+     *
      * @param AbstractServiceMulti $service
      * @param IModel $mainModel
      * @param IModel $joinedModel
@@ -110,7 +110,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
     public function getSignature($need = TRUE) {
-        return implode('|', (array) $this->getPrimary($need));
+        return implode('|', (array)$this->getPrimary($need));
     }
 
     public function isNew() {

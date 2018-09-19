@@ -3,12 +3,11 @@
 namespace Submits;
 
 use ModelSubmit;
-use Nette\Http\FileUpload;
 
 /**
  * Storage for signle file for each submit. Storage must keep original file
  * which can be modified by processings for later use.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface ISubmitStorage {
@@ -40,7 +39,7 @@ interface ISubmitStorage {
 
     /**
      * File is renamed/moved to own purposes.
-     * 
+     *
      * @param string $filename
      * @param ModelSubmit $submit
      * @return void
@@ -48,7 +47,7 @@ interface ISubmitStorage {
     public function storeFile($filename, ModelSubmit $submit);
 
     /**
-     * 
+     *
      * @param ModelSubmit $submit
      * @param enum $type
      * @return string filename with absolute path

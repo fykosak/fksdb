@@ -56,7 +56,7 @@ class PersonProvider implements IFilteredDataProvider {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-                ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
+            ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
         return $this->getItems();
     }
 
@@ -67,7 +67,7 @@ class PersonProvider implements IFilteredDataProvider {
 
     public function getItems() {
         $persons = $this->searchTable
-                ->order('family_name, other_name');
+            ->order('family_name, other_name');
 
 
         $result = array();

@@ -36,12 +36,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
         if ($refresh) {
             $token = $this->getTable()
-                    ->where('login_id', $login->login_id)
-                    ->where('type', $type)
-                    ->where('data', $data)
-                    ->where('since <= NOW()')
-                    ->where('until IS NULL OR until >= NOW()')
-                    ->fetch();
+                ->where('login_id', $login->login_id)
+                ->where('type', $type)
+                ->where('data', $data)
+                ->where('since <= NOW()')
+                ->where('until IS NULL OR until >= NOW()')
+                ->fetch();
         } else {
             $token = null;
         }
@@ -76,10 +76,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
      */
     public function verifyToken($tokenData, $strict = true) {
         $tokens = $this->getTable()
-                ->where('token', $tokenData);
+            ->where('token', $tokenData);
         if ($strict) {
             $tokens->where('since <= NOW()')
-                    ->where('until IS NULL OR until >= NOW()');
+                ->where('until IS NULL OR until >= NOW()');
         }
 
 
@@ -103,15 +103,15 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->dispose($token);
         }
     }
-    
+
     public function findTokensByEventId($eventId) {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $eventId.':%');
+            ->where('data LIKE ?', $eventId . ':%');
         $tokens = [];
-        foreach($res as $token) {
+        foreach ($res as $token) {
             $tokens[] = ModelAuthToken::createFromTableRow($token);
         }
         return $tokens;

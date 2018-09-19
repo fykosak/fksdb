@@ -41,7 +41,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function renderDefault() {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getSelectedLanguage())
-	  as $new) {
+                 as $new) {
             $this->flashMessage($new);
         }
     }

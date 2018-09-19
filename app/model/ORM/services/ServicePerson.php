@@ -12,7 +12,7 @@ class ServicePerson extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @deprecated
      * @see ServiceOrg::findByTeXSignature($signature, $contest_id)
      * @param type $signature
@@ -23,12 +23,12 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('person_info:tex_signature', $signature)->fetch();
-        return $result ? : null;
+        return $result ?: null;
     }
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param type $email
      * @return ModelPerson|null
      */
@@ -37,7 +37,7 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('person_info:email', $email)->fetch();
-        return $result ? : null;
+        return $result ?: null;
     }
 
     public function save(IModel &$model) {

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Components\Grids\BaseGrid;
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
-use \FKSDB\Components\Grids\BaseGrid;
 use SQL\SearchableDataSource;
 
 /**

@@ -4,7 +4,7 @@
  * trait content contest, year, series and lang chooser
  */
 
-use \FKSDB\Components\Controls;
+use FKSDB\Components\Controls;
 
 /**
  * Trait ContestNav
@@ -34,7 +34,7 @@ trait LanguageNav {
         return $control;
     }
 
-      public function getSelectedLanguage() {
+    public function getSelectedLanguage() {
         $this->init();
         return $this->lang;
     }
@@ -65,11 +65,11 @@ trait LanguageNav {
      */
     protected function startupRedirects() {
         $this->init();
-         if (is_null($this->newParams)) {
+        if (is_null($this->newParams)) {
             return;
         }
         $this->redirect('this', [
-             'lang' => $this->newParams->lang ?: $this->lang,
+            'lang' => $this->newParams->lang ?: $this->lang,
         ]);
     }
 }

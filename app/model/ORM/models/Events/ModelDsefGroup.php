@@ -9,5 +9,5 @@ use AbstractModelSingle;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelDsefGroup extends AbstractModelSingle {
-    
+
 }

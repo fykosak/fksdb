@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\BaseGrid;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use ServiceSchool;

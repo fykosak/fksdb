@@ -66,20 +66,20 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('Škola nemůže mít v soutěži více týmů než %d.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($first, $schoolControls, $personControls, $holder) {
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        return $this->checkMulti($first, $control, $schools, $holder);
-                    }, $msgMulti);
+            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls, $holder) {
+                $schools = $this->getSchools($schoolControls, $personControls);
+                return $this->checkMulti($first, $control, $schools, $holder);
+            }, $msgMulti);
             $first = false;
         }
-        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMulti) {
-                    if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMulti(true, NULL, $schools)) {
-                            $form->addError($msgMulti);
-                        }
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) {
+            if ($form->isValid()) { // it means that all schools may have been disabled
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMulti(true, NULL, $schools)) {
+                    $form->addError($msgMulti);
+                }
+            }
+        };
     }
 
     private $cache;
@@ -99,11 +99,11 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
              */
             $acYear = $event->event_type->contest->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
             $result = $this->connection->table(DbNames::TAB_EVENT_PARTICIPANT)
-                    ->select('person.person_history:school_id')
-                    ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
-                    ->where($baseHolder->getEventId(), $event->getPrimary())
-                    ->where('person.person_history:ac_year', $acYear)
-                    ->where('person.person_history:school_id', $schools);
+                ->select('person.person_history:school_id')
+                ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
+                ->where($baseHolder->getEventId(), $event->getPrimary())
+                ->where('person.person_history:ac_year', $acYear)
+                ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?
             if ($team && !$team->isNew()) {

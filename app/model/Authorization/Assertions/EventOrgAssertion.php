@@ -5,14 +5,13 @@ namespace Authorization\Assertions;
 use DbNames;
 use Exports\StoredQuery;
 use Nette\Database\Connection;
-use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractEventOrgAssertion extends Object {
@@ -40,11 +39,11 @@ abstract class AbstractEventOrgAssertion extends Object {
         $this->connection = $connection;
     }
 
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege,$parameterValue=null) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null) {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {
-          //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+            //  throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
 
         $identity = $this->user->getIdentity();
@@ -53,12 +52,13 @@ abstract class AbstractEventOrgAssertion extends Object {
             return false;
         }
         $rows = $this->connection->table(DbNames::TAB_EVENT_ORG)
-                ->where('person_id', $person->person_id)
-                ->where('event.event_type_id', $this->eventTypeId);
+            ->where('person_id', $person->person_id)
+            ->where('event.event_type_id', $this->eventTypeId);
 
-       // $queryParameters = $storedQuery->getParameters(true);
+        // $queryParameters = $storedQuery->getParameters(true);
         if ($this->parameterName) {
-            $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/ $parameterValue);
+            $rows->where('event.' . $this->parameterName, /*$queryParameters[$this->parameterName]*/
+                $parameterValue);
         }
         return count($rows) > 0;
     }

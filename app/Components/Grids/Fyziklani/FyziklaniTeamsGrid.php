@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 
+use FKSDB\Components\Grids\BaseGrid;
 use FyziklaniModule\BasePresenter;
-use \NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DataSource\NDataSource;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-use \FKSDB\Components\Grids\BaseGrid;
 
 /**
  *

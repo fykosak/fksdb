@@ -26,7 +26,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param string $type
      * @param DateTime $until
      * @param DateTime $since

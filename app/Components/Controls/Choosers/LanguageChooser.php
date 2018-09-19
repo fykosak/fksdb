@@ -2,12 +2,9 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Http\Session;
 use Nette\Templating\Template;
-use OrgModule\BasePresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -149,7 +146,7 @@ class LanguageChooser extends Control {
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 

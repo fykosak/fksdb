@@ -21,9 +21,9 @@ class CaptchaBox extends SelectBox {
             self::VALUE_YES => _('ano'),
         ));
 
-        $this->addRule(function(BaseControl $control) {
-                    return $control->getValue() == self::VALUE_NO;
-                }, _('Tento formulář je jenom pro lidi.'));
+        $this->addRule(function (BaseControl $control) {
+            return $control->getValue() == self::VALUE_NO;
+        }, _('Tento formulář je jenom pro lidi.'));
 
         $this->setDefaultValue(self::VALUE_YES);
     }

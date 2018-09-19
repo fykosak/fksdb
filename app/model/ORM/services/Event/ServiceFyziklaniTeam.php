@@ -35,6 +35,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $team = $this->findByPrimary($teamId);
         return $team && $team->event_id == $eventId;
     }
+
     /**
      * Syntactic sugar.
      * @param int $eventId
@@ -63,7 +64,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
                 'category' => $row->category,
                 'roomId' => $position ? $position->getRoom()->room_id : '',
                 'name' => $row->name,
-                'status'=>$row->status,
+                'status' => $row->status,
                 'teamId' => $row->e_fyziklani_team_id,
                 'x' => $position ? $position->col : null,
                 'y' => $position ? $position->row : null,

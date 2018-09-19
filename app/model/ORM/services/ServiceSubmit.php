@@ -13,7 +13,7 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param int $ctId
      * @param int $taskId
      * @return ModelSubmit|null
@@ -23,9 +23,9 @@ class ServiceSubmit extends AbstractServiceSingle {
 
         if (!array_key_exists($key, $this->submit_cache)) {
             $result = $this->getTable()->where(array(
-                        'ct_id' => $ctId,
-                        'task_id' => $taskId,
-                    ))->fetch();
+                'ct_id' => $ctId,
+                'task_id' => $taskId,
+            ))->fetch();
 
             if ($result !== false) {
                 $this->submit_cache[$key] = $result;
@@ -37,13 +37,13 @@ class ServiceSubmit extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @return Selection
      */
     public function getSubmits() {
         $submits = $this->getTable()
-                ->select(DbNames::TAB_SUBMIT . '.*')
-                ->select(DbNames::TAB_TASK . '.*');
+            ->select(DbNames::TAB_SUBMIT . '.*')
+            ->select(DbNames::TAB_TASK . '.*');
         return $submits;
     }
 

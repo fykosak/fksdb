@@ -29,7 +29,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -43,7 +43,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -57,7 +57,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -69,9 +69,9 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         }
         return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
     }
-    
+
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return IResultsModel
@@ -82,7 +82,7 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return \IEvaluationStrategy|null

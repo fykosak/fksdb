@@ -11,7 +11,7 @@ use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailTemplateFactory {
@@ -56,7 +56,7 @@ class MailTemplateFactory {
     public final function createFromFile($filename, $lang = null, Control $control = null) {
         $presenter = $this->application->getPresenter();
         if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {
-            throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string) $presenter));
+            throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
         }
         if ($lang === null) {
             $lang = $presenter->getLang();

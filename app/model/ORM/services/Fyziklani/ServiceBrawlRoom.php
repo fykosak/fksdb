@@ -8,7 +8,8 @@ class ServiceBrawlRoom extends \AbstractServiceSingle {
     public function findByName($name) {
         return $this->getTable()->where('name', $name)->fetch();
     }
-    public function getRoomsByIds(array $ids){
+
+    public function getRoomsByIds(array $ids) {
         $rooms = [];
         foreach ($ids as $roomId) {
             /**

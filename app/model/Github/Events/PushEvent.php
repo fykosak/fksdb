@@ -2,8 +2,6 @@
 
 namespace Github\Events;
 
-use Github\Events\Event;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,15 +10,15 @@ use Github\Events\Event;
  */
 class PushEvent extends Event {
 
-	const REFS_HEADS = 'refs/heads/';
+    const REFS_HEADS = 'refs/heads/';
 
-	/** @var string */
-	public $ref;
+    /** @var string */
+    public $ref;
 
-	/** @var string */
-	public $after;
+    /** @var string */
+    public $after;
 
-	/** @var string */
-	public $before;
+    /** @var string */
+    public $before;
 
 }

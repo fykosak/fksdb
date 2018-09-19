@@ -105,15 +105,15 @@ class AutocompleteSelectBox extends TextBase {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
         $this->dataProvider = $dataProvider;
-	$this->dataProvider->setDefaultValue($this->getValue());
+        $this->dataProvider->setDefaultValue($this->getValue());
     }
 
     public function getControl() {
         $control = parent::getControl();
 
-        $control->data['ac'] = (int) true;
-        $control->data['ac-ajax'] = (int) $this->isAjax();
-        $control->data['ac-multiselect'] = (int) $this->isMultiselect();
+        $control->data['ac'] = (int)true;
+        $control->data['ac-ajax'] = (int)$this->isAjax();
+        $control->data['ac-multiselect'] = (int)$this->isMultiselect();
         $control->data['ac-ajax-url'] = $this->ajaxUrl;
         $control->data['ac-render-method'] = $this->renderMethod;
 
@@ -175,16 +175,16 @@ class AutocompleteSelectBox extends TextBase {
                 $this->value = $value;
             }
         }
-	if ($this->dataProvider) {
+        if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
-	}
+        }
     }
 
     public function setDefaultValue($value) {
-    	if ($this->dataProvider) {
+        if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($value);
-	}
-	return parent::setDefaultValue($value);
+        }
+        return parent::setDefaultValue($value);
     }
 
     public function getValue() {

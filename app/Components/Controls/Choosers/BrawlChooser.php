@@ -34,6 +34,7 @@ class BrawlChooser extends Control {
     public function setEvent(\ModelEvent $event) {
         $this->event = $event;
     }
+
     /**
      * @return \ModelEvent
      */

@@ -34,7 +34,7 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
             case ModelCategory::CAT_ES_9:
                 return array(null, 9);
             default:
-                throw new InvalidArgumentException('Invalid category '.$category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->id);
                 break;
         }
     }
@@ -54,9 +54,9 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
     public function getTaskPoints($task, \ModelCategory $category) {
         if ($task->label == '1' && $task->series < 7) {
             if (in_array($category->id, array(
-                        ModelCategory::CAT_ES_6,
-                        ModelCategory::CAT_ES_7,
-                    ))) {
+                ModelCategory::CAT_ES_6,
+                ModelCategory::CAT_ES_7,
+            ))) {
                 return $task->points;
             } else {
                 return null;

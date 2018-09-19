@@ -3,7 +3,6 @@
 namespace Authentication;
 
 use AuthenticatedPresenter;
-use Authentication\LoginUserStorage;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use ModelLogin;
@@ -45,7 +44,6 @@ class LoginUserStorage extends UserStorage {
     private $globalSession;
 
     /**
-
      * @var Application
      */
     private $application;
@@ -79,7 +77,7 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @internal Used internally or for testing purposes only.
-     * 
+     *
      * @param IPresenter $presenter
      */
     public function setPresenter(IPresenter $presenter) {
@@ -125,10 +123,10 @@ class LoginUserStorage extends UserStorage {
              */
             if (!$ssoData && $presenter instanceof AuthenticatedPresenter) {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
-                        (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
+                    (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
                     $params = array(
-                        'backlink' => (string) $this->request->getUrl(),
+                        'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                     );

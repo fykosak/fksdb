@@ -2,8 +2,8 @@
 
 namespace ORM\Tables;
 
-use Nette\Database\Table\Selection as TableSelection;
 use Nette\Database\Connection;
+use Nette\Database\Table\Selection as TableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -22,7 +22,7 @@ class TypedTableSelection extends TableSelection {
 
     /**
      * This override ensures returned objects are of correct class.
-     * 
+     *
      * @param array $row
      * @return AbstractModelSingle
      */

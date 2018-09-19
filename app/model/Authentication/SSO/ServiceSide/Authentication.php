@@ -46,7 +46,7 @@ class Authentication {
     }
 
     public function login($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = array(
             self::PARAM_BACKLINK => $backlink,
@@ -61,7 +61,7 @@ class Authentication {
     }
 
     public function logout($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = array(
             self::PARAM_BACKLINK => $backlink,

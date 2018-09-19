@@ -26,9 +26,9 @@ interface IExtendedPersonPresenter {
     public function messageEdit();
 
     public function messageError();
-    
+
     public function messageExists();
-    
+
     public function flashMessage($message, $type = 'info');
 }
 

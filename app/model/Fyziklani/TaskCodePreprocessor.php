@@ -19,11 +19,11 @@ class TaskCodePreprocessor {
     }
 
     public static function extractTeamId($numLabel) {
-        return (int) substr($numLabel, 0, 6);
+        return (int)substr($numLabel, 0, 6);
     }
 
     public static function extractTaskLabel($teamTaskLabel) {
-        return (string) substr($teamTaskLabel, 6, 2);
+        return (string)substr($teamTaskLabel, 6, 2);
     }
 
     public static function getNumLabel($teamTaskLabel) {

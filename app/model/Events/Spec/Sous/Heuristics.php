@@ -2,12 +2,12 @@
 
 namespace Events\Spec\Sous;
 
-use ORM\ModelsMulti\Events\ModelMSousParticipant;
 use Exports\StoredQueryPostProcessing;
+use ORM\ModelsMulti\Events\ModelMSousParticipant;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Heuristics extends StoredQueryPostProcessing {
@@ -119,7 +119,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 continue;
             }
             if ($row['gender'] == 'F') {
-                $W+=1;
+                $W += 1;
             }
         }
         if ($W < ceil($N / 2)) { // not enough girls (the code assumes reverse is never true)
@@ -133,7 +133,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'F') {
                     $row['spare'] = self::RULE4FW;
-                    $spareGirls+=1;
+                    $spareGirls += 1;
                 }
                 if ($spareGirls >= $W) {
                     break;
@@ -150,7 +150,7 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'M') {
                     $row['spare'] = self::RULE4MW;
-                    $spareAll+=1;
+                    $spareAll += 1;
                 }
                 if ($spareAll >= $N) {
                     break;
@@ -169,10 +169,10 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'M' && $spareK < $NK) {
                     $row['spare'] = self::RULE4M2;
-                    $spareK+=1;
+                    $spareK += 1;
                 } else if ($row['gender'] == 'F' && $spareH < $NH) {
                     $row['spare'] = self::RULE4F2;
-                    $spareH+=1;
+                    $spareH += 1;
                 }
                 if ($spareH + $spareK >= $N) {
                     break;

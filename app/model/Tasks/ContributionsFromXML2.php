@@ -6,11 +6,10 @@ use Pipeline\Stage;
 use ServiceOrg;
 use ServiceTaskContribution;
 use SimpleXMLElement;
-use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML2 extends Stage {
@@ -21,7 +20,7 @@ class ContributionsFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private static $contributionFromXML = [
         'author' => 'authors/author',
@@ -60,7 +59,7 @@ class ContributionsFromXML2 extends Stage {
 
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->taskContributionService->getConnection()->beginTransaction();
@@ -74,13 +73,13 @@ class ContributionsFromXML2 extends Stage {
                 continue;
             }
             foreach ($parentEl->{$child} as $element) {
-                $signature = (string) $element;
+                $signature = (string)$element;
                 $signature = trim($signature);
                 if (!$signature) {
                     continue;
                 }
-                
-                
+
+
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {

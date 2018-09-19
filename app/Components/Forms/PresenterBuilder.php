@@ -22,7 +22,7 @@ class PresenterBuilder {
         $this->presenterFactory = $presenterFactory;
     }
 
-        /**
+    /**
      * Provides an instance of a presenter prepared for calling action*, render*, etc. methods.
      *
      * @param string $presenterName
@@ -39,7 +39,7 @@ class PresenterBuilder {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : array();
+        $params = $params ?: array();
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {
@@ -50,6 +50,7 @@ class PresenterBuilder {
 
         return $presenter;
     }
+
     /**
      * @param string $presenterName
      * @return Presenter

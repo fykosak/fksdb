@@ -12,7 +12,6 @@ use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
-use ServiceTaskStudyYear;
 use Traversable;
 
 /**
@@ -159,7 +158,7 @@ class ContestantSubmits extends BaseControl {
             if (isset($result[$tasknr])) {
                 throw new InvalidArgumentException("Task with no. $tasknr is present multiple times in passed value.");
             }
-            $result[(int) $tasknr] = $this->serializeSubmit($submit);
+            $result[(int)$tasknr] = $this->serializeSubmit($submit);
         }
 
         $dummySubmit = $this->submitService->createNew();

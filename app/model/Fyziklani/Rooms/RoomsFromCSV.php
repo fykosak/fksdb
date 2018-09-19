@@ -46,9 +46,9 @@ class RoomsFromCSV extends Stage {
         }
 
         $teams = $this->serviceTeam->getTable()
-                ->where('event_id', $this->event->event_id)
-                ->where('status!=?', 'cancelled')
-                ->fetchPairs('e_fyziklani_team_id');
+            ->where('event_id', $this->event->event_id)
+            ->where('status!=?', 'cancelled')
+            ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = array();
 
         $this->serviceTeam->getConnection()->beginTransaction();

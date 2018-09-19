@@ -7,7 +7,7 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Count extends Object {
@@ -27,7 +27,7 @@ class Count extends Object {
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }
-    
+
     public function __toString() {
         return "count({$this->state})";
     }

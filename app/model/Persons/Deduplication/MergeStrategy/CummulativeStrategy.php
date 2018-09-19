@@ -2,11 +2,9 @@
 
 namespace Persons\Deduplication\MergeStrategy;
 
-use Nette\Diagnostics\Debugger;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CummulativeStrategy implements IMergeStrategy {
@@ -14,7 +12,7 @@ class CummulativeStrategy implements IMergeStrategy {
     private $precedence;
 
     /**
-     * 
+     *
      * @param null|enum $precedence trunk|merged
      */
     function __construct($precedence = null) {

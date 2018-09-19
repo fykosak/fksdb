@@ -20,7 +20,7 @@ class DetailResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     * 
+     *
      * @param ModelCategory $category
      * @return array
      */

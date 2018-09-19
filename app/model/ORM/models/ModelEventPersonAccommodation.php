@@ -1,6 +1,7 @@
 <?php
 
-use \Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\ActiveRow;
+
 /**
  * Class ModelEventPersonAccommodation
  * @property integer person_id

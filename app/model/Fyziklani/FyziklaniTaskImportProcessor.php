@@ -4,8 +4,8 @@ namespace FKSDB\model\Fyziklani;
 
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
+use Nette\Diagnostics\Debugger;
 use ServiceFyziklaniTask;
-use \Nette\Diagnostics\Debugger;
 
 /**
  *
@@ -48,16 +48,16 @@ class FyziklaniTaskImportProcessor {
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $this->serviceFyziklaniTask->updateModel($task, [
-                            'label' => $row['label'],
-                            'name' => $row['name']
-                        ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
+                    $this->serviceFyziklaniTask->updateModel($task, [
+                        'label' => $row['label'],
+                        'name' => $row['name']
+                    ]);
+                    $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
                 } else {
-                        $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                            'warning'
-                        ];
+                    $messages[] = [
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
+                        'warning'
+                    ];
                 }
                 $this->serviceFyziklaniTask->save($task);
             } catch (Exception $e) {

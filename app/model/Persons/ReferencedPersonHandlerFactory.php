@@ -3,15 +3,15 @@
 namespace Persons;
 
 use Nette\Object;
+use ServiceMPersonHasFlag;
 use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
-use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonHandlerFactory extends Object {
@@ -35,7 +35,7 @@ class ReferencedPersonHandlerFactory extends Object {
      * @var ServiceMPostContact
      */
     private $serviceMPostContact;
-    
+
     /**
      * @var ServiceMPersonHasFlag
      */
@@ -51,7 +51,7 @@ class ReferencedPersonHandlerFactory extends Object {
 
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
         return new ReferencedPersonHandler(
-                $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
+            $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
         );
     }
 

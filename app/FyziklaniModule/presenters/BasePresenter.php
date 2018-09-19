@@ -153,7 +153,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSubtitle() {
-        return sprintf(_('%d. Fyziklání'),$this->getEvent()->event_year);
+        return sprintf(_('%d. Fyziklání'), $this->getEvent()->event_year);
     }
 
     /**
@@ -198,6 +198,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public function getNavBarVariant() {
         return ['brawl brawl' . $this->getEventId(), 'dark'];
     }
+
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
     }

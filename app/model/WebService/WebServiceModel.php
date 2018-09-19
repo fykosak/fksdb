@@ -125,7 +125,7 @@ class WebServiceModel {
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
-      
+
         if (isset($args->{'school-cumulatives'})) {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
 
@@ -180,7 +180,7 @@ class WebServiceModel {
         }
 
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
-        $year = (string) $args->year;
+        $year = (string)$args->year;
 
         $doc = new DOMDocument();
         $statsNode = $doc->createElement('stats');
@@ -227,7 +227,7 @@ class WebServiceModel {
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = array();
-        
+
         $this->checkAuthentication(__FUNCTION__, $qid);
 
         // stupid PHP deserialization
@@ -275,7 +275,7 @@ class WebServiceModel {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
-        } else if($arg !== null) {
+        } else if ($arg !== null) {
             $this->log("Called $serviceName($arg).");
         } else {
             $this->log("Called $serviceName.");
@@ -315,7 +315,7 @@ class WebServiceModel {
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
-    
+
     private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));

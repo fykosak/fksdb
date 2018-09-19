@@ -9,7 +9,7 @@ use Tasks\SeriesData;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksFromXML extends Stage {
@@ -52,7 +52,7 @@ class TasksFromXML extends Stage {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         // obtain ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
@@ -67,7 +67,7 @@ class TasksFromXML extends Stage {
 
         // update fields
         foreach ($this->xmlToColumnMap as $xmlElement => $column) {
-            $task->{$column} = (string) $XMLTask->{$xmlElement};
+            $task->{$column} = (string)$XMLTask->{$xmlElement};
         }
 
         // store it

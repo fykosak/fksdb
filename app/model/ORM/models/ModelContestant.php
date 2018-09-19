@@ -16,7 +16,7 @@ class ModelContestant extends AbstractModelSingle implements IResource {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
-    
+
     /**
      * @return ModelContest
      */

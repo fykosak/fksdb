@@ -22,7 +22,7 @@ class NavigationExtension extends CompilerExtension {
             'structure' => array(),
         ));
         $navbar = $builder->addDefinition('navbar')
-                ->setClass('FKSDB\Components\Controls\Navigation\Navigation');
+            ->setClass('FKSDB\Components\Controls\Navigation\Navigation');
         $navbar->setShared(true)->setAutowired(true);
 
 

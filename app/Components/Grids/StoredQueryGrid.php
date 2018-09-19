@@ -43,9 +43,9 @@ class StoredQueryGrid extends BaseGrid {
         try {
             $c = 0;
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn($c + 1, $name)->setRenderer(function($row) use($c) {
-                            echo $row[$c];
-                        });
+                $this->addColumn($c + 1, $name)->setRenderer(function ($row) use ($c) {
+                    echo $row[$c];
+                });
                 ++$c;
             }
         } catch (PDOException $e) {
@@ -59,16 +59,16 @@ class StoredQueryGrid extends BaseGrid {
 
         foreach ($this->exportFormatFactory->getFormats($this->storedQuery) as $formatName => $label) {
             $this->addGlobalButton('format_' . $formatName)
-                    ->setLabel($label)
-                    ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
+                ->setLabel($label)
+                ->setLink($this->getParent()->link('format!', array('format' => $formatName)));
         }
 
 
         if (!$this->storedQuery->getQueryPattern()->isNew()) {
             $this->addGlobalButton('show')
-                    ->setLabel(_('Podrobnosti dotazu'))
-                    ->setClass('btn btn-sm btn-default')
-                    ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
+                ->setLabel(_('Podrobnosti dotazu'))
+                ->setClass('btn btn-sm btn-default')
+                ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
                 $parameters = array('qid' => $qid, 'bc' => null);
                 $queryParameters = $this->storedQuery->getParameters();
@@ -78,9 +78,9 @@ class StoredQueryGrid extends BaseGrid {
                     }
                 }
                 $this->addGlobalButton('qid')
-                        ->setLabel(_('Odkaz'))
-                        ->setClass('btn btn-sm btn-default')
-                        ->setLink($this->getPresenter()->link('Export:execute', $parameters));
+                    ->setLabel(_('Odkaz'))
+                    ->setClass('btn btn-sm btn-default')
+                    ->setLink($this->getPresenter()->link('Export:execute', $parameters));
             }
         }
     }

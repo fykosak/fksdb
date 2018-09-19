@@ -10,7 +10,7 @@ use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AESOPContestant extends StoredQueryPostProcessing {
@@ -37,7 +37,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
     /**
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
-     * 
+     *
      * @param ServiceTask $serviceTask
      * @return int|double
      */
@@ -48,9 +48,9 @@ class AESOPContestant extends StoredQueryPostProcessing {
             return null;
         }
         $tasks = $serviceTask->getTable()
-                ->where('contest_id', $this->parameters['contest'])
-                ->where('year', $this->parameters['year'])
-                ->where('series BETWEEN 1 AND 6');
+            ->where('contest_id', $this->parameters['contest'])
+            ->where('year', $this->parameters['year'])
+            ->where('series BETWEEN 1 AND 6');
         $sum = 0;
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $category);
@@ -136,7 +136,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * 
+     *
      * @return ModelCategory|null
      */
     private function getCategory() {

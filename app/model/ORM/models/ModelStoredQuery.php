@@ -1,11 +1,11 @@
 <?php
 
-use Nette\Security\IResource;
 use Exports\StoredQueryPostProcessing;
+use Nette\Security\IResource;
 
 /**
  * @todo Better (general) support for related collection setter.
- * 
+ *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
@@ -46,24 +46,24 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         }
         return $this->postProcessing;
     }
-    
+
     public function getTags() {
         if (!isset($this->query_id)) {
             $this->query_id = null;
         }
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
-    
+
     /**
      * @return ModelMStoredQueryTag[]
      */
     public function getMStoredQueryTags() {
         $tags = $this->getTags();
-        
+
         if (!$tags || count($tags) == 0) {
             return array();
         }
-        
+
         $result = array();
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch

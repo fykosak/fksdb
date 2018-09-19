@@ -12,7 +12,7 @@ class ModelPersonHistory extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-    
+
     /**
      * @return ModelSchool
      */
@@ -51,15 +51,15 @@ class ModelPersonHistory extends AbstractModelSingle {
         }
         foreach (self::$classProgress as $sequence) {
             $pattern = '/(' . implode('|', array_map('preg_quote', $sequence)) . ')/i';
-            $class = preg_replace_callback($pattern, function($matches) use($sequence, $diff) {
-                        $idx = array_search(mb_strtolower($matches[0]), $sequence);
-                        $newIdx = $idx + $diff;
-                        if ($newIdx > count($sequence) - 1) {
-                            return $matches[1];
-                        } else {
-                            return $sequence[$newIdx];
-                        }
-                    }, $class);
+            $class = preg_replace_callback($pattern, function ($matches) use ($sequence, $diff) {
+                $idx = array_search(mb_strtolower($matches[0]), $sequence);
+                $newIdx = $idx + $diff;
+                if ($newIdx > count($sequence) - 1) {
+                    return $matches[1];
+                } else {
+                    return $sequence[$newIdx];
+                }
+            }, $class);
         }
         return $class;
     }

@@ -11,7 +11,7 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractAdjustment extends Object implements IFormAdjustment {
@@ -33,7 +33,7 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
     }
 
     /**
-     * 
+     *
      * @param string $mask
      * @return IControl[]
      */

@@ -12,11 +12,11 @@ use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use ORM\IModel;
+use ServiceMPersonHasFlag;
 use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
-use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -109,10 +109,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
             $models = array(
                 'person' => &$person,
-                'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
-                'person_history' => ($history = $person->getHistory($this->acYear)) ? : $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
+                'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
+                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
+                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress(true)) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
             );
             $services = array(
                 'person' => $this->servicePerson,
@@ -246,7 +246,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 continue;
             }
 
-            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
+            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
 
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;

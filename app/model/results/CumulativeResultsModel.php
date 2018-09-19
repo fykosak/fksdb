@@ -20,7 +20,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     * 
+     *
      * @return array
      */
     public function getDataColumns($category) {
@@ -37,7 +37,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
-            
+
                 $dataColumns[] = array(
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
@@ -91,7 +91,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = "ct.ct_id";
 

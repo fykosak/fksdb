@@ -39,7 +39,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-                ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);
+            ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);
         return $this->getItems();
     }
 
@@ -50,7 +50,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     public function getItems() {
         $tagTypes = $this->searchTable
-                ->order('name');
+            ->order('name');
 
         $result = array();
         foreach ($tagTypes as $tagType) {

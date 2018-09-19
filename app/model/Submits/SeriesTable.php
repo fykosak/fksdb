@@ -11,9 +11,9 @@ use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @todo Prominent example for necessity of caching.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesTable {
@@ -101,9 +101,9 @@ class SeriesTable {
      */
     public function getContestants($series = null) {
         return $this->serviceContestant->getTable()->where(array(
-                    'contest_id' => $this->getContest()->contest_id,
-                    'year' => $this->getYear(),
-                ))->order('person.family_name, person.other_name, person.person_id');
+            'contest_id' => $this->getContest()->contest_id,
+            'year' => $this->getYear(),
+        ))->order('person.family_name, person.other_name, person.person_id');
         //TODO series
     }
 
@@ -122,8 +122,8 @@ class SeriesTable {
 
     public function getSubmitsTable($ctId = null, $task = null) {
         $submits = $this->serviceSubmit->getTable()
-                ->where('ct_id', $this->getContestants())
-                ->where('task_id', $this->getTasks());
+            ->where('ct_id', $this->getContestants())
+            ->where('task_id', $this->getTasks());
 
         // store submits in 2D hash for better access
         $submitsTable = array();

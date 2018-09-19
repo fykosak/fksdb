@@ -47,8 +47,8 @@ class TaskStatsModel {
      */
     public function getData($labels) {
         $sql = "SELECT * FROM `v_task_stats` WHERE " .
-                "contest_id = ? AND year = ? " .
-                "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
+            "contest_id = ? AND year = ? " .
+            "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
 
         $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);
         $result = $stmt->fetchAll();

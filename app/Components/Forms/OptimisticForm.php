@@ -8,7 +8,7 @@ use Nette\Callback;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class OptimisticForm extends Form {
@@ -36,9 +36,9 @@ class OptimisticForm extends Form {
     private $refreshOnConflict = true;
 
     /**
-     * 
+     *
      * @param callback $fingerprintCallback returns fingerprint of current version of the data
-     * @param callback $defaultsCallback    returns current version of data, formatted as an array
+     * @param callback $defaultsCallback returns current version of data, formatted as an array
      */
     public function __construct($fingerprintCallback, $defaultsCallback) {
         parent::__construct();
@@ -63,7 +63,7 @@ class OptimisticForm extends Form {
 
     /**
      * Sets whether form values are refreshed when conflict occured.
-     * 
+     *
      * @param boolean $refreshOnConflict
      */
     public function setRefreshOnConflict($refreshOnConflict) {
@@ -71,7 +71,7 @@ class OptimisticForm extends Form {
     }
 
     /**
-     * @param null $values  Must be always null! Defaults callback is used to produce the values.
+     * @param null $values Must be always null! Defaults callback is used to produce the values.
      * @param boolean $erase
      * @throws LogicException
      */
@@ -97,7 +97,7 @@ class OptimisticForm extends Form {
             $this->addError(_('Od zobrazení formuláře byla změněna jeho data.')); //TODO customize message accordint to refreshOnConflict value
             $this->setFingerprint($currentFingerprint);
 
-            
+
             if ($this->getRefreshOnConflict()) {
                 parent::setValues($this->defaultsCallback->invoke());
             }

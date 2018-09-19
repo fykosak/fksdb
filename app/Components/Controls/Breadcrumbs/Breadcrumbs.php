@@ -97,11 +97,11 @@ class Breadcrumbs extends Control {
 
     public function reset() {
         foreach (array(
-    self::SECTION_BACKIDS,
-    self::SECTION_REQUESTS,
-    self::SECTION_REVERSE,
-    self::SECTION_PATH_REVERSE,
-        ) as $sectionName) {
+                     self::SECTION_BACKIDS,
+                     self::SECTION_REQUESTS,
+                     self::SECTION_REVERSE,
+                     self::SECTION_PATH_REVERSE,
+                 ) as $sectionName) {
             $this->session->getSection($sectionName)->remove();
         }
     }
@@ -116,9 +116,9 @@ class Breadcrumbs extends Control {
         $path = array();
         foreach ($this->getTraversePath($request) as $naviRequest) {
             $url = $this->router->constructUrl($naviRequest->request, $this->httpRequest->getUrl());
-            $path[] = (object) array(
-                        'url' => $url,
-                        'title' => $naviRequest->title,
+            $path[] = (object)array(
+                'url' => $url,
+                'title' => $naviRequest->title,
             );
         }
         /**

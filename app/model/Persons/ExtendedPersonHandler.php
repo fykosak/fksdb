@@ -135,7 +135,7 @@ class ExtendedPersonHandler extends Object {
             // create login
             $email = $person->getInfo() ? $person->getInfo()->email : null;
             $login = $person->getLogin();
-            $hasLogin = (bool) $login;
+            $hasLogin = (bool)$login;
             if ($email && !$login) {
                 $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {

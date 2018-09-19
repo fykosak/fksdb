@@ -9,7 +9,7 @@ use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */

@@ -23,7 +23,7 @@ class SQLResultsCache {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      */
@@ -36,7 +36,7 @@ class SQLResultsCache {
             $conditions[] = 'contest_id = ' . $contest->contest_id;
         }
         if ($year !== null) {
-            $conditions[] = 'year = ' . (int) $year;
+            $conditions[] = 'year = ' . (int)$year;
         }
 
         $sql = '
@@ -49,7 +49,7 @@ class SQLResultsCache {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      */
@@ -60,17 +60,17 @@ class SQLResultsCache {
         }
 
         $tasks = $this->serviceTask->getTable()
-                ->where(array(
-            'contest_id' => $contest->contest_id,
-            'year' => $year,
-        ));
+            ->where(array(
+                'contest_id' => $contest->contest_id,
+                'year' => $year,
+            ));
 
 
         $this->connection->beginTransaction();
         foreach ($tasks as $task) {
             $conditions = array();
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
-            $conditions[] = 't.year = ' . (int) $year;
+            $conditions[] = 't.year = ' . (int)$year;
             $conditions[] = 's.task_id = ' . $task->task_id;
             $sql = '
             UPDATE submit s

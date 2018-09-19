@@ -12,7 +12,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestChooser extends Control {
@@ -84,8 +84,7 @@ class ContestChooser extends Control {
     private $contestSource = 0xffffffff;
 
     /**
-     * 
-
+     *
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
@@ -104,7 +103,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * 
+     *
      * @param mixed $yearDefinition enum
      */
     public function setYears($yearDefinition) {
@@ -232,9 +231,9 @@ class ContestChooser extends Control {
     private function getContests() {
         if ($this->contests === null) {
             if (is_array($this->contestsDefinition)) { // explicit
-                $contests = array_map(function($contest) {
-                            return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
-                        }, $this->contestsDefinition);
+                $contests = array_map(function ($contest) {
+                    return ($contest instanceof ModelContest) ? $contest->contest_id : $contest;
+                }, $this->contestsDefinition);
             } else if ($this->contestsDefinition === self::CONTESTS_ALL) { // all
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
@@ -256,10 +255,10 @@ class ContestChooser extends Control {
             foreach ($contests as $id) {
                 $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
-                $this->contests[$id] = (object) array(
-                            'contest' => $contest,
-                            'years' => $years,
-                            'currentYear' => $this->yearCalculator->getCurrentYear($contest),
+                $this->contests[$id] = (object)array(
+                    'contest' => $contest,
+                    'years' => $years,
+                    'currentYear' => $this->yearCalculator->getCurrentYear($contest),
                 );
             }
         }

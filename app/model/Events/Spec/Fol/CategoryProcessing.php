@@ -7,8 +7,8 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
-use FKSDB\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use ServiceSchool;
@@ -122,7 +122,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if ($competitor['study_year'] === null) {
                 $olds += 1;
             } else if ($competitor['study_year'] >= 1 && $competitor['study_year'] <= 4) {
-                $year[(int) $competitor['study_year']] += 1;
+                $year[(int)$competitor['study_year']] += 1;
             } else {
                 $year[0] += 1; // ZŠ
             }

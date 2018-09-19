@@ -13,29 +13,29 @@ use Nette\Object;
  */
 class Updater extends Object {
 
-	/** @var GlobalParameters */
-	private $globalParameters;
+    /** @var GlobalParameters */
+    private $globalParameters;
 
-	function __construct(GlobalParameters $globalParameters) {
-		$this->globalParameters = $globalParameters;
-	}
+    function __construct(GlobalParameters $globalParameters) {
+        $this->globalParameters = $globalParameters;
+    }
 
-	public function installBranch($requestedBranch) {
-		$deployment = $this->globalParameters['updater']['deployment'];
-		foreach ($deployment as $path => $branch) {
-			if ($branch != $requestedBranch) {
-				continue;
-			}
-			$this->install($path, $branch);
-		}
-	}
+    public function installBranch($requestedBranch) {
+        $deployment = $this->globalParameters['updater']['deployment'];
+        foreach ($deployment as $path => $branch) {
+            if ($branch != $requestedBranch) {
+                continue;
+            }
+            $this->install($path, $branch);
+        }
+    }
 
-	private function install($path, $branch) {
-		$user = $this->globalParameters['updater']['installUser'];
-		$script = $this->globalParameters['updater']['installScript'];
-		$cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";
-		Debugger::log("Running: $cmd");
-		shell_exec($cmd);
-	}
+    private function install($path, $branch) {
+        $user = $this->globalParameters['updater']['installUser'];
+        $script = $this->globalParameters['updater']['installScript'];
+        $cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";
+        Debugger::log("Running: $cmd");
+        shell_exec($cmd);
+    }
 
 }

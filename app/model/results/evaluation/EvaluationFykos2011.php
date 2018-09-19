@@ -82,7 +82,7 @@ class EvaluationFykos2011 implements IEvaluationStrategy {
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }
-        
+
     }
 
 }

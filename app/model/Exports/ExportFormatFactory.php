@@ -10,8 +10,8 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\Arrays;
-use ServiceEvent;
 use ServiceContest;
+use ServiceEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -115,7 +115,7 @@ class ExportFormatFactory extends Object {
             'year' => $queryParameters['ac_year'],
         ));
 
-        if(array_key_exists('eventTypeId', $parameters[$qid])) {
+        if (array_key_exists('eventTypeId', $parameters[$qid])) {
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters(array(

@@ -56,23 +56,23 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
         $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                            return false;
-                        }
-                        return true;
-                    }, $msgMixture);
+            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMixture($schools)) {
+                    $form->addError($msgMixture);
+                    return false;
+                }
+                return true;
+            }, $msgMixture);
         }
-        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMixture) {
-                    if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                        }
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) {
+            if ($form->isValid()) { // it means that all schools may have been disabled
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMixture($schools)) {
+                    $form->addError($msgMixture);
+                }
+            }
+        };
     }
 
     private function checkMixture($schools) {

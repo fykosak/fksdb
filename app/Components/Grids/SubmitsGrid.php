@@ -55,20 +55,20 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Úloha'))
-                ->setRenderer(function($row) use($presenter) {
-                            $row->task_id; // stupid caching...
-                            $task = $row->getTask();
-                            $FQname = $task->getFQName();
+            ->setRenderer(function ($row) use ($presenter) {
+                $row->task_id; // stupid caching...
+                $task = $row->getTask();
+                $FQname = $task->getFQName();
 
-                            if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
-                                $el = Html::el('a');
-                                $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
-                                $el->setText($FQname);
-                                return $el;
-                            } else {
-                                return $FQname;
-                            }
-                        });
+                if ($row->source == ModelSubmit::SOURCE_UPLOAD) {
+                    $el = Html::el('a');
+                    $el->href = $presenter->link(':Public:Submit:download', array('id' => $row->submit_id));
+                    $el->setText($FQname);
+                    return $el;
+                } else {
+                    return $FQname;
+                }
+            });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
         $this->addColumn('source', _('Způsob odevzdání'));
 
@@ -76,18 +76,17 @@ class SubmitsGrid extends BaseGrid {
         // operations
         //
         $this->addButton("revoke", _("Zrušit"))
-                ->setClass("btn btn-xs btn-warning")
-                ->setText('Zrušit') //todo i18n
-                ->setShow(function($row) {
-                            return $this->canRevoke($row);
-                        })
-                ->setLink(function($row) {
-                            return $this->link("revoke!", $row->submit_id);
-                        })
-                ->setConfirmationDialog(function($row) {
-                            return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
-                        });
-
+            ->setClass("btn btn-xs btn-warning")
+            ->setText('Zrušit')//todo i18n
+            ->setShow(function ($row) {
+                return $this->canRevoke($row);
+            })
+            ->setLink(function ($row) {
+                return $this->link("revoke!", $row->submit_id);
+            })
+            ->setConfirmationDialog(function ($row) {
+                return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
+            });
 
 
         //

@@ -20,7 +20,7 @@ class ServiceContestant extends AbstractServiceSingle {
      */
     public function getCurrentContestants($contest_id, $year) {
         $contestants = $this->getConnection()->table($this->viewName)
-                ->select('*');
+            ->select('*');
 
 
         $contestants->where(array(

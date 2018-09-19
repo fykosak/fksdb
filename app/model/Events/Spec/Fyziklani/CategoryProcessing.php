@@ -100,8 +100,8 @@ class CategoryProcessing extends AbstractProcessing {
 
         foreach ($participants as $participant) {
             $country = $this->serviceSchool->getTable()
-                    ->select('address.region.country_iso')
-                    ->where(['school_id' => $participant['school_id']])->fetch();
+                ->select('address.region.country_iso')
+                ->where(['school_id' => $participant['school_id']])->fetch();
             if (!in_array($country->country_iso, array('CZ', 'SK'))) {
                 $abroad += 1;
             }

@@ -85,7 +85,7 @@ class Merger {
     public function setConflictResolution($rawValues) {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
-                $data = & $this->getPairDataById($table, $pairId);
+                $data = &$this->getPairDataById($table, $pairId);
                 foreach ($values as $column => $value) {
                     if (!isset($data[self::IDX_RESOLUTION])) {
                         $data[self::IDX_RESOLUTION] = array();
@@ -188,7 +188,7 @@ class Merger {
      * @param type $column
      */
     public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
-        $data = & $this->getPairData($trunkRow, $mergedRow);
+        $data = &$this->getPairData($trunkRow, $mergedRow);
         $data[self::IDX_TRUNK][$column] = $trunkRow[$column];
         $data[self::IDX_MERGED][$column] = $mergedRow[$column];
     }

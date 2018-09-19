@@ -5,6 +5,7 @@
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
+
 interface IContestPresenter {
 
     /** @return ModelContest */

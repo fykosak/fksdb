@@ -88,9 +88,9 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function setPrimaryHolder($name) {
         $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function(BaseHolder $baseHolder) use($primaryHolder) {
-                    return $baseHolder !== $primaryHolder;
-                });
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
+            return $baseHolder !== $primaryHolder;
+        });
     }
 
     public function getPrimaryHolder() {

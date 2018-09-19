@@ -46,7 +46,7 @@ abstract class ReactComponent extends Control {
         $this->template->mode = $this->getMode();
 
         $this->template->data = $this->getData();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'ReactComponent.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }
 }

@@ -11,7 +11,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Transition extends FreezableObject {
@@ -83,7 +83,7 @@ class Transition extends FreezableObject {
 
     /**
      * Meaningless idenifier.
-     * 
+     *
      * @return string
      */
     public function getName() {
@@ -187,7 +187,7 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * 
+     *
      * @return null|Transition
      */
     private function getBlockingTransition() {
@@ -229,8 +229,8 @@ class Transition extends FreezableObject {
 
     /**
      * Launch induced transitions and sets new state.
-     * 
-     * @todo Induction work only for one level.     * 
+     *
+     * @todo Induction work only for one level.     *
      * @throws TransitionConditionFailedException
      */
     public final function execute() {
@@ -257,7 +257,7 @@ class Transition extends FreezableObject {
 
     /**
      * Triggers onExecuted event.
-     * 
+     *
      * @param Transition[] $induced
      * @throws TransitionOnExecutedException
      */
@@ -297,7 +297,7 @@ class Transition extends FreezableObject {
         $stateMask = $parts[0];
 
         /*
-         * Star matches any state but meta-states (initial and terminal) 
+         * Star matches any state but meta-states (initial and terminal)
          */
         if (strpos(BaseMachine::STATE_ANY, $stateMask) !== false || (strpos(BaseMachine::STATE_ANY, $this->source) !== false &&
                 ($mask != BaseMachine::STATE_INIT && $mask != BaseMachine::STATE_TERMINATED))) {
@@ -309,7 +309,7 @@ class Transition extends FreezableObject {
 
     /**
      * @note Assumes mask is valid.
-     * 
+     *
      * @param string $mask
      */
     private static function parseMask($mask) {

@@ -1,12 +1,13 @@
 <?php
+
 namespace FKSDB\Components\Controls;
 
-use \Nette\Forms\Controls\TextInput;
-use \Nette\Application\UI\Form;
+use Nette\Application\UI\Form;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Json;
 
 class TaskCodeInput extends TextInput {
-    
+
     public function __construct($label = null, $cols = null, $maxLength = null) {
         parent::__construct($label, $cols, $maxLength);
         $this->setHtmlId('taskcode');

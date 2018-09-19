@@ -17,7 +17,7 @@ use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AccountManager {
@@ -72,7 +72,7 @@ class AccountManager {
 
     /**
      * Creates login and invites user to set up the account.
-     * 
+     *
      * @param ITemplate $template template of the mail
      * @param ModelPerson $person
      * @param string $email
@@ -88,7 +88,7 @@ class AccountManager {
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
 
-        // prepare and send email        
+        // prepare and send email
         $template->token = $token->token;
         $template->person = $person;
         $template->email = $email;
@@ -115,10 +115,10 @@ class AccountManager {
             throw new RecoveryNotImplementedException();
         }
         $token = $this->serviceAuthToken->getTable()->where(array(
-                    'login_id' => $login->login_id,
-                    'type' => ModelAuthToken::TYPE_RECOVERY,
-                ))
-                ->where('until > ?', new DateTime())->fetch();
+            'login_id' => $login->login_id,
+            'type' => ModelAuthToken::TYPE_RECOVERY,
+        ))
+            ->where('until > ?', new DateTime())->fetch();
 
         if ($token) {
             throw new RecoveryExistsException();
@@ -127,7 +127,7 @@ class AccountManager {
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
 
-        // prepare and send email        
+        // prepare and send email
         $template->token = $token->token;
         $template->login = $login;
         $template->until = $until;
@@ -172,7 +172,7 @@ class AccountManager {
 }
 
 abstract class RecoveryException extends RuntimeException {
-    
+
 }
 
 class RecoveryExistsException extends RecoveryException {

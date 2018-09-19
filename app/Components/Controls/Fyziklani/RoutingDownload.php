@@ -1,9 +1,8 @@
 <?php
 
-namespace  FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Application\IJavaScriptCollector;
-
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;

@@ -19,7 +19,7 @@ class DateTimeBox extends TextInput {
         parent::__construct($label, $cols, $maxLength);
 
         $this->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label očekává YYYY-MM-DD hh:mm[:ss].'), '/^\d{4}-\d{2}-\d{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
+            ->addRule(Form::REGEXP, _('%label očekává YYYY-MM-DD hh:mm[:ss].'), '/^\d{4}-\d{2}-\d{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
     }
 
     public function getControl() {

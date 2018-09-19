@@ -4,7 +4,6 @@ namespace Submits;
 
 use ModelSubmit;
 use Nette\Diagnostics\Debugger;
-use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
@@ -12,7 +11,7 @@ use UnexpectedValueException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FilesystemSubmitStorage implements ISubmitStorage {
@@ -47,7 +46,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
      * File extension + metadata will be added to the name.
-     * 
+     *
      * @var string
      */
     private $filenameMask;
@@ -130,7 +129,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * 
+     *
      * @throws InvalidStateException
      */
     public function rollback() {
@@ -160,14 +159,14 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
-            $files = array_filter($files, function($file) {
-                        return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
-                    });
+            $files = array_filter($files, function ($file) {
+                return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
+            });
         } else {
-            $files = array_filter($files, function($file) {
-                        return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
-                                !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
-                    });
+            $files = array_filter($files, function ($file) {
+                return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                    !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
+            });
         }
 
         if (count($files) == 0) {
@@ -182,14 +181,14 @@ class FilesystemSubmitStorage implements ISubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     * 
+     *
      * @param ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit) {
         $filename = $this->retrieveFile($submit);
 
-        return (bool) $filename;
+        return (bool)$filename;
     }
 
     public function deleteFile(ModelSubmit $submit) {
@@ -220,7 +219,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * 
+     *
      * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */

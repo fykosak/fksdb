@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Application\UI\Form;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
@@ -56,10 +56,10 @@ class AddressFactory {
 
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
-                    ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
+                ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
 
             $container->addText('second_row', _('Druhý řádek'))
-                    ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
+                ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
         }
 
         $target = new WriteOnlyInput(_('Místo'));
@@ -85,9 +85,8 @@ class AddressFactory {
 
 
         $postalCode = $container->addText('postal_code', _('PSČ'))
-                ->addRule(Form::MAX_LENGTH, null, 5)
-                ->setOption('description', _('Bez mezer. Pro Českou republiku nebo Slovensko.'));
-
+            ->addRule(Form::MAX_LENGTH, null, 5)
+            ->setOption('description', _('Bez mezer. Pro Českou republiku nebo Slovensko.'));
 
 
         $country = $container->addSelect('country_iso', _('Stát'));
@@ -102,32 +101,32 @@ class AddressFactory {
         /* Country + postal code validation */
         $addressService = $this->serviceAddress;
         $regionService = $this->serviceRegion;
-        $validPostalCode = function(BaseControl $control) use($addressService) {
+        $validPostalCode = function (BaseControl $control) use ($addressService) {
             return $addressService->tryInferRegion($control->getValue());
         };
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
-            $conditioned->addConditionOn($country, function(BaseControl $control) {
+            $conditioned->addConditionOn($country, function (BaseControl $control) {
                 $value = $control->getValue();
                 return in_array($value, array('CZ', 'SK'));
             })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
         }
         $postalCode->addCondition(Form::FILLED)
-                ->addRule($validPostalCode, _('Neplatný formát PSČ.'));
+            ->addRule($validPostalCode, _('Neplatný formát PSČ.'));
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
-            $conditioned->addConditionOn($postalCode, function(BaseControl $control) use($addressService) {
+            $conditioned->addConditionOn($postalCode, function (BaseControl $control) use ($addressService) {
                 return !$addressService->tryInferRegion($control->getValue());
             })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
         }
         $country->addCondition(Form::FILLED)
-                ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use($regionService, $addressService, $postalCode) {
-            $regionId = $addressService->inferRegion($postalCode->getValue());
-            $region = $regionService->findByPrimary($regionId);
-            return $region->country_iso == $control->getValue();
-        }, _('Zvolený stát neodpovídá zadanému PSČ.'));
+            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($regionService, $addressService, $postalCode) {
+                $regionId = $addressService->inferRegion($postalCode->getValue());
+                $region = $regionService->findByPrimary($regionId);
+                return $region->country_iso == $control->getValue();
+            }, _('Zvolený stát neodpovídá zadanému PSČ.'));
     }
 
 }

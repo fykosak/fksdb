@@ -44,7 +44,7 @@ trait WriteOnlyTrait {
 // don't show the value (only if it's form displayed after submit)
 // for JS
         if ($this->writeOnly && $this->getValue() && !$this->hasManualValue) {
-            $control->data['writeOnly'] = (int) true;
+            $control->data['writeOnly'] = (int)true;
             $control->data['writeOnly-value'] = self::VALUE_ORIGINAL;
             $control->data['writeOnly-label'] = _('skrytá hodnota');
             $control->value = self::VALUE_ORIGINAL;
@@ -70,12 +70,12 @@ trait WriteOnlyTrait {
         parent::attached($obj);
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
             $that = $this;
-            $obj->onValidate = $obj->onValidate ? : array();
-            array_unshift($obj->onValidate, function(Form $form) use($that) {
-                        if ($that->writeOnly && $that->getValue() == self::VALUE_ORIGINAL) {
-                            $that->writeOnlyDisable();
-                        }
-                    });
+            $obj->onValidate = $obj->onValidate ?: array();
+            array_unshift($obj->onValidate, function (Form $form) use ($that) {
+                if ($that->writeOnly && $that->getValue() == self::VALUE_ORIGINAL) {
+                    $that->writeOnlyDisable();
+                }
+            });
             $this->writeOnlyAttachedOnValidate = true;
         }
         if (!$this->writeOnlyAttachedJS && $obj instanceof IJavaScriptCollector) {

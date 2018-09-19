@@ -28,7 +28,7 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     * 
+     *
      * @return array
      */
     public function getDataColumns($category) {
@@ -126,7 +126,7 @@ class BrojureResultsModel extends AbstractResultsModel {
             $i += 1;
         }
 
-        $select[] = "round(100 * SUM($sum) / SUM(".$this->evaluationStrategy->getTaskPointsColumn($category).")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
         $study_years = $this->evaluationStrategy->categoryToStudyYears($category);

@@ -10,7 +10,7 @@ class ServiceTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @param int $series
@@ -19,11 +19,11 @@ class ServiceTask extends AbstractServiceSingle {
      */
     public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
         $result = $this->getTable()->where(array(
-                    'contest_id' => $contest->contest_id,
-                    'year' => $year,
-                    'series' => $series,
-                    'tasknr' => $tasknr,
-                ))->fetch();
+            'contest_id' => $contest->contest_id,
+            'year' => $year,
+            'series' => $series,
+            'tasknr' => $tasknr,
+        ))->fetch();
 
         if ($result !== false) {
             return ModelTask::createFromTableRow($result);

@@ -24,7 +24,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * Used for substituing form's IControl (via duck-typing).
-     * 
+     *
      * @param Traversable $value
      */
     public function setValue($value) {
@@ -33,7 +33,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * Used for substituing form's IControl (via duck-typing).
-     * 
+     *
      * @param Traversable $value
      */
     public function setDefaultValue($value) {

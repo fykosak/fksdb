@@ -9,7 +9,7 @@ use SimpleXMLElement;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksFromXML2 extends Stage {
@@ -46,7 +46,7 @@ class TasksFromXML2 extends Stage {
 
     public function process() {
         $xml = $this->data->getData();
-        $sImported = (string) $xml->number;
+        $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
             throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%i) a nastavená (%i) série.'), $sImported, $sSet));
@@ -65,7 +65,7 @@ class TasksFromXML2 extends Stage {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         // obtain ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
@@ -92,7 +92,7 @@ class TasksFromXML2 extends Stage {
 
                 if (count($elements) == 1) {
                     if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attribute(self::XML_NAMESPACE)->lang == 'cs') {
-                        $csvalue = (string) $elements[0];
+                        $csvalue = (string)$elements[0];
                     }
                 }
                 foreach ($elements as $el) {
@@ -100,13 +100,13 @@ class TasksFromXML2 extends Stage {
                         continue;
                     }
                     if ($el->attributes(self::XML_NAMESPACE)->lang == $lang) {
-                        $value = (string) $el;
+                        $value = (string)$el;
                         break;
                     }
                 }
                 $value = $value ?: $csvalue;
             } else {
-                $value = (string) $XMLTask->{$xmlElement};
+                $value = (string)$XMLTask->{$xmlElement};
             }
 
             $task->{$column} = $value;

@@ -6,7 +6,7 @@ use Nette\InvalidArgumentException;
 use Nette\Object;
 
 /**
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExpressionEvaluator extends Object {

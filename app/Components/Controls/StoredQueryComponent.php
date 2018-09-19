@@ -18,7 +18,7 @@ use PDOException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryComponent extends Control {
@@ -103,13 +103,13 @@ class StoredQueryComponent extends Control {
         $form->addComponent($parameters, self::CONT_PARAMS);
 
         $form->addSubmit('execute', _('Parametrizovat'));
-        $form->onSuccess[] = function(Form $form) {
-                    $this->parameters = array();
-                    $values = $form->getValues();
-                    foreach ($values[self::CONT_PARAMS] as $key => $values) {
-                        $this->parameters[$key] = $values['value'];
-                    }
-                };
+        $form->onSuccess[] = function (Form $form) {
+            $this->parameters = array();
+            $values = $form->getValues();
+            foreach ($values[self::CONT_PARAMS] as $key => $values) {
+                $this->parameters[$key] = $values['value'];
+            }
+        };
 
         return $form;
     }

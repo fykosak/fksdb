@@ -269,7 +269,7 @@ class BaseHolder extends FreezableObject {
     }
 
     public function resolveMultipleSecondaries($conflicts) {
-        if(!$this->secondaryResolution) {
+        if (!$this->secondaryResolution) {
             throw new SecondaryModelConflictException($this->getModel(), $conflicts);
         }
         $this->secondaryResolution->resolve($this->getModel(), $conflicts);
@@ -365,9 +365,9 @@ class BaseHolder extends FreezableObject {
      * @return Field[]
      */
     public function getDeterminingFields() {
-        return array_filter($this->fields, function(Field $field) {
-                    return $field->isDetermining();
-                });
+        return array_filter($this->fields, function (Field $field) {
+            return $field->isDetermining();
+        });
     }
 
     /**

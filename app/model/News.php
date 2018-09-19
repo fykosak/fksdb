@@ -19,15 +19,15 @@ class News extends Object {
 
     public function getNews(ModelContest $contest, $lang) {
         $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
-	if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
+        if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
             return array();
-	}
+        }
         $news = $this->globalParameters[$contestName]['news'][$lang];
-	if ($news) {
+        if ($news) {
             return $news;
-	} else {
+        } else {
             return array();
-	}
+        }
     }
 
 }

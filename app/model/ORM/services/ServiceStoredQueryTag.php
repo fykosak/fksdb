@@ -7,8 +7,8 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY_TAG;
     protected $modelClassName = 'ModelStoredQueryTag';
-    
-    /** 
+
+    /**
      * @param int|null $tagTypeId
      * @return Nette\Database\Table\Selection|null
      */
@@ -17,7 +17,7 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('tag_type_id', $tagTypeId);
-        return $result ? : null;
+        return $result ?: null;
     }
 }
 

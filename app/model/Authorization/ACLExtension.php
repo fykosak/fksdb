@@ -30,7 +30,7 @@ class ACLExtension extends CompilerExtension {
 
         $builder = $this->getContainerBuilder();
         $definition = $builder->addDefinition('authorization')
-                ->setClass('Nette\Security\Permission');
+            ->setClass('Nette\Security\Permission');
 
         $config = $this->getConfig();
 

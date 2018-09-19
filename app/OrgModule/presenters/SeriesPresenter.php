@@ -9,7 +9,7 @@ use SeriesCalculator;
 
 /**
  * Presenter providing series context and a way to modify it.
- * 
+ *
  */
 abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter {
 

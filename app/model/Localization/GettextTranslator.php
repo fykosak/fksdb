@@ -58,7 +58,7 @@ class GettextTranslator implements ITranslator {
             return "";
         }
         if ($count !== null) {
-            return ngettext($message, $message, (int) $count);
+            return ngettext($message, $message, (int)$count);
         } else {
             return gettext($message);
         }

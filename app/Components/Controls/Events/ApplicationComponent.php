@@ -137,10 +137,10 @@ class ApplicationComponent extends Control {
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Uložit'));
             $saveSubmit->setOption('row', 1);
-            $saveSubmit->onClick[] = function(SubmitButton $button) {
-                        $form = $button->getForm();
-                        $this->handleSubmit($form);
-                    };
+            $saveSubmit->onClick[] = function (SubmitButton $button) {
+                $form = $button->getForm();
+                $this->handleSubmit($form);
+            };
         }
         /*
          * Create transition buttons
@@ -151,10 +151,10 @@ class ApplicationComponent extends Control {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function(SubmitButton $button) use($transitionName) {
-                        $form = $button->getForm();
-                        $this->handleSubmit($form, $transitionName);
-                    };
+            $submit->onClick[] = function (SubmitButton $button) use ($transitionName) {
+                $form = $button->getForm();
+                $this->handleSubmit($form, $transitionName);
+            };
 
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-success');
@@ -183,9 +183,9 @@ class ApplicationComponent extends Control {
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addClass('btn-link');
-        $submit->onClick[] = function(SubmitButton $button) {
-                    $this->finalRedirect();
-                };
+        $submit->onClick[] = function (SubmitButton $button) {
+            $this->finalRedirect();
+        };
 
         /*
          * Custom adjustments

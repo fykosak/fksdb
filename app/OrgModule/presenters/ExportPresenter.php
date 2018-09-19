@@ -7,8 +7,8 @@ use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
@@ -303,7 +303,7 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
-    $this->setIcon('fa fa-play-circle-o');
+        $this->setIcon('fa fa-play-circle-o');
     }
 
     public function renderExecute($id) {

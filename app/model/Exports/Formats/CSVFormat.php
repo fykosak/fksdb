@@ -7,11 +7,11 @@ use PePa\CSVResponse;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CSVFormat extends Object implements IExportFormat {
-    
+
     const DEFAULT_DELIMITER = ';';
     const DEFAULT_QUOTE = false;
 

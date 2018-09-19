@@ -49,7 +49,7 @@ class EventsExtension extends CompilerExtension {
     public static $semanticMap = array(
         'RefPerson' => 'FKSDB\Components\Forms\Factories\Events\PersonFactory',
         'Chooser' => 'FKSDB\Components\Forms\Factories\Events\ChooserFactory',
-        'Checkbox'=> 'FKSDB\Components\Forms\Factories\Events\CheckboxFactory',
+        'Checkbox' => 'FKSDB\Components\Forms\Factories\Events\CheckboxFactory',
         'Options' => 'FKSDB\Components\Forms\Factories\Events\ArrayOptions',
         'role' => 'Events\Semantics\Role',
         'regOpen' => 'Events\Semantics\RegOpen',
@@ -455,7 +455,6 @@ class EventsExtension extends CompilerExtension {
         foreach ($machineDef['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', $formAdjustment);
         }
-
 
 
         $factory->addSetup('freeze');

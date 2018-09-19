@@ -8,7 +8,7 @@ class ModelTask extends AbstractModelSingle {
 
     /**
      * (Fully qualified) task name for use in GUI.
-     * 
+     *
      * @return string
      */
     public function getFQName() {

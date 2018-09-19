@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ResourceAvailability extends AbstractAdjustment {
@@ -36,7 +36,7 @@ class ResourceAvailability extends AbstractAdjustment {
     }
 
     /**
-     * 
+     *
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
@@ -106,12 +106,12 @@ class ResourceAvailability extends AbstractAdjustment {
             }
 
 
-            $primaries = array_map(function(BaseHolder $baseHolder) {
-                        return $baseHolder->getModel()->getPrimary(false);
-                    }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function($primary) {
-                        return (bool) $primary;
-                    });
+            $primaries = array_map(function (BaseHolder $baseHolder) {
+                return $baseHolder->getModel()->getPrimary(false);
+            }, $serviceData['holders']);
+            $primaries = array_filter($primaries, function ($primary) {
+                return (bool)$primary;
+            });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
@@ -129,16 +129,16 @@ class ResourceAvailability extends AbstractAdjustment {
             }
         }
 
-        $form->onValidate[] = function(Form $form) use($capacity, $usage, $controls) {
-                    $controlsUsage = 0;
-                    foreach ($controls as $control) {
-                        $controlsUsage += (int) $control->getValue();
-                    }
-                    if ($capacity < $usage + $controlsUsage) {
-                        $message = str_replace('%avail', $capacity - $usage, $this->message);
-                        $form->addError($message);
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($capacity, $usage, $controls) {
+            $controlsUsage = 0;
+            foreach ($controls as $control) {
+                $controlsUsage += (int)$control->getValue();
+            }
+            if ($capacity < $usage + $controlsUsage) {
+                $message = str_replace('%avail', $capacity - $usage, $this->message);
+                $form->addError($message);
+            }
+        };
     }
 
 }

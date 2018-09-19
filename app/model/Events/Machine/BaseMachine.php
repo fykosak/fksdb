@@ -8,7 +8,7 @@ use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class BaseMachine extends FreezableObject {
@@ -123,10 +123,10 @@ class BaseMachine extends FreezableObject {
     }
 
     public function getAvailableTransitions($mode = self::EXECUTABLE) {
-        return array_filter($this->getMatchingTransitions(), function(Transition $transition) use($mode) {
-                    return
-                            (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
-                });
+        return array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($mode) {
+            return
+                (!($mode & self::EXECUTABLE) || $transition->canExecute()) && (!($mode & self::VISIBLE) || $transition->isVisible());
+        });
     }
 
     public function getTransition($name) {
@@ -134,9 +134,9 @@ class BaseMachine extends FreezableObject {
     }
 
     public function getTransitionByTarget($state) {
-        $candidates = array_filter($this->getMatchingTransitions(), function(Transition $transition) use($state) {
-                    return $transition->getTarget() == $state;
-                });
+        $candidates = array_filter($this->getMatchingTransitions(), function (Transition $transition) use ($state) {
+            return $transition->getTarget() == $state;
+        });
         if (count($candidates) == 0) {
             return null;
         } else if (count($candidates) > 1) {
@@ -150,9 +150,9 @@ class BaseMachine extends FreezableObject {
         if ($mask === null) {
             $mask = $this->getState();
         }
-        return array_filter($this->transitions, function(Transition $transition) use($mask) {
-                    return $transition->matches($mask);
-                });
+        return array_filter($this->transitions, function (Transition $transition) use ($mask) {
+            return $transition->matches($mask);
+        });
     }
 
 }

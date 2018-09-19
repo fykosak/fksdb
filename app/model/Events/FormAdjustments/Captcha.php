@@ -30,7 +30,7 @@ class Captcha extends Object implements IFormAdjustment {
         $this->user = $user;
     }
 
-        public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }

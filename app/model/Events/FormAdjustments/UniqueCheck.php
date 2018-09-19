@@ -36,27 +36,27 @@ class UniqueCheck extends AbstractAdjustment {
             $field = $this->field;
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function(IControl $control) use($baseHolder, $field) {
-                        $table = $baseHolder->getService()->getTable();
-                        $column = BaseHolder::getBareColumn($field);
-                        if ($control instanceof ReferencedId) {
-                            /* We don't want to fullfil potential promise
-                             * as it would be out of transaction here.
-                             */
-                            $value = $control->getValue(false);
-                        } else {
-                            $value = $control->getValue();
-                        }
-                        $model = $baseHolder->getModel();
-                        $pk = $table->getName() . '.' . $table->getPrimary();
+            $control->addRule(function (IControl $control) use ($baseHolder, $field) {
+                $table = $baseHolder->getService()->getTable();
+                $column = BaseHolder::getBareColumn($field);
+                if ($control instanceof ReferencedId) {
+                    /* We don't want to fullfil potential promise
+                     * as it would be out of transaction here.
+                     */
+                    $value = $control->getValue(false);
+                } else {
+                    $value = $control->getValue();
+                }
+                $model = $baseHolder->getModel();
+                $pk = $table->getName() . '.' . $table->getPrimary();
 
-                        $table->where($column, $value);
-                        $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getEvent()->getPrimary());
-                        if ($model && !$model->isNew()) {
-                            $table->where("NOT $pk = ?", $model->getPrimary());
-                        }
-                        return count($table) == 0;
-                    }, $this->message);
+                $table->where($column, $value);
+                $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getEvent()->getPrimary());
+                if ($model && !$model->isNew()) {
+                    $table->where("NOT $pk = ?", $model->getPrimary());
+                }
+                return count($table) == 0;
+            }, $this->message);
         }
     }
 

@@ -17,7 +17,7 @@ class BornNumber {
     public function __invoke(BaseControl $control) {
         $rc = $control->getValue();
         // suppose once validated is always valid
-        if($rc == WriteOnlyInput::VALUE_ORIGINAL) {
+        if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
         $matches = array();
@@ -37,7 +37,7 @@ class BornNumber {
         $mod = ($year . $month . $day . $ext) % 11;
         if ($mod === 10)
             $mod = 0;
-        if ($mod !== (int) $c) {
+        if ($mod !== (int)$c) {
             return FALSE;
         }
 

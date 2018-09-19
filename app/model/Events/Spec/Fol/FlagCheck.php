@@ -2,14 +2,14 @@
 
 namespace Events\Spec\Fol;
 
-use Events\FormAdjustments\IFormAdjustment;
 use Events\FormAdjustments\AbstractAdjustment;
+use Events\FormAdjustments\IFormAdjustment;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
-use ServiceSchool;
 use ServicePersonHistory;
+use ServiceSchool;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -61,22 +61,22 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition($form::FILLED)
-                    ->addRule(function(IControl $control) use ($schoolControl, $personControl, $form, $msgForeign) {
-                        $schoolId = $this->getSchoolId($schoolControl, $personControl);
-                        if (!$this->isCzSkSchool($schoolId)) {
-                            $form->addError($msgForeign);
-                            return false;
-                        }
-                        return true;
-                    }, $msgForeign)
-                    ->addRule(function(IControl $control) use ($studyYearControl, $personControl, $form, $msgOld) {
-                        $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                        if (!$this->isStudent($studyYear)) {
-                            $form->addError($msgOld);
-                            return false;
-                        }
-                        return true;
-                    }, $msgOld);
+                ->addRule(function (IControl $control) use ($schoolControl, $personControl, $form, $msgForeign) {
+                    $schoolId = $this->getSchoolId($schoolControl, $personControl);
+                    if (!$this->isCzSkSchool($schoolId)) {
+                        $form->addError($msgForeign);
+                        return false;
+                    }
+                    return true;
+                }, $msgForeign)
+                ->addRule(function (IControl $control) use ($studyYearControl, $personControl, $form, $msgOld) {
+                    $studyYear = $this->getStudyYear($studyYearControl, $personControl);
+                    if (!$this->isStudent($studyYear)) {
+                        $form->addError($msgOld);
+                        return false;
+                    }
+                    return true;
+                }, $msgOld);
         }
 //        $form->onValidate[] = function(Form $form) use($schoolControls, $spamControls, $studyYearControls, $message) {
 //                    if ($form->isValid()) { // it means that all schools may have been disabled
@@ -93,26 +93,26 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     private function getStudyYear($studyYearControl, $personControl) {
-        if($studyYearControl->getValue()) {
+        if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
 
         $personId = $personControl->getValue(false);
         $personHistory = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
         return $personHistory->study_year;
     }
 
     private function getSchoolId($schoolControl, $personControl) {
-        if($schoolControl->getValue()) {
+        if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
 
         $personId = $personControl->getValue(false);
         $school = $this->servicePersonHistory->getTable()
-                ->where('person_id', $personId)
-                ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())->fetch();
         return $school->school_id;
     }
 

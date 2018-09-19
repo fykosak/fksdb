@@ -48,7 +48,7 @@ class PersonsGrid extends BaseGrid {
 
         /***** columns ****/
 
-         $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function ($row) {
+        $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function ($row) {
 
             return $this->renderPerson($row);
         })

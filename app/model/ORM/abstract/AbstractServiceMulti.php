@@ -9,7 +9,7 @@ use ORM\Tables\MultiTableSelection;
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
  * Joined side is in a sense primary (search, select, delete).
- * 
+ *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceMulti extends Object implements IService {
@@ -35,7 +35,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     protected static $instances = array();
 
     /**
-     * 
+     *
      * @param AbstractServiceSingle $mainService
      * @param AbstractServiceSingle $joinedService
      * @param string $modelClassName
@@ -47,7 +47,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * Use this method to create new models!
-     * 
+     *
      * @param array $data
      * @return AbstractModelMulti
      */
@@ -61,7 +61,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     /**
-     * 
+     *
      * @param AbstractModelSingle $mainModel
      * @param AbstractModelSingle $joinedModel
      * @return AbstractModelMulti
@@ -83,7 +83,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * Use this method to store a model!
-     * 
+     *
      * @param AbstractModelMulti $model
      */
     public function save(IModel &$model) {
@@ -103,7 +103,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
     /**
      * Use this method to delete a model!
-     * 
+     *
      * @param AbstractModelMulti $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
@@ -137,7 +137,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     /**
-     * 
+     *
      * @param int $key ID of the joined models
      * @return AbstractModelMulti|null
      */
@@ -148,9 +148,9 @@ abstract class AbstractServiceMulti extends Object implements IService {
         }
         $this->modelClassName;
         $mainModel = $this->getMainService()
-                ->getTable()
-                ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
-                ->fetch(); //?? is this always unique??
+            ->getTable()
+            ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
+            ->fetch(); //?? is this always unique??
         return $this->composeModel($mainModel, $joinedModel);
     }
 

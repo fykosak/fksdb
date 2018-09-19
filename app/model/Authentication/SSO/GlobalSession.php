@@ -8,7 +8,6 @@ use ModelGlobalSession;
 use Nette\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\NotImplementedException;
 use ServiceGlobalSession;
 
 /**
@@ -50,7 +49,7 @@ class GlobalSession implements IGlobalSession {
     }
 
     public function start($sessionId = null) {
-        $sessionId = $sessionId ? : $this->gsidHolder->getGSID();
+        $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
         if ($sessionId) {
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($sessionId);
 
@@ -99,7 +98,7 @@ class GlobalSession implements IGlobalSession {
             throw new InvalidStateException("Global session not started.");
         }
         if ($offset == self::UID) {
-            return (bool) $this->globalSession;
+            return (bool)$this->globalSession;
         }
         return false;
     }

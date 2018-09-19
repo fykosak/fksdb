@@ -3,10 +3,10 @@
 namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
+use Nette\Database\Connection;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
-use Nette\Database\Connection;
 
 class EventAuthorizator extends Object {
     /**
@@ -18,7 +18,7 @@ class EventAuthorizator extends Object {
      * @var Permission
      */
     private $acl;
-    
+
     /**
      * @var Connection
      */

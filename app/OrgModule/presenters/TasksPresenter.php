@@ -6,8 +6,8 @@ use Astrid\Downloader;
 use Astrid\DownloadException;
 use FKSDB\Application\UploadException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use FKSDB\Logging\FlashDumpFactory;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -94,7 +94,7 @@ class TasksPresenter extends BasePresenter {
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $form->addSelect('series', _('Série'))
-                ->setItems($seriesItems, false);
+            ->setItems($seriesItems, false);
 
         // File upload
         $language = $form->addSelect('lang', _('Jazyk'));
