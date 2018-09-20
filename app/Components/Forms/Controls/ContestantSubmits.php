@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
 use FormUtils;
 use InvalidArgumentException;
@@ -17,7 +17,7 @@ use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestantSubmits extends BaseControl {
@@ -38,12 +38,6 @@ class ContestantSubmits extends BaseControl {
      * @var ServiceSubmit
      */
     private $submitService;
-
-    /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
-
     /**
      * @var ModelContestant
      */
@@ -60,19 +54,18 @@ class ContestantSubmits extends BaseControl {
     private $className;
 
     /**
-     * 
+     *
      * @param Traversable|array $tasks
      * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
      * @param string|null $label
      */
-    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, ServiceTaskStudyYear $serviceTaskStudyYear, $acYear, $label = null) {
+    function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;
         $this->contestant = $contestant;
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->acYear = $acYear;
     }
 
@@ -107,19 +100,8 @@ class ContestantSubmits extends BaseControl {
         return null;
     }
 
-    private function isTaskDisabled($taskId) {
+    private function isTaskDisabled() {
         return false;
-        // TODO loading person history took too long, implement better study_year detection
-//        $history = $this->contestant->getPerson()->getHistory($this->acYear);
-//        $studyYear = ($history && isset($history->study_year)) ? $history->study_year : null;
-//        if ($studyYear === null) {
-//            return false;
-//        }
-//        $taskStudyYear = $this->serviceTaskStudyYear->findByPrimary(array(
-//            'task_id' => $taskId,
-//            'study_year' => $studyYear,
-//        ));
-//        return $taskStudyYear === null;
     }
 
     /**
@@ -144,7 +126,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     /**
-     * 
+     *
      * @param array|Traversable|string $value of ModelTask
      * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
      * @throws InvalidArgumentException
@@ -217,7 +199,7 @@ class ContestantSubmits extends BaseControl {
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
         $data['task'] = array(
             'label' => $this->getTask($submit->task_id)->label,
-            'disabled' => $this->isTaskDisabled($submit->task_id),
+            'disabled' => $this->isTaskDisabled(),
         ); // ORM workaround
         return $data;
     }
@@ -243,7 +225,7 @@ class ContestantSubmits extends BaseControl {
 
     /**
      * Workaround to perform server-side conversion of dates.
-     * 
+     *
      * @todo Improve client side so that this is not needed anymore.
      * @param string $source
      * @return string

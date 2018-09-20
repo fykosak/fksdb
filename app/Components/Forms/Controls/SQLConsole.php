@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Application\IJavaScriptCollector;
-use FKS\Application\IStylesheetCollector;
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Application\IStylesheetCollector;
 use Nette\Forms\Controls\TextArea;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
- * 
+ *
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SQLConsole extends TextArea {
@@ -18,8 +18,8 @@ class SQLConsole extends TextArea {
 
     public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
         parent::__construct($label, $cols, $rows);
-        $this->monitor('FKS\Application\IJavaScriptCollector');
-        $this->monitor('FKS\Application\IStylesheetCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IStylesheetCollector');
     }
 
     private $attachedJS = false;

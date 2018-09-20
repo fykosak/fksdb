@@ -1,0 +1,48 @@
+<?php
+
+namespace FKSDB\Components\Forms\Controls;
+
+use FKSDB\Components\Forms\Containers\IWriteOnly;
+use JanTvrdik\Components\DatePicker;
+
+/**
+ * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
+ * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
+ *
+ * @author Michal Koutný <michal@fykos.cz>
+ */
+class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
+
+    use WriteOnlyTrait;
+
+    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
+        parent::__construct($label, $cols, $maxLength);
+        $this->writeOnlyAppendMonitors();
+    }
+
+    public function getControl() {
+        $control = parent::getControl();
+        $control = $this->writeOnlyAdjustControl($control);
+        return $control;
+    }
+
+    public function setValue($value) {
+        if ($value == self::VALUE_ORIGINAL) {
+            $this->value = $value;
+            $this->rawValue = $value;
+        } else {
+            parent::setValue($value);
+        }
+    }
+
+    public function loadHttpData() {
+        parent::loadHttpData();
+        $this->writeOnlyLoadHttpData();
+    }
+
+    protected function attached($obj) {
+        parent::attached($obj);
+        $this->writeOnlyAttached($obj);
+    }
+
+}

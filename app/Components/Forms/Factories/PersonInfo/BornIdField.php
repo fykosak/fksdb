@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
-use FKS\Components\Forms\Controls\WriteonlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\Form;
 
-class BornIdField extends WriteonlyInput {
+class BornIdField extends WriteOnlyInput {
 
     public function __construct() {
         parent::__construct(_('Rodné číslo'));

@@ -3,6 +3,8 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\React\Fyziklani\Results;
+use Nette\Application\Responses\JsonResponse;
+
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {

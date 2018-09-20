@@ -11,8 +11,8 @@ use Events\Model\Holder\Holder;
 use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use Events\SubmitProcessingException;
 use Exception;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
-use FKS\Logging\ILogger;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Logging\ILogger;
 use FormUtils;
 use ModelEvent;
 use Nette\ArrayHash;
@@ -23,7 +23,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationHandler {
@@ -226,7 +226,7 @@ class ApplicationHandler {
 
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
                 $referencedId->rollback();
             }
         }
@@ -258,5 +258,5 @@ class ApplicationHandler {
 }
 
 class ApplicationHandlerException extends RuntimeException {
-    
+
 }

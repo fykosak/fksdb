@@ -5,17 +5,17 @@ namespace Events\Model;
 use Events\Model\Holder\Field;
 use ModelPerson;
 use Nette\Object;
-use Persons\IModifialibityResolver;
+use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonContainerResolver extends Object implements IVisibilityResolver, IModifialibityResolver {
+class PersonContainerResolver extends Object implements IVisibilityResolver, IModifiabilityResolver {
 
     /**
      * @var Field

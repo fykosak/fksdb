@@ -4,8 +4,8 @@ namespace Exports;
 
 use CSVFormat;
 use Exports\Formats\AESOPFormat;
-use FKS\Config\Expressions\Helpers;
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Config\GlobalParameters;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Object;
@@ -39,12 +39,12 @@ class ExportFormatFactory extends Object {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
-    
+
     /**
      * @var ServiceEvent
      */
     private $serviceEvent;
-    
+
     /**
      * @var ServiceContest
      */
@@ -107,14 +107,14 @@ class ExportFormatFactory extends Object {
         $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
         $category = Arrays::get($queryParameters, 'category', null);
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
-        
+
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
         $format->addParameters(array(
             'errors-to' => $maintainer,
             'event' => $eventId,
             'year' => $queryParameters['ac_year'],
         ));
-        
+
         if(array_key_exists('eventTypeId', $parameters[$qid])) {
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
@@ -123,7 +123,7 @@ class ExportFormatFactory extends Object {
                 'end-date' => $event->end->format('Y-m-d'),
             ));
         }
-        
+
         // temporary 'bugfix' for team competition max-rank computation
         if ($qid != 'aesop.fol' && $qid != 'aesop.klani.ct' && $qid != 'aesop.klani.uc') {
             $format->addParameters(array(
@@ -140,7 +140,7 @@ class ExportFormatFactory extends Object {
         return $format;
     }
 
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {        
+    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {
         $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
         return $format;
     }

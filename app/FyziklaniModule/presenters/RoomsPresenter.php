@@ -4,6 +4,8 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\React\Fyziklani\RoutingEdit;
+use Nette\Application\Responses\JsonResponse;
+use Nette\Utils\Json;
 
 /**
  *

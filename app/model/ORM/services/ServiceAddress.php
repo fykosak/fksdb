@@ -25,7 +25,7 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param string $postalCode
      * @return int
      * @throws InvalidPostalCode
@@ -60,7 +60,7 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param strnig $postalCode
      * @return boolean
      */
@@ -74,12 +74,3 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
 }
-
-class InvalidPostalCode extends InvalidArgumentException {
-
-    public function __construct($postalCode, $code = null, $previous = null) {
-        parent::__construct("Invalid postal code '$postalCode'.", $code, $previous);
-    }
-
-}
-

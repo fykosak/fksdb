@@ -6,7 +6,6 @@ use Authentication\AccountManager;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use Mail\MailTemplateFactory;
-use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use ServicePerson;
 
@@ -14,7 +13,7 @@ use ServicePerson;
  * Sends email notification of account creation
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class LoginInvitation extends Object {

@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use ModelEvent;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
@@ -56,11 +55,11 @@ class FyziklaniFactory {
 
     /**
      * @param ModelEvent $event
-     * @return Form
+     * @return FormControl
      */
     public function createEntryQRForm(ModelEvent $event) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->addText('taskCode')->setAttribute('readonly', true);
         foreach ($event->getParameter('availablePoints') as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
@@ -68,17 +67,18 @@ class FyziklaniFactory {
                 ->setAttribute('class', 'btn-' . $points . '-points')->setDisabled(true);
         }
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
-        return $form;
+        return $control;
     }
 
     public function createEditForm(ModelEvent $event) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
+
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIdField(), 'team_id');
         $form->addComponent($this->createTaskField(), 'task');
         $form->addComponent($this->createPointsField($event), 'points');
         $form->addSubmit('send', _('Uložit'));
-        return $form;
+        return $control;
     }
 }
