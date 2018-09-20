@@ -1,29 +1,16 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani;
+namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results;
 
 use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 
-class Results extends FyziklaniModule {
+
+abstract class Results extends ResultsAndStatistics {
     /**
      * @var bool
      */
     private static $JSAttached = false;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    public function __construct($mode) {
-        parent::__construct();
-        $this->mode = $mode;
-    }
-
-    public function getData() {
-        return null;
-    }
-
 
     protected function attached($obj) {
         parent::attached($obj);
@@ -33,11 +20,7 @@ class Results extends FyziklaniModule {
         }
     }
 
-    protected function getMode() {
-        return $this->mode;
-    }
-
-    protected function getComponentName() {
+    protected final function getComponentName() {
         return 'results';
     }
 }

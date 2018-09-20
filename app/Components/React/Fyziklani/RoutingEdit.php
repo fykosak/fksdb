@@ -12,6 +12,23 @@ class RoutingEdit extends FyziklaniModule {
      * @var array
      */
     private $data;
+    /**
+     * @var \ServiceBrawlTeamPosition
+     */
+    private $serviceBrawlTeamPosition;
+
+
+    public function __construct(
+        $mode,
+        \ServiceBrawlRoom $serviceBrawlRoom,
+        \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
+        \ModelEvent $event
+    ) {
+        parent::__construct($serviceBrawlRoom, $event);
+
+        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
+        //$this->mode = $mode;
+    }
 
     public function setData($data) {
         $this->data = $data;

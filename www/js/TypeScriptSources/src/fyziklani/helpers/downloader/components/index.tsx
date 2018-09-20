@@ -9,6 +9,7 @@ import {
     fetchResults,
     waitForFetch,
 } from '../actions/';
+import { INetteActions } from '../../../../index';
 
 interface IState {
     isSubmitting?: boolean;
@@ -16,11 +17,13 @@ interface IState {
     refreshDelay?: number;
     isRefreshing?: boolean;
     onWaitForFetch?: (lastUpdated: string, delay: number) => void;
+
     onFetch?(): void;
 }
 
 interface IProps {
     accessKey: string;
+    actions: INetteActions;
 }
 
 class Downloader extends React.Component<IState & IProps, {}> {
@@ -65,10 +68,14 @@ const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IStat
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>, ownProps: IProps): IState => {
-    const {accessKey} = ownProps;
+    const {accessKey, actions} = ownProps;
+    if (!actions.hasOwnProperty('refresh')) {
+        throw new Error('you need to have refresh URL');
+    }
+    const url = actions.refresh;
     return {
-        onFetch: () => fetchResults(accessKey, dispatch, null),
-        onWaitForFetch: (lastUpdated: string, delay: number): void => waitForFetch(accessKey, dispatch, delay, lastUpdated),
+        onFetch: () => fetchResults(accessKey, dispatch, null, url),
+        onWaitForFetch: (lastUpdated: string, delay: number): void => waitForFetch(accessKey, dispatch, delay, lastUpdated, url),
     };
 };
 

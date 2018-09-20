@@ -3,12 +3,11 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\React\Fyziklani\Results;
-use Nette\Application\Responses\JsonResponse;
-
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
     use \ReactRequest;
+
     /**
      * @throws \Nette\Application\ForbiddenRequestException
      */
@@ -85,36 +84,36 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function renderResultsView() {
-        if ($this->isAjax()) {
-            $this->handleAjaxCall();
-        }
+        /*  if ($this->isAjax()) {
+              $this->handleAjaxCall();
+          }*/
     }
 
     /**
      * @throws \Nette\Application\AbortException
      */
     public function renderResultsPresentation() {
-        if ($this->isAjax()) {
-            $this->handleAjaxCall();
-        }
+        /* if ($this->isAjax()) {
+             $this->handleAjaxCall();
+         }*/
     }
 
     /**
      * @throws \Nette\Application\AbortException
      */
     public function renderTeamStatistics() {
-        if ($this->isAjax()) {
-            $this->handleAjaxCall();
-        }
+        /*  if ($this->isAjax()) {
+              $this->handleAjaxCall();
+          }*/
     }
 
     /**
      * @throws \Nette\Application\AbortException
      */
     public function renderTaskStatistics() {
-        if ($this->isAjax()) {
-            $this->handleAjaxCall();
-        }
+        /* if ($this->isAjax()) {
+             $this->handleAjaxCall();
+         }*/
     }
 
     /**

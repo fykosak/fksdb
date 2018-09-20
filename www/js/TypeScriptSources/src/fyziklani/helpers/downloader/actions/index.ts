@@ -22,6 +22,7 @@ export const fetchResults = (
     accessKey: string,
     dispatch: Dispatch<IState>,
     oldLastUpdated: string = null,
+    url: string,
 ): Promise<IResponse<IResponseData>> => {
     const data: IRequest<string> = {
         act: '@@fyziklani/results',
@@ -31,12 +32,18 @@ export const fetchResults = (
     if (oldLastUpdated) {
         data.requestData = oldLastUpdated;
     }
-    return dispatchNetteFetch<string, IResponseData, IState>(accessKey, dispatch, data, () => null, () => null);
+    return dispatchNetteFetch<string, IResponseData, IState>(accessKey, dispatch, data, () => null, () => null, url);
 };
 
-export const waitForFetch = (accessKey: string, dispatch: Dispatch<IState>, delay: number, lastUpdated: string = null): any => {
+export const waitForFetch = (
+    accessKey: string,
+    dispatch: Dispatch<IState>,
+    delay: number,
+    lastUpdated: string = null,
+    url: string,
+): any => {
     return setTimeout(() => {
-        return fetchResults(accessKey, dispatch, lastUpdated);
+        return fetchResults(accessKey, dispatch, lastUpdated, url);
     }, delay);
 };
 

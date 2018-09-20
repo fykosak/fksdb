@@ -10,13 +10,14 @@ import {
 } from './interfaces';
 import jqXHR = JQuery.jqXHR;
 
-export async function netteFetch<F, D, T= any>(
-    data: IRequest<F>,
-    success: (data: IResponse<D>) => void,
+export async function netteFetch<TFormData, TResponseData, T= any>(
+    data: IRequest<TFormData>,
+    success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
-): Promise<IResponse<D>> {
+    url: string = null,
+): Promise<IResponse<TResponseData>> {
     const netteJQuery: any = $;
-    return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
+    return new Promise((resolve: (d: IResponse<TResponseData>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
             error: (e: jqXHR<T>) => {
@@ -24,10 +25,11 @@ export async function netteFetch<F, D, T= any>(
                 reject(e);
             },
             method: 'POST',
-            success: (d: IResponse<D>) => {
+            success: (d: IResponse<TResponseData>) => {
                 success(d);
                 resolve(d);
             },
+            url,
         });
     });
 }
@@ -36,6 +38,7 @@ export async function uploadFile<F, D, T>(
     data: IRequest<F>,
     success: (data: IResponse<D>) => void,
     error: (e: jqXHR<T>) => void,
+    url: string = null,
 ): Promise<IResponse<D>> {
     return new Promise((resolve: (d: IResponse<D>) => void, reject) => {
         $.ajax({
@@ -53,7 +56,7 @@ export async function uploadFile<F, D, T>(
                 success(d);
             },
             type: 'POST',
-            url: '#',
+            url,
         });
     });
 }
@@ -64,6 +67,7 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= an
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
+    url: string = null,
 ): Promise<IResponse<TResponseData>> {
 
     dispatch(submitStart(accessKey));
@@ -74,7 +78,7 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= an
         (e: jqXHR<T>) => {
             dispatch(submitFail<T>(e, accessKey));
             error(e);
-        });
+        }, url);
 }
 
 export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= any>(
@@ -83,6 +87,7 @@ export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= an
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
+    url: string = null,
 ): Promise<IResponse<TResponseData>> {
 
     dispatch(submitStart(accessKey));
@@ -93,5 +98,5 @@ export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= an
         (e: jqXHR<T>) => {
             dispatch(submitFail<T>(e, accessKey));
             error(e);
-        });
+        }, url);
 }

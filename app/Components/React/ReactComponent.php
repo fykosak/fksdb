@@ -6,6 +6,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\Templating\FileTemplate;
+use Nette\Utils\Json;
 
 /**
  * Class ReactComponent
@@ -44,9 +45,23 @@ abstract class ReactComponent extends Control {
         $this->template->moduleName = $this->getModuleName();
         $this->template->componentName = $this->getComponentName();
         $this->template->mode = $this->getMode();
+        $this->template->actions = Json::encode($this->getActions());
 
         $this->template->data = $this->getData();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'ReactComponent.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
+    }
+
+    protected function getActions() {
+        return [];
+    }
+
+    /**
+     * @return object
+     */
+    protected function getReactRequest() {
+        $requestData = $this->getPresenter()->getHttpRequest()->getPost('requestData');
+        $act = $this->getPresenter()->getHttpRequest()->getPost('act');
+        return (object)['requestData' => $requestData, 'act' => $act];
     }
 }
