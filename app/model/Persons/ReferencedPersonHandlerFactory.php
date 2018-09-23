@@ -85,3 +85,4 @@ class ReferencedPersonHandlerFactory extends Object {
     }
 
 }
+

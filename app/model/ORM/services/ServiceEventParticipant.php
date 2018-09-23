@@ -12,8 +12,6 @@ class ServiceEventParticipant extends AbstractServiceSingle {
 
     public function save(IModel &$model) {
         try {
-            \Nette\Diagnostics\Debugger::barDump($model, 'model');
-            \Nette\Diagnostics\Debugger::barDump($model->isNew(), 'isNev?');
             parent::save($model);
         } catch (ModelException $e) {
             if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {

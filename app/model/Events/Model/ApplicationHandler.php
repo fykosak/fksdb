@@ -17,7 +17,6 @@ use FormUtils;
 use ModelEvent;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use RuntimeException;
 use SystemContainer;
@@ -109,7 +108,7 @@ class ApplicationHandler {
         $this->initializeMachine($holder);
 
         try {
-            $explicitMachineName = $explicitMachineName ?: $this->machine->getPrimaryMachine()->getName();
+            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
 
             $this->beginTransaction();
 
@@ -147,15 +146,15 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
                 $this->logger->log(_("Přihláška smazána."), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             }
         } catch (ModelDataConflictException $e) {
             $container = $e->getReferencedId()->getReferencedContainer();
