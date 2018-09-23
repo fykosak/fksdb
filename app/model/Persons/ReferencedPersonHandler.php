@@ -3,8 +3,8 @@
 namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FormUtils;
 use ModelException;
 use ModelPerson;
@@ -97,13 +97,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->resolution = $resolution;
     }
 
-    public function createFromValues(ArrayHash $values, &$messages) {
+    public function createFromValues(ArrayHash $values) {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
         if (!$person) {
             $person = $this->servicePerson->createNew();
         }
-        $messages = $this->store($person, $values);
+        $this->store($person, $values);
         return $person;
     }
 
@@ -112,11 +112,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param ArrayHash $values
      * @param $messages
      */
-    public function update(IModel $model, ArrayHash $values, &$messages) {
+    public function update(IModel $model, ArrayHash $values) {
         /**
          * @var ModelPerson $model
          */
-        $messages = $this->store($model, $values);
+        $this->store($model, $values);
     }
 
     public function setEventId($eventId) {

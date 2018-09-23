@@ -20,9 +20,9 @@ interface IReferencedHandler {
 
     public function setResolution($resolution);
 
-    public function update(IModel $model, ArrayHash $values, &$messages);
+    public function update(IModel $model, ArrayHash $values);
 
-    public function createFromValues(ArrayHash $values, &$messages);
+    public function createFromValues(ArrayHash $values);
 
     public function isSecondaryKey($field);
 
