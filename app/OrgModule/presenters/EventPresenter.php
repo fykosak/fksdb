@@ -5,8 +5,8 @@ namespace OrgModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKS\Config\NeonScheme;
-use FKS\Logging\MemoryLogger;
+use FKSDB\Config\NeonScheme;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
@@ -16,7 +16,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFacto
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
-use Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -31,7 +31,6 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceAuthToken;
 use ServiceEvent;
-use ServiceEventOrg;
 use SystemContainer;
 use Utils;
 

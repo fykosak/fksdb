@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKS\Components\Controls\PresenterBuilder;
+use FKSDB\Components\Controls\PresenterBuilder;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;

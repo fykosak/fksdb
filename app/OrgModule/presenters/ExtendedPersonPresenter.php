@@ -4,7 +4,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKS\Config\Expressions\Helpers;
+use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;

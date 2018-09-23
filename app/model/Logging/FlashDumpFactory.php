@@ -1,15 +1,14 @@
 <?php
 
-namespace Logging;
+namespace FKSDB\Logging;
 
-use FKS\Logging\FlashMessageDump;
-use Nette\InvalidArgumentException;
+
 use Nette\MemberAccessException;
 use Nette\Utils\Strings;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FlashDumpFactory {

@@ -7,7 +7,7 @@ use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use Events\Processings\AbstractProcessing;
 use Events\SubmitProcessingException;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\ArrayHash;
 use Nette\Forms\Form;
 use YearCalculator;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Nette\ArrayHash;
 use Nette\Callback;
@@ -15,7 +15,7 @@ use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SubmitButton;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -64,7 +64,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->monitor('Nette\Forms\Form');
 
         $this->referencedId = $referencedId;

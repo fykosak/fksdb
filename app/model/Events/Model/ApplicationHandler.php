@@ -12,7 +12,7 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use FormUtils;
 use ModelEvent;
 use Nette\ArrayHash;

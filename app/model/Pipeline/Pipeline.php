@@ -2,7 +2,7 @@
 
 namespace Pipeline;
 
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\InvalidStateException;
 
 /**

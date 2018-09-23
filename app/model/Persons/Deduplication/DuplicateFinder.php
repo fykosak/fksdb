@@ -2,15 +2,15 @@
 
 namespace Persons\Deduplication;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidArgumentException;
+
 use Nette\Utils\Strings;
 use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DuplicateFinder {
@@ -75,7 +75,7 @@ class DuplicateFinder {
 
     /**
      * @todo Implement more than binary score.
-     * 
+     *
      * @param ActiveRow $a
      * @param ActiveRow $b
      * @return float

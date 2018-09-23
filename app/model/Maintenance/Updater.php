@@ -2,7 +2,7 @@
 
 namespace Maintenance;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use Nette\Diagnostics\Debugger;
 use Nette\Object;
 

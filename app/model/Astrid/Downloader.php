@@ -2,14 +2,14 @@
 
 namespace Astrid;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use ModelContest;
 use Nette\InvalidStateException;
 use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Downloader {
@@ -54,7 +54,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \ModelContest $contest
      * @param int $year
      * @param int $series
      * @param string $language
@@ -73,7 +73,7 @@ class Downloader {
     }
 
     /**
-     * @param \Tasks\ModelContest $contest
+     * @param \ModelContest $contest
      * @param int $year
      * @param int $series
      * @return string filename of downloaded XML file
@@ -108,5 +108,5 @@ class Downloader {
 }
 
 class DownloadException extends RuntimeException {
-    
+
 }

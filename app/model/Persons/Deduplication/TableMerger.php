@@ -2,7 +2,7 @@
 
 namespace Persons\Deduplication;
 
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\Database\Connection;
 use Nette\Database\Reflection\AmbiguousReferenceKeyException;
 use Nette\Database\Reflection\MissingReferenceException;
@@ -13,10 +13,10 @@ use Persons\Deduplication\MergeStrategy\IMergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @note Works with single column primary keys only.
  * @note Assumes name of the FK column is the same like the referenced PK column.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TableMerger {
@@ -87,7 +87,7 @@ class TableMerger {
     }
 
     /**
-     * 
+     *
      * @param mixed $column
      * @return boolean
      */

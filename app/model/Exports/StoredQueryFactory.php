@@ -5,7 +5,7 @@ namespace Exports;
 use BasePresenter;
 use DOMDocument;
 use DOMNode;
-use Exports\StoredQuery;
+
 use ISeriesPresenter;
 use ModelStoredQuery;
 use Nette\Application\BadRequestException;
@@ -18,7 +18,7 @@ use WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory implements IXMLNodeSerializer {

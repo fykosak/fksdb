@@ -8,8 +8,8 @@ use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
-use FKS\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
+use FKSDB\Config\Expressions\Helpers;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
@@ -82,7 +82,6 @@ class PersonFactory extends AbstractFactory {
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getEvent();
-
         $this->referencedEventPersonFactory->setEventId($event->event_id);
         $acYear = $event->getAcYear();
 

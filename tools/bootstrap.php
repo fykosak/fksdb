@@ -2,8 +2,8 @@
 
 use Authorization\ACLExtension;
 use Events\EventsExtension;
-use FKS\Config\Extensions\NavigationExtension;
-use FKS\Config\Extensions\RouterExtension;
+use FKSDB\Config\Extensions\NavigationExtension;
+use FKSDB\Config\Extensions\RouterExtension;
 use JanTvrdik\Components\DatePicker;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;

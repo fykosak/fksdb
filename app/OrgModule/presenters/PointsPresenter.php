@@ -137,7 +137,7 @@ class PointsPresenter extends SeriesPresenter {
                 ->setText($fullname)
                 ->add(Html::el('br'))
                 ->add($schoolLabel);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $label);
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
 
             $namingContainer = $container->addContainer($contestant->ct_id);

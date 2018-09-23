@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use FKS\Logging\MemoryLogger;
+use FKSDB\Logging\MemoryLogger;
 use Pipeline\Pipeline;
 use ServiceOrg;
 use ServiceStudyYear;

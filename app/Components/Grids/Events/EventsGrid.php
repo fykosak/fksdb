@@ -32,13 +32,9 @@ class EventsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
-
         //
         // data
         //
-
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
         $dataSource = new SearchableDataSource($events);
@@ -82,6 +78,11 @@ class EventsGrid extends BaseGrid {
             ->setText(_('Organizátoři'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
+            });
+        $this->addButton('accommodation')
+            ->setText(_('Accommodation'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('EventAccommodation:list', ['eventId' => $row->event_id]);
             });
 
         $this->addGlobalButton('add')

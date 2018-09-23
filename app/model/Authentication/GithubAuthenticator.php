@@ -2,7 +2,7 @@
 
 namespace Authentication;
 
-use FKS\Config\GlobalParameters;
+use FKSDB\Config\GlobalParameters;
 use FullHttpRequest;
 use Github\Events\Event;
 use ModelLogin;

@@ -11,7 +11,7 @@ use Events\Machine\Transition;
 use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use IteratorAggregate;
 use LogicException;
 use ModelEvent;

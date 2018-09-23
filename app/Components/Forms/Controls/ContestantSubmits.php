@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
 use FormUtils;
 use InvalidArgumentException;
@@ -12,7 +12,7 @@ use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
-use ServiceTaskStudyYear;
+
 use Traversable;
 
 /**
@@ -61,7 +61,7 @@ class ContestantSubmits extends BaseControl {
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
         parent::__construct($label);
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
 
         $this->setTasks($tasks);
         $this->submitService = $submitService;

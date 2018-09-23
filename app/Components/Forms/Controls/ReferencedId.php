@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKS\Utils\Promise;
+use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
