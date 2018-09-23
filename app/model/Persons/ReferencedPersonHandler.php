@@ -4,6 +4,7 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FormUtils;
 use ModelException;
 use ModelPerson;
@@ -12,11 +13,11 @@ use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use ORM\IModel;
+use ServiceMPersonHasFlag;
 use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
-use ServiceMPersonHasFlag;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -59,11 +60,36 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     private $acYear;
 
     /**
-     * @var enum
+     * @var integer
+     */
+    private $eventId;
+
+    /**
+     * @var mixed
      */
     private $resolution;
 
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag, $acYear, $resolution) {
+    /**
+     * @var \ServiceEventPersonAccommodation
+     */
+    private $serviceEventPersonAccommodation;
+
+    /**
+     * @var Handler
+     */
+    private $eventAccommodationHandler;
+
+    function __construct(
+        Handler $eventAccommodation,
+        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServicePerson $servicePerson,
+        ServicePersonInfo $servicePersonInfo,
+        ServicePersonHistory $servicePersonHistory,
+        ServiceMPostContact $serviceMPostContact,
+        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        $acYear,
+        $resolution
+    ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
@@ -71,6 +97,8 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
+        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+        $this->eventAccommodationHandler = $eventAccommodation;
     }
 
     public function getResolution() {
@@ -95,6 +123,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->store($model, $values);
     }
 
+    public function setEventId($eventId) {
+        $this->eventId = $eventId;
+    }
+
     private function store(ModelPerson &$person, ArrayHash $data) {
         /*
          * Process data
@@ -109,10 +141,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
             $models = array(
                 'person' => &$person,
-                'person_info' => ($info = $person->getInfo()) ? : $this->servicePersonInfo->createNew(),
-                'person_history' => ($history = $person->getHistory($this->acYear)) ? : $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ? : $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
+                'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
+                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
+                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
             );
             $services = array(
                 'person' => $this->servicePerson,
@@ -174,9 +206,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
-                    $subconflicts = $this->getConflicts($model[$key], $value);
-                    if (count($subconflicts)) {
-                        $conflicts[$key] = $subconflicts;
+                    $subConflicts = $this->getConflicts($model[$key], $value);
+                    if (count($subConflicts)) {
+                        $conflicts[$key] = $subConflicts;
                     }
                 } else {
                     if ($model[$key] != $value) {
@@ -246,7 +278,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 continue;
             }
 
-            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ? : $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
+            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
 
             $data[$fid] = new ArrayHash();
             $data[$fid]['value'] = $value;
