@@ -8,11 +8,12 @@ use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\DataValidator;
 use Events\Model\Holder\Field;
 use Events\Model\PersonContainerResolver;
-use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
+use FKSDB\Config\Expressions\Helpers;
 use Nette\ComponentModel\Component;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\HiddenField;
 use Nette\Security\User;
 use Persons\SelfResolver;
 use ServicePerson;
@@ -80,7 +81,7 @@ class PersonFactory extends AbstractFactory {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
-        $event = $field->getBaseHolder()->getHolder()->getEvent();
+        $event = $field->getBaseHolder()->getEvent();
         $this->referencedEventPersonFactory->setEventId($event->event_id);
         $acYear = $event->getAcYear();
 
@@ -93,6 +94,12 @@ class PersonFactory extends AbstractFactory {
         return $components;
     }
 
+    /**
+     * @param HiddenField[] $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $hiddenField = reset($component);
         $default = $field->getValue();
