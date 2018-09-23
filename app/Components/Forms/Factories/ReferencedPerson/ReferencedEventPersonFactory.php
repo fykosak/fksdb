@@ -81,7 +81,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             return null;
         }
         if ($sub === 'person_accommodation') {
-            //   return $person->getAccommodationByEventId($this->eventId);
+            return $person->getAccommodationByEventId($this->eventId);
         }
         return parent::getPersonValue($person, $sub, $field, $acYear, $options);
     }
