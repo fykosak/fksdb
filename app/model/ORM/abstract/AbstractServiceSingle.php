@@ -122,7 +122,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
         try {
-            \Nette\Diagnostics\Debugger::barDump($model, 'results');
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->toArray());
                 if ($result !== false) {
@@ -133,7 +132,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
                 }
             } else {
                 $result = $model->update() !== false;
-                \Nette\Diagnostics\Debugger::barDump($result, 'results');
             }
         } catch (PDOException $e) {
             throw new ModelException('Error when storing model.', null, $e);

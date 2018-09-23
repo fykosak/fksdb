@@ -7,7 +7,6 @@ use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
 use ModelEvent;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
