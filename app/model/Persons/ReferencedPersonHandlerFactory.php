@@ -50,8 +50,15 @@ class ReferencedPersonHandlerFactory extends Object {
      */
     private $eventAccommodationHandler;
 
-
-    function __construct(Handler $eventAccommodationAdjustment, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag) {
+    function __construct(
+        Handler $eventAccommodationAdjustment,
+        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServicePerson $servicePerson,
+        ServicePersonInfo $servicePersonInfo,
+        ServicePersonHistory $servicePersonHistory,
+        ServiceMPostContact $serviceMPostContact,
+        ServiceMPersonHasFlag $serviceMPersonHasFlag
+    ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
@@ -61,13 +68,20 @@ class ReferencedPersonHandlerFactory extends Object {
         $this->eventAccommodationHandler = $eventAccommodationAdjustment;
     }
 
-    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION,$eventId) {
+    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
-            $this->eventAccommodationHandler, $this->serviceEventPersonAccommodation, $this->servicePerson, $this->servicePersonInfo, $this->servicePersonHistory, $this->serviceMPostContact, $this->serviceMPersonHasFlag, $acYear, $resolution
+            $this->eventAccommodationHandler,
+            $this->serviceEventPersonAccommodation,
+            $this->servicePerson,
+            $this->servicePersonInfo,
+            $this->servicePersonHistory,
+            $this->serviceMPostContact,
+            $this->serviceMPersonHasFlag,
+            $acYear,
+            $resolution
         );
         $handler->setEventId($eventId);
         return $handler;
     }
 
 }
-

@@ -77,7 +77,17 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $eventAccommodationHandler;
 
-    function __construct(Handler $eventAccommodation, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, ServicePersonHistory $servicePersonHistory, ServiceMPostContact $serviceMPostContact, ServiceMPersonHasFlag $serviceMPersonHasFlag, $acYear, $resolution) {
+    function __construct(
+        Handler $eventAccommodation,
+        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServicePerson $servicePerson,
+        ServicePersonInfo $servicePersonInfo,
+        ServicePersonHistory $servicePersonHistory,
+        ServiceMPostContact $serviceMPostContact,
+        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        $acYear,
+        $resolution
+    ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
@@ -143,7 +153,6 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_accommodation' => null,
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
@@ -215,9 +224,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
-                    $subconflicts = $this->getConflicts($model[$key], $value);
-                    if (count($subconflicts)) {
-                        $conflicts[$key] = $subconflicts;
+                    $subConflicts = $this->getConflicts($model[$key], $value);
+                    if (count($subConflicts)) {
+                        $conflicts[$key] = $subConflicts;
                     }
                 } else {
                     if ($model[$key] != $value) {
@@ -286,6 +295,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             if ($value === null) {
                 continue;
             }
+
             $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(array('fid' => $fid));
 
             $data[$fid] = new ArrayHash();
