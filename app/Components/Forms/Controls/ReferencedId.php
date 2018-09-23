@@ -5,10 +5,8 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
-use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Nette\Mail\Message;
 use ORM\IModel;
 use ORM\IService;
 
@@ -169,14 +167,12 @@ class ReferencedId extends HiddenField {
                 if ($referencedId === self::VALUE_PROMISE) {
                     $model = $this->handler->createFromValues($values, $messages);
 
-                    $this->addMessages($messages);
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } else if ($referencedId) {
                     $model = $this->getService()->findByPrimary($referencedId);
                     $this->handler->update($model, $values, $messages);
-                    $this->addMessages($messages);
 
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                     $model = $this->getService()->findByPrimary($model->getPrimary());
@@ -193,18 +189,6 @@ class ReferencedId extends HiddenField {
         });
         $this->setValue($referencedId);
         $this->setPromise($promise);
-    }
-
-    /**
-     * @param $messages Message[]
-     */
-    private function addMessages(array $messages) {
-        /**
-         * @var $message Message
-         */
-        foreach ($messages as $message) {
-            $this->getForm()->addError($message->getText());
-        }
     }
 
     private $attachedOnValidate = false;
