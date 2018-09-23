@@ -162,7 +162,6 @@ class ReferencedId extends HiddenField {
         $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
         $promise = new Promise(function () use ($referencedId, $values) {
-            $messages = [];
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
                     $model = $this->handler->createFromValues($values);
