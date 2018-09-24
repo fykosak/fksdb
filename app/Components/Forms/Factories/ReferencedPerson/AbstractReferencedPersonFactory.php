@@ -337,8 +337,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     protected function createSearchControl($searchType) {
+
         switch ($searchType) {
-            default:
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
@@ -347,6 +347,9 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
+                break;
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
         return $control;
     }
@@ -354,7 +357,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     protected function createSearchCallback($searchType) {
         $service = $this->servicePerson;
         switch ($searchType) {
-            default:
             case self::SEARCH_EMAIL:
                 return function ($term) use ($service) {
                     return $service->findByEmail($term);
@@ -365,12 +367,14 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 return function ($term) use ($service) {
                     return $service->findByPrimary($term);
                 };
+                break;
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
     protected function createTermToValuesCallback($searchType) {
         switch ($searchType) {
-            default:
             case self::SEARCH_EMAIL:
                 return function ($term) {
                     return ['person_info' => ['email' => $term]];
@@ -378,8 +382,10 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 break;
             case self::SEARCH_ID:
                 return function () {
-                    return array();
+                    return [];
                 };
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
