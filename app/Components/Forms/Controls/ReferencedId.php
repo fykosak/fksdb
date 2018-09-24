@@ -164,6 +164,7 @@ class ReferencedId extends HiddenField {
         $promise = new Promise(function () use ($referencedId, $values) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
+
                     $model = $this->handler->createFromValues($values);
                     $this->setValue($model, IReferencedSetter::MODE_FORCE);
                     $this->setModelCreated(true);
@@ -182,7 +183,6 @@ class ReferencedId extends HiddenField {
                 $e->setReferencedId($this);
                 throw $e;
             }
-
         });
         $this->setValue($referencedId);
         $this->setPromise($promise);

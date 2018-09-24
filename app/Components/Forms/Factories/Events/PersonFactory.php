@@ -110,6 +110,7 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
+
         $hiddenField->setDefaultValue($default);
     }
 
