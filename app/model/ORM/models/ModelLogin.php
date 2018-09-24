@@ -2,6 +2,7 @@
 
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
+use FKSDB\ORM\ModelPerson;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 

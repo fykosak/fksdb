@@ -3,8 +3,8 @@
 namespace Persons;
 
 use Authorization\ContestAuthorizator;
+use FKSDB\ORM\ModelPerson;
 use ModelContest;
-use ModelPerson;
 use Nette\Object;
 
 /**

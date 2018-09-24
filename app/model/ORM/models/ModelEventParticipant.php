@@ -1,4 +1,7 @@
 <?php
+
+use FKSDB\ORM\ModelPerson;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>

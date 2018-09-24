@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
@@ -13,14 +14,14 @@ class ModelEventOrg extends AbstractModelSingle implements IResource {
         $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
         return $row ? ModelPerson::createFromTableRow($row) : null;
     }
-    
+
     /**
      * @return ModelEvent
      */
     public function getEvent() {
         return ModelEvent::createFromTableRow($this->ref(DbNames::TAB_EVENT, 'event_id'));
     }
-    
+
     public function getResourceId() {
         return 'eventOrg';
     }

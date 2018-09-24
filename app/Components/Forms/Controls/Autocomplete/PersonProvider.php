@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\ORM\ModelPerson;
 use ModelContest;
-use ModelPerson;
 use Nette\Database\Table\Selection;
 use ServicePerson;
 use YearCalculator;

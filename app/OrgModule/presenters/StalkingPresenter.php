@@ -3,7 +3,6 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;
@@ -15,8 +14,9 @@ use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;

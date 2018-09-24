@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -12,7 +14,7 @@ class ModelPersonHistory extends AbstractModelSingle {
     public function getPerson() {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
-    
+
     /**
      * @return ModelSchool
      */

@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
 use Nette\Security\IResource;
 
 /**

@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
 use Nette\Security\IResource;
 
 /**
@@ -16,7 +17,7 @@ class ModelContestant extends AbstractModelSingle implements IResource {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
-    
+
     /**
      * @return ModelContest
      */

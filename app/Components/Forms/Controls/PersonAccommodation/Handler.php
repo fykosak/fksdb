@@ -3,7 +3,10 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
+use FKSDB\ORM\ModelPerson;
+use Nette\ArrayHash;
 use Nette\Diagnostics\Debugger;
+use Nette\NotImplementedException;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -15,12 +18,12 @@ class Handler {
     }
 
     /**
-     * @param \Nette\ArrayHash $data
-     * @param \ModelPerson $person
+     * @param ArrayHash $data
+     * @param ModelPerson $person
      * @param integer $eventId
      * @return Message[]
      */
-    public function prepareAndUpdate(\Nette\ArrayHash $data, \ModelPerson $person, $eventId) {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
         $messages = [];
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 
@@ -45,7 +48,8 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                $messages[] = new Message(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
+                $messages[] = new Message(sprintf(
+                    _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
                     $eventAccommodation->date->format(\ModelEventAccommodation::ACC_DATE_FORMAT)
@@ -57,17 +61,17 @@ class Handler {
     }
 
     /**
-     * @param \Nette\ArrayHash $data
+     * @param ArrayHash $data
      * @return integer[]
      */
-    private function prepareData(\Nette\ArrayHash $data) {
+    private function prepareData(ArrayHash $data) {
         foreach ($data as $type => $datum) {
             switch ($type) {
                 case Matrix::ResolutionId:
                     $data = (array)json_decode($datum);
                     break;
                 default:
-                    throw new \Nette\NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
+                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
             }
         }
 

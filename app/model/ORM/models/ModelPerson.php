@@ -1,6 +1,24 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
+use ModelAddress;
+use ModelContestant;
+use ModelEventAccommodation;
+use ModelEventPersonAccommodation;
+use ModelFlag;
+use ModelLogin;
+use ModelMPersonHasFlag;
+use ModelMPostContact;
+use ModelOrg;
+use ModelPersonHasFlag;
+use ModelPersonHistory;
+use ModelPersonInfo;
+use ModelPostContact;
 use Nette\Security\IResource;
+use YearCalculator;
 
 /**
  *
