@@ -15,7 +15,6 @@ use ModelMPostContact;
 use ModelOrg;
 use ModelPersonHasFlag;
 use ModelPersonHistory;
-use ModelPersonInfo;
 use ModelPostContact;
 use Nette\Security\IResource;
 use YearCalculator;
