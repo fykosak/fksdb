@@ -98,6 +98,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @param AbstractModelSingle $model
      * @param boolean $alive
      * @param array $data
+     * @param boolean $alive
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if (!$model instanceof $this->modelClassName) {
@@ -146,7 +147,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param AbstractModelSingle $model
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
