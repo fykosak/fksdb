@@ -263,13 +263,13 @@ class BaseHolder extends FreezableObject {
         $this->getService()->updateModel($this->getModel(), array(self::STATE_COLUMN => $state));
     }
 
-    public function updateModel($values) {
+    public function updateModel($values, $alive = true) {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        $this->getService()->updateModel($this->getModel(), $values);
+        $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
     public function resolveMultipleSecondaries($conflicts) {
-        if(!$this->secondaryResolution) {
+        if (!$this->secondaryResolution) {
             throw new SecondaryModelConflictException($this->getModel(), $conflicts);
         }
         $this->secondaryResolution->resolve($this->getModel(), $conflicts);
@@ -365,9 +365,9 @@ class BaseHolder extends FreezableObject {
      * @return Field[]
      */
     public function getDeterminingFields() {
-        return array_filter($this->fields, function(Field $field) {
-                    return $field->isDetermining();
-                });
+        return array_filter($this->fields, function (Field $field) {
+            return $field->isDetermining();
+        });
     }
 
     /**
