@@ -30,14 +30,14 @@ class BaseMachine extends FreezableObject {
     private $state;
 
     /**
-     * @var string[$state]
+     * @var string[]
      */
     private $states;
 
     /**
-     * @var Transition[$transitionMask]
+     * @var Transition[]
      */
-    private $transitions = array();
+    private $transitions = [];
 
     /**
      * @var Machine
@@ -48,11 +48,18 @@ class BaseMachine extends FreezableObject {
         $this->name = $name;
     }
 
+    /**
+     * @param $state
+     * @param $label
+     */
     public function addState($state, $label) {
         $this->updating();
         $this->states[$state] = $label;
     }
 
+    /**
+     * @param Transition $transition
+     */
     public function addTransition(Transition $transition) {
         $this->updating();
         $transition->setBaseMachine($this);
@@ -61,10 +68,17 @@ class BaseMachine extends FreezableObject {
         $this->transitions[$transition->getName()] = $transition;
     }
 
+    /**
+     * @return string
+     */
     public function getName() {
         return $this->name;
     }
 
+    /**
+     * @param $transitionMask
+     * @param $induced
+     */
     public function addInducedTransition($transitionMask, $induced) {
         if (!$this->isFrozen()) {
             throw new InvalidStateException('Cannot add induced transitions to unfreezed base machine.');
@@ -77,10 +91,16 @@ class BaseMachine extends FreezableObject {
         }
     }
 
+    /**
+     * @return Machine
+     */
     public function getMachine() {
         return $this->machine;
     }
 
+    /**
+     * @param Machine $machine
+     */
     public function setMachine(Machine $machine) {
         $this->machine = $machine;
     }
@@ -92,10 +112,16 @@ class BaseMachine extends FreezableObject {
         return $this->state;
     }
 
+    /**
+     * @param $state
+     */
     public function setState($state) {
         $this->state = $state;
     }
 
+    /**
+     * @return string
+     */
     public function getStates() {
         return $this->states;
     }
@@ -118,6 +144,9 @@ class BaseMachine extends FreezableObject {
         }
     }
 
+    /**
+     * @return Transition[]
+     */
     public function getTransitions() {
         return $this->transitions;
     }
@@ -133,10 +162,18 @@ class BaseMachine extends FreezableObject {
                 });
     }
 
+    /**
+     * @param $name
+     * @return Transition
+     */
     public function getTransition($name) {
         return $this->transitions[$name];
     }
 
+    /**
+     * @param $state
+     * @return Transition[]
+     */
     public function getTransitionByTarget($state) {
         $candidates = array_filter($this->getMatchingTransitions(), function(Transition $transition) use($state) {
                     return $transition->getTarget() == $state;
@@ -150,6 +187,10 @@ class BaseMachine extends FreezableObject {
         }
     }
 
+    /**
+     * @param null $mask
+     * @return Transition[]
+     */
     private function getMatchingTransitions($mask = null) {
         if ($mask === null) {
             $mask = $this->getState();
