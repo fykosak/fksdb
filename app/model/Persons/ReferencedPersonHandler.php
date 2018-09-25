@@ -153,6 +153,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
+                'person_accommodation' => ($personAccommodation = $person->getAccommodationByEventId($this->eventId) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];
