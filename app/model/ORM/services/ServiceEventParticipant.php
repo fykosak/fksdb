@@ -26,7 +26,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
          * @var $model ModelEventParticipant
          */
         parent::updateModel($model, $data, $alive);
-        if (!$alive && !$model->isNew()) {
+        if (!$alive /*&& !$model->isNew()*/) {
             $person = $model->getPerson();
             if ($person) {
                 $person->removeAccommodationForEvent($model->event_id);
