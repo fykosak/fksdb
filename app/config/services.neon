@@ -64,8 +64,6 @@ services:
         setup:
             - setLogPath(%logDir%/mail)
 
-    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
-
 
     #
     # Events
