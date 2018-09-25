@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
-use Nette\Diagnostics\Debugger;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -52,7 +51,6 @@ class Handler {
                 ), 'danger');
             }
         }
-        Debugger::barDump($messages, 'messages');
         return $messages;
     }
 
