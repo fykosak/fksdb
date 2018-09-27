@@ -73,6 +73,9 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     public function updateModel(IModel $model, $data, $alive = true) {
+        \Nette\Diagnostics\Debugger::barDump($alive, 'alive');
+        \Nette\Diagnostics\Debugger::barDump($data, 'data');
+        \Nette\Diagnostics\Debugger::barDump($model, 'model');
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }

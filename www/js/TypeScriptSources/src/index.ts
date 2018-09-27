@@ -10,7 +10,7 @@ class AppCollector {
     }
 
     public run() {
-        document.querySelectorAll('.react-root,[data-react-root]').forEach((element: Element) => {
+        document.querySelectorAll('.react-root,*[data-react-root]').forEach((element: Element) => {
             const module = element.getAttribute('data-module');
             const component = element.getAttribute('data-component');
             const mode = element.getAttribute('data-mode');
