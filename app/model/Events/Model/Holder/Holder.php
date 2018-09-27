@@ -222,8 +222,6 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
             } else {
                 $alive = true;
             }
-            Debugger::barDump($alive);
-            Debugger::barDump(isset($newStates[$name]));
             if (isset($values[$name])) {
                 $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
             }

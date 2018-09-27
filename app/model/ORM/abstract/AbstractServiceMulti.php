@@ -28,6 +28,10 @@ abstract class AbstractServiceMulti extends Object implements IService {
      * @var AbstractServiceSingle
      */
     protected $joinedService;
+    /**
+     * @var string
+     */
+    protected $joiningColumn;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
@@ -73,9 +77,6 @@ abstract class AbstractServiceMulti extends Object implements IService {
     }
 
     public function updateModel(IModel $model, $data, $alive = true) {
-        \Nette\Diagnostics\Debugger::barDump($alive, 'alive');
-        \Nette\Diagnostics\Debugger::barDump($data, 'data');
-        \Nette\Diagnostics\Debugger::barDump($model, 'model');
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
@@ -86,7 +87,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * Use this method to store a model!
      *
-     * @param AbstractModelMulti $model
+     * @param IModel $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
@@ -106,7 +107,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * Use this method to delete a model!
      *
-     * @param AbstractModelMulti $model
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */

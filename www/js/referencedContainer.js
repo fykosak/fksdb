@@ -31,7 +31,7 @@ $(function() {
 
             function searchifyContainer() {
                 // create search button
-                var searchButton = $('<span class="input-group-btn"><button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button></span>');
+                var searchButton = $('<span class="input-group-btn"><button class="btn btn-default" type="button"><span class="fa fa-search glyphicon glyphicon-search"></span></button></span>');
                 searchButton.click(function() {
                     elSubmitSearch.click();
                 });
@@ -41,7 +41,7 @@ $(function() {
                 if(elSearch.data('uiElement')) {
                     elToReplace = elSearch.data('uiElement');
                 }
-                
+
                 // Workaround for broken replaceWith()
                 //elToReplace.replaceWith(searchInputGroup);
                 var par = elToReplace.parent();
@@ -51,7 +51,7 @@ $(function() {
                 } else {
                     searchInputGroup.prependTo(par);
                 }
-                
+
                 searchInputGroup.append(elSearch);
                 searchInputGroup.append(elToReplace);
                 searchInputGroup.append(searchButton);
@@ -130,10 +130,10 @@ $(function() {
                 var elValue = compactGroup.find('p.form-control-static');
                 elValue.text(value);
 
-                var buttonEdit = $('<button type="button" class="btn btn-sm btn-default" title="Upravit"><span class="glyphicon glyphicon-edit"></span></button>');
+                var buttonEdit = $('<button type="button" class="btn btn-sm btn-default" title="Upravit"><span class="glyphicon glyphicon-edit fa fa-pencil"></span></button>');
                 buttonEdit.click(decompactifyContainer);
 
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning" title="Smazat"><span class="glyphicon glyphicon-remove fa fa-remove"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
                 });
@@ -164,7 +164,7 @@ $(function() {
 
             function decorateClearButton() {
                 var well = elContainer.children('.well');
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="glyphicon glyphicon-remove"></span></button>');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="glyphicon glyphicon-remove fa fa-remove"></span></button>');
                 buttonDel.click(function() {
                     elClear.click();
                 });

@@ -19,7 +19,7 @@ class AppCollector {
                 if (this.items.hasOwnProperty(index)) {
                     const item = this.items[index];
                     if (item(element, module, component, mode, rawData)) {
-                        break;
+                        return;
                     }
                 }
             }

@@ -2,17 +2,37 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use Nette\Forms\Controls\TextInput;
+use FKSDB\Components\React\IReactComponent;
+use Nette\Forms\Controls\HiddenField;
 
-class Matrix extends TextInput {
-    const ResolutionId = 'matrix';
+class Matrix extends HiddenField implements IReactComponent {
+    const RESOLUTION_ID = 'matrix';
 
     public function __construct() {
-        parent::__construct(_('Accommodation'));
+        parent::__construct();
         $this->setAttribute('data-react-root', true);
-        $this->setAttribute('data-module', 'events');
-        $this->setAttribute('data-component', 'accommodation');
-        $this->setAttribute('data-mode', null);
+        $this->setAttribute('data-module', $this->getModuleName());
+        $this->setAttribute('data-component', $this->getComponentName());
+        $this->setAttribute('data-mode', $this->getMode());
+    }
+
+    public function getComponentName() {
+        return 'accommodation';
+    }
+
+    public function getModuleName() {
+        return 'events';
+    }
+
+    public function getMode() {
+        return self::RESOLUTION_ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getData() {
+        return null;
     }
 
     public function setAccommodationDefinition($accommodationDef) {

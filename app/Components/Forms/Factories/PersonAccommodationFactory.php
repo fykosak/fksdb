@@ -39,7 +39,7 @@ class PersonAccommodationFactory {
      */
     public function createField($fieldName, $eventId) {
         switch ($fieldName) {
-            case Matrix::ResolutionId:
+            case Matrix::RESOLUTION_ID:
                 return $this->createMatrixSelect($eventId);
             default:
                 throw new InvalidArgumentException();
