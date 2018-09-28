@@ -3,6 +3,7 @@
 namespace Persons;
 
 use Authorization\ContestAuthorizator;
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use ModelContest;
 use ModelPerson;
 use Nette\Object;

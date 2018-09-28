@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -26,7 +27,6 @@ use Nette\Utils\Arrays;
 use ORM\IModel;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
 use ServiceFlag;
 use ServicePerson;
@@ -110,9 +110,9 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @return array
      */
-    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
+    public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $eventId = 0) {
 
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
+        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $eventId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
 

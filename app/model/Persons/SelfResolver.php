@@ -2,6 +2,7 @@
 
 namespace Persons;
 
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use ModelPerson;
 use Nette\Object;
 use Nette\Security\User;

@@ -3,6 +3,7 @@
 namespace Persons;
 
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use Nette\Object;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;

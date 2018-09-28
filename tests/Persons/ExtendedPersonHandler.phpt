@@ -7,6 +7,7 @@ $container = require '../bootstrap.php';
 use DatabaseTestCase;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use ModelContest;
 use ModelPerson;
 use Nette\Application\UI\Control;
@@ -174,7 +175,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         return $form;
     }
-
 }
 
 /*

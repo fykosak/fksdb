@@ -3,11 +3,11 @@
 namespace Events\Model;
 
 use Events\Model\Holder\Field;
+use FKSDB\Person\Handler\ReferencedPersonHandler;
 use ModelPerson;
 use Nette\Object;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
 use Persons\SelfResolver;
 
 /**

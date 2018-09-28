@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
-use Nette\ArrayHash;
+use ModelEventAccommodation;
 use ModelPerson;
+use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
-use ModelEventAccommodation;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -19,12 +19,12 @@ class Handler {
     }
 
     /**
-     * @param ArrayHash $data
+     * @param array $data
      * @param \ModelPerson $person
      * @param integer $eventId
      * @return Message[]
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
+    public function prepareAndUpdate(array $data, ModelPerson $person, $eventId) {
         $messages = [];
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 

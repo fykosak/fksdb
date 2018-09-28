@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Person\Handler;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
@@ -120,7 +120,6 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param IModel $model
      * @param ArrayHash $values
-     * @param $messages
      */
     public function update(IModel $model, ArrayHash $values) {
         /**
@@ -131,6 +130,66 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     public function setEventId($eventId) {
         $this->eventId = $eventId;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getIterators() {
+        return ['person', 'person_info', 'person_history', self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT];
+    }
+
+    protected function updateItem($iterator, ModelPerson $model, array $data) {
+        switch ($iterator) {
+            case 'person':
+                $this->updatePerson($model, $data);
+                break;
+            case 'person_info':
+                $this->updatePersonInfo($model, $data);
+                break;
+            case 'person_history':
+                $this->updatePersonHistory($model, $data);
+                break;
+            case self::POST_CONTACT_PERMANENT:
+                $this->updatePermanentAddress($model, $data);
+                break;
+            case self::POST_CONTACT_DELIVERY:
+                $this->updateDeliveryAddress($model, $data);
+                break;
+
+        }
+    }
+
+    private function updatePerson(ModelPerson &$person, array $data) {
+        $this->servicePerson->updateModel($person, $data);
+        $this->servicePerson->save($model);
+    }
+
+    private function updatePersonInfo(ModelPerson $person, array $data) {
+        $info = $person->getInfo() ?: $this->servicePersonInfo->createNew();
+        $this->servicePersonInfo->updateModel($info, $data);
+        $this->servicePersonInfo->save($info);
+    }
+
+    private function updatePersonHistory(ModelPerson $person, array $data) {
+        $history = $person->getHistory($this->acYear) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]);
+        $this->servicePersonHistory->updateModel($history, $data);
+        $this->servicePersonHistory->save($history);
+    }
+
+    private function updateDeliveryAddress(ModelPerson $person, array $data) {
+        $dataPostContact = $person->getDeliveryAddress() ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]);
+
+        $this->serviceMPostContact->updateModel($dataPostContact, $data);
+        $this->serviceMPostContact->save($dataPostContact);
+
+    }
+
+    private function updatePermanentAddress(ModelPerson $person, array $data) {
+        $dataPostContact = $person->getPermanentAddress(true) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]);
+
+        $this->serviceMPostContact->updateModel($dataPostContact, $data);
+        $this->serviceMPostContact->save($dataPostContact);
     }
 
     /**
@@ -202,7 +261,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-
+                //$this->update($model, $data[$t]);
                 $services[$t]->updateModel($model, $data[$t]);
                 $services[$t]->save($model);
             }
