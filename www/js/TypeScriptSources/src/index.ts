@@ -1,6 +1,6 @@
 import { eventAccommodation } from './events/accommodation';
 
-type IApp = (element: Element, module: string, component: string, mode: string, rawData: string) => boolean;
+export type IApp = (element: Element, module: string, component: string, mode: string, rawData: string) => boolean;
 
 class AppCollector {
     private items: IApp[] = [];

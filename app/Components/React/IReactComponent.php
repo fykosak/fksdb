@@ -1,17 +1,26 @@
 <?php
+
 namespace FKSDB\Components\React;
 
 
 interface IReactComponent {
-
-    function getComponentName();
-
-    function getModuleName();
-
-    function getMode();
+    /**
+     * @return string
+     */
+    function getComponentName(): string;
 
     /**
      * @return string
      */
-    function getData();
+    function getModuleName(): string;
+
+    /**
+     * @return string
+     */
+    function getMode(): string;
+
+    /**
+     * @return string
+     */
+    function getData(): string;
 }

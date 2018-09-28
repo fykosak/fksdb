@@ -180,7 +180,7 @@ class ReferencedContainer extends ContainerWithOptions {
     private function createClearButton() {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
-        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             $this->referencedId->setValue(null);
             $this->invalidateFormGroup();
