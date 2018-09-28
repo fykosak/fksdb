@@ -22,8 +22,7 @@ class PersonAccommodationFactory {
     }
 
     private function createMatrixSelect($eventId) {
-        $control = new Matrix($this->serviceEventAccommodation, $eventId);
-        return $control;
+        return new Matrix($this->serviceEventAccommodation, $eventId);
     }
 
     private function createSingleAccommodationSelect($eventId) {
