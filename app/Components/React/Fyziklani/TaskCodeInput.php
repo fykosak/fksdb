@@ -3,37 +3,42 @@
 namespace FKSDB\Components\React\Fyziklani;
 
 use Nette\Utils\Json;
+use ORM\Services\Events\ServiceFyziklaniTeam;
+use ServiceFyziklaniTask;
 
 class TaskCodeInput extends FyziklaniModule {
     /**
-     * @var array
+     * @var ServiceFyziklaniTeam
      */
-    private $teams;
+    private $serviceFyziklaniTeam;
     /**
-     * @var array
+     * @var ServiceFyziklaniTask
      */
-    private $tasks;
+    private $serviceFyziklaniTask;
+    /**
+     * @var integer
+     */
+    private $eventId;
 
-    public function setTeams($teams) {
-        return $this->teams = $teams;
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, $eventId) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventId = $eventId;
+        parent::__construct();
     }
 
-    public function setTasks($tasks) {
-        return $this->tasks = $tasks;
-    }
-
-    public function getData() {
+    public function getData(): string {
         return Json::encode([
-            'tasks' => $this->tasks,
-            'teams' => $this->teams,
+            'tasks' => $this->serviceFyziklaniTask->getTasks($this->eventId),
+            'teams' => $this->serviceFyziklaniTeam->getTeams($this->eventId),
         ]);
     }
 
-    protected function getMode() {
+    public function getMode(): string {
         return null;
     }
 
-    protected function getComponentName() {
+    public function getComponentName(): string {
         return 'submit-form';
     }
 }

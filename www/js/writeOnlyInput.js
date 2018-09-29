@@ -12,20 +12,20 @@ $(function() {
             var originalValue = actualInput.data('writeonly-value');
             var originalLabel = actualInput.data('writeonly-label');
 
-            var button = $('<i class="glyphicon glyphicon-remove"/>');
+            var button = $('<i class="fa fa-remove glyphicon glyphicon-remove"/>');
             var actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
             var par = actualInput.parent();
             var prev = actualInput.prev();
-            
+
             actualGroup.append(actualInput);
             actualGroup.append(button);
             if (prev.length) {
                 actualGroup.insertAfter(prev);
             } else {
                 actualGroup.prependTo(par);
-            }            
+            }
 
             var overlayInput = actualInput.clone();
             overlayInput.removeAttr('id', null).val('').attr('placeholder', originalLabel);

@@ -351,6 +351,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @throws \Nette\Utils\JsonException
      */
     public function getAccommodationByEventId($eventId) {
+        if (!$eventId) {
+            return null;
+        }
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         $accommodations = [];
         foreach ($query as $row) {
