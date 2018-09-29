@@ -45,9 +45,6 @@ parameters:
                 person_has_flag:
                     spam_mff:
                         required: true
-                person_accommodation:
-                    matrix:
-                        required: false
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_accomodation
