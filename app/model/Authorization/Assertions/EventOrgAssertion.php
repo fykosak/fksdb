@@ -5,14 +5,14 @@ namespace Authorization\Assertions;
 use DbNames;
 use Exports\StoredQuery;
 use Nette\Database\Connection;
-use Nette\InvalidArgumentException;
+
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractEventOrgAssertion extends Object {

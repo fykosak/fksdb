@@ -11,10 +11,10 @@ use ORM\Tables\TypedTableSelection;
 /**
  * Service class to high-level manipulation with ORM objects.
  * Use singleton descedants implemetations.
- * 
+ *
  * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
  *       duplicated in all descedant classes.
- * 
+ *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceSingle extends TableSelection implements IService {
@@ -46,7 +46,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Use this method to create new models!
-     * 
+     *
      * @param array $data
      * @return AbstractModelSingle
      */
@@ -54,14 +54,14 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if ($data === null) {
             $data = $this->getDefaultData();
         }
-        $result = $this->createFromArray((array) $data);
+        $result = $this->createFromArray((array)$data);
         $result->setNew();
         return $result;
     }
 
     /**
      * @internal Used also in MultiTableSelection.
-     * 
+     *
      * @param array $data
      * @return AbstractModelSingle
      */
@@ -79,7 +79,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param int $key
      * @return AbstractModelSingle|null
      */
@@ -94,11 +94,13 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Updates values in model from given data.
-     * 
+     *
      * @param AbstractModelSingle $model
+     * @param boolean $alive
      * @param array $data
+     * @param boolean $alive
      */
-    public function updateModel(IModel $model, $data) {
+    public function updateModel(IModel $model, $data, $alive = true) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
@@ -111,8 +113,8 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Use this method to store a model!
-     * 
-     * @param AbstractModelSingle $model
+     *
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws ModelException
      */
@@ -120,7 +122,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        $result = true;
         try {
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->toArray());
@@ -145,8 +146,8 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
-     * 
-     * @param AbstractModelSingle $model
+     *
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
@@ -171,7 +172,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Default data for the new model.
-     * 
+     *
      * @return array
      */
     protected function getDefaultData() {
@@ -189,7 +190,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     /**
      * Omits array elements whose keys aren't columns in the table.
-     * 
+     *
      * @param array|null $data
      * @return array|null
      */

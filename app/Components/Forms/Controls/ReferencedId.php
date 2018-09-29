@@ -193,9 +193,8 @@ class ReferencedId extends HiddenField {
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate[] = function (Form $form) use ($that) {
-                $that->createPromise();
+            $obj->onValidate[] = function () {
+                $this->createPromise();
             };
             $this->attachedOnValidate = true;
         }

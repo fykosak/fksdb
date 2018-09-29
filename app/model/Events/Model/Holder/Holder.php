@@ -18,6 +18,7 @@ use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
+use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -88,9 +89,9 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     public function setPrimaryHolder($name) {
         $this->updating();
         $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function(BaseHolder $baseHolder) use($primaryHolder) {
-                    return $baseHolder !== $primaryHolder;
-                });
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
+            return $baseHolder !== $primaryHolder;
+        });
     }
 
     public function getPrimaryHolder() {
@@ -215,10 +216,14 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
 
         foreach ($this->baseHolders as $name => $baseHolder) {
-            //$alive = isset($newStates[$name]) && $newStates[$name] != BaseMachine::STATE_TERMINATED;
-            $alive = true;
-            if (isset($values[$name]) && $alive) {
-                $baseHolder->updateModel($values[$name]); // terminated models may not be correctly updated
+            $stateExist = isset($newStates[$name]);
+            if ($stateExist) {
+                $alive = ($newStates[$name] != BaseMachine::STATE_TERMINATED);
+            } else {
+                $alive = true;
+            }
+            if (isset($values[$name])) {
+                $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
             }
         }
         return $newStates;

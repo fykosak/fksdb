@@ -49,8 +49,6 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . '../BaseGrid.paginator.v4.latte');
 
         $this->addColumn('name', _('Jméno týmu'));
         $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
@@ -58,13 +56,13 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Místnost'));
         $this->addColumn('modified', _('Zadané'));
-        $this->addButton('edit', null)->setClass('btn btn-xs btn-default')->setLink(function ($row) use ($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-warning')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Submit:edit', ['id' => $row->fyziklani_submit_id]);
         })->setText(_('Upravit'))->setShow(function (\ModelFyziklaniSubmit $row) {
             return $row->getTeam()->hasOpenSubmit() && !is_null($row->points);
         });
 
-        $this->addButton('delete', null)->setClass('btn btn-xs btn-danger')->setLink(function ($row) {
+        $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
             return $this->link("delete!", $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
             return _("Opravdu vzít submit úlohy zpět?"); //todo i18n

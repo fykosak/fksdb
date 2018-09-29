@@ -47,8 +47,9 @@ class AddressFactory {
      * Appends elements to an existing container.
      * (Created because of KdybyReplicator.)
      *
-     * @param \FKSDB\Components\Forms\Factories\Container $container
-     * @param ControlGroup $group
+     * @param AddressContainer $container
+     * @param IControl $conditioningField
+     * @param integer $options
      */
     public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
         $container->setServiceRegion($this->serviceRegion);

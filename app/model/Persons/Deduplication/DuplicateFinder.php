@@ -4,7 +4,7 @@ namespace Persons\Deduplication;
 
 use FKSDB\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidArgumentException;
+
 use Nette\Utils\Strings;
 use ServicePerson;
 

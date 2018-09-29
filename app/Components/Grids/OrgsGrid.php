@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use ServiceContestant;
+
 use ServiceOrg;
 use SQL\SearchableDataSource;
 
@@ -33,8 +33,6 @@ class OrgsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //

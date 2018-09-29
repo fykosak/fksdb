@@ -17,15 +17,15 @@ class RoutingEdit extends FyziklaniModule {
         $this->data = $data;
     }
 
-    public function getData() {
+    public function getData(): string {
         return Json::encode($this->data);
     }
 
-    protected function getMode() {
+    protected function getMode(): string {
         return null;
     }
 
-    protected function getComponentName() {
+    protected function getComponentName(): string {
         return 'routing';
     }
 }
