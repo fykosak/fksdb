@@ -139,7 +139,3 @@ class ImportHandler extends Object {
     }
 
 }
-
-class ImportHandlerException extends RuntimeException {
-
-}

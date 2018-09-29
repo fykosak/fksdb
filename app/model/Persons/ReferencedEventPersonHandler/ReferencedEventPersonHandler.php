@@ -2,9 +2,14 @@
 
 namespace FKSDB\Person\Handler;
 
-
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use ModelPerson;
+use ServiceEventPersonAccommodation;
+use ServiceMPersonHasFlag;
+use ServiceMPostContact;
+use ServicePerson;
+use ServicePersonHistory;
+use ServicePersonInfo;
 
 class ReferencedEventPersonHandler extends ReferencedPersonHandler {
     /**
@@ -19,14 +24,15 @@ class ReferencedEventPersonHandler extends ReferencedPersonHandler {
 
     function __construct(
         Handler $eventAccommodation,
-        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
-        \ServicePerson $servicePerson,
-        \ServicePersonInfo $servicePersonInfo,
-        \ServicePersonHistory $servicePersonHistory,
-        \ServiceMPostContact $serviceMPostContact,
-        \ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServicePerson $servicePerson,
+        ServicePersonInfo $servicePersonInfo,
+        ServicePersonHistory $servicePersonHistory,
+        ServiceMPostContact $serviceMPostContact,
+        ServiceMPersonHasFlag $serviceMPersonHasFlag,
         $acYear,
-        $resolution
+        $resolution,
+        $eventId
     ) {
         parent::__construct(
             $eventAccommodation,
@@ -39,6 +45,7 @@ class ReferencedEventPersonHandler extends ReferencedPersonHandler {
             $acYear,
             $resolution
         );
+        $this->eventId = $eventId;
         $this->eventAccommodationHandler = $eventAccommodation;
     }
 

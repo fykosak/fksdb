@@ -256,7 +256,3 @@ class ApplicationHandler {
     }
 
 }
-
-class ApplicationHandlerException extends RuntimeException {
-
-}

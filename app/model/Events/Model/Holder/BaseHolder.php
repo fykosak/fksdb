@@ -214,6 +214,9 @@ class BaseHolder extends FreezableObject {
         return $this->evaluator->evaluate($this->modifiable, $this);
     }
 
+    /**
+     * @return IModel
+     */
     public function & getModel() {
         if (!$this->model) {
             $this->model = $this->getService()->createNew();

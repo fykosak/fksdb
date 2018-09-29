@@ -19,6 +19,7 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
+use ServiceEventPersonAccommodation;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -69,7 +70,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $resolution;
     /**
-     * @var \ServiceEventPersonAccommodation
+     * @var ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
     /**
@@ -79,7 +80,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     function __construct(
         Handler $eventAccommodation,
-        \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
+        ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,

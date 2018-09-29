@@ -69,7 +69,7 @@ class ReferencedPersonHandlerFactory extends Object {
         $this->eventAccommodationHandler = $eventAccommodationAdjustment;
     }
 
-    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
+    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
         $handler = new ReferencedPersonHandler(
             $this->eventAccommodationHandler,
             $this->serviceEventPersonAccommodation,
@@ -81,9 +81,6 @@ class ReferencedPersonHandlerFactory extends Object {
             $acYear,
             $resolution
         );
-        $handler->setEventId($eventId);
         return $handler;
     }
-
 }
-
