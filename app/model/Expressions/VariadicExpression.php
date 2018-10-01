@@ -37,7 +37,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     public function __toString() {
-        $terms = array();
+        $terms = [];
         foreach ($this->arguments as $arg) {
             $terms[] = (string) $arg;
         };

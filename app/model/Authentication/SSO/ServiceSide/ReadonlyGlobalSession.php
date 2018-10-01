@@ -30,7 +30,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
     /**
      * @var array
      */
-    private $data = array();
+    private $data = [];
 
     function __construct(PDO $connection, IGSIDHolder $gsidHolder) {
         $this->connection = $connection;
@@ -65,7 +65,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
     public function destroy() {
         // Note: This is read-only implementation, global session is not actually deleted.
         $this->gsidHolder->setGSID(null);
-        $this->data = array();
+        $this->data = [];
     }
 
     /*     * *************************

@@ -112,7 +112,7 @@ class ApplicationHandler {
 
             $this->beginTransaction();
 
-            $transitions = array();
+            $transitions = [];
             if ($explicitTransitionName !== null) {
                 $explicitMachine = $this->machine[$explicitMachineName];
                 $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
@@ -132,7 +132,7 @@ class ApplicationHandler {
                 }
             }
 
-            $induced = array(); // cache induced transition as they won't match after execution
+            $induced = []; // cache induced transition as they won't match after execution
             foreach ($transitions as $key => $transition) {
                 $induced[$key] = $transition->execute();
             }
@@ -195,7 +195,7 @@ class ApplicationHandler {
         }
 
         $primaryName = $holder->getPrimaryHolder()->getName();
-        $newStates = array();
+        $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
             $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
         }

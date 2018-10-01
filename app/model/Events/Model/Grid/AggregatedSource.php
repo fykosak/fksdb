@@ -43,7 +43,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     }
 
     private function loadData() {
-        $this->holders = array();
+        $this->holders = [];
         foreach ($this->events as $eventKey => $event) {
             $result = $this->processEvent($event);
 

@@ -36,7 +36,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * @var array of AbstractService  singleton instances of descedants
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      *

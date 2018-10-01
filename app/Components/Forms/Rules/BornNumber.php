@@ -20,7 +20,7 @@ class BornNumber {
         if($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
-        $matches = array();
+        $matches = [];
         // "be liberal in what you receive"
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
             return FALSE;

@@ -341,7 +341,7 @@ class PersonPresenter extends EntityPresenter {
         if (isset($section->data)) {
             return $section->data;
         } else {
-            return array();
+            return [];
         }
     }
 

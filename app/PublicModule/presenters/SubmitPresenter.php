@@ -105,7 +105,7 @@ class SubmitPresenter extends BasePresenter {
         $form = $control->getForm();
 
         $prevDeadline = null;
-        $taskIds = array();
+        $taskIds = [];
         $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {

@@ -120,7 +120,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             if (!$this->yearCalculator) {
                 throw new InvalidStateException('To obtain current roles, you have to inject YearCalculator to this Login instance.');
             }
-            $this->roles = array();
+            $this->roles = [];
             /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
              * that Identity is known, however user is not logged in.
              */

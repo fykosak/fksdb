@@ -84,7 +84,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults(array());
+        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
     protected function createComponentGrid($name) {

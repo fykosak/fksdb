@@ -239,7 +239,7 @@ class ContestChooser extends Control {
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
-                $contests = array();
+                $contests = [];
                 $login = $this->getLogin();
                 if ($login) {
                     if ($this->contestsDefinition == ModelRole::ORG) {
@@ -252,7 +252,7 @@ class ContestChooser extends Control {
                     }
                 }
             }
-            $this->contests = array();
+            $this->contests = [];
             foreach ($contests as $id) {
                 $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
@@ -278,7 +278,7 @@ class ContestChooser extends Control {
                 return array($currentYear);
             }
             $contestants = $login->getPerson()->getContestants($contest->contest_id);
-            $years = array();
+            $years = [];
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
             }

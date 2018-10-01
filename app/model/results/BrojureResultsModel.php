@@ -24,11 +24,11 @@ class BrojureResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
+    private $dataColumns = [];
 
     /**
      * Definition of header.
-     * 
+     *
      * @return array
      */
     public function getDataColumns($category) {
@@ -37,13 +37,13 @@ class BrojureResultsModel extends AbstractResultsModel {
         }
 
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
+            $dataColumns = [];
             foreach ($this->getTasks($this->listedSeries) as $task) {
-                $dataColumns[] = array(
+                $dataColumns[] = [
                     self::COL_DEF_LABEL => $task->label,
                     self::COL_DEF_LIMIT => $this->evaluationStrategy->getTaskPoints($task, $category),
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
-                );
+                ];
             }
 
             $sum = 0;
@@ -53,23 +53,23 @@ class BrojureResultsModel extends AbstractResultsModel {
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
-                $dataColumns[] = array(
+                $dataColumns[] = [
                     self::COL_DEF_LABEL => self::COL_SERIES_PREFIX . $series,
                     self::COL_DEF_LIMIT => $points,
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
-                );
+                ];
                 $sum += $points;
             }
-            $dataColumns[] = array(
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
-            );
-            $dataColumns[] = array(
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
-            );
+            ];
             $this->dataColumns[$category->id] = $dataColumns;
         }
         return $this->dataColumns[$category->id];
@@ -83,7 +83,7 @@ class BrojureResultsModel extends AbstractResultsModel {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
     public function getListedSeries() {
@@ -93,7 +93,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     public function setListedSeries($listedSeries) {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
     public function getCategories() {
@@ -108,7 +108,7 @@ class BrojureResultsModel extends AbstractResultsModel {
             throw new \Nette\InvalidStateException('Listed series is not among series.');
         }
 
-        $select = array();
+        $select = [];
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 

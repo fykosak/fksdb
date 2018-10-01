@@ -49,7 +49,7 @@ class RoomsFromCSV extends Stage {
                 ->where('event_id', $this->event->event_id)
                 ->where('status!=?', 'cancelled')
                 ->fetchPairs('e_fyziklani_team_id');
-        $updatedTeams = array();
+        $updatedTeams = [];
 
         $this->serviceTeam->getConnection()->beginTransaction();
         $parser = new CSVParser($this->data);

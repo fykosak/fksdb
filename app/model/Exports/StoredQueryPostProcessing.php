@@ -17,7 +17,7 @@ abstract class StoredQueryPostProcessing extends Object {
     protected $parameters;
 
     public final function resetParameters() {
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
     public final function bindValue($key, $value, $type = null) {

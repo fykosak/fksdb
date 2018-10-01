@@ -8,14 +8,14 @@ use ORM\IService;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
-    private $safeKeys = array();
+    private $safeKeys = [];
 
-    function __construct($safeKeys = array()) {
+    function __construct($safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
@@ -39,7 +39,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
-        $result = array();
+        $result = [];
         foreach ($currentArray as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
@@ -57,7 +57,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
 
     private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
         $currentArray = $currentModel->toArray();
-        $data = array();
+        $data = [];
         foreach ($currentArray as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;

@@ -18,8 +18,8 @@ class GroupedContainer extends Container {
      *
      * @var ControlGroup[]
      */
-    private $groups = array();
-    private $withoutGroup = array();
+    private $groups = [];
+    private $withoutGroup = [];
     private $prefix;
 
     public function __construct($prefix) {

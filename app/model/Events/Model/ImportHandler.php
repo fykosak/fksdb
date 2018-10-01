@@ -125,7 +125,7 @@ class ImportHandler extends Object {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 
-        $result = array();
+        $result = [];
         foreach ($this->source as $pkValue => $holder) {
             if ($this->keyName == $pkName) {
                 $keyValue = $pkValue;

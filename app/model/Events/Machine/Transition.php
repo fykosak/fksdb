@@ -24,7 +24,7 @@ class Transition extends FreezableObject {
     /**
      * @var Transition[]
      */
-    private $inducedTransitions = array();
+    private $inducedTransitions = [];
 
     /**
      * @var string
@@ -74,7 +74,7 @@ class Transition extends FreezableObject {
     /**
      * @var array
      */
-    public $onExecuted = array();
+    public $onExecuted = [];
 
     function __construct($mask, $label) {
         $this->setMask($mask);
@@ -175,7 +175,7 @@ class Transition extends FreezableObject {
     }
 
     private function getInducedTransitions() {
-        $result = array();
+        $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
             $inducedTransition = $targetMachine->getTransitionByTarget($targetState);
@@ -208,7 +208,7 @@ class Transition extends FreezableObject {
 
     private function validateTarget($inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget(array())) !== true) { // intentionally =
+            if (($result = $inducedTransition->validateTarget([])) !== true) { // intentionally =
                 return $result;
             }
         }
@@ -239,7 +239,7 @@ class Transition extends FreezableObject {
         }
 
 
-        $inducedTransitions = array();
+        $inducedTransitions = [];
         foreach ($this->getInducedTransitions() as $inducedTransition) {
             $inducedTransition->_execute();
             $inducedTransitions[] = $inducedTransition;
@@ -263,7 +263,7 @@ class Transition extends FreezableObject {
      */
     public final function executed($inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
-            $inducedTransition->executed(array());
+            $inducedTransition->executed([]);
         }
         try {
             $this->onExecuted($this);

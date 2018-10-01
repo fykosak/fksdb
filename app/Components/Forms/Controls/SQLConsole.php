@@ -34,7 +34,7 @@ class SQLConsole extends TextArea {
         }
         if (!$this->attachedCSS && $component instanceof IStylesheetCollector) {
             $this->attachedCSS = true;
-            $component->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'));
+            $component->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);
         }
     }
 

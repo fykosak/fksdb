@@ -23,10 +23,10 @@ class ServiceContestant extends AbstractServiceSingle {
                 ->select('*');
 
 
-        $contestants->where(array(
+        $contestants->where([
             'v_contestant.contest_id' => $contest_id,
             'v_contestant.year' => $year,
-        ));
+        ]);
 
         return $contestants;
     }

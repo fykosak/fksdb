@@ -125,7 +125,7 @@ class WebServiceModel {
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
-      
+
         if (isset($args->{'school-cumulatives'})) {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
 
@@ -226,8 +226,8 @@ class WebServiceModel {
         // parse arguments
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
-        $parameters = array();
-        
+        $parameters = [];
+
         $this->checkAuthentication(__FUNCTION__, $qid);
 
         // stupid PHP deserialization
@@ -315,7 +315,7 @@ class WebServiceModel {
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
-    
+
     private function createSchoolCumulativeNode(IResultsModel $resultsModel, DOMDocument $doc) {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
