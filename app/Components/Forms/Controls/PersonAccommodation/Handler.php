@@ -7,6 +7,7 @@ use ModelEventAccommodation;
 use ModelEventPersonAccommodation;
 use ModelPerson;
 use Nette\ArrayHash;
+use Nette\Database\Table\Selection;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
 
@@ -19,25 +20,33 @@ class Handler {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
-    public function getAccommodationsByEventIdAncPersonId($personId, $eventId) {
+    public function getAccommodationsByEventIdAndPersonId($personId, $eventId) {
         return $this->serviceEventPersonAccommodation->getTable()
             ->where('person_id', $personId)
             ->where('event_accommodation.event_id', $eventId);
-
     }
 
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
      * @param integer $eventId
-     * @return Message[]
+     * @throws CapacityException
+     * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
-        $messages = [];
-        $oldRows = $this->getAccommodationsByEventIdAncPersonId($person->person_id, $eventId);
-
+        // get old rows
+        $oldRows = $this->getAccommodationsByEventIdAndPersonId($person->person_id, $eventId);
+        // get new data
         $newAccommodationIds = $this->prepareData($data);
+        // remove or do noting where acc in active again
+        $this->checkCurrentAccommodation($oldRows, $newAccommodationIds);
+        foreach ($newAccommodationIds as $id) {
+            // register new acc
+            $this->createNewAccommodationDatum($person, $id);
+        }
+    }
 
+    private function checkCurrentAccommodation(Selection $oldRows, &$newAccommodationIds) {
         foreach ($oldRows as $row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             if (in_array($model->event_accommodation_id, $newAccommodationIds)) {
@@ -48,22 +57,33 @@ class Handler {
                 $row->delete();
             }
         }
-        foreach ($newAccommodationIds as $id) {
-            $model = $this->serviceEventPersonAccommodation->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
-            $query = $this->serviceEventAccommodation->findByPrimary($id);
-            $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
-            if ($eventAccommodation->getAvailableCapacity() > 0) {
-                $this->serviceEventPersonAccommodation->save($model);
-            } else {
-                //$model->delete();
-                $messages[] = new Message(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
-                    $person->getFullName(),
-                    $eventAccommodation->name,
-                    $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
-                ), Message::LVL_DANGER);
-            }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param $accommodationId
+     * @throws CapacityException
+     */
+    private function createNewAccommodationDatum(ModelPerson $person, $accommodationId) {
+
+        $model = $this->serviceEventPersonAccommodation->createNew([
+            'person_id' => $person->person_id,
+            'event_accommodation_id' => $accommodationId,
+        ]);
+
+        $query = $this->serviceEventAccommodation->findByPrimary($accommodationId);
+        $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
+        if ($eventAccommodation->getAvailableCapacity() > 0) {
+            $this->serviceEventPersonAccommodation->save($model);
+        } else {
+            //$model->delete();
+            throw new CapacityException(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
+                $person->getFullName(),
+                $eventAccommodation->name,
+                $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
+            ));
         }
-        return $messages;
+
     }
 
     /**

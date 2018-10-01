@@ -78,5 +78,7 @@ services:
     #
     - FKSDB\model\Fyziklani\TaskCodePreprocessor
 
+    accommodationFactory: FKSDB\Components\Forms\Factories\EventAccommodation\Factory
+
 includes:
     - merger.neon

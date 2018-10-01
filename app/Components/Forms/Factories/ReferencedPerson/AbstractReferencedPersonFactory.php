@@ -248,12 +248,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         ))) {
             if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
-                if ($required) {
-                    $options = AddressFactory::REQUIRED;
-                } else {
-                    $options = 0;
-                }
-                $container = $this->addressFactory->createAddress($options, $hiddenField);
+
+                $container = $this->addressFactory->createAddress($hiddenField, $required);
                 return $container;
             } else {
                 throw new InvalidArgumentException("Only 'address' field is supported.");

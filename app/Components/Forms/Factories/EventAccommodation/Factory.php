@@ -2,12 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories\EventAccommodation;
 
-
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateTimeBox;
 
 class Factory {
-    public function createForm() {
+    public function createAccommodationContainer() {
         $container = new ModelContainer();
 
         $container->addText('name', _('Name'))->setRequired(true);

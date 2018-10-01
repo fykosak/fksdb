@@ -3,12 +3,12 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
+use FKSDB\Components\Forms\Factories\EventAccommodation\Factory as AccommodationFactory;
 use FKSDB\Components\Grids\EventAccommodationGrid;
 use FKSDB\Components\Grids\EventBilletedPerson;
 use ModelEvent;
+use ModelEventAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -62,6 +62,11 @@ class EventAccommodationPresenter extends EntityPresenter {
      */
     private $serviceAddress;
 
+    /**
+     * @var AccommodationFactory
+     */
+    private $accommodationFactory;
+
 
     public function injectAddressFactory(AddressFactory $addressFactory) {
         $this->addressFactory = $addressFactory;
@@ -69,6 +74,10 @@ class EventAccommodationPresenter extends EntityPresenter {
 
     public function injectServiceAddress(\ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
+    }
+
+    public function injectAccommodationFactory(AccommodationFactory $accommodationFactory) {
+        $this->accommodationFactory = $accommodationFactory;
     }
 
     public function injectServiceEventAccommodation(ServiceEventAccommodation $serviceEventAccommodation) {
@@ -141,10 +150,8 @@ class EventAccommodationPresenter extends EntityPresenter {
     }
 
     public function titleBilleted() {
-        /**
-         * @var $model \ModelEventAccommodation
-         */
-        $model = $this->serviceEventAccommodation->findByPrimary($this->eventAccommodationId);
+        $row = $this->serviceEventAccommodation->findByPrimary($this->eventAccommodationId);
+        $model = ModelEventAccommodation::createFromTableRow($row);
         $this->setTitle(
             sprintf(_('List of accommodated people of hostel "%s" at %s of event "%s"'),
                 $model->name,
@@ -154,27 +161,14 @@ class EventAccommodationPresenter extends EntityPresenter {
         $this->setIcon('fa fa-users');
     }
 
-    private function createAccommodationContainer() {
-        $container = new ModelContainer();
-
-        $container->addText('name', _('Name'))->setRequired(true);
-        $container->addText('capacity', _('Capacity'))->setRequired(true);
-
-        $container->addText('price_kc', _('Price Kč'));
-
-        $container->addText('price_eur', _('Price €'));
-        $container->addComponent(new DateTimeBox(_('Date')), 'date');
-        return $container;
-    }
-
     public function createForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $schoolContainer = $this->createAccommodationContainer();
-        $form->addComponent($schoolContainer, self::CONT_ACCOMMODATION);
+        $accommodationContainer = $this->accommodationFactory->createAccommodationContainer();
+        $form->addComponent($accommodationContainer, self::CONT_ACCOMMODATION);
 
-        $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);
+        $addressContainer = $this->addressFactory->createAddress(null,true,true);
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
 
         return $control;

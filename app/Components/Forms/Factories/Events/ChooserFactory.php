@@ -6,11 +6,12 @@ use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ChooserFactory extends AbstractFactory {
@@ -29,24 +30,24 @@ class ChooserFactory extends AbstractFactory {
      */
     private $optionsProvider;
 
-    function __construct($prompt,IOptionsProvider $optionsProvider) {
+    function __construct($prompt, IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
 
-    protected function createComponent(Field $field,BaseMachine $machine,Container $container) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
 
         $component = new SelectBox($field->getLabel());
-        $component->setOption('description',$field->getDescription());
+        $component->setOption('description', $field->getDescription());
 
         $component->setPrompt($this->prompt);
 
         $options = $this->optionsProvider->getOptions($field);
         $opts = [];
         foreach ($options as $key => $option) {
-            if(is_array($option)){
+            if (is_array($option)) {
                 $opts[$option['value']] = $option['label'];
-            }else{
+            } else {
                 $opts[$key] = $option;
             }
         }
@@ -56,11 +57,11 @@ class ChooserFactory extends AbstractFactory {
         return $component;
     }
 
-    protected function setDefaultValue($component,Field $field,BaseMachine $machine,Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue($field->getValue());
     }
 
-    protected function setDisabled($component,Field $field,BaseMachine $machine,Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
     }
 

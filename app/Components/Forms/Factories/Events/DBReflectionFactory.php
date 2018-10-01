@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Controls\TimeBox;
 use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
@@ -50,8 +51,8 @@ class DBReflectionFactory extends AbstractFactory {
         } else if (substr_compare($type, 'INT', '-3') == 0) {
             $element = new TextInput($field->getLabel());
             $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
-                    ->addRule(Form::MAX_LENGTH, null, $size);
+                ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
+                ->addRule(Form::MAX_LENGTH, null, $size);
         } else if ($type == 'TEXT') {
             $element = new TextArea($field->getLabel());
         } else if ($type == 'TIME') {

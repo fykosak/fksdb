@@ -4,6 +4,7 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\CapacityException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FormUtils;
 use ModelException;
@@ -136,10 +137,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @return Message[]
+     * @throws \Nette\Utils\JsonException
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
-        $messages = [];
         /*
          * Process data
          */
@@ -197,8 +197,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     continue;
                 }
                 if ($t == 'person_accommodation' && isset($data[$t])) {
-                    $ms = $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
-                    $messages = array_merge($messages, $ms);
+                    $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
@@ -214,8 +213,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         } catch (ModelException $e) {
             $this->rollBack();
             throw $e;
+        } catch (CapacityException $e) {
+            throw $e;
         }
-        return $messages;
+        return;
     }
 
     private $outerTransaction = false;
