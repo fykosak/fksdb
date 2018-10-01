@@ -8,6 +8,9 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property boolean active
+ * @property integer login_id
+ * @property DateTime last_login
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
@@ -15,11 +18,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      * @var YearCalculator|null
      */
     private $yearCalculator;
-
-    /**
-     * @var ModelPerson|null|false
-     */
-    private $person = false;
 
     protected function getYearCalculator() {
         return $this->yearCalculator;
@@ -35,7 +33,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     public function getPerson() {
         if ($this->person === false) {
             $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-            $this->person = $row ? ModelPerson::createFromTableRow($row) : null;
+            $this->person = $row ? ModelPerson::createFromTableRow($this->person) : null;
         }
 
         return $this->person;

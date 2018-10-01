@@ -2,6 +2,7 @@
 
 use Nette\DateTime;
 use Nette\Security\IResource;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelEventAccommodation
@@ -14,8 +15,8 @@ use Nette\Security\IResource;
  * @property integer price_kc
  * @property integer price_eur
  * @property DateTime date
- * @property \Nette\Database\Table\ActiveRow address
- * @property \Nette\Database\Table\ActiveRow event
+ * @property ActiveRow address
+ * @property ActiveRow event
  */
 class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
     const ACC_DATE_FORMAT = 'Y-m-d';

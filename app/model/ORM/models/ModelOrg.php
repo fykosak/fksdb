@@ -1,10 +1,12 @@
 <?php
 
 use Nette\Security\IResource;
-
+use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property ActiveRow contest
+ * @property ActiveRow person
  */
 class ModelOrg extends AbstractModelSingle implements IResource {
 
@@ -29,5 +31,3 @@ class ModelOrg extends AbstractModelSingle implements IResource {
     }
 
 }
-
-?>

@@ -12,7 +12,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestChooser extends Control {
@@ -84,13 +84,14 @@ class ContestChooser extends Control {
     private $contestSource = 0xffffffff;
 
     /**
-     * 
+     *
 
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
      */
     function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+        parent::__construct();
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -104,7 +105,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * 
+     *
      * @param mixed $yearDefinition enum
      */
     public function setYears($yearDefinition) {
