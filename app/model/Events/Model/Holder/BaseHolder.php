@@ -83,7 +83,7 @@ class BaseHolder extends FreezableObject {
     /**
      * @var Field[]
      */
-    private $fields = array();
+    private $fields = [];
 
     /**
      * @var IModel
@@ -334,7 +334,7 @@ class BaseHolder extends FreezableObject {
             throw new InvalidStateException('Call serService prior setting person IDs.');
         }
 
-        $this->personIds = array();
+        $this->personIds = [];
         foreach ($personIds as $personId) {
             $this->personIds[] = $this->resolveColumnJoins($personId);
         }
@@ -421,7 +421,7 @@ class BaseHolder extends FreezableObject {
 
     private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
-        $parameters = $parameters ? Neon::decode($parameters) : array();
+        $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
     }
 

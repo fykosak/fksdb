@@ -30,7 +30,7 @@ class PersonContainer extends Container {
     const SUBMIT_CLEAR = '__clear';
 
     private $searchType;
-    private $hiddenComponents = array();
+    private $hiddenComponents = [];
 
     /**
      * @var PersonId
@@ -228,7 +228,7 @@ class PersonContainer extends Container {
                 ->onClick[] = function(SubmitButton $submit) {
                     $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
                     $person = $this->findPerson($term);
-                    $values = array();
+                    $values = [];
                     if (!$person) {
                         $person = PersonId::VALUE_PROMISE;
                         $values = $this->getPersonSearchData($term);
@@ -256,7 +256,7 @@ class PersonContainer extends Container {
                 );
         }
 
-        return array();
+        return [];
     }
 
 }

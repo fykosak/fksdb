@@ -128,7 +128,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderHandout() {
-        $taskIds = array();
+        $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
@@ -137,13 +137,13 @@ class InboxPresenter extends SeriesPresenter {
             'task_id' => $taskIds,
         ));
 
-        $values = array();
+        $values = [];
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
             if (!isset($values[$key])) {
-                $values[$key] = array();
+                $values[$key] = [];
             }
             $values[$key][] = $personId;
         }
@@ -264,13 +264,13 @@ class InboxPresenter extends SeriesPresenter {
         $order = $post[self::POST_ORDER];
         $series = $this->getSelectedSeries();
 
-        $tasks = array();
+        $tasks = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $task->task_id; // stupid touch
             $tasks[$task->tasknr] = $task;
         }
 
-        $uploadSubmits = array();
+        $uploadSubmits = [];
         $submits = $this->serviceSubmit->getSubmits()->where(array(
             DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
             DbNames::TAB_TASK . '.series' => $series
@@ -279,11 +279,11 @@ class InboxPresenter extends SeriesPresenter {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
             } else {
-                $uploadSubmits[$row->submit_id] = $this->serviceSubmit->createNew($row->toArray());
+                $uploadSubmits[$row->submit_id] = $this->serviceSubmit->createNew($row->to[]);
                 $uploadSubmits[$row->submit_id]->setNew(false);
             }
         }
-        $nTasks = array(); // reindexed tasks
+        $nTasks = []; // reindexed tasks
         foreach ($tasks as $task) {
             $nTasks[] = $task;
         }
@@ -292,8 +292,8 @@ class InboxPresenter extends SeriesPresenter {
         /*
          * Prepare new tasks for properly ordered submit.
          */
-        $orderedSubmits = array();
-        $orderedTasks = array();
+        $orderedSubmits = [];
+        $orderedTasks = [];
 
         $nr = -1;
         foreach ($order as $submitData) {
@@ -313,12 +313,12 @@ class InboxPresenter extends SeriesPresenter {
         $connection = $this->serviceSubmit->getConnection();
         $connection->beginTransaction();
 
-        $newSubmits = array();
+        $newSubmits = [];
         foreach (array_combine($orderedTasks, $orderedSubmits) as $taskId => $submit) {
             if ($taskId == $submit->task_id) {
                 $newSubmits[] = $submit;
             } else {
-                $data = $submit->toArray();
+                $data = $submit->to[];
                 unset($data['submit_id']);
                 $newSubmit = $this->serviceSubmit->createNew($data);
                 $newSubmit->task_id = $taskId;

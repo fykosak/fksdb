@@ -110,7 +110,7 @@ class AddressFactory {
             $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
             $conditioned->addConditionOn($country, function(BaseControl $control) {
                 $value = $control->getValue();
-                return in_array($value, array('CZ', 'SK'));
+                return in_array($value, ['CZ', 'SK']);
             })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
         }
         $postalCode->addCondition(Form::FILLED)

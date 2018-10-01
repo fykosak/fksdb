@@ -110,8 +110,8 @@ class EventAccommodationPresenter extends EntityPresenter {
          * @var $model \ModelEventAccommodation
          */
         $defaults = [
-            self::CONT_ACCOMMODATION => $model->toArray(),
-            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : [],
+            self::CONT_ACCOMMODATION => $model->to[],
+            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->to[] : [],
         ];
         $form->setDefaults($defaults);
     }

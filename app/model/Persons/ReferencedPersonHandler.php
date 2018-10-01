@@ -238,7 +238,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private function preparePostContactModels(&$models) {
         if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
-            $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
+            $data = $models[self::POST_CONTACT_DELIVERY]->to[];
             unset($data['post_contact_id']);
             unset($data['address_id']);
             unset($data['type']);

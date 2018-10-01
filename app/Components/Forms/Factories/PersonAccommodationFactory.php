@@ -24,7 +24,7 @@ class PersonAccommodationFactory {
          * @var $accommodation \ModelEventAccommodation
          */
         foreach ($accommodations as $accommodation) {
-            $accommodationDef[] = $accommodation->__toArray();
+            $accommodationDef[] = $accommodation->__to[];
         }
         $control = new Matrix();
         $control->setAccommodationDefinition($accommodationDef);

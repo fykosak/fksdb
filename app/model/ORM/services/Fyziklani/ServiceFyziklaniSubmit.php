@@ -20,10 +20,10 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         /**
          * @var $result ModelFyziklaniSubmit
          */
-        $result = $this->getTable()->where(array(
+        $result = $this->getTable()->where([
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId
-        ))->fetch();
+        ])->fetch();
         return $result ?: null;
     }
 

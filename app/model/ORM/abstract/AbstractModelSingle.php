@@ -19,7 +19,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     public static function createFromTableRow(ActiveRow $row) {
-        $model = new static($row->toArray(), $row->getTable());
+        $model = new static($row->to[], $row->getTable());
         if ($model->getPrimary(false)) {
             $model->setNew(false);
         }

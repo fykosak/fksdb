@@ -155,7 +155,7 @@ class SeriesChooser extends Control {
 
         $lastSeries = $this->seriesCalculator->getLastSeries($contest, $year);
         if ($lastSeries === null) {
-            return array();
+            return [];
         } else {
             return range(1, $lastSeries);
         }

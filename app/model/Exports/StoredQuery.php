@@ -33,12 +33,12 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $implicitParameterValues = array();
+    private $implicitParameterValues = [];
 
     /**
      * @var array
      */
-    private $parameterValues = array();
+    private $parameterValues = [];
 
     /**
      * @var int|null
@@ -63,7 +63,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $orders = array();
+    private $orders = [];
 
     /**
      * @var array
@@ -138,7 +138,7 @@ class StoredQuery implements IDataSource, IResource {
 
     public function getColumnNames() {
         if (!$this->columnNames) {
-            $this->columnNames = array();
+            $this->columnNames = [];
             $innerSql = $this->getQueryPattern()->sql;
             $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
 
@@ -161,7 +161,7 @@ class StoredQuery implements IDataSource, IResource {
 
     public function getParameterNames() {
         if ($this->parameterDefaults === null) {
-            $this->parameterDefaults = array();
+            $this->parameterDefaults = [];
             foreach ($this->queryPattern->getParameters() as $parameter) {
                 $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
             }

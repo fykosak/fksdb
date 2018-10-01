@@ -62,7 +62,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
         return $this->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
     }
 
-    public function __toArray() {
+    public function __to[] {
         return [
             'eventAccommodationId' => $this->event_accommodation_id,
             'eventId' => $this->event_id,

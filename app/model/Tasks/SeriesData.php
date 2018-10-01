@@ -6,7 +6,7 @@ use ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesData {
@@ -39,7 +39,7 @@ class SeriesData {
     /**
      * @var array[tasknr] of ModelTask
      */
-    private $tasks = array();
+    private $tasks = [];
 
     function __construct(ModelContest $contest, $year, $series, $language, $data) {
         $this->contest = $contest;

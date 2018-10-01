@@ -6,29 +6,29 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
- * 
+ *
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFlag extends SelectBox {
-    
+
     const FLAG_YES = 'flag-yes';
     // It's necessary that value for FLAG_NO cannot coerce to false/null.
     const FLAG_NO = 'flag-no';
 
     /**
      * Should be self::FLAG_* values on output?
-     * @var bool 
+     * @var bool
      */
     private $useExplicitValues = false;
-    
+
     public function __construct($label = NULL) {
-	$items = array(
+	$items = [
 	    self::FLAG_YES => _('Ano'),
 	    self::FLAG_NO => _('Ne'),
-	);
+    ];
         parent::__construct($label, $items);
-	$this->setPrompt('–');	
+	$this->setPrompt('–');
     }
 
     public function getValue() {

@@ -13,9 +13,9 @@ use ORM\IService;
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
-    private $safeKeys = array();
+    private $safeKeys = [];
 
-    function __construct($safeKeys = array()) {
+    function __construct($safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
@@ -37,9 +37,9 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
-        $currentArray = $currentModel->toArray();
-        $foundArray = $foundModel->toArray();
-        $result = array();
+        $currentArray = $currentModel->to[];
+        $foundArray = $foundModel->to[];
+        $result = [];
         foreach ($currentArray as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
@@ -56,8 +56,8 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
-        $currentArray = $currentModel->toArray();
-        $data = array();
+        $currentArray = $currentModel->to[];
+        $data = [];
         foreach ($currentArray as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;

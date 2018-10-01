@@ -34,7 +34,7 @@ class StoredQueryTagCloud extends Control {
     
     private $mode;
     
-    private $activeTagIds = array();
+    private $activeTagIds = [];
 
     function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         parent::__construct();
@@ -79,7 +79,7 @@ class StoredQueryTagCloud extends Control {
     
     private function createNextActiveTagIds(){
         $tags = $this->serviceMStoredQueryTag->getMainService();
-        $nextActiveTagIds = array();
+        $nextActiveTagIds = [];
         foreach($tags as $tag) {
             $activeTagIds = $this->activeTagIds;
             if(array_key_exists($tag->tag_type_id, $activeTagIds)) {

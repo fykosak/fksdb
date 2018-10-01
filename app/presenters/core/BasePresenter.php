@@ -83,7 +83,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @var array[string] => bool
      */
-    private $authorizedCache = array();
+    private $authorizedCache = [];
 
     /**
      * @var string cache
@@ -186,11 +186,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * IStylesheetCollector
      * ****************************** */
 
-    public function registerStylesheetFile($file, $media = array()) {
+    public function registerStylesheetFile($file, $media = []) {
         $this['cssLoader']->addFile($file, $media);
     }
 
-    public function unregisterStylesheetFile($file, $media = array()) {
+    public function unregisterStylesheetFile($file, $media = []) {
         $this['cssLoader']->removeFile($file, $media);
     }
 

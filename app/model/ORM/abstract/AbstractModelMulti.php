@@ -46,8 +46,8 @@ abstract class AbstractModelMulti extends Object implements IModel {
         return new static(null, $mainModel, $joinedModel);
     }
 
-    public function toArray() {
-        return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
+    public function to[] {
+        return $this->getMainModel()->to[] + $this->getJoinedModel()->to[];
     }
 
     public function getMainModel() {
