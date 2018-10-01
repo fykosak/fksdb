@@ -7,7 +7,7 @@ use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
 use ModelEvent;
-use Nette\Forms\Container;
+use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -96,11 +96,6 @@ class BaseHolder extends FreezableObject {
      * @var IEventRelation|null
      */
     private $eventRelation;
-
-    /**
-     * @var ISecondaryResolutionStrategy
-     */
-    private $secondaryResolution;
 
     /**
      * @var ModelEvent
@@ -260,19 +255,13 @@ class BaseHolder extends FreezableObject {
     }
 
     public function setModelState($state) {
-        $this->getService()->updateModel($this->getModel(), array(self::STATE_COLUMN => $state));
+        $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
     public function updateModel($values, $alive = true) {
+        Debugger::barDump($alive,'holder::update');
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
-    }
-
-    public function resolveMultipleSecondaries($conflicts) {
-        if (!$this->secondaryResolution) {
-            throw new SecondaryModelConflictException($this->getModel(), $conflicts);
-        }
-        $this->secondaryResolution->resolve($this->getModel(), $conflicts);
     }
 
     public function getName() {
@@ -371,7 +360,8 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @return Container
+     * @param BaseMachine $machine
+     * @return ContainerWithOptions
      */
     public function createFormContainer(BaseMachine $machine) {
         $container = new ContainerWithOptions();
@@ -379,12 +369,12 @@ class BaseHolder extends FreezableObject {
         $container->setOption('description', $this->getDescription());
 
         foreach ($this->fields as $name => $field) {
-            if (!$field->isVisible($machine)) {
+            if (!$field->isVisible()) {
                 continue;
             }
             $components = $field->createFormComponent($machine, $container);
             if (!is_array($components)) {
-                $components = array($components);
+                $components = [$components];
             }
             $i = 0;
             foreach ($components as $component) {

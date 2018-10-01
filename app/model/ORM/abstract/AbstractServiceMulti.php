@@ -28,6 +28,10 @@ abstract class AbstractServiceMulti extends Object implements IService {
      * @var AbstractServiceSingle
      */
     protected $joinedService;
+    /**
+     * @var string
+     */
+    protected $joiningColumn;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
@@ -76,15 +80,14 @@ abstract class AbstractServiceMulti extends Object implements IService {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-
-        $this->getMainService()->updateModel($model->getMainModel(), $data);
-        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data);
+        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
+        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
     }
 
     /**
      * Use this method to store a model!
      *
-     * @param AbstractModelMulti $model
+     * @param IModel $model
      */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
@@ -104,7 +107,7 @@ abstract class AbstractServiceMulti extends Object implements IService {
     /**
      * Use this method to delete a model!
      *
-     * @param AbstractModelMulti $model
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */

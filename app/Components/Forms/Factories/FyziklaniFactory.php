@@ -5,16 +5,24 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use ModelEvent;
-use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
+use ORM\Services\Events\ServiceFyziklaniTeam;
+use ServiceFyziklaniTask;
 
 class FyziklaniFactory {
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
 
-    private $container;
-
-    public function __construct(Container $container) {
-        $this->container = $container;
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     private function createPointsField(ModelEvent $event) {
@@ -46,10 +54,8 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($teams, $tasks) {
-        $control = new TaskCodeInput();
-        $control->setTasks($tasks);
-        $control->setTeams($teams);
+    public function createEntryForm($eventId) {
+        $control = new TaskCodeInput($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $eventId);
         return $control;
     }
 
