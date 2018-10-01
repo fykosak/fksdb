@@ -279,7 +279,7 @@ class InboxPresenter extends SeriesPresenter {
             if ($row->source == ModelSubmit::SOURCE_POST) {
                 unset($tasks[$row->tasknr]);
             } else {
-                $uploadSubmits[$row->submit_id] = $this->serviceSubmit->createNew($row->to[]);
+                $uploadSubmits[$row->submit_id] = $this->serviceSubmit->createNew($row->toArray());
                 $uploadSubmits[$row->submit_id]->setNew(false);
             }
         }
@@ -318,7 +318,7 @@ class InboxPresenter extends SeriesPresenter {
             if ($taskId == $submit->task_id) {
                 $newSubmits[] = $submit;
             } else {
-                $data = $submit->to[];
+                $data = $submit->toArray();
                 unset($data['submit_id']);
                 $newSubmit = $this->serviceSubmit->createNew($data);
                 $newSubmit->task_id = $taskId;

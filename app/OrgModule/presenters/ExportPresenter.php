@@ -252,11 +252,11 @@ class ExportPresenter extends SeriesPresenter {
         if (!$values) {
             $values = [];
             $values[self::CONT_CONSOLE] = $this->getPatternQuery();
-            $values[self::CONT_META] = $this->getPatternQuery()->to[];
+            $values[self::CONT_META] = $this->getPatternQuery()->toArray();
             $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
             $values[self::CONT_PARAMS_META] = [];
             foreach ($query->getParameters() as $parameter) {
-                $paramData = $parameter->to[];
+                $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS_META][] = $paramData;
             }

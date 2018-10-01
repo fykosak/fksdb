@@ -61,7 +61,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $login = $this->getUser()->getIdentity();
 
         $defaults = array(
-            self::CONT_LOGIN => $login->to[],
+            self::CONT_LOGIN => $login->toArray(),
         );
         $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
 

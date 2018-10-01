@@ -10,12 +10,12 @@ use ORM\IModel;
 abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
-     * @var AbstractModelSingle 
+     * @var AbstractModelSingle
      */
     protected $mainModel;
 
     /**
-     * @var AbstractModelSingle 
+     * @var AbstractModelSingle
      */
     protected $joinedModel;
 
@@ -26,7 +26,7 @@ abstract class AbstractModelMulti extends Object implements IModel {
 
     /**
      * @note DO NOT use directly, use AbstracServiceMulti::composeModel or AbstractModelMulti::createFromExistingModels.
-     * 
+     *
      * @param AbstractServiceMulti $service
      * @param IModel $mainModel
      * @param IModel $joinedModel
@@ -46,8 +46,8 @@ abstract class AbstractModelMulti extends Object implements IModel {
         return new static(null, $mainModel, $joinedModel);
     }
 
-    public function to[] {
-        return $this->getMainModel()->to[] + $this->getJoinedModel()->to[];
+    public function toArray() {
+        return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
     }
 
     public function getMainModel() {

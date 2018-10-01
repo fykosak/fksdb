@@ -80,7 +80,7 @@ abstract class EntityPresenter extends BasePresenter {
         if (!$model) {
             return;
         }
-        $form->setDefaults($model->to[]);
+        $form->setDefaults($model->toArray());
     }
 
     /**

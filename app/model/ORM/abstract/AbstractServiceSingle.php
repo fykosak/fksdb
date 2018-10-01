@@ -74,7 +74,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     public function createFromTableRow(ActiveRow $row) {
         $className = $this->modelClassName;
-        return new $className($row->to[], $row->getTable());
+        return new $className($row->toArray(), $row->getTable());
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         $result = true;
         try {
             if ($model->isNew()) {
-                $result = $this->getTable()->insert($model->to[]);
+                $result = $this->getTable()->insert($model->toArray());
                 if ($result !== false) {
                     $model = $result;
                     $model->setNew(false);

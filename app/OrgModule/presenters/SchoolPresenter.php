@@ -111,8 +111,8 @@ class SchoolPresenter extends EntityPresenter {
          * @var $model \ModelEventAccommodation
          */
         $defaults = [
-            self::CONT_SCHOOL => $model->to[],
-            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->to[] : null,
+            self::CONT_SCHOOL => $model->toArray(),
+            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
         ];
 
         $form->setDefaults($defaults);
