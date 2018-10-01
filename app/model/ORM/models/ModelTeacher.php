@@ -1,7 +1,7 @@
 <?php
 
 use Nette\Security\IResource;
-
+use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
@@ -9,6 +9,8 @@ use Nette\Security\IResource;
  * @property DateTime since
  * @property integer school_id
  * @property integer person_id
+ * @property ActiveRow person
+ * @property ActiveRow school
  */
 class ModelTeacher extends AbstractModelSingle implements IResource {
 

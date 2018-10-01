@@ -3,6 +3,9 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer series
+ * @property string label
+ * @property string name_cs
  */
 class ModelTask extends AbstractModelSingle {
 
@@ -16,7 +19,7 @@ class ModelTask extends AbstractModelSingle {
     }
 
     /**
-     * @param enum $type ModelTaskContribution::TYPE_*
+     * @param mixed $type ModelTaskContribution::TYPE_*
      * @return ModelTaskContribution[] indexed by contribution_id
      */
     public function getContributions($type = null) {

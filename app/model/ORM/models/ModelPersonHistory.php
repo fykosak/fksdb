@@ -3,6 +3,10 @@
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer ac_year
+ * @property integer school_id
+ * @property string class
+ * @property integer study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
 
@@ -51,15 +55,15 @@ class ModelPersonHistory extends AbstractModelSingle {
         }
         foreach (self::$classProgress as $sequence) {
             $pattern = '/(' . implode('|', array_map('preg_quote', $sequence)) . ')/i';
-            $class = preg_replace_callback($pattern, function($matches) use($sequence, $diff) {
-                        $idx = array_search(mb_strtolower($matches[0]), $sequence);
-                        $newIdx = $idx + $diff;
-                        if ($newIdx > count($sequence) - 1) {
-                            return $matches[1];
-                        } else {
-                            return $sequence[$newIdx];
-                        }
-                    }, $class);
+            $class = preg_replace_callback($pattern, function ($matches) use ($sequence, $diff) {
+                $idx = array_search(mb_strtolower($matches[0]), $sequence);
+                $newIdx = $idx + $diff;
+                if ($newIdx > count($sequence) - 1) {
+                    return $matches[1];
+                } else {
+                    return $sequence[$newIdx];
+                }
+            }, $class);
         }
         return $class;
     }
@@ -68,6 +72,7 @@ class ModelPersonHistory extends AbstractModelSingle {
         if (!$studyYear) {
             return null;
         }
+        $result = null;
         if ($studyYear >= 6 && $studyYear <= 9) {
             $result = $studyYear + $diff;
             if ($result > 9) {

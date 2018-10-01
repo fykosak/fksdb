@@ -2,12 +2,17 @@
 
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property boolean active
+ * @property integer login_id
+ * @property DateTime last_login
+ * @property ActiveRow person
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
@@ -15,11 +20,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      * @var YearCalculator|null
      */
     private $yearCalculator;
-
-    /**
-     * @var ModelPerson|null|false
-     */
-    private $person = false;
 
     protected function getYearCalculator() {
         return $this->yearCalculator;
@@ -33,12 +33,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      * @return ModelPerson
      */
     public function getPerson() {
-        if ($this->person === false) {
-            $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-            $this->person = $row ? ModelPerson::createFromTableRow($row) : null;
+        if ($this->person) {
+            return ModelPerson::createFromTableRow($this->person);
         }
-
-        return $this->person;
+        return null;
     }
 
     /**
