@@ -17,6 +17,10 @@ export const eventAccommodation: IApp = (element: Element, module: string, compo
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
+    if (element.hasOwnProperty('style')) {
+        element.style.display = 'none';
+    }
+    debugger;
     ReactDOM.render(<Index accommodationDef={accommodationDef} input={element}/>, container);
 
     return true;

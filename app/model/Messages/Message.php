@@ -1,7 +1,13 @@
 <?php
+
 namespace FKSDB\Messages;
 
 class Message {
+
+    const LVL_DANGER = 'danger';
+    const LVL_WARNING = 'warning';
+    const LVL_INFO = 'info';
+    const LVL_SUCCESS = 'success';
     /**
      * @var string
      */

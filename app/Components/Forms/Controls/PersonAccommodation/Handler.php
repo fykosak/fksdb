@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
-use Nette\ArrayHash;
+use ModelEventAccommodation;
+use ModelEventPersonAccommodation;
 use ModelPerson;
+use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
-use ModelEventAccommodation;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -18,24 +19,30 @@ class Handler {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
+    public function getAccommodationsByEventIdAncPersonId($personId, $eventId) {
+        return $this->serviceEventPersonAccommodation->getTable()
+            ->where('person_id', $personId)
+            ->where('event_accommodation.event_id', $eventId);
+
+    }
+
     /**
      * @param ArrayHash $data
-     * @param \ModelPerson $person
+     * @param ModelPerson $person
      * @param integer $eventId
      * @return Message[]
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
         $messages = [];
-        $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
+        $oldRows = $this->getAccommodationsByEventIdAncPersonId($person->person_id, $eventId);
 
         $newAccommodationIds = $this->prepareData($data);
-        /**
-         * @var $row \ModelEventPersonAccommodation
-         */
+
         foreach ($oldRows as $row) {
-            if (in_array($row->event_accommodation_id, $newAccommodationIds)) {
+            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            if (in_array($model->event_accommodation_id, $newAccommodationIds)) {
                 // do nothing
-                $index = array_search($row->event_accommodation_id, $newAccommodationIds);
+                $index = array_search($model->event_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
                 $row->delete();
@@ -53,7 +60,7 @@ class Handler {
                     $person->getFullName(),
                     $eventAccommodation->name,
                     $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
-                ), 'danger');
+                ), Message::LVL_DANGER);
             }
         }
         return $messages;
@@ -67,14 +74,12 @@ class Handler {
         foreach ($data as $type => $datum) {
             switch ($type) {
                 case Matrix::RESOLUTION_ID:
-                    $data = (array)json_decode($datum);
-                    break;
+                    return array_values((array)json_decode($datum));
                 default:
                     throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
             }
         }
-
-        return array_values($data);
+        return [];
     }
 }
 
