@@ -31,7 +31,7 @@ class DBReflectionFactory extends AbstractFactory {
     /**
      * @var array tableName => columnName[]
      */
-    private $columns = array();
+    private $columns = [];
 
     function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -108,7 +108,7 @@ class DBReflectionFactory extends AbstractFactory {
 
     private function getColumnMetadata($table, $column) {
         if (!isset($this->columns[$table])) {
-            $columns = array();
+            $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
                 $columns[$columnMeta['name']] = $columnMeta;
             }

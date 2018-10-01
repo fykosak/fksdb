@@ -141,7 +141,7 @@ class ImportComponent extends Control {
 
     private function createKeyElement() {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $options = array();
+        $options = [];
         foreach ($baseHolder->getFields() as $field) {
             $options[$field->getName()] = $baseHolder->getName() . '.' . $field->getName();
         }

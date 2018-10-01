@@ -37,7 +37,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * @var array of AbstractService  singleton instances of descedants
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     public function __construct(Connection $connection) {
         parent::__construct($this->tableName, $connection);
@@ -96,6 +96,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Updates values in model from given data.
      *
      * @param AbstractModelSingle $model
+     * @param boolean $alive
      * @param array $data
      * @param boolean $alive
      */
@@ -113,7 +114,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Use this method to store a model!
      *
-     * @param AbstractModelSingle $model
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws ModelException
      */
@@ -121,7 +122,6 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));
         }
-        $result = true;
         try {
             if ($model->isNew()) {
                 $result = $this->getTable()->insert($model->toArray());
@@ -147,7 +147,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param AbstractModelSingle $model
+     * @param IModel $model
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
@@ -177,7 +177,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     protected function getDefaultData() {
         if ($this->defaults == null) {
-            $this->defaults = array();
+            $this->defaults = [];
             foreach ($this->getColumnMetadata() as $column) {
                 if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default']) && $column['default'] == 'CURRENT_TIMESTAMP') {
                     continue;
@@ -198,7 +198,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if ($data === null) {
             return null;
         }
-        $result = array();
+        $result = [];
         foreach ($this->getColumnMetadata() as $column) {
             $name = $column['name'];
             if (array_key_exists($name, $data)) {

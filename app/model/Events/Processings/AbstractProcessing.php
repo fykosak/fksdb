@@ -53,7 +53,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
-        $result = array();
+        $result = [];
         foreach ($keys as $key) {
             if (preg_match($pattern, $key)) {
                 $result[] = $this->valuesPathCache[$key];
@@ -73,7 +73,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
-        $result = array();
+        $result = [];
         foreach ($keys as $key) {
             if (preg_match($pattern, $key)) {
                 $result[] = $this->formPathCache[$key];
@@ -104,7 +104,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     private function setValues(ArrayHash $values, $prefix = '') {
         if (!$prefix) {
             $this->values = $values;
-            $this->valuesPathCache = array();
+            $this->valuesPathCache = [];
         }
 
         foreach ($values as $key => $value) {
@@ -118,7 +118,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     }
 
     private function setForm($form) {
-        $this->formPathCache = array();
+        $this->formPathCache = [];
         if (!$form) {
             return;
         }

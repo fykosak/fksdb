@@ -18,6 +18,7 @@ use ModelEvent;
 use Nette\Application\UI\Form;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
+use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -34,22 +35,22 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
     /**
      * @var IFormAdjustment[]
      */
-    private $formAdjustments = array();
+    private $formAdjustments = [];
 
     /**
      * @var IProcessing[]
      */
-    private $processings = array();
+    private $processings = [];
 
     /**
      * @var BaseHolder[]
      */
-    private $baseHolders = array();
+    private $baseHolders = [];
 
     /**
      * @var BaseHolder[]
      */
-    private $secondaryBaseHolders = array();
+    private $secondaryBaseHolders = [];
 
     /**
      * @var BaseHolder
@@ -203,7 +204,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * @return string[] machineName => new state
      */
     public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null) {
-        $newStates = array();
+        $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
         }
@@ -215,13 +216,17 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
         }
 
         foreach ($this->baseHolders as $name => $baseHolder) {
-            $alive = isset($newStates[$name]) && $newStates[$name] != BaseMachine::STATE_TERMINATED;
-
+            $stateExist = isset($newStates[$name]);
+            if ($stateExist) {
+                $alive = ($newStates[$name] != BaseMachine::STATE_TERMINATED);
+            } else {
+                $alive = true;
+            }
             if (isset($values[$name])) {
-                $baseHolder->updateModel($values[$name],$alive); // terminated models may not be correctly updated
+                $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
             }
         }
-          return $newStates;
+        return $newStates;
     }
 
     public function adjustForm(Form $form, Machine $machine) {
@@ -242,7 +247,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      */
     public function getGroupedSecondaryHolders() {
         if ($this->groupedHolders == null) {
-            $this->groupedHolders = array();
+            $this->groupedHolders = [];
 
             foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $key = spl_object_hash($baseHolder->getService());
@@ -252,7 +257,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
                         'personIds' => $baseHolder->getPersonIds(),
-                        'holders' => array(),
+                        'holders' => [],
                     );
                 }
                 $this->groupedHolders[$key]['holders'][] = $baseHolder;

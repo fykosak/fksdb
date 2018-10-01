@@ -25,7 +25,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
             if (!isset($this->query_id)) {
                 $this->query_id = null;
             }
-            $result = array();
+            $result = [];
             foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
                 $result[] = ModelStoredQueryParameter::createFromTableRow($row);
             }
@@ -62,10 +62,9 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         $tags = $this->getTags();
 
         if (!$tags || count($tags) == 0) {
-            return array();
+            return [];
         }
-
-        $result = array();
+        $result = [];
         foreach ($tags as $tag) {
             $tag->tag_type_id; // stupid touch
             $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');

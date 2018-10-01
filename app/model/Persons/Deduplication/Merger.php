@@ -21,7 +21,7 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
-    private $conflicts = array();
+    private $conflicts = [];
 
     /**
      * @var ActiveRow
@@ -52,7 +52,7 @@ class Merger {
      *
      * @var TableMerger[]
      */
-    private $tableMergers = array();
+    private $tableMergers = [];
 
     function __construct($configuration, Connection $connection) {
         $this->configuration = $configuration;
@@ -88,7 +88,7 @@ class Merger {
                 $data = & $this->getPairDataById($table, $pairId);
                 foreach ($values as $column => $value) {
                     if (!isset($data[self::IDX_RESOLUTION])) {
-                        $data[self::IDX_RESOLUTION] = array();
+                        $data[self::IDX_RESOLUTION] = [];
                     }
                     $data[self::IDX_RESOLUTION][$column] = $value;
                 }
@@ -102,7 +102,7 @@ class Merger {
      */
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.
-        $this->connection->getCache()->clean(array(Cache::ALL => true));
+        $this->connection->getCache()->clean([Cache::ALL => true]);
         $this->connection->getDatabaseReflection()->setConnection($this->connection);
 
         $table = $this->trunkRow->getTable()->getName();
@@ -228,11 +228,11 @@ class Merger {
 
     private function & getPairDataById($table, $pairId) {
         if (!isset($this->conflicts[$table])) {
-            $this->conflicts[$table] = array();
+            $this->conflicts[$table] = [];
         }
 
         if (!isset($this->conflicts[$table][$pairId])) {
-            $this->conflicts[$table][$pairId] = array();
+            $this->conflicts[$table][$pairId] = [];
         }
 
         return $this->conflicts[$table][$pairId];

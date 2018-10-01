@@ -83,7 +83,7 @@ class TasksFromXML2 extends Stage {
             $value = NULL;
 
             // Argh, I was not able not make ->xpath() working so emulate it.
-            $matches = array();
+            $matches = [];
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];

@@ -47,7 +47,7 @@ class CategoryProcessing extends AbstractProcessing {
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        $participants = array();
+        $participants = [];
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;

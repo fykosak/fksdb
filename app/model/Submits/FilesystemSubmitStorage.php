@@ -60,7 +60,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * @var array of IStorageProcessing
      */
-    private $processings = array();
+    private $processings = [];
 
     function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
@@ -74,7 +74,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     public function beginTransaction() {
-        $this->todo = array();
+        $this->todo = [];
     }
 
     /**
@@ -151,10 +151,10 @@ class FilesystemSubmitStorage implements ISubmitStorage {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
 
-        $this->todo[] = array(
+        $this->todo[] = [
             'file' => $filename,
             'submit' => $submit,
-        );
+        ];
     }
 
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
@@ -193,7 +193,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     public function deleteFile(ModelSubmit $submit) {
-        $fails = array();
+        $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
             if (!unlink($file->getRealpath())) {
@@ -213,7 +213,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             $files = iterator_to_array($it, false);
         } catch (UnexpectedValueException $e) {
-            return array();
+            return [];
         }
 
         return $files;

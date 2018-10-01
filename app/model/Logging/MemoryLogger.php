@@ -12,7 +12,7 @@ class MemoryLogger extends StackedLogger {
     const IDX_MESSAGE = 'msg';
     const IDX_LEVEL = 'lvl';
 
-    private $messages = array();
+    private $messages = [];
 
     /**
      *
@@ -23,7 +23,7 @@ class MemoryLogger extends StackedLogger {
     }
 
     public function clear() {
-        $this->messages = array();
+        $this->messages = [];
     }
 
     protected function doLog($message, $level) {

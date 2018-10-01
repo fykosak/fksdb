@@ -85,7 +85,7 @@ class StoredQueryComponent extends Control {
 
     public function updateParameters($parameters) {
         if (!$this->parameters) {
-            $this->parameters = array();
+            $this->parameters = [];
         }
         $this->parameters = array_merge($this->parameters, $parameters);
     }
@@ -129,7 +129,7 @@ class StoredQueryComponent extends Control {
     public function render() {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
-            $defaults = array();
+            $defaults = [];
             foreach ($this->parameters as $key => $value) {
                 $defaults[$key] = array('value' => $value);
             }

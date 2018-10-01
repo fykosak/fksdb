@@ -43,13 +43,13 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     }
 
     public function getFingerprint() {
-        return md5(implode(':', array(
+        return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,
             $this->source,
             $this->note,
             $this->raw_points,
-        )));
+        ]));
     }
 
 }

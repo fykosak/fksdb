@@ -103,11 +103,11 @@ class StoredQueryFactory {
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))
-                ->setItems(array(
+                ->setItems([
                     ModelStoredQueryParameter::TYPE_INT => 'integer',
                     ModelStoredQueryParameter::TYPE_STR => 'string',
                     ModelStoredQueryParameter::TYPE_BOOL => 'bool',
-        ));
+                ]);
 
         $container->addText('default', _('Výchozí hodnota'));
     }

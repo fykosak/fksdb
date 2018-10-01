@@ -25,7 +25,7 @@ class Machine extends FreezableObject implements ArrayAccess, IteratorAggregate 
     /**
      * @var BaseMachine[]
      */
-    private $baseMachines = array();
+    private $baseMachines = [];
 
     /**
      * @var BaseMachine

@@ -254,7 +254,7 @@ class EventPresenter extends EntityPresenter {
                     if ($parameters) {
                         $parameters = Neon::decode($parameters);
                     } else {
-                        $parameters = array();
+                        $parameters = [];
                     }
 
                     NeonScheme::readSection($parameters, $scheme);

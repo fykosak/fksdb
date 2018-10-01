@@ -223,10 +223,10 @@ class PointsPresenter extends SeriesPresenter {
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         if (!$person) {
-            return array();
+            return [];
         }
 
-        $taskIds = array();
+        $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
