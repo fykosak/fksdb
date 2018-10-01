@@ -2,6 +2,7 @@
 
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 
@@ -11,6 +12,7 @@ use Nette\Security\IIdentity;
  * @property boolean active
  * @property integer login_id
  * @property DateTime last_login
+ * @property ActiveRow person
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
@@ -31,12 +33,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      * @return ModelPerson
      */
     public function getPerson() {
-        if ($this->person === false) {
-            $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-            $this->person = $row ? ModelPerson::createFromTableRow($this->person) : null;
+        if ($this->person) {
+            return ModelPerson::createFromTableRow($this->person);
         }
-
-        return $this->person;
+        return null;
     }
 
     /**
