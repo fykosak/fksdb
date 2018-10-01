@@ -68,7 +68,7 @@ class ReactResponse extends Nette\Object implements Nette\Application\IResponse 
         $httpResponse->setExpiration(FALSE);
         $response = [
             'messages' => array_map(function (ReactMessage $value) {
-                return $value->__to[];
+                return $value->__toArray();
             }, $this->messages),
             'act' => $this->act,
             'data' => $this->data,
