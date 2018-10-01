@@ -186,7 +186,6 @@ class InboxPresenter extends SeriesPresenter {
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
         $form = $formControl->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());

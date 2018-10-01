@@ -1,0 +1,9 @@
+{
+  "require": {
+    "php" : ">=7.0.0",
+    "nette/nette": "~2.0.18"
+  },
+  "autoload": {
+    "classmap": ["libs/"]
+  }
+}
