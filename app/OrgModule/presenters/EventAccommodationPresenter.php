@@ -225,7 +225,7 @@ class EventAccommodationPresenter extends EntityPresenter {
             $data = $this->getAccommodationFormData($values);
             /**
              * @var $accommodation \ModelEventAccommodation
-             * @var $address \ModelAddress
+             * @var $address \FKSDB\ORM\ModelAddress
              */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
             $accommodation->event_id = $this->eventId;

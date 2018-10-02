@@ -1,7 +1,9 @@
 <?php
 
-use Nette\Security\IResource;
+use FKSDB\ORM\ModelAddress;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>

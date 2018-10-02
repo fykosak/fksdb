@@ -33,11 +33,11 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return \ModelAddress
+     * @return \FKSDB\ORM\ModelAddress
      */
     public function getAddress() {
         if ($this->address) {
-            return \ModelAddress::createFromTableRow($this->address);
+            return \FKSDB\ORM\ModelAddress::createFromTableRow($this->address);
         }
         return null;
     }

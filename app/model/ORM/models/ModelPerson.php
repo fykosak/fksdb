@@ -4,7 +4,6 @@ namespace FKSDB\ORM;
 
 use AbstractModelSingle;
 use DbNames;
-use ModelAddress;
 use ModelContestant;
 use ModelEventAccommodation;
 use ModelEventPersonAccommodation;
