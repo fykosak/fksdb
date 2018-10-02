@@ -11,7 +11,6 @@ use ModelEventPersonAccommodation;
 use ModelFlag;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
-use ModelOrg;
 use ModelPersonHasFlag;
 use ModelPersonHistory;
 use ModelPostContact;
@@ -283,7 +282,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @internal To get active orgs call FKSDB\ORM\ModelLogin::getActiveOrgs
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg indexed by contest_id
+     * @return array of FKSDB\ORM\ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];

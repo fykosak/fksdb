@@ -48,7 +48,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @return array of FKSDB\ORM\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {
