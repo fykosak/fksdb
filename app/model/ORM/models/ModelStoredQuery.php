@@ -1,7 +1,13 @@
 <?php
 
-use Nette\Security\IResource;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
 use Exports\StoredQueryPostProcessing;
+use InvalidArgumentException;
+use ModelMStoredQueryTag;
+use Nette\Security\IResource;
 
 /**
  * @todo Better (general) support for related collection setter.

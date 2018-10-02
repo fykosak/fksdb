@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelTask;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -8,7 +9,7 @@ use FKSDB\ORM\ModelContest;
 class ServiceTask extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_TASK;
-    protected $modelClassName = 'ModelTask';
+    protected $modelClassName = 'FKSDB\ORM\ModelTask';
 
     /**
      * Syntactic sugar.

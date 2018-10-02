@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\ModelFlag;
+use FKSDB\ORM\ModelPersonHasFlag;
+
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>

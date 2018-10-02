@@ -1,7 +1,8 @@
 <?php
 
-use FKSDB\ORM\ModelContest;
-use FKSDB\ORM\ModelPerson;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 

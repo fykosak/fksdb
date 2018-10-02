@@ -1,6 +1,8 @@
 <?php
 
-use FKSDB\ORM\ModelAddress;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 
 /**
  *

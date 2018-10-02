@@ -64,9 +64,9 @@ acl:
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, storedQuery, show)
-    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(ModelEventType::FYZIKLANI))))
+    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(FKSDB\ORM\ModelEventType::FYZIKLANI))))
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
-    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(ModelEventType::XXX))))
+    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
     - allow(webmaster, task, insert) # stahování úloh

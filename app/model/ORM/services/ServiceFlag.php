@@ -1,12 +1,14 @@
 <?php
 
+use FKSDB\ORM\ModelFlag;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFlag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_FLAG;
-    protected $modelClassName = 'ModelFlag';
+    protected $modelClassName = 'FKSDB\ORM\ModelFlag';
 
     /**
      * Syntactic sugar.

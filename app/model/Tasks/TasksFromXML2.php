@@ -9,7 +9,7 @@ use SimpleXMLElement;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksFromXML2 extends Stage {
@@ -67,7 +67,7 @@ class TasksFromXML2 extends Stage {
         $series = $this->data->getSeries();
         $tasknr = (int) (string) $XMLTask->number;
 
-        // obtain ModelTask
+        // obtain FKSDB\ORM\ModelTask
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
         if ($task == null) {
             $task = $this->taskService->createNew(array(

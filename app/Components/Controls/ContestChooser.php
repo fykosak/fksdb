@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\ModelContest;
-use ModelRole;
+use FKSDB\ORM\ModelRole;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Http\Session;

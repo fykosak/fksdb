@@ -6,7 +6,7 @@
 class ServiceContestYear extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_CONTEST_YEAR;
-    protected $modelClassName = 'ModelContestYear';
+    protected $modelClassName = 'FKSDB\ORM\ModelContestYear';
 
 }
 

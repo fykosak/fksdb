@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelRegion;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use ORM\IModel;

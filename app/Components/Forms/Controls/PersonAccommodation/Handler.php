@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
+use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
-use ModelEventAccommodation;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -30,7 +30,7 @@ class Handler {
 
         $newAccommodationIds = $this->prepareData($data);
         /**
-         * @var $row \ModelEventPersonAccommodation
+         * @var $row \FKSDB\ORM\ModelEventPersonAccommodation
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_accommodation_id, $newAccommodationIds)) {

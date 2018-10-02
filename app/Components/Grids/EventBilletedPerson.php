@@ -35,16 +35,16 @@ class EventBilletedPerson extends BaseGrid {
         $this->setDataSource($dataSource);
         // $this->addColumn('name', _('Name'));
         $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
-            $model = \ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
             return $model->getPerson()->getFullName();
         });
 
         $this->addColumn('status', _('State'))->setRenderer(function ($row) {
-            $model = \ModelEventPersonAccommodation::createFromTableRow($row);
-            $classNames = ($model->status === \ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
+            $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
+            $classNames = ($model->status === \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
             return Html::el('span')
                 ->addAttributes(['class' => $classNames])
-                ->add((($model->status == \ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
+                ->add((($model->status == \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
 
         });
 
@@ -54,7 +54,7 @@ class EventBilletedPerson extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->link('confirmPayment!', $row->event_person_accommodation_id);
             })->setShow(function ($row) {
-                return $row->status !== \ModelEventPersonAccommodation::STATUS_PAID;
+                return $row->status !== \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID;
             });
 
         $this->addButton('deletePayment', _('Delete payment'))->setText(_('Delete payment'))
@@ -62,7 +62,7 @@ class EventBilletedPerson extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->link('deletePayment!', $row->event_person_accommodation_id);
             })->setShow(function ($row) {
-                return $row->status == \ModelEventPersonAccommodation::STATUS_PAID;
+                return $row->status == \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID;
             });
 
         /*/
@@ -92,7 +92,7 @@ class EventBilletedPerson extends BaseGrid {
             $this->redirect('this');
             return;
         }
-        $model->update(['status' => \ModelEventPersonAccommodation::STATUS_PAID]);
+        $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID]);
         $this->serviceEventPersonAccommodation->save($model);
         $this->redirect('this');
     }
@@ -104,7 +104,7 @@ class EventBilletedPerson extends BaseGrid {
             $this->redirect('this');
             return;
         }
-        $model->update(['status' => \ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
+        $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
         $this->serviceEventPersonAccommodation->save($model);
         $this->redirect('this');
     }
@@ -112,8 +112,8 @@ class EventBilletedPerson extends BaseGrid {
         public function handleConfirmPaymentAll($personId) {
             $rows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $personId);
             foreach ($rows as $row) {
-                $model = \ModelEventPersonAccommodation::createFromTableRow($row);
-                $model->update(['status' => \ModelEventPersonAccommodation::STATUS_PAID]);
+                $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
+                $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID]);
                 $this->serviceEventPersonAccommodation->save($model);
             }
             $this->redirect('this');
@@ -122,8 +122,8 @@ class EventBilletedPerson extends BaseGrid {
         public function handleDeletePaymentAll($personId) {
             $rows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $personId);
             foreach ($rows as $row) {
-                $model = \ModelEventPersonAccommodation::createFromTableRow($row);
-                $model->update(['status' => \ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
+                $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
+                $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
                 $this->serviceEventPersonAccommodation->save($model);
             }
             $this->redirect('this');

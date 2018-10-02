@@ -1,7 +1,8 @@
 <?php
 
+namespace FKSDB\ORM;
 
-use FKSDB\ORM\ModelPerson;
+use AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 
 /**

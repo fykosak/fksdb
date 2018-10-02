@@ -1,6 +1,9 @@
 <?php
 
-use FKSDB\ORM\ModelPerson;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
 
 /**
  *

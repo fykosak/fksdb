@@ -37,7 +37,7 @@ class SeriesData {
     private $data;
 
     /**
-     * @var array[tasknr] of ModelTask
+     * @var array[tasknr] of FKSDB\ORM\ModelTask
      */
     private $tasks = [];
 

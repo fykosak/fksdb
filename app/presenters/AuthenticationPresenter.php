@@ -8,6 +8,7 @@ use Authentication\RecoveryException;
 use Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;

@@ -4,10 +4,10 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
+use FKSDB\ORM\ModelContestant;
 use FKSDB\ORM\ModelSubmit;
 use FormUtils;
 use InvalidArgumentException;
-use ModelContestant;
 use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -24,7 +24,7 @@ class ContestantSubmits extends BaseControl {
     use ClientDataTrait;
 
     /**
-     * @var Traversable|array of ModelTask
+     * @var Traversable|array of FKSDB\ORM\ModelTask
      */
     private $tasks;
 
@@ -38,7 +38,7 @@ class ContestantSubmits extends BaseControl {
      */
     private $submitService;
     /**
-     * @var ModelContestant
+     * @var \FKSDB\ORM\ModelContestant
      */
     private $contestant;
 
@@ -126,7 +126,7 @@ class ContestantSubmits extends BaseControl {
 
     /**
      *
-     * @param array|Traversable|string $value of ModelTask
+     * @param array|Traversable|string $value of FKSDB\ORM\ModelTask
      * @return \FKSDB\Components\Forms\Controls\ContestantSubmits
      * @throws InvalidArgumentException
      */

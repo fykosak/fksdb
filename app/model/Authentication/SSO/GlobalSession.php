@@ -4,11 +4,10 @@ namespace Authentication\SSO;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
-use ModelGlobalSession;
+use FKSDB\ORM\ModelGlobalSession;
 use Nette\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-
 use ServiceGlobalSession;
 
 /**
@@ -29,7 +28,7 @@ class GlobalSession implements IGlobalSession {
     private $gsidHolder;
 
     /**
-     * @var ModelGlobalSession|null
+     * @var \FKSDB\ORM\ModelGlobalSession|null
      */
     private $globalSession;
 

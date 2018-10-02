@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\ModelContestant;
 use FKSDB\ORM\ModelSubmit;
-use ModelContestant;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;

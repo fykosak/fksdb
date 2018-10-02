@@ -5,8 +5,8 @@ namespace OrgModule;
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\ORM\ModelRole;
 use IContestPresenter;
-use ModelRole;
 use Nette\Application\BadRequestException;
 
 /**

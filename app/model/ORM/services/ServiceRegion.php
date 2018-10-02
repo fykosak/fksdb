@@ -6,7 +6,7 @@
 class ServiceRegion extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_REGION;
-    protected $modelClassName = 'ModelRegion';
+    protected $modelClassName = 'FKSDB\ORM\ModelRegion';
 
     /**
      * @return TypedTableSelection

@@ -7,7 +7,6 @@ use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
 use DateTime;
 use DbNames;
-use ModelRole;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;

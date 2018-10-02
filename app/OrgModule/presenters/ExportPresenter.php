@@ -15,11 +15,11 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\ORM\ModelContest;
 use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\ModelPostContact;
+use FKSDB\ORM\ModelStoredQuery;
 use FormUtils;
 use IResultsModel;
 use ModelException;
-use ModelPostContact;
-use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;

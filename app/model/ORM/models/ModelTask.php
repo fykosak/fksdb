@@ -1,5 +1,10 @@
 <?php
 
+namespace FKSDB\ORM;
+use AbstractModelSingle;
+use DbNames;
+use Utils;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -19,7 +24,7 @@ class ModelTask extends AbstractModelSingle {
     }
 
     /**
-     * @param mixed $type ModelTaskContribution::TYPE_*
+     * @param mixed $type FKSDB\ORM\ModelTaskContribution::TYPE_*
      * @return ModelTaskContribution[] indexed by contribution_id
      */
     public function getContributions($type = null) {

@@ -2,38 +2,38 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\ORM\ModelStoredQuery;
 use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use ServiceMStoredQueryTag;
-use ModelStoredQuery;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class StoredQueryTagCloud extends Control {
-    
+
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
-    
+
     /**
      * @var ServiceMStoredQueryTag
      */
     private $serviceMStoredQueryTag;
-    
+
     /**
      * @var ModelStoredQuery
      */
     private $modelStoredQuery;
-        
+
     /**
      * @var callable[]
      */
     private $onClick;
-    
+
     private $mode;
-    
+
     private $activeTagIds = [];
 
     function __construct($mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
@@ -41,16 +41,16 @@ class StoredQueryTagCloud extends Control {
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
         $this->mode = $mode;
     }
-    
-    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {        
+
+    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
         $this->modelStoredQuery = $modelStoredQuery;
     }
-    
+
     public function registerOnClick(callable $callback){
         $this->onClick[] = $callback;
         return $this;
     }
-    
+
     public function handleOnClick(array $activeTagIds){
         $this->activeTagIds = $activeTagIds;
         foreach($this->onClick as $callback){
@@ -76,7 +76,7 @@ class StoredQueryTagCloud extends Control {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryTagCloud.latte');
         $this->template->render();
     }
-    
+
     private function createNextActiveTagIds(){
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];

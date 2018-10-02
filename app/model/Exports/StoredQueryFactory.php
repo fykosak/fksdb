@@ -5,9 +5,8 @@ namespace Exports;
 use BasePresenter;
 use DOMDocument;
 use DOMNode;
-
+use FKSDB\ORM\ModelStoredQuery;
 use ISeriesPresenter;
-use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;

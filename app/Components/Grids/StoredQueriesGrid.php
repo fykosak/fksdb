@@ -61,7 +61,7 @@ class StoredQueriesGrid extends BaseGrid {
         //
         $this->addColumn('name', _('Název'));
         $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
-        $this->addColumn('tags', _('Štítky'))->setRenderer(function (\ModelStoredQuery $row) {
+        $this->addColumn('tags', _('Štítky'))->setRenderer(function (\FKSDB\ORM\ModelStoredQuery $row) {
             $baseEl = Html::el('div')->addAttributes(['class' => 'storedQueryTags']);
             foreach ($row->getMStoredQueryTags() as $tag) {
                 $baseEl->add(Html::el('span')

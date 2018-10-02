@@ -107,7 +107,7 @@ class EventAccommodationPresenter extends EntityPresenter {
             return;
         }
         /**
-         * @var $model \ModelEventAccommodation
+         * @var $model \FKSDB\ORM\ModelEventAccommodation
          */
         $defaults = [
             self::CONT_ACCOMMODATION => $model->toArray(),
@@ -118,7 +118,7 @@ class EventAccommodationPresenter extends EntityPresenter {
 
     public function titleEdit() {
         /**
-         * @var $model \ModelEventAccommodation
+         * @var $model \FKSDB\ORM\ModelEventAccommodation
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(
@@ -142,7 +142,7 @@ class EventAccommodationPresenter extends EntityPresenter {
 
     public function titleBilleted() {
         /**
-         * @var $model \ModelEventAccommodation
+         * @var $model \FKSDB\ORM\ModelEventAccommodation
          */
         $model = $this->serviceEventAccommodation->findByPrimary($this->eventAccommodationId);
         $this->setTitle(
@@ -224,7 +224,7 @@ class EventAccommodationPresenter extends EntityPresenter {
              */
             $data = $this->getAccommodationFormData($values);
             /**
-             * @var $accommodation \ModelEventAccommodation
+             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
              * @var $address \FKSDB\ORM\ModelAddress
              */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
@@ -271,7 +271,7 @@ class EventAccommodationPresenter extends EntityPresenter {
                 throw new \ModelException();
             }
             /**
-             * @var $accommodation \ModelEventAccommodation
+             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
              */
             $accommodation = $this->getModel();
 

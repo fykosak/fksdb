@@ -4,15 +4,8 @@ namespace FKSDB\ORM;
 
 use AbstractModelSingle;
 use DbNames;
-use ModelContestant;
-use ModelEventAccommodation;
-use ModelEventPersonAccommodation;
-use ModelFlag;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
-use ModelPersonHasFlag;
-use ModelPersonHistory;
-use ModelPostContact;
 use Nette\Security\IResource;
 use YearCalculator;
 
@@ -299,7 +292,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @param YearCalculator $yearCalculator
-     * @return array of ModelContestant indexed by contest_id
+     * @return array of FKSDB\ORM\ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];

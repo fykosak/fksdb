@@ -2,10 +2,10 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPerson;
 use Mail\SendFailedException;
-use ModelAuthToken;
 use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;

@@ -9,7 +9,7 @@ use ORM\IModel;
 class ServicePersonHasFlag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON_HAS_FLAG;
-    protected $modelClassName = 'ModelPersonHasFlag';
+    protected $modelClassName = 'FKSDB\ORM\ModelPersonHasFlag';
 
     public function createNew($data = null) {
         if ($data === null) {

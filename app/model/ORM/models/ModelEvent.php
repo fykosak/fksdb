@@ -5,8 +5,6 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use DbNames;
 use Events\Model\Holder\Holder;
-use ModelEventAccommodation;
-use ModelEventType;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
