@@ -8,9 +8,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\ModelTaskContribution;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelSubmit;
-use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
@@ -360,8 +360,8 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      *
-     * @param ModelSubmit $oldSubmit
-     * @param ModelSubmit $newSubmit
+     * @param \FKSDB\ORM\ModelSubmit $oldSubmit
+     * @param \FKSDB\ORM\ModelSubmit $newSubmit
      * @return void
      */
     private function restampSubmit(ModelSubmit $oldSubmit, ModelSubmit $newSubmit) {

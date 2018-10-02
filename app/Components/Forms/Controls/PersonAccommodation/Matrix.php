@@ -46,7 +46,7 @@ class Matrix extends HiddenField implements IReactComponent {
 
         $accommodationDef = [];
         /**
-         * @var $accommodation \ModelEventAccommodation
+         * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
          */
         foreach ($accommodations as $accommodation) {
             $accommodationDef[] = $accommodation->__toArray();

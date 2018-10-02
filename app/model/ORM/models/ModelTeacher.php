@@ -1,7 +1,12 @@
 <?php
 
-use Nette\Security\IResource;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DateTime;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>

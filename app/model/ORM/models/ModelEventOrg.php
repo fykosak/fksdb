@@ -1,15 +1,17 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelEventOrg
+ * Class FKSDB\ORM\ModelEventOrg
  * @property ActiveRow person
  * @property ActiveRow event
  */
-
 class ModelEventOrg extends AbstractModelSingle implements IResource {
 
     /**

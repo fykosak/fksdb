@@ -1,8 +1,11 @@
 <?php
 
-use \Nette\Database\Table\ActiveRow;
+namespace FKSDB\ORM;
+
+use Nette\Database\Table\ActiveRow;
+
 /**
- * Class ModelEventPersonAccommodation
+ * Class FKSDB\ORM\ModelEventPersonAccommodation
  * @property integer person_id
  * @property integer event_accommodation_id
  * @property integer event_person_accommodation_id

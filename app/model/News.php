@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelContest;
 use Nette\Object;
 
 class News extends Object {

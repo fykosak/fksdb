@@ -5,6 +5,7 @@ use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
+use FKSDB\ORM\ModelAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Diagnostics\Debugger;

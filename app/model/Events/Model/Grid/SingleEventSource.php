@@ -5,7 +5,7 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\Object;
@@ -14,12 +14,12 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class SingleEventSource extends Object implements IHolderSource {
 
@@ -136,7 +136,7 @@ class SingleEventSource extends Object implements IHolderSource {
 
     /**
      * Method propagates selected calls to internal primary models selection.
-     * 
+     *
      * @staticvar array $delegated
      * @param string $name
      * @param array $args

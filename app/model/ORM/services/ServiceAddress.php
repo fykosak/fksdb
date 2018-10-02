@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelRegion;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
@@ -12,7 +13,7 @@ class ServiceAddress extends AbstractServiceSingle {
     const PATTERN = '/[0-9]{5}/';
 
     protected $tableName = DbNames::TAB_ADDRESS;
-    protected $modelClassName = 'ModelAddress';
+    protected $modelClassName = 'FKSDB\ORM\ModelAddress';
 
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {

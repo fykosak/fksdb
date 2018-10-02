@@ -44,23 +44,23 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function (\ModelTeacher $row) {
+        $this->addColumn('display_name', _('Name'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             $person = $row->getPerson();
             return $person->getFullname();
         });
-        $this->addColumn('since', _('Since'))->setRenderer(function (\ModelTeacher $row) {
+        $this->addColumn('since', _('Since'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             if ($row->since === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->add(_('undefined'));
             }
             return $row->since->format('Y-m-d');
         });
-        $this->addColumn('until', _('Until'))->setRenderer(function (\ModelTeacher $row) {
+        $this->addColumn('until', _('Until'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             if ($row->until === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still teaches'));
             }
             return $row->until->format('Y-m-d');
         });
-        $this->addColumn('school_id', _('School'))->setRenderer(function (\ModelTeacher $row) {
+        $this->addColumn('school_id', _('School'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             return $row->getSchool()->name_abbrev;
         });
 

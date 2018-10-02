@@ -1,6 +1,10 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Nette\InvalidStateException;
+use PDO;
 
 /**
  *

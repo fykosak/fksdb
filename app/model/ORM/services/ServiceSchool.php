@@ -6,7 +6,7 @@
 class ServiceSchool extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SCHOOL;
-    protected $modelClassName = 'ModelSchool';
+    protected $modelClassName = 'FKSDB\ORM\ModelSchool';
 
     public function getSchools() {
         $schools = $this->getTable()

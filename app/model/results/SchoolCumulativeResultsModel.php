@@ -24,7 +24,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      */
     private $cumulativeResultsModel;
 
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, \ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, \FKSDB\ORM\ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }

@@ -3,7 +3,7 @@
 namespace Astrid;
 
 use FKSDB\Config\GlobalParameters;
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 use Nette\InvalidStateException;
 use RuntimeException;
 
@@ -54,7 +54,7 @@ class Downloader {
     }
 
     /**
-     * @param \ModelContest $contest
+     * @param \FKSDB\ORM\ModelContest $contest
      * @param int $year
      * @param int $series
      * @param string $language
@@ -73,7 +73,7 @@ class Downloader {
     }
 
     /**
-     * @param \ModelContest $contest
+     * @param \FKSDB\ORM\ModelContest $contest
      * @param int $year
      * @param int $series
      * @return string filename of downloaded XML file

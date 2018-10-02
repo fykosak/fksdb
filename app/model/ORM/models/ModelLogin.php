@@ -1,10 +1,16 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Authentication\PasswordAuthenticator;
 use Authorization\Grant;
+use DateTime;
+use DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
+use YearCalculator;
 
 /**
  *
@@ -41,7 +47,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     /**
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @return array of FKSDB\ORM\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         if ($this->getPerson()) {

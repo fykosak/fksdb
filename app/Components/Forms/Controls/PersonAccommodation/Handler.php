@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Messages\Message;
+use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
-use ModelPerson;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
-use ModelEventAccommodation;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -20,7 +20,7 @@ class Handler {
 
     /**
      * @param ArrayHash $data
-     * @param \ModelPerson $person
+     * @param ModelPerson $person
      * @param integer $eventId
      * @return Message[]
      */
@@ -30,7 +30,7 @@ class Handler {
 
         $newAccommodationIds = $this->prepareData($data);
         /**
-         * @var $row \ModelEventPersonAccommodation
+         * @var $row \FKSDB\ORM\ModelEventPersonAccommodation
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_accommodation_id, $newAccommodationIds)) {
@@ -49,7 +49,8 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                $messages[] = new Message(sprintf(_('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
+                $messages[] = new Message(sprintf(
+                    _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
                     $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)

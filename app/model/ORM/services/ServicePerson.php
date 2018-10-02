@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
 use ORM\IModel;
 
 /**
@@ -8,11 +9,11 @@ use ORM\IModel;
 class ServicePerson extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON;
-    protected $modelClassName = 'ModelPerson';
+    protected $modelClassName = 'FKSDB\ORM\ModelPerson';
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @deprecated
      * @see ServiceOrg::findByTeXSignature($signature, $contest_id)
      * @param type $signature
@@ -28,7 +29,7 @@ class ServicePerson extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param type $email
      * @return ModelPerson|null
      */

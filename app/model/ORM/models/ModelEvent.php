@@ -1,9 +1,13 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
 use Events\Model\Holder\Holder;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Database\Table\ActiveRow;
 
 /**
  *

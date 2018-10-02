@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelEventParticipant;
 use ORM\IModel;
 
 /**
@@ -8,7 +9,7 @@ use ORM\IModel;
 class ServiceEventParticipant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
-    protected $modelClassName = 'ModelEventParticipant';
+    protected $modelClassName = 'FKSDB\ORM\ModelEventParticipant';
 
     public function save(IModel &$model) {
         try {

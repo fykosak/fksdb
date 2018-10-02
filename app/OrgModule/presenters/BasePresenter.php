@@ -5,8 +5,8 @@ namespace OrgModule;
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\ORM\ModelRole;
 use IContestPresenter;
-use ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
@@ -52,7 +52,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     /**
-     * @return \ModelContest
+     * @return \FKSDB\ORM\ModelContest
      * @throws BadRequestException
      */
     public function getSelectedContest() {
@@ -97,7 +97,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

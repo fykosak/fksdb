@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use ServicePersonInfo;
 

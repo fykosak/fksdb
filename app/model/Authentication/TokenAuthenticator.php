@@ -2,8 +2,8 @@
 
 namespace Authentication;
 
-use ModelAuthToken;
-use ModelLogin;
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelLogin;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;

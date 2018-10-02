@@ -3,9 +3,9 @@
 namespace Authentication;
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelLogin;
 use FullHttpRequest;
 use Github\Events\Event;
-use ModelLogin;
 use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
@@ -35,7 +35,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param Request $request
-     * @return ModelLogin
+     * @return \FKSDB\ORM\ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate(FullHttpRequest $request) {

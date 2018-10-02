@@ -7,10 +7,10 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelLogin;
 use Mail\MailTemplateFactory;
-use ModelAuthToken;
-use ModelEvent;
-use ModelLogin;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
@@ -24,7 +24,7 @@ use ServicePerson;
  * Sends email with given template name (in standard template directory)
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailSender extends Object {
@@ -123,7 +123,7 @@ class MailSender extends Object {
         $token = $this->createToken($login, $event, $application);
         $until = $token->until;
 
-        // prepare and send email      
+        // prepare and send email
         $template = $this->mailTemplateFactory->createFromFile($filename);
         $template->token = $token->token;
         $template->person = $person;

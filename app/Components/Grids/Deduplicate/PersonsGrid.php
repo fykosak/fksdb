@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Tables\TypedTableSelection;

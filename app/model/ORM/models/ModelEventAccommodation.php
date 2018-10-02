@@ -1,11 +1,13 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
-use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelEventAccommodation
+ * Class FKSDB\ORM\ModelEventAccommodation
  * @package ORM\Models\Events
  * @property integer event_accommodation_id
  * @property integer event_id
@@ -26,18 +28,18 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return \ModelEvent
+     * @return \FKSDB\ORM\ModelEvent
      */
     public function getEvent() {
-        return \ModelEvent::createFromTableRow($this->event);
+        return \FKSDB\ORM\ModelEvent::createFromTableRow($this->event);
     }
 
     /**
-     * @return \ModelAddress
+     * @return \FKSDB\ORM\ModelAddress
      */
     public function getAddress() {
         if ($this->address) {
-            return \ModelAddress::createFromTableRow($this->address);
+            return \FKSDB\ORM\ModelAddress::createFromTableRow($this->address);
         }
         return null;
     }

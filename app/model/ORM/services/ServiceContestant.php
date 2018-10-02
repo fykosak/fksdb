@@ -9,7 +9,7 @@ class ServiceContestant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_CONTESTANT_BASE;
     protected $viewName = DbNames::VIEW_CONTESTANT;
-    protected $modelClassName = 'ModelContestant';
+    protected $modelClassName = 'FKSDB\ORM\ModelContestant';
 
     /**
      * @note Read-only (loads data from view).

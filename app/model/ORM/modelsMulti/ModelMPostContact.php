@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\ModelAddress;
+use FKSDB\ORM\ModelPostContact;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
