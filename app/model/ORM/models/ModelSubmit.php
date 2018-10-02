@@ -5,6 +5,11 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property DateTime submitted_on
+ * @property integer submit_id
+ * @property string source
+ * @property string note
+ * @property integer raw_points
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 
@@ -38,13 +43,13 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     }
 
     public function getFingerprint() {
-        return md5(implode(':', array(
+        return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,
             $this->source,
             $this->note,
             $this->raw_points,
-        )));
+        ]));
     }
 
 }

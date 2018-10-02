@@ -12,7 +12,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestChooser extends Control {
@@ -84,13 +84,14 @@ class ContestChooser extends Control {
     private $contestSource = 0xffffffff;
 
     /**
-     * 
+     *
 
      * @param Session $session
      * @param YearCalculator $yearCalculator
      * @param ServiceContest $serviceContest
      */
     function __construct(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+        parent::__construct();
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -104,7 +105,7 @@ class ContestChooser extends Control {
     }
 
     /**
-     * 
+     *
      * @param mixed $yearDefinition enum
      */
     public function setYears($yearDefinition) {
@@ -239,7 +240,7 @@ class ContestChooser extends Control {
                 $pk = $this->serviceContest->getPrimary();
                 $contests = $this->serviceContest->fetchPairs($pk, $pk);
             } else { // implicity -- by role
-                $contests = array();
+                $contests = [];
                 $login = $this->getLogin();
                 if ($login) {
                     if ($this->contestsDefinition == ModelRole::ORG) {
@@ -252,9 +253,10 @@ class ContestChooser extends Control {
                     }
                 }
             }
-            $this->contests = array();
+            $this->contests = [];
             foreach ($contests as $id) {
-                $contest = $this->serviceContest->findByPrimary($id);
+                $row = $this->serviceContest->findByPrimary($id);
+                $contest = ModelContest::createFromTableRow($row);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object) array(
                             'contest' => $contest,
@@ -278,7 +280,7 @@ class ContestChooser extends Control {
                 return array($currentYear);
             }
             $contestants = $login->getPerson()->getContestants($contest->contest_id);
-            $years = array();
+            $years = [];
             foreach ($contestants as $contestant) {
                 $years[] = $contestant->year;
             }

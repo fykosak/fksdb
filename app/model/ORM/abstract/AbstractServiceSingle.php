@@ -37,7 +37,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * @var array of AbstractService  singleton instances of descedants
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     public function __construct(Connection $connection) {
         parent::__construct($this->tableName, $connection);
@@ -177,7 +177,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     protected function getDefaultData() {
         if ($this->defaults == null) {
-            $this->defaults = array();
+            $this->defaults = [];
             foreach ($this->getColumnMetadata() as $column) {
                 if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default']) && $column['default'] == 'CURRENT_TIMESTAMP') {
                     continue;
@@ -198,7 +198,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         if ($data === null) {
             return null;
         }
-        $result = array();
+        $result = [];
         foreach ($this->getColumnMetadata() as $column) {
             $name = $column['name'];
             if (array_key_exists($name, $data)) {

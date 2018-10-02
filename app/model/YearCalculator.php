@@ -120,12 +120,12 @@ class YearCalculator extends Object {
     }
 
     private function preloadCache() {
-        $this->cache = array();
-        $this->revCache = array();
+        $this->cache = [];
+        $this->revCache = [];
         foreach ($this->serviceContestYear->getTable()->order('year') as $row) {
             if (!isset($this->cache[$row->contest_id])) {
-                $this->cache[$row->contest_id] = array();
-                $this->revCache[$row->contest_id] = array();
+                $this->cache[$row->contest_id] = [];
+                $this->revCache[$row->contest_id] = [];
             }
             $this->cache[$row->contest_id][$row->year] = $row->ac_year;
             $this->revCache[$row->contest_id][$row->ac_year] = $row->year;

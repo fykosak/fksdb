@@ -66,7 +66,7 @@ class StudyYearsFromXML extends Stage {
         $this->serviceTaskStudyYear->getConnection()->beginTransaction();
 
         // parse contributors            
-        $studyYears = array();
+        $studyYears = [];
         $hasYears = false;
         foreach (explode(self::DELIMITER, (string) $XMLTask->{self::XML_ELEMENT}) as $studyYear) {
             $studyYear = trim($studyYear);

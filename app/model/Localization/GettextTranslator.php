@@ -14,7 +14,7 @@ class GettextTranslator implements ITranslator {
     /**
      * @var array[lang] => locale
      */
-    private $locales = array();
+    private $locales = [];
 
     /**
      * @var string

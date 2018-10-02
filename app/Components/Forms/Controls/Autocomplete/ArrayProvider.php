@@ -13,7 +13,7 @@ class ArrayProvider implements IFilteredDataProvider {
     private $labelById;
 
     function __construct(array $data) {
-        $this->data = array();
+        $this->data = [];
         $this->labelById = $data;
         foreach ($data as $id => $label) {
             $this->data[] = array(
@@ -30,7 +30,7 @@ class ArrayProvider implements IFilteredDataProvider {
      * @return array
      */
     public function getFilteredItems($search) {
-        $result = array();
+        $result = [];
         foreach ($this->data as $item) {
             $label = $item[self::LABEL];
             if (mb_substr($label, 0, mb_strlen($search)) == $search) {

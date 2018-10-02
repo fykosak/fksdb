@@ -241,7 +241,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
         if (in_array($sub, array(
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,

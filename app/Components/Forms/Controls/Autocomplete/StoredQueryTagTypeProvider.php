@@ -52,13 +52,13 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         $tagTypes = $this->searchTable
                 ->order('name');
 
-        $result = array();
+        $result = [];
         foreach ($tagTypes as $tagType) {
-            $result[] = array(
+            $result[] = [
                 self::LABEL => $tagType->name,
                 self::VALUE => $tagType->tag_type_id,
                 self::DESCRIPTION => $tagType->description,
-            );
+            ];
         }
         return $result;
     }

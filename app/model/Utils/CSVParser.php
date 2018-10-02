@@ -44,7 +44,7 @@ class CSVParser extends Object implements Iterator {
     public function next() {
         $this->currentRow = fgetcsv($this->file, 0, $this->delimiter);
         if ($this->indexType == self::INDEX_FROM_HEADER) {
-            $result = array();
+            $result = [];
             foreach ($this->header as $i => $name) {
                 $result[$name] = $this->currentRow[$i];
             }

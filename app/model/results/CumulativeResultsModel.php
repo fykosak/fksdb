@@ -16,7 +16,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
+    private $dataColumns = [];
 
     /**
      * Definition of header.
@@ -29,7 +29,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
+            $dataColumns = [];
             $sum = 0;
             foreach ($this->getSeries() as $series) {
                 // sum points as sum of tasks
@@ -68,7 +68,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
     public function getCategories() {
@@ -80,7 +80,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
             throw new \Nette\InvalidStateException('Series not set.');
         }
 
-        $select = array();
+        $select = [];
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 

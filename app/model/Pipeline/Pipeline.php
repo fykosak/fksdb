@@ -18,7 +18,7 @@ class Pipeline {
     /**
      * @var array of IStage
      */
-    private $stages = array();
+    private $stages = [];
 
     /**
      * @var mixed

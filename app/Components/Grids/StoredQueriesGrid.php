@@ -29,6 +29,7 @@ class StoredQueriesGrid extends BaseGrid {
     private $isFilteredByTag = false;
 
     function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
+        parent::__construct();
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->contestAuthorizator = $contestAuthorizator;
     }

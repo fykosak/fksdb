@@ -122,12 +122,12 @@ class AutocompleteSelectBox extends TextBase {
         $defaultValue = $this->getValue();
         if ($defaultValue) {
             if ($this->isMultiselect()) {
-                $defaultTextValue = array();
+                $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
-                $control->value = implode(self::INTERNAL_DELIMITER , $defaultValue);
+                $control->value = implode(self::INTERNAL_DELIMITER, $defaultValue);
             } else {
                 $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
                 $control->value = $defaultValue;
@@ -164,9 +164,9 @@ class AutocompleteSelectBox extends TextBase {
             if (is_array($value)) {
                 $this->value = $value;
             } else if ($value === '') {
-                $this->value = array();
+                $this->value = [];
             } else {
-                $this->value = explode(self::INTERNAL_DELIMITER , $value);
+                $this->value = explode(self::INTERNAL_DELIMITER, $value);
             }
         } else {
             if ($value === '') {

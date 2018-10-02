@@ -85,7 +85,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     private function setTasks($tasks) {
-        $this->tasks = array();
+        $this->tasks = [];
         foreach ($tasks as $task) {
             $this->tasks[$task->tasknr] = $task;
         }
@@ -133,7 +133,7 @@ class ContestantSubmits extends BaseControl {
      */
     public function setValue($value) {
         if (!$value) {
-            $this->rawValue = $this->serializeValue(array());
+            $this->rawValue = $this->serializeValue([]);
             $this->value = $this->deserializeValue($this->rawValue);
         } else if (is_string($value)) {
             $this->rawValue = $value;
@@ -147,7 +147,7 @@ class ContestantSubmits extends BaseControl {
     }
 
     private function serializeValue($value) {
-        $result = array();
+        $result = [];
 
         foreach ($value as $submit) {
             if (!$submit) {
@@ -180,7 +180,7 @@ class ContestantSubmits extends BaseControl {
     private function deserializeValue($value) {
         $value = json_decode($value, true);
 
-        $result = array();
+        $result = [];
 
         foreach ($value as $tasknr => $serializedSubmit) {
             if (!$serializedSubmit) {
@@ -197,10 +197,10 @@ class ContestantSubmits extends BaseControl {
         $data = $submit->toArray();
         $format = $this->sourceToFormat($submit->source);
         $data['submitted_on'] = $data['submitted_on'] ? $data['submitted_on']->format($format) : null;
-        $data['task'] = array(
+        $data['task'] = [
             'label' => $this->getTask($submit->task_id)->label,
             'disabled' => $this->isTaskDisabled(),
-        ); // ORM workaround
+        ]; // ORM workaround
         return $data;
     }
 

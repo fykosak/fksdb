@@ -47,7 +47,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
                 ->where('ac_year', $this->getHolder()->getEvent()->getAcYear())
                 ->fetchPairs('person_id', 'school_id');
 
-        $result = array();
+        $result = [];
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();
