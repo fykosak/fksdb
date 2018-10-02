@@ -18,7 +18,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::createNew($data);
     }
 
-    public function updateModel(IModel $model, $data) {
+    public function updateModel(IModel $model, $data, $alive = true) {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

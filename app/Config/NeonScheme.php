@@ -23,7 +23,7 @@ class NeonScheme {
         if (!is_array($section)) {
             throw new NeonSchemaException('Expected array got \'' . (string) $section . '\'.');
         }
-        $result = array();
+        $result = [];
         foreach ($sectionScheme as $key => $metadata) {
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {

@@ -3,7 +3,6 @@
 namespace Authentication;
 
 use AuthenticatedPresenter;
-
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use ModelLogin;
@@ -45,7 +44,6 @@ class LoginUserStorage extends UserStorage {
     private $globalSession;
 
     /**
-
      * @var Application
      */
     private $application;
@@ -115,7 +113,9 @@ class LoginUserStorage extends UserStorage {
              * probably is not needed anymore.
              */
             //parent::setAuthenticated(false);
-
+            /**
+             * @var $presenter AuthenticatedPresenter
+             */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
@@ -125,10 +125,10 @@ class LoginUserStorage extends UserStorage {
              */
             if (!$ssoData && $presenter instanceof AuthenticatedPresenter) {
                 $allowedNonlogin = ($presenter->getAllowedAuthMethods() &
-                        (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
+                    (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
                 if ($presenter->requiresLogin() && !$allowedNonlogin) {
                     $params = array(
-                        'backlink' => (string) $this->request->getUrl(),
+                        'backlink' => (string)$this->request->getUrl(),
                         AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                     );
@@ -141,8 +141,8 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @param IIdentity
-     * @return LoginUserStorage
+     * @param IIdentity|NULL $identity
+     * @return UserStorage
      */
     public function setIdentity(IIdentity $identity = NULL) {
         $this->identity = $identity;
@@ -168,10 +168,12 @@ class LoginUserStorage extends UserStorage {
         }
 
         // Find login
-        $login = $this->loginService->findByPrimary($local->getId());
-        if (!$login) {
+        $row = $this->loginService->findByPrimary($local->getId());
+
+        if (!$row) {
             return null;
         }
+        $login = ModelLogin::createFromTableRow($row);
         $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;

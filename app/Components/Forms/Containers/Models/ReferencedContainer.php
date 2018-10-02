@@ -180,7 +180,7 @@ class ReferencedContainer extends ContainerWithOptions {
     private function createClearButton() {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
-        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             $this->referencedId->setValue(null);
             $this->invalidateFormGroup();
@@ -238,7 +238,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+            // $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 
@@ -293,4 +293,3 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
 }
-

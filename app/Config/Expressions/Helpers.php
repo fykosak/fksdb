@@ -17,7 +17,7 @@ use Traversable;
  */
 class Helpers {
 
-    private static $semanticMap = array(
+    private static $semanticMap = [
         'and' => 'FKSDB\Expressions\Logic\And_',
         'or' => 'FKSDB\Expressions\Logic\Or_',
         'neg' => 'FKSDB\Expressions\Logic\Not',
@@ -25,7 +25,7 @@ class Helpers {
         'before' => 'FKSDB\Expressions\Predicates\Before',
         'le' => 'FKSDB\Expressions\Comparison\Le',
         'leq' => 'FKSDB\Expressions\Comparison\Leq',
-    );
+    ];
 
     public static function registerSemantic($semanticMap) {
         self::$semanticMap += $semanticMap;
@@ -42,7 +42,7 @@ class Helpers {
             return $expression;
         }
 
-        $arguments = array();
+        $arguments = [];
         foreach ($expression->attributes as $attribute) {
             if ($attribute === '...') {
                 continue;
@@ -52,7 +52,7 @@ class Helpers {
 
         $class = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
         if (function_exists($class)) { // workaround for Nette interpretation of entities
-            $class = array('', $class);
+            $class = ['', $class];
         }
         return new Statement($class, $arguments);
     }
@@ -68,7 +68,7 @@ class Helpers {
             return $expression;
         }
 
-        $arguments = array();
+        $arguments = [];
         foreach ($expression->attributes as $attribute) {
             if ($attribute === '...') {
                 continue;
@@ -87,7 +87,7 @@ class Helpers {
 
     public static function evalExpressionArray($expressionArray, Container $container) {
         if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
-            $result = array();
+            $result = [];
             foreach ($expressionArray as $key => $expression) {
                 $result[$key] = self::evalExpressionArray($expression, $container);
             }

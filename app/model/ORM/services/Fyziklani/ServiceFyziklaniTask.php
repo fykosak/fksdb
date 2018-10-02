@@ -21,10 +21,10 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         /**
          * @var $result ModelFyziklaniTask
          */
-        $result = $this->getTable()->where(array(
+        $result = $this->getTable()->where([
             'label' => $label,
             'event_id' => $eventId
-        ))->fetch();
+        ])->fetch();
         return $result ?: null;
     }
 

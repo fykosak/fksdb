@@ -24,20 +24,20 @@ class AddressContainer extends ModelContainer {
 
     /**
      * Used for substituing form's IControl (via duck-typing).
-     * 
+     *
      * @param Traversable $value
      */
     public function setValue($value) {
-        $this->setValues($value === null ? array() : $value);
+        $this->setValues($value === null ? [] : $value);
     }
 
     /**
      * Used for substituing form's IControl (via duck-typing).
-     * 
+     *
      * @param Traversable $value
      */
     public function setDefaultValue($value) {
-        $this->setDefaults($value === null ? array() : $value);
+        $this->setDefaults($value === null ? [] : $value);
     }
 
     public function setValues($values, $erase = FALSE) {

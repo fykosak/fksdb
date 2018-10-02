@@ -20,7 +20,7 @@ class Results extends FyziklaniModule {
         $this->mode = $mode;
     }
 
-    public function getData() {
+    public function getData(): string {
         return null;
     }
 

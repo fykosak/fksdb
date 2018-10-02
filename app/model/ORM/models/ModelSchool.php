@@ -1,10 +1,11 @@
 <?php
 
 use Nette\Security\IResource;
-
+use Nette\Database\Table\ActiveRow;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property ActiveRow address
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
 

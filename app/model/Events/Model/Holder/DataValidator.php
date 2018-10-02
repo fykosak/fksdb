@@ -6,19 +6,19 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DataValidator extends Object {
 
     private $validationErrors;
-    private $stateStack = array();
+    private $stateStack = [];
 
     public function validate(BaseHolder $baseHolder, $state) {
         $this->pushState($baseHolder, $state);
 
         // validate
-        $this->validationErrors = array();
+        $this->validationErrors = [];
         $this->validateFields($baseHolder);
 
         $this->popState($baseHolder);
@@ -33,7 +33,7 @@ class DataValidator extends Object {
             $field->validate($this);
         }
     }
-    
+
     public function addError($error) {
         $this->validationErrors[] = $error;
     }

@@ -8,7 +8,7 @@ use Nette\Http\Session;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Jakub Šafin <xellos@fykos.cz>
  */
 class LanguageChooser extends Control {
@@ -46,12 +46,13 @@ class LanguageChooser extends Control {
     private $defaultLanguage = self::DEFAULT_FIRST;
 
     /**
-     * 
+     *
 
      * @param Session $session
      * @param ServiceLanguage $serviceLanguage
      */
     function __construct(Session $session) {
+        parent::__construct();
         $this->session = $session;
     }
 

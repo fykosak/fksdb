@@ -3,7 +3,7 @@
 *}
 {define errors}
     {if $form instanceof Nette\Forms\Form}
-        {var $fieldErrors = array()}
+        {var $fieldErrors = []}
         {foreach $form->getControls() as $control}
             {foreach $control->getErrors() as $error}
                 {var $fieldErrors[$error] = 1}
@@ -71,9 +71,9 @@
 {/define}
 
 {define buttonArray}
-    {var $buttonRows = array()}
+    {var $buttonRows = []}
     {foreach $buttons as $button}
-        {? if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = array()}
+        {? if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
         {var $buttonRows[$button->getOption('row')][] = $button}
     {/foreach}
     {? ksort($buttonRows)}
@@ -101,13 +101,13 @@
 
 
 {define controls}
-    {var $buttons = array()}
+    {var $buttons = []}
     {foreach $controls as $name => $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}
                 {include #buttonArray buttons => $buttons}
-                {var $buttons = array()}
+                {var $buttons = []}
             {/if}
             {if $field instanceof Nette\Forms\Controls\Checkbox}
                 {include #checkbox field => $field}

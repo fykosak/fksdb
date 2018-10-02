@@ -70,7 +70,7 @@ trait WriteOnlyTrait {
         parent::attached($obj);
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
             $that = $this;
-            $obj->onValidate = $obj->onValidate ? : array();
+            $obj->onValidate = $obj->onValidate ? : [];
             array_unshift($obj->onValidate, function(Form $form) use($that) {
                         if ($that->writeOnly && $that->getValue() == self::VALUE_ORIGINAL) {
                             $that->writeOnlyDisable();

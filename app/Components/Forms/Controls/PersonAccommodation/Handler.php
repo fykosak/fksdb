@@ -5,14 +5,15 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
-use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
+use ServiceEventPersonAccommodation;
+use ModelEventAccommodation;
 
 class Handler {
     private $serviceEventPersonAccommodation;
     private $serviceEventAccommodation;
 
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
+    public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
@@ -43,7 +44,7 @@ class Handler {
         foreach ($newAccommodationIds as $id) {
             $model = $this->serviceEventPersonAccommodation->createNew(['person_id' => $person->person_id, 'event_accommodation_id' => $id]);
             $query = $this->serviceEventAccommodation->findByPrimary($id);
-            $eventAccommodation = \ModelEventAccommodation::createFromTableRow($query);
+            $eventAccommodation = ModelEventAccommodation::createFromTableRow($query);
             if ($eventAccommodation->getAvailableCapacity() > 0) {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
@@ -52,11 +53,10 @@ class Handler {
                     _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
-                    $eventAccommodation->date->format(\ModelEventAccommodation::ACC_DATE_FORMAT)
+                    $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
                 ), 'danger');
             }
         }
-        Debugger::barDump($messages, 'messages');
         return $messages;
     }
 
@@ -67,7 +67,7 @@ class Handler {
     private function prepareData(ArrayHash $data) {
         foreach ($data as $type => $datum) {
             switch ($type) {
-                case Matrix::ResolutionId:
+                case Matrix::RESOLUTION_ID:
                     $data = (array)json_decode($datum);
                     break;
                 default:

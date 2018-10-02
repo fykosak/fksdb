@@ -58,10 +58,10 @@ class ResourceAvailability extends AbstractAdjustment {
             'holders' => array($holder->getPrimaryHolder()),
         );
 
-        $services = array();
-        $controls = array();
+        $services = [];
+        $controls = [];
         foreach ($groups as $group) {
-            $holders = array();
+            $holders = [];
             $field = null;
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();

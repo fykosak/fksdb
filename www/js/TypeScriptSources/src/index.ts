@@ -1,6 +1,6 @@
 import { eventAccommodation } from './events/accommodation';
 
-type IApp = (element: Element, module: string, component: string, mode: string, rawData: string) => boolean;
+export type IApp = (element: Element, module: string, component: string, mode: string, rawData: string) => boolean;
 
 class AppCollector {
     private items: IApp[] = [];
@@ -10,7 +10,7 @@ class AppCollector {
     }
 
     public run() {
-        document.querySelectorAll('.react-root,[data-react-root]').forEach((element: Element) => {
+        document.querySelectorAll('.react-root,*[data-react-root]').forEach((element: Element) => {
             const module = element.getAttribute('data-module');
             const component = element.getAttribute('data-component');
             const mode = element.getAttribute('data-mode');
@@ -19,7 +19,7 @@ class AppCollector {
                 if (this.items.hasOwnProperty(index)) {
                     const item = this.items[index];
                     if (item(element, module, component, mode, rawData)) {
-                        break;
+                        return;
                     }
                 }
             }

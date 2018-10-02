@@ -96,7 +96,7 @@ class MailSender extends Object {
                 ->where('person_info:email IS NOT NULL')
                 ->fetchPairs('person_id');
 
-        $logins = array();
+        $logins = [];
         foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
@@ -191,7 +191,7 @@ class MailSender extends Object {
                     $names = array($holder->getPrimaryHolder()->getName());
                     break;
                 case self::ADDR_SECONDARY:
-                    $names = array();
+                    $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
                         $names = array_merge($names, array_map(function($it) {
                                             return $it->getName();
@@ -202,12 +202,12 @@ class MailSender extends Object {
                     $names = array_keys(iterator_to_array($transition->getBaseHolder()->getHolder()));
                     break;
                 default:
-                    $names = array();
+                    $names = [];
             }
         }
 
 
-        $persons = array();
+        $persons = [];
         foreach ($names as $name) {
             $personId = $holder[$name]->getPersonId();
             if ($personId) {

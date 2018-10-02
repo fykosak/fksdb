@@ -5,6 +5,10 @@ use FKSDB\ORM\ModelPerson;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer ac_year
+ * @property integer school_id
+ * @property string class
+ * @property integer study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
 
@@ -28,24 +32,24 @@ class ModelPersonHistory extends AbstractModelSingle {
      */
     public function extrapolate($acYear) {
         $diff = $acYear - $this->ac_year;
-        $data = array(
+        $data = [
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
-        );
-        $result = new self(array(), $this->getTable());
+        ];
+        $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {
             $result->$key = $value; // this is workaround to properly set modfified flag
         }
         return $result;
     }
 
-    private static $classProgress = array(
-        array('prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'),
-        array('I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'),
-        array('1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'),
-    );
+    private static $classProgress = [
+        ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
+        ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
+        ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
+    ];
 
     private function extrapolateClass($class, $diff) {
         if (!$class) {
@@ -53,15 +57,15 @@ class ModelPersonHistory extends AbstractModelSingle {
         }
         foreach (self::$classProgress as $sequence) {
             $pattern = '/(' . implode('|', array_map('preg_quote', $sequence)) . ')/i';
-            $class = preg_replace_callback($pattern, function($matches) use($sequence, $diff) {
-                        $idx = array_search(mb_strtolower($matches[0]), $sequence);
-                        $newIdx = $idx + $diff;
-                        if ($newIdx > count($sequence) - 1) {
-                            return $matches[1];
-                        } else {
-                            return $sequence[$newIdx];
-                        }
-                    }, $class);
+            $class = preg_replace_callback($pattern, function ($matches) use ($sequence, $diff) {
+                $idx = array_search(mb_strtolower($matches[0]), $sequence);
+                $newIdx = $idx + $diff;
+                if ($newIdx > count($sequence) - 1) {
+                    return $matches[1];
+                } else {
+                    return $sequence[$newIdx];
+                }
+            }, $class);
         }
         return $class;
     }
@@ -70,6 +74,7 @@ class ModelPersonHistory extends AbstractModelSingle {
         if (!$studyYear) {
             return null;
         }
+        $result = null;
         if ($studyYear >= 6 && $studyYear <= 9) {
             $result = $studyYear + $diff;
             if ($result > 9) {

@@ -113,7 +113,7 @@ class Breadcrumbs extends Control {
     public function render() {
         $request = $this->getPresenter()->getRequest();
 
-        $path = array();
+        $path = [];
         foreach ($this->getTraversePath($request) as $naviRequest) {
             $url = $this->router->constructUrl($naviRequest->request, $this->httpRequest->getUrl());
             $path[] = (object) array(
@@ -176,7 +176,7 @@ class Breadcrumbs extends Control {
         $naviRequest = $requests[$requestKey];
 
         $prevPathKey = null;
-        $path = array();
+        $path = [];
         $userId = $this->getPresenter()->getUser()->getId();
 
         do {
@@ -222,7 +222,7 @@ class Breadcrumbs extends Control {
             $reflection = new PresenterComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
-            $filteredParameters = array();
+            $filteredParameters = [];
             $backLinkParameter = call_user_func("$presenterClassName::getBackLinkParamName");
             foreach ($identifyingParameters as $param) {
                 if ($param == $backLinkParameter) {
@@ -314,7 +314,7 @@ class Breadcrumbs extends Control {
      * @return array
      */
     protected function filterParameters($parameters) {
-        $result = array();
+        $result = [];
         foreach ($parameters as $key => $value) {
             if ($key == Presenter::FLASH_KEY) {
                 continue;

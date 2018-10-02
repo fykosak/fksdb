@@ -11,6 +11,7 @@ use ModelException;
 use ModelPostContact;
 use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
+use Nette\Mail\Message;
 use Nette\Object;
 use ORM\IModel;
 use ServiceMPersonHasFlag;
@@ -58,7 +59,6 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @var int
      */
     private $acYear;
-
     /**
      * @var integer
      */
@@ -68,12 +68,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @var mixed
      */
     private $resolution;
-
     /**
      * @var \ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
-
     /**
      * @var Handler
      */
@@ -119,7 +117,15 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         return $person;
     }
 
+    /**
+     * @param IModel $model
+     * @param ArrayHash $values
+     * @param $messages
+     */
     public function update(IModel $model, ArrayHash $values) {
+        /**
+         * @var ModelPerson $model
+         */
         $this->store($model, $values);
     }
 
@@ -127,7 +133,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->eventId = $eventId;
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param ArrayHash $data
+     * @return Message[]
+     */
     private function store(ModelPerson &$person, ArrayHash $data) {
+        $messages = [];
         /*
          * Process data
          */
@@ -137,22 +149,22 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             /*
              * Person & its extensions
              */
-
-
-            $models = array(
+            $models = [
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
-                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(array('ac_year' => $this->acYear)),
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_DELIVERY)),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(array('type' => ModelPostContact::TYPE_PERMANENT))
-            );
-            $services = array(
+                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
+                'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getAccommodationByEventId($this->eventId)) ?: null),
+                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
+            ];
+            $services = [
                 'person' => $this->servicePerson,
                 'person_info' => $this->servicePersonInfo,
                 'person_history' => $this->servicePersonHistory,
+                'person_accommodation' => $this->serviceEventPersonAccommodation,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
-            );
+            ];
 
             $originalModels = array_keys(iterator_to_array($data));
 
@@ -184,7 +196,13 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     }
                     continue;
                 }
+                if ($t == 'person_accommodation' && isset($data[$t])) {
+                    $ms = $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
+                    $messages = array_merge($messages, $ms);
+                    continue;
+                }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
+
                 $services[$t]->updateModel($model, $data[$t]);
                 $services[$t]->save($model);
             }
@@ -197,6 +215,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             $this->rollBack();
             throw $e;
         }
+        return $messages;
     }
 
     private $outerTransaction = false;

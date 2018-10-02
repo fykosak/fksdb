@@ -10,7 +10,7 @@ use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StudyYearsFromXML2 extends Stage {
@@ -25,7 +25,7 @@ class StudyYearsFromXML2 extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private $defaultStudyYears;
 
@@ -67,13 +67,13 @@ class StudyYearsFromXML2 extends Stage {
         $task = $tasks[$tasknr];
         $this->serviceTaskStudyYear->getConnection()->beginTransaction();
 
-        // parse contributors            
-        $studyYears = array();
+        // parse contributors
+        $studyYears = [];
         $hasYears = false;
 
         $parentEl = $XMLTask->{self::XML_ELEMENT_PARENT};
-        // parse contributors            
-        $contributors = array();
+        // parse contributors
+        $contributors = [];
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
                 $studyYear = (string) $element;
@@ -107,10 +107,10 @@ class StudyYearsFromXML2 extends Stage {
 
         // store new contributions
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = $this->serviceTaskStudyYear->createNew(array(
+            $studyYearModel = $this->serviceTaskStudyYear->createNew([
                 'task_id' => $task->task_id,
                 'study_year' => $studyYear,
-            ));
+            ]);
 
             $this->serviceTaskStudyYear->save($studyYearModel);
         }

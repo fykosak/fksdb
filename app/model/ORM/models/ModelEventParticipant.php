@@ -1,10 +1,13 @@
 <?php
 
+
 use FKSDB\ORM\ModelPerson;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property ActiveRow person
  */
 class ModelEventParticipant extends AbstractModelSingle {
 
@@ -12,9 +15,7 @@ class ModelEventParticipant extends AbstractModelSingle {
      * @return ModelPerson|null
      */
     public function getPerson() {
-        $this->person_id; // stupid touch
-        $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-        return $row ? ModelPerson::createFromTableRow($row) : null;
+        return ModelPerson::createFromTableRow($this->person);
     }
 
     public function __toString() {
@@ -26,5 +27,3 @@ class ModelEventParticipant extends AbstractModelSingle {
     }
 
 }
-
-?>

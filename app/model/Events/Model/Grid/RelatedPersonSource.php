@@ -40,7 +40,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 	}
 
 
-        $subconditions = array();
+        $subconditions = [];
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
