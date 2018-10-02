@@ -2,8 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
-
+use FKSDB\ORM\ModelLogin;
 use Nette\Forms\Controls\BaseControl;
 use ServiceLogin;
 
@@ -21,7 +20,7 @@ class UniqueLogin {
     private $serviceLogin;
 
     /**
-     * @var ModelLogin
+     * @var \FKSDB\ORM\ModelLogin
      */
     private $ignoredLogin;
 

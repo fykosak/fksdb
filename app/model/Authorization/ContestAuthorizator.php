@@ -2,8 +2,8 @@
 
 namespace Authorization;
 
+use FKSDB\ORM\ModelLogin;
 use ModelContest;
-use ModelLogin;
 use Nette\Database\Table\ActiveRow;
 use Nette\Object;
 use Nette\Security\Permission;

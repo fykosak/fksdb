@@ -24,11 +24,11 @@ class ModelAuthToken extends \AbstractModelSingle {
     const TYPE_EVENT_NOTIFY = 'event_notify';
 
     /**
-     * @return \ModelLogin
+     * @return \FKSDB\ORM\ModelLogin
      */
     public function getLogin() {
         $data = $this->login;
-        return \ModelLogin::createFromTableRow($data);
+        return \FKSDB\ORM\ModelLogin::createFromTableRow($data);
     }
 
 }

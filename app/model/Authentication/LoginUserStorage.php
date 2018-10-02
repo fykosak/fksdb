@@ -5,7 +5,7 @@ namespace Authentication;
 use AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
-use ModelLogin;
+use FKSDB\ORM\ModelLogin;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;

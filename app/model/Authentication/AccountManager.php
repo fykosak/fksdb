@@ -2,10 +2,10 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPerson;
 use Mail\SendFailedException;
 use ModelAuthToken;
-use ModelLogin;
 use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
@@ -76,7 +76,7 @@ class AccountManager {
      * @param ITemplate $template template of the mail
      * @param ModelPerson $person
      * @param string $email
-     * @return ModelLogin
+     * @return \FKSDB\ORM\ModelLogin
      * @throws MailNotSendException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {

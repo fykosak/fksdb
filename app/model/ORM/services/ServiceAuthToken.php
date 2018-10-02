@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelLogin;
 use Nette\DateTime;
 use Nette\Utils\Strings;
 

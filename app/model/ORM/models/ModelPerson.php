@@ -9,7 +9,6 @@ use ModelContestant;
 use ModelEventAccommodation;
 use ModelEventPersonAccommodation;
 use ModelFlag;
-use ModelLogin;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
 use ModelOrg;
@@ -282,7 +281,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @internal To get active orgs call ModelLogin::getActiveOrgs
+     * @internal To get active orgs call FKSDB\ORM\ModelLogin::getActiveOrgs
      * @param YearCalculator $yearCalculator
      * @return array of ModelOrg indexed by contest_id
      */

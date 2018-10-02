@@ -2,6 +2,7 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\ModelPerson;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
@@ -51,7 +52,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         $login = null;
 
         if ($row) {
-            $person = \ModelPerson::createFromTableRow($row);
+            $person = ModelPerson::createFromTableRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 throw new NoLoginException();
@@ -74,7 +75,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param \ModelLogin $login
+     * @param \FKSDB\ORM\ModelLogin $login
      * @return string
      */
     public static function calculateHash($password, $login) {

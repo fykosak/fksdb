@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelLogin;
+
 class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;
