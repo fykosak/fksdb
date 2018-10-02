@@ -101,7 +101,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

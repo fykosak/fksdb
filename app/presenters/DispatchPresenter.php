@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
 use FKSDB\ORM\ModelLogin;
 
 class DispatchPresenter extends AuthenticatedPresenter {

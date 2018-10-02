@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use ServicePerson;

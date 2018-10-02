@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
 use Nette\Object;
 
 class SeriesCalculator extends Object {
@@ -36,7 +37,7 @@ class SeriesCalculator extends Object {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return int
@@ -50,7 +51,7 @@ class SeriesCalculator extends Object {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return int

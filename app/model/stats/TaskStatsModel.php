@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * General results sheet with contestants and their ranks.
  *

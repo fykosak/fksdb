@@ -4,8 +4,8 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelContest;
 use Mail\MailTemplateFactory;
-use ModelContest;
 use Nette\Database\Connection;
 use Nette\Object;
 use ORM\IService;

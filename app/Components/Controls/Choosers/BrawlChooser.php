@@ -42,7 +42,7 @@ class BrawlChooser extends Control {
     }
 
     /**
-     * @return \ModelContest[]
+     * @return \FKSDB\ORM\ModelContest[]
      */
     private function getBrawls() {
         if ($this->brawls === null) {

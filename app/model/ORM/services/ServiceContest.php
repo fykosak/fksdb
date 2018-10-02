@@ -6,7 +6,7 @@
 class ServiceContest extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_CONTEST;
-    protected $modelClassName = 'ModelContest';
+    protected $modelClassName = 'FKSDB\ORM\ModelContest';
 
 }
 

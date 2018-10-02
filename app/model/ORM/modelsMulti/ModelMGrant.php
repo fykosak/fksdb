@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
 use Nette\Security\IRole;
 
 /**

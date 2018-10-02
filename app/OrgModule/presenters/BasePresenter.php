@@ -52,7 +52,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     /**
-     * @return \ModelContest
+     * @return \FKSDB\ORM\ModelContest
      * @throws BadRequestException
      */
     public function getSelectedContest() {
@@ -97,7 +97,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

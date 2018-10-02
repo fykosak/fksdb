@@ -3,7 +3,6 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
-use ModelContest;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 

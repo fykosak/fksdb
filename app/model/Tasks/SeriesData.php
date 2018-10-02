@@ -2,7 +2,7 @@
 
 namespace Tasks;
 
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.

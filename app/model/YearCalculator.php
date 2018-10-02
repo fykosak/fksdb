@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelContest;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Object;

@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 use ModelSubmit;
 use Nette\Database\Table\Selection;
 use ServiceContestant;

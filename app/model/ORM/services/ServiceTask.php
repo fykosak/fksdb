@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */

@@ -2,8 +2,8 @@
 
 namespace Authorization;
 
+use FKSDB\ORM\ModelContest;
 use FKSDB\ORM\ModelLogin;
-use ModelContest;
 use Nette\Database\Table\ActiveRow;
 use Nette\Object;
 use Nette\Security\Permission;
@@ -45,7 +45,7 @@ class ContestAuthorizator extends Object {
      *
      * @param mixed $resource
      * @param enum $privilege
-     * @param int|ModelContest $contest queried contest
+     * @param int|\FKSDB\ORM\ModelContest $contest queried contest
      * @return boolean
      */
     public function isAllowed($resource, $privilege, $contest) {

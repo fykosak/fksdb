@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 use ModelRole;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -38,7 +38,7 @@ class ContestChooser extends Control {
     private $yearDefinition;
 
     /**
-     * @var ModelContest[]
+     * @var \FKSDB\ORM\ModelContest[]
      */
     private $contests;
 
@@ -58,7 +58,7 @@ class ContestChooser extends Control {
     private $serviceContest;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\ModelContest
      */
     private $contest;
 

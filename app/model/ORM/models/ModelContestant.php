@@ -1,8 +1,10 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
 use FKSDB\ORM\ModelPerson;
-use Nette\Security\IResource;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
