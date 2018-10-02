@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Grids\EventAccommodationGrid;
 use FKSDB\Components\Grids\EventBilletedPerson;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;

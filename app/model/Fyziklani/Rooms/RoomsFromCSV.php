@@ -3,8 +3,8 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\ModelEvent;
 use FKSDB\Utils\CSVParser;
-use ModelEvent;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use Pipeline\PipelineException;
 use Pipeline\Stage;

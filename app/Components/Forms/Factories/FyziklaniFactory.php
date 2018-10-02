@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -60,7 +60,7 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\ModelEvent $event
      * @return FormControl
      */
     public function createEntryQRForm(ModelEvent $event) {

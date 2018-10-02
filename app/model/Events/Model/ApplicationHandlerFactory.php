@@ -3,7 +3,7 @@
 namespace Events\Model;
 
 use FKSDB\Logging\ILogger;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 

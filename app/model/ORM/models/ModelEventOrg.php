@@ -1,9 +1,10 @@
 <?php
 
+use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelEventOrg

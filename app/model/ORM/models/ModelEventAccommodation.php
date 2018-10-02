@@ -1,8 +1,8 @@
 <?php
 
+use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelEventAccommodation
@@ -26,10 +26,10 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return \ModelEvent
+     * @return \FKSDB\ORM\ModelEvent
      */
     public function getEvent() {
-        return \ModelEvent::createFromTableRow($this->event);
+        return \FKSDB\ORM\ModelEvent::createFromTableRow($this->event);
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace Events\Model\Grid;
 
 use Events\UndeclaredEventException;
+use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
-use ModelEvent;
 use ORM\Tables\TypedTableSelection;
 use SystemContainer;
 

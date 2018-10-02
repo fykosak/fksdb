@@ -9,14 +9,14 @@ use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\InitSource;
 use Events\Model\Grid\RelatedPersonSource;
 use Events\Model\Holder\Holder;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\ModelEvent;
 use ModelAuthToken;
-use ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -34,7 +34,7 @@ class ApplicationPresenter extends BasePresenter {
     const PARAM_AFTER = 'a';
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $event = false;
 

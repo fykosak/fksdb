@@ -6,7 +6,7 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Choosers\BrawlChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -23,7 +23,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      *
-     * @var ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $event;
 
@@ -174,7 +174,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return ModelEvent
+     * @return \FKSDB\ORM\ModelEvent
      */
     public function getEvent() {
         if (!$this->event) {

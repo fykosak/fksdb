@@ -10,7 +10,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
@@ -47,7 +47,7 @@ class ApplicationsGrid extends Control {
     private $machines = [];
 
     /**
-     * @var ModelEvent[]
+     * @var \FKSDB\ORM\ModelEvent[]
      */
     private $eventApplications = [];
 
