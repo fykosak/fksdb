@@ -1,5 +1,12 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DateTime;
+use DbNames;
+use ModelContestant;
+use ModelTask;
 use Nette\Security\IResource;
 
 /**

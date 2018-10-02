@@ -2,7 +2,7 @@
 
 namespace Submits;
 
-use ModelSubmit;
+use FKSDB\ORM\ModelSubmit;
 
 /**
  *

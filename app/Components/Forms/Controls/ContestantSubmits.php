@@ -4,15 +4,14 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\ClientDataTrait;
+use FKSDB\ORM\ModelSubmit;
 use FormUtils;
 use InvalidArgumentException;
 use ModelContestant;
-use ModelSubmit;
 use Nette\DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use ServiceSubmit;
-
 use Traversable;
 
 /**

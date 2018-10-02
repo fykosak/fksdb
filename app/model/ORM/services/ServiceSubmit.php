@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelSubmit;
 use Nette\Database\Table\Selection;
 
 /**
@@ -8,7 +9,7 @@ use Nette\Database\Table\Selection;
 class ServiceSubmit extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_SUBMIT;
-    protected $modelClassName = 'ModelSubmit';
+    protected $modelClassName = 'FKSDB\ORM\ModelSubmit';
     private $submit_cache = [];
 
     /**

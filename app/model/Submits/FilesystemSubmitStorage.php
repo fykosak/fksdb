@@ -2,9 +2,8 @@
 
 namespace Submits;
 
-use ModelSubmit;
+use FKSDB\ORM\ModelSubmit;
 use Nette\Diagnostics\Debugger;
-
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
@@ -183,7 +182,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     /**
      * Checks whether there exists valid file for the submit.
      *
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\ModelSubmit $submit
      * @return bool
      */
     public function existsFile(ModelSubmit $submit) {
@@ -236,7 +235,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
+     * @param \FKSDB\ORM\ModelSubmit $submit
      * @return string
      */
     private function createFilename(ModelSubmit $submit) {
