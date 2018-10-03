@@ -3,6 +3,7 @@
 #
 
 services:
+    router: FKSDB\Routing::createRouter
     accountManager:
         class: Authentication\AccountManager
         setup:
