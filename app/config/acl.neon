@@ -86,7 +86,7 @@ acl:
     - allow(inboxManager, contestant, create)
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
-    - allow(inboxManager, person, stalk.restrict)
+    - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
 
     # list privileges explicitly, so that we exclude stalk and stalk-search
     - allow(dataManager, person, [create, edit, list, delete, merge])
@@ -119,7 +119,6 @@ acl:
     - allow(guest, fyziklani, dashboard)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
-    - allow(schoolManager, person, stalk.restrict)
 
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
