@@ -14,6 +14,7 @@ use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
+use FKSDB\Components\Controls\Stalking\StalkingComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\ModelPerson;
@@ -46,6 +47,10 @@ class StalkingPresenter extends BasePresenter {
      * @var ModelPerson|null
      */
     private $person = false;
+    /**
+     * @var string
+     */
+    private $mode;
 
     /**
      * @return ModelPerson|null
@@ -64,15 +69,21 @@ class StalkingPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
      */
-    public function authorizedView($id) {
+    public function authorizedView() {
         $person = $this->getPerson();
         if (!$person) {
             throw new BadRequestException('Neexistující osoba.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($person, 'stalk', $this->getSelectedContest()));
+
+        $full = $this->getContestAuthorizator()->isAllowed($person, 'stalk.full', $this->getSelectedContest());
+
+        $restrict = $this->getContestAuthorizator()->isAllowed($person, 'stalk.restrict', $this->getSelectedContest());
+
+        $basic = $this->getContestAuthorizator()->isAllowed($person, 'stalk.basic', $this->getSelectedContest());
+
+        $this->setAuthorized($full || $restrict || $basic);
     }
 
     public function injectServicePerson(ServicePerson $servicePerson) {
@@ -88,57 +99,57 @@ class StalkingPresenter extends BasePresenter {
     }
 
     public function createComponentBaseInfo() {
-        $component = new BaseInfo($this->getPerson());
+        $component = new BaseInfo($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentAddress() {
-        $component = new Address($this->getPerson());
+        $component = new Address($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventParticipant() {
-        $component = new EventParticipant($this->getPerson());
+        $component = new EventParticipant($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventTeacher() {
-        $component = new EventTeacher($this->getPerson());
+        $component = new EventTeacher($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventOrg() {
-        $component = new EventOrg($this->getPerson());
+        $component = new EventOrg($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentLogin() {
-        $component = new Login($this->getPerson());
+        $component = new Login($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentOrg() {
-        $component = new Org($this->getPerson());
+        $component = new Org($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentContestant() {
-        $component = new Contestant($this->getPerson());
+        $component = new Contestant($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentPersonHistory() {
-        $component = new PersonHistory($this->getPerson());
+        $component = new PersonHistory($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentRole() {
-        $component = new Role($this->getPerson());
+        $component = new Role($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentFlag() {
-        $component = new Flag($this->getPerson());
+        $component = new Flag($this->getPerson(), $this->getMode());
         return $component;
     }
 
@@ -172,12 +183,27 @@ class StalkingPresenter extends BasePresenter {
         return $control;
     }
 
+    private function getMode() {
+        if (!$this->mode) {
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.basic', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::MODE_BASIC;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.restrict', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::MODE_RESTRICT;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.full', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::MODE_FULL;
+            }
+        }
+        return $this->mode;
+    }
+
     public function titleDefault() {
         $this->setTitle(_('Stalking'));
         $this->setIcon('fa fa-search');
     }
 
-    public function titleView($id) {
+    public function titleView() {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
         $this->setIcon('fa fa-eye');
     }

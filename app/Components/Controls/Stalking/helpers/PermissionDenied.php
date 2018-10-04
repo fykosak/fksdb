@@ -10,11 +10,10 @@ use Nette\Templating\FileTemplate;
  * @package FKSDB\Components\Controls\Stalking\Helpers
  * @property FileTemplate $template
  */
-class ContestBadge extends Control {
+class PermissionDenied extends Control {
 
-    public function render($contestId) {
-        $this->template->contestId = $contestId;
-        $this->template->setFile(__DIR__ . '/ContestBadge.latte');
+    public function render() {
+        $this->template->setFile(__DIR__ . '/PermissionDenied.latte');
         $this->template->render();
     }
 }

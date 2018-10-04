@@ -1,8 +1,8 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Event Teacher</h4>
-    {if count($teams)}
+    {if count($teachers)}
         <ul class="list-group list-group-flush">
-            {foreach $teams as $team}
+            {foreach $teachers as $team}
                 <li class="list-group-item">
                     <span class="row">
                         <span class="col-4">{$team->event->event_year}
