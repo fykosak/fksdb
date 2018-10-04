@@ -7,21 +7,21 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY;
     protected $modelClassName = 'ModelStoredQuery';
-    
+
     /**
      *
-     * @var ServiceStoredQueryTag 
+     * @var ServiceStoredQueryTag
      */
     private $serviceStoredQueryTag;
-    
-    public function __construct(\Nette\Database\Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
-        parent::__construct($connection);
+
+    public function __construct(\Nette\Database\Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag, \Nette\Database\IReflection $reflection) {
+        parent::__construct($connection, $reflection);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param string|null $qid
      * @return ModelStoredQuery|null
      */
@@ -30,9 +30,9 @@ class ServiceStoredQuery extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ? : null;
+        return $result ?: null;
     }
-    
+
     /**
      * @param int|null $tagTypeId
      * @return Nette\Database\Table\Selection|null
@@ -43,7 +43,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         }
         $queryIds = $this->serviceStoredQueryTag->findByTagTypeId($tagTypeId)->fetchPairs('query_id', 'query_id');
         $result = $this->getTable()->where('query_id', $queryIds);
-        return $result ? : null;
+        return $result ?: null;
     }
 
 }

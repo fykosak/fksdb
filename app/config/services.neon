@@ -4,6 +4,7 @@
 
 services:
     router: FKSDB\Routing::createRouter
+    reflection: Nette\Database\Reflection\DiscoveredReflection()
     accountManager:
         class: Authentication\AccountManager
         setup:

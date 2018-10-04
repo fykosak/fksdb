@@ -33,15 +33,20 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @var Connection
      */
     protected $connection;
+    /**
+     * @var \Nette\Database\IReflection
+     */
+    protected $reflection;
 
     /**
      * @var array of AbstractService  singleton instances of descedants
      */
     protected static $instances = [];
 
-    public function __construct(Connection $connection) {
-        parent::__construct($this->tableName, $connection);
+    public function __construct(Connection $connection, \Nette\Database\IReflection $reflection) {
+        parent::__construct($connection, $this->tableName, $reflection);
         $this->connection = $connection;
+        $this->reflection = $reflection;
     }
 
     /**
@@ -165,7 +170,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * @return TableSelection
      */
     public function getTable() {
-        return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection);
+        return new TypedTableSelection($this->modelClassName, $this->tableName, $this->connection, $this->reflection);
     }
 
     protected $defaults = null;

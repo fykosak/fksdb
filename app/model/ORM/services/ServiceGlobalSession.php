@@ -20,8 +20,8 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      */
     private $request;
 
-    function __construct(Request $request, Connection $connection) {
-        parent::__construct($connection);
+    function __construct(Request $request, Connection $connection,\Nette\Database\IReflection $reflection) {
+        parent::__construct($connection,$reflection);
         $this->request = $request;
     }
 

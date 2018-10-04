@@ -17,15 +17,15 @@ parameters:
 
     astrid:
         host: astrid.fykos.cz
-        user: 
-        password: 
+        user:
+        password:
     facebook:
         appId:
         secret:
     ro-database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user: 
-        password: 
+        user:
+        password:
     github:
         # login name in fksdb of Github webhook user
         login: github
@@ -56,8 +56,8 @@ parameters:
 nette:
     database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user: 
-        password: 
+        user:
+        password:
 
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
