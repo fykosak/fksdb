@@ -39,7 +39,7 @@ EOT
             'name' => 'Hotel Test',
             'price_kc' => 20,
             'price_eur' => 30,
-            'capacity' => 3,
+            'capacity' => $this->getAccommodationCapacity(),
             'address_id' => $addressId,
             'date' => new \DateTime(),
         ]);
@@ -87,6 +87,8 @@ EOT
             'event_accommodation_id' => $this->accId,
         ]);
     }
+
+    abstract public function getAccommodationCapacity();
 
     protected function tearDown() {
         $this->connection->query("DELETE FROM e_dsef_participant");

@@ -1,0 +1,2 @@
+[05-Oct-2018 20:26:11 Europe/Berlin] PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php/20151012/pdo_mysql.so' - /usr/lib/php/20151012/pdo_mysql.so: undefined symbol: mysqlnd_allocator in Unknown on line 0
+[05-Oct-2018 20:26:11 Europe/Berlin] PHP Warning:  Module 'PDO' already loaded in Unknown on line 0

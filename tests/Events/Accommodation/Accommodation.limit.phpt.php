@@ -8,6 +8,7 @@ $container = require '../../bootstrap.php';
 
 class AccommodationTest extends AccommodationTestCase {
 
+
     public function testRegistration() {
         $request = $this->createPostRequest([
             'participant' => [
@@ -45,15 +46,14 @@ class AccommodationTest extends AccommodationTestCase {
         ]);
 
         $response = $this->fixture->run($request);
-        Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+        Assert::type('Nette\Application\Responses\TextResponse', $response);
 
-        Assert::equal('3', $this->connection->fetchColumn('SELECT count(*) FROM event_person_accommodation WHERE event_accommodation_id = ?', $this->accId));
+        Assert::equal('2', $this->connection->fetchColumn('SELECT count(*) FROM event_person_accommodation WHERE event_accommodation_id = ?', $this->accId));
     }
+
     public function getAccommodationCapacity() {
-      return 3;
+        return 2;
     }
-
-
 }
 
 
