@@ -23,7 +23,7 @@ class AccommodationTest extends AccommodationTestCase {
         $this->dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->lastPersonId,
             'event_id' => $this->eventId,
-            'status' => 'applied',
+            'status' => 'cancelled',
         ]);
         $this->insert(\DbNames::TAB_E_DSEF_PARTICIPANT,
             [
@@ -35,6 +35,7 @@ class AccommodationTest extends AccommodationTestCase {
             'event_accommodation_id' => $this->accId,
         ]);
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId]);
+        $this->insert(\DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
         $this->authenticate($loginId);
 
     }
@@ -43,14 +44,36 @@ class AccommodationTest extends AccommodationTestCase {
         $postData = [
             'participant' => [
                 'person_id' => $this->lastPersonId,
-
+                'person_id_1' => [
+                    '_c_compact' => ' ',
+                    'person' => [
+                        'other_name' => 'Pani',
+                        'family_name' => 'Bílá III.',
+                    ],
+                    'person_info' => [
+                        'email' => 'bila3-acc@hrad.cz',
+                        'id_number' => '1231354',
+                        'born' => '15. 09. 2014',
+                    ],
+                    'post_contact_p' => [
+                        'address' => [
+                            'target' => 'jkljhkjh',
+                            'city' => 'jkhlkjh',
+                            'postal_code' => '64546',
+                            'country_iso' => '',
+                        ],
+                    ],
+                    'person_accommodation' => [
+                        'matrix' => json_encode(['2018-06-05' => $this->accId]),
+                    ],
+                ],
                 'e_dsef_group_id' => 2,
                 'lunch_count' => 0,
-                'message' => "",
+                'message' => '',
             ],
-            'privacy' => "on",
-            'c_a_p_t_cha' => "pqrt",
-            'applied__cancelled' => "Přihlásit účastníka",
+            'privacy' => 'on',
+            'c_a_p_t_cha' => 'pqrt',
+            'cancelled____terminated' => 'Přihlásit účastníka',
         ];
 
         $post = Helpers::merge([], array(
@@ -62,16 +85,14 @@ class AccommodationTest extends AccommodationTestCase {
             'id' => $this->dsefAppId,
             'do' => 'application-form-form-submit',
         ));
-
+        $query = $this->connection->query('SELECT DATABASE() as db')->fetch();
+        echo $query->db;
         $request = new Request('Public:Application', 'POST', $post, $postData);
-
-        /*$response = $this->fixture->run($request);
-        file_put_contents('./acc_out.html', $response->getSource());
-
+        $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
-
-*/
-        Assert::equal('2', $this->connection->fetchColumn('SELECT count(*) FROM event_person_accommodation WHERE event_accommodation_id = ?', $this->accId));
+        //file_put_contents('./acc_out.html', $response->getSource());
+        //Assert::equal('cancelled', $this->connection->fetchColumn('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
+        Assert::equal('0', $this->connection->fetchColumn('SELECT count(*) FROM event_person_accommodation WHERE event_accommodation_id = ? AND person_id=?', $this->accId, $this->lastPersonId));
     }
 
     public function getAccommodationCapacity() {
