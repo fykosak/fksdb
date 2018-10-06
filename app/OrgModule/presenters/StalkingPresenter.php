@@ -186,13 +186,13 @@ class StalkingPresenter extends BasePresenter {
     private function getMode() {
         if (!$this->mode) {
             if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.basic', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::MODE_BASIC;
+                $this->mode = StalkingComponent::PERMISSION_BASIC;
             }
             if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.restrict', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::MODE_RESTRICT;
+                $this->mode = StalkingComponent::PERMISSION_RESTRICT;
             }
             if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.full', $this->getSelectedContest())) {
-                $this->mode = StalkingComponent::MODE_FULL;
+                $this->mode = StalkingComponent::PERMISSION_FULL;
             }
         }
         return $this->mode;

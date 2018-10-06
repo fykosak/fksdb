@@ -14,9 +14,9 @@ use Nette\Templating\FileTemplate;
  * @property FileTemplate $template
  */
 abstract class StalkingComponent extends Control {
-    const MODE_FULL = 'full';
-    const MODE_RESTRICT = 'restrict';
-    const MODE_BASIC = 'basic';
+    const PERMISSION_FULL = 'full';
+    const PERMISSION_RESTRICT = 'restrict';
+    const PERMISSION_BASIC = 'basic';
     /**
      * @var string
      */

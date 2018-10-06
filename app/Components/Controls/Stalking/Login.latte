@@ -1,7 +1,7 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Login info</h4>
 
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_RESTRICT }
+    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         {if !is_null($login)}
             <ul class="list-group list-group-flush">

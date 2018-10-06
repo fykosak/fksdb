@@ -1,6 +1,6 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Base info</h4>
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_RESTRICT }
+    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row">
@@ -14,7 +14,7 @@
                 <div class="row">
                     <span class="col-5">Born</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->born))}
                             {$info->born->__toString()}
@@ -28,7 +28,7 @@
                 <div class="row">
                     <span class="col-5">ID number</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->id_number))}
                             {$info->id_number}
@@ -42,7 +42,7 @@
                 <div class="row">
                     <span class="col-5">Born ID</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->born_id))}
                             {$info->born_id}
@@ -81,7 +81,7 @@
                 <div class="row">
                     <span class="col-5">Birthplace</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->birthplace))}
                             {$info->birthplace}
@@ -114,7 +114,7 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Contact information</h4>
     {dump $mode}
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_RESTRICT }
+    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -135,7 +135,7 @@
                 <div class="row">
                     <span class="col-5">Phone</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->phone))}
                             {$info->phone}
@@ -149,7 +149,7 @@
                 <div class="row">
                     <span class="col-5">Phone parent mum</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->phone_parent_m))}
                             {$info->phone_parent_m}
@@ -163,7 +163,7 @@
                 <div class="row">
                     <span class="col-5">Phone parent dad</span>
                     <div class="col-7">
-                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL}
+                        {if $mode !== \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL}
                             {control permissionDenied}
                         {elseif (!is_null($info->phone_parent_d))}
                             {$info->phone_parent_d}

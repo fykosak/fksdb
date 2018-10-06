@@ -1,7 +1,7 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Address</h4>
     <div class="card-body">
-        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_RESTRICT }
+        {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
             {if count($MAddress)}
                 {foreach $MAddress as $address}
                     {if $address->type == 'P'}

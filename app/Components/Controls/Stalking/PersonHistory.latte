@@ -1,6 +1,6 @@
 <div class="card mb-3 border-primary">
     <h4 class="card-header bg-primary text-white">Person history</h4>
-    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::MODE_RESTRICT }
+    {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         {if count($data['history'])}
             {foreach $data['history'] as $history}
