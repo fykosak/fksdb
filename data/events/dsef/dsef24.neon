@@ -40,54 +40,30 @@ events:
 
                 states:
                     applied: Přihlášen
-                    applied.tsaf: "Přihlášen (TSAF)"
-                    applied.notsaf: "Přihlášen (zůstal z TSAFu)"
-                    spare.tsaf: "Náhradník pro TSAF"
                     participated: Účastnil se
                     missed: Nepřijel
                     cancelled: Zrušen
 
                 transitions:
-                    # to spare
-                    __init->spare.tsaf:
-                        condition: %events.dsef24.appCond%
-                        visible: false
-                    # to applied
                     __init->applied:
                         condition: %events.dsef24.appCond%
                         label: Přihlásit účastníka
                         onExecuted:
                             - Events\Transitions\MailSender(confirmation, .self)
-                    __init|spare.tsaf->applied.tsaf:
-                        condition: %events.dsef24.appCond%
-                        visible: false
-                        onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
-                    applied.tsaf->applied.notsaf:
-                        condition: role('admin')
-                        visible: false
-                    applied->applied.tsaf:
-                        condition: %events.dsef24.appCond%
-                        visible: false
-                    # to end-states
-                    applied|applied.tsaf|applied.notsaf->participated:
+                    applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: Prezentovat
-                    applied|applied.tsaf|applied.notsaf->missed:
+                    applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: Nepřijel
                         dangerous: true
-                    # cancel and termination
-                    applied|applied.notsaf->cancelled:
+                    applied->cancelled:
                         condition: role('admin')
                         label: Zrušit přihlášku
                         dangerous: true
                     cancelled->__terminated:
                         condition: role('admin')
                         label: Smazat přihlášku
-                    spare.tsaf->cancelled:
-                        condition: role('admin')
-                        visible: false
 
                 fields:
                     person_id:
