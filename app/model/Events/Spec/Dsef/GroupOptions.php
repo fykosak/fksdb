@@ -29,19 +29,19 @@ class GroupOptions extends Object implements IOptionsProvider {
     private $excludeStates;
 
     /**
-     * @var array  eventId => groups cache 
+     * @var array  eventId => groups cache
      */
-    private $groups = array();
+    private $groups = [];
 
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
-     * 
+     *
      * @param ServiceMDsefParticipant $serviceMParticipant
      * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = array('cancelled')) {
+    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;
@@ -49,12 +49,12 @@ class GroupOptions extends Object implements IOptionsProvider {
     }
 
     private function transformGroups($groups) {
-        $result = array();
+        $result = [];
         foreach ($groups as $name => $capacity) {
-            $result[] = array(
+            $result[] = [
                 'label' => $name,
                 'capacity' => $capacity
-            );
+            ];
         }
         return $result;
     }
@@ -92,7 +92,7 @@ class GroupOptions extends Object implements IOptionsProvider {
         $groupOccupied = $selection->fetchPairs('e_dsef_group_id', 'occupied');
 
         $selfGroup = $application->e_dsef_group_id;
-        $result = array();
+        $result = [];
         foreach ($groups as $key => $group) {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
             if ($group->capacity > $occupied) {

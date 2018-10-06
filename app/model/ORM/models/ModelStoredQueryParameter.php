@@ -1,10 +1,17 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Nette\InvalidStateException;
+use PDO;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property string type
+ * @property integer default_integer
+ * @property string default_string
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
@@ -27,7 +34,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     public function setDefaultValue($value) {
         switch ($this->type) {
             case self::TYPE_INT:
-            case self::TYPE_BOOL:                
+            case self::TYPE_BOOL:
                 $this->default_integer = (int)$value;
                 break;
             case self::TYPE_STR:

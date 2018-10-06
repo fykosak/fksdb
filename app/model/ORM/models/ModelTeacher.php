@@ -1,5 +1,10 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DateTime;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
 /**
@@ -9,6 +14,8 @@ use Nette\Security\IResource;
  * @property DateTime since
  * @property integer school_id
  * @property integer person_id
+ * @property ActiveRow person
+ * @property ActiveRow school
  */
 class ModelTeacher extends AbstractModelSingle implements IResource {
 

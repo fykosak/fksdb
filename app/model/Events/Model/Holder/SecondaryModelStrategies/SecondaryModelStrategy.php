@@ -38,7 +38,7 @@ abstract class SecondaryModelStrategy {
                 $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
         } else {
-            $secondary = array();
+            $secondary = [];
         }
         $this->setSecondaryModels($holders, $secondary);
     }
@@ -49,7 +49,7 @@ abstract class SecondaryModelStrategy {
             $joinData = array($joinOn => $joinValue);
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
-                $conflicts = array();
+                $conflicts = [];
                 foreach ($existing as $secondaryModel) {
                     if ($baseHolder->getModel()->getPrimary(false) !== $secondaryModel->getPrimary()) {
                         $conflicts[] = $secondaryModel;

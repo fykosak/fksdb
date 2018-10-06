@@ -7,19 +7,19 @@ use DbNames;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelPerson;
+use FKSDB\ORM\ModelPostContact;
+use FKSDB\ORM\ModelStoredQuery;
 use FormUtils;
 use IResultsModel;
-use ModelContest;
 use ModelException;
-use ModelPerson;
-use ModelPostContact;
-use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\SubmitButton;
@@ -150,7 +150,7 @@ class ExportPresenter extends SeriesPresenter {
         }
 
         $sql = $data[self::CONT_CONSOLE]['sql'];
-        $parameters = array();
+        $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
             $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
             $parameter->setDefaultValue($paramMetaData['default']);
@@ -224,7 +224,7 @@ class ExportPresenter extends SeriesPresenter {
         $this->setStoredQuery($storedQuery);
 
         if ($query && $this->getParameter('qid')) {
-            $parameters = array();
+            $parameters = [];
             foreach ($this->getParameter() as $key => $value) {
                 if (Strings::startsWith($key, StoredQueryComponent::PARAMETER_URL_PREFIX)) {
                     $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
@@ -250,11 +250,11 @@ class ExportPresenter extends SeriesPresenter {
 
         $values = $this->getDesignFormFromSession();
         if (!$values) {
-            $values = array();
+            $values = [];
             $values[self::CONT_CONSOLE] = $this->getPatternQuery();
             $values[self::CONT_META] = $this->getPatternQuery()->toArray();
             $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
-            $values[self::CONT_PARAMS_META] = array();
+            $values[self::CONT_PARAMS_META] = [];
             foreach ($query->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
@@ -507,10 +507,10 @@ class ExportPresenter extends SeriesPresenter {
 
 
         $model = $modelFactory->createCumulativeResultsModel($this->getSelectedContest(), $this->getSelectedYear());
-        $this->template->data = array();
+        $this->template->data = [];
 
         foreach ($model->getCategories() as $category) {
-            $rows = array();
+            $rows = [];
             $model->setSeries(array(1, 2, 3, 4, 5, 6));
 
             $header = $model->getDataColumns($category);
@@ -522,7 +522,7 @@ class ExportPresenter extends SeriesPresenter {
                 $sumCol++;
             }
 
-            $datas = array();
+            $datas = [];
             foreach ($model->getData($category) as $data) {
                 if ($data->sum !== null) {
                     $datas[] = $data;
@@ -532,7 +532,7 @@ class ExportPresenter extends SeriesPresenter {
             foreach ($datas as $data) {
                 $ctid = $data->ct_id;
 
-                $row = array();
+                $row = [];
                 //TODO unechecked
                 $contestant = $serviceContestant->getTable()->getConnection()->table(DbNames::VIEW_CONTESTANT)->where('ct_id', $ctid);
                 $person = ModelPerson::createFromTableRow($contestant->person);

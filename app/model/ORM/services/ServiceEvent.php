@@ -1,12 +1,14 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEvent extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT;
-    protected $modelClassName = 'ModelEvent';
+    protected $modelClassName = 'FKSDB\ORM\ModelEvent';
 
     public function getEvents(ModelContest $contest, $year) {
         $result = $this->getTable()
@@ -16,7 +18,7 @@ class ServiceEvent extends AbstractServiceSingle {
                 ->where(DbNames::TAB_EVENT . '.year', $year);
         return $result;
     }
-    
+
     public function getByEventTypeId(ModelContest $contest, $year, $eventTypeId) {
         return $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
     }

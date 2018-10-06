@@ -5,9 +5,8 @@ namespace Exports;
 use BasePresenter;
 use DOMDocument;
 use DOMNode;
-
+use FKSDB\ORM\ModelStoredQuery;
 use ISeriesPresenter;
-use ModelStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -63,7 +62,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    public function createQueryFromSQL($sql, $parameters, $queryData = array()) {
+    public function createQueryFromSQL($sql, $parameters, $queryData = []) {
         $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
             'sql' => $sql,
             'php_post_proc' => 0,

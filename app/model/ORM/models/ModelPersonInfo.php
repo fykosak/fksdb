@@ -1,5 +1,10 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>

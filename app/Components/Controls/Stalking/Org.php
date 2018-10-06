@@ -5,9 +5,9 @@ namespace FKSDB\Components\Controls\Stalking;
 class Org extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
         $this->template->orgs = $this->modelPerson->getOrgs();
-        $template->setFile(__DIR__ . '/Org.latte');
-        $template->render();
+        $this->template->setFile(__DIR__ . '/Org.latte');
+        $this->template->render();
     }
 }

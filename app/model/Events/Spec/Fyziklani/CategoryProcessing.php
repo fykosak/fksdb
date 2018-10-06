@@ -47,7 +47,7 @@ class CategoryProcessing extends AbstractProcessing {
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        $participants = array();
+        $participants = [];
         foreach ($holder as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
@@ -66,7 +66,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var $person \ModelPerson
+                 * @var $person \FKSDB\ORM\ModelPerson
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();

@@ -61,7 +61,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return;
         }
-        $defaults = array();
+        $defaults = [];
         $defaults[ExtendedPersonHandler::CONT_MODEL]['since'] = $this->getSelectedYear();
         $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
     }

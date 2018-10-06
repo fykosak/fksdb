@@ -13,7 +13,7 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -241,7 +241,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
         if (in_array($sub, array(
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,

@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelPerson;
+
 class DuplicateApplicationException extends ModelException {
 
     public function __construct(ModelPerson $person, $previous = null) {

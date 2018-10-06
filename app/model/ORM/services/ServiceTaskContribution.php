@@ -6,7 +6,7 @@
 class ServiceTaskContribution extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_TASK_CONTRIBUTION;
-    protected $modelClassName = 'ModelTaskContribution';
+    protected $modelClassName = 'FKSDB\ORM\ModelTaskContribution';
 
 }
 

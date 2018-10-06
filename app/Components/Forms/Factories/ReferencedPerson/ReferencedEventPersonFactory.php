@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;

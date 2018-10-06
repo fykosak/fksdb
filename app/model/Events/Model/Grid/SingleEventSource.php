@@ -5,7 +5,7 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use Nette\Object;
@@ -14,12 +14,12 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class SingleEventSource extends Object implements IHolderSource {
 
@@ -58,7 +58,7 @@ class SingleEventSource extends Object implements IHolderSource {
      *
      * @var Holder[]
      */
-    private $holders = array();
+    private $holders = [];
 
     function __construct(ModelEvent $event, SystemContainer $container) {
         $this->event = $event;
@@ -104,39 +104,39 @@ class SingleEventSource extends Object implements IHolderSource {
 
             $secondaryPK = $secondarySelection->getPrimary();
             if (!isset($this->secondaryModels[$key])) {
-                $this->secondaryModels[$key] = array();
+                $this->secondaryModels[$key] = [];
             }
             $this->secondaryModels[$key] = $secondarySelection->fetchPairs($secondaryPK);
         }
 
         // invalidate holders
-        $this->holders = array();
+        $this->holders = [];
     }
 
     private function createHolders() {
-        $cache = array();
+        $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
                 $primaryPK = $secondaryModel[$group['joinOn']];
                 if (!isset($cache[$primaryPK])) {
-                    $cache[$primaryPK] = array();
+                    $cache[$primaryPK] = [];
                 }
                 if (!isset($cache[$primaryPK][$key])) {
-                    $cache[$primaryPK][$key] = array();
+                    $cache[$primaryPK][$key] = [];
                 }
                 $cache[$primaryPK][$key][] = $secondaryModel;
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->container->createEventHolder($this->event);
-            $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : array());
+            $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }
     }
 
     /**
      * Method propagates selected calls to internal primary models selection.
-     * 
+     *
      * @staticvar array $delegated
      * @param string $name
      * @param array $args

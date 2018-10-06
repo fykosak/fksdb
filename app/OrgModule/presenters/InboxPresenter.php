@@ -8,9 +8,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelSubmit;
+use FKSDB\ORM\ModelTaskContribution;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelSubmit;
-use ModelTaskContribution;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
@@ -128,7 +128,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderHandout() {
-        $taskIds = array();
+        $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
@@ -137,13 +137,13 @@ class InboxPresenter extends SeriesPresenter {
             'task_id' => $taskIds,
         ));
 
-        $values = array();
+        $values = [];
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
             if (!isset($values[$key])) {
-                $values[$key] = array();
+                $values[$key] = [];
             }
             $values[$key][] = $personId;
         }
@@ -186,7 +186,6 @@ class InboxPresenter extends SeriesPresenter {
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
         $form = $formControl->getForm();
-        $form->setRenderer(new BootstrapRenderer());
 
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
@@ -264,13 +263,13 @@ class InboxPresenter extends SeriesPresenter {
         $order = $post[self::POST_ORDER];
         $series = $this->getSelectedSeries();
 
-        $tasks = array();
+        $tasks = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $task->task_id; // stupid touch
             $tasks[$task->tasknr] = $task;
         }
 
-        $uploadSubmits = array();
+        $uploadSubmits = [];
         $submits = $this->serviceSubmit->getSubmits()->where(array(
             DbNames::TAB_SUBMIT . '.ct_id' => $ctId,
             DbNames::TAB_TASK . '.series' => $series
@@ -283,7 +282,7 @@ class InboxPresenter extends SeriesPresenter {
                 $uploadSubmits[$row->submit_id]->setNew(false);
             }
         }
-        $nTasks = array(); // reindexed tasks
+        $nTasks = []; // reindexed tasks
         foreach ($tasks as $task) {
             $nTasks[] = $task;
         }
@@ -292,8 +291,8 @@ class InboxPresenter extends SeriesPresenter {
         /*
          * Prepare new tasks for properly ordered submit.
          */
-        $orderedSubmits = array();
-        $orderedTasks = array();
+        $orderedSubmits = [];
+        $orderedTasks = [];
 
         $nr = -1;
         foreach ($order as $submitData) {
@@ -313,7 +312,7 @@ class InboxPresenter extends SeriesPresenter {
         $connection = $this->serviceSubmit->getConnection();
         $connection->beginTransaction();
 
-        $newSubmits = array();
+        $newSubmits = [];
         foreach (array_combine($orderedTasks, $orderedSubmits) as $taskId => $submit) {
             if ($taskId == $submit->task_id) {
                 $newSubmits[] = $submit;
@@ -361,8 +360,8 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      *
-     * @param ModelSubmit $oldSubmit
-     * @param ModelSubmit $newSubmit
+     * @param \FKSDB\ORM\ModelSubmit $oldSubmit
+     * @param \FKSDB\ORM\ModelSubmit $newSubmit
      * @return void
      */
     private function restampSubmit(ModelSubmit $oldSubmit, ModelSubmit $newSubmit) {

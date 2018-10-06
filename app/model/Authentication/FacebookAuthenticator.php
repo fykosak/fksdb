@@ -2,7 +2,7 @@
 
 namespace Authentication;
 
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
@@ -13,7 +13,7 @@ use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FacebookAuthenticator extends AbstractAuthenticator {

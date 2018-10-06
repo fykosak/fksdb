@@ -13,12 +13,12 @@ class BrawlChooser extends Control {
 
     const EVENT_TYPE_ID = 1;
     /**
-     * @var \ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $event;
 
     /**
-     * @var \ModelEvent[]
+     * @var \FKSDB\ORM\ModelEvent[]
      */
     private $brawls;
     /**
@@ -31,18 +31,18 @@ class BrawlChooser extends Control {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function setEvent(\ModelEvent $event) {
+    public function setEvent(\FKSDB\ORM\ModelEvent $event) {
         $this->event = $event;
     }
     /**
-     * @return \ModelEvent
+     * @return \FKSDB\ORM\ModelEvent
      */
     private function getEvent() {
         return $this->event;
     }
 
     /**
-     * @return \ModelContest[]
+     * @return \FKSDB\ORM\ModelContest[]
      */
     private function getBrawls() {
         if ($this->brawls === null) {

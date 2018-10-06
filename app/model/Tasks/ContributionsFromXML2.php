@@ -69,7 +69,7 @@ class ContributionsFromXML2 extends Stage {
             list($parent, $child) = explode('/', $XMLElement);
             $parentEl = $XMLTask->{$parent}[0];
             // parse contributors
-            $contributors = array();
+            $contributors = [];
             if (!$parentEl || !isset($parentEl->{$child})) {
                 continue;
             }

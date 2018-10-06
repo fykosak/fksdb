@@ -4,14 +4,14 @@ namespace OrgModule;
 
 use Authentication\AccountManager;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use FormUtils;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\ModelPerson;
+use FormUtils;
 use Mail\MailTemplateFactory;
-use ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
@@ -341,7 +341,7 @@ class PersonPresenter extends EntityPresenter {
         if (isset($section->data)) {
             return $section->data;
         } else {
-            return array();
+            return [];
         }
     }
 

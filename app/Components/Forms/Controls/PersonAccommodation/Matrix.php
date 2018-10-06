@@ -4,9 +4,9 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
-use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\Controls\TextInput;
 
-class Matrix extends HiddenField implements IReactComponent {
+class Matrix extends TextInput implements IReactComponent {
     const RESOLUTION_ID = 'matrix';
 
     use ReactField;
@@ -20,7 +20,7 @@ class Matrix extends HiddenField implements IReactComponent {
     private $eventId;
 
     public function __construct(\ServiceEventAccommodation $serviceEventAccommodation, $eventId) {
-        parent::__construct();
+        parent::__construct(_('Accommodation'));
         $this->serviceEventAccommodation = $serviceEventAccommodation;
         $this->eventId = $eventId;
         $this->appendProperty();
@@ -46,7 +46,7 @@ class Matrix extends HiddenField implements IReactComponent {
 
         $accommodationDef = [];
         /**
-         * @var $accommodation \ModelEventAccommodation
+         * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
          */
         foreach ($accommodations as $accommodation) {
             $accommodationDef[] = $accommodation->__toArray();

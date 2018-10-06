@@ -2,14 +2,14 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Form;
 use ORM\IModel;
 use Persons\ExtendedPersonHandler;
-use ServiceEventOrg;
 use ServiceEvent;
-use ModelEvent;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use ServiceEventOrg;
 
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
@@ -27,7 +27,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEvent;
 
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $modelEvent;
 
@@ -84,7 +84,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults(array());
+        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
     protected function createComponentGrid($name) {

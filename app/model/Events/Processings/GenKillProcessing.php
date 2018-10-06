@@ -24,7 +24,7 @@ use Nette\Object;
 class GenKillProcessing extends Object implements IProcessing {
 
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
-        $result = array();
+        $result = [];
         foreach ($holder as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
                 continue;

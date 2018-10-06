@@ -19,7 +19,7 @@ class FlashDumpFactory {
 
     private $configuration;
 
-    private $cache = array();
+    private $cache = [];
 
     function __construct($configuration) {
         $this->configuration = $configuration;

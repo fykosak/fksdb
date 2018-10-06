@@ -29,12 +29,12 @@
                         <h4>{$container->getOption('label')}</h4>
                     {/if}
                     <p n:if="$level > 0 && $withOptions && $container->getOption('description')">{$container->getOption('description')}</p>
-                    {var $controls = array()}
+                    {var $controls = []}
                     {foreach $container->getComponents() as $component}
                         {if $component instanceof Nette\Forms\Container}
                             {if $controls}
                                 {include #controls controls => $controls}
-                                {var $controls = array()}
+                                {var $controls = []}
                             {/if}
                             {if $level < 2 || ($withOptions && $component->getOption('showGroup'))}
                                 {include #group container => $component, level => $level + 1}
@@ -47,7 +47,7 @@
                     {/foreach}
                     {if $controls}
                         {include #controls controls => $controls}
-                        {var $controls = array()}
+                        {var $controls = []}
                     {/if}
                 </fieldset>
             </div>

@@ -42,7 +42,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     public function titleEdit() {
         /**
-         * @var $model \ModelTeacher
+         * @var $model \FKSDB\ORM\ModelTeacher
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullname()));
@@ -96,7 +96,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

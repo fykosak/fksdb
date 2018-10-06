@@ -2,8 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
-
+use FKSDB\ORM\ModelLogin;
 use Nette\Forms\Controls\BaseControl;
 use ServiceLogin;
 
@@ -21,7 +20,7 @@ class UniqueLogin {
     private $serviceLogin;
 
     /**
-     * @var ModelLogin
+     * @var \FKSDB\ORM\ModelLogin
      */
     private $ignoredLogin;
 
@@ -44,7 +43,7 @@ class UniqueLogin {
             return true;
         }
 
-        $conflicts = $this->serviceLogin->getTable()->where(array('login' => $login));
+        $conflicts = $this->serviceLogin->getTable()->where(['login' => $login]);
         if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }

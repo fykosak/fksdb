@@ -1,5 +1,9 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\ModelRole;
+
 class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;

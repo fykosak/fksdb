@@ -42,7 +42,7 @@ class EventAccommodationGrid extends BaseGrid {
             return $row->date->format('Y-m-d');
         });
         $this->addColumn('capacity', _('Capacity'))->setRenderer(function ($row) {
-            $model = \ModelEventAccommodation::createFromTableRow($row);
+            $model = \FKSDB\ORM\ModelEventAccommodation::createFromTableRow($row);
             return $model->getUsedCapacity() . '/' . $row->capacity;
         });
         $this->addButton('edit', _('Upravit'))->setText('Upravit')//todo i18n

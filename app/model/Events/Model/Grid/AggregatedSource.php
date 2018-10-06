@@ -4,20 +4,20 @@ namespace Events\Model\Grid;
 
 use ArrayIterator;
 use Events\Model\Holder\Holder;
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use Nette\Object;
 use ORM\Tables\TypedTableSelection;
 use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource where()
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 abstract class AggregatedPersonSource extends Object implements IHolderSource {
 
@@ -43,7 +43,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     }
 
     private function loadData() {
-        $this->holders = array();
+        $this->holders = [];
         foreach ($this->events as $eventKey => $event) {
             $result = $this->processEvent($event);
 
@@ -63,7 +63,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
 
     /**
      * Method propagates selected calls to internal primary models selection.
-     * 
+     *
      * @staticvar array $delegated
      * @param string $name
      * @param array $args

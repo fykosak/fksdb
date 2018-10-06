@@ -16,7 +16,7 @@ class DetailResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
+    private $dataColumns = [];
 
     /**
      * Definition of header.
@@ -26,7 +26,7 @@ class DetailResultsModel extends AbstractResultsModel {
      */
     public function getDataColumns($category) {
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
+            $dataColumns = [];
             $sum = 0;
             foreach ($this->getTasks($this->series) as $task) {
                 $taskPoints = $this->evaluationStrategy->getTaskPoints($task, $category);
@@ -54,7 +54,7 @@ class DetailResultsModel extends AbstractResultsModel {
     public function setSeries($series) {
         $this->series = $series;
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
     public function getCategories() {
@@ -66,7 +66,7 @@ class DetailResultsModel extends AbstractResultsModel {
             throw new \Nette\InvalidStateException('Series not set.');
         }
 
-        $select = array();
+        $select = [];
         $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
         $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
 

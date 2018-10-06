@@ -2,8 +2,8 @@
 
 namespace Submits;
 
-use ModelContest;
-use ModelSubmit;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelSubmit;
 use Nette\Database\Table\Selection;
 use ServiceContestant;
 use ServiceSubmit;
@@ -11,9 +11,9 @@ use ServiceTask;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @todo Prominent example for necessity of caching.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesTable {
@@ -100,19 +100,19 @@ class SeriesTable {
      * @return Selection
      */
     public function getContestants($series = null) {
-        return $this->serviceContestant->getTable()->where(array(
+        return $this->serviceContestant->getTable()->where([
                     'contest_id' => $this->getContest()->contest_id,
                     'year' => $this->getYear(),
-                ))->order('person.family_name, person.other_name, person.person_id');
+        ])->order('person.family_name, person.other_name, person.person_id');
         //TODO series
     }
 
     public function getTasks() {
-        $tasks = $this->serviceTask->getTable()->where(array(
+        $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
             'series' => $this->getSeries(),
-        ));
+        ]);
 
         if ($this->getTaskFilter() !== null) {
             $tasks->where('task_id', $this->getTaskFilter());
@@ -126,10 +126,10 @@ class SeriesTable {
                 ->where('task_id', $this->getTasks());
 
         // store submits in 2D hash for better access
-        $submitsTable = array();
+        $submitsTable = [];
         foreach ($submits as $submit) {
             if (!isset($submitsTable[$submit->ct_id])) {
-                $submitsTable[$submit->ct_id] = array();
+                $submitsTable[$submit->ct_id] = [];
             }
             $submitsTable[$submit->ct_id][$submit->task_id] = ModelSubmit::createFromTableRow($submit);
         }
@@ -146,18 +146,18 @@ class SeriesTable {
     public function formatAsFormValues() {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
-        $result = array();
+        $result = [];
         foreach ($contestants as $contestant) {
             $ctId = $contestant->ct_id;
             if (isset($submitsTable[$ctId])) {
-                $result[$ctId] = array(self::FORM_SUBMIT => $submitsTable[$ctId]);
+                $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];
             } else {
-                $result[$ctId] = array(self::FORM_SUBMIT => null);
+                $result[$ctId] = [self::FORM_SUBMIT => null];
             }
         }
-        return array(
+        return [
             self::FORM_CONTESTANT => $result
-        );
+        ];
     }
 
     /**

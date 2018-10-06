@@ -1,16 +1,18 @@
 <?php
 
+use FKSDB\ORM\ModelOrg;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceOrg extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_ORG;
-    protected $modelClassName = 'ModelOrg';
-    
+    protected $modelClassName = 'FKSDB\ORM\ModelOrg';
+
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param type $signature
      * @param type $contest_id
      * @return ModelOrg|null

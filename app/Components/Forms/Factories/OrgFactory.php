@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use ServicePerson;
@@ -42,7 +42,7 @@ class OrgFactory {
         $container->addText('since',_('Od ročníku'))
                 ->addRule(Form::NUMERIC)
                 ->addRule(Form::FILLED)
-                ->addRule(Form::RANGE,_('Počáteční ročník není v intervalu [%d, %d].'),array($min,$max));
+                ->addRule(Form::RANGE,_('Počáteční ročník není v intervalu [%d, %d].'), [$min,$max]);
 
         $container->addText('until',_('Do ročníku'))
                 ->addCondition(Form::FILLED)
@@ -50,7 +50,7 @@ class OrgFactory {
                 ->addRule(function ($until,$since) {
                     return $since->value <= $until->value;
                 },_('Konec nesmí být dříve než začátek'),$container['since'])
-                ->addRule(Form::RANGE,_('Koncový ročník není v intervalu [%d, %d].'),array($min,$max));
+                ->addRule(Form::RANGE,_('Koncový ročník není v intervalu [%d, %d].'), [$min,$max]);
 
 
         $container->addText('role',_('Funkce'))
@@ -70,14 +70,14 @@ class OrgFactory {
 
         $container->addSelect('order',_('Hodnost'))
                 ->setOption('description',_('Pro řazení v seznamu organizátorů'))
-                ->setItems(array(
+                ->setItems([
                     0 => '0 - org',
                     1 => '1',
                     2 => '2',
                     3 => '3',
                     4 => '4 - hlavní organizátor',
                     9 => '9 - vedoucí semináře',
-                ))
+                ])
                 ->setPrompt(_('Zvolit hodnost'))
                 ->addRule(Form::FILLED,_('Vyberte hodnost.'));
 

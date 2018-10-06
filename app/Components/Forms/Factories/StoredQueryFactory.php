@@ -7,9 +7,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
+use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\ModelStoredQueryParameter;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use ModelStoredQuery;
-use ModelStoredQueryParameter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -103,11 +103,11 @@ class StoredQueryFactory {
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))
-                ->setItems(array(
+                ->setItems([
                     ModelStoredQueryParameter::TYPE_INT => 'integer',
                     ModelStoredQueryParameter::TYPE_STR => 'string',
                     ModelStoredQueryParameter::TYPE_BOOL => 'bool',
-        ));
+                ]);
 
         $container->addText('default', _('Výchozí hodnota'));
     }

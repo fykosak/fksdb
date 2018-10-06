@@ -11,16 +11,16 @@ use Nette\Config\CompilerExtension;
  */
 class NavigationExtension extends CompilerExtension {
 
-    private $createdNodes = array();
+    private $createdNodes = [];
 
     public function loadConfiguration() {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
-        $config = $this->getConfig(array(
-            'nodes' => array(),
-            'structure' => array(),
-        ));
+        $config = $this->getConfig([
+            'nodes' => [],
+            'structure' => [],
+        ]);
         $navbar = $builder->addDefinition('navbar')
                 ->setClass('FKSDB\Components\Controls\Navigation\Navigation');
         $navbar->setShared(true)->setAutowired(true);
@@ -33,16 +33,16 @@ class NavigationExtension extends CompilerExtension {
         $this->createFromStructure($config['structure'], $navbar);
 
 
-        $navbar->addSetup('$service->setStructure(?);', array($config['structure']));
+        $navbar->addSetup('$service->setStructure(?);', [$config['structure']]);
     }
 
-    private function createNode($navbar, $nodeId, $arguments = array()) {
+    private function createNode($navbar, $nodeId, $arguments = []) {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
         }
         $this->createdNodes[$nodeId] = 1;
         $arguments['nodeId'] = $nodeId;
-        $navbar->addSetup('$service->createNode(?, ?);', array($nodeId, $arguments));
+        $navbar->addSetup('$service->createNode(?, ?);', [$nodeId, $arguments]);
     }
 
     private function createFromStructure($structure, $navbar, $parent = null) {
@@ -51,7 +51,7 @@ class NavigationExtension extends CompilerExtension {
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);
                     if ($parent) {
-                        $navbar->addSetup('$service->addParent(?, ?);', array($nodeId, $parent));
+                        $navbar->addSetup('$service->addParent(?, ?);', [$nodeId, $parent]);
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
@@ -60,7 +60,7 @@ class NavigationExtension extends CompilerExtension {
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);
                     if ($parent) {
-                        $navbar->addSetup('$service->addParent(?, ?);', array($nodeId, $parent));
+                        $navbar->addSetup('$service->addParent(?, ?);', [$nodeId, $parent]);
                     }
                 }
             }

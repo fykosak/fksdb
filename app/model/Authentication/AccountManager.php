@@ -2,10 +2,10 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\ModelPerson;
 use Mail\SendFailedException;
-use ModelAuthToken;
-use ModelLogin;
-use ModelPerson;
 use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
@@ -17,7 +17,7 @@ use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AccountManager {
@@ -72,11 +72,11 @@ class AccountManager {
 
     /**
      * Creates login and invites user to set up the account.
-     * 
+     *
      * @param ITemplate $template template of the mail
      * @param ModelPerson $person
      * @param string $email
-     * @return ModelLogin
+     * @return \FKSDB\ORM\ModelLogin
      * @throws MailNotSendException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
@@ -88,7 +88,7 @@ class AccountManager {
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
 
-        // prepare and send email        
+        // prepare and send email
         $template->token = $token->token;
         $template->person = $person;
         $template->email = $email;
@@ -127,7 +127,7 @@ class AccountManager {
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
 
-        // prepare and send email        
+        // prepare and send email
         $template->token = $token->token;
         $template->login = $login;
         $template->until = $until;
@@ -172,7 +172,7 @@ class AccountManager {
 }
 
 abstract class RecoveryException extends RuntimeException {
-    
+
 }
 
 class RecoveryExistsException extends RecoveryException {

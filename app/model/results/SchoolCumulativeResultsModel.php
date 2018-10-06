@@ -6,7 +6,7 @@
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
-    
+
     /**
      * @var int
      */
@@ -16,22 +16,22 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = array();
-    
+    private $dataColumns = [];
+
     /**
      *
-     * @var CumulativeResultsModel 
+     * @var CumulativeResultsModel
      */
     private $cumulativeResultsModel;
-    
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, \ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
+
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, \FKSDB\ORM\ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
     /**
      * Definition of header.
-     * 
+     *
      * @param ModelCategory $category
      * @return array
      */
@@ -40,34 +40,34 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             throw new \Nette\InvalidStateException('Series not specified.');
         }
         if (!isset($this->dataColumns[$category->id])) {
-            $dataColumns = array();
-            foreach ($this->getSeries() as $series) {            
-                $dataColumns[] = array(
+            $dataColumns = [];
+            foreach ($this->getSeries() as $series) {
+                $dataColumns[] = [
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => 0, //not well defined
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
-                );
+                ];
             }
-            $dataColumns[] = array(
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_CONTESTANTS_COUNT,
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_CONTESTANTS_COUNT,
-            );
-            $dataColumns[] = array(
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_UNWEIGHTED_SUM,
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_UNWEIGHTED_SUM,
-            );
-            $dataColumns[] = array(
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
-            );
-            $dataColumns[] = array(
+            ];
+            $dataColumns[] = [
                 self::COL_DEF_LABEL => self::LABEL_SUM,
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_SUM,
-            );
+            ];
             $this->dataColumns[$category->id] = $dataColumns;
         }
         return $this->dataColumns[$category->id];
@@ -81,34 +81,34 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
         // invalidate cache of columns
-        $this->dataColumns = array();
+        $this->dataColumns = [];
     }
 
     public function getCategories() {
         //return $this->evaluationStrategy->getCategories();
-        return array(
+        return [
             new ModelCategory(ModelCategory::CAT_ALL)
-        );
+        ];
     }
 
     protected function composeQuery($category) {
         throw new \Nette\NotSupportedException;
     }
-    
+
     /**
      * @param ModelCategory $category
      * @return array of Nette\Database\Row
      */
     public function getData($category) {
-        $categories = array();
+        $categories = [];
         if($category->id == ModelCategory::CAT_ALL){
             $categories = $this->cumulativeResultsModel->getCategories();
         }
         else{
             $categories[] = $category;
         }
-        
-        $data = array();
+
+        $data = [];
         foreach ($categories as $cummulativeCategory){
             foreach ($this->cumulativeResultsModel->getData($cummulativeCategory) as $row){
                 $schoolName = $row[self::DATA_SCHOOL];
@@ -117,10 +117,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                 unset($contestant[self::DATA_SCHOOL]);
                 unset($contestant[self::DATA_RANK_FROM]);
                 unset($contestant[self::DATA_RANK_TO]);
-                $data[$schoolName][] = $contestant;                
+                $data[$schoolName][] = $contestant;
             }
         }
-        $result = array();
+        $result = [];
         foreach($data as $schoolName => $dataRow){
             usort($dataRow, function($a, $b){return ($a[self::ALIAS_SUM]>$b[self::ALIAS_SUM])?-1:1;});
             $resultRow = $this->createResultRow($dataRow, $category);
@@ -129,7 +129,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             $result[] = $resultRow;
         }
         usort($result, function($a, $b){return ($a[self::ALIAS_SUM]>$b[self::ALIAS_SUM])?-1:1;});
-        
+
         $prevSum = false;
         for($i=0; $i<count($result); $i++){
             if($result[$i][self::ALIAS_SUM] !== $prevSum) {
@@ -154,20 +154,20 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
         return $result;
     }
-    
+
     //TODO better have somehow in evaluation strategy
     private function weightVector($i){
-        return max(array(1.0-0.1*$i, 0.1));
+        return max([1.0-0.1*$i, 0.1]);
     }
-    
+
     private function createResultRow($schoolContestants, $category){
-        $resultRow = array();
+        $resultRow = [];
         foreach($this->getDataColumns($category) as $column){
             $resultRow[$column[self::COL_ALIAS]] = 0;
         }
-        
+
         $resultRow[self::ALIAS_CONTESTANTS_COUNT] = 0;
-        
+
         for($i=0; $i<count($schoolContestants); $i++){
             if($schoolContestants[$i][self::ALIAS_SUM] != 0){
                 $resultRow[self::ALIAS_CONTESTANTS_COUNT]++;
