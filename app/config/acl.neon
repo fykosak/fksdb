@@ -38,7 +38,7 @@ acl:
     # Resources
     - addResource(submit)        # revoke, upload, download, edit, ALL
     - addResource(task)          # insert, edit
-    - addResource(person)        # create, edit, list, delete, merge, stalk, stalk.search, stalk.full
+    - addResource(person)        # create, edit, list, delete, merge, stalk.restrict, stalk.search, stalk.search, stalk.full
     - addResource(contestant)    # create, edit, list, delete
     - addResource(school)        # create, edit, list, delete
     - addResource(storedQuery)   # create, edit, list, delete, show
