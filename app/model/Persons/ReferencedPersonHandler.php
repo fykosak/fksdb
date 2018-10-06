@@ -19,6 +19,7 @@ use ServiceMPostContact;
 use ServicePerson;
 use ServicePersonHistory;
 use ServicePersonInfo;
+use Submits\StorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -213,6 +214,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             throw $e;
         } catch (ModelException $e) {
             $this->rollBack();
+            throw $e;
+        } catch (StorageException $e) {
+            $this->rollback();
             throw $e;
         }
         return $messages;
