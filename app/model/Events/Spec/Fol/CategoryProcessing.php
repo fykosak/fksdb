@@ -32,17 +32,41 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      */
     private $serviceSchool;
     private $categoryNames;
+    
+    private $rulesVersion;
 
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    /**
+     * 
+     * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
+     * @param YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
+     */
+    function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
-        $this->categoryNames = [
-            self::HIGH_SCHOOL_A => _('Středoškoláci A'),
-            self::HIGH_SCHOOL_B => _('Středoškoláci B'),
-            self::HIGH_SCHOOL_C => _('Středoškoláci C'),
-            self::ABROAD => _('Zahraniční SŠ'),
-            self::OPEN => _('Open'),
-        ];
+        
+        if (!in_array($rulesVersion, [1, 2])) {
+            throw new \Nette\InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+        }
+        $this->rulesVersion = $rulesVersion;
+        
+        if ($this->rulesVersion == 1) {
+            $this->categoryNames = [
+                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
+                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
+                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
+                self::ABROAD => _('Zahraniční SŠ'),
+                self::OPEN => _('Open'),
+            ];
+        }
+        else if ($this->rulesVersion == 2) {
+            $this->categoryNames = [
+                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
+                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
+                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
+                self::OPEN => _('Open'),
+            ];
+        }
     }
 
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
@@ -130,7 +154,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         // evaluate stats
         if ($olds > 0) {
             return self::OPEN;
-        } elseif ($abroad > 0) {
+        } elseif ($this->rulesVersion == 1 && $abroad > 0) {
             return self::ABROAD;
         } else { //Czech/Slovak highschoolers (or lower)
             $sum = 0;
