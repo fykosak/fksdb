@@ -7,6 +7,7 @@ use Authorization\Grant;
 class Role extends StalkingComponent {
 
     public function render() {
+        $this->beforeRender();
         $template = $this->template;
         $login = $this->modelPerson->getLogin();
         $roles = [];
