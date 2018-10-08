@@ -19,7 +19,7 @@ parameters:
                     address:
                         required: true
                 person_accommodation:
-                    boolean:
+                    single:
                         required: false
 
 events:

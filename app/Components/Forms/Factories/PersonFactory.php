@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
 use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;
 use FKSDB\Components\Forms\Factories\Person\OtherNameField;
+use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -50,7 +51,7 @@ class PersonFactory {
     const EL_CREATE_LOGIN = 'createLogin';
     const EL_CREATE_LOGIN_LANG = 'lang';
 
-    public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
+    public function createPersonSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
@@ -63,9 +64,9 @@ class PersonFactory {
 
     /**
      * @param $fieldName
-     * @return DisplayNameField|FamilyNameField|GenderField|OtherNameField
+     * @return BaseControl
      */
-    public function createField($fieldName) {
+    public function createField($fieldName): BaseControl {
         switch ($fieldName) {
             case 'other_name':
                 return new OtherNameField();

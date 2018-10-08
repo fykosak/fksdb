@@ -25,7 +25,7 @@ class Handler {
      * @throws StorageException
      * @return void
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId): void {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 
         $newAccommodationIds = $this->prepareData($data);

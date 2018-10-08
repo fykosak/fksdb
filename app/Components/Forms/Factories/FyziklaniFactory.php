@@ -25,7 +25,7 @@ class FyziklaniFactory {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    private function createPointsField(ModelEvent $event) {
+    private function createPointsField(ModelEvent $event): RadioList {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
         foreach ($event->getParameter('availablePoints') as $points) {
@@ -36,25 +36,25 @@ class FyziklaniFactory {
         return $field;
     }
 
-    private function createTeamField() {
+    private function createTeamField(): TextInput {
         $field = new TextInput(_('Tým'));
         $field->setDisabled(true);
         return $field;
     }
 
-    private function createTeamIdField() {
+    private function createTeamIdField(): TextInput {
         $field = new TextInput(_('ID týmu'));
         $field->setDisabled(true);
         return $field;
     }
 
-    private function createTaskField() {
+    private function createTaskField(): TextInput {
         $field = new TextInput(_('Úloha'));
         $field->setDisabled(true);
         return $field;
     }
 
-    public function createEntryForm($eventId) {
+    public function createEntryForm($eventId): TaskCodeInput {
         $control = new TaskCodeInput($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $eventId);
         return $control;
     }
@@ -63,7 +63,7 @@ class FyziklaniFactory {
      * @param \FKSDB\ORM\ModelEvent $event
      * @return FormControl
      */
-    public function createEntryQRForm(ModelEvent $event) {
+    public function createEntryQRForm(ModelEvent $event): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('taskCode')->setAttribute('readonly', true);
@@ -76,7 +76,7 @@ class FyziklaniFactory {
         return $control;
     }
 
-    public function createEditForm(ModelEvent $event) {
+    public function createEditForm(ModelEvent $event): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 

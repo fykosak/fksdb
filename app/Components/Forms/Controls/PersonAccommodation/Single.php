@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 
 class Single extends AccommodationField {
-    const RESOLUTION_ID = 'boolean';
+    const RESOLUTION_ID = 'single';
 
     public function getMode(): string {
         return self::RESOLUTION_ID;
