@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\Components\React\IReactComponent;
-use FKSDB\Components\React\ReactField;
-use Nette\Forms\Controls\HiddenField;
-
 class Matrix extends AccommodationComponent {
     const RESOLUTION_ID = 'matrix';
 

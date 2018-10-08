@@ -5,9 +5,9 @@ namespace FKSDB\Components\Controls\Stalking;
 class BaseInfo extends StalkingComponent {
 
     public function render() {
-        $template = $this->template;
+        $this->beforeRender();
         $this->template->info = $this->modelPerson->getInfo();
-        $template->setFile(__DIR__ . '/BaseInfo.latte');
-        $template->render();
+        $this->template->setFile(__DIR__ . '/BaseInfo.latte');
+        $this->template->render();
     }
 }

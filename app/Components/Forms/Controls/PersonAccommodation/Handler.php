@@ -8,6 +8,7 @@ use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
+use Submits\StorageException;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -49,12 +50,13 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                $messages[] = new Message(sprintf(
+                throw new StorageException();
+                /*$messages[] = new Message(sprintf(
                     _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
                     $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
-                ), 'danger');
+                ), 'danger');*/
             }
         }
         return $messages;

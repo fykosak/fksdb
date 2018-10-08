@@ -21,7 +21,7 @@ interface IProps {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>

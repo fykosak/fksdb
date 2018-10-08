@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-12 23:14+0100\n"
-"PO-Revision-Date: 2017-11-17 00:37+0100\n"
+"PO-Revision-Date: 2018-10-06 02:01+0200\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: ../app/FyziklaniModule/presenters/ClosePresenter.php:20
@@ -130,7 +130,7 @@ msgstr ""
 #: ../app/FyziklaniModule/presenters/SubmitPresenter.php:204
 #, php-format
 msgid "Tým %s neexistuje."
-msgstr "Team with name '%value' already exists."
+msgstr "Team with name '%s' already exists."
 
 #: ../app/FyziklaniModule/presenters/SubmitPresenter.php:213
 #: ../app/FyziklaniModule/presenters/SubmitPresenter.php:252
@@ -1595,7 +1595,7 @@ msgstr "Study year"
 #: ../app/Components/Forms/Factories/PersonFactory.php:319
 #, php-format
 msgid "%d. ročník (očekávaný rok maturity %d)"
-msgstr "grade %d (expected finals in %d)"
+msgstr "grade %d (expected graduation in %d)"
 
 #: ../app/Components/Forms/Factories/PersonFactory.php:323
 msgid "střední škola"
@@ -2339,8 +2339,8 @@ msgstr "Because of the insurance company."
 msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr "The phone number (with the country code) that you will have with you."
 
-#: ../data/events/vaf/vaf3.neon.neon2php:52
-#: ../data/events/fol.neon.neon2php:52 ../data/events/fol.neon.neon2php:113
+#: ../data/events/vaf/vaf3.neon.neon2php:52 ../data/events/fol.neon.neon2php:52
+#: ../data/events/fol.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:181
 msgid "Přihlášen"
 msgstr "Applied"
@@ -2350,8 +2350,8 @@ msgstr "Applied"
 msgid "Náhradník"
 msgstr "Substitute"
 
-#: ../data/events/vaf/vaf3.neon.neon2php:54
-#: ../data/events/fol.neon.neon2php:54 ../data/events/fol.neon.neon2php:114
+#: ../data/events/vaf/vaf3.neon.neon2php:54 ../data/events/fol.neon.neon2php:54
+#: ../data/events/fol.neon.neon2php:114
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:100
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:182
 msgid "Účastnil se"
@@ -2365,8 +2365,7 @@ msgstr "Participated"
 msgid "Nepřijel"
 msgstr "Did not come"
 
-#: ../data/events/vaf/vaf3.neon.neon2php:56
-#: ../data/events/fol.neon.neon2php:53
+#: ../data/events/vaf/vaf3.neon.neon2php:56 ../data/events/fol.neon.neon2php:53
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:101
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:184
 msgid "Zrušen"
