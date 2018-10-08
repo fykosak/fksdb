@@ -137,10 +137,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @return Message[]
+     * @throws StorageException
+     * @return void
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
-        $messages = [];
         /*
          * Process data
          */
@@ -198,8 +198,8 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                     continue;
                 }
                 if ($t == 'person_accommodation' && isset($data[$t])) {
-                    $ms = $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
-                    $messages = array_merge($messages, $ms);
+                    $this->eventAccommodationHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
+
                     continue;
                 }
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
@@ -219,7 +219,6 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
             $this->rollback();
             throw $e;
         }
-        return $messages;
     }
 
     private $outerTransaction = false;

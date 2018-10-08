@@ -33,11 +33,11 @@ class Results extends FyziklaniModule {
         }
     }
 
-    protected function getMode() {
+    public function getMode(): string {
         return $this->mode;
     }
 
-    protected function getComponentName() {
+    public function getComponentName(): string {
         return 'results';
     }
 }

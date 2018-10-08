@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 
-class Boolean extends AccommodationComponent {
+class Single extends AccommodationField {
     const RESOLUTION_ID = 'boolean';
 
-    public function getMode() {
+    public function getMode(): string {
         return self::RESOLUTION_ID;
     }
 }

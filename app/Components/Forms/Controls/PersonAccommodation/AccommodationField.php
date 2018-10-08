@@ -6,7 +6,7 @@ use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use Nette\Forms\Controls\TextInput;
 
-abstract class AccommodationComponent extends TextInput implements IReactComponent {
+abstract class AccommodationField extends TextInput implements IReactComponent {
 
     use ReactField;
     /**
@@ -25,18 +25,18 @@ abstract class AccommodationComponent extends TextInput implements IReactCompone
         $this->appendProperty();
     }
 
-    public function getComponentName() {
+    public function getComponentName(): string {
         return 'accommodation';
     }
 
-    public function getModuleName() {
+    public function getModuleName(): string {
         return 'events';
     }
 
     /**
      * @return string
      */
-    public function getData() {
+    public function getData(): string {
         $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($this->eventId);
 
         $accommodationDef = [];
