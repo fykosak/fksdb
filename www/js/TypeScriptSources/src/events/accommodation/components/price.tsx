@@ -5,6 +5,7 @@ import { getAccommodationPrice } from '../middleware/helpers';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { IAccommodationStore } from '../reducer/';
 import { IAccommodationState } from '../reducer/accommodation';
+import { lang } from '../../../i18n/i18n';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];
@@ -21,7 +22,7 @@ class Price extends React.Component<IProps & IState, {}> {
         const price = getAccommodationPrice(accommodationDef, accommodation);
 
         return <>
-            <p>Price</p>
+            <p>{lang.getText('Price')}</p>
             <PriceDisplay price={price}/>
         </>;
     }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:20+0200\n"
+"POT-Creation-Date: 2018-10-08 14:27+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -763,6 +763,7 @@ msgstr ""
 #: ../app/OrgModule/presenters/EventAccommodationPresenter.php:166
 #: ../app/Components/Forms/Factories/EventAccommodation/Factory.php:19
 #: ../app/Components/Grids/EventAccommodationGrid.php:41
+#: ../www/js/TypeScriptSources/src/events/accommodation/components/accommodation.tsx.tsx2php:44
 msgid "Date"
 msgstr ""
 
@@ -1931,6 +1932,7 @@ msgid "Zvolený stát neodpovídá zadanému PSČ."
 msgstr ""
 
 #: ../app/Components/Grids/EventAccommodationGrid.php:38
+#: ../www/js/TypeScriptSources/src/events/accommodation/components/price.tsx.tsx2php:25
 msgid "Price"
 msgstr ""
 
