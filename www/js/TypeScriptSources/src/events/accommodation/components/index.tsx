@@ -8,12 +8,14 @@ import logger from 'redux-logger';
 import { config } from '../../../config/';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
-import Accommodation from './accommodation';
+import Matrix from './matrix/index';
 import InputConnector from './input-connector';
+import Boolean from './boolean';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];
     input: HTMLInputElement;
+    mode: 'matrix' | 'multiNight' | 'multiHotels' | 'boolean' | string;
 }
 
 export default class Index extends React.Component<IProps, {}> {
@@ -25,9 +27,23 @@ export default class Index extends React.Component<IProps, {}> {
             <Provider store={store}>
                 <>
                     <InputConnector input={this.props.input}/>
-                    <Accommodation accommodationDef={this.props.accommodationDef}/>
+                    {this.getComponentByMode()}
                 </>
             </Provider>
         );
+    }
+
+    private getComponentByMode(): JSX.Element {
+        switch (this.props.mode) {
+            case 'matrix':
+                return <Matrix accommodationDef={this.props.accommodationDef}/>;
+            case 'multiNight':
+            case 'multiHotels':
+            case 'boolean':
+                return <Boolean accommodationDef={this.props.accommodationDef}/>
+            default:
+                throw new Error('no match');
+        }
+
     }
 }
