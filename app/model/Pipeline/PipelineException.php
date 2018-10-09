@@ -2,6 +2,8 @@
 
 namespace Pipeline;
 
-class PipelineException extends \RuntimeException {
+use RuntimeException;
+
+class PipelineException extends RuntimeException {
 
 }

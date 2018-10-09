@@ -39,7 +39,7 @@ class Pipeline {
         $this->logger = $logger;
     }
 
-    public function getLogger() {
+    public function getLogger(): ILogger {
         return $this->logger;
     }
 
@@ -83,7 +83,7 @@ class Pipeline {
         return $data;
     }
 
-    public function log($message, $level = ILogger::INFO) {
+    public function log(string $message, string $level = ILogger::INFO) {
         if ($this->logger) {
             $this->logger->log($message, $level);
         }

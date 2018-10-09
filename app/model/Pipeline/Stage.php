@@ -36,8 +36,8 @@ abstract class Stage {
         $this->pipeline = $pipeline;
     }
 
-    protected function log($message, $level = ILogger::INFO) {
-        $this->getPipeline()->log($message);
+    protected function log(string $message, string $level = ILogger::INFO) {
+        $this->getPipeline()->log($message, $level);
     }
 
 }
