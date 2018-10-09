@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM;
 
+use DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
@@ -28,18 +29,18 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return \FKSDB\ORM\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
-        return \FKSDB\ORM\ModelEvent::createFromTableRow($this->event);
+        return ModelEvent::createFromTableRow($this->event);
     }
 
     /**
-     * @return \FKSDB\ORM\ModelAddress
+     * @return ModelAddress
      */
     public function getAddress() {
         if ($this->address) {
-            return \FKSDB\ORM\ModelAddress::createFromTableRow($this->address);
+            return ModelAddress::createFromTableRow($this->address);
         }
         return null;
     }
@@ -62,7 +63,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
      * @return integer
      */
     public function getUsedCapacity() {
-        return $this->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
+        return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
     }
 
     public function __toArray() {

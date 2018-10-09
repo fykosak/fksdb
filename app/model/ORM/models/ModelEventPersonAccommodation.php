@@ -19,17 +19,11 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle {
     const STATUS_PAID = 'paid';
     const STATUS_WAITING_FOR_PAYMENT = 'waiting';
 
-    /**
-     * @return ModelEventAccommodation
-     */
-    public function getEventAccommodation() {
+    public function getEventAccommodation(): ModelEventAccommodation {
         return ModelEventAccommodation::createFromTableRow($this->event_accommodation);
     }
 
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 }
