@@ -24,7 +24,7 @@ class ModelTask extends AbstractModelSingle {
     }
 
     /**
-     * @param mixed $type FKSDB\ORM\ModelTaskContribution::TYPE_*
+     * @param string $type ModelTaskContribution::TYPE_*
      * @return ModelTaskContribution[] indexed by contribution_id
      */
     public function getContributions($type = null) {
@@ -35,8 +35,8 @@ class ModelTask extends AbstractModelSingle {
 
         $result = [];
         foreach ($contributions as $contribution) {
-            $contribution = ModelTaskContribution::createFromTableRow($contribution);
-            $result[$contribution->contribution_id] = $contribution;
+            $contributionModel = ModelTaskContribution::createFromTableRow($contribution);
+            $result[$contributionModel->contribution_id] = $contributionModel;
         }
         return $result;
     }
@@ -49,8 +49,8 @@ class ModelTask extends AbstractModelSingle {
 
         $result = [];
         foreach ($studyYears as $studyYear) {
-            $studyYear = ModelTaskStudyYear::createFromTableRow($studyYear);
-            $result[$studyYear->study_year] = $studyYear;
+            $studyYearModel = ModelTaskStudyYear::createFromTableRow($studyYear);
+            $result[$studyYearModel->study_year] = $studyYearModel;
         }
         return $result;
     }

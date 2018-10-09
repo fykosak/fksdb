@@ -24,7 +24,7 @@ use Nette\Security\IResource;
 class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
     const ACC_DATE_FORMAT = 'Y-m-d';
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'eventAccommodation';
     }
 

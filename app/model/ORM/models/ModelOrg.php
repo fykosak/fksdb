@@ -24,7 +24,7 @@ class ModelOrg extends AbstractModelSingle implements IResource {
         return ModelPerson::createFromTableRow($data);
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'org';
     }
 

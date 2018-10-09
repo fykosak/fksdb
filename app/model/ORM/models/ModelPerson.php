@@ -6,6 +6,7 @@ use AbstractModelSingle;
 use DbNames;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 use YearCalculator;
 
@@ -24,9 +25,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
      *
-     * @return ModelLogin|null
+     *
      */
-    public function getLogin() {
+    public function getLogin(): ModelLogin {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -39,10 +40,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelLogin::createFromTableRow($logins->current());
     }
 
-    /**
-     * @return ModelPersonInfo|null
-     */
-    public function getInfo() {
+    public function getInfo(): ModelPersonInfo {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -60,7 +58,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
-    public function getHistory($acYear, $extrapolated = false) {
+    public function getHistory($acYear, $extrapolated = false): ModelPersonHistory {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -86,7 +84,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param null $contestId
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getContestants($contestId = null) {
+    public function getContestants($contestId = null): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -101,7 +99,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param null $contestId
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getOrgs($contestId = null) {
+    public function getOrgs($contestId = null): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -112,7 +110,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
-    public function getFlags() {
+    public function getFlags(): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -122,7 +120,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @return ModelMPersonHasFlag[]
      */
-    public function getMPersonHasFlags() {
+    public function getMPersonHasFlags(): array {
         $personFlags = $this->getFlags();
 
         if (!$personFlags || count($personFlags) == 0) {
@@ -140,11 +138,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * @param $fid
-     * @return ModelMPersonHasFlag|null
-     */
-    public function getMPersonHasFlag($fid) {
+    public function getMPersonHasFlag(int $fid): ModelMPersonHasFlag {
         $flags = $this->getMPersonHasFlags();
 
         if (!$flags || count($flags) == 0) {
@@ -348,7 +342,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * IResource
      */
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'person';
     }
 
@@ -357,7 +351,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    public function getAccommodationByEventId($eventId) {
+    public function getAccommodationByEventId($eventId): string {
         if (!$eventId) {
             return null;
         }
