@@ -7,7 +7,7 @@ use FKSDB\Components\React\ReactComponent;
 
 abstract class FyziklaniModule extends ReactComponent {
 
-    public final function getModuleName() {
+    public final function getModuleName(): string {
         return 'fyziklani';
     }
 }

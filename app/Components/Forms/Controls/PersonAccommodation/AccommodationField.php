@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
+use FKSDB\ORM\ModelEventAccommodation;
 use Nette\Forms\Controls\TextInput;
 
 abstract class AccommodationField extends TextInput implements IReactComponent {
@@ -40,11 +41,9 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
         $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($this->eventId);
 
         $accommodationDef = [];
-        /**
-         * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
-         */
         foreach ($accommodations as $accommodation) {
-            $accommodationDef[] = $accommodation->__toArray();
+            $model = ModelEventAccommodation::createFromTableRow($accommodation);
+            $accommodationDef[] = $model->__toArray();
         }
         return count($accommodationDef) ? json_encode($accommodationDef) : NULL;
     }
