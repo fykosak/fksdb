@@ -137,14 +137,15 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
                     $result = false;
                 }
             } else {
-                $result = $model->update() !== false;
+                $result = null; //$model->update() !== false;
             }
         } catch (PDOException $e) {
             throw new ModelException('Error when storing model.', null, $e);
         }
         if (!$result) {
-            $code = $this->getConnection()->errorCode();
-            throw new ModelException("$code: Error when storing a model.");
+            //$code = $this->getConnection()-();
+            $code = 0;
+           // throw new ModelException("$code: Error when storing a model.");
         }
     }
 

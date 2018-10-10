@@ -20,11 +20,12 @@ class Routing extends \Nette\Object {
     ];
 
     /**
-     * @return IRouter
+     * @return RouteList
      */
-    public static function createRouter() {
+    public static function createRouter(): IRouter {
 
         $router = new RouteList();
+
         # PHP-like scripts compatibility
         $router[] = new Route('index.php',
             [
@@ -36,6 +37,7 @@ class Routing extends \Nette\Object {
                 Route::SECURED,
             ]
         );
+        /*
         # Backward compatibility
         $router[] = new Route('web-service/<action>',
             [
@@ -66,7 +68,7 @@ class Routing extends \Nette\Object {
                 'tld' => '%domain.tld%',
             ], Route::SECURED);
 
-        $router[] = new Route('//<subdomain>.fykos.[!<tld>]/<action login|logout|fb-login|recover>',
+        $router[] = new Route('//auth.fykos.[!<tld>]/<action login|logout|fb-login|recover>',
             [
                 'presenter' => 'Authentication',
                 'subdomain' => '%subdomain.auth%',
@@ -83,7 +85,7 @@ class Routing extends \Nette\Object {
                 'year' => null,
             ],
             Route::SECURED);
-        $router[] = new Route('//<subdomain>.fykos.[!<tld>]/[<contestId %contests%>/]<presenter register>/<action=default>',
+        $router[] = new Route('//auth.fykos.[!<tld>]/[<contestId %contests%>/]<presenter register>/<action=default>',
             [
                 'module' => 'Public',
                 'subdomain' => '%subdomain.auth%',
@@ -134,7 +136,7 @@ class Routing extends \Nette\Object {
                 'contestId' => ['filterTable' => self::inverseContestMapping],
             ],
             Route::SECURED);
-
+*/
         return $router;
     }
 }

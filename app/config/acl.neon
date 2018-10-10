@@ -10,8 +10,7 @@ services:
     ownerAssertion: Authorization\Assertions\OwnerAssertion
 
     # data services
-    #- authorizator:
-     #   class: Nette\Security\Permission
+    #authorizator: Nette\Security\Permission
       #  setup:
 acl:
     # Roles
@@ -64,8 +63,8 @@ acl:
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, storedQuery, show)
-    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(ModelEventType::FYZIKLANI))))
-    - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
+    #- allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(ModelEventType::FYZIKLANI)))
+    - allow(org, teacher, Nette\Security\Permission::ALL)
     # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
@@ -75,31 +74,31 @@ acl:
     - allow(dispatcher, storedQuery, show)
     - allow(dispatcher, export, execute)
 
-    - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
+    - allow(taskManager, task, Nette\Security\Permission::ALL)
 
-    - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
+    - allow(inboxManager, submit, Nette\Security\Permission::ALL)
     - allow(inboxManager, task, edit)  # zadání opravovačů
     - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(inboxManager, contestant, list)
     - allow(inboxManager, contestant, create)
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
-    - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(inboxManager, school, Nette\Security\Permission::ALL)
 
     # list privileges explicitly, so that we exclude stalk and stalk-search
     - allow(dataManager, person, [create, edit, list, delete, merge])
-    - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(dataManager, school, Nette\Security\Permission::ALL)
 
-    - allow(exportDesigner, storedQuery, ::constant(Nette\Security\Permission::ALL))
-    - allow(exportDesigner, export, ::constant(Nette\Security\Permission::ALL))
-    - allow(exportDesigner, export.adhoc, ::constant(Nette\Security\Permission::ALL))
+    - allow(exportDesigner, storedQuery, Nette\Security\Permission::ALL)
+    - allow(exportDesigner, export, Nette\Security\Permission::ALL)
+    - allow(exportDesigner, export.adhoc, Nette\Security\Permission::ALL)
 
-    - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
-    - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event, Nette\Security\Permission::ALL) # TODO add certain privilegies to organizers too
+    - allow(eventManager, eventOrg, Nette\Security\Permission::ALL)
+    - allow(eventManager, school, Nette\Security\Permission::ALL)
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, eventAccommodation, Nette\Security\Permission::ALL)
 
-    - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
+    - allow(boss, org, Nette\Security\Permission::ALL)
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk-search)
@@ -108,14 +107,14 @@ acl:
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
-    - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
+    - allow(taskManager, fyziklani, Nette\Security\Permission::ALL)
 
 
-    - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
+    - allow(org, fyziklani, Nette\Security\Permission::ALL) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(guest, fyziklani, dashboard)
 
-    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(schoolManager, school, Nette\Security\Permission::ALL)
 
 
-    - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
+    - allow(cartesian, Nette\Security\Permission::ALL, Nette\Security\Permission::ALL)
 

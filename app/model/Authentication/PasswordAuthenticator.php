@@ -47,7 +47,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     }
 
     public function findLogin($id) {
-        $row = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
+        $row = $this->servicePerson->getReferencedTable(\DbNames::TAB_PERSON_INFO, 'person_id', true)->where('email', $id)->fetch();
+        //$row = $this->servicePerson->where('person_info.email', $id)->fetch();
         $login = null;
 
         if ($row) {
