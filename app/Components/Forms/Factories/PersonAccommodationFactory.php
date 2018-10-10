@@ -7,7 +7,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 use ServiceEventAccommodation;
 
-class PersonAccommodationFactory {
+class PersonAccommodationFactory extends TableReflectionFactory {
     /**
      * @var string;
      */
@@ -28,24 +28,21 @@ class PersonAccommodationFactory {
     private function createSingleAccommodationSelect($eventId) {
         return null;
     }
+
     private function createSingleDaySelect($eventId) {
         return null;
     }
+
     private function createBooleanSelect($eventId) {
         return null;
     }
 
-    /**
-     * @param string $fieldName
-     * @param integer $eventId
-     * @return BaseControl
-     */
-    public function createField($fieldName, $eventId) {
+    public function createField(string $fieldName, array $data = []): BaseControl {
         switch ($fieldName) {
             case Matrix::RESOLUTION_ID:
-                return $this->createMatrixSelect($eventId);
+                return $this->createMatrixSelect($data['eventId']);
             case self::RESOLUTION_AUTO:
-                return $this->autoResolution($eventId);
+                return $this->autoResolution($data['eventId']);
             default:
                 throw new InvalidArgumentException();
         }

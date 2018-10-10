@@ -25,7 +25,6 @@ class SchoolFactory {
         $this->schoolProvider = $schoolProvider;
     }
 
-
     public function createSchool() {
         $container = new ModelContainer();
         $container->addText('name_full', _('Plný název'))

@@ -26,12 +26,9 @@ use Nette\InvalidArgumentException;
  * @package FKSDB\Components\Forms\Factories
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonInfoFactory {
-    /**
-     * @param $fieldName
-     * @return BaseControl
-     */
-    public function createField($fieldName) {
+class PersonInfoFactory extends TableReflectionFactory {
+
+    public function createField(string $fieldName, array $data = []): BaseControl {
         switch ($fieldName) {
             case   'born':
                 return new BornField();

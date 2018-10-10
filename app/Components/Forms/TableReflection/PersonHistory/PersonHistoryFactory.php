@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
+use Nette\ArgumentOutOfRangeException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 
@@ -12,7 +13,7 @@ use Nette\InvalidArgumentException;
  * @package FKSDB\Components\Forms\Factories
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonHistoryFactory {
+class PersonHistoryFactory extends TableReflectionFactory {
 
     /**
      * @var SchoolFactory
@@ -29,19 +30,17 @@ class PersonHistoryFactory {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param string $fieldName
-     * @param integer $acYear
-     * @return BaseControl
-     */
-    public function createField($fieldName, $acYear) {
+    public function createField(string $fieldName, array $data = []): BaseControl {
         switch ($fieldName) {
             case 'class':
                 return new ClassField();
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             case 'study_year':
-                return new StudyYearField($this->yearCalculator, $acYear);
+                if (!in_array('acYear', $data)) {
+                    throw new ArgumentOutOfRangeException('parameter data musí obsahovať property "acYear"');
+                }
+                return new StudyYearField($this->yearCalculator, $data['acYear']);
             default:
                 throw new InvalidArgumentException();
         }

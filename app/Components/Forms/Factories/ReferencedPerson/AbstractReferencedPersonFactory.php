@@ -268,7 +268,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                     $control = $this->personInfoFactory->createField($fieldName);
                     break;
                 case 'person_history':
-                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                    $control = $this->personHistoryFactory->createField($fieldName, ['acYear' => $acYear]);
                     break;
                 case 'person':
                     $control = $this->personFactory->createField($fieldName);

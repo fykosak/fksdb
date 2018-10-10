@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\Person;
+namespace FKSDB\Components\Forms\TableReflection\Person\Fields;
 
 use Nette\Forms\Controls\RadioList;
 

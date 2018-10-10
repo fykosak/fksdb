@@ -1,13 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories;
+namespace FKSDB\Components\Forms\TableReflection\Person;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
-use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
-use FKSDB\Components\Forms\Factories\Person\GenderField;
-use FKSDB\Components\Forms\Factories\Person\OtherNameField;
+use FKSDB\Components\Forms\TableReflection\Person\Fields;
+use FKSDB\Components\Forms\TableReflection\TableReflectionFactory;
+use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -15,7 +14,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonFactory {
+class PersonFactory extends TableReflectionFactory {
     // For person
 
     const SHOW_DISPLAY_NAME = 0x1;
@@ -61,20 +60,16 @@ class PersonFactory {
         return $select;
     }
 
-    /**
-     * @param $fieldName
-     * @return DisplayNameField|FamilyNameField|GenderField|OtherNameField
-     */
-    public function createField($fieldName) {
+    public function createField(string $fieldName, array $data = []): BaseControl {
         switch ($fieldName) {
             case 'other_name':
-                return new OtherNameField();
+                return new Fields\OtherNameField();
             case 'family_name':
-                return new FamilyNameField();
+                return new Fields\FamilyNameField();
             case 'display_name':
-                return new DisplayNameField();
+                return new Fields\DisplayNameField();
             case 'gender':
-                return new GenderField();
+                return new Fields\GenderField();
             default:
                 throw new InvalidArgumentException();
         }
