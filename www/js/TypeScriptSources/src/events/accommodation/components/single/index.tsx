@@ -28,7 +28,7 @@ class Single extends React.Component<IProps & IState, {}> {
         const {date, eventAccommodationId, price, name, capacity, usedCapacity} = accommodationDef[0];
         const {fromDate, toDate} = recalculateDate(date);
 
-        const label = lang.getText('I want to stay in the Hotel "%name%" from %from% to %to%.')
+        const label = lang.getText('I want to stay in the hotel %name% from %from% to %to%.')
             .replace('%name%', name)
             .replace('%from%', fromDate.toLocaleDateString(lang.getBCP47()))
             .replace('%to%', toDate.toLocaleDateString(lang.getBCP47()));
@@ -44,7 +44,7 @@ class Single extends React.Component<IProps & IState, {}> {
                 <span className={'ml-3'}>{label}</span>
             </span>
             <span className={'text-muted'}>
-                <small className={'ml-3'}>{lang.getText(' Accommodation price:')} <PriceDisplay price={price}/></small>
+                <small className={'ml-3'}>{lang.getText('Accommodation price')}: <PriceDisplay price={price}/></small>
                 <CapacityLabel capacity={capacity} usedCapacity={usedCapacity}/>
             </span>
 

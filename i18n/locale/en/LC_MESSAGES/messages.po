@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-10 23:29+0200\n"
+"POT-Creation-Date: 2018-10-11 00:35+0200\n"
 "PO-Revision-Date: 2018-10-06 02:01+0200\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -544,6 +544,7 @@ msgstr "Person is required."
 #: ../app/OrgModule/presenters/ExtendedPersonPresenter.php:85
 #: ../app/OrgModule/presenters/StalkingPresenter.php:170
 #: ../data/events/vaf/vaf3.neon.neon2php:90
+#: ../data/events/dsef/dsef24.neon.neon2php:71
 #: ../data/events/fol/fol1.neon.neon2php:141
 #: ../data/events/fol/fol8.neon.neon2php:141
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:219
@@ -2404,6 +2405,7 @@ msgid "záznamů"
 msgstr "records"
 
 #: ../app/Components/Grids/Events/ApplicationsGrid.@layout.latte.latte2php:16
+#: ../data/events/dsef/dsef24.neon.neon2php:95
 msgid "Účastník"
 msgstr "Participant"
 
@@ -2529,6 +2531,7 @@ msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr "The phone number (with the country code) that you will have with you."
 
 #: ../data/events/vaf/vaf3.neon.neon2php:58
+#: ../data/events/dsef/dsef24.neon.neon2php:43
 #: ../data/events/fol/fol1.neon.neon2php:56
 #: ../data/events/fol/fol1.neon.neon2php:117
 #: ../data/events/fol/fol8.neon.neon2php:56
@@ -2543,6 +2546,7 @@ msgid "Náhradník"
 msgstr "Substitute"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:60
+#: ../data/events/dsef/dsef24.neon.neon2php:44
 #: ../data/events/fol/fol1.neon.neon2php:58
 #: ../data/events/fol/fol1.neon.neon2php:118
 #: ../data/events/fol/fol8.neon.neon2php:58
@@ -2554,6 +2558,8 @@ msgstr "Participated"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:61
 #: ../data/events/vaf/vaf3.neon.neon2php:78
+#: ../data/events/dsef/dsef24.neon.neon2php:45
+#: ../data/events/dsef/dsef24.neon.neon2php:59
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:114
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:195
@@ -2561,6 +2567,7 @@ msgid "Nepřijel"
 msgstr "Did not come"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:62
+#: ../data/events/dsef/dsef24.neon.neon2php:46
 #: ../data/events/fol/fol1.neon.neon2php:57
 #: ../data/events/fol/fol8.neon.neon2php:57
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:113
@@ -2579,16 +2586,19 @@ msgid "Nasadit náhradníka"
 msgstr "Substitute"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:75
+#: ../data/events/dsef/dsef24.neon.neon2php:56
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:132
 msgid "Prezentovat"
 msgstr "Present"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:82
+#: ../data/events/dsef/dsef24.neon.neon2php:63
 #, fuzzy
 msgid "Zrušit přihlášku"
 msgstr "Import applications"
 
 #: ../data/events/vaf/vaf3.neon.neon2php:86
+#: ../data/events/dsef/dsef24.neon.neon2php:67
 #, fuzzy
 msgid "Smazat přihlášku"
 msgstr "Import applications"
@@ -2637,6 +2647,28 @@ msgstr ""
 #, fuzzy
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Person %s is already applied to the event."
+
+#: ../data/events/dsef/dsef24.neon.neon2php:51
+#, fuzzy
+msgid "Přihlásit účastníka"
+msgstr "Login"
+
+#: ../data/events/dsef/dsef24.neon.neon2php:77
+msgid "Preferovaná skupina"
+msgstr ""
+
+#: ../data/events/dsef/dsef24.neon.neon2php:80
+#, fuzzy
+msgid "Zvolit skupinu"
+msgstr "Choose contest"
+
+#: ../data/events/dsef/dsef24.neon.neon2php:82
+msgid "Počet baget k obědu"
+msgstr ""
+
+#: ../data/events/dsef/dsef24.neon.neon2php:84
+msgid "à 30 Kč"
+msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:18
 #: ../data/events/fol/fol1.neon.neon2php:29
@@ -2831,15 +2863,15 @@ msgid "Ubytování"
 msgstr "Accommodation"
 
 #: ../www/js/TypeScriptSources/src/events/accommodation/components/capacity-label.tsx.tsx2php:15
-msgid "Used capacity/Total capacity:"
+msgid "Used capacity/Total capacity"
 msgstr ""
 
 #: ../www/js/TypeScriptSources/src/events/accommodation/components/single/index.tsx.tsx2php:31
-msgid "I want to stay in the Hotel \"%name%\" from %from% to %to%."
+msgid "I want to stay in the hotel %name% from %from% to %to%."
 msgstr ""
 
 #: ../www/js/TypeScriptSources/src/events/accommodation/components/single/index.tsx.tsx2php:47
-msgid " Accommodation price:"
+msgid "Accommodation price"
 msgstr ""
 
 #~ msgid "Zvolit jazyk"

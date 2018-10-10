@@ -40,48 +40,48 @@ events:
                 service: @event.ServiceMDsefParticipant
 
                 states:
-                    applied: Přihlášen
-                    participated: Účastnil se
-                    missed: Nepřijel
-                    cancelled: Zrušen
+                    applied: _('Přihlášen')
+                    participated: _('Účastnil se')
+                    missed: _('Nepřijel')
+                    cancelled: _('Zrušen')
 
                 transitions:
                     __init->applied:
                         condition: %events.dsef24.appCond%
-                        label: Přihlásit účastníka
+                        label: _('Přihlásit účastníka')
                         onExecuted:
                             - Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Prezentovat
+                        label: _('Prezentovat')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nepřijel
+                        label: _('Nepřijel')
                         dangerous: true
                     applied->cancelled:
                         condition: role('admin')
-                        label: Zrušit přihlášku
+                        label: _('Zrušit přihlášku')
                         dangerous: true
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat přihlášku
+                        label: _('Smazat přihlášku')
 
                 fields:
                     person_id:
-                        label: Osoba
+                        label: _('Osoba')
                         required: true
                         modifiable: %events.dsef24.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef24.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
-                        label: Preferovaná skupina
+                        label: _('Preferovaná skupina')
                         required: true
                         modifiable: %events.dsef24.appCond%
-                        factory: Chooser(Zvolit skupinu, Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(_('Zvolit skupinu'), Events\Spec\Dsef\GroupOptions())
                     lunch_count:
-                        label:  Počet baget k obědu
+                        label:  _('Počet baget k obědu')
                         modifiable: %events.dsef24.appCond%
-                        description:  à 30 Kč
+                        description:  _('à 30 Kč')
 
 
         #
@@ -92,7 +92,7 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT_DSEF
-                    label: Účastník
+                    label: _('Účastník')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:

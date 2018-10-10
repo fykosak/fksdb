@@ -12,7 +12,7 @@ export default class CapacityLabel extends React.Component<IProps, {}> {
         const {capacity, usedCapacity} = this.props;
         return <small
             className={'ml-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
-            {lang.getText('Used capacity/Total capacity:')} {usedCapacity}/{capacity}
+            {lang.getText('Used capacity/Total capacity')}: {usedCapacity}/{capacity}
         </small>;
     }
 }

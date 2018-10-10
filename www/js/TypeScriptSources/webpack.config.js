@@ -18,7 +18,7 @@ module.exports = {
                 loader: 'tslint-loader',
                 exclude: /node_modules/,
                 options: {
-                    failOnHint: true,
+                    failOnHint: false,
                     configuration: require('./tslint.json'),
                 },
             },
