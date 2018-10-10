@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Matrix;
+use FKSDB\Components\Forms\TableReflection\TableReflectionFactory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 use ServiceEventAccommodation;
