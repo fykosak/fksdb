@@ -20,7 +20,7 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
     private $eventId;
 
     public function __construct(\ServiceEventAccommodation $serviceEventAccommodation, $eventId) {
-        parent::__construct();
+        parent::__construct(_('Accommodation'));
         $this->serviceEventAccommodation = $serviceEventAccommodation;
         $this->eventId = $eventId;
         $this->appendProperty();

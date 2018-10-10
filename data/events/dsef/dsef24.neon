@@ -15,12 +15,13 @@ parameters:
                         required: true
                     born:
                         required: true
-                post_contact_p:
-                    address:
-                        required: true
                 person_accommodation:
                     single:
                         required: false
+                post_contact_p:
+                    address:
+                        required: true
+
 
 events:
     dsef24:

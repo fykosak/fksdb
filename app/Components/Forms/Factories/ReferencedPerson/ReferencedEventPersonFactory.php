@@ -69,7 +69,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
 
         if ($sub === 'person_accommodation') {
-            $control = $this->personAccommodationFactory->createField('matrix', $this->eventId);
+            $control = $this->personAccommodationFactory->createField($fieldName, $this->eventId);
             $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
             return $control;
         }
