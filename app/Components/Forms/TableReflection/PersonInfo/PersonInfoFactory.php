@@ -18,6 +18,7 @@ use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentDField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneParentMField;
 use FKSDB\Components\Forms\Factories\PersonInfo\UkLoginField;
+use FKSDB\Components\Forms\TableReflection\TableReflectionFactory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
 

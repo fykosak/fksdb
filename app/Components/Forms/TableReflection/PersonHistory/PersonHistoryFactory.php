@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
+use FKSDB\Components\Forms\TableReflection\TableReflectionFactory;
 use Nette\ArgumentOutOfRangeException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
