@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>): IState => 
     };
 };
 
-const mapStateToProps = (state): IState => {
+const mapStateToProps = (state: IAccommodationStore): IState => {
 
     return {
         data: state.accommodation,
