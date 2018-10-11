@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelEventParticipant;
 use ORM\IModel;
 
 /**
@@ -8,7 +9,7 @@ use ORM\IModel;
 class ServiceEventParticipant extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
-    protected $modelClassName = 'ModelEventParticipant';
+    protected $modelClassName = 'FKSDB\ORM\ModelEventParticipant';
 
     public function save(IModel &$model) {
         try {
@@ -21,4 +22,17 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
+    public function updateModel(IModel $model, $data, $alive = true) {
+        /**
+         * @var $model ModelEventParticipant
+         */
+        parent::updateModel($model, $data, $alive);
+        if (!$alive && !$model->isNew()) {
+            $person = $model->getPerson();
+            if ($person) {
+                $person->removeAccommodationForEvent($model->event_id);
+            }
+
+        }
+    }
 }

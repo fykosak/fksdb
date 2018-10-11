@@ -3,6 +3,10 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\React\Fyziklani\Results;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
@@ -161,19 +165,19 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function createComponentResultsView() {
-        return new Results('results-view');
+        return new ResultsView($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentResultsPresentation() {
-        return new Results('results-presentation');
+        return new ResultsPresentation($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentTeamStatistics() {
-        return new Results('team-statistics');
+        return new TeamStatistics($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentTaskStatistics() {
-        return new Results('task-statistics');
+        return new TaskStatistics($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     /**

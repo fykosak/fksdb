@@ -19,7 +19,7 @@ class EventFactory extends Object {
 		'push' => 'createPush',
 	);
 
-	private $repositoryCache = array();
+	private $repositoryCache = [];
 
 	public function createEvent($type, $data) {
 		if (!array_key_exists($type, self::$typeMap)) {

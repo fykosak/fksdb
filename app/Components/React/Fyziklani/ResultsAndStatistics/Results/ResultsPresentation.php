@@ -5,7 +5,7 @@ namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results;
 
 class ResultsPresentation extends Results {
 
-    protected function getMode() {
+    public function getMode(): string {
         return 'presentation';
     }
 }

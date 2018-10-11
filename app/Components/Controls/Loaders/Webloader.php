@@ -15,10 +15,10 @@ abstract class Webloader extends Control {
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
 
-    private $files = array();
-    private $inlines = array();
+    private $files = [];
+    private $inlines = [];
 
-    public function addFile($file, $attributes = array()) {
+    public function addFile($file, $attributes = []) {
         $hash = $file . implode(':', $attributes);
         $this->files[$hash] = array(
             self::FILENAME => $file,
@@ -27,7 +27,7 @@ abstract class Webloader extends Control {
         $this->invalidateControl();
     }
 
-    public function removeFile($file, $attributes = array()) {
+    public function removeFile($file, $attributes = []) {
         $hash = $file . implode(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
@@ -48,7 +48,7 @@ abstract class Webloader extends Control {
     public function render() {
         $args = func_get_args();
 
-        $files = array();
+        $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
                 $files[] = array(
@@ -60,7 +60,7 @@ abstract class Webloader extends Control {
             foreach ($args as $arg) {
                 $files[] = array(
                     self::FILENAME => $arg,
-                    self::ATTRIBUTES => array(),
+                    self::ATTRIBUTES => [],
                 );
             }
         }

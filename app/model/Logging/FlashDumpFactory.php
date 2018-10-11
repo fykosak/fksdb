@@ -2,8 +2,7 @@
 
 namespace FKSDB\Logging;
 
-use FKSDB\Logging\FlashMessageDump;
-use Nette\InvalidArgumentException;
+
 use Nette\MemberAccessException;
 use Nette\Utils\Strings;
 
@@ -20,7 +19,7 @@ class FlashDumpFactory {
 
     private $configuration;
 
-    private $cache = array();
+    private $cache = [];
 
     function __construct($configuration) {
         $this->configuration = $configuration;

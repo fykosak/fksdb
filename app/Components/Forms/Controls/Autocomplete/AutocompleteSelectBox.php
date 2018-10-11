@@ -21,7 +21,7 @@ class AutocompleteSelectBox extends TextBase {
     const SELECTOR_CLASS = 'autocompleteSelect';
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
-    const INTERNAL_DELIMITER  = ',';
+    const INTERNAL_DELIMITER = ',';
     const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
     /**
@@ -122,12 +122,12 @@ class AutocompleteSelectBox extends TextBase {
         $defaultValue = $this->getValue();
         if ($defaultValue) {
             if ($this->isMultiselect()) {
-                $defaultTextValue = array();
+                $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
-                $control->value = implode(self::INTERNAL_DELIMITER , $defaultValue);
+                $control->value = implode(self::INTERNAL_DELIMITER, $defaultValue);
             } else {
                 $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
                 $control->value = $defaultValue;
@@ -164,9 +164,9 @@ class AutocompleteSelectBox extends TextBase {
             if (is_array($value)) {
                 $this->value = $value;
             } else if ($value === '') {
-                $this->value = array();
+                $this->value = [];
             } else {
-                $this->value = explode(self::INTERNAL_DELIMITER , $value);
+                $this->value = explode(self::INTERNAL_DELIMITER, $value);
             }
         } else {
             if ($value === '') {
@@ -195,7 +195,7 @@ class AutocompleteSelectBox extends TextBase {
         $this->multiselect = $multiselect;
     }
 
-    public function setItems(array $items, $useKeys = TRUE) {
+    public function setItems() {
         throw new NotImplementedException('Use setDataProvider instead.');
     }
 

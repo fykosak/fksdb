@@ -6,9 +6,9 @@ use AuthenticatedPresenter;
 use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelRole;
 use IContestPresenter;
-use ModelContestant;
-use ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
@@ -101,7 +101,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

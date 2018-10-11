@@ -6,7 +6,7 @@ use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 
 abstract class Statistics extends ResultsAndStatistics {
 
-    protected final function getComponentName() {
+    public final function getComponentName():string {
         return 'statistics';
     }
 

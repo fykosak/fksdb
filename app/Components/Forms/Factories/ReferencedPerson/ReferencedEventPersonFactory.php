@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\PersonAccommodationFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Forms\Controls\HiddenField;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
@@ -69,7 +69,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
     public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
 
         if ($sub === 'person_accommodation') {
-            $control = $this->personAccommodationFactory->createField('matrix', $this->eventId);
+            $control = $this->personAccommodationFactory->createField($fieldName, $this->eventId);
             $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
             return $control;
         }
@@ -81,7 +81,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
             return null;
         }
         if ($sub === 'person_accommodation') {
-            //   return $person->getAccommodationByEventId($this->eventId);
+            return $person->getAccommodationByEventId($this->eventId);
         }
         return parent::getPersonValue($person, $sub, $field, $acYear, $options);
     }

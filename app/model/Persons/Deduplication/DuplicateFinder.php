@@ -4,7 +4,7 @@ namespace Persons\Deduplication;
 
 use FKSDB\Config\GlobalParameters;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidArgumentException;
+
 use Nette\Utils\Strings;
 use ServicePerson;
 
@@ -40,13 +40,13 @@ class DuplicateFinder {
         foreach ($this->servicePerson->getTable()->select("person.*, person_info:email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
-                $buckets[$bucketKey] = array();
+                $buckets[$bucketKey] = [];
             }
             $buckets[$bucketKey][] = $person;
         }
 
         /* Run quadratic comparison in each bucket */
-        $pairs = array();
+        $pairs = [];
         foreach ($buckets as $bucket) {
             foreach ($bucket as $personA) {
                 foreach ($bucket as $personB) {
@@ -55,10 +55,10 @@ class DuplicateFinder {
                     }
                     $score = $this->getSimilarityScore($personA, $personB);
                     if ($score > $this->parameters['threshold']) {
-                        $pairs[$personA->person_id] = array(
+                        $pairs[$personA->person_id] = [
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
-                        );
+                        ];
                         continue; // we search only pairs, so each equivalence class is decomposed into pairs
                     }
                 }
@@ -111,7 +111,7 @@ class DuplicateFinder {
 
     private function getDifferentPersons(ActiveRow $person) {
         if (!isset($person->duplicates)) {
-            return array();
+            return [];
         }
         $differentPersonIds = [];
         foreach (explode(',', $person->duplicates) as $row) {

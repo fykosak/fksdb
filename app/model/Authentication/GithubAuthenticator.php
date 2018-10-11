@@ -3,9 +3,9 @@
 namespace Authentication;
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\ModelLogin;
 use FullHttpRequest;
 use Github\Events\Event;
-use ModelLogin;
 use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
@@ -21,7 +21,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
-	const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
     /**
      * @var GlobalParameters
@@ -35,7 +35,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param Request $request
-     * @return ModelLogin
+     * @return \FKSDB\ORM\ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate(FullHttpRequest $request) {
@@ -57,12 +57,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
 
-        $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
+        $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
 
-        if (!$login) {
+        if (!$row) {
             throw new NoLoginException();
         }
-
+        $login = ModelLogin::createFromTableRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

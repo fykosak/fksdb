@@ -11,7 +11,7 @@ use Nette\Object;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractAdjustment extends Object implements IFormAdjustment {
@@ -33,7 +33,7 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
     }
 
     /**
-     * 
+     *
      * @param string $mask
      * @return IControl[]
      */
@@ -43,9 +43,9 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
-        $result = array();
+        $result = [];
         foreach ($keys as $key) {
-            $matches = array();
+            $matches = [];
             if (preg_match($pattern, $key, $matches)) {
                 if (isset($matches[1])) {
                     $result[$matches[1]] = $this->pathCache[$key];
@@ -58,7 +58,7 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
     }
 
     private function setForm($form) {
-        $this->pathCache = array();
+        $this->pathCache = [];
         foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
             $path = $control->lookupPath('Nette\Forms\Form');
             $path = str_replace('_1', '', $path);

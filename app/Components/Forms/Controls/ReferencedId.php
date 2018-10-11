@@ -2,13 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Utils\Promise;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use ORM\IModel;
 use ORM\IService;
+use Submits\StorageException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -182,6 +183,8 @@ class ReferencedId extends HiddenField {
             } catch (ModelDataConflictException $e) {
                 $e->setReferencedId($this);
                 throw $e;
+            } catch (StorageException $e) {
+                $this->getForm()->addError($e->getMessage());
             }
         });
         $this->setValue($referencedId);
@@ -193,9 +196,8 @@ class ReferencedId extends HiddenField {
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate[] = function (Form $form) use ($that) {
-                $that->createPromise();
+            $obj->onValidate[] = function () {
+                $this->createPromise();
             };
             $this->attachedOnValidate = true;
         }

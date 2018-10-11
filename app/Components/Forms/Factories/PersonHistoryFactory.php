@@ -34,7 +34,7 @@ class PersonHistoryFactory {
      * @param integer $acYear
      * @return BaseControl
      */
-    public function createField($fieldName, $acYear) {
+    public function createField($fieldName, $acYear): BaseControl {
         switch ($fieldName) {
             case 'class':
                 return new ClassField();

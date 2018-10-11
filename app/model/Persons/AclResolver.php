@@ -3,8 +3,8 @@
 namespace Persons;
 
 use Authorization\ContestAuthorizator;
-use ModelContest;
-use ModelPerson;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelPerson;
 use Nette\Object;
 
 /**
@@ -20,7 +20,7 @@ class AclResolver extends Object implements IVisibilityResolver, IModifiabilityR
     private $contestAuthorizator;
 
     /**
-     * @var ModelContest
+     * @var \FKSDB\ORM\ModelContest
      */
     private $contest;
 

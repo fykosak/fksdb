@@ -12,7 +12,7 @@ use Nette\Utils\Json;
  * Class ReactComponent
  * @property FileTemplate template
  */
-abstract class ReactComponent extends Control {
+abstract class ReactComponent extends Control implements IReactComponent {
     /**
      * @var bool
      */
@@ -29,17 +29,6 @@ abstract class ReactComponent extends Control {
             $obj->registerJSFile('js/bundle-all.min.js');
         }
     }
-
-    protected abstract function getComponentName();
-
-    protected abstract function getModuleName();
-
-    protected abstract function getMode();
-
-    /**
-     * @return string
-     */
-    protected abstract function getData();
 
     public final function render() {
         $this->template->moduleName = $this->getModuleName();

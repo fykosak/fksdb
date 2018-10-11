@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelAuthToken;
 use Nette\Database\Connection;
 use Nette\DateTime;
 use Nette\Http\Request;
@@ -13,7 +14,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     const SESSION_ID_LENGTH = 32;
 
     protected $tableName = DbNames::TAB_GLOBAL_SESSION;
-    protected $modelClassName = 'ModelGlobalSession';
+    protected $modelClassName = 'FKSDB\ORM\ModelGlobalSession';
 
     /**
      * @var Request
@@ -26,7 +27,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     }
 
     /**
-     * 
+     *
      * @param string $type
      * @param DateTime $until
      * @param DateTime $since
@@ -43,13 +44,13 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             $sessionId = Strings::random(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
 
-        $session = $this->createNew(array(
+        $session = $this->createNew([
             'session_id' => $sessionId,
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
             'remote_ip' => $this->request->getRemoteAddress(),
-        ));
+        ]);
         $this->save($session);
         $this->getConnection()->commit();
 

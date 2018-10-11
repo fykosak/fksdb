@@ -3,7 +3,14 @@
 namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\React\Fyziklani\FyziklaniModule;
+use FKSDB\ORM\ModelEvent;
+use FyziklaniModule\BasePresenter;
+use Nette\ArgumentOutOfRangeException;
+use Nette\DateTime;
 use ORM\Services\Events\ServiceFyziklaniTeam;
+use ServiceBrawlRoom;
+use ServiceBrawlTeamPosition;
+use ServiceFyziklaniTask;
 
 abstract class ResultsAndStatistics extends FyziklaniModule {
 
@@ -15,7 +22,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
 
     /**
      *
-     * @var \ServiceFyziklaniTask
+     * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
 
@@ -26,31 +33,33 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
     private $serviceFyziklaniSubmit;
 
     public function __construct(
-        $mode,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceBrawlRoom $serviceBrawlRoom,
-        \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
-        \ModelEvent $event
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceBrawlRoom $serviceBrawlRoom,
+        ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
+        ModelEvent $event
     ) {
         parent::__construct($serviceBrawlRoom, $event);
-         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    public final function getData() {
-        return null;
+    public final function getData(): string {
+        return '';
     }
 
     protected function getActions() {
         $actions = parent::getActions();
-        return $actions['refresh'] = $this->link('refresh!');
+        $actions['refresh'] = $this->link('refresh!');
+        return $actions;
 
     }
 
     public function handleRefresh() {
         $presenter = $this->getPresenter();
-
+        if (!($presenter instanceof BasePresenter)) {
+            throw new ArgumentOutOfRangeException();
+        }
         $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
         /**
          * @var \DateTime $lastUpdated
@@ -70,14 +79,14 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
                 'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-            'lastUpdated' => (new \DateTime())->__toString(),
+            'lastUpdated' => (new DateTime())->__toString(),
             'isOrg' => $isOrg,
             'refreshDelay' => $this->getEvent()->getParameter('refreshDelay'),
             'submits' => [],
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent()->event_id, $lastUpdated);
+            //   $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent()->event_id, $lastUpdated);
         }
         //  if (!$lastUpdated) {
         $result['rooms'] = $this->getRooms();

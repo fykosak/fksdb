@@ -24,14 +24,13 @@ class StoredQueryGrid extends BaseGrid {
     private $exportFormatFactory;
 
     function __construct(StoredQuery $storedQuery, ExportFormatFactory $exportFormatFactory) {
+        parent::__construct();
         $this->storedQuery = $storedQuery;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
@@ -67,7 +66,7 @@ class StoredQueryGrid extends BaseGrid {
         if (!$this->storedQuery->getQueryPattern()->isNew()) {
             $this->addGlobalButton('show')
                     ->setLabel(_('Podrobnosti dotazu'))
-                    ->setClass('btn btn-sm btn-default')
+                    ->setClass('btn btn-sm btn-secondary')
                     ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
             if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
                 $parameters = array('qid' => $qid, 'bc' => null);
@@ -79,7 +78,7 @@ class StoredQueryGrid extends BaseGrid {
                 }
                 $this->addGlobalButton('qid')
                         ->setLabel(_('Odkaz'))
-                        ->setClass('btn btn-sm btn-default')
+                        ->setClass('btn btn-sm btn-secondary')
                         ->setLink($this->getPresenter()->link('Export:execute', $parameters));
             }
         }

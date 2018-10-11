@@ -29,6 +29,7 @@ class StoredQueriesGrid extends BaseGrid {
     private $isFilteredByTag = false;
 
     function __construct(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
+        parent::__construct();
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->contestAuthorizator = $contestAuthorizator;
     }
@@ -47,8 +48,6 @@ class StoredQueriesGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
         //
         // data
         //
@@ -62,7 +61,7 @@ class StoredQueriesGrid extends BaseGrid {
         //
         $this->addColumn('name', _('Název'));
         $this->addColumn('description', _('Popis'))->setTruncate(self::DESCRIPTION_TRUNC);
-        $this->addColumn('tags', _('Štítky'))->setRenderer(function (\ModelStoredQuery $row) {
+        $this->addColumn('tags', _('Štítky'))->setRenderer(function (\FKSDB\ORM\ModelStoredQuery $row) {
             $baseEl = Html::el('div')->addAttributes(['class' => 'storedQueryTags']);
             foreach ($row->getMStoredQueryTags() as $tag) {
                 $baseEl->add(Html::el('span')

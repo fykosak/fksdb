@@ -10,7 +10,7 @@ use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
@@ -23,7 +23,7 @@ class ContributionsFromXML extends Stage {
     private $data;
 
     /**
-     * @var array   contribution type => xml element 
+     * @var array   contribution type => xml element
      */
     private $contributionFromXML;
 
@@ -65,8 +65,8 @@ class ContributionsFromXML extends Stage {
         $this->taskContributionService->getConnection()->beginTransaction();
 
         foreach ($this->contributionFromXML as $type => $XMLElement) {
-            // parse contributors            
-            $contributors = array();
+            // parse contributors
+            $contributors = [];
             foreach (explode(self::DELIMITER, (string) $XMLTask->{$XMLElement}) as $signature) {
                 $signature = trim($signature);
                 if (!$signature) {

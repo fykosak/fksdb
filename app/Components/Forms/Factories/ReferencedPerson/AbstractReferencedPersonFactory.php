@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
+use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
-use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -13,7 +13,7 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -89,7 +89,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      */
     protected $addressFactory;
 
-    function __construct(AddressFactory $addressFactory, FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
+    public function __construct(AddressFactory $addressFactory, FlagFactory $flagFactory, ServicePerson $servicePerson, PersonFactory $personFactory, ReferencedPersonHandlerFactory $referencedPersonHandlerFactory, PersonProvider $personProvider, ServiceFlag $serviceFlag, PersonInfoFactory $personInfoFactory, PersonHistoryFactory $personHistoryFactory) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
@@ -112,7 +112,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
      */
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
-        $handler = $this->referencedPersonHandlerFactory->create($acYear);
+        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
 
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
 
@@ -241,7 +241,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = array()) {
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
         if (in_array($sub, array(
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
@@ -332,9 +332,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
             }
         }
+        return false;
     }
 
     protected function createSearchControl($searchType) {
+
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
@@ -344,6 +346,9 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 break;
             case self::SEARCH_ID:
                 $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
+                break;
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
         return $control;
     }
@@ -361,6 +366,9 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 return function ($term) use ($service) {
                     return $service->findByPrimary($term);
                 };
+                break;
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
@@ -372,9 +380,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 };
                 break;
             case self::SEARCH_ID:
-                return function ($term) {
-                    return array();
+                return function () {
+                    return [];
                 };
+            default:
+                throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 

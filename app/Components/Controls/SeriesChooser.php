@@ -10,7 +10,7 @@ use ServiceContest;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesChooser extends Control {
@@ -54,6 +54,7 @@ class SeriesChooser extends Control {
     private $valid;
 
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
+        parent::__construct();
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
         $this->serviceContest = $serviceContest;
@@ -155,7 +156,7 @@ class SeriesChooser extends Control {
 
         $lastSeries = $this->seriesCalculator->getLastSeries($contest, $year);
         if ($lastSeries === null) {
-            return array();
+            return [];
         } else {
             return range(1, $lastSeries);
         }

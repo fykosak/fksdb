@@ -4,20 +4,28 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
-use ModelEvent;
-use Nette\DI\Container;
+use FKSDB\ORM\ModelEvent;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
+use ORM\Services\Events\ServiceFyziklaniTeam;
+use ServiceFyziklaniTask;
 
 class FyziklaniFactory {
+    /**
+     * @var ServiceFyziklaniTeam
+     */
+    private $serviceFyziklaniTeam;
+    /**
+     * @var ServiceFyziklaniTask
+     */
+    private $serviceFyziklaniTask;
 
-    private $container;
-
-    public function __construct(Container $container) {
-        $this->container = $container;
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    private function createPointsField(ModelEvent $event) {
+    private function createPointsField(ModelEvent $event): RadioList {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
         foreach ($event->getParameter('availablePoints') as $points) {
@@ -28,36 +36,34 @@ class FyziklaniFactory {
         return $field;
     }
 
-    private function createTeamField() {
+    private function createTeamField(): TextInput {
         $field = new TextInput(_('Tým'));
         $field->setDisabled(true);
         return $field;
     }
 
-    private function createTeamIdField() {
+    private function createTeamIdField(): TextInput {
         $field = new TextInput(_('ID týmu'));
         $field->setDisabled(true);
         return $field;
     }
 
-    private function createTaskField() {
+    private function createTaskField(): TextInput {
         $field = new TextInput(_('Úloha'));
         $field->setDisabled(true);
         return $field;
     }
 
-    public function createEntryForm($teams, $tasks) {
-        $control = new TaskCodeInput();
-        $control->setTasks($tasks);
-        $control->setTeams($teams);
+    public function createEntryForm($eventId): TaskCodeInput {
+        $control = new TaskCodeInput($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $eventId);
         return $control;
     }
 
     /**
-     * @param ModelEvent $event
+     * @param \FKSDB\ORM\ModelEvent $event
      * @return FormControl
      */
-    public function createEntryQRForm(ModelEvent $event) {
+    public function createEntryQRForm(ModelEvent $event): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('taskCode')->setAttribute('readonly', true);
@@ -70,7 +76,7 @@ class FyziklaniFactory {
         return $control;
     }
 
-    public function createEditForm(ModelEvent $event) {
+    public function createEditForm(ModelEvent $event): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 

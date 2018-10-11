@@ -2,19 +2,19 @@
 
 namespace Events\Model\Grid;
 
-use ModelEvent;
+use FKSDB\ORM\ModelEvent;
 use ORM\Tables\TypedTableSelection;
 use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource where()
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 

@@ -28,8 +28,6 @@ class EventAccommodationGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $this['paginator']->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
 
         $accommodations = $this->serviceEventAccommodation->getTable()->where('event_id', $this->eventId);
 
@@ -44,7 +42,7 @@ class EventAccommodationGrid extends BaseGrid {
             return $row->date->format('Y-m-d');
         });
         $this->addColumn('capacity', _('Capacity'))->setRenderer(function ($row) {
-            $model = \ModelEventAccommodation::createFromTableRow($row);
+            $model = \FKSDB\ORM\ModelEventAccommodation::createFromTableRow($row);
             return $model->getUsedCapacity() . '/' . $row->capacity;
         });
         $this->addButton('edit', _('Upravit'))->setText('Upravit')//todo i18n

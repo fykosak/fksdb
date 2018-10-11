@@ -8,26 +8,43 @@ import logger from 'redux-logger';
 import { config } from '../../../config/';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
-import Accommodation from './accommodation';
 import InputConnector from './input-connector';
+import Matrix from './matrix/index';
+import Single from './single';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];
     input: HTMLInputElement;
+    mode: 'matrix' | 'multiNight' | 'multiHotels' | 'boolean' | string;
 }
 
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>
                 <>
                     <InputConnector input={this.props.input}/>
-                    <Accommodation accommodationDef={this.props.accommodationDef}/>
+                    {this.getComponentByMode()}
                 </>
             </Provider>
         );
+    }
+
+    private getComponentByMode(): JSX.Element {
+        switch (this.props.mode) {
+            case 'matrix':
+                return <Matrix accommodationDef={this.props.accommodationDef}/>;
+
+            case 'single':
+                return <Single accommodationDef={this.props.accommodationDef}/>;
+            case 'multiNight':
+            case 'multiHotels':
+            default:
+                throw new Error('no match');
+        }
+
     }
 }

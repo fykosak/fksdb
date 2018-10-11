@@ -16,7 +16,7 @@ class PresenterBuilder {
      * @var PresenterFactory
      */
     private $presenterFactory;
-    private $presenterCache = array();
+    private $presenterCache = [];
 
     function __construct(PresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
@@ -32,14 +32,14 @@ class PresenterBuilder {
      * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
      */
-    public function preparePresenter($presenterName, $action, $params, $baseParams = array(), $newInstance = false) {
+    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : array();
+        $params = $params ? : [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {

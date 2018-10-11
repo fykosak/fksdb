@@ -3,8 +3,8 @@
 namespace Submits;
 
 use fks_pdf_parser_exception;
+use FKSDB\ORM\ModelSubmit;
 use FPDI;
-use ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 

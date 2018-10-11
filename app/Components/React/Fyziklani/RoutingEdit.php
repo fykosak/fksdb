@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\React\Fyziklani;
 
+use FKSDB\ORM\ModelEvent;
 use Nette\Utils\Json;
 
 /**
@@ -22,27 +23,26 @@ class RoutingEdit extends FyziklaniModule {
         $mode,
         \ServiceBrawlRoom $serviceBrawlRoom,
         \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
-        \ModelEvent $event
+        ModelEvent $event
     ) {
         parent::__construct($serviceBrawlRoom, $event);
 
         $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-        //$this->mode = $mode;
     }
 
     public function setData($data) {
         $this->data = $data;
     }
 
-    public function getData() {
+    public function getData(): string {
         return Json::encode($this->data);
     }
 
-    protected function getMode() {
+    public function getMode(): string {
         return null;
     }
 
-    protected function getComponentName() {
+    public function getComponentName(): string {
         return 'routing';
     }
 }

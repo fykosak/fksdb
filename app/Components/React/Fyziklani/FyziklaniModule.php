@@ -3,6 +3,7 @@
 namespace FKSDB\Components\React\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\ORM\ModelEvent;
 
 abstract class FyziklaniModule extends ReactComponent {
 
@@ -12,17 +13,18 @@ abstract class FyziklaniModule extends ReactComponent {
     private $serviceBrawlRoom;
 
     /**
-     * @var \ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
-    public function __construct(\ServiceBrawlRoom $serviceBrawlRoom, \ModelEvent $event) {
+    public function __construct(\ServiceBrawlRoom $serviceBrawlRoom, ModelEvent $event) {
         parent::__construct();
         $this->serviceBrawlRoom = $serviceBrawlRoom;
         $this->event = $event;
     }
 
-    protected final function getModuleName() {
+
+    public final function getModuleName(): string {
         return 'fyziklani';
     }
 

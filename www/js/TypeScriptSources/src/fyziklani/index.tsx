@@ -33,7 +33,7 @@ const registerSubmitForm = (element: Element, mode: string, rawData: string, act
 const registerResults = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
 
     switch (mode) {
-        case 'results-presentation':
+        case 'presentation':
             element.parentElement.className = 'container-fluid';
             document.querySelectorAll('.breadcrumb')
                 .forEach((breadcrumbElement: Element) => {
@@ -45,14 +45,20 @@ const registerResults = (element: Element, mode: string, rawData: string, action
                 });
             ReactDOM.render(<Results mode={'presentation'} actions={actions}/>, element);
             return true;
-        case 'results-view':
+        case 'view':
             ReactDOM.render(<Results mode={'view'} actions={actions}/>, element);
             return true;
-        case 'team-statistics':
-            ReactDOM.render(<Statistics mode={'team'} actions={actions}/>, element);
-            return true;
-        case 'task-statistics':
-            ReactDOM.render(<Statistics mode={'task'} actions={actions}/>, element);
+        default:
+            throw Error('Not implement');
+    }
+};
+
+const registerStatistics = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+
+    switch (mode) {
+        case 'team':
+        case 'task':
+            ReactDOM.render(<Statistics mode={mode} actions={actions}/>, element);
             return true;
         default:
             throw Error('Not implement');
@@ -70,6 +76,8 @@ export const fyziklani = (element: Element, module: string, component: string, m
             return registerResults(element, mode, rawData, actions);
         case 'submit-form':
             return registerSubmitForm(element, mode, rawData, actions);
+        case 'statistics':
+            return registerStatistics(element, mode, rawData, actions);
         default:
             throw new Error('not implement');
     }

@@ -1,19 +1,21 @@
 <?php
 
+use FKSDB\ORM\ModelStoredQuery;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_STORED_QUERY;
-    protected $modelClassName = 'ModelStoredQuery';
-    
+    protected $modelClassName = 'FKSDB\ORM\ModelStoredQuery';
+
     /**
      *
-     * @var ServiceStoredQueryTag 
+     * @var ServiceStoredQueryTag
      */
     private $serviceStoredQueryTag;
-    
+
     public function __construct(\Nette\Database\Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
         parent::__construct($connection);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
@@ -21,7 +23,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * 
+     *
      * @param string|null $qid
      * @return ModelStoredQuery|null
      */
@@ -32,7 +34,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         $result = $this->getTable()->where('qid', $qid)->fetch();
         return $result ? : null;
     }
-    
+
     /**
      * @param int|null $tagTypeId
      * @return Nette\Database\Table\Selection|null

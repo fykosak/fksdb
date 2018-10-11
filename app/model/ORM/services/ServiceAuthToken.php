@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelLogin;
 use Nette\DateTime;
 use Nette\Utils\Strings;
 
@@ -11,7 +13,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     protected $tableName = DbNames::TAB_AUTH_TOKEN;
-    protected $modelClassName = 'ModelAuthToken';
+    protected $modelClassName = 'FKSDB\ORM\ModelAuthToken';
 
     /**
      *
@@ -50,13 +52,13 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 $tokenData = Strings::random(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNew(array(
+            $token = $this->createNew([
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
                 'type' => $type
-            ));
+            ]);
         }
         $token->until = $until;
 
@@ -103,7 +105,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->dispose($token);
         }
     }
-    
+
     public function findTokensByEventId($eventId) {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)

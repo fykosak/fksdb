@@ -1,10 +1,13 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
 
 /**
- * Class ModelEventAccommodation
+ * Class FKSDB\ORM\ModelEventAccommodation
  * @package ORM\Models\Events
  * @property integer event_accommodation_id
  * @property integer event_id
@@ -14,8 +17,8 @@ use Nette\Security\IResource;
  * @property integer price_kc
  * @property integer price_eur
  * @property DateTime date
- * @property \Nette\Database\Table\ActiveRow address
- * @property \Nette\Database\Table\ActiveRow event
+ * @property ActiveRow address
+ * @property ActiveRow event
  */
 class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
     const ACC_DATE_FORMAT = 'Y-m-d';
@@ -25,18 +28,18 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return \ModelEvent
+     * @return \FKSDB\ORM\ModelEvent
      */
     public function getEvent() {
-        return \ModelEvent::createFromTableRow($this->event);
+        return \FKSDB\ORM\ModelEvent::createFromTableRow($this->event);
     }
 
     /**
-     * @return \ModelAddress
+     * @return \FKSDB\ORM\ModelAddress
      */
     public function getAddress() {
         if ($this->address) {
-            return \ModelAddress::createFromTableRow($this->address);
+            return \FKSDB\ORM\ModelAddress::createFromTableRow($this->address);
         }
         return null;
     }

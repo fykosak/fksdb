@@ -1,26 +1,33 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
+/**
+ * Class FKSDB\ORM\ModelEventOrg
+ * @property ActiveRow person
+ * @property ActiveRow event
+ */
 class ModelEventOrg extends AbstractModelSingle implements IResource {
 
     /**
      * @return ModelPerson
      */
     public function getPerson() {
-        $this->person_id; // stupid touch
-        $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-        return $row ? ModelPerson::createFromTableRow($row) : null;
+        return ModelPerson::createFromTableRow($this->person);
     }
-    
+
     /**
      * @return ModelEvent
      */
     public function getEvent() {
-        return ModelEvent::createFromTableRow($this->ref(DbNames::TAB_EVENT, 'event_id'));
+        return ModelEvent::createFromTableRow($this->event);
     }
-    
+
     public function getResourceId() {
         return 'eventOrg';
     }

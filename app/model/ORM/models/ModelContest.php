@@ -1,5 +1,8 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
 use Nette\Utils\Strings;
 
 /**

@@ -1,6 +1,13 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
+use ModelMPersonHasFlag;
+use ModelMPostContact;
 use Nette\Security\IResource;
+use YearCalculator;
 
 /**
  *
@@ -265,9 +272,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @internal To get active orgs call ModelLogin::getActiveOrgs
+     * @internal To get active orgs call FKSDB\ORM\ModelLogin::getActiveOrgs
      * @param YearCalculator $yearCalculator
-     * @return array of ModelOrg indexed by contest_id
+     * @return array of FKSDB\ORM\ModelOrg indexed by contest_id
      */
     public function getActiveOrgs(YearCalculator $yearCalculator) {
         $result = [];
@@ -285,7 +292,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @param YearCalculator $yearCalculator
-     * @return array of ModelContestant indexed by contest_id
+     * @return array of FKSDB\ORM\ModelContestant indexed by contest_id
      */
     public function getActiveContestants(YearCalculator $yearCalculator) {
         $result = [];
@@ -351,6 +358,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @throws \Nette\Utils\JsonException
      */
     public function getAccommodationByEventId($eventId) {
+        if (!$eventId) {
+            return null;
+        }
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         $accommodations = [];
         foreach ($query as $row) {

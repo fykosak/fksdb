@@ -5,8 +5,8 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelTaskContribution;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
@@ -223,10 +223,10 @@ class PointsPresenter extends SeriesPresenter {
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         if (!$person) {
-            return array();
+            return [];
         }
 
-        $taskIds = array();
+        $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }

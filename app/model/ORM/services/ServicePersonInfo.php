@@ -8,7 +8,7 @@ use ORM\IModel;
 class ServicePersonInfo extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON_INFO;
-    protected $modelClassName = 'ModelPersonInfo';
+    protected $modelClassName = 'FKSDB\ORM\ModelPersonInfo';
 
     public function createNew($data = null) {
         if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
@@ -18,7 +18,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::createNew($data);
     }
 
-    public function updateModel(IModel $model, $data) {
+    public function updateModel(IModel $model, $data, $alive = true) {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

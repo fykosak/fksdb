@@ -112,8 +112,8 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     private function isCzSkSchool($school_id) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(array('school_id' => $school_id))->fetch();
-        if (in_array($country->country_iso, array('CZ', 'SK'))) {
+        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $school_id])->fetch();
+        if (in_array($country->country_iso, ['CZ', 'SK'])) {
             return true;
         }
         return false;

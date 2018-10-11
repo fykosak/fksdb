@@ -61,19 +61,19 @@ class AESOPContestant extends StoredQueryPostProcessing {
     private function filterCategory($data) {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
-        $studyYears = array();
+        $studyYears = [];
         $category = $this->getCategory();
         if ($category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($category);
             $studyYears = is_array($studyYears) ? $studyYears : array($studyYears);
         }
 
-        $graduationYears = array();
+        $graduationYears = [];
         foreach ($studyYears as $studyYear) {
             $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->parameters['ac_year']);
         }
 
-        $result = array();
+        $result = [];
         foreach ($data as $row) {
             if (!in_array($row[self::END_YEAR], $graduationYears)) {
                 continue;
@@ -84,7 +84,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     private function calculateRank($data) {
-        $points = array();
+        $points = [];
         foreach ($data as $row) {
             if (!isset($points[$row[self::POINTS]])) {
                 $points[$row[self::POINTS]] = 1;
@@ -94,7 +94,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
         }
 
         krsort($points);
-        $ranks = array();
+        $ranks = [];
         $cumsum = 0;
         foreach ($points as $pointsValue => $count) {
             $ranks[$pointsValue] = $cumsum + 1;

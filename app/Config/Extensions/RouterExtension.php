@@ -16,10 +16,10 @@ class RouterExtension extends CompilerExtension {
         parent::loadConfiguration();
 
         $container = $this->getContainerBuilder();
-        $config = $this->getConfig(array(
-            'routes' => array(),
+        $config = $this->getConfig([
+            'routes' => [],
             'disableSecured' => false,
-        ));
+        ]);
 
         $router = $container->getDefinition('router');
         $disableSecured = $config['disableSecured'];
@@ -29,7 +29,7 @@ class RouterExtension extends CompilerExtension {
             if (isset($action['flags'])) {
                 $flags = $action['flags'];
                 if (!is_array($flags)) {
-                    $flags = array($flags);
+                    $flags = [$flags];
                 }
                 foreach ($flags as $flag) {
                     $binFlag = constant("Nette\Application\Routers\Route::$flag");
@@ -41,7 +41,7 @@ class RouterExtension extends CompilerExtension {
                 unset($action['flags']);
             }
 
-            $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?, ?);', array($mask, $action, $flagsBin));
+            $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?, ?);', [$mask, $action, $flagsBin]);
         }
     }
 

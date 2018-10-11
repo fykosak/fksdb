@@ -1,8 +1,9 @@
 parameters:
     events:
-        fol:
+        fol8:
             appCond: or(regOpen(), role('admin'))
             modCond: or(neg(param('migrated')), role('admin'))
+            rulesVersion: 2
             participant:
                 person:
                     other_name:
@@ -29,9 +30,9 @@ parameters:
 
 
 events:
-    fol:
+    fol8:
         event_type_id: 9
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+        eventYears: [8] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
         formLayout: fol.form
         paramScheme:
@@ -59,7 +60,7 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.fol.appCond%
+                        condition: %events.fol8.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
                             - Events\Transitions\MailSender(team, *)
@@ -83,24 +84,24 @@ events:
                         label: _('Název týmu') # i18n
                         required: true
                         visible: true # or condition
-                        modifiable: %events.fol.appCond%
+                        modifiable: %events.fol8.appCond%
                     category:
                         label: _('Kategorie') # i18n
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                        factory: Chooser(_('Category'), Events\Spec\Fol\CategoryProcessing())
+                        factory: Chooser(_('Category'), Events\Spec\Fol\CategoryProcessing(%events.fol8.rulesVersion%))
                     note:
                         label: _('Kontaktní adresa')
                         required: false
                         visible: true
-                        modifiable: %events.fol.modCond%
+                        modifiable: %events.fol8.modCond%
                         description: _('Pro zaslání případné odměny.')
                     password:
                         label: _('Herní heslo') # i18n
                         required: state('__init')
                         visible: true
-                        modifiable: %events.fol.modCond%
+                        modifiable: %events.fol8.modCond%
                         description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
                         factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
 
@@ -119,7 +120,7 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.fol.modCond%
+                        condition: %events.fol8.modCond%
                         visible: false
                         label: _('Přidat člena')
                         onExecuted:
@@ -131,7 +132,7 @@ events:
                         condition: role('admin')
                         visible: false
                     applied->__terminated:
-                        condition: %events.fol.modCond%
+                        condition: %events.fol8.modCond%
                         label: _('Smazat člena')
                         visible: false
 
@@ -139,9 +140,9 @@ events:
                     person_id:
                         label: _('Osoba')
                         visible: true
-                        modifiable: %events.fol.modCond%
+                        modifiable: %events.fol8.modCond%
                         determining: true
-                        factory: RefPerson(%events.fol.participant%, email, true, role('admin'), false)
+                        factory: RefPerson(%events.fol8.participant%, email, true, role('admin'), false)
 
 
 
@@ -182,7 +183,7 @@ events:
 
 
             processings:
-                - Events\Spec\Fol\CategoryProcessing()
+                - Events\Spec\Fol\CategoryProcessing(%events.fol8.rulesVersion%)
                 - Events\Spec\Fol\PasswordProcessing()
                 - @events.privacyPolicy
 

@@ -2,7 +2,7 @@
 
 namespace Persons;
 
-use ModelPerson;
+use FKSDB\ORM\ModelPerson;
 use Nette\Object;
 use Nette\Security\User;
 

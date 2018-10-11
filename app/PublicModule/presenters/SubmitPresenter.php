@@ -5,8 +5,8 @@ namespace PublicModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\ORM\ModelSubmit;
 use ModelException;
-use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
@@ -105,7 +105,7 @@ class SubmitPresenter extends BasePresenter {
         $form = $control->getForm();
 
         $prevDeadline = null;
-        $taskIds = array();
+        $taskIds = [];
         $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {

@@ -3,17 +3,17 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Components\Forms\Controls\SQLConsole;
+use FKSDB\ORM\ModelStoredQuery;
+use FKSDB\ORM\ModelStoredQueryParameter;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use ModelStoredQuery;
-use ModelStoredQueryParameter;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use ServiceStoredQueryTagType;
-use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -79,8 +79,7 @@ class StoredQueryFactory {
         $replicator->containerClass = 'FKSDB\Components\Forms\Containers\ModelContainer';
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Přidat parametr'));
-        //$submit->getControlPrototype()->addClass('btn-default'); //TODO doesn't work
-        $submit->getControlPrototype()->addClass('btn-sm'); // TODO doesn't work
+        $submit->getControlPrototype()->addClass('btn-sm btn-success');
 
         $submit->setValidationScope(false)
                 ->addCreateOnClick();
@@ -104,22 +103,24 @@ class StoredQueryFactory {
         $container->addText('description', _('Popis'));
 
         $container->addSelect('type', _('Datový typ'))
-                ->setItems(array(
+                ->setItems([
                     ModelStoredQueryParameter::TYPE_INT => 'integer',
                     ModelStoredQueryParameter::TYPE_STR => 'string',
                     ModelStoredQueryParameter::TYPE_BOOL => 'bool',
-        ));
+                ]);
 
         $container->addText('default', _('Výchozí hodnota'));
     }
 
     public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
-        $container = new Container();
+        $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
         foreach ($queryPattern->getParameters() as $parameter) {
             $name = $parameter->name;
-            $subcontainer = $container->addContainer($name);
+            $subcontainer = new ModelContainer();
+            $container->addComponent($subcontainer,$name);
+            // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:

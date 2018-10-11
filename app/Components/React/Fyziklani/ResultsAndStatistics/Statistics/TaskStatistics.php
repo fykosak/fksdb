@@ -3,7 +3,7 @@
 namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics;
 
 class TaskStatistics extends Statistics {
-    protected function getMode() {
+    public function getMode(): string {
         return 'task';
     }
 }
