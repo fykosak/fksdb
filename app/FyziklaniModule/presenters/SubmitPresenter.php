@@ -166,9 +166,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        $teams = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
-        $tasks = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-        return $this->fyziklaniFactory->createEntryForm($teams, $tasks);
+        return $this->fyziklaniFactory->createEntryForm($this->getEventId());
     }
 
     public function createComponentEntryQRForm() {
@@ -210,7 +208,6 @@ class SubmitPresenter extends BasePresenter {
         }
         /* Existenica týmu */
         $teamId = $this->taskCodePreprocessor->extractTeamId($taskCode);
-
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->getEventId())) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamId);

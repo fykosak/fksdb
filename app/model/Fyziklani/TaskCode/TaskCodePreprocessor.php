@@ -29,5 +29,4 @@ class TaskCodePreprocessor {
     public static function getNumLabel($teamTaskLabel) {
         return str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $teamTaskLabel);
     }
-
 }
