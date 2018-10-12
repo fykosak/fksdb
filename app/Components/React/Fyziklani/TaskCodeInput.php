@@ -2,32 +2,9 @@
 
 namespace FKSDB\Components\React\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
-use Nette\DI\Container;
 use Nette\Utils\Json;
-use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceFyziklaniTask;
 
 class TaskCodeInput extends FyziklaniModule {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-
-    public function __construct(Container $container, \ServiceBrawlRoom $serviceBrawlRoom, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
-        parent::__construct($container, $serviceBrawlRoom, $event);
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->event = $event;
-    }
 
     public function getData(): string {
         return Json::encode([

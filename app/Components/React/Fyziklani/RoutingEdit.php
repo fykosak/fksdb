@@ -2,42 +2,19 @@
 
 namespace FKSDB\Components\React\Fyziklani;
 
-use FKSDB\ORM\ModelEvent;
-use Nette\DI\Container;
 use Nette\Utils\Json;
 
 /**
  * Class Routing
  */
 class RoutingEdit extends FyziklaniModule {
-    /**
-     * @var array
-     */
-    private $data;
-    /**
-     * @var \ServiceBrawlTeamPosition
-     */
-    private $serviceBrawlTeamPosition;
-
-
-    public function __construct(
-        Container $container,
-        $mode,
-        \ServiceBrawlRoom $serviceBrawlRoom,
-        \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
-        ModelEvent $event
-    ) {
-        parent::__construct($container,$serviceBrawlRoom, $event);
-
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-    }
-
-    public function setData($data) {
-        $this->data = $data;
-    }
 
     public function getData(): string {
-        return Json::encode($this->data);
+
+        return Json::encode([
+            'teams' => $this->serviceFyziklaniTeam->getTeams($this->event),
+            'rooms' => $this->getRooms(),
+        ]);
     }
 
     public function getMode(): string {
@@ -46,5 +23,21 @@ class RoutingEdit extends FyziklaniModule {
 
     public function getComponentName(): string {
         return 'routing';
+    }
+
+    protected function getActions(): array {
+        $actions = parent::getActions();
+        $actions['save'] = $this->link('save!');
+        return $actions;
+    }
+
+    public function handleSave() {
+        $data = $this->getHttpRequest()->getPost('requestData');
+        $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
+        $response = new \ReactResponse();
+        $response->setAct('update-teams');
+        $response->setData(['updatedTeams' => $updatedTeams]);
+        $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
+        $this->getPresenter()->sendResponse($response);
     }
 }

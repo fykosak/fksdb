@@ -67,12 +67,6 @@ class RoomsPresenter extends BasePresenter {
 
 
     public function createComponentRouting() {
-        $control = new RoutingEdit();
-        $data = [
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->getEventId()),
-            'rooms' => $this->getRooms(),
-        ];
-        $control->setData($data);
-        return $control;
+       return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context,$this->getEvent());
     }
 }

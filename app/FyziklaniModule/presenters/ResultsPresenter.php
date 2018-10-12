@@ -8,7 +8,6 @@ use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatist
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 
 class ResultsPresenter extends BasePresenter {
-    //use \ReactRequest;
 
     /**
      * @throws \Nette\Application\ForbiddenRequestException
@@ -25,7 +24,7 @@ class ResultsPresenter extends BasePresenter {
         }
     }
 
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         switch ($this->getAction()) {
             case 'default':
             case 'resultsView':
@@ -83,19 +82,19 @@ class ResultsPresenter extends BasePresenter {
         $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
     }
 
-    public function createComponentResultsView() {
-        return new ResultsView($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+    public function createComponentResultsView(): ResultsView {
+        return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
     }
 
-    public function createComponentResultsPresentation() {
-        return new ResultsPresentation($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+    public function createComponentResultsPresentation(): ResultsPresentation {
+        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
     }
 
-    public function createComponentTeamStatistics() {
-        return new TeamStatistics($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+    public function createComponentTeamStatistics(): TeamStatistics {
+        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
     }
 
-    public function createComponentTaskStatistics() {
-        return new TaskStatistics($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+    public function createComponentTaskStatistics(): TaskStatistics {
+        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
     }
 }

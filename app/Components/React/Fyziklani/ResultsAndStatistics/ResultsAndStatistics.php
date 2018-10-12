@@ -16,39 +16,6 @@ use ServiceFyziklaniTask;
 
 abstract class ResultsAndStatistics extends FyziklaniModule {
 
-    /**
-     *
-     * @var ServiceFyziklaniTeam
-     */
-    protected $serviceFyziklaniTeam;
-
-    /**
-     *
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-
-    /**
-     *
-     * @var \ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-
-    public function __construct(
-        Container $context,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceBrawlRoom $serviceBrawlRoom,
-        ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
-        ModelEvent $event
-    ) {
-        parent::__construct($context, $serviceBrawlRoom, $event);
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
     public final function getData(): string {
         return '';
     }
