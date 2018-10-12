@@ -24,11 +24,11 @@ export const fetchResults = (
     oldLastUpdated: string = null,
     url: string,
 ): Promise<IResponse<IResponseData>> => {
+    console.log((new Date()).getTime());
     const data: IRequest<string> = {
         act: '@@fyziklani/results',
         requestData: null,
     };
-
     if (oldLastUpdated) {
         data.requestData = oldLastUpdated;
     }

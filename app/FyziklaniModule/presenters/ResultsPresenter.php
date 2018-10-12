@@ -2,15 +2,13 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\React\Fyziklani\Results;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
-use Nette\DateTime;
 
 class ResultsPresenter extends BasePresenter {
-    use \ReactRequest;
+    //use \ReactRequest;
 
     /**
      * @throws \Nette\Application\ForbiddenRequestException
@@ -81,113 +79,23 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function authorizedResultsPresentation() {
+        $this->getHttpRequest();
         $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
     }
 
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderResultsView() {
-        /*  if ($this->isAjax()) {
-              $this->handleAjaxCall();
-          }*/
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderResultsPresentation() {
-        /* if ($this->isAjax()) {
-             $this->handleAjaxCall();
-         }*/
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderTeamStatistics() {
-        /*  if ($this->isAjax()) {
-              $this->handleAjaxCall();
-          }*/
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderTaskStatistics() {
-        /* if ($this->isAjax()) {
-             $this->handleAjaxCall();
-         }*/
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    private function handleAjaxCall() {
-        $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
-        /**
-         * @var DateTime $lastUpdated
-         */
-        $request = $this->getReactRequest();
-        $requestData = $request->requestData;
-        $lastUpdated = $requestData ? $requestData['lastUpdated'] : null;
-        $response = new \ReactResponse();
-        $response->setAct('results-update');
-
-        $result = [
-            'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$this->getEvent()->getParameter('gameStart'),
-            'gameEnd' => (string)$this->getEvent()->getParameter('gameEnd'),
-            'times' => [
-                'toStart' => strtotime($this->getEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
-                'visible' => $this->isResultsVisible(),
-            ],
-            'lastUpdated' => (new DateTime())->__toString(),
-            'isOrg' => $isOrg,
-            'refreshDelay' => $this->getEvent()->getParameter('refreshDelay'),
-            'submits' => [],
-        ];
-
-        if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEventId(), $lastUpdated);
-        }
-        //  if (!$lastUpdated) {
-        $result['rooms'] = $this->getRooms();
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-        $result['categories'] = ['A', 'B', 'C'];
-        // }
-
-        $response->setData($result);
-
-        $this->sendResponse($response);
-    }
-
     public function createComponentResultsView() {
-        return new ResultsView($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+        return new ResultsView($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentResultsPresentation() {
-        return new ResultsPresentation($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+        return new ResultsPresentation($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentTeamStatistics() {
-        return new TeamStatistics($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
+        return new TeamStatistics($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 
     public function createComponentTaskStatistics() {
-        return new TaskStatistics($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
-    }
-
-    /**
-     * @return boolean
-     */
-    private function isResultsVisible() {
-        $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
-        $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));
-        $after = (time() > strtotime($this->getEvent()->getParameter('resultsDisplay')));
-
-        return $hardDisplay || ($before && $after);
+        return new TaskStatistics($this->context, $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->getEvent());
     }
 }

@@ -4,19 +4,20 @@ import {
     Dispatch,
 } from 'react-redux';
 import { lang } from '../../../../i18n/i18n';
+import { INetteActions } from '../../../../index';
 import { IFyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,
     waitForFetch,
 } from '../actions/';
-import { INetteActions } from '../../../../index';
 
 interface IState {
     isSubmitting?: boolean;
     lastUpdated?: string;
     refreshDelay?: number;
     isRefreshing?: boolean;
-    onWaitForFetch?: (lastUpdated: string, delay: number) => void;
+
+    onWaitForFetch?(lastUpdated: string, delay: number): void;
 
     onFetch?(): void;
 }
@@ -27,14 +28,18 @@ interface IProps {
 }
 
 class Downloader extends React.Component<IState & IProps, {}> {
+    private f = false;
+
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
+        this.f = true;
     }
 
     public componentWillReceiveProps(nextProps: IState & IProps) {
         const {lastUpdated: oldLastUpdated} = this.props;
         if (oldLastUpdated !== nextProps.lastUpdated) {
+
             const {onWaitForFetch, refreshDelay, lastUpdated} = nextProps;
             if (refreshDelay) {
                 onWaitForFetch(lastUpdated, refreshDelay);

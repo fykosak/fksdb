@@ -4,6 +4,7 @@ namespace FKSDB\Components\React\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\ModelEvent;
+use Nette\DI\Container;
 
 abstract class FyziklaniModule extends ReactComponent {
 
@@ -17,10 +18,16 @@ abstract class FyziklaniModule extends ReactComponent {
      */
     private $event;
 
-    public function __construct(\ServiceBrawlRoom $serviceBrawlRoom, ModelEvent $event) {
+    /**
+     * @var Container
+     */
+    protected $context;
+
+    public function __construct(Container $container,\ServiceBrawlRoom $serviceBrawlRoom, ModelEvent $event) {
         parent::__construct();
         $this->serviceBrawlRoom = $serviceBrawlRoom;
         $this->event = $event;
+        $this->container = $container;
     }
 
 

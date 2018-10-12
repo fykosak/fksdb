@@ -7,6 +7,8 @@ use FKSDB\ORM\ModelEvent;
 use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DateTime;
+use Nette\DI\Container;
+use Nette\Diagnostics\FireLogger;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceBrawlRoom;
 use ServiceBrawlTeamPosition;
@@ -33,13 +35,16 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
     private $serviceFyziklaniSubmit;
 
     public function __construct(
+        Container $context,
+        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceBrawlRoom $serviceBrawlRoom,
         ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
         ModelEvent $event
     ) {
-        parent::__construct($serviceBrawlRoom, $event);
+        parent::__construct($context, $serviceBrawlRoom, $event);
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
@@ -66,12 +71,12 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
          */
         $request = $this->getReactRequest();
         $requestData = $request->requestData;
-        $lastUpdated = $requestData ? $requestData['lastUpdated'] : null;
+        $lastUpdated = $requestData ? $requestData : null;
         $response = new \ReactResponse();
         $response->setAct('results-update');
 
         $result = [
-            'basePath' => $presenter->getHttpRequest()->getUrl()->getBasePath(),
+            'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
             'gameStart' => (string)$this->getEvent()->getParameter('gameStart'),
             'gameEnd' => (string)$this->getEvent()->getParameter('gameEnd'),
             'times' => [
@@ -86,9 +91,9 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            //   $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent()->event_id, $lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent()->event_id, $lastUpdated);
         }
-        //  if (!$lastUpdated) {
+        //if (!$lastUpdated) {
         $result['rooms'] = $this->getRooms();
         $result['teams'] = $this->serviceFyziklaniTeam->getTeams($this->getEvent()->event_id);
         $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEvent()->event_id);
@@ -97,9 +102,8 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
 
         $response->setData($result);
 
-        $this->sendResponse($response);
+        $this->getPresenter()->sendResponse($response);
     }
-
 
     /**
      * @return boolean

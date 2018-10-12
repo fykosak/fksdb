@@ -5,7 +5,7 @@ export interface INetteActions {
     [name: string]: string;
 }
 
-export type IApp = (element: Element, module: string, component: string, mode: string, rawData: string) => boolean;
+export type IApp = (element: Element, module: string, component: string, mode: string, rawData: string, actions: INetteActions) => boolean;
 
 class AppCollector {
     private items: IApp[] = [];
@@ -27,7 +27,7 @@ class AppCollector {
                 if (this.items.hasOwnProperty(index)) {
                     const item = this.items[index];
                     if (item(element, module, component, mode, rawData, actions)) {
-                        break;
+                        return;
 
                     }
                 }

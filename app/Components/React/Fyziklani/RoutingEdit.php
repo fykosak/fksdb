@@ -3,6 +3,7 @@
 namespace FKSDB\Components\React\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
+use Nette\DI\Container;
 use Nette\Utils\Json;
 
 /**
@@ -20,12 +21,13 @@ class RoutingEdit extends FyziklaniModule {
 
 
     public function __construct(
+        Container $container,
         $mode,
         \ServiceBrawlRoom $serviceBrawlRoom,
         \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
         ModelEvent $event
     ) {
-        parent::__construct($serviceBrawlRoom, $event);
+        parent::__construct($container,$serviceBrawlRoom, $event);
 
         $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
     }

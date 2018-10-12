@@ -23,10 +23,10 @@ export default class ResultsApp extends React.Component<IProps, {}> {
         const {mode, actions} = this.props;
         return (
             <Provider store={store}>
-                <>
+                <div className={'brawl-results fyziklani-results'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
                     <App mode={mode} accessKey={accessKey}/>
-                </>
+                </div>
             </Provider>
         );
     }

@@ -5,6 +5,8 @@ namespace FKSDB\Components\React;
 use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
+use Nette\DI\Container;
+use Nette\Http\IRequest;
 use Nette\Templating\FileTemplate;
 use Nette\Utils\Json;
 
@@ -17,6 +19,10 @@ abstract class ReactComponent extends Control implements IReactComponent {
      * @var bool
      */
     protected static $reactJSAttached = false;
+    /**
+     * @var Container
+     */
+    protected $container;
 
     /**
      * @param $obj IComponent
@@ -24,6 +30,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
     protected function attached($obj) {
         if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
             static::$reactJSAttached = true;
+            $obj->registerJSFile('js/tablesorter.min.js');
             $obj->registerJSFile('js/lib/react.min.js');
             $obj->registerJSFile('js/lib/react-dom.min.js');
             $obj->registerJSFile('js/bundle-all.min.js');
@@ -45,12 +52,17 @@ abstract class ReactComponent extends Control implements IReactComponent {
         return [];
     }
 
+    protected function getHttpRequest(): IRequest {
+        return $this->container->getByType('Nette\Http\IRequest');
+    }
+
     /**
      * @return object
      */
     protected function getReactRequest() {
-        $requestData = $this->getPresenter()->getHttpRequest()->getPost('requestData');
-        $act = $this->getPresenter()->getHttpRequest()->getPost('act');
+
+        $requestData = $this->getHttpRequest()->getPost('requestData');
+        $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];
     }
 }
