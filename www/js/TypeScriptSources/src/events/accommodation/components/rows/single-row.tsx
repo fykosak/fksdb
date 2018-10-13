@@ -30,7 +30,7 @@ class Single extends React.Component<IProps & IState, {}> {
             .replace('%from%', fromDate.toLocaleDateString(lang.getBCP47()))
             .replace('%to%', toDate.toLocaleDateString(lang.getBCP47()));
 
-        return <div>
+        return <div className={'mb-3'}>
                 <span className={'form-check ' + (value ? 'text-success border-success' : '')}>
                 <span
                     className={value ? 'fa fa-check-square-o' : 'fa fa-square-o'}

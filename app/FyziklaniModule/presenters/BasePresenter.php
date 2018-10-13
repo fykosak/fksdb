@@ -13,6 +13,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
+use FKSDB\ORM\ModelEvent;
 
 /**
  *
@@ -182,7 +183,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         if (!$this->event) {
@@ -204,7 +205,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getNavBarVariant() {
-        return ['brawl brawl' . $this->getEventId(), 'dark'];
+        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
     }
 
     public function getNavRoot() {

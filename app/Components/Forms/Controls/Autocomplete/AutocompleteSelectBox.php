@@ -38,7 +38,7 @@ class AutocompleteSelectBox extends TextBase {
     /**
      * @var boolean
      */
-    private $multiselect;
+    private $multiSelect;
 
     /**
      * @var string
@@ -96,8 +96,8 @@ class AutocompleteSelectBox extends TextBase {
         return $this->ajax;
     }
 
-    public function isMultiselect() {
-        return $this->multiselect;
+    public function isMultiSelect() {
+        return $this->multiSelect;
     }
 
     public function setDataProvider(IDataProvider $dataProvider) {
@@ -191,12 +191,8 @@ class AutocompleteSelectBox extends TextBase {
         return $this->value;
     }
 
-    public function setMultiselect($multiselect) {
-        $this->multiselect = $multiselect;
-    }
-
-    public function setItems() {
-        throw new NotImplementedException('Use setDataProvider instead.');
+    public function setMultiSelect($multiSelect) {
+        $this->multiSelect = $multiSelect;
     }
 
 }

@@ -11,11 +11,12 @@ import { app } from '../reducer/';
 import InputConnector from './input-connector';
 import Matrix from './matrix/index';
 import Single from './single';
+import MultiNights from './multi-nights';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];
     input: HTMLInputElement;
-    mode: 'matrix' | 'multiNight' | 'multiHotels' | 'boolean' | string;
+    mode: 'matrix' | 'multiNights' | 'multiHotels' | 'boolean' | string;
 }
 
 export default class Index extends React.Component<IProps, {}> {
@@ -40,7 +41,8 @@ export default class Index extends React.Component<IProps, {}> {
 
             case 'single':
                 return <Single accommodationDef={this.props.accommodationDef}/>;
-            case 'multiNight':
+            case 'multiNights':
+                return <MultiNights accommodationDef={this.props.accommodationDef}/>
             case 'multiHotels':
             default:
                 throw new Error('no match');
