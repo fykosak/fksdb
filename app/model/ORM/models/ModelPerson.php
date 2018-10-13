@@ -6,6 +6,7 @@ use AbstractModelSingle;
 use DbNames;
 use ModelMPersonHasFlag;
 use ModelMPostContact;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 use YearCalculator;
 
@@ -24,7 +25,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
      *
-     * @return ModelLogin|null
+     *
      */
     public function getLogin() {
         if (!isset($this->person_id)) {
@@ -39,9 +40,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelLogin::createFromTableRow($logins->current());
     }
 
-    /**
-     * @return ModelPersonInfo|null
-     */
     public function getInfo() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -86,7 +84,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param null $contestId
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getContestants($contestId = null) {
+    public function getContestants($contestId = null): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -101,7 +99,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param null $contestId
      * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getOrgs($contestId = null) {
+    public function getOrgs($contestId = null): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -112,7 +110,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
-    public function getFlags() {
+    public function getFlags(): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -140,10 +138,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * @param $fid
-     * @return ModelMPersonHasFlag|null
-     */
     public function getMPersonHasFlag($fid) {
         $flags = $this->getMPersonHasFlags();
 
@@ -227,16 +221,16 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    public function isEventParticipant($event_id = null) {
+    public function isEventParticipant($eventId = null): bool {
         $tmp = $this->getEventParticipant();
-        if ($event_id) {
-            $tmp->where('action_id = ?', $event_id);
+        if ($eventId) {
+            $tmp->where('action_id = ?', $eventId);
         }
 
         if ($tmp->count() > 0) {
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 
@@ -348,7 +342,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * IResource
      */
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'person';
     }
 
@@ -361,6 +355,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         if (!$eventId) {
             return null;
         }
+
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         $accommodations = [];
         foreach ($query as $row) {
@@ -382,7 +377,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public function removeAccommodationForEvent($eventId) {
+    public
+    function removeAccommodationForEvent($eventId) {
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         /**
          * @var $row ModelEventPersonAccommodation

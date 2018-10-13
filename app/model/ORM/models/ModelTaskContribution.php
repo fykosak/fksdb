@@ -6,6 +6,7 @@ use AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer contribution_id
  */
 class ModelTaskContribution extends AbstractModelSingle {
 
