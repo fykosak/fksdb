@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IEventAccommodation } from '../../middleware/interfaces';
 import Row from '../rows/single-row';
-import { lang } from '../../../../i18n/i18n';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];

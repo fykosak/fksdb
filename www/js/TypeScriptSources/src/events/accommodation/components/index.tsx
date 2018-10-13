@@ -10,8 +10,8 @@ import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import InputConnector from './input-connector';
 import Matrix from './matrix/index';
-import Single from './single';
 import MultiNights from './multi-nights';
+import Single from './single';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];
@@ -42,7 +42,7 @@ export default class Index extends React.Component<IProps, {}> {
             case 'single':
                 return <Single accommodationDef={this.props.accommodationDef}/>;
             case 'multiNights':
-                return <MultiNights accommodationDef={this.props.accommodationDef}/>
+                return <MultiNights accommodationDef={this.props.accommodationDef}/>;
             case 'multiHotels':
             default:
                 throw new Error('no match');
