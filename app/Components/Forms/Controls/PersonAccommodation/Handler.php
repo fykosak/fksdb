@@ -67,10 +67,10 @@ class Handler {
     private function prepareData(ArrayHash $data): array {
         foreach ($data as $type => $datum) {
             switch ($type) {
-                case Matrix::RESOLUTION_ID:
-                case Single::RESOLUTION_ID:
-                case MultiHotels::RESOLUTION_ID:
-                case MultiNights::RESOLUTION_ID:
+                case MatrixField::RESOLUTION_ID:
+                case SingleField::RESOLUTION_ID:
+                case MultiHotelsField::RESOLUTION_ID:
+                case MultiNightsField::RESOLUTION_ID:
                     $data = (array)json_decode($datum);
                     break;
                 default:

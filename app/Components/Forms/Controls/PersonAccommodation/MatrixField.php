@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-class Matrix extends AccommodationField {
+class MatrixField extends AccommodationField {
     const RESOLUTION_ID = 'matrix';
 
     public function getMode(): string {

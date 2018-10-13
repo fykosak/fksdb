@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\PersonAccommodation\AccommodationField;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Matrix;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiHotels;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiNights;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\Single as BooleanField;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\MatrixField;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiHotelsField;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiNightsField;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\SingleField;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
 use ServiceEventAccommodation;
@@ -25,20 +25,20 @@ class PersonAccommodationFactory {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
-    private function createMatrixSelect($eventId): Matrix {
-        return new Matrix($this->serviceEventAccommodation, $eventId);
+    private function createMatrixSelect($eventId): MatrixField {
+        return new MatrixField($this->serviceEventAccommodation, $eventId);
     }
 
-    private function createMultiHotelsSelect($eventId): MultiHotels {
-        return new MultiHotels($this->serviceEventAccommodation, $eventId);
+    private function createMultiHotelsSelect($eventId): MultiHotelsField {
+        return new MultiHotelsField($this->serviceEventAccommodation, $eventId);
     }
 
-    private function createMultiNightsSelect($eventId): MultiNights {
-        return new MultiNights($this->serviceEventAccommodation, $eventId);
+    private function createMultiNightsSelect($eventId): MultiNightsField {
+        return new MultiNightsField($this->serviceEventAccommodation, $eventId);
     }
 
-    private function createBooleanSelect($eventId): BooleanField {
-        return new BooleanField($this->serviceEventAccommodation, $eventId);
+    private function createBooleanSelect($eventId): SingleField {
+        return new SingleField($this->serviceEventAccommodation, $eventId);
     }
 
     /**
@@ -48,16 +48,16 @@ class PersonAccommodationFactory {
      */
     public function createField($fieldName, $eventId): AccommodationField {
         switch ($fieldName) {
-            case Matrix::RESOLUTION_ID:
+            case MatrixField::RESOLUTION_ID:
                 return $this->createMatrixSelect($eventId);
             case self::RESOLUTION_AUTO:
-                throw  new NotImplementedException('Mode auto is not implemtn');
+                throw  new NotImplementedException('Mode auto is not implement');
                 break;
-            case MultiNights::RESOLUTION_ID:
+            case MultiNightsField::RESOLUTION_ID:
                 return $this->createMultiNightsSelect($eventId);
-            case MultiHotels::RESOLUTION_ID:
+            case MultiHotelsField::RESOLUTION_ID:
                 return $this->createMultiHotelsSelect($eventId);
-            case BooleanField::RESOLUTION_ID:
+            case SingleField::RESOLUTION_ID:
                 return $this->createBooleanSelect($eventId);
             default:
                 throw new InvalidArgumentException();
