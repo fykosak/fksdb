@@ -27,7 +27,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      *
      *
      */
-    public function getLogin(): ModelLogin {
+    public function getLogin() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -40,7 +40,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelLogin::createFromTableRow($logins->current());
     }
 
-    public function getInfo(): ModelPersonInfo {
+    public function getInfo() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -58,7 +58,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
-    public function getHistory($acYear, $extrapolated = false): ModelPersonHistory {
+    public function getHistory($acYear, $extrapolated = false) {
         if (!isset($this->person_id)) {
             $this->person_id = null;
         }
@@ -120,7 +120,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * @return ModelMPersonHasFlag[]
      */
-    public function getMPersonHasFlags(): array {
+    public function getMPersonHasFlags() {
         $personFlags = $this->getFlags();
 
         if (!$personFlags || count($personFlags) == 0) {
@@ -138,7 +138,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    public function getMPersonHasFlag(int $fid): ModelMPersonHasFlag {
+    public function getMPersonHasFlag(int $fid) {
         $flags = $this->getMPersonHasFlags();
 
         if (!$flags || count($flags) == 0) {
@@ -221,16 +221,16 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    public function isEventParticipant($event_id = null) {
+    public function isEventParticipant($eventId = null): bool {
         $tmp = $this->getEventParticipant();
-        if ($event_id) {
-            $tmp->where('action_id = ?', $event_id);
+        if ($eventId) {
+            $tmp->where('action_id = ?', $eventId);
         }
 
         if ($tmp->count() > 0) {
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 

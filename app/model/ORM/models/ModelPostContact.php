@@ -13,7 +13,7 @@ class ModelPostContact extends AbstractModelSingle {
     const TYPE_DELIVERY = 'D';
     const TYPE_PERMANENT = 'P';
 
-    public function getAddress(): ModelAddress {
+    public function getAddress() {
         $address = $this->address;
         if ($address) {
             return ModelAddress::createFromTableRow($address);

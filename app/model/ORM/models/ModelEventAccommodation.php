@@ -28,10 +28,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
         return 'eventAccommodation';
     }
 
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
     }
 
@@ -48,25 +45,25 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     /**
      * @return integer
      */
-    public function getAvailableCapacity() {
+    public function getAvailableCapacity(): int {
         return ($this->getCapacity() - $this->getUsedCapacity());
     }
 
     /**
      * @return integer
      */
-    public function getCapacity() {
+    public function getCapacity(): int {
         return $this->capacity;
     }
 
     /**
      * @return integer
      */
-    public function getUsedCapacity() {
+    public function getUsedCapacity(): int {
         return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
     }
 
-    public function __toArray() {
+    public function __toArray(): array {
         return [
             'eventAccommodationId' => $this->event_accommodation_id,
             'eventId' => $this->event_id,

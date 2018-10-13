@@ -14,8 +14,7 @@ use Nette\Security\IResource;
 class ModelSchool extends AbstractModelSingle implements IResource {
 
     public function getAddress(): ModelAddress {
-        $data = $this->address;
-        return ModelAddress::createFromTableRow($data);
+        return ModelAddress::createFromTableRow($this->address);
     }
 
     public function getResourceId(): string {
