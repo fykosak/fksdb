@@ -19,6 +19,7 @@ use YearCalculator;
  * @property integer login_id
  * @property DateTime last_login
  * @property ActiveRow person
+ * @property string login
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity {
 
@@ -35,9 +36,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return ModelPerson
-     */
     public function getPerson() {
         if ($this->person) {
             return ModelPerson::createFromTableRow($this->person);
@@ -63,7 +61,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-    public function isOrg($yearCalculator) {
+    public function isOrg($yearCalculator): bool {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
@@ -81,7 +79,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      *
      * @return string Human readable identification of the login.
      */
-    public function getName() {
+    public function getName(): string {
         $person = $this->getPerson();
         if ($person) {
             return (string)$person;

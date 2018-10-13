@@ -18,6 +18,10 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->stored = !$value;
     }
 
+    /**
+     * @param ActiveRow $row
+     * @return static
+     */
     public static function createFromTableRow(ActiveRow $row) {
         $model = new static($row->toArray(), $row->getTable());
         if ($model->getPrimary(false)) {
@@ -27,5 +31,3 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
 }
-
-?>

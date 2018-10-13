@@ -15,7 +15,7 @@ class ModelContest extends AbstractModelSingle {
     const ID_FYKOS = 1;
     const ID_VYFUK = 2;
 
-    public function getContestSymbol() {
+    public function getContestSymbol(): string {
         return strtolower(Strings::webalize($this->name));
     }
 }
