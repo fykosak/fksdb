@@ -15,25 +15,15 @@ use DbNames;
  */
 class ModelPersonHistory extends AbstractModelSingle {
 
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
-    /**
-     * @return ModelSchool
-     */
-    public function getSchool() {
+    public function getSchool(): ModelSchool {
         return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
-    /**
-     * @param int $acYear
-     * @return ModelPersonHistory
-     */
-    public function extrapolate($acYear) {
+    public function extrapolate(int $acYear): ModelPersonHistory {
         $diff = $acYear - $this->ac_year;
         $data = [
             'ac_year' => $acYear,

@@ -12,10 +12,7 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelEventParticipant extends AbstractModelSingle {
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
