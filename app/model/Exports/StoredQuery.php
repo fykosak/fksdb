@@ -12,8 +12,8 @@ use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
- * Represents instantiotion (in term of parameters) of FKSDB\ORM\ModelStoredQuery. * 
- * 
+ * Represents instantiotion (in term of parameters) of FKSDB\ORM\ModelStoredQuery. *
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQuery implements IDataSource, IResource {
@@ -170,7 +170,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * 
+     *
      * @param string $sql
      * @return Statement
      */
@@ -279,7 +279,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * Implemements only single column sorting.
-     * 
+     *
      * @param string $by column name
      * @param string $way DESC|ASC
      */
@@ -291,7 +291,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'export';
     }
 

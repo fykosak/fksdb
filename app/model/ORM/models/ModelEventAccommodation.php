@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM;
 
+use DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
@@ -23,23 +24,20 @@ use Nette\Security\IResource;
 class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
     const ACC_DATE_FORMAT = 'Y-m-d';
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'eventAccommodation';
     }
 
-    /**
-     * @return \FKSDB\ORM\ModelEvent
-     */
-    public function getEvent() {
-        return \FKSDB\ORM\ModelEvent::createFromTableRow($this->event);
+    public function getEvent(): ModelEvent {
+        return ModelEvent::createFromTableRow($this->event);
     }
 
     /**
-     * @return \FKSDB\ORM\ModelAddress
+     * @return ModelAddress
      */
     public function getAddress() {
         if ($this->address) {
-            return \FKSDB\ORM\ModelAddress::createFromTableRow($this->address);
+            return ModelAddress::createFromTableRow($this->address);
         }
         return null;
     }
@@ -47,25 +45,25 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     /**
      * @return integer
      */
-    public function getAvailableCapacity() {
+    public function getAvailableCapacity(): int {
         return ($this->getCapacity() - $this->getUsedCapacity());
     }
 
     /**
      * @return integer
      */
-    public function getCapacity() {
+    public function getCapacity(): int {
         return $this->capacity;
     }
 
     /**
      * @return integer
      */
-    public function getUsedCapacity() {
-        return $this->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
+    public function getUsedCapacity(): int {
+        return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
     }
 
-    public function __toArray() {
+    public function __toArray(): array {
         return [
             'eventAccommodationId' => $this->event_accommodation_id,
             'eventId' => $this->event_id,

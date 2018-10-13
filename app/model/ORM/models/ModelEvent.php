@@ -83,7 +83,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return $this->holder->getParameter($name);
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'event';
     }
 

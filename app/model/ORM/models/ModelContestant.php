@@ -14,23 +14,17 @@ use Nette\Security\IResource;
  */
 class ModelContestant extends AbstractModelSingle implements IResource {
 
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         $data = $this->person;
         return ModelPerson::createFromTableRow($data);
     }
 
-    /**
-     * @return ModelContest
-     */
-    public function getContest() {
+    public function getContest(): ModelContest {
         $data = $this->contest;
         return ModelContest::createFromTableRow($data);
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'contestant';
     }
 

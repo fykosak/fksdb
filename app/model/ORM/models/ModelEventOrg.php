@@ -14,21 +14,15 @@ use Nette\Security\IResource;
  */
 class ModelEventOrg extends AbstractModelSingle implements IResource {
 
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson() {
+    public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'eventOrg';
     }
 
