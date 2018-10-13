@@ -138,7 +138,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    public function getMPersonHasFlag(int $fid) {
+    public function getMPersonHasFlag($fid) {
         $flags = $this->getMPersonHasFlags();
 
         if (!$flags || count($flags) == 0) {
@@ -351,10 +351,11 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    public function getAccommodationByEventId($eventId): string {
+    public function getAccommodationByEventId($eventId) {
         if (!$eventId) {
             return null;
         }
+
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         $accommodations = [];
         foreach ($query as $row) {
@@ -376,7 +377,8 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public function removeAccommodationForEvent($eventId) {
+    public
+    function removeAccommodationForEvent($eventId) {
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         /**
          * @var $row ModelEventPersonAccommodation
