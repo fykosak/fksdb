@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { changeData } from '../../../../input-connector/actions';
 import DateDisplay from '../../../../shared/components/displays/date';
 import PriceDisplay from '../../../../shared/components/displays/price/index';
-import { changeAccommodation } from '../../actions/';
 import { IEventAccommodation } from '../../middleware/interfaces';
 import { IAccommodationStore } from '../../reducer/';
 
@@ -71,14 +71,14 @@ class Row extends React.Component<IProps & IState, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>, ownProps: IProps): IState => {
     return {
-        onChange: (value) => dispatch(changeAccommodation(ownProps.date, value)),
+        onChange: (value) => dispatch(changeData(ownProps.date, value)),
     };
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
+const mapStateToProps = (state: IAccommodationStore, ownProps: IProps): IState => {
     let value = null;
-    if (state.accommodation.hasOwnProperty(ownProps.date)) {
-        value = state.accommodation[ownProps.date];
+    if (state.inputConnector.hasOwnProperty(ownProps.date)) {
+        value = state.inputConnector[ownProps.date];
     }
     return {
         value,

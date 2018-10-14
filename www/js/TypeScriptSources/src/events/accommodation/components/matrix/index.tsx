@@ -4,7 +4,7 @@ import Price from '../price';
 import Row from './row';
 
 interface IProps {
-    accommodationDef?: IEventAccommodation[];
+    accommodationDef: IEventAccommodation[];
 }
 
 export default class Matrix extends React.Component<IProps, {}> {

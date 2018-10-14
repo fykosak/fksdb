@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { IInputConnectorItems } from '../../../input-connector/reducers';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { getAccommodationPrice } from '../middleware/helpers';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { IAccommodationStore } from '../reducer/';
-import { IAccommodationState } from '../reducer/accommodation';
+import { lang } from '../../../i18n/i18n';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];
 }
 
 interface IState {
-    accommodation?: IAccommodationState;
+    accommodation?: IInputConnectorItems;
 }
 
 class Price extends React.Component<IProps & IState, {}> {
@@ -21,7 +22,7 @@ class Price extends React.Component<IProps & IState, {}> {
         const price = getAccommodationPrice(accommodationDef, accommodation);
 
         return <>
-            <p>Price</p>
+            <p>{lang.getText('Price')}</p>
             <PriceDisplay price={price}/>
         </>;
     }
@@ -33,7 +34,7 @@ const mapDispatchToProps = (): IState => {
 
 const mapStateToProps = (state: IAccommodationStore): IState => {
     return {
-        accommodation: state.accommodation,
+        accommodation: state.inputConnector.data,
     };
 };
 

@@ -3,7 +3,7 @@ import { IEventAccommodation } from '../../middleware/interfaces';
 import Row from '../rows/single-row';
 
 interface IProps {
-    accommodationDef?: IEventAccommodation[];
+    accommodationDef: IEventAccommodation[];
 }
 
 export default class MultiNights extends React.Component<IProps, {}> {

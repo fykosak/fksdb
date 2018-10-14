@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { lang } from '../../../../i18n/i18n';
 import PriceDisplay from '../../../../shared/components/displays/price';
-import { changeAccommodation } from '../../actions';
 import { recalculateDate } from '../../middleware/dates';
 import { IEventAccommodation } from '../../middleware/interfaces';
 import { IAccommodationStore } from '../../reducer';
 import CapacityLabel from '../capacity-label';
+import { changeData } from '../../../../input-connector/actions';
 
 interface IProps {
     accommodationItem?: IEventAccommodation;
@@ -50,15 +50,15 @@ class Single extends React.Component<IProps & IState, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>): IState => {
     return {
-        onChange: (date, value) => dispatch(changeAccommodation(date, value)),
+        onChange: (date, value) => dispatch(changeData(date, value)),
     };
 };
 
-const mapStateToProps = (state, ownProps: IProps): IState => {
+const mapStateToProps = (state: IAccommodationStore, ownProps: IProps): IState => {
     const {accommodationItem} = ownProps;
     let value = null;
-    if (state.accommodation.hasOwnProperty(accommodationItem.date)) {
-        value = state.accommodation[accommodationItem.date];
+    if (state.inputConnector.hasOwnProperty(accommodationItem.date)) {
+        value = state.inputConnector[accommodationItem.date];
     }
     return {
         value,

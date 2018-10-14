@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Results from './results/components/';
 import Routing from './routing/components/index';
+import Schedule from './schedule/components/index';
 import Statistics from './statistics/components/';
 import TaskCodeApp from './submit-form/components/index';
 import { INetteActions } from '../index';
@@ -53,6 +54,15 @@ const registerResults = (element: Element, mode: string, rawData: string, action
     }
 };
 
+const registerSchedule = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+    if (!(element instanceof HTMLInputElement)) {
+        return false;
+    }
+
+    ReactDOM.render(<Schedule mode={mode} actions={actions} input={element}/>, element);
+    return true;
+};
+
 const registerStatistics = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
 
     switch (mode) {
@@ -78,6 +88,8 @@ export const fyziklani = (element: Element, module: string, component: string, m
             return registerSubmitForm(element, mode, rawData, actions);
         case 'statistics':
             return registerStatistics(element, mode, rawData, actions);
+        case 'schedule':
+            return registerSchedule(element, mode, rawData, actions);
         default:
             throw new Error('not implement');
     }
