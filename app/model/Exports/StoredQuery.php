@@ -246,7 +246,7 @@ class StoredQuery implements IDataSource, IResource {
     public function getData() {
         if ($this->data === null) {
             $innerSql = $this->getQueryPattern()->sql;
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
+            $sql = "SELECT * FROM ($innerSql LIMIT 18446744073709551615) " . self::INNER_QUERY; //LIMIT ... is only temporary bugfix to allow ORDER BY in inner SQL
 
             if ($this->orders) {
                 $sql .= ' ORDER BY ' . implode(', ', $this->orders);
