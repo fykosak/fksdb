@@ -58,8 +58,16 @@ const registerSchedule = (element: Element, mode: string, rawData: string, actio
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
+    const data = JSON.parse(rawData);
 
-    ReactDOM.render(<Schedule mode={mode} actions={actions} input={element}/>, element);
+    const container = document.createElement('div');
+    element.parentElement.appendChild(container);
+    if (!(element instanceof HTMLInputElement)) {
+        return false;
+    }
+    //element.style.display = 'none';
+
+    ReactDOM.render(<Schedule mode={mode} actions={actions} input={element} data={data}/>, container);
     return true;
 };
 

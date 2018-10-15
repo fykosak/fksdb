@@ -209,6 +209,9 @@ events:
                         modifiable: %events.fyziklani13.appCond%
                         determining: true
                         factory: RefPerson(%events.fyziklani13.participant%, email, true, role('admin'), false)
+                    schedule:
+                        label: _('Schedule')
+                        factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory([])
 
 
         #

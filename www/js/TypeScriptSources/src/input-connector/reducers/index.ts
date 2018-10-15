@@ -18,7 +18,10 @@ export interface IInputConnectorStore {
 const setData = (state: IInputConnectorState, action): IInputConnectorState => {
     return {
         ...state,
-        [action.key]: action.value,
+        data: {
+            ...state.data,
+            [action.key]: action.value,
+        },
     };
 };
 

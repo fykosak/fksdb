@@ -35,7 +35,7 @@
             {/block}
 
             {block user-info}
-                <ul n:if="$user->isLoggedIn()" class="nav navbar-nav navbar-right">
+                <ul n:if="$user->isLoggedIn()" class="ml-auto nav navbar-nav navbar-right">
                     {var $login => $user->getIdentity()}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">

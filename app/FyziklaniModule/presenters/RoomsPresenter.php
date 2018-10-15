@@ -3,9 +3,6 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\React\Fyziklani\RoutingEdit;
-use Nette\Application\Responses\JsonResponse;
-use Nette\Utils\Json;
 
 /**
  *
@@ -30,15 +27,17 @@ class RoomsPresenter extends BasePresenter {
 
     public function authorizedEdit() {
         // TODO now can edit routing anybody
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.edit')));
     }
 
     public function authorizedDownload() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.download')));
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms')));
+        $download = $this->eventIsAllowed('fyziklani', 'rooms.download');
+        $edit = $this->eventIsAllowed('fyziklani', 'rooms.edit');
+        $this->setAuthorized($download || $edit);
     }
 
     /**
@@ -67,6 +66,6 @@ class RoomsPresenter extends BasePresenter {
 
 
     public function createComponentRouting() {
-       return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context,$this->getEvent());
+        return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context, $this->getEvent());
     }
 }

@@ -6,27 +6,29 @@ interface ILanguageData {
     };
 }
 
+export type availableLanguages = 'cs' | 'en' | 'sk';
+
 class Lang {
 
     private readonly data: ILanguageData = {};
 
-    private currentLocale = 'cs';
+    private currentLocale: availableLanguages = 'cs';
 
     public constructor(langData: ILanguageData) {
         this.data = langData;
         window.location.search.slice(1).split('&').forEach((s) => {
             const [key, value] = s.split('=');
             if (key === 'lang') {
-                this.currentLocale = value;
+                this.setLocale(value as availableLanguages);
             }
         });
     }
 
-    public getCurrentLocale(): string {
+    public getCurrentLocale(): availableLanguages {
         return this.currentLocale;
     }
 
-    public setLocale(locale: string): void {
+    public setLocale(locale: availableLanguages): void {
         this.currentLocale = locale;
     }
 

@@ -6,6 +6,7 @@ use FKSDB\ORM\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
 use Nette\Security\IResource;
@@ -175,6 +176,8 @@ class StoredQuery implements IDataSource, IResource {
      * @return Statement
      */
     private function bindParams($sql) {
+        Debugger::$maxLen = 100000000;
+        Debugger::barDump($sql);
         $statement = $this->connection->prepare($sql);
         if ($this->postProcessing) {
             $this->postProcessing->resetParameters();
@@ -255,8 +258,10 @@ class StoredQuery implements IDataSource, IResource {
             if ($this->limit !== null && $this->offset !== null) {
                 $sql .= " LIMIT {$this->offset}, {$this->limit}";
             }
+            Debugger::$maxLen = 100000000;
 
             $statement = $this->bindParams($sql);
+            Debugger::barDump($statement);
             $statement->execute();
             $this->data = $statement;
             if ($this->postProcessing) {

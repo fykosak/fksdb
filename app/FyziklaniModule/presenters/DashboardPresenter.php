@@ -5,7 +5,7 @@ namespace FyziklaniModule;
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('FYKOSí Fyziklání'));
+        $this->setTitle(_('Fyziklani'));
         $this->setIcon('fa fa-dashboard');
     }
 

@@ -5,10 +5,10 @@ interface IProps {
     date: string;
 }
 
-export default class DateDisplay extends React.Component<IProps, {}> {
+export default class TimeDisplay extends React.Component<IProps, {}> {
 
     public render() {
         const date = new Date(this.props.date);
-        return <span>{date.toLocaleDateString(lang.getBCP47())}</span>;
+        return <span>{date.toLocaleTimeString(lang.getBCP47())}</span>;
     }
 }

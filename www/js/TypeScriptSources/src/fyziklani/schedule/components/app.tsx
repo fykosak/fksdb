@@ -5,11 +5,8 @@ import {
 } from 'react-redux';
 import Powered from '../../../shared/powered';
 import { IFyziklaniScheduleStore } from '../reducers/';
-import {
-    IData,
-    IScheduleItem,
-} from './index';
-import PriceDisplay from '../../../shared/components/displays/price';
+import { IData } from './index';
+import Row from './row';
 
 interface IState {
 }
@@ -18,7 +15,7 @@ interface IProps {
     data: IData;
 }
 
-class RoutingApp extends React.Component<IState & IProps, {}> {
+class Schedule extends React.Component<IState & IProps, {}> {
 
     public render() {
         const {data} = this.props;
@@ -27,33 +24,16 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
             if (data.hasOwnProperty(blockName)) {
                 const blockData = data[blockName];
 
-                rows.push(<div>{this.createdDateLabel(blockData.date)}</div>);
-                blockData.parallels.map((item, index) => {
-                    return this.createItem(item, index);
-                });
+                rows.push(<Row key={blockName} blockData={blockData} blockName={blockName}/>);
             }
         }
 
         return (
             <div>
+                {rows}
                 <Powered/>
             </div>
         );
-    }
-
-    private createdDateLabel(dates: { start: string; end: string }) {
-        return <span>{dates.start}{dates.end}</span>;
-    }
-
-    private createItem(item: IScheduleItem, index: number) {
-        return <div key={index}
-                    onClick={() => {
-                        console.log(item.id);
-                    }}>
-            <div>{item.name}</div>
-            <div>{item.description}</div>
-            <div><PriceDisplay price={item.price}/></div>
-        </div>;
     }
 }
 
@@ -65,4 +45,4 @@ const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoutingApp);
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
