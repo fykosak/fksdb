@@ -27,7 +27,7 @@
     "@types/react-redux": "latest",
     "@types/promise-polyfill": "latest",
     "@types/redux-form": "latest",
-    "typescript": "latest",
+    "typescript": "3.0.3",
     "awesome-typescript-loader": "5.0.0-1",
     "ts-loader": "latest",
     "eslint": "latest",

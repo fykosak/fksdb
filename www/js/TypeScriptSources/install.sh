@@ -1,6 +1,6 @@
 #!/bin/bash
 
 cd ./www/js/TypeScriptSources/
-npm install
+npm -g install
 webpack --color --mode="production"
 cd -
