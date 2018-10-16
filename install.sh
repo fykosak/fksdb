@@ -56,7 +56,7 @@ function update_files {
 function post_update {
 	rm -rf "$fksdb_dir"/temp/*
 	"$fksdb_dir/i18n/compile.sh"
-	"$fksdb_dir/www/js/TypescriptSources/install.sh"
+	"$fksdb_dir/www/js/TypeScriptSources/install.sh"
 }
 
 #

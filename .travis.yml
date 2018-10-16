@@ -20,7 +20,7 @@ install:
 #  - composer install --no-interaction --prefer-source
   - "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
   - ./i18n/compile.sh
-  - ./www/js/TypescriptSources/install.sh
+  - ./www/js/TypeScriptSources/install.sh
 
 before_script:
   - ./tests/init-database.sh
