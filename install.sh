@@ -56,6 +56,7 @@ function update_files {
 function post_update {
 	rm -rf "$fksdb_dir"/temp/*
 	"$fksdb_dir/i18n/compile.sh"
+	"$fksdb_dir/www/js/TypescriptSources/install.sh"
 }
 
 #
@@ -73,7 +74,7 @@ remote="${3:-origin}"
 lockfile="$fksdb_dir/.install-lock"
 
 check_args || exit 1
-	
+
 exec > "$fksdb_dir/install.sh.log"
 export GIT_DIR="$fksdb_dir/.git"
 
@@ -83,10 +84,10 @@ if [ `current_branch` != $branch ] ; then
 fi
 
 (
-	flock -n -w 10 9 || exit 1 
+	flock -n -w 10 9 || exit 1
 	mark_unavailable
 	if update_files ; then
 		post_update
 	fi
 	mark_available
-) 9>$lockfile 
+) 9>$lockfile
