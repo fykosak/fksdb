@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 
-class Single extends AccommodationField {
+class SingleField extends AccommodationField {
     const RESOLUTION_ID = 'single';
 
     public function getMode(): string {

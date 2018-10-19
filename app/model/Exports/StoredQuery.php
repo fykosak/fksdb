@@ -246,7 +246,12 @@ class StoredQuery implements IDataSource, IResource {
     public function getData() {
         if ($this->data === null) {
             $innerSql = $this->getQueryPattern()->sql;
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
+            if ($this->orders || $this->limit !== null || $this->offset !== null) {
+                $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
+            }
+            else {
+                $sql = $innerSql;
+            }
 
             if ($this->orders) {
                 $sql .= ' ORDER BY ' . implode(', ', $this->orders);
