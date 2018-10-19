@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { INetteActions } from '../../../index';
+import { Provider } from 'react-redux';
 import {
     applyMiddleware,
     createStore,
 } from 'redux';
+import logger from 'redux-logger';
+import { INetteActions } from '../../../app-collector/';
 import { config } from '../../../config';
 import { app } from '../../../events/accommodation/reducer';
-import { Provider } from 'react-redux';
-import logger from 'redux-logger';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
 import App from './app';
 

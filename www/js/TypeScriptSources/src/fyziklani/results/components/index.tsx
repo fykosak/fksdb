@@ -5,8 +5,8 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
+import { INetteActions } from '../../../app-collector/';
 import { config } from '../../../config/';
-import { INetteActions } from '../../../index';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
 import App from './app';
