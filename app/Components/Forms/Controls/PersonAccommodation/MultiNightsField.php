@@ -2,9 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-
-class MultiHotels extends AccommodationField {
-    const RESOLUTION_ID = 'multiHotels';
+class MultiNightsField extends AccommodationField {
+    const RESOLUTION_ID = 'multiNights';
 
     public function getMode(): string {
         return self::RESOLUTION_ID;
