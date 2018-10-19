@@ -21,11 +21,11 @@ class RoutingEdit extends FyziklaniModule {
         return Json::encode($this->data);
     }
 
-    protected function getMode(): string {
+    public function getMode(): string {
         return null;
     }
 
-    protected function getComponentName(): string {
+    public function getComponentName(): string {
         return 'routing';
     }
 }

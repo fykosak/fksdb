@@ -29,9 +29,12 @@ class EventFactory {
     }
 
     /**
-     * @param type $options
+     * @param ModelContest $contest
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
      */
-    public function createEvent(ModelContest $contest, $options = 0, ControlGroup $group = null) {
+    public function createEvent(ModelContest $contest, $options = 0, ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -41,21 +44,21 @@ class EventFactory {
         $container->addComponent($type, 'event_type_id');
 
         $container->addText('event_year', _('Ročník akce'))
-                ->addRule(Form::INTEGER, _('%label musí být číslo.'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
+            ->addRule(Form::INTEGER, _('%label musí být číslo.'))
+            ->addRule(Form::FILLED, _('%label je povinný.'))
+            ->setOption('description', _('Ročník akce musí být unikátní pro daný typ akce.'));
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->addRule(Form::MAX_LENGTH, null, 255)
-                ->setOption('description', _('U soustředka místo.'));
+            ->addRule(Form::FILLED, _('%label je povinný.'))
+            ->addRule(Form::MAX_LENGTH, null, 255)
+            ->setOption('description', _('U soustředka místo.'));
 
         $container->addDatePicker('begin', _('Začátek akce'))
-                ->addRule(Form::FILLED, _('%label je povinný.'));
+            ->addRule(Form::FILLED, _('%label je povinný.'));
 
         $container->addDatePicker('end', _('Konec akce'))
-                ->addRule(Form::FILLED, _('%label je povinný.'))
-                ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
+            ->addRule(Form::FILLED, _('%label je povinný.'))
+            ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
 
         $control = new DateTimeBox(_('Začátek registrace'));
         $container->addComponent($control, 'registration_begin');
@@ -65,15 +68,15 @@ class EventFactory {
 
 
         $container->addTextArea('report', _('Text'))
-                ->setOption('description', _('Shrnující text k akci.'));
+            ->setOption('description', _('Shrnující text k akci.'));
 
         $container->addTextArea('parameters', _('Parametry'))
-                ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
+            ->setOption('description', _('V Neon syntaxi, schéma je specifické pro definici akce.'));
 
         return $container;
     }
 
-    public function createEventType(ModelContest $contest) {
+    public function createEventType(ModelContest $contest): SelectBox {
         $element = new SelectBox(_('Typ akce'));
 
         $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');

@@ -4,10 +4,10 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
+use FKSDB\ORM\ModelEventAccommodation;
 use Nette\Forms\Controls\TextInput;
 
-class Matrix extends TextInput implements IReactComponent {
-    const RESOLUTION_ID = 'matrix';
+abstract class AccommodationField extends TextInput implements IReactComponent {
 
     use ReactField;
     /**
@@ -26,30 +26,24 @@ class Matrix extends TextInput implements IReactComponent {
         $this->appendProperty();
     }
 
-    public function getComponentName() {
+    public function getComponentName(): string {
         return 'accommodation';
     }
 
-    public function getModuleName() {
+    public function getModuleName(): string {
         return 'events';
-    }
-
-    public function getMode() {
-        return self::RESOLUTION_ID;
     }
 
     /**
      * @return string
      */
-    public function getData() {
+    public function getData(): string {
         $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($this->eventId);
 
         $accommodationDef = [];
-        /**
-         * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
-         */
         foreach ($accommodations as $accommodation) {
-            $accommodationDef[] = $accommodation->__toArray();
+            $model = ModelEventAccommodation::createFromTableRow($accommodation);
+            $accommodationDef[] = $model->__toArray();
         }
         return count($accommodationDef) ? json_encode($accommodationDef) : NULL;
     }

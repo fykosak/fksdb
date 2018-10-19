@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { IEventAccommodation } from '../middleware/interfaces';
-import Price from './price';
+import { IEventAccommodation } from '../../middleware/interfaces';
+import Price from '../price';
 import Row from './row';
+import { lang } from '../../../../i18n/i18n';
 
 interface IProps {
     accommodationDef?: IEventAccommodation[];
 }
 
-export default class Accommodation extends React.Component<IProps, {}> {
+export default class Matrix extends React.Component<IProps, {}> {
 
     public render() {
         const dates = {};
@@ -40,7 +41,7 @@ export default class Accommodation extends React.Component<IProps, {}> {
             <table className="table">
                 <thead>
                 <tr>
-                    <th>Date</th>
+                    <th>{lang.getText('Date')}</th>
                     {names.map((hotel, i) => {
                         return <th key={i}>{hotel}</th>;
                     })}

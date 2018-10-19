@@ -112,7 +112,7 @@ EOT
                         ],
                     ],
                     'person_accommodation' => [
-                        'matrix' => json_encode(['2018-06-05' => $this->accId]),
+                        'single' => json_encode(['2018-06-05' => $this->accId]),
                     ],
                 ],
                 'e_dsef_group_id' => 2,
