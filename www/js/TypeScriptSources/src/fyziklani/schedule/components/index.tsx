@@ -6,12 +6,12 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config';
-import { app } from '../reducers';
+import { availableLanguages } from '../../../i18n/i18n';
 import { INetteActions } from '../../../index';
 import InputConnector from '../../../input-connector/compoenents';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
+import { app } from '../reducers';
 import App from './app';
-import { availableLanguages } from '../../../i18n/i18n';
 
 interface IProps {
     data: IData;
@@ -20,42 +20,51 @@ interface IProps {
     input: HTMLInputElement;
 }
 
-export type ILocalizedItem = {
-    [lang in availableLanguages]?: ILocalizedScheduleItem;
+export type ILocalizedParallelInfo = {
+    [lang in availableLanguages]?: ILocalizedParallelItem;
 };
 
-export interface IInfo {
+export interface IInfoItem {
     description?: string;
     name: string;
 }
 
 export type ILocalizedInfo = {
-    [lang in availableLanguages]?: IInfo;
+    [lang in availableLanguages]?: IInfoItem;
 };
 
-export interface IScheduleItem extends ILocalizedItem {
+export interface IChooserParallel extends ILocalizedParallelInfo {
     price: IPrice;
     id: number;
 }
 
-export interface ILocalizedScheduleItem {
+export interface ILocalizedParallelItem {
     description: string;
     name: string;
     place: string;
 }
 
-export interface ISchedulePart {
+interface IAbstractScheduleItem {
     date: {
         start: string;
         end: string;
     };
-    type: 'chooser' | 'info';
-    descriptions?: ILocalizedInfo;
-    parallels?: IScheduleItem[];
 }
 
+export interface IScheduleChooserItem extends IAbstractScheduleItem {
+    type: 'chooser';
+    parallels: IChooserParallel[];
+}
+
+export interface IScheduleInfoItem extends IAbstractScheduleItem {
+    type: 'info';
+    descriptions: ILocalizedInfo;
+}
+
+export type IScheduleItem = IScheduleChooserItem | IScheduleInfoItem;
+
 export interface IData {
-    [key: string]: ISchedulePart;
+    [key: string]: IScheduleItem;
 }
 
 const realp: IData = {
@@ -298,7 +307,6 @@ const realp: IData = {
         type: 'info',
     },
 };
-
 
 export default class Index extends React.Component<IProps, {}> {
 

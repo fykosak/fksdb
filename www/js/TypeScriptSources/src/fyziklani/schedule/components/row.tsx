@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { ISchedulePart } from './index';
+import { IScheduleItem } from './index';
 import ScheduleItem from './schedule-item';
 import TimeDisplay from '../../../shared/components/displays/time';
+import InfoItem from './Info-item';
 
 interface IProps {
-    blockData: ISchedulePart;
+    blockData: IScheduleItem;
     blockName: string;
 }
 
@@ -16,35 +17,38 @@ export default class Row extends React.Component<IProps, {}> {
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
-                    return <div className={'col-4'}>
-                        <ScheduleItem key={index} blockName={blockName} item={parallel}/>
-                    </div>;
+                    return <div className={'col-5'}><ScheduleItem key={index} blockName={blockName} item={parallel}/></div>;
                 });
                 break;
             case 'info':
-                component = 'INFO';
+                component = <div className={'col-5'}><InfoItem blockName={blockName} item={blockData.descriptions}/></div>;
+                ;
                 break;
 
         }
+        // <div className={'schedule-line'}/>
         return (
-            <div className={'row'}>
-                <div className={'col-2'}>
+            <div className={'schedule-row schedule-row-' + blockData.type}>
+                <div className={'time-block'}>
                     {this.createdDateLabel(blockData.date)}
                 </div>
-                {component}
+                <div className={'schedule-block row justify-content-between'}>
+                    {component}
+                </div>
+
             </div>
         );
     }
 
     private createdDateLabel(dates: { start: string; end: string }) {
-        return <span>
-            <span className={'date-start'}>
+        return <div className={'schedule-time'}>
+            <div className={'date-start'}>
                 <TimeDisplay date={dates.start}/>
-            </span>
-            <span className={'timeline'}/>
-            <span className={'date-end'}>
+            </div>
+            <div className={'timeline'}>|</div>
+            <div className={'date-end'}>
                 <TimeDisplay date={dates.end}/>
-            </span>
-        </span>;
+            </div>
+        </div>;
     }
 }

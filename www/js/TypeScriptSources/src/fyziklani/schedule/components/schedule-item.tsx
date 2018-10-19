@@ -5,13 +5,12 @@ import {
 } from 'react-redux';
 import { lang } from '../../../i18n/i18n';
 import { changeData } from '../../../input-connector/actions';
-import Card from '../../../shared/components/card';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { IFyziklaniScheduleStore } from '../reducers/';
-import { IScheduleItem } from './index';
+import { IChooserParallel } from './index';
 
 interface IProps {
-    item: IScheduleItem;
+    item: IChooserParallel;
     blockName: string;
 }
 
@@ -33,14 +32,26 @@ class ScheduleItem extends React.Component<IProps & IState, {}> {
         const localizedData = item[langKey];
         return (
 
-            <div onClick={() => {
+            <div className={'schedule-container'} onClick={() => {
                 this.props.setSchedule(active ? null : item.id);
             }}>
-                <Card headline={localizedData.name} level={active ? 'success' : 'info'}>
-                    <span>{localizedData.description}</span>
-                    <span>{localizedData.place}</span>
-                    <PriceDisplay price={item.price}/>
-                </Card>
+                <div className={'schedule-inner-container row ' + (active ? 'active' : '')}>
+                    <div className={'col-2 schedule-check-container'}>
+                        <span className={'h1 mr-2 ' + (active ? 'fa fa-check-square-o' : 'fa fa-square-o')}/>
+                    </div>
+                    <div className={'col-10'}>
+                        <h6>{localizedData.name}</h6>
+                        <div>{localizedData.description}</div>
+                        <div>
+                            <small>{localizedData.place}</small>
+                        </div>
+                        <div>
+                            <small>
+                                <PriceDisplay price={item.price}/>
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

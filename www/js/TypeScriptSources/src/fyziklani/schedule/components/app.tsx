@@ -29,7 +29,7 @@ class Schedule extends React.Component<IState & IProps, {}> {
         }
 
         return (
-            <div>
+            <div style={{backgroundColor: '#f44336', color: 'white'}}>
                 {rows}
                 <Powered/>
             </div>
