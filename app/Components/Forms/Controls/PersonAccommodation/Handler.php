@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\Messages\Message;
 use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
@@ -23,10 +22,10 @@ class Handler {
      * @param ArrayHash $data
      * @param ModelPerson $person
      * @param integer $eventId
-     * @return Message[]
+     * @throws StorageException
+     * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
-        $messages = [];
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 
         $newAccommodationIds = $this->prepareData($data);
@@ -50,26 +49,28 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                throw new StorageException();
-                /*$messages[] = new Message(sprintf(
+                throw new StorageException(sprintf(
                     _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
                     $eventAccommodation->date->format(ModelEventAccommodation::ACC_DATE_FORMAT)
-                ), 'danger');*/
+                ));
+
             }
         }
-        return $messages;
     }
 
     /**
      * @param ArrayHash $data
      * @return integer[]
      */
-    private function prepareData(ArrayHash $data) {
+    private function prepareData(ArrayHash $data): array {
         foreach ($data as $type => $datum) {
             switch ($type) {
-                case Matrix::RESOLUTION_ID:
+                case MatrixField::RESOLUTION_ID:
+                case SingleField::RESOLUTION_ID:
+                case MultiHotelsField::RESOLUTION_ID:
+                case MultiNightsField::RESOLUTION_ID:
                     $data = (array)json_decode($datum);
                     break;
                 default:

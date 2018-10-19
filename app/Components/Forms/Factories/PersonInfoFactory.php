@@ -31,7 +31,7 @@ class PersonInfoFactory {
      * @param $fieldName
      * @return BaseControl
      */
-    public function createField($fieldName) {
+    public function createField($fieldName): BaseControl {
         switch ($fieldName) {
             case   'born':
                 return new BornField();

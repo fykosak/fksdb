@@ -7,20 +7,20 @@ interface IReactComponent {
     /**
      * @return string
      */
-    function getComponentName();
+    function getComponentName(): string;
 
     /**
      * @return string
      */
-    function getModuleName();
+    function getModuleName(): string;
 
     /**
      * @return string
      */
-    function getMode();
+    function getMode(): string;
 
     /**
      * @return string
      */
-    function getData();
+    function getData(): string;
 }
