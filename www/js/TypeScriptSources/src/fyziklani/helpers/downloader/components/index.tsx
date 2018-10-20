@@ -4,7 +4,7 @@ import {
     Dispatch,
 } from 'react-redux';
 import { lang } from '../../../../i18n/i18n';
-import { INetteActions } from '../../../../index';
+import { INetteActions } from '../../../../app-collector/';
 import { IFyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,

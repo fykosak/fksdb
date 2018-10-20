@@ -165,10 +165,12 @@ events:
                         modifiable: %events.fyziklani13.appCond%
                         factory: RefPerson(%events.fyziklani13.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: _('Učitel má zájem o program')
+                        label: _('Učitel má zájem o program počas fyziklani') # FIXME
                         visible: true
                         modifiable: %events.fyziklani13.appCond%
-
+                    teacher_schedule:
+                        label: _('Schedule')
+                        factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%)
             #
             #   PARTICIPANT
             #
@@ -211,7 +213,7 @@ events:
                         factory: RefPerson(%events.fyziklani13.participant%, email, true, role('admin'), false)
                     schedule:
                         label: _('Schedule')
-                        factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory([])
+                        factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%)
 
 
         #

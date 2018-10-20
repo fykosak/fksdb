@@ -446,6 +446,10 @@ body[data-contest="vyfuk"] h6 {
     cursor: pointer;
 }
 
+.info-container {
+    cursor: not-allowed;
+}
+
 .time-block {
     width: 20%;
 }

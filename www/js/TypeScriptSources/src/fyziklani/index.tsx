@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { IApp } from '../app-collector';
 import Results from './results/components/';
 import Routing from './routing/components/index';
 import Schedule from './schedule/components/index';
 import Statistics from './statistics/components/';
 import TaskCodeApp from './submit-form/components/index';
-import { INetteActions } from '../index';
 
-const registerRouting = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+const registerRouting: IApp = (element, module, component, mode, rawData, actions) => {
     const wrap = document.querySelector('#wrap > .container');
     if (wrap) {
         wrap.className = wrap.className.split(' ').reduce((className, name) => {
@@ -22,7 +22,7 @@ const registerRouting = (element: Element, mode: string, rawData: string, action
     return true;
 };
 
-const registerSubmitForm = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+const registerSubmitForm: IApp = (element, module, component, mode, rawData, actions) => {
 
     const c = document.createElement('div');
     const {tasks, teams} = JSON.parse(rawData);
@@ -31,7 +31,7 @@ const registerSubmitForm = (element: Element, mode: string, rawData: string, act
     return true;
 };
 
-const registerResults = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+const registerResults: IApp = (element, module, component, mode, rawData, actions) => {
 
     switch (mode) {
         case 'presentation':
@@ -54,7 +54,7 @@ const registerResults = (element: Element, mode: string, rawData: string, action
     }
 };
 
-const registerSchedule = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+const registerSchedule: IApp = (element, module, component, mode, rawData, actions) => {
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
@@ -71,7 +71,7 @@ const registerSchedule = (element: Element, mode: string, rawData: string, actio
     return true;
 };
 
-const registerStatistics = (element: Element, mode: string, rawData: string, actions: INetteActions): boolean => {
+const registerStatistics: IApp = (element, module, component, mode, rawData, actions) => {
 
     switch (mode) {
         case 'team':
@@ -83,21 +83,21 @@ const registerStatistics = (element: Element, mode: string, rawData: string, act
     }
 };
 
-export const fyziklani = (element: Element, module: string, component: string, mode: string, rawData: string, actions: INetteActions): boolean => {
+export const fyziklani: IApp = (element, module, component, mode, rawData, actions) => {
     if (module !== 'fyziklani') {
         return false;
     }
     switch (component) {
         case 'routing':
-            return registerRouting(element, mode, rawData, actions);
+            return registerRouting(element, module, component, mode, rawData, actions);
         case 'results':
-            return registerResults(element, mode, rawData, actions);
+            return registerResults(element, module, component, mode, rawData, actions);
         case 'submit-form':
-            return registerSubmitForm(element, mode, rawData, actions);
+            return registerSubmitForm(element, module, component, mode, rawData, actions);
         case 'statistics':
-            return registerStatistics(element, mode, rawData, actions);
+            return registerStatistics(element, module, component, mode, rawData, actions);
         case 'schedule':
-            return registerSchedule(element, mode, rawData, actions);
+            return registerSchedule(element, module, component, mode, rawData, actions);
         default:
             throw new Error('not implement');
     }

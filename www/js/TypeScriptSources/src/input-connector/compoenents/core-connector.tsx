@@ -12,7 +12,7 @@ interface IState {
     data?: IInputConnectorItems;
 }
 
-export default class CoreConnector<TState> extends React.Component<ICoreProps & IState, {}> {
+export default class CoreConnector extends React.Component<ICoreProps & IState, {}> {
 
     public componentDidMount() {
         const {input, onSetInitialData} = this.props;
@@ -22,7 +22,7 @@ export default class CoreConnector<TState> extends React.Component<ICoreProps & 
     }
 
     public componentWillReceiveProps(newProps: ICoreProps & IState) {
-        const data: IInputConnectorItems = {}; // FIXME
+        const data: IInputConnectorItems = {};
         let hasValue = false;
 
         for (const key in newProps.data) {

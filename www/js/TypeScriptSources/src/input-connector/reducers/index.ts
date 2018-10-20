@@ -27,7 +27,10 @@ const setData = (state: IInputConnectorState, action): IInputConnectorState => {
 
 const setInitialData = (state: IInputConnectorState, action): IInputConnectorState => {
     if (action.data) {
-        return action.data;
+        return {
+            ...state,
+            data: action.data,
+        };
     }
     return state;
 };
