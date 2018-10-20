@@ -18,13 +18,19 @@ export interface IInputConnectorStore {
 const setData = (state: IInputConnectorState, action): IInputConnectorState => {
     return {
         ...state,
-        [action.key]: action.value,
+        data: {
+            ...state.data,
+            [action.key]: action.value,
+        },
     };
 };
 
 const setInitialData = (state: IInputConnectorState, action): IInputConnectorState => {
     if (action.data) {
-        return action.data;
+        return {
+            ...state,
+            data: action.data,
+        };
     }
     return state;
 };

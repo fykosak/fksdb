@@ -77,8 +77,8 @@ const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>, ownProps: I
 
 const mapStateToProps = (state: IAccommodationStore, ownProps: IProps): IState => {
     let value = null;
-    if (state.inputConnector.hasOwnProperty(ownProps.date)) {
-        value = state.inputConnector[ownProps.date];
+    if (state.inputConnector.data.hasOwnProperty(ownProps.date)) {
+        value = state.inputConnector.data[ownProps.date];
     }
     return {
         value,

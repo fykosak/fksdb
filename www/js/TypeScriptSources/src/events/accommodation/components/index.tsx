@@ -6,9 +6,9 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config/';
+import InputConnector from '../../../input-connector/compoenents/';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
-import InputConnector from '../../../input-connector/compoenents/';
 import Matrix from './matrix/index';
 import MultiNights from './multi-nights';
 import Single from './single';
@@ -43,6 +43,7 @@ export default class Index extends React.Component<IProps, {}> {
             case 'multiNights':
                 return <MultiNights accommodationDef={this.props.accommodationDef}/>;
             case 'multiHotels':
+                throw new Error('Not implement');
             default:
                 throw new Error('no match');
         }
