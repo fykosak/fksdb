@@ -81,7 +81,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      * Syntactic sugar.
      *
      * @param int $key
-     * @return AbstractModelSingle|null
+     * @return ActiveRow|null
      */
     public function findByPrimary($key) {
         $result = $this->getTable()->get($key);

@@ -6,13 +6,14 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\Choosers\BrawlChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
+use FKSDB\ORM\ModelEvent;
 
 /**
  *
@@ -76,10 +77,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var \ServiceBrawlTeamPosition
      */
     protected $serviceBrawlTeamPosition;
+    /**
+     * @var FyziklaniComponentsFactory
+     */
+    protected $fyziklaniComponentsFactory;
 
 
     public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
         $this->serviceBrawlRoom = $serviceBrawlRoom;
+    }
+
+    public function injectFyziklaniComponentsFactory(FyziklaniComponentsFactory $fyziklaniComponentsFactory) {
+        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
     public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
@@ -153,7 +162,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSubtitle() {
-        return sprintf(_('%d. Fyziklání'),$this->getEvent()->event_year);
+        return sprintf(_('%d. Fyziklání'), $this->getEvent()->event_year);
     }
 
     /**
@@ -174,7 +183,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return \FKSDB\ORM\ModelEvent
+     * @return ModelEvent
      */
     public function getEvent() {
         if (!$this->event) {
@@ -196,8 +205,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getNavBarVariant() {
-        return ['brawl brawl' . $this->getEventId(), 'dark'];
+        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
     }
+
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
     }

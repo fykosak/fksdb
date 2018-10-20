@@ -5,7 +5,7 @@ import Row from './row';
 import { lang } from '../../../../i18n/i18n';
 
 interface IProps {
-    accommodationDef?: IEventAccommodation[];
+    accommodationDef: IEventAccommodation[];
 }
 
 export default class Matrix extends React.Component<IProps, {}> {

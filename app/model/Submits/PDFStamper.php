@@ -34,11 +34,10 @@ class PDFStamper implements IStorageProcessing {
      *
      * @var string printf mask for arguments: series, label, contestant's name
      */
-    private $stampMask;
+    const STAMP_MASK = 'S%dU%s, %s, %s';
 
-    function __construct($fontSize, $stampMask = 'S%dU%s, %s') {
+    function __construct($fontSize) {
         $this->fontSize = $fontSize;
-        $this->stampMask = $stampMask;
     }
 
     public function getInputFile() {
@@ -62,7 +61,7 @@ class PDFStamper implements IStorageProcessing {
     }
 
     public function getStampMask() {
-        return $this->stampMask;
+        return self::STAMP_MASK;
     }
 
     public function process(ModelSubmit $submit) {
@@ -78,7 +77,7 @@ class PDFStamper implements IStorageProcessing {
         $label = $submit->getTask()->label;
         $person = $submit->getContestant()->getPerson();
 
-        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullname());
+        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullname(), $submit->submit_id);
         try {
             $this->stampText($stampText);
         } catch (fks_pdf_parser_exception $e) {
@@ -88,11 +87,11 @@ class PDFStamper implements IStorageProcessing {
 
     private function stampText($text) {
         $pdf = new FPDI();
-        $pagecount = $pdf->setSourceFile($this->getInputFile());
+        $pageCount = $pdf->setSourceFile($this->getInputFile());
 
-        for ($page = 1; $page <= $pagecount; ++$page) {
+        for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
-
+            $text .= ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
             $orientation = $specs['h'] > $specs['w'] ? 'P' : 'L';
             $pdf->addPage($orientation);
@@ -107,12 +106,12 @@ class PDFStamper implements IStorageProcessing {
             $th = $this->getFontSize() * 0.35; // 1pt = 0.35mm
             $x = ($pw - $tw) / 2;
             $y = $th + $offset;
-
+            $tmpQRCodeFile = '';
             // stamp background
             $margin = 2;
             $pdf->SetFillColor(240, 240, 240);
             $pdf->Rect($x - $margin, $y - $th - $margin, $tw + 2 * $margin, ($th + 2 * $margin), 'F');
-
+            $pdf->Image($tmpQRCodeFile, $y, $y, $th, $th);
             $stampText = Strings::webalize($text, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Text($x, $y, $stampText);
         }

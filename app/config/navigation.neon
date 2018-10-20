@@ -55,5 +55,11 @@ navigation:
         fyziklani.rooms.default:
             - fyziklani.rooms.edit
             - fyziklani.rooms.download
+        fyziklani.results.default:
+            - fyziklani.dashboard.default
+            - fyziklani.results.resultsPresentation
+            - fyziklani.results.resultsView
+            - fyziklani.results.teamStatistics
+            - fyziklani.results.taskStatistics
 
 

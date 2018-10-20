@@ -11,6 +11,11 @@ use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
+/**
+ * Class ClosePresenter
+ * @package FyziklaniModule
+ * @property FormControl closeCategoryAForm
+ */
 class ClosePresenter extends BasePresenter {
 
     /** @var ModelFyziklaniTeam */

@@ -7,7 +7,6 @@ use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use ModelFyziklaniSubmit;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\Button;
@@ -151,21 +150,23 @@ class SubmitPresenter extends BasePresenter {
 
         if ($this->isAjax()) {
 
-            $fullCode = $this->getHttpRequest()->getQuery('fullCode');
-            $points = $this->getHttpRequest()->getQuery('points');
+            $fullCode = $this->getHttpRequest()->getPost('requestData')['code'];
+            $points = $this->getHttpRequest()->getPost('requestData')['points'];
+            $response = new \ReactResponse();
+            $response->setAct('submit');
+
             if ($this->checkTaskCode($fullCode, $msg)) {
                 $msg = $this->savePoints($fullCode, $points);
             } else {
                 $msg = [$msg, 'danger'];
             }
-            $this->sendResponse(new JsonResponse($msg));
+            $response->addMessage(new \ReactMessage($msg[0], $msg[1]));
+            $this->sendResponse($response);
         }
     }
 
     public function createComponentEntryForm() {
-        $teams = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
-        $tasks = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-        return $this->fyziklaniFactory->createEntryForm($teams, $tasks);
+        return $this->fyziklaniFactory->createEntryForm($this->getEventId());
     }
 
     public function createComponentEntryQRForm() {
@@ -207,7 +208,6 @@ class SubmitPresenter extends BasePresenter {
         }
         /* Existenica týmu */
         $teamId = $this->taskCodePreprocessor->extractTeamId($taskCode);
-
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->getEventId())) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamId);
