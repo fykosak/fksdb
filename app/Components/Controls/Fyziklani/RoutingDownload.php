@@ -57,6 +57,7 @@ class RoutingDownload extends Control {
     }
 
     public function render() {
+        parent::render();
         $this->template->rooms = $this->rooms;
         $this->template->buildings = $this->buildings;
         $this->template->teams = $this->teams;
@@ -74,4 +75,5 @@ class RoutingDownload extends Control {
             $obj->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js');
         }
     }
+
 }

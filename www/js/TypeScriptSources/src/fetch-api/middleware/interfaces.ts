@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import jqXHR = JQuery.jqXHR;
 
 export interface IMessage {
     level: string;
@@ -6,24 +7,24 @@ export interface IMessage {
 }
 
 export interface IRequest<F> {
-    data: F;
+    requestData: F;
     act: string;
 }
 
 export interface IResponse<D> {
     act: string;
     messages: IMessage[];
-    data: D;
+    responseData: D;
 }
 
-export interface ISubmitAction extends Action {
+export interface IActionSubmit extends Action {
     accessKey: string;
 }
 
-export interface ISubmitFailAction extends ISubmitAction {
-    error: any;
+export interface IActionSubmitFail<T = any> extends IActionSubmit {
+    error: jqXHR<T>;
 }
 
-export interface ISubmitSuccessAction<D> extends ISubmitAction {
+export interface IActionSubmitSuccess<D> extends IActionSubmit {
     data: IResponse<D>;
 }

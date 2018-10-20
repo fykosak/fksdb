@@ -4,22 +4,23 @@ import {
     ACTION_SUBMIT_SUCCESS,
 } from '../actions/submit';
 import {
+    IActionSubmit,
+    IActionSubmitFail,
+    IActionSubmitSuccess,
     IMessage,
     IResponse,
-    ISubmitAction,
-    ISubmitFailAction,
-    ISubmitSuccessAction,
 } from '../middleware/interfaces';
+import jqXHR = JQuery.jqXHR;
 
-export interface IState {
+export interface IFetchApiState<T= any> {
     [accessKey: string]: {
         submitting?: boolean;
-        error?: any;
+        error?: jqXHR<T>;
         messages?: IMessage[];
     };
 }
 
-const submitStart = (state: IState, action: ISubmitAction): IState => {
+const submitStart = (state: IFetchApiState, action: IActionSubmit): IFetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -31,20 +32,24 @@ const submitStart = (state: IState, action: ISubmitAction): IState => {
         },
     };
 };
-const submitFail = (state: IState, action: ISubmitFailAction): IState => {
+const submitFail = (state: IFetchApiState, action: IActionSubmitFail): IFetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
         [accessKey]: {
             ...state[accessKey],
             error: action.error,
-            messages: [action.error.toString(), 'danger'],
+            messages: [{
+                level: 'danger',
+                text: action.error.toString(),
+            }],
             submitting: false,
         },
     };
 };
-const submitSuccess = (state: IState, action: ISubmitSuccessAction<any>): IState => {
-    const data: IResponse<any> = action.data;
+
+function submitSuccess<D= any>(state: IFetchApiState, action: IActionSubmitSuccess<D>): IFetchApiState {
+    const data: IResponse<D> = action.data;
     const {accessKey} = action;
     return {
         ...state,
@@ -54,19 +59,19 @@ const submitSuccess = (state: IState, action: ISubmitSuccessAction<any>): IState
             submitting: false,
         },
     };
-};
+}
 
-const initState: IState = {};
+const initState: IFetchApiState = {};
 
-export const submit = (state: IState = initState, action): IState => {
+export function submit<D= any>(state: IFetchApiState = initState, action): IFetchApiState {
     switch (action.type) {
         case ACTION_SUBMIT_START:
             return submitStart(state, action);
         case ACTION_SUBMIT_FAIL:
             return submitFail(state, action);
         case ACTION_SUBMIT_SUCCESS:
-            return submitSuccess(state, action);
+            return submitSuccess<D>(state, action);
         default:
             return state;
     }
-};
+}

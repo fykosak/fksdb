@@ -43,13 +43,16 @@ class RoomsPresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
      */
     public function renderEdit() {
         if ($this->isAjax()) {
-            $data = Json::decode($this->getHttpRequest()->getPost('data'));
+            $data = $this->getHttpRequest()->getPost('requestData');
             $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
-            $this->sendResponse(new JsonResponse(['updatedTeams' => $updatedTeams]));
+            $response = new \ReactResponse();
+            $response->setAct('update-teams');
+            $response->setData(['updatedTeams' => $updatedTeams]);
+            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
+            $this->sendResponse($response);
         }
     }
 
@@ -64,12 +67,6 @@ class RoomsPresenter extends BasePresenter {
 
 
     public function createComponentRouting() {
-        $control = new RoutingEdit();
-        $data = [
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->getEventId()),
-            'rooms' => $this->getRooms(),
-        ];
-        $control->setData($data);
-        return $control;
+       return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context,$this->getEvent());
     }
 }

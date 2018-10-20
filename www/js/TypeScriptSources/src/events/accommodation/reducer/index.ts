@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 import {
-    accommodation,
-    IAccommodationState,
-} from './accommodation';
+    IInputConnectorState,
+    inputConnector,
+} from '../../../input-connector/reducers';
 
 export const app = combineReducers({
-    accommodation,
+    inputConnector,
 });
 
 export interface IAccommodationStore {
-    accommodation: IAccommodationState;
+    inputConnector: IInputConnectorState;
 }

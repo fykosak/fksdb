@@ -16,12 +16,7 @@ class ServiceBrawlRoom extends \AbstractServiceSingle {
              */
             $room = ModelBrawlRoom::createFromTableRow($this->findByPrimary($roomId));
             if ($room) {
-                $rooms[] = [
-                    'roomId' => $room->room_id,
-                    'name' => $room->name,
-                    'x' => $room->columns,
-                    'y' => $room->rows,
-                ];
+                $rooms[] = $room->__toArray();
             }
         }
         return $rooms;

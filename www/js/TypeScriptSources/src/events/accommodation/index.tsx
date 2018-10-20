@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { IApp } from '../../index';
+import { IApp } from '../../app-collector/';
 import Index from './components';
 
-export const eventAccommodation: IApp = (element: Element, module: string, component: string, mode: string, rawData: string): boolean => {
+export const eventAccommodation: IApp = (element, module, component, mode, rawData) => {
     if (module !== 'events') {
         return false;
     }

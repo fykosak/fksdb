@@ -24,12 +24,13 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
     public function updateRouting($data) {
         $updatedTeams = [];
         foreach ($data as $teamData) {
+            $teamData = (object)$teamData;
             try {
                 /**
                  * @var $model \ModelBrawlTeamPosition
                  */
                 $model = $this->findByTeamId($teamData->teamId);
-                if (!is_null($teamData->x) && !is_null($teamData->y)) {
+                if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
 
                     $data = [
                         'e_fyziklani_team_id' => $teamData->teamId,

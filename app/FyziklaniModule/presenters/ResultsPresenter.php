@@ -2,86 +2,99 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\React\Fyziklani\Results;
-use Nette\Application\Responses\JsonResponse;
-use Nette\DateTime;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 
 class ResultsPresenter extends BasePresenter {
+
     /**
      * @throws \Nette\Application\ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
-        if ($this->getAction() == 'default') {
-            return;
-        }
-        parent::unauthorizedAccess();
-    }
-
-    public function requiresLogin() {
-        return $this->getAction() !== 'default';
-    }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderDefault() {
-
-        if ($this->isAjax()) {
-            $isOrg = $this->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
-            /**
-             * @var DateTime $lastUpdated
-             */
-            $lastUpdated = $this->getHttpRequest()->getQuery('lastUpdated');
-
-            $result = [];
-            $result['lastUpdated'] = (new DateTime())->__toString();
-            $result['submits'] = [];
-            $result['isOrg'] = $isOrg;
-            if ($isOrg || $this->isResultsVisible()) {
-                $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEventId(), $lastUpdated);
-            }
-            $result['refreshDelay'] = $this->getEvent()->getParameter('refreshDelay');
-            $result['times'] = [
-                'toStart' => strtotime($this->getEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
-                'visible' => $this->isResultsVisible()
-            ];
-            $this->sendResponse(new JsonResponse($result));
+        switch ($this->getAction()) {
+            case 'default':
+            case 'resultsView':
+            case 'taskStatistics':
+            case 'teamStatistics':
+                return;
+            default:
+                parent::unauthorizedAccess();
         }
     }
 
-    public function createComponentResults() {
-        $control = new Results();
-// TODO set others parameters (game start/end...)
-        $control->setRooms($this->getRooms());
-        $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
-        $control->setTasks($this->serviceFyziklaniTask->getTasks($this->getEventId()));
-
-        $control->setParams([
-            'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$this->getEvent()->getParameter('gameStart'),
-            'gameEnd' => (string)$this->getEvent()->getParameter('gameEnd'),
-        ]);
-        return $control;
+    public function requiresLogin(): bool {
+        switch ($this->getAction()) {
+            case 'default':
+            case 'resultsView':
+            case 'taskStatistics':
+            case 'teamStatistics':
+                return false;
+            default:
+                return true;
+        }
     }
 
     public function titleDefault() {
+        $this->setTitle(_('Výsledky a statistiky FYKOSího Fyziklání'));
+        $this->setIcon('fa fa-trophy');
+    }
+
+    public function titleResultsView() {
         $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
         $this->setIcon('fa fa-trophy');
+    }
+
+    public function titleResultsPresentation() {
+        $this->setIcon('fa fa-table');
+        return $this->setTitle(_('Presentace FYKOSího Fyziklání'));
+    }
+
+    public function titleTeamStatistics() {
+        $this->setTitle(_('Tímové statistiky FYKOSího Fyzikláni'));
+        $this->setIcon('fa fa-line-chart');
+    }
+
+    public function titleTaskStatistics() {
+        $this->setTitle(_('Statistiky úloh FYKOSího Fyzikláni'));
+        $this->setIcon('fa fa-pie-chart');
     }
 
     public function authorizedDefault() {
         $this->setAuthorized(true);
     }
 
-    /**
-     * @return boolean
-     */
-    private function isResultsVisible() {
-        $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
-        $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));
-        $after = (time() > strtotime($this->getEvent()->getParameter('resultsDisplay')));
+    public function authorizedResultsView() {
+        $this->authorizedDefault();
+    }
 
-        return $hardDisplay || ($before && $after);
+    public function authorizedTaskStatistics() {
+        $this->authorizedDefault();
+    }
+
+    public function authorizedTeamStatistics() {
+        $this->authorizedDefault();
+    }
+
+    public function authorizedResultsPresentation() {
+        $this->getHttpRequest();
+        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
+    }
+
+    public function createComponentResultsView(): ResultsView {
+        return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
+    }
+
+    public function createComponentResultsPresentation(): ResultsPresentation {
+        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
+    }
+
+    public function createComponentTeamStatistics(): TeamStatistics {
+        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
+    }
+
+    public function createComponentTaskStatistics(): TaskStatistics {
+        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
     }
 }
