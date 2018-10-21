@@ -19,7 +19,9 @@ class ScheduleFactory extends AbstractFactory {
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
-        return new ScheduleField($this->data);
+        $component = new ScheduleField($this->data);
+        $component->setOption('description', $field->getDescription());
+        return $component;
     }
 
     /**

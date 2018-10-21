@@ -20,7 +20,7 @@ interface IState {
     setSchedule?(id: number): void;
 }
 
-class ScheduleItem extends React.Component<IProps & IState, {}> {
+class ChooserItem extends React.Component<IProps & IState, {}> {
 
     public render() {
         const {item, value} = this.props;
@@ -32,11 +32,11 @@ class ScheduleItem extends React.Component<IProps & IState, {}> {
         const localizedData = item[langKey];
         return (
 
-            <div className={'schedule-container'} onClick={() => {
+            <div onClick={() => {
                 this.props.setSchedule(active ? null : item.id);
             }}>
-                <div className={'schedule-inner-container row ' + (active ? 'active' : '')}>
-                    <div className={'col-2 schedule-check-container'}>
+                <div className={'chooser-container row ' + (active ? 'active' : '')}>
+                    <div className={'col-2 chooser-check-container'}>
                         <span className={'h1 mr-2 ' + (active ? 'fa fa-check-square-o' : 'fa fa-square-o')}/>
                     </div>
                     <div className={'col-10'}>
@@ -70,4 +70,4 @@ const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>, ownProp
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleItem);
+export default connect(mapStateToProps, mapDispatchToProps)(ChooserItem);

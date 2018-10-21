@@ -1,9 +1,9 @@
 import * as React from 'react';
 import DateDisplay from '../../../shared/components/displays/date';
 import TimeDisplay from '../../../shared/components/displays/time';
+import ChooserItem from './chooser-item';
 import { IScheduleItem } from './index';
-import InfoItem from './Info-item';
-import ScheduleItem from './schedule-item';
+import InfoItem from './info-item';
 
 interface IProps {
     blockData: IScheduleItem;
@@ -19,7 +19,7 @@ export default class Row extends React.Component<IProps, {}> {
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
-                    return <div className={'col-5'}><ScheduleItem key={index} blockName={blockName} item={parallel}/></div>;
+                    return <div className={'col-5'}><ChooserItem key={index} blockName={blockName} item={parallel}/></div>;
                 });
                 break;
             case 'info':

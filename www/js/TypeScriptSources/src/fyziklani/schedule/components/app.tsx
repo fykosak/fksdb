@@ -1,21 +1,12 @@
 import * as React from 'react';
-import {
-    connect,
-    Dispatch,
-} from 'react-redux';
-import Powered from '../../../shared/powered';
-import { IFyziklaniScheduleStore } from '../reducers/';
 import { IData } from './index';
 import Row from './row';
-
-interface IState {
-}
 
 interface IProps {
     data: IData;
 }
 
-class Schedule extends React.Component<IState & IProps, {}> {
+export default class Schedule extends React.Component<IProps, {}> {
 
     public render() {
         const {data} = this.props;
@@ -23,7 +14,6 @@ class Schedule extends React.Component<IState & IProps, {}> {
         for (const blockName in data) {
             if (data.hasOwnProperty(blockName)) {
                 const blockData = data[blockName];
-
                 rows.push(<Row key={blockName} blockData={blockData} blockName={blockName}/>);
             }
         }
@@ -31,18 +21,7 @@ class Schedule extends React.Component<IState & IProps, {}> {
         return (
             <div className={'schedule-field-container'}>
                 {rows}
-                <Powered/>
             </div>
         );
     }
 }
-
-const mapStateToProps = (): IState => {
-    return {};
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Schedule);

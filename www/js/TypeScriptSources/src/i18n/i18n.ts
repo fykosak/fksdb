@@ -1,5 +1,9 @@
 import { data } from './i18n-data';
 
+export type ILangMap<TValue> = {
+    [key in availableLanguages]: TValue;
+};
+
 interface ILanguageData {
     [lang: string]: {
         [msqId: string]: string;

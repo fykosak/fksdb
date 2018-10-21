@@ -17,9 +17,8 @@ export default class InfoItem extends React.Component<IProps, {}> {
         }
         const localizedData = item[langKey];
         return (
-
-            <div className={'info-container'}>
-                <div className={'info-inner-container row'}>
+            <div>
+                <div className={'info-container row'}>
                     <div className={'col-2 info-check-container'}>
                         <span className={'h1 mr-2 fa fa-info'}/>
                     </div>

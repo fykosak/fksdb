@@ -409,6 +409,9 @@ body[data-contest="vyfuk"] h6 {
     padding: .5rem;
     border-bottom: #f44336 1px dashed;
 }
+.schedule-row:first-of-type{
+    border-top: #f44336 1px dashed;
+}
 
 .schedule-line {
     width: 100%;
@@ -470,19 +473,22 @@ body[data-contest="vyfuk"] h6 {
     width: 100%;
 }
 
-.schedule-inner-container, .info-inner-container {
-    padding: 1rem;
-    border-radius: 1rem;
+.chooser-container, .info-container {
     width: 100%;
-    border: solid 1px #f44336;
 }
 
-.schedule-inner-container.active {
+.chooser-container {
+    border: solid 1px #f44336;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.chooser-container.active {
     color: white; /**/
     background-color: #f44336;
 }
 
-.schedule-check-container, .info-check-container {
+.chooser-check-container, .info-check-container {
     align-content: center;
     align-items: center;
     display: flex;

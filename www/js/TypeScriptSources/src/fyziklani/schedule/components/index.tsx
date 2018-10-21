@@ -7,11 +7,12 @@ import {
 import logger from 'redux-logger';
 import { INetteActions } from '../../../app-collector/';
 import { config } from '../../../config';
-import { availableLanguages } from '../../../i18n/i18n';
+import { ILangMap } from '../../../i18n/i18n';
 import InputConnector from '../../../input-connector/compoenents';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
 import { app } from '../reducers';
 import App from './app';
+import CompactValue from './compact-value';
 
 interface IProps {
     data: IData;
@@ -20,18 +21,14 @@ interface IProps {
     input: HTMLInputElement;
 }
 
-export type ILocalizedParallelInfo = {
-    [lang in availableLanguages]?: ILocalizedParallelItem;
-};
+export type ILocalizedParallelInfo = ILangMap<ILocalizedParallelItem>;
 
 export interface IInfoItem {
     description?: string;
     name: string;
 }
 
-export type ILocalizedInfo = {
-    [lang in availableLanguages]?: IInfoItem;
-};
+export type ILocalizedInfo = ILangMap<IInfoItem>;
 
 export interface IChooserParallel extends ILocalizedParallelInfo {
     price: IPrice;
@@ -75,8 +72,10 @@ export default class Index extends React.Component<IProps, {}> {
         return (
             <Provider store={store}>
                 <>
+                    <CompactValue data={this.props.data}/>
                     <InputConnector input={this.props.input}/>
                     <App data={this.props.data}/>
+
                 </>
             </Provider>
         );
