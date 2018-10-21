@@ -49,6 +49,8 @@ parameters:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.matrix
                     p*.person_id.person_info.id_number: p*.person_id.person_accommodation.matrix
                     team.teacher_present: team.teacher_id
+                    team.teacher_schedule: team.teacher_id
+                    p*.schedule: p*.person_id
 
 events:
     fyziklani13:
@@ -90,6 +92,8 @@ events:
                 default: []
             buildings:
                  default: []
+            schedule:
+                default: %events.fyziklani13.schedule% # aby sa k tomu dalo dokopať
 
         baseMachines:
             #

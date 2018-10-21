@@ -65,7 +65,7 @@ const registerSchedule: IApp = (element, module, component, mode, rawData, actio
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-    //element.style.display = 'none';
+    element.style.display = 'none';
 
     ReactDOM.render(<Schedule mode={mode} actions={actions} input={element} data={data}/>, container);
     return true;

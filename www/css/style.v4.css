@@ -138,8 +138,12 @@ body[data-contest="vyfuk"] h6 {
     background-color: #1175da;
 }
 
-.bg-brawl {
-    background-color: #7611da;
+.bg-fyziklani {
+    background-color: #d7392e;
+}
+
+.bg-fykos.event-id-134 {
+    background-color: #d7392e;
 }
 
 .bg-error {
@@ -403,12 +407,12 @@ body[data-contest="vyfuk"] h6 {
     justify-content: space-between;
     position: relative;
     padding: .5rem;
-    border-bottom: white 1px dashed;
+    border-bottom: #f44336 1px dashed;
 }
 
 .schedule-line {
     width: 100%;
-    border-bottom: white 1px dashed;
+    border-bottom: #f44336 1px dashed;
     position: absolute;
 }
 
@@ -470,16 +474,21 @@ body[data-contest="vyfuk"] h6 {
     padding: 1rem;
     border-radius: 1rem;
     width: 100%;
+    border: solid 1px #f44336;
 }
 
 .schedule-inner-container.active {
-    color: #f44336;
-    background-color: white;
+    color: white; /**/
+    background-color: #f44336;
 }
 
 .schedule-check-container, .info-check-container {
     align-content: center;
     align-items: center;
     display: flex;
+}
+
+.schedule-field-container {
+    color: #f44336;
 }
 

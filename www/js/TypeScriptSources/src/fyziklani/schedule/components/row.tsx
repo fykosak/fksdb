@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { IScheduleItem } from './index';
-import ScheduleItem from './schedule-item';
+import DateDisplay from '../../../shared/components/displays/date';
 import TimeDisplay from '../../../shared/components/displays/time';
+import { IScheduleItem } from './index';
 import InfoItem from './Info-item';
+import ScheduleItem from './schedule-item';
 
 interface IProps {
     blockData: IScheduleItem;
@@ -14,6 +15,7 @@ export default class Row extends React.Component<IProps, {}> {
     public render() {
         const {blockData, blockName} = this.props;
         let component = null;
+        const {type} = blockData;
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
@@ -22,8 +24,9 @@ export default class Row extends React.Component<IProps, {}> {
                 break;
             case 'info':
                 component = <div className={'col-5'}><InfoItem blockName={blockName} item={blockData.descriptions}/></div>;
-                ;
                 break;
+            default:
+                throw new Error('Unsupported type:' + type);
 
         }
         // <div className={'schedule-line'}/>
@@ -43,11 +46,11 @@ export default class Row extends React.Component<IProps, {}> {
     private createdDateLabel(dates: { start: string; end: string }) {
         return <div className={'schedule-time'}>
             <div className={'date-start'}>
-                <TimeDisplay date={dates.start}/>
+                <DateDisplay date={dates.start} options={{weekday: 'short'}}/> <TimeDisplay date={dates.start}/>
             </div>
             <div className={'timeline'}>|</div>
             <div className={'date-end'}>
-                <TimeDisplay date={dates.end}/>
+                <DateDisplay date={dates.start} options={{weekday: 'short'}}/> <TimeDisplay date={dates.end}/>
             </div>
         </div>;
     }
