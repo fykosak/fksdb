@@ -18,7 +18,7 @@ events:
 
                 states:
                     applied: _('Přihlášen')
-                    participated: _('častnil se')
+                    participated: _('Účastnil se')
                     missed: _('Nepřijel')
                     cancelled: _('Zrušen')
 
