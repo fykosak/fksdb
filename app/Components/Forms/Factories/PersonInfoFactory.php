@@ -81,7 +81,7 @@ class PersonInfoFactory {
             case'nationality':
                 return new NationalityField();
             default:
-                throw new InvalidArgumentException('Field ' . $fieldName . ' not exist');
+                throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }
 
     }

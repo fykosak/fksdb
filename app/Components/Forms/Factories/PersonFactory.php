@@ -80,7 +80,7 @@ class PersonFactory {
             case 'born_family_name':
                 return new BornFamilyNameField();
             default:
-                throw new InvalidArgumentException('Field ' . $fieldName . ' not exist');
+                throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }
     }
 }
