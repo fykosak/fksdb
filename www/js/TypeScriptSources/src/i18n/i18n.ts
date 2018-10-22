@@ -4,17 +4,15 @@ export type ILangMap<TValue> = {
     [key in availableLanguages]: TValue;
 };
 
-interface ILanguageData {
-    [lang: string]: {
-        [msqId: string]: string;
-    };
-}
+type ILanguageData = ILangMap<{
+    [msqId: string]: string;
+}>;
 
 export type availableLanguages = 'cs' | 'en' | 'sk';
 
 class Lang {
 
-    private readonly data: ILanguageData = {};
+    private readonly data: ILanguageData = {cs: {}, en: {}, sk: {}};
 
     private currentLocale: availableLanguages = 'cs';
 

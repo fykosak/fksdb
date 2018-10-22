@@ -64,7 +64,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore, ownProps: IProps): ISta
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>, ownProps: IProps): {} => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>, ownProps: IProps): IState => {
     return {
         setSchedule: (id: number) => dispatch(changeData(ownProps.blockName, id)),
     };

@@ -68,17 +68,16 @@ export default class Index extends React.Component<IProps, {}> {
 
     public render() {
         const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-
+        const {data, input} = this.props;
         return (
             <Provider store={store}>
                 <>
-                    <CompactValue data={this.props.data}/>
-                    <InputConnector input={this.props.input}/>
-                    <App data={this.props.data}/>
+                    <CompactValue data={data}/>
+                    <InputConnector input={input}/>
+                    <App data={data}/>
 
                 </>
             </Provider>
         );
-        // <InputConnector input={this.props.input}/>
     }
 }
