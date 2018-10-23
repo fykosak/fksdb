@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\ORM\ModelPerson;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -195,7 +196,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
-
+        Debugger::barDump($model, 'model');
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
@@ -209,7 +210,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
                 $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
-
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
@@ -220,6 +220,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                     $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
+                    $component->setValue($value);
                 } else if ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
@@ -394,6 +395,8 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     }
 
     protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+        Debugger::barDump($person, 'setPersonValue');
+
         if (!$person) {
             return null;
         }
