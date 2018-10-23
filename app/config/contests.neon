@@ -115,7 +115,7 @@ parameters:
                     required: false
                 health_insurance:
                     required: false
-                nationality:
+                citizenship:
                     required: false
         adminEventOrg:
             person:

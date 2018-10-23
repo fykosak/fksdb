@@ -404,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   `account` VARCHAR(32) NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
   `agreed` DATETIME NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
   `birthplace` VARCHAR(255) NULL DEFAULT NULL COMMENT 'název města narození osoby',
-  `nationality` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Štátna prislušnosť',
+  `citizenship` CHAR(2) NULL DEFAULT NULL COMMENT 'Štátna prislušnosť',
   `health_insurance` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Zdravotná poistovňa',
   `employer` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
   `academic_degree_prefix` varchar(64) NULL DEFAULT NULL COMMENT 'titul pred menom',

@@ -16,7 +16,7 @@ use FKSDB\Components\Forms\Factories\PersonInfo\HealthInsuranceField;
 use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
 use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
 use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
-use FKSDB\Components\Forms\Factories\PersonInfo\NationalityField;
+use FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipField;
 use FKSDB\Components\Forms\Factories\PersonInfo\NoteField;
 use FKSDB\Components\Forms\Factories\PersonInfo\OriginField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
@@ -32,6 +32,15 @@ use Nette\InvalidArgumentException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonInfoFactory {
+    /**
+     * @var \ServiceRegion
+     */
+    private $serviceRegion;
+
+    public function __construct(\ServiceRegion $serviceRegion) {
+        $this->serviceRegion = $serviceRegion;
+    }
+
     /**
      * @param $fieldName
      * @return BaseControl
@@ -78,8 +87,8 @@ class PersonInfoFactory {
                 return new EmployerField();
             case 'health_insurance':
                 return new HealthInsuranceField();
-            case'nationality':
-                return new NationalityField();
+            case 'citizenship':
+                return new CitizenshipField($this->serviceRegion);
             default:
                 throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }
