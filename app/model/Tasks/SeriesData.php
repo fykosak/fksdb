@@ -2,11 +2,11 @@
 
 namespace Tasks;
 
-use ModelContest;
+use FKSDB\ORM\ModelContest;
 
 /**
  * "POD" to hold series pipeline processing data.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesData {
@@ -37,9 +37,9 @@ class SeriesData {
     private $data;
 
     /**
-     * @var array[tasknr] of ModelTask
+     * @var array[tasknr] of FKSDB\ORM\ModelTask
      */
-    private $tasks = array();
+    private $tasks = [];
 
     function __construct(ModelContest $contest, $year, $series, $language, $data) {
         $this->contest = $contest;

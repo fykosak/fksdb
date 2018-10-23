@@ -6,7 +6,7 @@
 class ServiceEventType extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_TYPE;
-    protected $modelClassName = 'ModelEventType';
+    protected $modelClassName = 'FKSDB\ORM\ModelEventType';
 
 }
 

@@ -9,4 +9,12 @@
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
 
+    public function __toArray() {
+        return [
+            'label' => $this->label,
+            'taskId' => $this->fyziklani_task_id,
+            'name' => $this->name,
+        ];
+    }
+
 }

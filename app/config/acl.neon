@@ -8,7 +8,7 @@
 services:
     # assertions
     ownerAssertion: Authorization\Assertions\OwnerAssertion
-    
+
     # data services
     #- authorizator:
      #   class: Nette\Security\Permission
@@ -38,7 +38,7 @@ acl:
     # Resources
     - addResource(submit)        # revoke, upload, download, edit, ALL
     - addResource(task)          # insert, edit
-    - addResource(person)        # create, edit, list, delete, merge, stalk, stalk-search
+    - addResource(person)        # create, edit, list, delete, merge, stalk.restrict, stalk.search, stalk.search, stalk.full
     - addResource(contestant)    # create, edit, list, delete
     - addResource(school)        # create, edit, list, delete
     - addResource(storedQuery)   # create, edit, list, delete, show
@@ -48,6 +48,8 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(fyziklani)
+    - addResource(teacher)        # create, edit, list
+    - addResource(eventAccommodation) # create, edit, list
 
     # ACL
     - allow(contestant, submit, upload)
@@ -62,8 +64,11 @@ acl:
     - allow(org, org, edit, [@ownerAssertion, 'isOrgSelf'])
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, storedQuery, show)
-    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(ModelEventType::FYZIKLANI))))
-    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(ModelEventType::XXX))))
+    - allow(org, export, execute, and(qid('fyziklani.prez'), isEventOrgByYear(::constant(FKSDB\ORM\ModelEventType::FYZIKLANI))))
+    - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, person, stalk.search)
+    - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
     - allow(webmaster, task, insert) # stahování úloh
@@ -81,10 +86,12 @@ acl:
     - allow(inboxManager, contestant, create)
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
 
     # list privileges explicitly, so that we exclude stalk and stalk-search
     - allow(dataManager, person, [create, edit, list, delete, merge])
     - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(dataManager, person, stalk.full)
 
     - allow(exportDesigner, storedQuery, ::constant(Nette\Security\Permission::ALL))
     - allow(exportDesigner, export, ::constant(Nette\Security\Permission::ALL))
@@ -94,11 +101,12 @@ acl:
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
+    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, person, stalk.full)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(boss, person, stalk, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(boss, person, stalk-search)
+    - allow(boss, person, stalk.full)
 
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))

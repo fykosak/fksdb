@@ -2,7 +2,7 @@
 
 namespace Persons\Deduplication;
 
-use FKS\Logging\ILogger;
+use FKSDB\Logging\ILogger;
 use Nette\Database\Connection;
 use Nette\Database\Reflection\AmbiguousReferenceKeyException;
 use Nette\Database\Reflection\MissingReferenceException;
@@ -13,10 +13,10 @@ use Persons\Deduplication\MergeStrategy\IMergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @note Works with single column primary keys only.
  * @note Assumes name of the FK column is the same like the referenced PK column.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TableMerger {
@@ -49,7 +49,7 @@ class TableMerger {
     /**
      * @var IMergeStrategy[]
      */
-    private $columnMergeStrategies = array();
+    private $columnMergeStrategies = [];
 
     /**
      * @var IMergeStrategy
@@ -87,15 +87,15 @@ class TableMerger {
     }
 
     /**
-     * 
+     *
      * @param mixed $column
      * @return boolean
      */
     private function tryColumnMerge($column) {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
-            $values = array(
+            $values = [
                 $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
-            );
+            ];
             $this->logUpdate($this->trunkRow, $values);
             $this->trunkRow->update($values);
             return true;
@@ -106,9 +106,9 @@ class TableMerger {
                 $strategy = $this->globalMergeStrategy;
             }
             try {
-                $values = array(
+                $values = [
                     $column => $strategy->mergeValues($this->trunkRow[$column], $this->mergedRow[$column]),
-                );
+                ];
                 $this->logUpdate($this->trunkRow, $values);
                 $this->trunkRow->update($values);
                 return true;
@@ -139,9 +139,9 @@ class TableMerger {
             $trunkDependants = $this->trunkRow->related($referencingTable);
             $mergedDependants = $this->mergedRow->related($referencingTable);
 
-            $newParent = array(
+            $newParent = [
                 $FKcolumn => $this->trunkRow->getPrimary()
-            );
+            ];
             /*
              * If simply changing the parent would violate some constraints (i.e. parent
              * can have only one child with certain properties -- that's the secondary key),
@@ -210,7 +210,7 @@ class TableMerger {
     }
 
     private function groupBySecondaryKey($rows, $parentColumn) {
-        $result = array();
+        $result = [];
         foreach ($rows as $row) {
             $key = $this->getSecondaryKeyValue($row, $parentColumn);
             if (isset($result[$key])) {
@@ -222,7 +222,7 @@ class TableMerger {
     }
 
     private function getSecondaryKeyValue(ActiveRow $row, $parentColumn) {
-        $key = array();
+        $key = [];
         foreach ($this->getSecondaryKey() as $column) {
             if ($column == $parentColumn) {
                 continue;
@@ -237,7 +237,7 @@ class TableMerger {
      * ****************************** */
 
     private function logUpdate(ActiveRow $row, $changes) {
-        $msg = array();
+        $msg = [];
         foreach ($changes as $column => $value) {
             if ($row[$column] != $value) {
                 $msg[] = "$column -> $value";
@@ -265,7 +265,7 @@ class TableMerger {
 
     private function getReferencingTables() {
         if ($this->refTables === null) {
-            $this->refTables = array();
+            $this->refTables = [];
             foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
                     list($table, $refColumn) = $this->connection->getDatabaseReflection()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
@@ -285,7 +285,7 @@ class TableMerger {
 
     private function getColumns() {
         if ($this->columns === null) {
-            $this->columns = array();
+            $this->columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($this->table) as $column) {
                 $this->columns[] = $column['name'];
             }
@@ -302,7 +302,7 @@ class TableMerger {
         return $column == $this->primaryKey;
     }
 
-    private $referencedTables = array();
+    private $referencedTables = [];
     private static $refreshReferenced = true;
 
     private function getReferencedTable($column) {
@@ -325,7 +325,7 @@ class TableMerger {
      */
     private function getSecondaryKey() {
         if ($this->secondaryKey === null) {
-            $this->secondaryKey = array();
+            $this->secondaryKey = [];
             foreach ($this->connection->getSupplementalDriver()->getIndexes($this->table) as $index) {
                 if ($index['unique']) {
                     $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);

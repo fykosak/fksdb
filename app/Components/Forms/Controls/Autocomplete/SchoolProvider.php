@@ -2,15 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use ModelSchool;
+use FKSDB\ORM\ModelSchool;
 use Nette\InvalidStateException;
 use Nette\NotImplementedException;
 use ServiceSchool;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SchoolProvider implements IFilteredDataProvider {
@@ -25,7 +24,7 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * School with school_id equal to defaulValue is suggested even when it's not
      * active.
-     * 
+     *
      * @var int
      */
     private $defaultValue;
@@ -36,7 +35,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * Prefix search.
-     * 
+     *
      * @param string $search
      * @return array
      */
@@ -57,10 +56,10 @@ class SchoolProvider implements IFilteredDataProvider {
         $schools->order('name_abbrev');
 
         if (count($schools) > self::LIMIT) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }
@@ -80,10 +79,10 @@ class SchoolProvider implements IFilteredDataProvider {
     }
 
     private function getItem(ModelSchool $school) {
-        return array(
+        return [
             self::LABEL => $school->name_abbrev,
             self::VALUE => $school->school_id,
-        );
+        ];
     }
 
     public function setDefaultValue($id) {

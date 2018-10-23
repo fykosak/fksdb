@@ -5,13 +5,9 @@
     margin: 2px;
 }
 
-.inbox-field input {    
+.inbox-field input {
     width: 90px;
 }
-.inbox-field input {    
-    width: 90px;
-}
-
 
 ul.inbox-swappable {
     list-style-type: none;

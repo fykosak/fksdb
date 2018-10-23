@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use ModelContestant;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelSubmit;
 use ModelException;
-use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
@@ -27,7 +27,7 @@ class SubmitsGrid extends BaseGrid {
     private $submitStorage;
 
     /**
-     * @var ModelContestant 
+     * @var ModelContestant
      */
     private $contestant;
 
@@ -41,12 +41,14 @@ class SubmitsGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
+        $paginator = $this['paginator'];
+        $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
         //
         // data
         //
         $submits = $this->submitService->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest? 
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
         $this->setDataSource(new NDataSource($submits));
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -75,15 +77,14 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $that = $this;
         $this->addButton("revoke", _("Zrušit"))
                 ->setClass("btn btn-xs btn-warning")
                 ->setText('Zrušit') //todo i18n
-                ->setShow(function($row) use($that) {
-                            return $that->canRevoke($row);
+                ->setShow(function($row) {
+                            return $this->canRevoke($row);
                         })
-                ->setLink(function($row) use ($that) {
-                            return $that->link("revoke!", $row->submit_id);
+                ->setLink(function($row) {
+                            return $this->link("revoke!", $row->submit_id);
                         })
                 ->setConfirmationDialog(function($row) {
                             return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n

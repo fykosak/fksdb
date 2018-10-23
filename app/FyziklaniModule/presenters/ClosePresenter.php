@@ -2,15 +2,20 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\Button;
 use Nette\Utils\Html;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
+/**
+ * Class ClosePresenter
+ * @package FyziklaniModule
+ * @property FormControl closeCategoryAForm
+ */
 class ClosePresenter extends BasePresenter {
 
     /** @var ModelFyziklaniTeam */
@@ -18,10 +23,12 @@ class ClosePresenter extends BasePresenter {
 
     public function titleTable() {
         $this->setTitle(_('Uzavírání bodování'));
+        $this->setIcon('fa fa-check');
     }
 
     public function titleTeam($id) {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->serviceFyziklaniTeam->findByPrimary($id)->__toString()));
+        $this->setIcon('fa fa-check-square-o');
     }
 
     public function authorizedTable() {
@@ -41,23 +48,23 @@ class ClosePresenter extends BasePresenter {
          * @var $button Button
          */
         if (!$this->isReadyToClose('A')) {
-            $button = $this['closeCategoryAForm']['send'];
+            $button = $this['closeCategoryAForm']->getForm()['send'];
             $button->setDisabled();
         }
         if (!$this->isReadyToClose('B')) {
-            $button = $this['closeCategoryBForm']['send'];
+            $button = $this['closeCategoryBForm']->getForm()['send'];
             $button->setDisabled();
         }
         if (!$this->isReadyToClose('C')) {
-            $button = $this['closeCategoryCForm']['send'];
+            $button = $this['closeCategoryCForm']->getForm()['send'];
             $button->setDisabled();
         }
         if (!$this->isReadyToClose('F')) {
-            $button = $this['closeCategoryFForm']['send'];
+            $button = $this['closeCategoryFForm']->getForm()['send'];
             $button->setDisabled();
         }
         if (!$this->isReadyToClose()) {
-            $button = $this['closeGlobalForm']['send'];
+            $button = $this['closeGlobalForm']->getForm()['send'];
             $button->setDisabled();
         }
     }
@@ -86,8 +93,8 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
             ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
         $form->addText('next_task', _('Úloha u vydavačů'))
@@ -97,7 +104,7 @@ class ClosePresenter extends BasePresenter {
             ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = [$this, 'closeFormSucceeded'];
-        return $form;
+        return $control;
     }
 
     /**
@@ -119,12 +126,12 @@ class ClosePresenter extends BasePresenter {
     }
 
     private function createComponentCloseCategoryForm($category) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->addHidden('category', $category);
         $form->addSubmit('send', sprintf(_('Uzavřít kategorii %s.'), $category));
         $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
-        return $form;
+        return $control;
     }
 
     public function createComponentCloseCategoryAForm() {
@@ -155,11 +162,11 @@ class ClosePresenter extends BasePresenter {
     }
 
     public function createComponentCloseGlobalForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uzavřít celé Fyziklání'));
         $form->onSuccess[] = [$this, 'closeGlobalFormSucceeded'];
-        return $form;
+        return $control;
     }
 
     /**

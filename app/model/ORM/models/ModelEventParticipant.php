@@ -1,25 +1,19 @@
 <?php
 
-use Nette\InvalidStateException;
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property ActiveRow person
  */
 class ModelEventParticipant extends AbstractModelSingle {
 
-//    private $person = false;
-
-    public function getPerson() {
-//        if ($this->person === false) {
-//            $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-//            $this->person = $row ? ModelPerson::createFromTableRow($row) : null;
-//        }
-//
-//        return $this->person;
-        $this->person_id; // stupid touch
-        $row = $this->ref(DbNames::TAB_PERSON, 'person_id');
-        return $row ? ModelPerson::createFromTableRow($row) : null;
+    public function getPerson(): ModelPerson {
+        return ModelPerson::createFromTableRow($this->person);
     }
 
     public function __toString() {
@@ -31,5 +25,3 @@ class ModelEventParticipant extends AbstractModelSingle {
     }
 
 }
-
-?>

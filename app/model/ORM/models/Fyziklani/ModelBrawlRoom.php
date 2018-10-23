@@ -10,4 +10,14 @@
  */
 
 class ModelBrawlRoom extends \AbstractModelSingle {
+
+    public function __toArray() {
+        return [
+            'roomId' => $this->room_id,
+            'name' => $this->name,
+            'x' => $this->columns,
+            'y' => $this->rows,
+        ];
+
+    }
 }

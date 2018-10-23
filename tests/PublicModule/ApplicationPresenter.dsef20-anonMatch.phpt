@@ -2,7 +2,7 @@
 
 $container = require '../bootstrap.php';
 
-use FKS\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\DateTime;
 use Tester\Assert;
 

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use ModelLogin;
+use FKSDB\ORM\ModelLogin;
 use ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class UniqueLoginFactory {

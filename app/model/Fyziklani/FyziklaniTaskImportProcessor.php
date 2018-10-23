@@ -2,7 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
-use FKS\Utils\CSVParser;
+use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
 use ServiceFyziklaniTask;
 use \Nette\Diagnostics\Debugger;

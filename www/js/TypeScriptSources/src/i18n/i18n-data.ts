@@ -1,0 +1,2 @@
+/* AUTOMATICALLY GENERATED FROM .po FILES */
+export const data = {"cs": {"Used capacity/Total capacity": "Již rezervováno/Celková kapacita", "I want to stay in the hotel %name% from %from% to %to%.": "Chci být ubytován v ubytovacím zařízení %name% od %from% do %to%.", "Date": ""}, "sk": {"Used capacity/Total capacity": "", "I want to stay in the hotel %name% from %from% to %to%.": "", "Date": ""}, "en": {"Used capacity/Total capacity": "", "I want to stay in the hotel %name% from %from% to %to%.": "", "Date": "", "Accommodation price": ""}};

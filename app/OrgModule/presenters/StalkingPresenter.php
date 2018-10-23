@@ -2,19 +2,22 @@
 
 namespace OrgModule;
 
-use FKS\Components\Controls\FormControl;
-use FKS\Components\Forms\Containers\ContainerWithOptions;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\Address;
 use FKSDB\Components\Controls\Stalking\BaseInfo;
 use FKSDB\Components\Controls\Stalking\Contestant;
 use FKSDB\Components\Controls\Stalking\EventOrg;
 use FKSDB\Components\Controls\Stalking\EventParticipant;
+use FKSDB\Components\Controls\Stalking\EventTeacher;
+use FKSDB\Components\Controls\Stalking\Flag;
 use FKSDB\Components\Controls\Stalking\Login;
 use FKSDB\Components\Controls\Stalking\Org;
 use FKSDB\Components\Controls\Stalking\PersonHistory;
 use FKSDB\Components\Controls\Stalking\Role;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
-use ModelPerson;
+use FKSDB\Components\Controls\Stalking\StalkingComponent;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\ORM\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -44,6 +47,10 @@ class StalkingPresenter extends BasePresenter {
      * @var ModelPerson|null
      */
     private $person = false;
+    /**
+     * @var string
+     */
+    private $mode;
 
     /**
      * @return ModelPerson|null
@@ -58,19 +65,25 @@ class StalkingPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk-search', $this->getSelectedContest()));
+        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk.search', $this->getSelectedContest()));
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
      */
-    public function authorizedView($id) {
+    public function authorizedView() {
         $person = $this->getPerson();
         if (!$person) {
             throw new BadRequestException('Neexistující osoba.', 404);
         }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($person, 'stalk', $this->getSelectedContest()));
+
+        $full = $this->getContestAuthorizator()->isAllowed($person, 'stalk.full', $this->getSelectedContest());
+
+        $restrict = $this->getContestAuthorizator()->isAllowed($person, 'stalk.restrict', $this->getSelectedContest());
+
+        $basic = $this->getContestAuthorizator()->isAllowed($person, 'stalk.basic', $this->getSelectedContest());
+
+        $this->setAuthorized($full || $restrict || $basic);
     }
 
     public function injectServicePerson(ServicePerson $servicePerson) {
@@ -86,54 +99,63 @@ class StalkingPresenter extends BasePresenter {
     }
 
     public function createComponentBaseInfo() {
-        $component = new BaseInfo($this->getPerson());
+        $component = new BaseInfo($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentAddress() {
-        $component = new Address($this->getPerson());
+        $component = new Address($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventParticipant() {
-        $component = new EventParticipant($this->getPerson());
+        $component = new EventParticipant($this->getPerson(), $this->getMode());
+        return $component;
+    }
+
+    public function createComponentEventTeacher() {
+        $component = new EventTeacher($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventOrg() {
-        $component = new EventOrg($this->getPerson());
+        $component = new EventOrg($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentLogin() {
-        $component = new Login($this->getPerson());
+        $component = new Login($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentOrg() {
-        $component = new Org($this->getPerson());
+        $component = new Org($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentContestant() {
-        $component = new Contestant($this->getPerson());
+        $component = new Contestant($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentPersonHistory() {
-        $component = new PersonHistory($this->getPerson());
+        $component = new PersonHistory($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentRole() {
-        $component = new Role($this->getPerson());
+        $component = new Role($this->getPerson(), $this->getMode());
+        return $component;
+    }
+
+    public function createComponentFlag() {
+        $component = new Flag($this->getPerson(), $this->getMode());
         return $component;
     }
 
     public function createComponentFormSearch() {
         $control = new FormControl();
         $form = $control->getForm();
-        $control->setGroupMode(FormControl::GROUP_CONTAINER);
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
@@ -151,8 +173,7 @@ class StalkingPresenter extends BasePresenter {
         $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
-        $that = $this;
-        $submit->onClick[] = function (SubmitButton $button) use ($that) {
+        $submit->onClick[] = function (SubmitButton $button) {
             $form = $button->getForm();
             $values = $form->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
@@ -162,17 +183,34 @@ class StalkingPresenter extends BasePresenter {
         return $control;
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Stalking'));
+    private function getMode() {
+        if (!$this->mode) {
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.basic', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_BASIC;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.restrict', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_RESTRICT;
+            }
+            if ($this->getContestAuthorizator()->isAllowed($this->getPerson(), 'stalk.full', $this->getSelectedContest())) {
+                $this->mode = StalkingComponent::PERMISSION_FULL;
+            }
+        }
+        return $this->mode;
     }
 
-    public function titleView($id) {
+    public function titleDefault() {
+        $this->setTitle(_('Stalking'));
+        $this->setIcon('fa fa-search');
+    }
+
+    public function titleView() {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+        $this->setIcon('fa fa-eye');
     }
 
     protected function getNavBarVariant() {
         /**
-         * @var $contest \ModelContest
+         * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

@@ -2,10 +2,9 @@
 
 namespace  FKSDB\Components\Controls\Fyziklani;
 
-use FKS\Application\IJavaScriptCollector;
+use FKSDB\Application\IJavaScriptCollector;
 
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\IContainer;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -58,6 +57,7 @@ class RoutingDownload extends Control {
     }
 
     public function render() {
+        parent::render();
         $this->template->rooms = $this->rooms;
         $this->template->buildings = $this->buildings;
         $this->template->teams = $this->teams;
@@ -75,4 +75,5 @@ class RoutingDownload extends Control {
             $obj->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js');
         }
     }
+
 }

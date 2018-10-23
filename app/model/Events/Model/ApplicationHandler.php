@@ -11,10 +11,10 @@ use Events\Model\Holder\Holder;
 use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use Events\SubmitProcessingException;
 use Exception;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
-use FKS\Logging\ILogger;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\ModelEvent;
 use FormUtils;
-use ModelEvent;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
@@ -23,7 +23,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationHandler {
@@ -112,7 +112,7 @@ class ApplicationHandler {
 
             $this->beginTransaction();
 
-            $transitions = array();
+            $transitions = [];
             if ($explicitTransitionName !== null) {
                 $explicitMachine = $this->machine[$explicitMachineName];
                 $explicitTransition = $explicitMachine->getTransition($explicitTransitionName);
@@ -132,7 +132,7 @@ class ApplicationHandler {
                 }
             }
 
-            $induced = array(); // cache induced transition as they won't match after execution
+            $induced = []; // cache induced transition as they won't match after execution
             foreach ($transitions as $key => $transition) {
                 $induced[$key] = $transition->execute();
             }
@@ -195,7 +195,7 @@ class ApplicationHandler {
         }
 
         $primaryName = $holder->getPrimaryHolder()->getName();
-        $newStates = array();
+        $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
             $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
         }
@@ -226,7 +226,7 @@ class ApplicationHandler {
 
     private function formRollback($data) {
         if ($data instanceof Form) {
-            foreach ($data->getComponents(true, 'FKS\Components\Forms\Controls\ReferencedId') as $referencedId) {
+            foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
                 $referencedId->rollback();
             }
         }
@@ -258,5 +258,5 @@ class ApplicationHandler {
 }
 
 class ApplicationHandlerException extends RuntimeException {
-    
+
 }

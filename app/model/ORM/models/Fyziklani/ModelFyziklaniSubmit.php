@@ -29,4 +29,13 @@ class ModelFyziklaniSubmit extends \AbstractModelSingle {
         $data = $this->ref(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id');
         return ModelFyziklaniTeam::createFromTableRow($data);
     }
+
+    public function __toArray() {
+        return [
+            'points' => $this->points,
+            'teamId' => $this->e_fyziklani_team_id,
+            'taskId' => $this->fyziklani_task_id,
+            'created' => $this->created->__toString(),
+        ];
+    }
 }

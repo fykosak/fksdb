@@ -4,19 +4,18 @@ namespace OrgModule;
 
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
-use FKS\Config\NeonScheme;
-use FKS\Logging\MemoryLogger;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Config\NeonScheme;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPersonFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FormUtils;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Logging\FlashDumpFactory;
+use FKSDB\Logging\FlashDumpFactory;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -29,9 +28,8 @@ use Nette\Utils\Html;
 use Nette\Utils\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
-use ServiceEvent;
-use ServiceEventOrg;
 use ServiceAuthToken;
+use ServiceEvent;
 use SystemContainer;
 use Utils;
 
@@ -58,18 +56,13 @@ class EventPresenter extends EntityPresenter {
     private $eventFactory;
 
     /**
-     * @var \ServicePerson
-     */
-    private $servicePerson;
-
-    /**
      *
      * @var LayoutResolver
      */
     private $layoutResolver;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -89,23 +82,10 @@ class EventPresenter extends EntityPresenter {
     private $flashDumpFactory;
 
     /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
-    /**
      * @var ServiceAuthToken $serviceAuthToken
      */
     private $serviceAuthToken;
 
-
-    public function injectServicePerson(\ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
-    }
-    
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
@@ -123,10 +103,6 @@ class EventPresenter extends EntityPresenter {
         $this->layoutResolver = $layoutResolver;
     }
 
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
@@ -141,10 +117,6 @@ class EventPresenter extends EntityPresenter {
 
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
-    }
-
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
-        $this->serviceEventOrg = $serviceEventOrg;
     }
 
     public function authorizedApplications($id) {
@@ -170,28 +142,33 @@ class EventPresenter extends EntityPresenter {
 
     public function titleList() {
         $this->setTitle(_('Akce'));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
     public function titleCreate() {
         $this->setTitle(_('Přidat akci'));
+        $this->setIcon('fa fa-calendar-plus-o');
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava akce %s'), $model->name));
+        $this->setIcon('fa fa-pencil');
     }
 
-    public function titleApplications($id) {
+    public function titleApplications() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Přihlášky akce %s'), $model->name));
+        $this->setIcon('fa fa-calendar-check-o');
     }
 
-    public function titleModel($id) {
+    public function titleModel() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Model akce %s'), $model->name));
+        $this->setIcon('fa fa-cubes');
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
         throw new NotImplementedException();
     }
@@ -201,33 +178,30 @@ class EventPresenter extends EntityPresenter {
     }
 
     protected function createComponentCreateComponent($name) {
-        $form = $this->createForm();
+        $control = $this->createForm();
+        $form = $control->getForm();
 
         $form->addSubmit('send', _('Přidat'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, true);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, true);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentEditComponent($name) {
-        $form = $this->createForm();
-
+        $control = $this->createForm();
+        $form = $control->getForm();
         $form->addSubmit('send', _('Uložit'));
-        $that = $this;
-        $form->onSuccess[] = function (Form $form) use ($that) {
-            $that->handleFormSuccess($form, false);
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleFormSuccess($form, false);
         };
 
-        return $form;
+        return $control;
     }
 
     protected function createComponentGrid($name) {
-        $grid = new EventsGrid($this->serviceEvent);
-
-        return $grid;
+        return new EventsGrid($this->serviceEvent);
     }
 
     protected function createComponentApplicationsGrid($name) {
@@ -263,8 +237,8 @@ class EventPresenter extends EntityPresenter {
     }
 
     private function createForm() {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $eventContainer = $this->eventFactory->createEvent($this->getSelectedContest());
         $form->addComponent($eventContainer, self::CONT_EVENT);
@@ -280,7 +254,7 @@ class EventPresenter extends EntityPresenter {
                     if ($parameters) {
                         $parameters = Neon::decode($parameters);
                     } else {
-                        $parameters = array();
+                        $parameters = [];
                     }
 
                     NeonScheme::readSection($parameters, $scheme);
@@ -292,7 +266,7 @@ class EventPresenter extends EntityPresenter {
             }, _('Parametry nesplňují Neon schéma'));
         }
 
-        return $form;
+        return $control;
     }
 
     private function createParamDescription($scheme) {
@@ -357,9 +331,9 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->serviceEvent->save($model);
-            
+
             // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ["until" => $model->registration_end ? : $model->end];
+            $tokenData = ["until" => $model->registration_end ?: $model->end];
             foreach ($this->serviceAuthToken->findTokensByEventId($model->id) as $token) {
                 $this->serviceAuthToken->updateModel($token, $tokenData);
                 $this->serviceAuthToken->save($token);

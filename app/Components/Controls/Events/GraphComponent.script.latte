@@ -19,7 +19,7 @@ function terminatedRenderer(r, node) {
     stroke: '#000',
     "stroke-width": 0
   });
-  
+
   var outer = r.ellipse(0, 0, 10, 10).attr({
     fill: null,
     stroke: '#000',
@@ -32,7 +32,7 @@ function terminatedRenderer(r, node) {
 }
 
 $(function(){
-    
+
   var canvas = $('#' + {$id});
   var width = canvas.width();
   var height = 600;
@@ -41,7 +41,7 @@ $(function(){
   var g = new Graph();
   var nodeRenderer = null;
   var node = null;
-  
+
   /* add a simple node */
   {foreach $states as $state}
     {if $state ==  Events\Machine\BaseMachine::STATE_INIT}
@@ -51,11 +51,11 @@ $(function(){
     {else}
         nodeRenderer = null;
     {/if}
-    
-    node = g.addNode({$state}, { label: {$machine->getStateName($state)}, render: nodeRenderer});    
+
+    node = g.addNode({$state}, { label: {$machine->getStateName($state)}, render: nodeRenderer});
   {/foreach}
 
-  {var conditions = array()}  
+  {var conditions = []}
   {foreach $machine->getTransitions() as $transition}
       {foreach $states as $state}
           {if $transition->matches($state)}
@@ -73,19 +73,19 @@ $(function(){
                    {else}
                        var style = false;
                    {/if}
-              
+
               g.addEdge({$state}, {$transition->getTarget()}, { directed: true, label: label, "label-style": labelStyle, stroke: style});
           {/if}
       {/foreach}
   {/foreach}
- 
+
   var layouter = new Graph.Layout.Spring(g);
   layouter.maxRepulsiveForceDistance = 10;
   layouter.layout();
-  
+
   /* draw the graph using the RaphaelJS draw implementation */
-  var renderer = new Graph.Renderer.Raphael({$id}, g, width, height);  
-  renderer.draw();  
+  var renderer = new Graph.Renderer.Raphael({$id}, g, width, height);
+  renderer.draw();
 
 
 });

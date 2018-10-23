@@ -1,6 +1,11 @@
 <?php
 
+namespace FKSDB\ORM;
+
+use AbstractModelSingle;
+use DbNames;
 use Events\Model\Holder\Holder;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
@@ -9,6 +14,9 @@ use Nette\Security\IResource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property integer event_year
  * @property integer year
+ * @property string name
+ * @property integer event_id
+ * @property ActiveRow event_type
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
@@ -29,11 +37,22 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         $this->holder = $holder;
     }
 
+    /**
+     * @return ModelEventType
+     */
     public function getEventType() {
-        if ($this->eventType === false) {
-            $this->eventType = ModelEventType::createFromTableRow($this->ref(DbNames::TAB_EVENT_TYPE, 'event_type_id'));
+        return $this->eventType = ModelEventType::createFromTableRow($this->event_type);
+    }
+
+    /**
+     * @return ModelEventAccommodation[]
+     */
+    public function getEventAccommodations() {
+        $data = [];
+        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
+            $data[] = ModelEventAccommodation::createFromTableRow($item);
         }
-        return $this->eventType;
+        return $data;
     }
 
     /**
@@ -65,7 +84,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return $this->holder->getParameter($name);
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'event';
     }
 

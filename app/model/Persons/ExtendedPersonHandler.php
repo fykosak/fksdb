@@ -4,13 +4,13 @@ namespace Persons;
 
 use Authentication\AccountManager;
 use BasePresenter;
-use FKS\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelPerson;
 use FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
-use ModelContest;
 use ModelException;
-use ModelPerson;
 use Nette\Database\Connection;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
@@ -22,7 +22,7 @@ use ServicePerson;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandler extends Object {

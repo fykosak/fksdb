@@ -3,9 +3,7 @@ var path = require('path');
 module.exports = {
     devtool: 'inline-source-map',
     entry: {
-        results: './src/results/index.tsx',
-        routing: './src/routing/index.tsx',
-        'entry-form': './src/entry-form/index.tsx'
+        all: './src/index.ts'
     },
     output: {
         path: path.resolve(__dirname, '../'),
@@ -20,7 +18,7 @@ module.exports = {
                 loader: 'tslint-loader',
                 exclude: /node_modules/,
                 options: {
-                    failOnHint: true,
+                    failOnHint: false,
                     configuration: require('./tslint.json'),
                 },
             },

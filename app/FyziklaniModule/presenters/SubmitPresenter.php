@@ -2,11 +2,11 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use ModelFyziklaniSubmit;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\Button;
@@ -46,7 +46,7 @@ class SubmitPresenter extends BasePresenter {
             /**
              * @var $form Form
              */
-            $form = $this['entryQRForm'];
+            $form = $this['entryQRForm']->getForm();
             $form->setDefaults(['taskCode' => $code]);
             foreach ($this->getEvent()->getParameter('availablePoints') as $points) {
                 /**
@@ -63,6 +63,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleEntry() {
         $this->setTitle(_('Zadávání bodů'));
+        $this->setIcon('fa fa-pencil-square-o');
     }
 
     public function titleQrEntry() {
@@ -83,6 +84,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleEdit() {
         $this->setTitle(_('Úprava bodování'));
+        $this->setIcon('fa fa-pencil');
     }
 
     public function authorizedEdit() {
@@ -91,6 +93,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleTable() {
         $this->setTitle(_('Submits'));
+        $this->setIcon('fa fa-table');
     }
 
     public function authorizedTable() {
@@ -147,29 +150,29 @@ class SubmitPresenter extends BasePresenter {
 
         if ($this->isAjax()) {
 
-            $fullCode = $this->getHttpRequest()->getQuery('fullCode');
-            $points = $this->getHttpRequest()->getQuery('points');
+            $fullCode = $this->getHttpRequest()->getPost('requestData')['code'];
+            $points = $this->getHttpRequest()->getPost('requestData')['points'];
+            $response = new \ReactResponse();
+            $response->setAct('submit');
+
             if ($this->checkTaskCode($fullCode, $msg)) {
                 $msg = $this->savePoints($fullCode, $points);
             } else {
                 $msg = [$msg, 'danger'];
             }
-            $this->sendResponse(new JsonResponse($msg));
+            $response->addMessage(new \ReactMessage($msg[0], $msg[1]));
+            $this->sendResponse($response);
         }
     }
 
     public function createComponentEntryForm() {
-        $teams = $this->serviceFyziklaniTeam->getTeams($this->getEventId());
-        $tasks = $this->serviceFyziklaniTask->getTasks($this->getEventId());
-
-        $form = $this->fyziklaniFactory->createEntryForm($teams, $tasks);
-        return $form;
+        return $this->fyziklaniFactory->createEntryForm($this->getEventId());
     }
 
     public function createComponentEntryQRForm() {
         $form = $this->fyziklaniFactory->createEntryQRForm($this->getEvent());
 
-        $form->onSuccess[] = [$this, 'entryFormSucceeded'];
+        $form->getForm()->onSuccess[] = [$this, 'entryFormSucceeded'];
         return $form;
     }
 
@@ -206,7 +209,6 @@ class SubmitPresenter extends BasePresenter {
         /* Existenica týmu */
         $teamId = $this->taskCodePreprocessor->extractTeamId($taskCode);
 
-
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->getEventId())) {
             $msg = sprintf(_('Tým %s neexistuje.'), $teamId);
             return false;
@@ -235,10 +237,10 @@ class SubmitPresenter extends BasePresenter {
         return true;
     }
 
-    public function createComponentFyziklaniEditForm() {
-        $form = $this->fyziklaniFactory->createEditForm($this->getEvent());
-        $form->onSuccess[] = [$this, 'editFormSucceeded'];
-        return $form;
+    public function createComponentSubmitEditForm() {
+        $control = $this->fyziklaniFactory->createEditForm($this->getEvent());
+        $control->getForm()->onSuccess[] = [$this, 'editFormSucceeded'];
+        return $control;
     }
 
     /**
@@ -268,10 +270,10 @@ class SubmitPresenter extends BasePresenter {
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
         /**
-         * @var $form Form
+         * @var $control FormControl
          */
-        $form = $this['fyziklaniEditForm'];
-        $form->setDefaults([
+        $control = $this['submitEditForm'];
+        $control->getForm()->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
             'points' => $submit->points,

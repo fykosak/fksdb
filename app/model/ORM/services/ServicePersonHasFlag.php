@@ -1,7 +1,7 @@
 <?php
 
-use ORM\IModel;
 use Nette\ArrayHash;
+use ORM\IModel;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -9,18 +9,18 @@ use Nette\ArrayHash;
 class ServicePersonHasFlag extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_PERSON_HAS_FLAG;
-    protected $modelClassName = 'ModelPersonHasFlag';
-    
+    protected $modelClassName = 'FKSDB\ORM\ModelPersonHasFlag';
+
     public function createNew($data = null) {
-        if($data === null) {
+        if ($data === null) {
             $data = new ArrayHash();
         }
         $data['modified'] = new DateTime();
         return parent::createNew($data);
     }
 
-    public function updateModel(IModel $model, $data) {
-        if($data === null) {
+    public function updateModel(IModel $model, $data, $alive = true) {
+        if ($data === null) {
             $data = new ArrayHash();
         }
         $data['modified'] = new DateTime();

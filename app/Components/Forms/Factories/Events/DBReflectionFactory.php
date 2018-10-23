@@ -6,7 +6,7 @@ use AbstractServiceMulti;
 use AbstractServiceSingle;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
-use FKS\Components\Forms\Controls\TimeBox;
+use FKSDB\Components\Forms\Controls\TimeBox;
 use Nette\ComponentModel\Component;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
@@ -18,7 +18,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DBReflectionFactory extends AbstractFactory {
@@ -31,7 +31,7 @@ class DBReflectionFactory extends AbstractFactory {
     /**
      * @var array tableName => columnName[]
      */
-    private $columns = array();
+    private $columns = [];
 
     function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -108,7 +108,7 @@ class DBReflectionFactory extends AbstractFactory {
 
     private function getColumnMetadata($table, $column) {
         if (!isset($this->columns[$table])) {
-            $columns = array();
+            $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
                 $columns[$columnMeta['name']] = $columnMeta;
             }

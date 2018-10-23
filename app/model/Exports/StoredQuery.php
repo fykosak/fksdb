@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use ModelStoredQuery;
+use FKSDB\ORM\ModelStoredQuery;
 use Nette\Database\Connection;
 use Nette\Database\ISupplementalDriver;
 use Nette\Database\Statement;
@@ -12,8 +12,8 @@ use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
- * Represents instantiotion (in term of parameters) of ModelStoredQuery. * 
- * 
+ * Represents instantiotion (in term of parameters) of FKSDB\ORM\ModelStoredQuery. *
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQuery implements IDataSource, IResource {
@@ -21,7 +21,7 @@ class StoredQuery implements IDataSource, IResource {
     const INNER_QUERY = 'sub';
 
     /**
-     * @var ModelStoredQuery
+     * @var \FKSDB\ORM\ModelStoredQuery
      */
     private $queryPattern;
 
@@ -33,12 +33,12 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $implicitParameterValues = array();
+    private $implicitParameterValues = [];
 
     /**
      * @var array
      */
-    private $parameterValues = array();
+    private $parameterValues = [];
 
     /**
      * @var int|null
@@ -63,7 +63,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @var array
      */
-    private $orders = array();
+    private $orders = [];
 
     /**
      * @var array
@@ -138,7 +138,7 @@ class StoredQuery implements IDataSource, IResource {
 
     public function getColumnNames() {
         if (!$this->columnNames) {
-            $this->columnNames = array();
+            $this->columnNames = [];
             $innerSql = $this->getQueryPattern()->sql;
             $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
 
@@ -161,7 +161,7 @@ class StoredQuery implements IDataSource, IResource {
 
     public function getParameterNames() {
         if ($this->parameterDefaults === null) {
-            $this->parameterDefaults = array();
+            $this->parameterDefaults = [];
             foreach ($this->queryPattern->getParameters() as $parameter) {
                 $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
             }
@@ -170,7 +170,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * 
+     *
      * @param string $sql
      * @return Statement
      */
@@ -246,7 +246,12 @@ class StoredQuery implements IDataSource, IResource {
     public function getData() {
         if ($this->data === null) {
             $innerSql = $this->getQueryPattern()->sql;
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
+            if ($this->orders || $this->limit !== null || $this->offset !== null) {
+                $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
+            }
+            else {
+                $sql = $innerSql;
+            }
 
             if ($this->orders) {
                 $sql .= ' ORDER BY ' . implode(', ', $this->orders);
@@ -279,7 +284,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * Implemements only single column sorting.
-     * 
+     *
      * @param string $by column name
      * @param string $way DESC|ASC
      */
@@ -291,7 +296,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
-    public function getResourceId() {
+    public function getResourceId(): string {
         return 'export';
     }
 

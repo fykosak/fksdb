@@ -6,19 +6,19 @@ use AuthenticatedPresenter;
 use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
+use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelRole;
 use IContestPresenter;
-use ModelContestant;
-use ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
  * Current year of FYKOS.
- * 
+ *
  * @todo Contest should be from URL and year should be current.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
     const PRESETS_KEY = 'publicPresets';
 
@@ -37,7 +37,7 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
      * @persistent
      */
     public $lang;
-    
+
     protected function startup() {
         parent::startup();
         $this['contestChooser']->syncRedirect();
@@ -89,14 +89,28 @@ class BasePresenter extends AuthenticatedPresenter implements IContestPresenter 
         if ($this->contestant === false) {
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(
-                        'contest_id' => $this->getSelectedContest()->contest_id,
-                        'year' => $this->getSelectedYear()
-                    ))->fetch();
+                'contest_id' => $this->getSelectedContest()->contest_id,
+                'year' => $this->getSelectedYear()
+            ))->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromTableRow($contestant) : null;
         }
 
         return $this->contestant;
+    }
+
+    protected function getNavBarVariant() {
+        /**
+         * @var $contest \FKSDB\ORM\ModelContest
+         */
+        $contest = $this->serviceContest->findByPrimary($this->contestId);
+        if ($contest) {
+            return [$contest->getContestSymbol(), 'dark'];
+        }
+        return [null, null];
+    }
+    public function getNavRoot() {
+        return 'public.dashboard.default';
     }
 
 }

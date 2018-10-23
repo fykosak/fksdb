@@ -7,10 +7,10 @@ use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\IHolderSource;
 use Events\Model\Holder\Holder;
-use FKS\Application\IJavaScriptCollector;
-use FKS\Logging\FlashMessageDump;
-use FKS\Logging\MemoryLogger;
-use ModelEvent;
+use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
@@ -18,7 +18,7 @@ use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationsGrid extends Control {
@@ -39,22 +39,22 @@ class ApplicationsGrid extends Control {
     /**
      * @var Holder[]
      */
-    private $holders = array();
+    private $holders = [];
 
     /**
      * @var Machine[]
      */
-    private $machines = array();
+    private $machines = [];
 
     /**
-     * @var ModelEvent[]
+     * @var \FKSDB\ORM\ModelEvent[]
      */
-    private $eventApplications = array();
+    private $eventApplications = [];
 
     /**
      * @var ApplicationHandler[]
      */
-    private $handlers = array();
+    private $handlers = [];
 
     /**
      * @var ApplicationHandlerFactory
@@ -78,7 +78,7 @@ class ApplicationsGrid extends Control {
 
     function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
-        $this->monitor('FKS\Application\IJavaScriptCollector');
+        $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->container = $container;
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
@@ -116,7 +116,7 @@ class ApplicationsGrid extends Control {
     }
 
     private function processSource() {
-        $this->eventApplications = array();
+        $this->eventApplications = [];
         foreach ($this->source as $key => $holder) {
             $this->eventApplications[$key] = $holder->getEvent();
             $this->holders[$key] = $holder;

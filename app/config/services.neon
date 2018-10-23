@@ -19,7 +19,7 @@ services:
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
-    - FKS\Config\GlobalParameters
+    globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: YearCalculator
     news: News
     seriesCalculator: SeriesCalculator
@@ -31,7 +31,7 @@ services:
         class: Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
-    - FKS\Components\Controls\PresenterBuilder
+    - FKSDB\Components\Controls\PresenterBuilder
     - Github\EventFactory
     - Maintenance\Updater
     globalSession:
@@ -39,15 +39,16 @@ services:
         setup:
             - start()
     - Authentication\SSO\TokenGSIDHolder
-    submitStorage: 
+    submitStorage:
         class: Submits\FilesystemSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
+    - FKSDB\Components\Forms\Controls\PersonAccommodation\Handler
     PDFStamper: Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
         class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
-    translator: FKS\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    translator: FKSDB\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
     # web services
     soapServer:

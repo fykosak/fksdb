@@ -3,11 +3,13 @@
 namespace FKSDB\Components\Events;
 
 use Events\Machine\BaseMachine;
+use Events\Machine\Machine;
+use Events\Machine\Transition;
 use Events\Model\ApplicationHandler;
 use Events\Model\ApplicationHandlerException;
 use Events\Model\Holder\Holder;
-use FKS\Components\Controls\FormControl;
-use FKS\Logging\FlashMessageDump;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Callback;
@@ -16,7 +18,7 @@ use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationComponent extends Control {
@@ -116,8 +118,7 @@ class ApplicationComponent extends Control {
 
     protected function createComponentForm($name) {
         $result = new FormControl();
-        $result->setGroupMode(FormControl::GROUP_CONTAINER);
-        $form = $result['form'];
+        $form = $result->getForm();
 
         /*
          * Create containers
@@ -131,7 +132,6 @@ class ApplicationComponent extends Control {
             $form->addComponent($container, $name);
         }
 
-        $that = $this;
         /*
          * Create save (no transition) button
          */
@@ -139,24 +139,27 @@ class ApplicationComponent extends Control {
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Uložit'));
             $saveSubmit->setOption('row', 1);
-            $saveSubmit->onClick[] = function(SubmitButton $button) use($that) {
-                        $form = $button->getForm();
-                        $that->handleSubmit($form);
-                    };
+            $saveSubmit->onClick[] = function (SubmitButton $button) {
+                $buttonForm = $button->getForm();
+                $this->handleSubmit($buttonForm);
+            };
         }
         /*
          * Create transition buttons
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
+        /**
+         * @var $transition Transition
+         */
         foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function(SubmitButton $button) use($transitionName, $that) {
-                        $form = $button->getForm();
-                        $that->handleSubmit($form, $transitionName);
-                    };
+            $submit->onClick[] = function (SubmitButton $button) use ($transitionName) {
+                $form = $button->getForm();
+                $this->handleSubmit($form, $transitionName);
+            };
 
             if ($transition->isCreating()) {
                 $submit->getControlPrototype()->addClass('btn-success');
@@ -173,7 +176,7 @@ class ApplicationComponent extends Control {
                 $submit->getControlPrototype()->addClass('btn-danger');
                 $submit->setOption('row', 2);
             } else {
-                $submit->getControlPrototype()->addClass('btn-default');
+                $submit->getControlPrototype()->addClass('btn-secondary');
                 $submit->setOption('row', 2);
             }
         }
@@ -184,10 +187,10 @@ class ApplicationComponent extends Control {
         $submit = $form->addSubmit('cancel', _('Storno'));
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
-        $submit->getControlPrototype()->addClass('btn-link');
-        $submit->onClick[] = function(SubmitButton $button) use($that) {
-                    $that->finalRedirect();
-                };
+        $submit->getControlPrototype()->addClass('btn-warning');
+        $submit->onClick[] = function (SubmitButton $button) {
+            $this->finalRedirect();
+        };
 
         /*
          * Custom adjustments

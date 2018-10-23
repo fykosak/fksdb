@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKS\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
-use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 
 /**
@@ -26,39 +25,34 @@ class SchoolFactory {
         $this->schoolProvider = $schoolProvider;
     }
 
-    /**
-     * @param type $options
-     */
-    public function createSchool($options = 0, ControlGroup $group = null) {
+    public function createSchool(): ModelContainer {
         $container = new ModelContainer();
-        $container->setCurrentGroup($group);
-
         $container->addText('name_full', _('Plný název'))
-                ->addRule(Form::MAX_LENGTH, null, 255)
-                ->setOption('description', _('Úplný nezkrácený název školy.'));
+            ->addRule(Form::MAX_LENGTH, null, 255)
+            ->setOption('description', _('Úplný nezkrácený název školy.'));
 
         $container->addText('name', _('Název'))
-                ->addRule(Form::MAX_LENGTH, null, 255)
-                ->addRule(Form::FILLED, _('Název je povinný.'))
-                ->setOption('description', _('Název na obálku.'));
+            ->addRule(Form::MAX_LENGTH, null, 255)
+            ->addRule(Form::FILLED, _('Název je povinný.'))
+            ->setOption('description', _('Název na obálku.'));
 
         $container->addText('name_abbrev', _('Zkrácený název'))
-                ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
-                ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
-                ->setOption('description', _('Název krátký do výsledkovky.'));
+            ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
+            ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
+            ->setOption('description', _('Název krátký do výsledkovky.'));
 
         $container->addText('email', _('Kontaktní e-mail'))
-                ->addCondition(Form::FILLED)
-                ->addRule(Form::EMAIL);
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::EMAIL);
 
         $container->addText('ic', _('IČ'))
-                ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na %d znaků.'), 8);
+            ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na %d znaků.'), 8);
 
         $container->addText('izo', _('IZO'))
-                ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
+            ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
 
         $container->addCheckbox('active', _('Aktivní záznam'))
-                ->setDefaultValue(true);
+            ->setDefaultValue(true);
 
         $container->addText('note', _('Poznámka'));
 
@@ -67,7 +61,7 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect($options = 0) {
+    public function createSchoolSelect($options = 0): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {

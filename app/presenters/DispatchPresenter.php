@@ -1,5 +1,9 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\ModelRole;
+
 class DispatchPresenter extends AuthenticatedPresenter {
 
     use \LanguageNav;
@@ -12,18 +16,13 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $query = $this->serviceContest->getTable();
         $result = [];
         foreach ($query as $row) {
-
-            /**
-             * @var $contest ModelContest
-             * @var $row ModelContest
-             */
-            $contest = $this->serviceContest->findByPrimary($row->contest_id);
+            $contest = ModelContest::createFromTableRow($row);
             $symbol = $contest->getContestSymbol();
             $allowed = [];
             foreach ([ModelRole::ORG, ModelRole::CONTESTANT] as $role) {
                 $allowed[$role] = $this->check($login, $contest, $role);
             }
-            $result[$symbol] = ['allowed' => $allowed, 'contest' => $contest];
+            $result[$symbol] = ['data' => $allowed, 'contest' => $contest];
         }
         $this->template->contests = $result;
     }
@@ -33,44 +32,60 @@ class DispatchPresenter extends AuthenticatedPresenter {
             case ModelRole::ORG:
                 foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
                     if ($contest->contest_id == $contestId) {
-                        return true;
+                        return [
+                            'link' => $this->link(':Org:Dashboard:default', [
+                                'contestId' => $contest->contest_id,
+                            ]),
+                            'active' => true,
+                            'label' => $this->getLabel($contest, $role),
+                        ];
                     }
                 };
-                return false;
+                return [
+                    'link' => null,
+                    'active' => false,
+                    'label' => $this->getLabel($contest, $role),
+                ];
             default:
             case ModelRole::CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
                     foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
                         if ($contest->contest_id == $contestId) {
-                            return true;
+                            return [
+                                'link' => $this->link(':Public:Dashboard:default', [
+                                    'contestId' => $contestId,
+                                ]),
+                                'active' => true,
+                                'label' => $this->getLabel($contest, $role),
+                            ];
                         }
                     }
                 }
-                return false;
+                return [
+                    'link' => $this->link(':Public:Register:year', [
+                        'contestId' => $contest->contest_id,
+                    ]),
+                    'active' => true,
+                    'label' => $this->getLabel($contest, 'register'),
+                ];
         }
     }
 
-    public function handleChangeContest($contestId, $role) {
-        switch ($role) {
-            case 'org':
-                $this->redirect(':Org:Dashboard:default', [
-                    'contestId' => $contestId,
-                ]);
-                return;
-            case 'contestant':
-                $this->redirect(':Public:Dashboard:default', [
-                    'contestId' => $contestId,
-                ]);
-                return;
-        }
+    private function getLabel(ModelContest $contest, $role) {
+        return $contest->name . ' - ' . _($role);
     }
 
-    public function getTitle() {
-        return _('Rozcestník');
+    public function titleDefault() {
+        $this->setTitle(_('Rozcestník'));
+        $this->setIcon('fa fa-home');
     }
 
     public function getNavBarVariant() {
         return ['dark', 'dark'];
+    }
+
+    public function getNavRoot() {
+        return '';
     }
 }

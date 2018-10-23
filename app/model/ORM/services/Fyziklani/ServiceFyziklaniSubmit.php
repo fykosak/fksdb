@@ -20,10 +20,10 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         /**
          * @var $result ModelFyziklaniSubmit
          */
-        $result = $this->getTable()->where(array(
+        $result = $this->getTable()->where([
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId
-        ))->fetch();
+        ])->fetch();
         return $result ?: null;
     }
 
@@ -40,11 +40,11 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $result ?: null;
     }
 
-    public function submitExist($taskID, $teamID) {
-        if (is_null($this->findByTaskAndTeam($taskID, $teamID))) {
+    public function submitExist($taskId, $teamId) {
+        if (is_null($this->findByTaskAndTeam($taskId, $teamId))) {
             return false;
         }
-        if (is_null($this->findByTaskAndTeam($taskID, $teamID)->points)) {
+        if (is_null($this->findByTaskAndTeam($taskId, $teamId)->points)) {
             return false;
         }
         return true;
@@ -60,12 +60,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
          * @var $submit ModelFyziklaniSubmit
          */
         foreach ($query as $submit) {
-            $submits[$submit->fyziklani_submit_id] = [
-                'points' => $submit->points,
-                'teamId' => $submit->e_fyziklani_team_id,
-                'taskId' => $submit->fyziklani_task_id,
-                'created' => $submit->created->__toString(),
-            ];
+            $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;
     }

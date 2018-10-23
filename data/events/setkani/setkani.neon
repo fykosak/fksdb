@@ -4,17 +4,24 @@ parameters:
             appCond: or(regOpen(), role('admin'))
             cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
             person:
-                        
+
                 person:
-                    other_name: true
-                    family_name: true
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
                 person_history:
-                    school_id: true
+                    school_id:
+                        required: true
                 person_info:
-                    email: true
-                    born: true
-                    phone_parent_m: false
-                    phone_parent_d: false 
+                    email:
+                        required: true
+                    born:
+                        required: true
+                    phone_parent_m:
+                        required: false
+                    phone_parent_d:
+                        required: false
                     phone:
                         required: true
                         description: "Telefon (i s předvolbou státu), který budeš mít s sebou."
@@ -38,19 +45,20 @@ parameters:
                     black: Černé
             arrival:
                 destination:
-                    aut: "ÚAN Florenc"
-                    phl: "Hlavní nádraží"
-                    
+                    flr: "ÚAN Florenc"
+                    hln: "Hlavní nádraží"
+                    kni: "Na Knížecí"
+
                 time:
                     start: 17:30
                     end: 18:00
-                   
-                    
-                
+
+
+
 events:
     setkani:
         event_type_id: [11,12]
-        #eventYears: [4] # specify for which years this machine is valid, by default all years
+        eventYears: [1,2,3,4,5,6,7] # specify for which years this machine is valid, by default all years
         tableLayout: event.grid
         formLayout: setkani.form
         paramScheme:
@@ -64,7 +72,7 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMVikendParticipant
-                
+
                 states:
                     applied: Přihlášen
                     participated: Účastnil se
@@ -105,10 +113,18 @@ events:
                         modifiable: %events.setkani.appCond%
                     arrival_time:
                        label: "Předpokládaný příjezd"
-                       description: "Čas příjezdu" 
+                       description: "Čas příjezdu"
+                    arrival_destination:
+                       label: "Na jaké místo přijedeš?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     departure_time:
                        label: "Předpokládaný odjezd"
-                       description: "Čas odjezdu" 
+                       description: "Čas odjezdu"
+                    departure_destination:
+                       label: "Z jakého místa chceš odjíždět?"
+                       required: true
+                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
                     tshirt_size:
                         label: "Jaké tričko nosíš?"
                         required: true
@@ -141,6 +157,6 @@ events:
                 - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-                
+
             processings:
                 - @events.privacyPolicy

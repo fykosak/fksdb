@@ -3,20 +3,20 @@
 namespace Events\Model\Grid;
 
 use Events\UndeclaredEventException;
-use ModelEvent;
-use ModelPerson;
+use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelPerson;
 use ORM\Tables\TypedTableSelection;
 use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
- * 
+ *
  * @method SingleEventSource where()
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count() 
+ * @method SingleEventSource count()
  */
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
@@ -40,7 +40,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 	}
 
 
-        $subconditions = array();
+        $subconditions = [];
         $count = 0;
 
         $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();

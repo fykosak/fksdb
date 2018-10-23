@@ -3,14 +3,17 @@
 namespace FyziklaniModule;
 
 use AuthenticatedPresenter;
+use FKSDB\Components\Controls\Choosers\BrawlChooser;
+use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use ModelEvent;
+use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
+use FKSDB\ORM\ModelEvent;
 
 /**
  *
@@ -21,7 +24,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      *
-     * @var ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $event;
 
@@ -74,10 +77,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var \ServiceBrawlTeamPosition
      */
     protected $serviceBrawlTeamPosition;
+    /**
+     * @var FyziklaniComponentsFactory
+     */
+    protected $fyziklaniComponentsFactory;
 
 
     public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
         $this->serviceBrawlRoom = $serviceBrawlRoom;
+    }
+
+    public function injectFyziklaniComponentsFactory(FyziklaniComponentsFactory $fyziklaniComponentsFactory) {
+        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
     public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
@@ -109,9 +120,32 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
+     * @return BrawlChooser
+     */
+    protected function createComponentBrawlChooser() {
+        $control = new BrawlChooser($this->serviceEvent);
+
+        return $control;
+    }
+
+    protected function createComponentLanguageChooser() {
+        $control = new LanguageChooser($this->session);
+
+        return $control;
+    }
+
+    /**
      * @throws BadRequestException
      */
     public function startup() {
+        /**
+         * @var $languageChooser LanguageChooser
+         * @var $brawlChooser BrawlChooser
+         */
+        $languageChooser = $this['languageChooser'];
+        $brawlChooser = $this['brawlChooser'];
+        $languageChooser->syncRedirect();
+        $brawlChooser->setEvent($this->getEvent());
 
         $this->event = $this->getEvent();
         if (!$this->eventExist()) {
@@ -128,7 +162,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getSubtitle() {
-        return (' ' . $this->getEvent()->event_year . '. FYKOSí Fyziklání');
+        return sprintf(_('%d. Fyziklání'), $this->getEvent()->event_year);
     }
 
     /**
@@ -171,7 +205,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getNavBarVariant() {
-        return ['brawl brawl' . $this->getEventId(), 'dark'];
+        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+    }
+
+    public function getNavRoot() {
+        return 'fyziklani.dashboard.default';
     }
 
 }

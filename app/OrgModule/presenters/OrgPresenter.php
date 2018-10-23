@@ -48,10 +48,12 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     public function titleCreate() {
         $this->setTitle(_('Založit organizátora'));
+        $this->setIcon('fa fa-user-plus');
     }
 
     public function titleList() {
         $this->setTitle(_('Organizátoři'));
+        $this->setIcon('fa fa-address-book');
     }
 
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -59,7 +61,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return;
         }
-        $defaults = array();
+        $defaults = [];
         $defaults[ExtendedPersonHandler::CONT_MODEL]['since'] = $this->getSelectedYear();
         $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
     }
@@ -90,7 +92,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání organizátora.');
     }
-    
+
     public function messageExists() {
         return _('Organizátor již existuje.');
     }

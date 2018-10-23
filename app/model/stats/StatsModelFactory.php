@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelContest;
+
 /**
  * Description of ResultsModelFactory
  *
@@ -23,7 +25,7 @@ class StatsModelFactory {
     }
 
     /**
-     * 
+     *
      * @param ModelContest $contest
      * @param int $year
      * @return TaskStatsModel

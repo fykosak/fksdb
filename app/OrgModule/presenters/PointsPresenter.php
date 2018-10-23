@@ -5,8 +5,8 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelTaskContribution;
 use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
@@ -22,7 +22,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * Show all tasks?
-     * 
+     *
      * @persistent
      */
     public $all;
@@ -102,17 +102,18 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     public function titleDefault() {
+        $this->setIcon('fa fa-trophy');
         $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()));
     }
 
     public function renderDefault() {
         $this['pointsForm']->setDefaults();
-        $this->template->showAll = (bool) $this->all;
+        $this->template->showAll = (bool)$this->all;
     }
 
     protected function createComponentPointsForm($name) {
         $form = new OptimisticForm(
-                array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );
         $renderer = new BootstrapRenderer();
         $renderer->setColLeft(2);
@@ -130,13 +131,13 @@ class PointsPresenter extends SeriesPresenter {
             $fullname = $contestant->getPerson()->getFullname();
             $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
             $schoolLabel = Html::el('small');
-            $schoolLabel->setText('('.$schoolAbbrev.')');
+            $schoolLabel->setText('(' . $schoolAbbrev . ')');
             $schoolLabel->class = 'text-muted';
             $label = Html::el()
-                    ->setText($fullname)
-                    ->add(Html::el('br'))
-                    ->add($schoolLabel);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->serviceTaskStudyYear, $this->getSelectedAcademicYear(), $label);
+                ->setText($fullname)
+                ->add(Html::el('br'))
+                ->add($schoolLabel);
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
 
             $namingContainer = $container->addContainer($contestant->ct_id);
@@ -146,7 +147,7 @@ class PointsPresenter extends SeriesPresenter {
         $form->addSubmit('save', _('Uložit'));
         $form->onSuccess[] = array($this, 'pointsFormSuccess');
 
-        // JS dependencies        
+        // JS dependencies
         $this->registerJSFile('js/points.js');
 
         return $form;
@@ -199,10 +200,10 @@ class PointsPresenter extends SeriesPresenter {
             $contest = $this->getSelectedContest();
 
             $years = $this->serviceTask->getTable()
-                            ->select('year')
-                            ->where(array(
-                                'contest_id' => $contest->contest_id,
-                            ))->group('year');
+                ->select('year')
+                ->where(array(
+                    'contest_id' => $contest->contest_id,
+                ))->group('year');
 
             foreach ($years as $year) {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
@@ -222,19 +223,19 @@ class PointsPresenter extends SeriesPresenter {
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         if (!$person) {
-            return array();
+            return [];
         }
 
-        $taskIds = array();
+        $taskIds = [];
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
         $gradedTasks = $this->serviceTaskContribution->getTable()
-                        ->where(array(
-                            'person_id' => $person->person_id,
-                            'task_id' => $taskIds,
-                            'type' => ModelTaskContribution::TYPE_GRADE
-                        ))->fetchPairs('task_id', 'task_id');
+            ->where(array(
+                'person_id' => $person->person_id,
+                'task_id' => $taskIds,
+                'type' => ModelTaskContribution::TYPE_GRADE
+            ))->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
     }
 

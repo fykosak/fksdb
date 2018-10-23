@@ -2,16 +2,15 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKS\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use ModelContest;
-use ModelPerson;
+use FKSDB\ORM\ModelContest;
+use FKSDB\ORM\ModelPerson;
 use Nette\Database\Table\Selection;
 use ServicePerson;
 use YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonProvider implements IFilteredDataProvider {
@@ -37,9 +36,9 @@ class PersonProvider implements IFilteredDataProvider {
      * Syntactic sugar, should be solved more generally.
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
-        $orgs = $this->servicePerson->getTable()->where(array(
+        $orgs = $this->servicePerson->getTable()->where([
             'org:contest_id' => $contest->contest_id
-        ));
+        ]);
 
         $currentYear = $yearCalculator->getCurrentYear($contest);
         $orgs->where('org:since <= ?', $currentYear);
@@ -49,7 +48,7 @@ class PersonProvider implements IFilteredDataProvider {
 
     /**
      * Prefix search.
-     * 
+     *
      * @param string $search
      * @return array
      */
@@ -71,7 +70,7 @@ class PersonProvider implements IFilteredDataProvider {
                 ->order('family_name, other_name');
 
 
-        $result = array();
+        $result = [];
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
@@ -84,11 +83,11 @@ class PersonProvider implements IFilteredDataProvider {
         if ($address) {
             $place = $address->getAddress()->city;
         }
-        return array(
+        return [
             self::LABEL => $person->getFullname(),
             self::VALUE => $person->person_id,
             self::PLACE => $place,
-        );
+        ];
     }
 
     public function setDefaultValue($id) {

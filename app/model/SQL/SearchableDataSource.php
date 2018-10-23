@@ -27,10 +27,10 @@ class SearchableDataSource extends NDataSource {
 
     public function applyFilter($value) {
         
-        call_user_func_array($this->filterCallback, array(
+        call_user_func_array($this->filterCallback, [
             $this->getData(),
             $value
-        ));
+        ]);
     }
 
 }

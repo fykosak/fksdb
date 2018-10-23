@@ -2,10 +2,11 @@
 
 namespace PublicModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+use FKSDB\ORM\ModelSubmit;
 use ModelException;
-use ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
@@ -18,7 +19,7 @@ use Submits\ProcessingException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
@@ -52,6 +53,7 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleDefault() {
         $this->setTitle(_('Odevzdat řešení'));
+        $this->setIcon('fa fa-cloud-upload');
     }
 
     public function authorizedDownload($id) {
@@ -99,11 +101,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentUploadForm($name) {
-        $form = new Form();
-        $form->setRenderer(new BootstrapRenderer());
+        $control = new FormControl();
+        $form = $control->getForm();
 
         $prevDeadline = null;
-        $taskIds = array();
+        $taskIds = [];
         $personHistory = $this->getUser()->getIdentity()->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
@@ -118,12 +120,13 @@ class SubmitPresenter extends BasePresenter {
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
-
-            $container = $form->addContainer('task' . $task->task_id);
+            $container = new ModelContainer();
+            $form->addComponent($container, 'task' . $task->task_id);
+            //$container = $form->addContainer();
             $upload = $container->addUpload('file', $task->getFQName());
             $conditionedUpload = $upload
-                    ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                ->addCondition(Form::FILLED)
+                ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
 
             if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                 $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
@@ -150,7 +153,7 @@ class SubmitPresenter extends BasePresenter {
             $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
-        return $form;
+        return $control;
     }
 
     public function createComponentSubmitsGrid($name) {

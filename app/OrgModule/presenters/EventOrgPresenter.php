@@ -2,14 +2,14 @@
 
 namespace OrgModule;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Form;
 use ORM\IModel;
 use Persons\ExtendedPersonHandler;
-use ServiceEventOrg;
 use ServiceEvent;
-use ModelEvent;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use ServiceEventOrg;
 
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
@@ -20,17 +20,17 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
-    
+
     /**
      * @var ServiceEvent
      */
     private $serviceEvent;
-    
+
     /**
-     * @var ModelEvent
+     * @var \FKSDB\ORM\ModelEvent
      */
     private $modelEvent;
-    
+
     /**
      * @persistent
      */
@@ -39,14 +39,25 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
     }
-    
+
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
+    $this->setIcon('fa fa-user');
+    }
+
+    public function titleCreate() {
+        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
+        $this->setIcon('fa fa-user-plus');
+    }
+
+    public function titleList() {
+        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
+        $this->setIcon('fa fa-users');
     }
 
     public function renderEdit($id) {
@@ -60,14 +71,6 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         }
     }
 
-    public function titleCreate() {
-        $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name));
-    }
-
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organizátoři akce %s'), $this->getEvent()->name));
-    }
-    
     public function actionDelete($id) {
         $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
         if($success){
@@ -81,7 +84,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
-        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults(array());
+        //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
     protected function createComponentGrid($name) {
@@ -111,13 +114,13 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     public function messageError() {
         return _('Chyba při zakládání organizátora akce.');
     }
-    
+
     public function messageExists() {
         return _('Organizátor akce již existuje.');
     }
-    
+
     /**
-     * 
+     *
      * @return ModelEvent
      */
     private function getEvent() {

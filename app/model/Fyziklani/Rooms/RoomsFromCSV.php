@@ -2,9 +2,9 @@
 
 namespace FKSDB\model\Fyziklani\Rooms;
 
-use FKS\Logging\ILogger;
-use FKS\Utils\CSVParser;
-use ModelEvent;
+use FKSDB\Logging\ILogger;
+use FKSDB\ORM\ModelEvent;
+use FKSDB\Utils\CSVParser;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use Pipeline\PipelineException;
 use Pipeline\Stage;
@@ -49,7 +49,7 @@ class RoomsFromCSV extends Stage {
                 ->where('event_id', $this->event->event_id)
                 ->where('status!=?', 'cancelled')
                 ->fetchPairs('e_fyziklani_team_id');
-        $updatedTeams = array();
+        $updatedTeams = [];
 
         $this->serviceTeam->getConnection()->beginTransaction();
         $parser = new CSVParser($this->data);
