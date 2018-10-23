@@ -246,6 +246,7 @@ events:
                 - Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
                 #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
