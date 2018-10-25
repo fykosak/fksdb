@@ -52,9 +52,8 @@ abstract class FyziklaniModule extends ReactComponent {
         \ServiceFyziklaniTask $serviceFyziklaniTask,
         \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
     ) {
-        parent::__construct();
+        parent::__construct($container);
         $this->event = $event;
-        $this->container = $container;
 
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;

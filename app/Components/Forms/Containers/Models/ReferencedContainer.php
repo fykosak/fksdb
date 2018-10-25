@@ -190,7 +190,7 @@ class ReferencedContainer extends ContainerWithOptions {
     private function createSearchButton() {
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
             ->setValidationScope(false);
-        //$submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = $this->searchCallback->invoke($term);

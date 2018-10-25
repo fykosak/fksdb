@@ -31,25 +31,22 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
         const active = item.id === value;
         const localizedData = item[langKey];
         return (
-
-            <div onClick={() => {
+            <div className={'chooser-container row ' + (active ? 'active' : '')} onClick={() => {
                 this.props.setSchedule(active ? null : item.id);
             }}>
-                <div className={'chooser-container row ' + (active ? 'active' : '')}>
-                    <div className={'col-2 chooser-check-container'}>
-                        <span className={'h1 mr-2 ' + (active ? 'fa fa-check-square-o' : 'fa fa-square-o')}/>
+                <div className={'col-2 chooser-check-container'}>
+                    <span className={active ? 'fa fa-check-square-o' : 'fa fa-square-o'}/>
+                </div>
+                <div className={'col-10'}>
+                    <span className={'h5'}>{localizedData.name}</span>
+                    <div>{localizedData.description}</div>
+                    <div>
+                        <small>{localizedData.place}</small>
                     </div>
-                    <div className={'col-10'}>
-                        <h6>{localizedData.name}</h6>
-                        <div>{localizedData.description}</div>
-                        <div>
-                            <small>{localizedData.place}</small>
-                        </div>
-                        <div>
-                            <small>
-                                <PriceDisplay price={item.price}/>
-                            </small>
-                        </div>
+                    <div>
+                        <small>
+                            <PriceDisplay price={item.price}/>
+                        </small>
                     </div>
                 </div>
             </div>

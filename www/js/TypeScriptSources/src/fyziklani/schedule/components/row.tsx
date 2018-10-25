@@ -29,28 +29,31 @@ export default class Row extends React.Component<IProps, {}> {
                 throw new Error('Unsupported type:' + type);
 
         }
-        // <div className={'schedule-line'}/>
         return (
             <div className={'schedule-row schedule-row-' + blockData.type}>
                 <div className={'time-block'}>
                     {this.createdDateLabel(blockData.date)}
                 </div>
-                <div className={'schedule-block row justify-content-between'}>
+                <div className={'schedule-container row justify-content-between'}>
                     {component}
                 </div>
-
             </div>
         );
     }
 
     private createdDateLabel(dates: { start: string; end: string }) {
         return <div className={'schedule-time'}>
-            <div className={'date-start'}>
-                <DateDisplay date={dates.start} options={{weekday: 'short'}}/> <TimeDisplay date={dates.start}/>
+            <div>
+                <DateDisplay date={dates.start} options={{weekday: 'long'}}/>
             </div>
-            <div className={'timeline'}>|</div>
-            <div className={'date-end'}>
-                <DateDisplay date={dates.start} options={{weekday: 'short'}}/> <TimeDisplay date={dates.end}/>
+            <div>
+                <TimeDisplay
+                    date={dates.start}
+                    options={{hour: 'numeric', minute: 'numeric'}}
+                /> - <TimeDisplay
+                date={dates.end}
+                options={{hour: 'numeric', minute: 'numeric'}}
+            />
             </div>
         </div>;
     }

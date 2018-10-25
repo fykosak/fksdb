@@ -1,4 +1,5 @@
 html, body {
+    font-family: 'Source Sans Pro', sans-serif;
     /*padding-top: 35px;*/
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
@@ -419,27 +420,12 @@ body[data-contest="vyfuk"] h6 {
     position: absolute;
 }
 
-.schedule-row-info {
-    /*height: 100px;*/
-}
-
-.schedule-row-info .schedule-line {
-    /*bottom: 50 px;*/
-}
-
-.schedule-row-chooser {
-    /*height: 150px;*/
-}
-
-.schedule-row-chooser .schedule-line {
-    /* bottom: 75 px;*/
-}
-
-.schedule-block {
+.schedule-container {
     width: 80%;
     display: flex;
     justify-content: space-around;
     align-content: center;
+    align-items: center;
 }
 
 .schedule-container, .info-container {
@@ -475,16 +461,16 @@ body[data-contest="vyfuk"] h6 {
 
 .chooser-container, .info-container {
     width: 100%;
+    padding: 1rem;
 }
 
 .chooser-container {
     border: solid 1px #f44336;
-    padding: 1rem;
     border-radius: 1rem;
 }
 
 .chooser-container.active {
-    color: white; /**/
+    color: white;
     background-color: #f44336;
 }
 

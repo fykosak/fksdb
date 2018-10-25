@@ -20,10 +20,12 @@ export default class InfoItem extends React.Component<IProps, {}> {
             <div>
                 <div className={'info-container row'}>
                     <div className={'col-2 info-check-container'}>
-                        <span className={'h1 mr-2 fa fa-info'}/>
+                        <span className={'fa fa-info'}/>
                     </div>
                     <div className={'col-10'}>
-                        <h6>{localizedData.name}</h6>
+                        <div>
+                            <span className={'h5'}>{localizedData.name}</span>
+                        </div>
                         <div>{localizedData.description}</div>
                     </div>
                 </div>
