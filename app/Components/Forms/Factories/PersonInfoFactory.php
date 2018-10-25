@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreePrefixField;
+use FKSDB\Components\Forms\Factories\PersonInfo\AcademicDegreeSuffixField;
 use FKSDB\Components\Forms\Factories\PersonInfo\AccountField;
 use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Components\Forms\Factories\PersonInfo\BirthplaceField;
@@ -9,9 +11,12 @@ use FKSDB\Components\Forms\Factories\PersonInfo\BornField;
 use FKSDB\Components\Forms\Factories\PersonInfo\BornIdField;
 use FKSDB\Components\Forms\Factories\PersonInfo\CareerField;
 use FKSDB\Components\Forms\Factories\PersonInfo\EmailField;
+use FKSDB\Components\Forms\Factories\PersonInfo\EmployerField;
+use FKSDB\Components\Forms\Factories\PersonInfo\HealthInsuranceField;
 use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
 use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
 use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
+use FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipField;
 use FKSDB\Components\Forms\Factories\PersonInfo\NoteField;
 use FKSDB\Components\Forms\Factories\PersonInfo\OriginField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
@@ -27,6 +32,15 @@ use Nette\InvalidArgumentException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonInfoFactory {
+    /**
+     * @var \ServiceRegion
+     */
+    private $serviceRegion;
+
+    public function __construct(\ServiceRegion $serviceRegion) {
+        $this->serviceRegion = $serviceRegion;
+    }
+
     /**
      * @param $fieldName
      * @return BaseControl
@@ -65,8 +79,18 @@ class PersonInfoFactory {
                 return new AgreedField();
             case    'email':
                 return new EmailField();
+            case 'academic_degree_prefix':
+                return new AcademicDegreePrefixField();
+            case 'academic_degree_suffix':
+                return new AcademicDegreeSuffixField();
+            case'employer':
+                return new EmployerField();
+            case 'health_insurance':
+                return new HealthInsuranceField();
+            case 'citizenship':
+                return new CitizenshipField($this->serviceRegion);
             default:
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }
 
     }

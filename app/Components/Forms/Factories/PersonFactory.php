@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
+use FKSDB\Components\Forms\Factories\Person\BornFamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\DisplayNameField;
 use FKSDB\Components\Forms\Factories\Person\FamilyNameField;
 use FKSDB\Components\Forms\Factories\Person\GenderField;
@@ -76,8 +77,10 @@ class PersonFactory {
                 return new DisplayNameField();
             case 'gender':
                 return new GenderField();
+            case 'born_family_name':
+                return new BornFamilyNameField();
             default:
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }
     }
 }
