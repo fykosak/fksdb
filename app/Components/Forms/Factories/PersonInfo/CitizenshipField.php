@@ -17,6 +17,7 @@ class CitizenshipField extends SelectBox {
         $this->serviceRegion = $serviceRegion;
         parent::__construct(_('Státní příslušnost'));
         $this->setItems($this->getCountries());
+        $this->setPrompt(_('Vyberte státní příslušnost'));
     }
 
     private function getCountries() {
