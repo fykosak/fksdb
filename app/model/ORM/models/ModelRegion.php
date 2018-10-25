@@ -6,6 +6,10 @@ use AbstractModelSingle;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property integer region_id
+ * @property string country_iso
+ * @property string nuts
+ * @property string name
  */
 class ModelRegion extends AbstractModelSingle {
 
