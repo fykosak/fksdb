@@ -17,24 +17,16 @@ use YearCalculator;
 class OrgFactory {
 
     /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
-
-    /**
      * @var YearCalculator
      */
     private $yearCalculator;
 
-    function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
-        $this->servicePerson = $servicePerson;
+    function __construct(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
 
-    public function createOrg($options = 0, ControlGroup $group = null, ModelContest $contest): ModelContainer {
+    public function createOrg(ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
-        $container->setCurrentGroup($group);
-
 
         $min = $this->yearCalculator->getFirstYear($contest);
         $max = $this->yearCalculator->getLastYear($contest);

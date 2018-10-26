@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Factories\Fyziklani\FyziklaniSubmit\PointsField;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\ORM\ModelEvent;
-use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniTask;
@@ -23,17 +23,6 @@ class FyziklaniFactory {
     public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
-    private function createPointsField(ModelEvent $event): RadioList {
-        $field = new RadioList(_('Počet bodů'));
-        $items = [];
-        foreach ($event->getParameter('availablePoints') as $points) {
-            $items[$points] = $points;
-        }
-        $field->setItems($items);
-        $field->setRequired();
-        return $field;
     }
 
     private function createTeamField(): TextInput {
@@ -83,7 +72,9 @@ class FyziklaniFactory {
         $form->addComponent($this->createTeamField(), 'team');
         $form->addComponent($this->createTeamIdField(), 'team_id');
         $form->addComponent($this->createTaskField(), 'task');
-        $form->addComponent($this->createPointsField($event), 'points');
+        $pointsField = new PointsField($event->getParameter('availablePoints'));
+        $pointsField->setRequired(true);
+        $form->addComponent($pointsField, 'points');
         $form->addSubmit('send', _('Uložit'));
         return $control;
     }

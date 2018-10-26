@@ -73,7 +73,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
     }
 
     protected function appendExtendedContainer(Form $form) {
-        $container = $this->orgFactory->createOrg(0, null, $this->getSelectedContest());
+        $container = $this->orgFactory->createOrg(  $this->getSelectedContest());
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
