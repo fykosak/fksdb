@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
+use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\Templating\FileTemplate;
@@ -25,14 +26,20 @@ abstract class StalkingComponent extends Control {
      * @var ModelPerson;
      */
     protected $modelPerson;
+    /**
+     * @var GettextTranslator
+     */
+    protected $translator;
 
-    public function __construct(ModelPerson $modelPerson, $mode) {
+    public function __construct(ModelPerson $modelPerson, GettextTranslator $translator, $mode) {
         parent::__construct();
         $this->mode = $mode;
         $this->modelPerson = $modelPerson;
+        $this->translator = $translator;
     }
 
     public function beforeRender() {
+        $this->template->setTranslator($this->translator);
         $this->template->mode = $this->mode;
     }
 
