@@ -99,57 +99,57 @@ class StalkingPresenter extends BasePresenter {
     }
 
     public function createComponentBaseInfo() {
-        $component = new BaseInfo($this->getPerson(), $this->getMode());
+        $component = new BaseInfo($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentAddress() {
-        $component = new Address($this->getPerson(), $this->getMode());
+        $component = new Address($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventParticipant() {
-        $component = new EventParticipant($this->getPerson(), $this->getMode());
+        $component = new EventParticipant($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventTeacher() {
-        $component = new EventTeacher($this->getPerson(), $this->getMode());
+        $component = new EventTeacher($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentEventOrg() {
-        $component = new EventOrg($this->getPerson(), $this->getMode());
+        $component = new EventOrg($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentLogin() {
-        $component = new Login($this->getPerson(), $this->getMode());
+        $component = new Login($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentOrg() {
-        $component = new Org($this->getPerson(), $this->getMode());
+        $component = new Org($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentContestant() {
-        $component = new Contestant($this->getPerson(), $this->getMode());
+        $component = new Contestant($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentPersonHistory() {
-        $component = new PersonHistory($this->getPerson(), $this->getMode());
+        $component = new PersonHistory($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentRole() {
-        $component = new Role($this->getPerson(), $this->getMode());
+        $component = new Role($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
     public function createComponentFlag() {
-        $component = new Flag($this->getPerson(), $this->getMode());
+        $component = new Flag($this->getPerson(), $this->getTranslator(), $this->getMode());
         return $component;
     }
 
