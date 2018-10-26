@@ -10,13 +10,14 @@ use FKSDB\Components\Forms\Factories\PersonInfo\BirthplaceField;
 use FKSDB\Components\Forms\Factories\PersonInfo\BornField;
 use FKSDB\Components\Forms\Factories\PersonInfo\BornIdField;
 use FKSDB\Components\Forms\Factories\PersonInfo\CareerField;
+use FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipField;
 use FKSDB\Components\Forms\Factories\PersonInfo\EmailField;
 use FKSDB\Components\Forms\Factories\PersonInfo\EmployerField;
 use FKSDB\Components\Forms\Factories\PersonInfo\HealthInsuranceField;
 use FKSDB\Components\Forms\Factories\PersonInfo\HomepageField;
 use FKSDB\Components\Forms\Factories\PersonInfo\IdNumberField;
 use FKSDB\Components\Forms\Factories\PersonInfo\ImField;
-use FKSDB\Components\Forms\Factories\PersonInfo\CitizenshipField;
+use FKSDB\Components\Forms\Factories\PersonInfo\LinkedinIdField;
 use FKSDB\Components\Forms\Factories\PersonInfo\NoteField;
 use FKSDB\Components\Forms\Factories\PersonInfo\OriginField;
 use FKSDB\Components\Forms\Factories\PersonInfo\PhoneField;
@@ -89,6 +90,8 @@ class PersonInfoFactory {
                 return new HealthInsuranceField();
             case 'citizenship':
                 return new CitizenshipField($this->serviceRegion);
+            case 'linkedin_id':
+                return new LinkedinIdField();
             default:
                 throw new InvalidArgumentException('Field ' . $fieldName . ' not exists');
         }

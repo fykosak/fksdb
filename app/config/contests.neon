@@ -85,38 +85,52 @@ parameters:
                 address:
                   required: false
             person_info:
+                # extends table person
+                academic_degree_prefix:
+                  required: false
+                academic_degree_suffix:
+                  required: false
+                # contact info
                 email:
                   required: false
                 phone:
                   required: false
-                career:
+                phone_parent_m:
                   required: false
-                uk_login:
+                phone_parent_d:
                   required: false
-                account:
-                  required: false
-                homepage:
-                  required: false
-                note:
-                  required: false
+                # to DPP/
                 born:
                   required: false
                 born_id:
                   required: false
-                id_number:
-                  required: false
                 birthplace:
                   required: false
-                academic_degree_prefix:
-                    required: false
-                academic_degree_suffix:
-                    required: false
+                id_number:
+                  required: false
                 employer:
-                    required: false
+                  required: false
                 health_insurance:
-                    required: false
+                  required: false
                 citizenship:
+                  required: false
+                # required to ORG
+                uk_login:
+                  required: false
+                account:
+                  required: false
+                # to webpage
+                career:
+                  required: false
+                homepage:
+                  required: false
+                im:
+                  required: false
+                linkedin_id:
                     required: false
+                # place to others onfo
+                note:
+                  required: false                         
         adminEventOrg:
             person:
                 other_name:
