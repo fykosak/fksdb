@@ -6,6 +6,7 @@ import {
 import { lang } from '../../../i18n/i18n';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
+import { toggleChooser } from '../actions';
 import { IFyziklaniScheduleStore } from '../reducers/';
 import {
     IData,
@@ -16,6 +17,8 @@ interface IState {
     values?: {
         [key: string]: number;
     };
+
+    onToggleChooser?(): void;
 }
 
 interface IProps {
@@ -25,7 +28,7 @@ interface IProps {
 class CompactValue extends React.Component<IState & IProps, {}> {
 
     public render() {
-        const {data, values} = this.props;
+        const {data, values, onToggleChooser} = this.props;
         const price: IPrice = {kc: 0, eur: 0};
         let count = 0;
         for (const blockName in data) {
@@ -56,7 +59,10 @@ class CompactValue extends React.Component<IState & IProps, {}> {
                     <span className={'ml-3'}>{lang.getText('Price')} <PriceDisplay price={price}/></span>
                 </span>
                 <div className={'input-group-append'}>
-                    <button className={'btn btn-primary'}><span className={'fa fa-chevron-down'}/></button>
+                    <button className={'btn btn-fyziklani'} onClick={(event) => {
+                        event.preventDefault();
+                        onToggleChooser();
+                    }}><span className={'fa fa-pencil mr-2'}/>{lang.getText('Edit schedule')}</button>
                 </div>
             </div>
         );
@@ -70,7 +76,9 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
-    return {};
+    return {
+        onToggleChooser: () => dispatch(toggleChooser()),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompactValue);

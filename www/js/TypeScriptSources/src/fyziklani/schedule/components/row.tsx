@@ -19,11 +19,11 @@ export default class Row extends React.Component<IProps, {}> {
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
-                    return <div className={'col-5'}><ChooserItem key={index} blockName={blockName} item={parallel}/></div>;
+                    return <div className={'col-6'}><ChooserItem key={index} blockName={blockName} item={parallel}/></div>;
                 });
                 break;
             case 'info':
-                component = <div className={'col-5'}><InfoItem blockName={blockName} item={blockData.descriptions}/></div>;
+                component = <div className={'col-6'}><InfoItem blockName={blockName} item={blockData.descriptions}/></div>;
                 break;
             default:
                 throw new Error('Unsupported type:' + type);
