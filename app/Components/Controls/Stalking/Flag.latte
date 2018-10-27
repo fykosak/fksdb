@@ -1,5 +1,5 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Flags</h4>
+    <h4 class="card-header bg-primary text-white">{_('Flags')}</h4>
     {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         {if count($flags)}
@@ -8,7 +8,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Value</span>
+                            <span class="col-5">{_('Value')}</span>
                             <div class="col-7">
                                 {if $flag->value == 1}
                                     <span class="badge badge-success">1</span>
@@ -23,7 +23,7 @@
                     {if $flag->type == 'contest' || $flag->type == 'contest_year'}
                         <li class="list-group-item">
                             <div class="row">
-                                <span class="col-5">Contest</span>
+                                <span class="col-5">{_('Contest')}</span>
                                 <div class="col-7">
                                     {control contestBadge, $org->contest_id}
                                 </div>
@@ -33,7 +33,7 @@
                     {if $flag->type == 'ac_year' || $flag->type == 'contest_year'}
                         <li class="list-group-item">
                             <div class="row">
-                                <span class="col-5">Year</span>
+                                <span class="col-5">{_('Year')}</span>
                                 <div class="col-7">
                                     {$flag->ac_year}
                                 </div>
@@ -42,7 +42,7 @@
                     {/if}
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Modified</span>
+                            <span class="col-5">{_('Modified')}</span>
                             <div class="col-7">
                                 {$flag->modified}
                             </div>
@@ -52,7 +52,7 @@
             {/foreach}
         {else}
             <div class="card-body">
-                <span class="badge-warning badge">No records</span>
+                <span class="badge-warning badge">{_('No records')}</span>
             </div>
         {/if}
     {else}
