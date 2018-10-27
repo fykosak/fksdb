@@ -5,8 +5,8 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelContestant;
 use FKSDB\ORM\ModelTaskContribution;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
@@ -107,18 +107,19 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     public function renderDefault() {
-        $this['pointsForm']->setDefaults();
+        $this['pointsForm']->getForm()->setDefaults();
         $this->template->showAll = (bool)$this->all;
     }
 
     protected function createComponentPointsForm($name) {
+        //   $controlContainer = new FormControl();
+        //   $formToRemove = $controlContainer->getForm();
+        //  $controlContainer->removeComponent($formToRemove);
+
         $form = new OptimisticForm(
-            array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
+            [$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']
         );
-        $renderer = new BootstrapRenderer();
-        $renderer->setColLeft(2);
-        $renderer->setColRight(10);
-        $form->setRenderer($renderer);
+        // $controlContainer->addComponent($form, 'form');
 
 
         $contestants = $this->seriesTable->getContestants();
@@ -127,7 +128,8 @@ class PointsPresenter extends SeriesPresenter {
 
         $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
-        foreach ($contestants as $contestant) {
+        foreach ($contestants as $row) {
+            $contestant = ModelContestant::createFromTableRow($row);
             $fullname = $contestant->getPerson()->getFullname();
             $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
             $schoolLabel = Html::el('small');
@@ -139,7 +141,8 @@ class PointsPresenter extends SeriesPresenter {
                 ->add($schoolLabel);
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $label);
             $control->setClassName('points');
-
+            // $namingContainer = new ContainerWithOptions();
+            // $container->addComponent($namingContainer,$contestant->ct_id);
             $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
