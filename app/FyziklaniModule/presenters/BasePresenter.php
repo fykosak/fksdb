@@ -7,13 +7,13 @@ use FKSDB\Components\Controls\Choosers\BrawlChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
+use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
-use FKSDB\ORM\ModelEvent;
 
 /**
  *
@@ -169,7 +169,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return \ModelBrawlRoom[]
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
     /**

@@ -76,6 +76,6 @@ abstract class FyziklaniModule extends ReactComponent {
      * @return \ModelBrawlRoom[]
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 }

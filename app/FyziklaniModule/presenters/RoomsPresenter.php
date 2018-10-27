@@ -57,7 +57,7 @@ class RoomsPresenter extends BasePresenter {
 
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
-        $buildings = $this->getEvent()->getParameter('buildings');
+        $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
         $control->setBuildings($buildings);
         $control->setRooms($this->getRooms());
         $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));

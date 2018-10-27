@@ -131,6 +131,18 @@ body[data-contest="vyfuk"] h6 {
     border-color: #5C00C1;
 }
 
+.btn-fyziklani:hover {
+    color: #fff;
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.btn-fyziklani {
+    color: #fff;
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
 .bg-vyfuk {
     background-color: #9c3;;
 }
@@ -268,6 +280,14 @@ body[data-contest="vyfuk"] h6 {
 
 .bd-callout-danger h4 {
     color: #d9534f
+}
+
+.bd-callout-fyziklani {
+    border-left-color: #f44336;
+}
+
+.bd-callout-fyziklani h4{
+    color: #f44336;
 }
 
 /** auto generated code */
@@ -410,7 +430,8 @@ body[data-contest="vyfuk"] h6 {
     padding: .5rem;
     border-bottom: #f44336 1px dashed;
 }
-.schedule-row:first-of-type{
+
+.schedule-row:first-of-type {
     border-top: #f44336 1px dashed;
 }
 

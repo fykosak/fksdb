@@ -12,13 +12,14 @@ import InputConnector from '../../../input-connector/compoenents';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
 import { app } from '../reducers';
 import App from './app';
-import CompactValue from './compact-value';
 
 interface IProps {
     data: IData;
     mode: string;
     actions: INetteActions;
     input: HTMLInputElement;
+    description: string;
+    label: string;
 }
 
 export type ILocalizedParallelInfo = ILangMap<ILocalizedParallelItem>;
@@ -68,13 +69,17 @@ export default class Index extends React.Component<IProps, {}> {
 
     public render() {
         const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        const {data, input} = this.props;
+        const {data, input, label, description} = this.props;
+        // <CompactValue data={data}/>
         return (
             <Provider store={store}>
                 <>
-                    <CompactValue data={data}/>
                     <InputConnector input={input}/>
-                    <App data={data}/>
+                    <App
+                        description={description}
+                        label={label}
+                        data={data}
+                    />
 
                 </>
             </Provider>

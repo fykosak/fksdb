@@ -62,12 +62,33 @@ const registerSchedule: IApp = (element, module, component, mode, rawData, actio
 
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
+    const descriptionElement = element.parentElement.querySelector('span');
+    let description = null;
+    if (descriptionElement) {
+        description = descriptionElement.innerText;
+        descriptionElement.style.display = 'none';
+    }
+    const labelElement = element.parentElement.parentElement.querySelector('label');
+    let label = null;
+    if (labelElement) {
+        label = labelElement.innerHTML;
+        labelElement.style.display = 'none';
+    }
+
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
+
     element.style.display = 'none';
 
-    ReactDOM.render(<Schedule mode={mode} actions={actions} input={element} data={data}/>, container);
+    ReactDOM.render(<Schedule
+        mode={mode}
+        actions={actions}
+        input={element}
+        data={data}
+        description={description}
+        label={label}
+    />, container);
     return true;
 };
 

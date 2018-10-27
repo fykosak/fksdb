@@ -3,16 +3,9 @@
 namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\React\Fyziklani\FyziklaniModule;
-use FKSDB\ORM\ModelEvent;
 use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DateTime;
-use Nette\DI\Container;
-use Nette\Diagnostics\FireLogger;
-use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceBrawlRoom;
-use ServiceBrawlTeamPosition;
-use ServiceFyziklaniTask;
 
 abstract class ResultsAndStatistics extends FyziklaniModule {
 
@@ -41,19 +34,19 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         $lastUpdated = $requestData ? $requestData : null;
         $response = new \ReactResponse();
         $response->setAct('results-update');
-
+        $gameSetup = $this->getEvent()->getParameter('gameSetup');
         $result = [
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$this->getEvent()->getParameter('gameStart'),
-            'gameEnd' => (string)$this->getEvent()->getParameter('gameEnd'),
+            'gameStart' => (string)$gameSetup['gameStart'],
+            'gameEnd' => (string)$gameSetup['gameEnd'],
             'times' => [
-                'toStart' => strtotime($this->getEvent()->getParameter('gameStart')) - time(),
-                'toEnd' => strtotime($this->getEvent()->getParameter('gameEnd')) - time(),
+                'toStart' => strtotime($gameSetup['gameStart']) - time(),
+                'toEnd' => strtotime($gameSetup['gameEnd']) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->__toString(),
             'isOrg' => $isOrg,
-            'refreshDelay' => $this->getEvent()->getParameter('refreshDelay'),
+            'refreshDelay' => $gameSetup['refreshDelay'],
             'submits' => [],
         ];
 
@@ -76,9 +69,10 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
      * @return boolean
      */
     private function isResultsVisible() {
-        $hardDisplay = $this->getEvent()->getParameter('resultsHardDisplay');
-        $before = (time() < strtotime($this->getEvent()->getParameter('resultsHide')));
-        $after = (time() > strtotime($this->getEvent()->getParameter('resultsDisplay')));
+        $gameSetup = $this->getEvent()->getParameter('gameSetup');
+        $hardDisplay = $gameSetup['resultsHardDisplay'];
+        $before = (time() < strtotime($gameSetup['resultsHide']));
+        $after = (time() > strtotime($gameSetup['resultsDisplay']));
 
         return $hardDisplay || ($before && $after);
     }
