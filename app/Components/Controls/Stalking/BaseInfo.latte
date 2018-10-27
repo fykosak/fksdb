@@ -238,7 +238,7 @@
                     <span class="col-5">{_('Academic degree prefix')}</span>
                     <div class="col-7">
                         {if (!is_null($info->academic_degree_prefix))}
-                            {$info->born->__toString()}
+                            {$info->academic_degree_prefix}
                         {else}
                             <span class="badge badge-warning">{_('not set')}</span>
                         {/if}
@@ -250,7 +250,7 @@
                     <span class="col-5">{_('Academic degree suffix')}</span>
                     <div class="col-7">
                         {if (!is_null($info->academic_degree_suffix))}
-                            {$info->born->__toString()}
+                            {$info->academic_degree_suffix}
                         {else}
                             <span class="badge badge-warning">{_('not set')}</span>
                         {/if}
