@@ -1,5 +1,5 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Org</h4>
+    <h4 class="card-header bg-primary text-white">{_('Org')}</h4>
 
     {if count($orgs)}
         {foreach $orgs as $org}
@@ -7,31 +7,31 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">org_id</span>
+                        <span class="col-5">{_('org_id')}</span>
                         <span class="col-7">{$org->org_id}</span>
                     </div>
                 </li>
 
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">Since</span>
+                        <span class="col-5">{_('Since')}</span>
                         <span class="col-7">
                                 {if (!is_null($org->since))}
                                     {$org->since}
                                 {else}
-                                    <span class="badge badge-danger">not set</span>
+                                    <span class="badge badge-danger">{_('not set')}</span>
                                 {/if}
                             </span>
                     </div>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">Until</span>
+                        <span class="col-5">{_('Until')}</span>
                         <div class="col-7">
                             {if (!is_null($org->until))}
                                 {$org->until}
                             {else}
-                                <span class="badge badge-success">still organizing</span>
+                                <span class="badge badge-success">{_('still organizing')}</span>
 
                             {/if}
                         </div>
@@ -39,10 +39,10 @@
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">role</span>
+                        <span class="col-5">{_('Role')}</span>
                         <div class="col-7">
                             {if (is_null($org->role))}
-                                <span class="badge badge-danger">not set</span>
+                                <span class="badge badge-danger">{_('not set')}</span>
                             {else}
                                 {$org->role}
                             {/if}
@@ -51,10 +51,10 @@
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">order</span>
+                        <span class="col-5">{_('Order')}</span>
                         <div class="col-7">
                             {if (is_null($org->order))}
-                                <span class="badge badge-danger">not set</span>
+                                <span class="badge badge-danger">{_('not set')}</span>
                             {else}
                                 {$org->order}
                             {/if}
@@ -63,10 +63,10 @@
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">Contribution</span>
+                        <span class="col-5">{_('Contribution')}</span>
                         <div class="col-7">
                             {if (is_null($org->contribution))}
-                                <span class="badge badge-danger">not set</span>
+                                <span class="badge badge-danger">{_('not set')}</span>
                             {else}
                                 {$org->contribution}
                             {/if}
@@ -75,10 +75,10 @@
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">tex_signature</span>
+                        <span class="col-5">{_('Tex Signature')}</span>
                         <div class="col-7">
                             {if (is_null($org->tex_signature))}
-                                <span class="badge badge-danger">not set</span>
+                                <span class="badge badge-danger">{_('not set')}</span>
                             {else}
                                 {$org->tex_signature}
                             {/if}
@@ -87,10 +87,10 @@
                 </li>
                 <li class="list-group-item">
                     <div class="row">
-                        <span class="col-5">domain_alias</span>
+                        <span class="col-5">{_('Domain_alias')}</span>
                         <div class="col-7">
                             {if (is_null($org->domain_alias))}
-                                <span class="badge badge-danger">not set</span>
+                                <span class="badge badge-danger">{_('not set')}</span>
                             {else}
                                 {$org->domain_alias}
                             {/if}
@@ -102,7 +102,7 @@
 
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">No records</span>
+            <span class="badge-warning badge">{_('No records')}</span>
         </div>
     {/if}
 
