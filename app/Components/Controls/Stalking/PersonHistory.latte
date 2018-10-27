@@ -1,5 +1,5 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Person history</h4>
+    <h4 class="card-header bg-primary text-white">{_('Person history')}</h4>
     {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         {if count($data['history'])}
@@ -8,36 +8,36 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">School</span>
+                            <span class="col-5">{_('School')}</span>
                             <div class="col-7">
                                 {if (!is_null($history->school_id))}
                                     {$history->school->name_abbrev}
                                 {else}
-                                    <span class="badge badge-danger">not set</span>
+                                    <span class="badge badge-danger">{_('not set')}</span>
                                 {/if}
                             </div>
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Class</span>
+                            <span class="col-5">{_('Class')}</span>
                             <div class="col-7">
                                 {if (!is_null($history->class))}
                                     {$history->class}
                                 {else}
-                                    <span class="badge badge-danger">not set</span>
+                                    <span class="badge badge-danger">{_('not set')}</span>
                                 {/if}
                             </div>
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="row">
-                            <span class="col-5">Study_year</span>
+                            <span class="col-5">{_('Study_year')}</span>
                             <div class="col-7">
                                 {if (!is_null($history->study_year))}
                                     {$history->study_year}
                                 {else}
-                                    <span class="badge badge-danger">not set</span>
+                                    <span class="badge badge-danger">{_('not set')}</span>
                                 {/if}
                             </div>
                         </div>
@@ -47,7 +47,7 @@
 
         {else}
             <div class="card-body">
-                <span class="badge-warning badge">No records</span>
+                <span class="badge-warning badge">{_('No records')}</span>
             </div>
         {/if}
     {else}

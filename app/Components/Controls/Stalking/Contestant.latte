@@ -1,5 +1,5 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Contestant</h4>
+    <h4 class="card-header bg-primary text-white">{_('Contestant')}</h4>
 
     {if count($contestants)}
         <ul class="list-group list-group-flush">
@@ -16,7 +16,7 @@
         </ul>
     {else}
         <div class="card-body">
-            <span class="badge-warning badge">No records</span>
+            <span class="badge-warning badge">{_('No records')}</span>
         </div>
     {/if}
 

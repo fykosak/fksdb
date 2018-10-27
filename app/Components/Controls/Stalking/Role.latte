@@ -1,5 +1,5 @@
 <div class="card mb-3 border-primary">
-    <h4 class="card-header bg-primary text-white">Roles</h4>
+    <h4 class="card-header bg-primary text-white">{_('Roles')}</h4>
     {if $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_FULL || $mode == \FKSDB\Components\Controls\Stalking\StalkingComponent::PERMISSION_RESTRICT }
 
         <div class="card-body">
@@ -13,7 +13,7 @@
                     {/foreach}
                 </ul>
             {else}
-                <span class="badge-warning badge">No records</span>
+                <span class="badge-warning badge">{_('No records')}</span>
             {/if}
         </div>
     {else}
