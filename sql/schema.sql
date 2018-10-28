@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `person_id` INT(11) NOT NULL AUTO_INCREMENT,
   `family_name` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Příjmení (nebo více příjmení oddělených jednou mezerou)',
   `other_name` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Křestní jména, von, de atd., oddělená jednou mezerou',
+  `born_family_name` varchar(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NULL DEFAULT NULL COMMENT 'Rodné příjmení',
   `display_name` VARCHAR(511) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NULL DEFAULT NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>',
   `gender` ENUM('M','F') CHARACTER SET 'utf8' NOT NULL,
   `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -110,13 +111,13 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   `health_restrictions` TEXT NULL DEFAULT NULL COMMENT 'alergie, léky, úrazy,...',
   `tshirt_size` TEXT NULL DEFAULT NULL,
   `tshirt_color` VARCHAR(20) NULL DEFAULT NULL,
-  `price` DECIMAL(6,2) NULL DEFAULT NULL COMMENT 'spočtena cena',
-  `arrival_time` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Čas prijezdu',
+  `price` DECIMAL(6,2) NULL DEFAULT NULL COMMENT 'vypočtená cena',
+  `arrival_time` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Čas příjezdu',
   `arrival_destination` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Místo prijezdu\n',
-  `arrival_ticket` TINYINT(1) NULL DEFAULT NULL COMMENT 'spoločný lístok na cestu tam\n',
+  `arrival_ticket` TINYINT(1) NULL DEFAULT NULL COMMENT 'společný lístek na cestu tam\n',
   `departure_time` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Čas odjezdu\n',
   `departure_destination` VARCHAR(20) NULL DEFAULT NULL COMMENT 'Místo odjezdu\n',
-  `departure_ticket` TINYINT(1) NULL DEFAULT NULL COMMENT 'spoločný lístok na cestu späť\n\n',
+  `departure_ticket` TINYINT(1) NULL DEFAULT NULL COMMENT 'společný lístek na cestu zpět\n\n',
   `swimmer` TINYINT(1) NULL DEFAULT NULL COMMENT 'plavec?',
   `used_drugs` TEXT NULL DEFAULT NULL COMMENT 'úžívané léky',
   `schedule` TEXT NULL DEFAULT NULL COMMENT 'serializovaný program',
@@ -325,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `org` (
   `person_id` INT(11) NOT NULL,
   `contest_id` INT(11) NOT NULL,
   `since` TINYINT(4) NOT NULL COMMENT 'od kterého ročníku orguje',
-  `until` TINYINT(4) NULL DEFAULT NULL COMMENT 'v kterém rončíku skončil',
+  `until` TINYINT(4) NULL DEFAULT NULL COMMENT 'v kterém ročníku skončil',
   `role` VARCHAR(255) NULL DEFAULT NULL COMMENT 'hlavní org, úlohář, etc.',
   `order` TINYINT(4) NOT NULL COMMENT 'pořadí pro řazení ve výpisech',
   `contribution` TEXT NULL DEFAULT NULL,
@@ -404,6 +405,11 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   `account` VARCHAR(32) NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
   `agreed` DATETIME NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
   `birthplace` VARCHAR(255) NULL DEFAULT NULL COMMENT 'název města narození osoby',
+  `citizenship` CHAR(2) NULL DEFAULT NULL COMMENT 'Státní příslušnost',
+  `health_insurance` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
+  `employer` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
+  `academic_degree_prefix` varchar(64) NULL DEFAULT NULL COMMENT 'titul před jménem',
+  `academic_degree_suffix` varchar(64) NULL DEFAULT NULL COMMENT 'titul za jménem',
   `email` VARCHAR(255) NULL DEFAULT NULL,
   `origin` TEXT NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
   `tex_signature` VARCHAR(32) NULL DEFAULT NULL COMMENT 'zkratka používaná v TeXových vzorácích',
@@ -696,7 +702,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `stored_query` (
   `query_id` INT NOT NULL AUTO_INCREMENT,
   `qid` VARCHAR(16) NULL DEFAULT NULL COMMENT 'identifikátor pro URL, práva apod.\ndotazy s QIDem nelze mazat',
-  `name` VARCHAR(32) NOT NULL COMMENT 'název dotazu, identifikace pro človkěka',
+  `name` VARCHAR(32) NOT NULL COMMENT 'název dotazu, identifikace pro člověka',
   `description` TEXT NULL DEFAULT NULL,
   `sql` TEXT NOT NULL,
   `php_post_proc` VARCHAR(255) NULL DEFAULT NULL,
@@ -715,7 +721,7 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter` (
   `query_id` INT NOT NULL,
   `name` VARCHAR(16) NOT NULL COMMENT 'název parametru pro použití v SQL',
   `description` TEXT NULL DEFAULT NULL,
-  `type` ENUM('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ paramtru',
+  `type` ENUM('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ parametru',
   `default_integer` INT(11) NULL DEFAULT NULL COMMENT 'implicitní hodnota',
   `default_string` VARCHAR(255) NULL DEFAULT NULL COMMENT 'implicitní hodnota',
   PRIMARY KEY (`parameter_id`),
@@ -832,7 +838,7 @@ CREATE TABLE IF NOT EXISTS `study_year` (
   `study_year` TINYINT(1) NOT NULL,
   PRIMARY KEY (`study_year`))
 ENGINE = InnoDB
-COMMENT = 'table just enforeces referential integrity';
+COMMENT = 'table just enforces referential integrity';
 
 
 -- -----------------------------------------------------

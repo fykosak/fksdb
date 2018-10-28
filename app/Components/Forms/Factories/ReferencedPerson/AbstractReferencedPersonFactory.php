@@ -195,7 +195,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
 
         $container->getReferencedId()->getHandler()->setResolution($resolution);
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullname() : null);
-
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
                 continue;
@@ -209,7 +208,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
                 $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
                 $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
-
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
@@ -220,6 +218,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                     $component->setDisabled(false);
                 } else if ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
+                    $component->setValue($value);
                 } else if ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
