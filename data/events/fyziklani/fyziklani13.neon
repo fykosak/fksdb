@@ -7,6 +7,7 @@ parameters:
                 description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="https://fykos.cz/akce/fyziklani/start">na špecialni strance</a>.')
                 factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%)
 
+
             teacher:
                 person:
                     other_name:

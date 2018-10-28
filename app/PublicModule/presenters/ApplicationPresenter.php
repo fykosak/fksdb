@@ -16,12 +16,13 @@ use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Logging\FlashDumpFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\ModelAuthToken;
+use FKSDB\ORM\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use ORM\IModel;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use ServiceEvent;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -38,7 +39,7 @@ class ApplicationPresenter extends BasePresenter {
     private $event = false;
 
     /**
-     * @var IModel
+     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
      */
     private $eventApplication = false;
 
@@ -58,7 +59,7 @@ class ApplicationPresenter extends BasePresenter {
     private $serviceEvent;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -114,9 +115,9 @@ class ApplicationPresenter extends BasePresenter {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
-    public function titleDefault($eventId, $id) {
+    public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle("{$this->getEvent()} {$this->getEventApplication()}");
+            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()));
         } else {
             $this->setTitle("{$this->getEvent()}");
         }
@@ -211,7 +212,7 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
-    protected function createComponentApplication($name) {
+    protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $flashDump = $this->flashDumpFactory->createApplication();
@@ -228,7 +229,7 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
-    protected function createComponentApplicationsGrid($name) {
+    protected function createComponentApplicationsGrid() {
         $person = $this->getUser()->getIdentity()->getPerson();
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
@@ -243,7 +244,7 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
-    protected function createComponentNewApplicationsGrid($name) {
+    protected function createComponentNewApplicationsGrid() {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
             ->where('registration_begin <= NOW()')

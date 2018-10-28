@@ -5,8 +5,8 @@ namespace Events\Model\Grid;
 use Events\UndeclaredEventException;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
+use Nette\DI\Container;
 use ORM\Tables\TypedTableSelection;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,7 +25,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
      */
     private $person;
 
-    function __construct(ModelPerson $person, TypedTableSelection $events, SystemContainer $container) {
+    function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
         $this->person = $person;
     }

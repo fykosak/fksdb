@@ -14,8 +14,8 @@ class ScheduleFactory extends AbstractFactory {
      */
     private $data;
 
-    public function __construct(array $data) {
-        $this->data = $data;
+    public function __construct($data) {
+        $this->data = (array)$data;
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
