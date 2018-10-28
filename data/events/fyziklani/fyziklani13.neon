@@ -131,12 +131,12 @@ events:
 
                 fields:
                     name:
-                        label: _('Název týmu') # i18n
+                        label: _('Název týmu')
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani13.appCond%
                     category:
-                        label: _('Kategorie') # i18n
+                        label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
@@ -161,7 +161,6 @@ events:
                         visible: true
                         modifiable: %events.fyziklani13.appCond%
                     teacher_schedule: %events.fyziklani13.scheduleField%
-                            #
             #   PARTICIPANT
             #
             PARTICIPANT:
@@ -241,7 +240,7 @@ events:
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
                 - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
-                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+                - Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()

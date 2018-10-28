@@ -66,9 +66,9 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('Škola nemůže mít v soutěži více týmů než %d.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($first, $schoolControls, $personControls, $holder) {
+            $control->addRule(function(IControl $control) use ($first, $schoolControls, $personControls) {
                         $schools = $this->getSchools($schoolControls, $personControls);
-                        return $this->checkMulti($first, $control, $schools, $holder);
+                        return $this->checkMulti($first, $control, $schools);
                     }, $msgMulti);
             $first = false;
         }
@@ -84,10 +84,10 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private $cache;
 
-    private function checkMulti($first, $control, $schools, Holder $holder, IModel $team = null) {
+    private function checkMulti($first, $control, $schools) {
         $holder = $this->getHolder();
         $team = $holder->getPrimaryHolder()->getModel();
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $secondaryGroups = $holder->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
         $baseHolders = $group['holders'];
