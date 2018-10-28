@@ -121,14 +121,14 @@ body[data-contest="vyfuk"] h6 {
 
 .btn-brawl:hover {
     color: #fff;
-    background-color: #5C00C1;
-    border-color: #4200A7;
+    background-color: #f44336;
+    border-color: #f44336;
 }
 
 .btn-brawl {
     color: #fff;
-    background-color: #7511da;
-    border-color: #5C00C1;
+    background-color: #f44336;
+    border-color: #f44336;
 }
 
 .btn-fyziklani:hover {
@@ -155,7 +155,7 @@ body[data-contest="vyfuk"] h6 {
     background-color: #d7392e;
 }
 
-.bg-fykos.event-id-134 {
+.bg-fykos.event-type-1 {
     background-color: #d7392e;
 }
 
@@ -286,7 +286,7 @@ body[data-contest="vyfuk"] h6 {
     border-left-color: #f44336;
 }
 
-.bd-callout-fyziklani h4{
+.bd-callout-fyziklani h4 {
     color: #f44336;
 }
 
@@ -419,9 +419,36 @@ body[data-contest="vyfuk"] h6 {
     color: white;
 }
 
-.navigation-item .card[data-background-id="5"]:hover a, .navigation-item .card[data-background-id="5"]:focus a {
+
+[data-contest~="fyziklani"] .navigation-item .card:hover a,
+[data-contest~="fyziklani"] .navigation-item .card:focus a {
     color: white;
 }
+
+[data-contest~="fyziklani"] .navigation-item .card {
+    border-color: #f44336;
+    background-color: white;
+    transition-duration: 200ms;
+    color: #f44336;
+}
+
+[data-contest~="fyziklani"] .navigation-item .card a {
+    color: #f44336;
+}
+
+[data-contest~="fyziklani"] .navigation-item .card:hover,
+[data-contest~="fyziklani"] .navigation-item .card:focus {
+    transition-duration: 200ms;
+    background-color: #f44336;
+    color: white;
+}
+
+[data-contest~="fyziklani"] .navigation-item .card:hover a,
+[data-contest~="fyziklani"] .navigation-item .card:focus a {
+    color: white;
+}
+
+
 
 .schedule-row {
     display: flex;

@@ -17,14 +17,9 @@ use Nette\Security\IResource;
  * @property string name
  * @property integer event_id
  * @property ActiveRow event_type
+ * @property integer event_type_id
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
-
-    private $eventType = false;
-
-    private $contest = false;
-
-    private $acYear = false;
 
     /**
      * Event can have a holder assigned for purposes of parameter parsing.
@@ -41,7 +36,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelEventType
      */
     public function getEventType() {
-        return $this->eventType = ModelEventType::createFromTableRow($this->event_type);
+        return ModelEventType::createFromTableRow($this->event_type);
     }
 
     /**
@@ -59,10 +54,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return ModelContest
      */
     public function getContest() {
-        if ($this->contest === false) {
-            $this->contest = ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
-        }
-        return $this->contest;
+        return ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
     /**
@@ -71,10 +63,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return int
      */
     public function getAcYear() {
-        if ($this->acYear === false) {
-            $this->acYear = $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
-        }
-        return $this->acYear;
+            return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
     public function getParameter($name) {

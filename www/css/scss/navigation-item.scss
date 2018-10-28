@@ -47,3 +47,7 @@
   }
 }
 
+[data-contest~="fyziklani"] .navigation-item .card {
+  @include navigation-item(#d7392e, white);
+}
+

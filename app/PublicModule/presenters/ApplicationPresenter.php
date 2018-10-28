@@ -328,7 +328,7 @@ class ApplicationPresenter extends BasePresenter {
         if (!$event) {
             return $parent;
         }
-        $parent[0] .= ' event-id-' . $event->event_id;
+        $parent[0] .= ' event-type-' . $event->event_type_id;
         return $parent;
     }
 
