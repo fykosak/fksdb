@@ -18,8 +18,8 @@ export default class Row extends React.Component<IProps, {}> {
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
-                    return <div className={'col-6'}>
-                        <ChooserItem key={index} blockName={blockName} item={parallel}/>
+                    return <div  key={index} className={'col-6'}>
+                        <ChooserItem blockName={blockName} item={parallel}/>
                     </div>;
                 });
                 break;

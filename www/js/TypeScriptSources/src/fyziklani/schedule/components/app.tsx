@@ -3,6 +3,7 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
+import { lang } from '../../../i18n/i18n';
 import { toggleChooser } from '../actions';
 import { IFyziklaniScheduleStore } from '../reducers';
 import { IData } from './index';
@@ -36,21 +37,19 @@ class Schedule extends React.Component<IProps & IState, {}> {
             <div className={'bd-callout bd-callout-fyziklani'}>
                 <h4>{label}</h4>
                 <p className={'text-muted mb-3'} dangerouslySetInnerHTML={{__html: description}}/>
-                {showChooser ?
-                    (<div className={'schedule-field-container'}>
-                        {rows}
-                    </div>) :
-                    (<div className={'text-center'}>
-                        <button
-                            className={'btn btn-fyziklani btn-block'}
-                            onClick={(event) => {
-                                event.preventDefault();
-                                onToggleChooser();
-                            }}
-                        >...
-                        </button>
-                    </div>)
-                }
+                {showChooser && (<div className={'schedule-field-container mb-3'}>
+                    {rows}
+                </div>)}
+                <div className={'text-center'}>
+                    <button
+                        className={'btn btn-fyziklani btn-block'}
+                        onClick={(event) => {
+                            event.preventDefault();
+                            onToggleChooser();
+                        }}
+                    >{showChooser ? lang.getText('Hide schedule') : lang.getText('Show schedule')}
+                    </button>
+                </div>
             </div>
         );
     }

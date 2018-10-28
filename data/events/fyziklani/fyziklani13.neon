@@ -18,6 +18,10 @@ parameters:
                         required: true
                     id_number:
                         required: false
+                    academic_degree_prefix:
+                        required: false
+                    academic_degree_suffix:
+                        required: false
                 person_has_flag:
                     spam_mff:
                         required: true
