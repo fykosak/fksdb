@@ -387,7 +387,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         return !($value === null || $value === '');
     }
 
-    protected function getPersonValue(ModelPerson $person, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
