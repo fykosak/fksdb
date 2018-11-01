@@ -4,17 +4,20 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ArrayHash;
 use Nette\Callback;
-use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
+use Nette\Diagnostics\Debugger;
+use Nette\Diagnostics\FireLogger;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
-use Nette\Forms\Controls\BaseControl;
 
 
 /**
@@ -116,7 +119,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     public function setConflicts(ArrayHash $conflicts, $container = null) {
-        $container = $container ? : $this;
+        $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
@@ -188,10 +191,13 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function createSearchButton() {
-        $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'))
-            ->setValidationScope(false);
+        $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Najít'));
+        $submit->setValidationScope(false);
+
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function () {
+
+        $submit->onClick[] = function (SubmitButton $button) {
+
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = $this->searchCallback->invoke($term);
 
@@ -203,7 +209,9 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->referencedId->setValue($model);
             $this->setValues($values);
             $this->invalidateFormGroup();
+            FireLogger::log('ahoj');
         };
+        Debugger::barDump($submit);
     }
 
     private function createCompactValue() {
@@ -211,6 +219,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function invalidateFormGroup() {
+        FireLogger::log('ahoj');
         $form = $this->getForm();
         $presenter = $form->lookup('Nette\Application\UI\Presenter');
         if ($presenter->isAjax()) {
@@ -219,9 +228,9 @@ class ReferencedContainer extends ContainerWithOptions {
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object) array(
-                        'id' => $this->referencedId->getHtmlId(),
-                        'value' => $this->referencedId->getValue(),
+            $payload->{self::JSON_DATA} = (object)array(
+                'id' => $this->referencedId->getHtmlId(),
+                'value' => $this->referencedId->getValue(),
             );
         }
     }
@@ -238,7 +247,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-            // $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 

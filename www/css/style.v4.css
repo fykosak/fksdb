@@ -290,6 +290,14 @@ body[data-contest="vyfuk"] h6 {
     color: #f44336;
 }
 
+[data-contest~="event-type-1"] .bd-callout {
+    border-left-color: #f44336;
+}
+
+[data-contest~="event-type-1"] .bd-callout h4 {
+    color: #f44336;
+}
+
 .schedule-row {
     display: flex;
     justify-content: space-between;

@@ -177,7 +177,7 @@ $(function () {
 
 
             if (elSearch.length) {
-                searchifyContainer();
+               // searchifyContainer();
             } else if (elClear.length && !(hasAnyFields.length || hasErrors.length)) {
                 compactifyContainer();
             } else if (elClear.length && (hasAnyFields.length || hasErrors.length)) {
