@@ -127,7 +127,6 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         $container->setOption('acYear', $acYear);
         $container->setOption('modifiabilityResolver', $modifiabilityResolver);
         $container->setOption('visibilityResolver', $visibilityResolver);
-
         foreach ($fieldsDefinition as $sub => $fields) {
             $subcontainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -141,12 +140,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
                 }
                 $subcontainer->setOption('label', $label);
             }
-
             foreach ($fields as $fieldName => $metadata) {
-                if (is_scalar($metadata)) {
-                    // old compatibility
-                    throw new \InvalidArgumentException('Metadata must be a vector');
-                }
                 $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
@@ -241,11 +235,11 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         }
     }
 
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, $metadata = []) {
-        if (in_array($sub, array(
+    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
+        if (in_array($sub, [
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ))) {
+        ])) {
             if ($fieldName == 'address') {
                 $required = Arrays::get($metadata, 'required', false);
                 if ($required) {
@@ -393,7 +387,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
         return !($value === null || $value === '');
     }
 
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(ModelPerson $person, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }
