@@ -53,11 +53,11 @@ parameters:
                         required: false
             dep:
                 require:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.matrix
-                    p*.person_id.person_info.id_number: p*.person_accommodation.matrix
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_accommodation.multiNights
                 visible:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.matrix
-                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.matrix
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
                     team.teacher_present: team.teacher_id
                     team.teacher_schedule: team.teacher_id
                     p*.schedule: p*.person_id
@@ -144,7 +144,7 @@ events:
                     force_a:
                         label: _('Chceme se účastnit v kategorii A')
                         visible: true
-                        description: _('Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+                        description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
 
                     phone:
                         label: _('Kontaktní telefon')

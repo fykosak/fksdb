@@ -39,7 +39,6 @@ export interface IChooserParallel extends ILocalizedParallelInfo {
 export interface ILocalizedParallelItem {
     description: string;
     name: string;
-    place: string;
 }
 
 interface IAbstractScheduleItem {

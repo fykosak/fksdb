@@ -18,7 +18,7 @@ export default class Row extends React.Component<IProps, {}> {
         switch (blockData.type) {
             case 'chooser':
                 component = blockData.parallels.map((parallel, index) => {
-                    return <div  key={index} className={'col-6'}>
+                    return <div key={index} className={'col-6'}>
                         <ChooserItem blockName={blockName} item={parallel}/>
                     </div>;
                 });
@@ -33,11 +33,11 @@ export default class Row extends React.Component<IProps, {}> {
 
         }
         return (
-            <div className={'schedule-row schedule-row-' + blockData.type}>
-                <div className={'time-block'}>
+            <div className={'schedule-row row schedule-row-' + blockData.type}>
+                <div className={'time-block col-2'}>
                     <TimeLabel start={blockData.date.start} end={blockData.date.end}/>
                 </div>
-                <div className={'schedule-container row justify-content-between'}>
+                <div className={'schedule-container col-10 row justify-content-between'}>
                     {component}
                 </div>
             </div>

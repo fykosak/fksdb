@@ -247,7 +247,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-            $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+          //  $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 

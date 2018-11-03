@@ -1,0 +1,73 @@
+$fyziklaniMainColor: #f44336;
+
+.schedule-field-container {
+  color: $fyziklaniMainColor;
+  .schedule-row {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding: .5rem;
+    border-bottom: $fyziklaniMainColor 1px dashed;
+    &:first-of-type {
+      border-top: $fyziklaniMainColor 1px dashed;
+    }
+    .schedule-time {
+      display: flex;
+      align-content: center;
+      text-align: center;
+      flex-wrap: wrap;
+      height: 100%;
+      & > div {
+        width: 100%;
+      }
+    }
+    .schedule-container {
+      height: 100%;
+
+      .chooser-container, .info-container {
+        width: 100%;
+        padding: 1rem 0;
+
+        .chooser-check-container, .info-check-container {
+          align-items: center;
+          display: flex;
+          text-align: center;
+          .fa {
+            width: 100%;
+          }
+        }
+      }
+
+      .chooser-container {
+        cursor: pointer;
+        border: solid 1px $fyziklaniMainColor;
+        border-radius: 1rem;
+        &.active {
+          color: white;
+          background-color: $fyziklaniMainColor;
+        }
+        li {
+          list-style: none;
+          &::before {
+            margin-left: -1em;
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+          }
+          &.description::before {
+            content: "\f29c"
+          }
+          &.price::before {
+            content: "\f155";
+          }
+        }
+      }
+
+      .info-container {
+        cursor: not-allowed;
+      }
+    }
+  }
+}

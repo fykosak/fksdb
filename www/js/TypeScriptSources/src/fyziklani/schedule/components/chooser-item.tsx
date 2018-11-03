@@ -39,14 +39,22 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
                 </div>
                 <div className={'col-10'}>
                     <span className={'h5'}>{localizedData.name}</span>
-                    <div>{localizedData.description}</div>
-                    <div>
-                        <small>{localizedData.place}</small>
+                    <div className={'row'}>
+                        <div className={'align-items-center col-2 d-flex'}>
+                            <span className={'fa fa-question-circle-o mr-2'}/>
+                        </div>
+                        <div className={'col-10'}>
+                            {localizedData.description}
+                        </div>
                     </div>
-                    <div>
-                        <small>
+                    <div className={'small row'}>
+                        <div className={'align-items-center col-2 d-flex'}>
+                            <span className={'fa fa-dollar mr-2'}/>
+                        </div>
+                        <div className={'col-10'}>
                             <PriceDisplay price={item.price}/>
-                        </small>
+                        </div>
+
                     </div>
                 </div>
             </div>

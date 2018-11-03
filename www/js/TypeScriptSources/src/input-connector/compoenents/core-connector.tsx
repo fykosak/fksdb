@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {
-    IInputConnectorItems,
-} from '../reducers';
+import { IInputConnectorItems } from '../reducers';
 
 export interface ICoreProps {
     input: HTMLInputElement;
@@ -32,6 +30,7 @@ export default class CoreConnector extends React.Component<ICoreProps & IState, 
             }
         }
         this.props.input.value = hasValue ? JSON.stringify(data) : null;
+        this.props.input.dispatchEvent(new Event('change')); // netteForm compatibility
     }
 
     public render() {
