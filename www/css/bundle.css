@@ -187,16 +187,6 @@
 .schedule-field-container .schedule-row:first-of-type {
   border-top: #f44336 1px dashed;
 }
-.schedule-field-container .schedule-row .schedule-time {
-  display: flex;
-  align-content: center;
-  text-align: center;
-  flex-wrap: wrap;
-  height: 100%;
-}
-.schedule-field-container .schedule-row .schedule-time > div {
-  width: 100%;
-}
 .schedule-field-container .schedule-row .schedule-container {
   height: 100%;
 }

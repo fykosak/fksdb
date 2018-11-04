@@ -9,11 +9,8 @@ use Nette\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
-use Nette\Diagnostics\Debugger;
-use Nette\Diagnostics\FireLogger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
@@ -73,7 +70,7 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId = $referencedId;
 
         $this->createClearButton();
-        $this->createSearchButton();
+
         $this->createCompactValue();
         $this->referencedId->setReferencedContainer($this);
     }
@@ -98,6 +95,7 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->addComponent($control, self::CONTROL_SEARCH);
             $this->hasSearch = true;
         }
+        $this->createSearchButton();
     }
 
     public function getAllowClear() {
@@ -196,7 +194,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
 
-        $submit->onClick[] = function (SubmitButton $button) {
+        $submit->onClick[] = function () {
 
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = $this->searchCallback->invoke($term);
@@ -209,9 +207,7 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->referencedId->setValue($model);
             $this->setValues($values);
             $this->invalidateFormGroup();
-            FireLogger::log('ahoj');
         };
-        Debugger::barDump($submit);
     }
 
     private function createCompactValue() {
@@ -219,7 +215,6 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     private function invalidateFormGroup() {
-        FireLogger::log('ahoj');
         $form = $this->getForm();
         $presenter = $form->lookup('Nette\Application\UI\Presenter');
         if ($presenter->isAjax()) {
@@ -247,7 +242,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
         if (!$this->attachedAjax && $obj instanceof Form) {
             $this->attachedAjax = true;
-          //  $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
+            //  $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
         }
     }
 

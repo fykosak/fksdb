@@ -26,7 +26,6 @@ html, body {
 .clear-referenced {
     position: absolute;
     right: 1em;
-    top: -3em;
     z-index: 3;
 }
 

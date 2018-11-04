@@ -34,7 +34,7 @@ class Schedule extends React.Component<IProps & IState, {}> {
                 const blockData = data[blockName];
                 const startBlockDay = (new Date(blockData.date.start)).getDay();
                 if (lastBlockDay !== startBlockDay) {
-                    rows.push(<div className={'schedule-row schedule-row-weekday'}>
+                    rows.push(<div className={'schedule-row schedule-row-weekday row'}>
                         <h3>
                             <DateDisplay date={blockData.date.start} options={{weekday: 'long'}}/>
                         </h3>

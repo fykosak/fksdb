@@ -11,16 +11,6 @@ $fyziklaniMainColor: #f44336;
     &:first-of-type {
       border-top: $fyziklaniMainColor 1px dashed;
     }
-    .schedule-time {
-      display: flex;
-      align-content: center;
-      text-align: center;
-      flex-wrap: wrap;
-      height: 100%;
-      & > div {
-        width: 100%;
-      }
-    }
     .schedule-container {
       height: 100%;
 
