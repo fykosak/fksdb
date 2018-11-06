@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { lang } from '../../../i18n/i18n';
 import { ILocalizedInfo } from './index';
+import Item from './item';
 
 interface IProps {
     item: ILocalizedInfo;
@@ -16,20 +17,13 @@ export default class InfoItem extends React.Component<IProps, {}> {
             return null;
         }
         const localizedData = item[langKey];
-        return (
-            <div>
-                <div className={'info-container row'}>
-                    <div className={'col-2 info-check-container'}>
-                        <span className={'fa fa-info'}/>
-                    </div>
-                    <div className={'col-10'}>
-                        <div>
-                            <span className={'h5'}>{localizedData.name}</span>
-                        </div>
-                        <div>{localizedData.description}</div>
-                    </div>
+        return <div>
+            <Item className={'info-container'} icon={<span className={'fa fa-info w-100'}/>}>
+                <div>
+                    <span className={'h5'}>{localizedData.name}</span>
                 </div>
-            </div>
-        );
+                <div>{localizedData.description}</div>
+            </Item>
+        </div>;
     }
 }

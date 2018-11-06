@@ -5,7 +5,7 @@ parameters:
             scheduleField:
                 label: _('Schedule')
                 description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="https://fykos.cz/akce/fyziklani/start">na špecialni strance</a>.')
-                factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%)
+                factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
 
 
             teacher:
@@ -94,35 +94,25 @@ events:
                 eventId: e_fyziklani_team.event_id
 
                 states:
-                    pending: _('Čeká na schválení')
-                    spare: _('Náhradník')
-                    approved: _('Potvrzen')
+                    approved: _('Přihlásen')
                     participated: _('Účastnil se')
                     cancelled: _('Zrušen')
                     missed: _('Nepřijel')
 
                 transitions:
-                    __init->pending:
+                    __init->approved:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
                             - Events\Transitions\MailSender(team, .*)
-                    pending->approved:
-                        condition: role('admin')
-                        label: _('Schválit účast')
-                        onExecuted:
-                            - Events\Transitions\MailSender(team, *)
-                    pending->spare:
-                        condition: role('admin')
-                        label: _('Potvrdit jako náhradníka')
-                    approved|spare->participated:
+                    approved->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
-                    approved|spare->missed:
+                    approved->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
                         dangerous: true
-                    pending|spare|approved->cancelled:
+                    approved->cancelled:
                         condition: role('admin')
                         label: _('Zrušit tým')
                         dangerous: true

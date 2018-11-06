@@ -8,6 +8,7 @@ import { changeData } from '../../../input-connector/actions';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { IFyziklaniScheduleStore } from '../reducers/';
 import { IChooserParallel } from './index';
+import Item from './item';
 
 interface IProps {
     item: IChooserParallel;
@@ -31,32 +32,19 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
         const active = item.id === value;
         const localizedData = item[langKey];
         return (
-            <div className={'chooser-container row ' + (active ? 'active' : '')} onClick={() => {
+            <div onClick={() => {
                 this.props.setSchedule(active ? null : item.id);
             }}>
-                <div className={'col-2 chooser-check-container'}>
-                    <span className={active ? 'fa fa-check-square-o' : 'fa fa-square-o'}/>
-                </div>
-                <div className={'col-10'}>
+                <Item className={'chooser-container ' + (active ? 'active' : '')}
+                      icon={<span className={active ? 'w-100 fa fa-check-square-o' : 'w-100 fa fa-square-o'}/>}>
                     <span className={'h5'}>{localizedData.name}</span>
-                    <div className={'row'}>
-                        <div className={'align-items-center col-2 d-flex'}>
-                            <span className={'fa fa-question-circle-o mr-2'}/>
-                        </div>
-                        <div className={'col-10'}>
-                            {localizedData.description}
-                        </div>
+                    <div>
+                        <span className={'fa fa-question-circle-o mr-2'}/>{localizedData.description}
                     </div>
-                    <div className={'small row'}>
-                        <div className={'align-items-center col-2 d-flex'}>
-                            <span className={'fa fa-dollar mr-2'}/>
-                        </div>
-                        <div className={'col-10'}>
-                            <PriceDisplay price={item.price}/>
-                        </div>
-
+                    <div className={'small'}>
+                        <span className={'fa fa-dollar mr-2'}/><PriceDisplay price={item.price}/>
                     </div>
-                </div>
+                </Item>
             </div>
         );
     }

@@ -1,8 +1,7 @@
 import {
-    ACTION_SET_INITIAL_DATA,
-    IActionSetInitialData,
-} from '../../../input-connector/actions';
-import { ACTION_TOGGLE_CHOOSER } from '../actions';
+    ACTION_SET_VISIBILITY,
+    ACTION_TOGGLE_CHOOSER,
+} from '../actions';
 
 const toggleChooser = (state: ICompactValueState): ICompactValueState => {
     return {
@@ -11,10 +10,10 @@ const toggleChooser = (state: ICompactValueState): ICompactValueState => {
     };
 };
 
-const setInitialVisibility = (state: ICompactValueState, action: IActionSetInitialData): ICompactValueState => {
+const setInitialVisibility = (state: ICompactValueState, action): ICompactValueState => {
     return {
         ...state,
-        showChooser: !action.data,
+        showChooser: !action.state,
     };
 };
 
@@ -30,7 +29,7 @@ export const compactValue = (state: ICompactValueState = initState, action): ICo
     switch (action.type) {
         case ACTION_TOGGLE_CHOOSER:
             return toggleChooser(state);
-        case ACTION_SET_INITIAL_DATA:
+        case ACTION_SET_VISIBILITY:
             return setInitialVisibility(state, action);
         default:
             return state;

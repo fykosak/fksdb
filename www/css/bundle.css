@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .brawl-results, .fyziklani-results {
   margin: 2em 0;
 }
@@ -178,32 +177,17 @@
   color: #f44336;
 }
 .schedule-field-container .schedule-row {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
   padding: 0.5rem;
   border-bottom: #f44336 1px dashed;
 }
 .schedule-field-container .schedule-row:first-of-type {
   border-top: #f44336 1px dashed;
 }
-.schedule-field-container .schedule-row .schedule-container {
-  height: 100%;
-}
 .schedule-field-container .schedule-row .schedule-container .chooser-container, .schedule-field-container .schedule-row .schedule-container .info-container {
   width: 100%;
   padding: 1rem 0;
 }
-.schedule-field-container .schedule-row .schedule-container .chooser-container .chooser-check-container, .schedule-field-container .schedule-row .schedule-container .chooser-container .info-check-container, .schedule-field-container .schedule-row .schedule-container .info-container .chooser-check-container, .schedule-field-container .schedule-row .schedule-container .info-container .info-check-container {
-  align-items: center;
-  display: flex;
-  text-align: center;
-}
-.schedule-field-container .schedule-row .schedule-container .chooser-container .chooser-check-container .fa, .schedule-field-container .schedule-row .schedule-container .chooser-container .info-check-container .fa, .schedule-field-container .schedule-row .schedule-container .info-container .chooser-check-container .fa, .schedule-field-container .schedule-row .schedule-container .info-container .info-check-container .fa {
-  width: 100%;
-}
 .schedule-field-container .schedule-row .schedule-container .chooser-container {
-  cursor: pointer;
   border: solid 1px #f44336;
   border-radius: 1rem;
 }
@@ -211,25 +195,11 @@
   color: white;
   background-color: #f44336;
 }
-.schedule-field-container .schedule-row .schedule-container .chooser-container li {
-  list-style: none;
-}
-.schedule-field-container .schedule-row .schedule-container .chooser-container li::before {
-  margin-left: -1em;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-}
-.schedule-field-container .schedule-row .schedule-container .chooser-container li.description::before {
-  content: "";
-}
-.schedule-field-container .schedule-row .schedule-container .chooser-container li.price::before {
-  content: "";
-}
 .schedule-field-container .schedule-row .schedule-container .info-container {
   cursor: not-allowed;
+}
+.schedule-field-container .schedule-row .schedule-container .chooser-container {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=bundle.css.map */

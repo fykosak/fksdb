@@ -92,39 +92,40 @@ $(function () {
             }
 
             function createCompactField(label, value) {
-                var compactGroup = $('<div class="form-group">\
+                const $compactGroup = $('<div class="form-group">\
         <label class="control-label"/>\
-<div class="input-group value"><p class="form-control-static form-control"/></div></div>');
+<div class="input-group"><p class="form-control-static form-control"/></div></div>');
 
-                var elLabel = compactGroup.find('label');
+                const elLabel = $compactGroup.find('label');
                 elLabel.text(label);
 
-                var elValue = compactGroup.find('p.form-control-static');
+                const elValue = $compactGroup.find('p.form-control-static');
                 const $label = $('<span></span>');
                 elValue.append('<span class="fa fa-user mr-3"></span>');
                 $label.text(value);
                 elValue.append($label);
-                const $btnContainer = $('<div class="input-group-append"></div>');
-                var buttonEdit = $('<button type="button" class="btn btn-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
-                buttonEdit.click(decompactifyContainer);
 
-                var buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-remove"></span></button>');
-                buttonDel.click(function () {
+                const $btnContainer = $('<div class="input-group-append"></div>');
+                const $buttonEdit = $('<button type="button" class="btn btn-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
+                $buttonEdit.click(decompactifyContainer);
+
+                const $buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-remove"></span></button>');
+                $buttonDel.click(function () {
                     $clearButton.click();
                 });
-                $btnContainer.append(buttonEdit);
-                $btnContainer.append(buttonDel);
+                $btnContainer.append($buttonEdit);
+                $btnContainer.append($buttonDel);
 
                 elValue.parent('.input-group').append($btnContainer);
 
-                return compactGroup;
+                return $compactGroup;
             }
 
 
             function compactifyContainer() {
                 if (compacted === null) {
-                    var label = elContainer.find('> fieldset > h4').text();
-                    var value = $compactValueInput.val();
+                    const label = elContainer.find('> fieldset > h4').text();
+                    const value = $compactValueInput.val();
                     compacted = createCompactField(label, value); //TODO clear button
                     compacted.insertAfter(elContainer);
                     compacted.find('.value').click(decompactifyContainer);

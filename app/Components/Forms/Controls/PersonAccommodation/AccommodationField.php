@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\ModelEventAccommodation;
@@ -20,14 +19,12 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
      */
     private $eventId;
 
-    static private $attachedJS = false;
-
     public function __construct(\ServiceEventAccommodation $serviceEventAccommodation, $eventId) {
         parent::__construct(_('Accommodation'));
         $this->serviceEventAccommodation = $serviceEventAccommodation;
         $this->eventId = $eventId;
         $this->appendProperty();
-        $this->monitor('FKSDB\Application\IJavaScriptCollector');
+        $this->registerMonitor();
     }
 
     public function getComponentName(): string {
@@ -54,9 +51,6 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
 
     public function attached($obj) {
         parent::attached($obj);
-        if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
-            self::$attachedJS = true;
-            $obj->registerJSFile('js/bundle-all.min.js');
-        }
+        $this->attachedReact($obj);
     }
 }

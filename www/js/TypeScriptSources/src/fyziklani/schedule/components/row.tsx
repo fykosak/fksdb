@@ -33,7 +33,7 @@ export default class Row extends React.Component<IProps, {}> {
 
         }
         return (
-            <div className={'schedule-row row schedule-row-' + blockData.type}>
+            <div className={'schedule-row d-flex justify-space-between row schedule-row-' + blockData.type}>
                 <div className={'time-block col-2'}>
                     <TimeLabel start={blockData.date.start} end={blockData.date.end}/>
                 </div>

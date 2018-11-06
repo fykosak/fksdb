@@ -4,14 +4,20 @@ import {
     Dispatch,
 } from 'react-redux';
 import { lang } from '../../../i18n/i18n';
-import { toggleChooser } from '../actions';
+import DateDisplay from '../../../shared/components/displays/date';
+import {
+    setVisibility,
+    toggleChooser,
+} from '../actions';
 import { IFyziklaniScheduleStore } from '../reducers';
 import { IData } from './index';
 import Row from './row';
-import DateDisplay from '../../../shared/components/displays/date';
 
 interface IProps {
-    data: IData;
+    data: {
+        data: IData;
+        visible: boolean;
+    };
     description: string;
     label: string;
 }
@@ -20,12 +26,17 @@ interface IState {
     showChooser?: boolean;
 
     onToggleChooser?(): void;
+
+    onSetVisibility?(state: boolean): void;
 }
 
 class Schedule extends React.Component<IProps & IState, {}> {
+    public componentDidMount() {
+        this.props.onSetVisibility(this.props.data.visible);
+    }
 
     public render() {
-        const {data, showChooser, label, description, onToggleChooser} = this.props;
+        const {data: {data}, showChooser, label, description, onToggleChooser} = this.props;
         const rows = [];
         let lastBlockDay = null;
         for (const blockName in data) {
@@ -34,7 +45,7 @@ class Schedule extends React.Component<IProps & IState, {}> {
                 const blockData = data[blockName];
                 const startBlockDay = (new Date(blockData.date.start)).getDay();
                 if (lastBlockDay !== startBlockDay) {
-                    rows.push(<div className={'schedule-row schedule-row-weekday row'}>
+                    rows.push(<div key={startBlockDay} className={'schedule-row schedule-row-weekday row'}>
                         <h3>
                             <DateDisplay date={blockData.date.start} options={{weekday: 'long'}}/>
                         </h3>
@@ -44,7 +55,6 @@ class Schedule extends React.Component<IProps & IState, {}> {
                 rows.push(<Row key={blockName} blockData={blockData} blockName={blockName}/>);
             }
         }
-// style={{display: showChooser ? '' : 'none'}}
         return (
             <div className={'bd-callout bd-callout-fyziklani'}>
                 <h4>{label}</h4>
@@ -75,6 +85,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
 
 const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
     return {
+        onSetVisibility: (state) => dispatch(setVisibility(state)),
         onToggleChooser: () => dispatch(toggleChooser()),
     };
 };

@@ -14,7 +14,10 @@ import { app } from '../reducers';
 import App from './app';
 
 interface IProps {
-    data: IData;
+    data: {
+        data: IData;
+        visible: boolean;
+    };
     mode: string;
     actions: INetteActions;
     input: HTMLInputElement;

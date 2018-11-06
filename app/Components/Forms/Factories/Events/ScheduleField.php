@@ -19,6 +19,7 @@ class ScheduleField extends TextInput implements IReactComponent {
         parent::__construct(_('Schedule'));
         $this->data = $data;
         $this->appendProperty();
+        $this->registerMonitor();
     }
 
     public function getComponentName(): string {
@@ -38,5 +39,10 @@ class ScheduleField extends TextInput implements IReactComponent {
      */
     public function getData(): string {
         return json_encode($this->data);
+    }
+
+    public function attached($obj) {
+        parent::attached($obj);
+        $this->attachedReact($obj);
     }
 }

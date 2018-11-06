@@ -1,4 +1,3 @@
-
 export interface INetteActions {
     [name: string]: string;
 }
@@ -15,6 +14,10 @@ class AppCollector {
     public run() {
 
         document.querySelectorAll('.react-root,[data-react-root]').forEach((element: Element) => {
+            // if (element.className.match(/.*react-element-served.*/)) {
+            if (element.getAttribute('data-served')) {
+                return;
+            }
             const module = element.getAttribute('data-module');
             const component = element.getAttribute('data-component');
             const mode = element.getAttribute('data-mode');
@@ -25,6 +28,8 @@ class AppCollector {
                 if (this.items.hasOwnProperty(index)) {
                     const item = this.items[index];
                     if (item(element, module, component, mode, rawData, actions)) {
+                        element.setAttribute('data-served', '1');
+                        // element.className += ' react-element-served';
                         return;
                     }
                 }
