@@ -11,6 +11,7 @@ services:
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventOrg:         ServiceEventOrg
+    ServiceEventPayment:     ServiceEventPayment
     ServiceEventType:        ServiceEventType
     ServiceFlag:             ServiceFlag
     ServiceFyziklaniSubmit:  ServiceFyziklaniSubmit

@@ -1,0 +1,72 @@
+parameters:
+    events:
+        fyziklani13:
+            appCond: or(regOpen(), role('admin'))
+            participant:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+events:
+    fyziklani13:
+        event_type_id: 1
+        eventYears: [13] # specify for which years this machine is valid, by default all years
+        tableLayout: fyziklaniPayment.grid
+        formLayout: fyziklaniPayment.form
+
+
+        baseMachines:
+            #
+            #   TEAM
+            #
+            PAYMENT:
+                service: @serviceEventPayment
+                personIds: [event_payment.person_id]
+
+                states:
+                    waiting: _('waiting')
+                    canceled: _('canceled')
+                    confirmed: _('confirmed')
+
+
+                transitions:
+                    __init->waiting:
+                        label: _('Přihlásit člena')
+                        onExecuted:
+                            - Events\Transitions\MailSender(member,self)
+                    waiting->canceled:
+                        label: _('Odebrat člena')
+                    waiting->confirmed:
+                        visible: false
+
+                fields:
+                    person_id:
+                        label: _('Osoba')
+                        visible: true
+                        modifiable: %events.fyziklani13.appCond%
+                        determining: true
+                        factory: RefPerson(%events.fyziklani13.participant%, email, true, role('admin'), false)
+                    payment_data:
+                        label: _('data')
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                payment:
+                    bmName: PAYMENT
+                    label: _('platba')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+
+            formAdjustments:
+                - @events.privacyPolicy
+                - @events.captcha
+            processings:
+                - @events.privacyPolicy

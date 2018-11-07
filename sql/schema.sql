@@ -1208,6 +1208,31 @@ CREATE TABLE IF NOT EXISTS `teacher`(
     ON UPDATE CASCADE
 ) ENGINE='InnoDB';
 
+CREATE TABLE IF NOT EXISTS `event_payment`(
+  `payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `person_id`  INT(11) NOT NULL,
+  `event_id` INT NOT NULL,
+  `data` TEXT,
+  `state` VARCHAR(256),
+  `price_kc` DECIMAL(11,2) NULL,
+  `price_eur` DECIMAL(11,2) NULL,
+  `constant_symbol` VARCHAR(256),
+  `variable_symbol` VARCHAR(256),
+  `specific_symbol` VARCHAR(256),
+  INDEX `fk_event_payment_1_idx` (`event_id` ASC),
+  INDEX `fk_event_payment_2_idx` (`person_id` ASC),
+  CONSTRAINT `fk_event_payment_person_id1`
+  FOREIGN KEY (`person_id`)
+  REFERENCES `person` (`person_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_event_payment_event_1`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE='InnoDB';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
