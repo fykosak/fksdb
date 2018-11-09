@@ -18,6 +18,9 @@ parameters:
                         required: true
                     born:
                         required: true
+                    id_number:
+                        required: false
+                        description: _('Číslo OP/pasu, pokud máš')
                     phone_parent_m:
                         required: false
                     phone_parent_d:

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PublicModule;
-
 
 use Events\Payment\MachineFactory;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -80,7 +78,7 @@ class EventPaymentPresenter extends BasePresenter {
                 'specific_symbol' => 1234,
             ]);
             $this->serviceEventPayment->save($model);
-            
+
             foreach ($form->getComponents() as $name => $component) {
                 if ($form->isSubmitted() === $component) {
                     Debugger::barDump($name);
@@ -101,4 +99,5 @@ class EventPaymentPresenter extends BasePresenter {
     private function getMachine() {
         return $this->transitionFactory->setUpMachine($this->getEvent());
     }
+
 }
