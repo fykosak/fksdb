@@ -2,6 +2,8 @@
 
 namespace Events\Payment;
 
+use FKSDB\ORM\ModelEventPayment;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -17,7 +19,7 @@ class Transition {
     /**
      * @var boolean
      */
-    private $dangerous;
+    private $dangerous = false;
 
     /**
      * @var \Closure[]
@@ -53,6 +55,10 @@ class Transition {
         $this->label = $label;
     }
 
+    public function getId() {
+        return $this->fromState . '__' . $this->toState;
+    }
+
 
     public function getLabel(): string {
         return $this->label;
@@ -66,9 +72,9 @@ class Transition {
         $this->dangerous = $dangerous;
     }
 
-    public final function execute() {
+    public final function execute(ModelEventPayment $model) {
         foreach ($this->onExecuted as $closure) {
-            $closure();
+            $closure($model);
         }
     }
 }

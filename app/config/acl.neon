@@ -50,6 +50,7 @@ acl:
     - addResource(fyziklani)
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
+    - addResource(eventPayment) # create, edit, list
 
     # ACL
     - allow(contestant, submit, upload)

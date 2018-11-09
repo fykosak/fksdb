@@ -156,10 +156,6 @@ class MailSender extends Object {
         return $token;
     }
 
-    private function getPerson(BaseHolder $baseHolder) {
-        return $this->servicePerson->findByPrimary($baseHolder->getPersonId());
-    }
-
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
         $application = Strings::truncate((string) $application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());

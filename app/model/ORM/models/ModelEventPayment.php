@@ -3,9 +3,13 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
+use Events\Payment\EventFactories\EventTransitionFactory;
+use Events\Payment\EventFactories\Fyziklani13Payment;
+use Events\Payment\EventFactories\IEventTransitionFactory;
 use Events\Payment\Machine;
-use Events\Payment\Transition;
+use Events\Payment\MachineFactory;
 use Nette\Database\Table\ActiveRow;
+use Nette\NotImplementedException;
 use Nette\Security\IResource;
 
 /**
@@ -29,37 +33,22 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
     const STATE_CONFIRMED = 'confirmed';
     const STATE_CANCELED = 'canceled';
 
-    /**
-     * @var Machine
-     */
-    private $machine;
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
+    public function getEvent(): ModelEvent {
+        return ModelEvent::createFromTableRow($this->event);
+    }
+
     public function getResourceId(): string {
-        return 'payment';
+        return 'eventPayment';
     }
 
-    public function createMachine() {
-        $this->machine = new Machine();
-        $this->machine->setInitState(self::STATE_WAITING);
-
-        $transition = new Transition(null, self::STATE_WAITING, _('Vytvorit platbu'));
-        $this->machine->addTransition($transition);
-
-        $transition = new Transition(self::STATE_WAITING, self::STATE_CONFIRMED, _('Zaplatil'));
-        $this->machine->addTransition($transition);
-
-        $transition = new Transition(self::STATE_WAITING, self::STATE_CANCELED, _('Zrusit platbu'));
-        $this->machine->addTransition($transition);
-
-        return $this->machine;
-    }
-
-    public function getMachine(): Machine {
-        return $this->machine;
+    public function executeTransition(Machine $machine,$id) {
+        $state = $machine->executeTransition($id, $this);
+        $this->update(['state' => $state]);
     }
 
 }

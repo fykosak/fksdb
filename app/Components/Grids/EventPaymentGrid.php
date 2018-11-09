@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 
+use Events\Payment\MachineFactory;
 use FKSDB\ORM\ModelEventPayment;
 use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
@@ -24,11 +25,14 @@ class EventPaymentGrid extends BaseGrid {
      */
     private $eventId;
 
-    public function __construct(\ServiceEventPayment $servicePayment, $eventId) {
+    private $transitionFactory;
+
+    public function __construct(\ServiceEventPayment $servicePayment, MachineFactory $transitionFactory, $eventId) {
         Debugger::barDump($eventId);
         parent::__construct();
         $this->eventId = $eventId;
         $this->serviceEventPayment = $servicePayment;
+        $this->transitionFactory = $transitionFactory;
     }
 
     protected function configure($presenter) {
@@ -48,10 +52,13 @@ class EventPaymentGrid extends BaseGrid {
         $this->addColumn('person_name', _('Osoba'))->setRenderer(function ($row) {
             return ModelPerson::createFromTableRow($row->person)->getFullName();
         });
+        $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
+            return ModelPerson::createFromTableRow($row->person)->getInfo()->email;
+        });
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
             return $row->price_kc . ' Kč/' . $row->price_eur . ' €';
         });
-        $this->addColumn('state', _('Staus'))->setRenderer(function ($row) {
+        $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $class = 'badge ';
             switch ($row->state) {
                 case ModelEventPayment::STATE_WAITING:
@@ -68,24 +75,53 @@ class EventPaymentGrid extends BaseGrid {
             }
             return Html::el('span')->addAttributes(['class' => $class])->add(_($row->state));
         });
-        $this->addColumn('tr', _('TR'))->setRenderer(function ($row) {
+        $this->addColumn('tr', _('Akcie'))->setRenderer(function ($row) {
             $model = ModelEventPayment::createFromTableRow($row);
-            $machine = $model->createMachine();
-            Debugger::barDump($this->presenter->getContext()->getParameters());
+            $machine = $model->createMachine($this->transitionFactory);
             $machine->setState($row->state);
-            Debugger::barDump($machine);
-            Debugger::barDump($machine->getAvailableTransitions());
-
-            return null;
+            $container = Html::el('span');
+            foreach ($machine->getAvailableTransitions() as $transition) {
+                $container->add(Html::el('a')->addAttributes([
+                    'href' => $this->link('transition', [
+                            'id' => $row->payment_id,
+                            'transition' => $transition->getId(),
+                        ]
+                    ),
+                    'class' => $transition->isDangerous() ? 'btn btn-danger' : 'btn btn-secondary',
+                ])->add($transition->getLabel()));
+            }
+            return $container;
         });
+
         //
         // operations
         //
-        $this->addButton("edit", _("Upravit"))
-            ->setText('Upravit')//todo i18n
+        $this->addButton('edit', _('Edit'))
+            ->setText('Edit')
             ->setLink(function ($row) {
-                return $this->getPresenter()->link("edit", $row->payment_id);
+                return $this->getPresenter()->link('edit', $row->payment_id);
             });
+    }
+
+    public function handleTransition($id, $transition) {
+        $row = $this->serviceEventPayment->findByPrimary($id);
+        if (!$row) {
+            $this->flashMessage('Payment doesn\'t exists.');
+            return;
+        }
+        $model = ModelEventPayment::createFromTableRow($row);
+        try {
+            $model->executeTransition($transition, $this->transitionFactory);
+        } catch (\Exception $e) {
+            Debugger::log($e);
+            $this->flashMessage('Some error...', 'danger');
+        } finally {
+           // $this->serviceEventPayment->save($model);
+            $this->flashMessage('Prechod vykonaný');
+         //   $this->redirect('this');
+        }
+
+
     }
 
 }

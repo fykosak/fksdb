@@ -160,5 +160,3 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
     }
 
 }
-
-?>

@@ -40,6 +40,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelLogin::createFromTableRow($logins->current());
     }
 
+    /**
+     * @return ModelPersonInfo|null
+     */
     public function getInfo() {
         if (!isset($this->person_id)) {
             $this->person_id = null;

@@ -2,6 +2,9 @@
 
 namespace Events\Payment;
 
+use FKSDB\ORM\ModelEventPayment;
+use Nette\Diagnostics\Debugger;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -20,6 +23,10 @@ class Machine {
     private $transitions = [];
 
     private $initState;
+
+    public function __construct($state) {
+        $this->state = $state;
+    }
 
     /**
      * @param Transition $transition
@@ -61,6 +68,8 @@ class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(): array {
+        Debugger::barDump($this->state);
+        Debugger::barDump($this->transitions);
         return array_filter($this->transitions, function (Transition $transition) {
             return $transition->getFromState() === $this->state;
         });
@@ -72,5 +81,16 @@ class Machine {
 
     public function setInitState(string $state) {
         $this->initState = $state;
+    }
+
+    public function executeTransition($id, ModelEventPayment $model) {
+        $availableTransitions = $this->getAvailableTransitions();
+        foreach ($availableTransitions as $transition) {
+            if ($transition->getId() === $id) {
+                $transition->execute($model);
+                return $transition->getToState();
+            }
+        }
+        throw new \Exception(\sprintf(_('Transition %s is not available'), $id));
     }
 }
