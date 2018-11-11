@@ -3,13 +3,9 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
-use Events\Payment\EventFactories\EventTransitionFactory;
-use Events\Payment\EventFactories\Fyziklani13Payment;
 use Events\Payment\EventFactories\IEventTransitionFactory;
 use Events\Payment\Machine;
-use Events\Payment\MachineFactory;
 use Nette\Database\Table\ActiveRow;
-use Nette\NotImplementedException;
 use Nette\Security\IResource;
 
 /**
@@ -32,7 +28,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
     const STATE_WAITING = 'waiting';
     const STATE_CONFIRMED = 'confirmed';
     const STATE_CANCELED = 'canceled';
-
+    const STATE_NEW = 'new';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
@@ -46,7 +42,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
         return 'eventPayment';
     }
 
-    public function executeTransition(Machine $machine,$id) {
+    public function executeTransition(Machine $machine, $id) {
         $state = $machine->executeTransition($id, $this);
         $this->update(['state' => $state]);
     }

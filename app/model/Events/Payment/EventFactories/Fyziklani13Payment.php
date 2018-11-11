@@ -14,12 +14,20 @@ class Fyziklani13Payment extends EventTransitionFactory {
             'subject' => 'prijali sme platbu'
         ];
 
-        $transition = $this->transitionFactory->createTransition(null, ModelEventPayment::STATE_WAITING, _('Vytvorit platbu'));
 
+        $transition = $this->transitionFactory->createTransition(null, ModelEventPayment::STATE_NEW, _('Napočítať cenu'));
         $machine->addTransition($transition);
 
-        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_CONFIRMED, _('Zaplatil'));
+        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_NEW, ModelEventPayment::STATE_WAITING, _('Vytvorit platbu'));
         $transition->onExecuted[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create', 'michalc@fykos.cz', $options);
+
+        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_NEW, ModelEventPayment::STATE_CANCELED, _('Zrusit platbu'));
+        $machine->addTransition($transition);
+
+
+
+        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_CONFIRMED, _('Zaplatil'));
+      //  $transition->onExecuted[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/confirm', 'michalc@fykos.cz', $options);
         $machine->addTransition($transition);
 
         $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_CANCELED, _('Zrusit platbu'));

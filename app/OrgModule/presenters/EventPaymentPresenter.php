@@ -5,7 +5,7 @@ namespace OrgModule;
 
 
 use Events\Payment\MachineFactory;
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\EventPaymentGrid;
 use FKSDB\ORM\ModelPerson;
@@ -27,7 +27,14 @@ class EventPaymentPresenter extends EntityPresenter {
      * @persistent
      */
     public $eventId;
+    /**
+     * @var MachineFactory
+     */
     private $transitionFactory;
+    /**
+     * @var EventPaymentFactory
+     */
+    private $eventPaymentFactory;
 
     public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
@@ -41,6 +48,10 @@ class EventPaymentPresenter extends EntityPresenter {
         $this->transitionFactory = $transitionFactory;
     }
 
+    public function injectEventPaymentFactory(EventPaymentFactory $eventPaymentFactory) {
+        $this->eventPaymentFactory = $eventPaymentFactory;
+    }
+
     protected function createComponentCreateComponent($name) {
         throw new NotImplementedException('use public GUI');
     }
@@ -50,13 +61,7 @@ class EventPaymentPresenter extends EntityPresenter {
     }
 
     protected function createComponentEditComponent($name) {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addHidden('person_id');
-        $form->addText('person', 'Osoba')
-            ->setDisabled(true)
-            ->setValue(ModelPerson::createFromTableRow($this->getModel()->person)->getFullName());
-
+        $control = $this->eventPaymentFactory->createEditForm(ModelPerson::createFromTableRow($this->getModel()->person));
 
         return $control;
     }

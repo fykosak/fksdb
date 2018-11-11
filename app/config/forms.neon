@@ -15,6 +15,7 @@ services:
     TeacherFactory: FKSDB\Components\Forms\Factories\TeacherFactory
     PersonAccommodationFactory: FKSDB\Components\Forms\Factories\PersonAccommodationFactory
     FyziklaniComponentsFactory: FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory
+    EventPaymentFactory: FKSDB\Components\Forms\Factories\EventPaymentFactory
 
     - FKSDB\Components\Forms\Rules\UniqueEmailFactory
     - FKSDB\Components\Forms\Rules\UniqueLoginFactory

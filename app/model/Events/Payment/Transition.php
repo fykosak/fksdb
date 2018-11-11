@@ -10,7 +10,12 @@ use FKSDB\ORM\ModelEventPayment;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Transition {
+    const TYPE_SUCCESS = 'success';
+    const TYPE_WARNING = 'warning';
+    const TYPE_DANGER = 'danger';
+    const TYPE_PRIMARY = 'primary';
 
+    private $type = self::TYPE_PRIMARY;
     /**
      * @var string
      */
@@ -59,6 +64,13 @@ class Transition {
         return $this->fromState . '__' . $this->toState;
     }
 
+    public function getType() {
+        return $this->type;
+    }
+
+    public function setType(string $type) {
+        $this->type = $type;
+    }
 
     public function getLabel(): string {
         return $this->label;

@@ -26,7 +26,8 @@ services:
         class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-    paymnetTransitionFactory: Events\Payment\MachineFactory()
+    paymnetTransitionFactory: Events\Payment\MachineFactory
+    priceCalculatorFactory: FKSDB\Models\Payment\Price\PriceCalculatorFactory
 
 
 factories:
