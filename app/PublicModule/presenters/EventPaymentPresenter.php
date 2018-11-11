@@ -5,13 +5,15 @@ namespace PublicModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Grids\Payment\PaymentDetailGrid;
+use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
-use FKSDB\Models\Payment\Price\PriceCalculatorFactory;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 
 class EventPaymentPresenter extends BasePresenter {
     /**
@@ -55,6 +57,19 @@ class EventPaymentPresenter extends BasePresenter {
      * @var EventPaymentFactory
      */
     private $eventPaymentFactory;
+    /**
+     * @var \ServiceEventPersonAccommodation
+     */
+    private $serviceEventPersonAccommodation;
+    /**
+     * @var \ServiceEventParticipant
+     */
+    private $serviceEventParticipant;
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
@@ -78,6 +93,32 @@ class EventPaymentPresenter extends BasePresenter {
 
     public function injectEventPaymentFactory(EventPaymentFactory $eventPaymentFactory) {
         $this->eventPaymentFactory = $eventPaymentFactory;
+    }
+
+    public function injectServiceEventPersonAccommodation(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+        $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
+    }
+
+    public function injectServiceEventParticipant(\ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    public function injectContainer(Container $container) {
+        $this->container = $container;
+    }
+
+    public function createComponentPaymentGrid($name) {
+        return new PaymentDetailGrid(
+            $this->getTranslator(),
+            $this->getModel(),
+            $this->getEvent(),
+            [
+                'accommodated_person_ids' => [94, 95],
+                ''
+            ],
+            $this->serviceEventPersonAccommodation,
+            $this->serviceEventParticipant
+        );
     }
 
     public function createComponentCreateForm() {
@@ -191,6 +232,8 @@ class EventPaymentPresenter extends BasePresenter {
                 throw new BadRequestException('Event nenájdený');
             }
             $this->event = ModelEvent::createFromTableRow($row);
+            $holder = $this->container->createEventHolder($this->event);
+            $this->event->setHolder($holder);
         }
 
         return $this->event;

@@ -1,0 +1,22 @@
+{dump $data}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{_('Item')}</th>
+        <th>{_('Price Kč')}</th>
+        <th>{_('Price €')}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $data as $datum}
+        <tr>
+            <td>{$datum['label']}</td>
+            <td>{$datum['kc']}</td>
+            <td>{$datum['eur']}</td>
+        </tr>
+    {/foreach}
+
+    </tbody>
+
+</table>
+
