@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Payment;
+namespace FKSDB\EventPayment\Transition;
 
 use FKSDB\ORM\ModelEventPayment;
 

@@ -3,8 +3,7 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
-use Events\Payment\EventFactories\IEventTransitionFactory;
-use Events\Payment\Machine;
+use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 

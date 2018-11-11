@@ -1,9 +1,8 @@
 <?php
 
-namespace Events\Payment;
+namespace FKSDB\EventPayment\Transition;
 
-use Events\Payment\EventFactories\EventTransitionFactory;
-use Events\Payment\EventFactories\Fyziklani13Payment;
+use FKSDB\EventPayment\Transition\Transitions\Fyziklani13Payment;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
 use Mail\MailTemplateFactory;
@@ -17,7 +16,7 @@ use Nette\NotImplementedException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class MachineFactory {
+class TransitionsFactory {
     private $mailer;
     private $mailTemplateFactory;
 
@@ -32,7 +31,7 @@ class MachineFactory {
         return $transition;
     }
 
-    private function findMachineFactory(ModelEvent $event): EventTransitionFactory {
+    private function createEventTransitions(ModelEvent $event): AbstractEventTransitions {
         if (($event->event_type_id === 1) && ($event->event_year === 13)) {
             return new Fyziklani13Payment($this);
         }
@@ -62,7 +61,7 @@ class MachineFactory {
 
     public function setUpMachine(ModelEvent $event, $state = null): Machine {
 
-        $factory = $this->findMachineFactory($event);
+        $factory = $this->createEventTransitions($event);
         $machine = $factory->createMachine($state);
         $factory->createTransitions($machine);
         // $this->machine->setInitState(self::STATE_WAITING);

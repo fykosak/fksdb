@@ -1,14 +1,11 @@
 <?php
 
-namespace Events\Payment\EventFactories;
+namespace FKSDB\EventPayment\Transition;
 
-use Events\Payment\Machine;
-use Events\Payment\MachineFactory;
-
-abstract class EventTransitionFactory {
+abstract class AbstractEventTransitions {
     protected $transitionFactory;
 
-    public function __construct(MachineFactory $transitionFactory) {
+    public function __construct(TransitionsFactory $transitionFactory) {
         $this->transitionFactory = $transitionFactory;
     }
 

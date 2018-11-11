@@ -1,11 +1,12 @@
 <?php
 
-namespace Events\Payment\EventFactories;
+namespace FKSDB\EventPayment\Transition\Transitions;
 
-use Events\Payment\Machine;
+use FKSDB\EventPayment\Transition\AbstractEventTransitions;
+use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\ORM\ModelEventPayment;
 
-class Fyziklani13Payment extends EventTransitionFactory {
+class Fyziklani13Payment extends AbstractEventTransitions {
 
     public function createTransitions(Machine &$machine) {
         $options = (object)[

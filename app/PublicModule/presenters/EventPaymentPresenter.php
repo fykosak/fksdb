@@ -2,10 +2,11 @@
 
 namespace PublicModule;
 
-use Events\Payment\MachineFactory;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\EventPayment\Transition\Machine;
+use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\Models\Payment\Price\PriceCalculatorFactory;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
@@ -34,9 +35,9 @@ class EventPaymentPresenter extends BasePresenter {
      */
     public $id;
     /**
-     * @var MachineFactory
+     * @var TransitionsFactory
      */
-    private $transitionFactory;
+    private $transitionsFactory;
     /**
      * @var \ServiceEvent
      */
@@ -63,8 +64,8 @@ class EventPaymentPresenter extends BasePresenter {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    public function injectEventTransitionFactory(MachineFactory $transitionFactory) {
-        $this->transitionFactory = $transitionFactory;
+    public function injectEventTransitionFactory(TransitionsFactory $transitionsFactory) {
+        $this->transitionsFactory = $transitionsFactory;
     }
 
     public function injectServiceEvent(\ServiceEvent $serviceEvent) {
@@ -149,6 +150,7 @@ class EventPaymentPresenter extends BasePresenter {
 
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
+
             $price = ['kc' => 251, 'eur' => 11];
             // $price = $calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
             //  $calculator->execute($values->data);
@@ -194,8 +196,8 @@ class EventPaymentPresenter extends BasePresenter {
         return $this->event;
     }
 
-    private function getMachine() {
-        return $this->transitionFactory->setUpMachine($this->getEvent());
+    private function getMachine(): Machine {
+        return $this->transitionsFactory->setUpMachine($this->getEvent());
     }
 
 }
