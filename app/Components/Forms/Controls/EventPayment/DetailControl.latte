@@ -15,8 +15,13 @@
             <td>{$item['eur']}</td>
         </tr>
     {/foreach}
-
+    <tr>
+        <td>{_('Spolu')}</td>
+        <td>{$model->price_kc}</td>
+        <td>{$model->price_eur}</td>
+    </tr>
     </tbody>
 
 </table>
+{control form}
 

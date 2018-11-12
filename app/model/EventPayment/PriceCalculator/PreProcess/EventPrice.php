@@ -15,12 +15,31 @@ class EventPrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public function run(array $data, ModelEvent $event) {
-        $ids = $data['event_participants'];
+    public function calculate(array $data, ModelEvent $event) {
+        $ids = $this->getData($data);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
             $this->price['kc'] += $model->price;
         }
+    }
+
+    protected function getData(array $data) {
+        return $data['event_participants'];
+    }
+
+    public function getGridItems(array $data, ModelEvent $event): array {
+        $items = [];
+        $ids = $this->getData($data);
+        foreach ($ids as $id) {
+            $row = $this->serviceEventParticipant->findByPrimary($id);
+            $model = ModelEventParticipant::createFromTableRow($row);
+            $items[] = [
+                'kc' => $model->price,
+                'eur' => 'N/A',
+                'label' => '',// TODO
+            ];
+        }
+        return $items;
     }
 }

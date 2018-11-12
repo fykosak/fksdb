@@ -2,11 +2,13 @@
 
 namespace PublicModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Components\Grids\Payment\PaymentDetailGrid;
+use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\ORM\ModelEvent;
@@ -65,11 +67,22 @@ class EventPaymentPresenter extends BasePresenter {
      * @var \ServiceEventParticipant
      */
     private $serviceEventParticipant;
-
+    /**
+     * @var ModelEventPayment
+     */
+    private $model;
     /**
      * @var Container
      */
     private $container;
+    /**
+     * @var Machine
+     */
+    private $machine;
+    /**
+     * @var SymbolGeneratorFactory
+     */
+    private $symbolGeneratorFactory;
 
     public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
@@ -81,6 +94,10 @@ class EventPaymentPresenter extends BasePresenter {
 
     public function injectEventTransitionFactory(TransitionsFactory $transitionsFactory) {
         $this->transitionsFactory = $transitionsFactory;
+    }
+
+    public function injectSymbolGeneratorFactory(SymbolGeneratorFactory $symbolGeneratorFactory) {
+        $this->symbolGeneratorFactory = $symbolGeneratorFactory;
     }
 
     public function injectServiceEvent(\ServiceEvent $serviceEvent) {
@@ -107,81 +124,81 @@ class EventPaymentPresenter extends BasePresenter {
         $this->container = $container;
     }
 
-    public function createComponentPaymentGrid($name) {
-        return new PaymentDetailGrid(
-            $this->getTranslator(),
-            $this->getModel(),
-            $this->getEvent(),
-            [
-                'accommodated_person_ids' => [94, 95],
-                ''
-            ],
-            $this->serviceEventPersonAccommodation,
-            $this->serviceEventParticipant
-        );
+    /* public function createComponentPaymentGrid() {
+         return new PaymentDetailGrid(
+             $this->getTranslator(),
+             $this->getCalculator(),
+             [
+                 'accommodated_person_ids' => [94, 95],
+                 'event_participants' => [],
+             ]
+         );
+     }*/
+
+    public function getCalculator(): PriceCalculator {
+        return $this->priceCalculatorFactory->createCalculator($this->getEvent());
+    }
+
+    public function handleCreateForm(Form $form) {
+        $values = $form->getValues();
+        $price = ['kc' => 251, 'eur' => 11];
+
+        //$calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
+        //$price = $calculator->execute($values->data);
+        /**
+         * @var $model ModelEventPayment
+         */
+        $model = $this->serviceEventPayment->createNew([
+            'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
+            'event_id' => $this->getEvent()->event_id,
+            'data' => '',
+            'state' => null,
+            'price_kc' => $price['kc'],
+            'price_eur' => $price['eur'],
+        ]);
+        $this->serviceEventPayment->save($model);
+
+        foreach ($form->getComponents() as $name => $component) {
+            if ($form->isSubmitted() === $component) {
+                $model->executeTransition($this->getMachine(), $name);
+            }
+        }
+        $this->redirect('confirm', ['id' => $model->payment_id]);
     }
 
     public function createComponentCreateForm() {
         $control = $this->eventPaymentFactory->createCreateForm();
+        $form = $control->getForm();
+
         // inject transitions buttons
         $machine = $this->getMachine();
-        $form = $control->getForm();
         $transitions = $machine->getAvailableTransitions();
         foreach ($transitions as $transition) {
             $button = $form->addSubmit($transition->getId(), $transition->getLabel());
             $button->getControlPrototype()->class .= 'btn btn-' . $transition->getType();
         }
-
-
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            $price = ['kc' => 251, 'eur' => 11];
-            // $price = $calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
-            //  $calculator->execute($values->data);
-            /**
-             * @var $model ModelEventPayment
-             */
-            $model = $this->serviceEventPayment->createNew([
-                'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
-                'event_id' => $this->getEvent()->event_id,
-                'data' => '',
-                'state' => null,
-                'price_kc' => $price['kc'],
-                'price_eur' => $price['eur'],
-                'constant_symbol' => 1234,
-                'variable_symbol' => 1234,
-                'specific_symbol' => 1234,
-            ]);
-            $this->serviceEventPayment->save($model);
-
-            foreach ($form->getComponents() as $name => $component) {
-                if ($form->isSubmitted() === $component) {
-                    $model->executeTransition($this->getMachine(), $name);
-                }
-            }
-            $this->redirect('confirm', ['id' => $model->payment_id]);
+            $this->handleCreateForm($form);
         };
         return $control;
     }
 
     private function getModel(): ModelEventPayment {
-        $row = $this->serviceEventPayment->findByPrimary($this->id);
-        return ModelEventPayment::createFromTableRow($row);
-    }
+        if (!$this->model) {
+            $row = $this->serviceEventPayment->findByPrimary($this->id);
+            $this->model = ModelEventPayment::createFromTableRow($row);
 
-    public function actionConfirm() {
-        /**
-         * @var $control FormControl
-         */
-        $control = $this['confirmForm'];
-        $control->getForm()->setDefaults($this->getModel()->toArray());
+        }
+        return $this->model;
     }
 
     public function createComponentConfirmForm() {
-        $control = $this->eventPaymentFactory->createConfirmForm($this->getModel()->getPerson());
+        $control = new DetailControl($this->getTranslator(), $this->getCalculator(), $this->getModel());
+        $form = $control->getFormControl()->getForm();
+
         // inject transitions buttons
         $machine = $this->getMachine();
-        $form = $control->getForm();
+        $machine->setState($this->getModel()->state);
         $transitions = $machine->getAvailableTransitions();
         foreach ($transitions as $transition) {
             $button = $form->addSubmit($transition->getId(), $transition->getLabel());
@@ -190,37 +207,28 @@ class EventPaymentPresenter extends BasePresenter {
 
 
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-
-            $price = ['kc' => 251, 'eur' => 11];
-            // $price = $calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
-            //  $calculator->execute($values->data);
-            /**
-             * @var $model ModelEventPayment
-             */
-            $model = $this->serviceEventPayment->createNew([
-                'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
-                'event_id' => $this->getEvent()->event_id,
-                'data' => '',
-                'state' => null,
-                'price_kc' => $price['kc'],
-                'price_eur' => $price['eur'],
-                'constant_symbol' => 1234,
-                'variable_symbol' => 1234,
-                'specific_symbol' => 1234,
-            ]);
-            $this->serviceEventPayment->save($model);
+            $generator = $this->getSymbolGenerator();
 
             foreach ($form->getComponents() as $name => $component) {
                 if ($form->isSubmitted() === $component) {
-                    $model->executeTransition($this->getMachine(), $name);
+                    if ($name === 'edit') {
+                        $this->redirect('edit');
+                    } else {
+                        $model = $this->getModel();
+                        $model->update($generator->crate($model));
+                        $this->serviceEventPayment->save($model);
+                        $model->executeTransition($this->getMachine(), $name);
+                        $this->redirect('detail');
+                    }
                 }
             }
-            $this->redirect('confirm');
         };
         return $control;
     }
 
+    private function getSymbolGenerator(): AbstractSymbolGenerator {
+        return $this->symbolGeneratorFactory->createGenerator($this->getEvent());
+    }
 
     private function getEvent() {
         if (!$this->event) {
@@ -240,7 +248,10 @@ class EventPaymentPresenter extends BasePresenter {
     }
 
     private function getMachine(): Machine {
-        return $this->transitionsFactory->setUpMachine($this->getEvent());
+        if (!$this->machine) {
+            $this->machine = $this->transitionsFactory->setUpMachine($this->getEvent());
+        }
+        return $this->machine;
     }
 
 }

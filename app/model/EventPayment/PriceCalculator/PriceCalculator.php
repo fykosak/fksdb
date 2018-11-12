@@ -26,11 +26,19 @@ class PriceCalculator {
     public function execute(array $data) {
         $price = ['kc' => 0, 'eur' => 0];
         foreach ($this->preProcess as $preProcess) {
-            $preProcess->run($data, $this->event);
+            $preProcess->calculate($data, $this->event);
             $price['kc'] += $preProcess->getPrice()['kc'];
             $price['eur'] += $preProcess->getPrice()['eur'];
         }
         return $price;
+    }
+
+    public function getGridItems(array $data) {
+        $items = [];
+        foreach ($this->preProcess as $preProcess) {
+            $items = \array_merge($items, $preProcess->getGridItems($data, $this->event));
+        }
+        return $items;
     }
 
 }
