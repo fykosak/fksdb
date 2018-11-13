@@ -22,6 +22,7 @@ use Nette\Security\IResource;
  * @property string constant_symbol
  * @property string variable_symbol
  * @property string specific_symbol
+ * @property string bank_account
  */
 class ModelEventPayment extends AbstractModelSingle implements IResource {
     const STATE_WAITING = 'waiting';
@@ -44,6 +45,18 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
     public function executeTransition(Machine $machine, $id) {
         $state = $machine->executeTransition($id, $this);
         $this->update(['state' => $state]);
+    }
+
+    public function getPaymentId() {
+        return \sprintf('%d%04d', $this->event_id, ($this->payment_id));
+    }
+
+    public function canEdit() {
+        return \in_array($this->state, [self::STATE_NEW]);
+    }
+
+    public function hasGeneratedSymbols() {
+        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
     }
 
 }

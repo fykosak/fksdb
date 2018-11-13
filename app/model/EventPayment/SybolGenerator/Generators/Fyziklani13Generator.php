@@ -23,6 +23,7 @@ class Fyziklani13Generator extends \FKSDB\EventPayment\SymbolGenerator\AbstractS
             'constant_symbol' => 1234,
             'variable_symbol' => $variableNumber,
             'specific_symbol' => 1234,
+            'bank_account' => '123456789/1234',
         ];
     }
 }

@@ -1,4 +1,28 @@
 {dump $items}
+
+<h3>{_('Informace o platcovi')}</h3>
+
+<form>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">{_('Name')}</label>
+        <div class="col-sm-10">
+            <input class="form-control-plaintext"
+                   readonly
+                   value="{$model->getPerson()->getFullName()}"
+                   title="name"/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">{_('Email')}</label>
+        <div class="col-sm-10">
+            <input class="form-control-plaintext"
+                   readonly
+                   value="{$model->getPerson()->getInfo()->email}"
+                   title="email"/>
+        </div>
+    </div>
+</form>
+<h3>{_('Položky')}</h3>
 <table class="table table-striped">
     <thead>
     <tr>
@@ -15,7 +39,7 @@
             <td>{$item['eur']}</td>
         </tr>
     {/foreach}
-    <tr>
+    <tr class="table-primary">
         <td>{_('Spolu')}</td>
         <td>{$model->price_kc}</td>
         <td>{$model->price_eur}</td>
@@ -23,5 +47,79 @@
     </tbody>
 
 </table>
-{control form}
 
+
+{if $model->constant_symbol || $model->variable_symbol || $model->specific_symbol}
+    <h3>{_('Informacie o platbe')}</h3>
+    <form>
+        {if $model->constant_symbol}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Constant symbol')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->constant_symbol}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+        {if $model->variable_symbol}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Variable_symbol')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->variable_symbol}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+        {if $model->specific_symbol}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Specific symbol')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->specific_symbol}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+
+        {if $model->bank_account}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Bank account')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->bank_account}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+        {if $model->price_kc}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Price Kč')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->price_kc}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+        {if $model->price_eur}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{_('Price €')}</label>
+                <div class="col-sm-10">
+                    <input class="form-control-plaintext"
+                           readonly
+                           value="{$model->price_eur}"
+                           title="name"/>
+                </div>
+            </div>
+        {/if}
+    </form>
+{/if}
+
+{control form}
