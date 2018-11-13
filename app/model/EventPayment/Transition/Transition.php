@@ -3,6 +3,7 @@
 namespace FKSDB\EventPayment\Transition;
 
 use FKSDB\ORM\ModelEventPayment;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -20,12 +21,10 @@ class Transition {
      * @var string
      */
     private $label;
-
     /**
-     * @var boolean
+     * @var bool
      */
-    private $dangerous = false;
-
+    private $forOrgOnly = true;
     /**
      * @var \Closure[]
      */
@@ -76,12 +75,15 @@ class Transition {
         return $this->label;
     }
 
-    public function isDangerous(): bool {
-        return $this->dangerous;
+    public function setForOrgOnly($state) {
+        $this->forOrgOnly = $state;
     }
 
-    public function setDangerous(bool $dangerous) {
-        $this->dangerous = $dangerous;
+    public function canExecute($isOrg) {
+        if (!$this->forOrgOnly) {
+            return true;
+        }
+        return $isOrg;
     }
 
     public final function execute(ModelEventPayment $model) {

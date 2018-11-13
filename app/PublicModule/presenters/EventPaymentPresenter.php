@@ -5,7 +5,6 @@ namespace PublicModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
@@ -121,7 +120,7 @@ class EventPaymentPresenter extends BasePresenter {
     public function titleDetail() {
         $this->setTitle(\sprintf(_('Detail platby #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
-        $this->setSubtitle(\sprintf('%s', _($this->getModel()->state)));
+        // $this->setSubtitle(\sprintf('%s', _($this->getModel()->state)));
     }
 
     public function titleConfirm() {
@@ -191,14 +190,14 @@ class EventPaymentPresenter extends BasePresenter {
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
-                $model->executeTransition($this->getMachine(), $name);
+                $model->executeTransition($this->getMachine(), $name, false);
                 $this->redirect('confirm', ['id' => $model->payment_id]);
             }
         }
     }
 
     public function createComponentCreateForm(): FormControl {
-        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine());
+        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine(), false);
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->handleCreateForm($form);
         };
@@ -226,7 +225,6 @@ class EventPaymentPresenter extends BasePresenter {
         $model = $this->getModel();
         $model->update([
             'data' => '',
-            'state' => null,
             'price_kc' => $price['kc'],
             'price_eur' => $price['eur'],
         ]);
@@ -259,17 +257,20 @@ class EventPaymentPresenter extends BasePresenter {
                     $model = $this->getModel();
                     $model->update($generator->crate($model));
                     $this->serviceEventPayment->save($model);
-                    $model->executeTransition($this->getMachine(), $name);
+                    $model->executeTransition($this->getMachine(), $name, false);
                     $this->redirect('detail');
                 }
             }
         }
     }
 
+    public function renderDetail() {
+        $this->template->model = $this->getModel();
+    }
+
     public function createComponentConfirmControl(): DetailControl {
         $machine = $this->getMachine();
-        $machine->setState($this->getModel()->state);
-        $control = $this->eventPaymentFactory->createConfirmControl($this->getModel(), $this->getCalculator(), $this->getTranslator(), $machine);
+        $control = $this->eventPaymentFactory->createConfirmControl($this->getModel(), $this->getCalculator(), $this->getTranslator(), $machine, false);
         $form = $control->getFormControl()->getForm();
 
         $form->onSuccess[] = function (Form $form) {
@@ -283,8 +284,6 @@ class EventPaymentPresenter extends BasePresenter {
     }
 
     public function createComponentDetailControl(): DetailControl {
-        $machine = $this->getMachine();
-        $machine->setState($this->getModel()->state);
-        return $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getCalculator(), $this->getTranslator(), $machine);
+        return $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getCalculator(), $this->getTranslator());
     }
 }

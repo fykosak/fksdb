@@ -51,20 +51,15 @@ class TransitionsFactory {
         return function (ModelEventPayment $model) use ($message, $template) {
 
             $template->model = $model;
-
             $message->setHtmlBody($template);
-
             $this->mailer->send($message);
-            Debugger::barDump($message);
         };
     }
 
-    public function setUpMachine(ModelEvent $event, $state = null): Machine {
-
+    public function setUpMachine(ModelEvent $event): Machine {
         $factory = $this->createEventTransitions($event);
-        $machine = $factory->createMachine($state);
+        $machine = $factory->createMachine();
         $factory->createTransitions($machine);
-        // $this->machine->setInitState(self::STATE_WAITING);
         return $machine;
     }
 }

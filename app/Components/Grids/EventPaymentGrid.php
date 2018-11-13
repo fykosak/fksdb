@@ -3,7 +3,9 @@
 namespace FKSDB\Components\Grids;
 
 
-use Events\Payment\MachineFactory;
+use FKSDB\EventPayment\Transition\Machine;
+use FKSDB\EventPayment\Transition\TransitionsFactory;
+use FKSDB\EventPayment\Transition\UnavailableTransitionException;
 use FKSDB\ORM\ModelEventPayment;
 use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
@@ -26,13 +28,17 @@ class EventPaymentGrid extends BaseGrid {
     private $eventId;
 
     private $transitionFactory;
+    /**
+     * @var Machine
+     */
+    private $machine;
 
-    public function __construct(\ServiceEventPayment $servicePayment, MachineFactory $transitionFactory, $eventId) {
-        Debugger::barDump($eventId);
+    public function __construct(Machine $machine, \ServiceEventPayment $servicePayment, TransitionsFactory $transitionFactory, $eventId) {
         parent::__construct();
         $this->eventId = $eventId;
         $this->serviceEventPayment = $servicePayment;
         $this->transitionFactory = $transitionFactory;
+        $this->machine = $machine;
     }
 
     protected function configure($presenter) {
@@ -48,8 +54,10 @@ class EventPaymentGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('constant_symbol', _('CS'));
-        $this->addColumn('person_name', _('Osoba'))->setRenderer(function ($row) {
+        $this->addColumn('id', _('#'))->setRenderer(function ($row) {
+            return '#' . ModelEventPayment::createFromTableRow($row)->getPaymentId();
+        });
+        $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
             return ModelPerson::createFromTableRow($row->person)->getFullName();
         });
         $this->addColumn('person_email', _('e-mail'))->setRenderer(function ($row) {
@@ -58,36 +66,26 @@ class EventPaymentGrid extends BaseGrid {
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
             return $row->price_kc . ' Kč/' . $row->price_eur . ' €';
         });
+        $this->addColumn('constant_symbol', _('CS'));
+        $this->addColumn('variable_symbol', _('VS'));
+        $this->addColumn('specific_symbol', _('SS'));
+        $this->addColumn('bank_account', _('Bank acc.'));
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $class = 'badge ';
-            switch ($row->state) {
-                case ModelEventPayment::STATE_WAITING:
-                    $class .= 'badge-warning';
-                    break;
-                case ModelEventPayment::STATE_CANCELED:
-                    $class .= 'badge-secondary';
-                    break;
-                case ModelEventPayment::STATE_CONFIRMED:
-                    $class .= 'badge-success';
-                    break;
-                default:
-                    throw new \Exception('Fuck this shit');
-            }
+            $class = ModelEventPayment::createFromTableRow($row)->getUIClass();
             return Html::el('span')->addAttributes(['class' => $class])->add(_($row->state));
         });
-        $this->addColumn('tr', _('Akcie'))->setRenderer(function ($row) {
+
+        $this->addColumn('tr', _('Actions'))->setRenderer(function ($row) {
             $model = ModelEventPayment::createFromTableRow($row);
-            $machine = $model->createMachine($this->transitionFactory);
-            $machine->setState($row->state);
-            $container = Html::el('span');
-            foreach ($machine->getAvailableTransitions() as $transition) {
+            $container = Html::el('span')->addAttributes(['class' => 'btn-group']);
+            foreach ($this->machine->getAvailableTransitions($model->state, true) as $transition) {
                 $container->add(Html::el('a')->addAttributes([
                     'href' => $this->link('transition', [
-                            'id' => $row->payment_id,
+                            'id' => $model->payment_id,
                             'transition' => $transition->getId(),
                         ]
                     ),
-                    'class' => $transition->isDangerous() ? 'btn btn-danger' : 'btn btn-secondary',
+                    'class' => 'btn btn-sm btn-' . $transition->getType(),
                 ])->add($transition->getLabel()));
             }
             return $container;
@@ -103,7 +101,7 @@ class EventPaymentGrid extends BaseGrid {
             });
     }
 
-    public function handleTransition($id, $transition) {
+    public function handleTransition(int $id, string $transition) {
         $row = $this->serviceEventPayment->findByPrimary($id);
         if (!$row) {
             $this->flashMessage('Payment doesn\'t exists.');
@@ -111,17 +109,13 @@ class EventPaymentGrid extends BaseGrid {
         }
         $model = ModelEventPayment::createFromTableRow($row);
         try {
-            $model->executeTransition($transition, $this->transitionFactory);
-        } catch (\Exception $e) {
-            Debugger::log($e);
-            $this->flashMessage('Some error...', 'danger');
-        } finally {
-           // $this->serviceEventPayment->save($model);
+            $model->executeTransition($this->machine, $transition, true);
             $this->flashMessage('Prechod vykonaný');
-         //   $this->redirect('this');
+            $this->redirect('this');
+        } catch (UnavailableTransitionException $e) {
+            Debugger::log($e);
+            Debugger::barDump($e);
+            $this->flashMessage('Some error...', 'danger');
         }
-
-
     }
-
 }

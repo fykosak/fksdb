@@ -29,23 +29,7 @@ class PaymentStateLabel extends Control {
     }
 
     public function render() {
-        $class = 'badge ';
-        switch ($this->modelEventPayment->state) {
-            case  ModelEventPayment::STATE_WAITING:
-                $class .= 'badge-warning';
-                break;
-            case ModelEventPayment::STATE_CONFIRMED:
-                $class .= 'badge-success';
-                break;
-            case ModelEventPayment::STATE_CANCELED:
-                $class .= 'badge-secondary';
-                break;
-            case ModelEventPayment::STATE_NEW:
-                $class .= 'badge-primary';
-                break;
-            default:
-                $class .= 'badge-light';
-        }
+        $class = $this->modelEventPayment->getUIClass();
         $this->template->setTranslator($this->translator);
         $this->template->className = $class;
         $this->template->label = $this->modelEventPayment->state;

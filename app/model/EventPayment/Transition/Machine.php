@@ -3,7 +3,6 @@
 namespace FKSDB\EventPayment\Transition;
 
 use FKSDB\ORM\ModelEventPayment;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,48 +12,15 @@ use Nette\Diagnostics\Debugger;
 class Machine {
 
     /**
-     * @var string
-     */
-    private $state;
-
-    /**
      * @var Transition[]
      */
     private $transitions = [];
-
-    private $initState;
-
-    public function __construct($state) {
-        $this->state = $state;
-    }
 
     /**
      * @param Transition $transition
      */
     public function addTransition(Transition $transition) {
         $this->transitions[] = $transition;
-    }
-
-    /**
-     * @return string
-     */
-    public function getState(): string {
-        return $this->state;
-    }
-
-    /**
-     * @param $state
-     */
-    public function setState(string $state) {
-        $this->state = $state;
-    }
-
-    /**
-     * @param string state identification
-     * @return string
-     */
-    public function getStateName(): string {
-        return _($this->state);
     }
 
     /**
@@ -65,32 +31,24 @@ class Machine {
     }
 
     /**
+     * @param string? $state
+     * @param boolean $isOrg
      * @return Transition[]
      */
-    public function getAvailableTransitions(): array {
-        Debugger::barDump($this->state);
-        Debugger::barDump($this->transitions);
-        return array_filter($this->transitions, function (Transition $transition) {
-            return $transition->getFromState() === $this->state;
+    public function getAvailableTransitions($state, $isOrg): array {
+        return array_filter($this->transitions, function (Transition $transition) use ($state, $isOrg) {
+            return ($transition->getFromState() === $state) && $transition->canExecute($isOrg);
         });
     }
 
-    public function getInitState() {
-        return $this->initState;
-    }
-
-    public function setInitState(string $state) {
-        $this->initState = $state;
-    }
-
-    public function executeTransition($id, ModelEventPayment $model) {
-        $availableTransitions = $this->getAvailableTransitions();
+    public function executeTransition($id, ModelEventPayment $model, $isOrg) {
+        $availableTransitions = $this->getAvailableTransitions($model->state, $isOrg);
         foreach ($availableTransitions as $transition) {
             if ($transition->getId() === $id) {
                 $transition->execute($model);
                 return $transition->getToState();
             }
         }
-        throw new \Exception(\sprintf(_('Transition %s is not available'), $id));
+        throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));
     }
 }

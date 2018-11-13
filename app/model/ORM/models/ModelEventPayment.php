@@ -42,8 +42,8 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
         return 'eventPayment';
     }
 
-    public function executeTransition(Machine $machine, $id) {
-        $state = $machine->executeTransition($id, $this);
+    public function executeTransition(Machine $machine, $id, $isOrg) {
+        $state = $machine->executeTransition($id, $this, $isOrg);
         $this->update(['state' => $state]);
     }
 
@@ -57,6 +57,27 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
 
     public function hasGeneratedSymbols() {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
+    }
+
+    public function getUIClass() {
+        $class = 'badge ';
+        switch ($this->state) {
+            case ModelEventPayment::STATE_WAITING:
+                $class .= 'badge-warning';
+                break;
+            case ModelEventPayment::STATE_CANCELED:
+                $class .= 'badge-secondary';
+                break;
+            case ModelEventPayment::STATE_CONFIRMED:
+                $class .= 'badge-success';
+                break;
+            case ModelEventPayment::STATE_NEW:
+                $class .= 'badge-primary';
+                break;
+            default:
+                $class .= 'badge-light';
+        }
+        return $class;
     }
 
 }
