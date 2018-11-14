@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\EventPayment;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\Payment\PaymentStateLabel;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Control;
@@ -37,6 +38,14 @@ class DetailControl extends Control {
 
     public function createComponentForm() {
         return new FormControl();
+    }
+
+    public function createComponentStateDisplay() {
+        return new StateDisplayControl($this->translator, $this->model);
+    }
+
+    public function createComponentStateLabel() {
+        return new PaymentStateLabel($this->model, $this->translator);
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\EventPayment;
 
-
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\EventPayment\Transition\UnavailableTransitionException;
@@ -14,9 +14,9 @@ use NiftyGrid\DataSource\NDataSource;
 
 /**
  *
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @author Mišo <miso@fykoscz>
  */
-class EventPaymentGrid extends BaseGrid {
+class OrgEventPaymentGrid extends BaseGrid {
 
     /**
      * @var \ServiceEventPayment
@@ -109,13 +109,13 @@ class EventPaymentGrid extends BaseGrid {
         }
         $model = ModelEventPayment::createFromTableRow($row);
         try {
-            $model->executeTransition($this->machine, $transition, true);
-            $this->flashMessage('Prechod vykonaný');
+            $this->machine->executeTransition($transition, $model, true);
+            $this->flashMessage(_('Prechod vykonaný'));
             $this->redirect('this');
         } catch (UnavailableTransitionException $e) {
             Debugger::log($e);
             Debugger::barDump($e);
-            $this->flashMessage('Some error...', 'danger');
+            $this->flashMessage($e->getMessage(), 'danger');
         }
     }
 }

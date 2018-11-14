@@ -41,12 +41,20 @@ class Machine {
         });
     }
 
-    public function executeTransition($id, ModelEventPayment $model, $isOrg) {
+    /**
+     * @param string? $id
+     * @param ModelEventPayment $model
+     * @param boolean $isOrg
+     * @return void
+     * @throws UnavailableTransitionException
+     */
+    public function executeTransition($id, ModelEventPayment $model, bool $isOrg) {
         $availableTransitions = $this->getAvailableTransitions($model->state, $isOrg);
         foreach ($availableTransitions as $transition) {
             if ($transition->getId() === $id) {
                 $transition->execute($model);
-                return $transition->getToState();
+                $model->update(['state' => $transition->getToState()]);
+                return;
             }
         }
         throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));

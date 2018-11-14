@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Payment;
+namespace FKSDB\Components\Grids\EventPayment;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEventPayment;
@@ -27,7 +27,7 @@ class MyPaymentGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $payments = $this->serviceEventPayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id);
+        $payments = $this->serviceEventPayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id)->order('payment_id DESC');
 
         $dataSource = new NDataSource($payments);
         $this->setDataSource($dataSource);
@@ -62,18 +62,6 @@ class MyPaymentGrid extends BaseGrid {
             })
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', [
-                    'id' => $row->payment_id,
-                    'eventId' => $row->event_id,
-                ]);
-            });
-
-        $this->addButton('confirm', _('Confirm'))
-            ->setText(_('Confirm'))
-            ->setShow(function ($row) {
-                return ModelEventPayment::createFromTableRow($row)->state === ModelEventPayment::STATE_NEW;
-            })
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('confirm', [
                     'id' => $row->payment_id,
                     'eventId' => $row->event_id,
                 ]);

@@ -5,7 +5,7 @@ namespace PublicModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
-use FKSDB\Components\Grids\Payment\MyPaymentGrid;
+use FKSDB\Components\Grids\EventPayment\MyPaymentGrid;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
@@ -264,10 +264,6 @@ class EventPaymentPresenter extends BasePresenter {
         }
     }
 
-    public function renderDetail() {
-        $this->template->model = $this->getModel();
-    }
-
     public function createComponentConfirmControl(): DetailControl {
         $machine = $this->getMachine();
         $control = $this->eventPaymentFactory->createConfirmControl($this->getModel(), $this->getCalculator(), $this->getTranslator(), $machine, false);
@@ -284,6 +280,6 @@ class EventPaymentPresenter extends BasePresenter {
     }
 
     public function createComponentDetailControl(): DetailControl {
-        return $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getCalculator(), $this->getTranslator());
+        return $this->createComponentConfirmControl();
     }
 }

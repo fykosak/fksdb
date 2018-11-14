@@ -6,7 +6,7 @@ namespace OrgModule;
 
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Grids\EventPaymentGrid;
+use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\ORM\ModelEvent;
@@ -112,7 +112,7 @@ class EventPaymentPresenter extends EntityPresenter {
 
 
     protected function createComponentGrid($name) {
-        return new EventPaymentGrid($this->getMachine(),$this->serviceEventPayment, $this->transitionsFactory, $this->eventId);
+        return new OrgEventPaymentGrid($this->getMachine(),$this->serviceEventPayment, $this->transitionsFactory, $this->eventId);
     }
 
     protected function createComponentEditComponent($name) {

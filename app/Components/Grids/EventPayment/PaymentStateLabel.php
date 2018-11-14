@@ -29,11 +29,27 @@ class PaymentStateLabel extends Control {
     }
 
     public function render() {
-        $class = $this->modelEventPayment->getUIClass();
         $this->template->setTranslator($this->translator);
-        $this->template->className = $class;
-        $this->template->label = $this->modelEventPayment->state;
-        $this->template->setFile(__DIR__ . 'PaymentStateLabel.latte');
+        $this->template->className = $this->modelEventPayment->getUIClass();
+
+        $label = $this->modelEventPayment->state;
+        switch ($this->modelEventPayment->state) {
+            case ModelEventPayment::STATE_NEW:
+                $label = _('Nová platba');
+                break;
+            case ModelEventPayment::STATE_WAITING:
+                $label = _('Čaká na zaplatenie');
+                break;
+            case ModelEventPayment::STATE_CANCELED:
+                $label = _('Zrušená platba');
+                break;
+            case ModelEventPayment::STATE_CONFIRMED:
+                $label = _('Platba prijatá');
+        }
+
+        $this->template->label = $label;
+
+        $this->template->setFile(__DIR__ . '/PaymentStateLabel.latte');
         $this->template->render();
     }
 }

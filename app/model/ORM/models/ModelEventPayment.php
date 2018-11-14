@@ -42,24 +42,41 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
         return 'eventPayment';
     }
 
+    /**
+     * @param Machine $machine
+     * @param $id
+     * @param $isOrg
+     * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     */
     public function executeTransition(Machine $machine, $id, $isOrg) {
-        $state = $machine->executeTransition($id, $this, $isOrg);
-        $this->update(['state' => $state]);
+        $machine->executeTransition($id, $this, $isOrg);
     }
 
-    public function getPaymentId() {
+    /**
+     * @return string
+     */
+    public function getPaymentId(): string {
         return \sprintf('%d%04d', $this->event_id, ($this->payment_id));
     }
 
-    public function canEdit() {
+    /**
+     * @return bool
+     */
+    public function canEdit(): bool {
         return \in_array($this->state, [self::STATE_NEW]);
     }
 
-    public function hasGeneratedSymbols() {
+    /**
+     * @return bool
+     */
+    public function hasGeneratedSymbols(): bool {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account;
     }
 
-    public function getUIClass() {
+    /**
+     * @return string
+     */
+    public function getUIClass(): string {
         $class = 'badge ';
         switch ($this->state) {
             case ModelEventPayment::STATE_WAITING:

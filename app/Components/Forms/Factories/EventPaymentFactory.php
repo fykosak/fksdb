@@ -28,7 +28,7 @@ class EventPaymentFactory {
         $this->personProvider = $personProvider;
     }
 
-    public function createEditForm($isOrg = false) {
+    public function createEditForm(bool $isOrg) {
         $control = new FormControl();
         $form = $control->getForm();
         if ($isOrg) {
@@ -51,14 +51,11 @@ class EventPaymentFactory {
 
         $control = new DetailControl($translator, $calculator, $modelEventPayment);
         $form = $control->getFormControl()->getForm();
-        $form->addSubmit('edit', _('Edit payment'));
+        if ($modelEventPayment->canEdit()) {
+            $form->addSubmit('edit', _('Edit payment'));
+        }
+
         $this->appendTransitionsButtons($modelEventPayment->state, $machine, $form, $isOrg);
-        return $control;
-    }
-
-    public function createDetailControl(ModelEventPayment $modelEventPayment, PriceCalculator $calculator, ITranslator $translator) {
-
-        $control = new DetailControl($translator, $calculator, $modelEventPayment);
         return $control;
     }
 
@@ -66,7 +63,7 @@ class EventPaymentFactory {
         $transitions = $machine->getAvailableTransitions($state, $isOrg);
         foreach ($transitions as $transition) {
             $button = $form->addSubmit($transition->getId(), $transition->getLabel());
-            $button->getControlPrototype()->class .= 'btn btn-' . $transition->getType();
+            $button->getControlPrototype()->addAttributes(['class' => 'btn btn-' . $transition->getType()]);
         }
 
     }
