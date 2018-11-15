@@ -1,34 +1,25 @@
 <?php
 
-namespace PublicModule;
+namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
-use FKSDB\Components\Grids\EventPayment\MyPaymentGrid;
+use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 
-class EventPaymentPresenter extends BasePresenter {
+class PaymentPresenter extends BasePresenter {
     /**
      * @var \ServiceEventPayment
      */
     private $serviceEventPayment;
-
-    /**
-     * @var integer
-     * @persistent
-     */
-    public $eventId;
     /**
      * @var integer
      * @persistent
@@ -38,14 +29,7 @@ class EventPaymentPresenter extends BasePresenter {
      * @var TransitionsFactory
      */
     private $transitionsFactory;
-    /**
-     * @var \ServiceEvent
-     */
-    private $serviceEvent;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
     /**
      * @var PriceCalculatorFactory
      */
@@ -60,10 +44,6 @@ class EventPaymentPresenter extends BasePresenter {
      * @var ModelEventPayment
      */
     private $model;
-    /**
-     * @var Container
-     */
-    private $container;
     /**
      * @var Machine
      */
@@ -86,10 +66,6 @@ class EventPaymentPresenter extends BasePresenter {
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;
     }
 
-    public function injectServiceEvent(\ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
     public function injectPriceCalculatorFactory(PriceCalculatorFactory $priceCalculatorFactory) {
         $this->priceCalculatorFactory = $priceCalculatorFactory;
     }
@@ -98,17 +74,8 @@ class EventPaymentPresenter extends BasePresenter {
         $this->eventPaymentFactory = $eventPaymentFactory;
     }
 
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
-    public function titleNew() {
+    public function titleCreate() {
         $this->setTitle(\sprintf(_('Nová platba akcie %s'), $this->getEvent()->name));
-        $this->setIcon('fa fa-credit-card');
-    }
-
-    public function titleList() {
-        $this->setTitle(_('My payment'));
         $this->setIcon('fa fa-credit-card');
     }
 
@@ -120,40 +87,38 @@ class EventPaymentPresenter extends BasePresenter {
     public function titleDetail() {
         $this->setTitle(\sprintf(_('Detail platby #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
-        // $this->setSubtitle(\sprintf('%s', _($this->getModel()->state)));
     }
 
-    public function titleConfirm() {
-        $this->setTitle(\sprintf(_('Sumarizácia platby #%s'), $this->getModel()->getPaymentId()));
+    public function titleList() {
+        $this->setTitle(\sprintf(_('List of payment')));
         $this->setIcon('fa fa-credit-card');
     }
 
-    private function getEvent(): ModelEvent {
-        if (!$this->event) {
-            if (!$this->eventId) {
-                throw new BadRequestException('EventId je povinné');
-            }
-            $row = $this->serviceEvent->findByPrimary($this->eventId);
-            if (!$row) {
-                throw new BadRequestException('Event nenájdený');
-            }
-            $this->event = ModelEvent::createFromTableRow($row);
-            $holder = $this->container->createEventHolder($this->event);
-            $this->event->setHolder($holder);
-        }
-        return $this->event;
+    public function authorizedDetail() {
+        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'detail', $this->getContest()));
+    }
+
+    public function authorizedEdit() {
+        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getContest()));
+    }
+
+    public function authorizedCreate() {
+        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.payment', 'create', $this->getContest()));
+    }
+
+    public function authorizedList() {
+        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.payment', 'list', $this->getContest()));
     }
 
     private function getModel(): ModelEventPayment {
         if (!$this->model) {
             $row = $this->serviceEventPayment->findByPrimary($this->id);
             $this->model = ModelEventPayment::createFromTableRow($row);
-
         }
         return $this->model;
     }
 
-    public function getCalculator(): PriceCalculator {
+    public function getPriceCalculator(): PriceCalculator {
         return $this->priceCalculatorFactory->createCalculator($this->getEvent());
     }
 
@@ -167,7 +132,6 @@ class EventPaymentPresenter extends BasePresenter {
         }
         return $this->machine;
     }
-
 
     public function handleCreateForm(Form $form) {
         $values = $form->getValues();
@@ -191,7 +155,7 @@ class EventPaymentPresenter extends BasePresenter {
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
                 $model->executeTransition($this->getMachine(), $name, false);
-                $this->redirect('confirm', ['id' => $model->payment_id]);
+                $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
     }
@@ -205,12 +169,12 @@ class EventPaymentPresenter extends BasePresenter {
     }
 
     public function actionEdit() {
-        if (!$this->getModel()->canEdit()) {
+        if ($this->getModel()->canEdit() || $this->getContestAuthorizator()->isAllowed($this->getModel(), 'org.edit', $this->getContest())) {
+            $this['editForm']->getForm()->setDefaults($this->getModel());
+        } else {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
-
-            $this->redirect('list');
+            $this->redirect(':MyPayment:');
         }
-        $this['editForm']->getForm()->setDefaults($this->getModel());
     }
 
     public function handleEditForm(Form $form) {
@@ -229,24 +193,11 @@ class EventPaymentPresenter extends BasePresenter {
             'price_eur' => $price['eur'],
         ]);
         $this->serviceEventPayment->save($model);
-        $this->redirect('confirm', ['id' => $model->payment_id]);
+        $this->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    public function createComponentEditForm(): FormControl {
-        $control = $this->eventPaymentFactory->createEditForm(false);
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleEditForm($form);
-        };
-        return $control;
-    }
 
-    public function actionConfirm() {
-        if ($this->getModel()->hasGeneratedSymbols()) {
-            $this->redirect('detail');
-        }
-    }
-
-    public function handleConfirmForm(Form $form) {
+    public function handleDetailForm(Form $form) {
         $generator = $this->getSymbolGenerator();
 
         foreach ($form->getComponents() as $name => $component) {
@@ -264,22 +215,26 @@ class EventPaymentPresenter extends BasePresenter {
         }
     }
 
-    public function createComponentConfirmControl(): DetailControl {
+    public function createComponentDetailControl(): DetailControl {
         $machine = $this->getMachine();
-        $control = $this->eventPaymentFactory->createConfirmControl($this->getModel(), $this->getCalculator(), $this->getTranslator(), $machine, false);
+        $control = $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getPriceCalculator(), $this->getTranslator(), $machine, false);
         $form = $control->getFormControl()->getForm();
 
         $form->onSuccess[] = function (Form $form) {
-            $this->handleConfirmForm($form);
+            $this->handleDetailForm($form);
         };
         return $control;
     }
 
-    public function createComponentMyPaymentGrid(): MyPaymentGrid {
-        return new MyPaymentGrid($this->serviceEventPayment);
+    protected function createComponentOrgGrid(): OrgEventPaymentGrid {
+        return new OrgEventPaymentGrid($this->getMachine(), $this->serviceEventPayment, $this->transitionsFactory, $this->eventId);
     }
 
-    public function createComponentDetailControl(): DetailControl {
-        return $this->createComponentConfirmControl();
+    public function createComponentEditForm(): FormControl {
+        $control = $this->eventPaymentFactory->createEditForm($this->getContestAuthorizator()->isAllowed($this->getModel(), 'org.edit', $this->getContest()));
+        $control->getForm()->onSuccess[] = function (Form $form) {
+            $this->handleEditForm($form);
+        };
+        return $control;
     }
 }

@@ -54,7 +54,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('id', _('#'))->setRenderer(function ($row) {
+        $this->addColumn('id', '#')->setRenderer(function ($row) {
             return '#' . ModelEventPayment::createFromTableRow($row)->getPaymentId();
         });
         $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
@@ -64,15 +64,16 @@ class OrgEventPaymentGrid extends BaseGrid {
             return ModelPerson::createFromTableRow($row->person)->getInfo()->email;
         });
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            return $row->price_kc . ' Kč/' . $row->price_eur . ' €';
+            $model = ModelEventPayment::createFromTableRow($row);
+            return $model->price_kc . ' Kč/' . $model->price_eur . ' €';
         });
         $this->addColumn('constant_symbol', _('CS'));
         $this->addColumn('variable_symbol', _('VS'));
         $this->addColumn('specific_symbol', _('SS'));
         $this->addColumn('bank_account', _('Bank acc.'));
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $class = ModelEventPayment::createFromTableRow($row)->getUIClass();
-            return Html::el('span')->addAttributes(['class' => $class])->add(_($row->state));
+            $model = ModelEventPayment::createFromTableRow($row);
+            return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->add(_($model->state));
         });
 
         $this->addColumn('tr', _('Actions'))->setRenderer(function ($row) {

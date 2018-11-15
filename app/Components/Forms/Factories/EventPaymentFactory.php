@@ -11,6 +11,7 @@ use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 
 class EventPaymentFactory {
@@ -31,6 +32,7 @@ class EventPaymentFactory {
     public function createEditForm(bool $isOrg) {
         $control = new FormControl();
         $form = $control->getForm();
+        Debugger::barDump($isOrg);
         if ($isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         }
@@ -47,7 +49,7 @@ class EventPaymentFactory {
         return $control;
     }
 
-    public function createConfirmControl(ModelEventPayment $modelEventPayment, PriceCalculator $calculator, ITranslator $translator, Machine $machine, $isOrg) {
+    public function createDetailControl(ModelEventPayment $modelEventPayment, PriceCalculator $calculator, ITranslator $translator, Machine $machine, $isOrg) {
 
         $control = new DetailControl($translator, $calculator, $modelEventPayment);
         $form = $control->getFormControl()->getForm();

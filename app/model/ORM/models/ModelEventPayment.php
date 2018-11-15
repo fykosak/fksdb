@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
+use Nette\Diagnostics\Debugger;
 use Nette\Security\IResource;
 
 /**
@@ -39,7 +40,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
     }
 
     public function getResourceId(): string {
-        return 'eventPayment';
+        return 'event.payment';
     }
 
     /**

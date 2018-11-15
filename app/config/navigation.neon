@@ -61,5 +61,7 @@ navigation:
             - fyziklani.results.resultsView
             - fyziklani.results.teamStatistics
             - fyziklani.results.taskStatistics
-
+        event.dashboard.default:
+            - event.payment.list
+            - event.payment.create
 

@@ -2,14 +2,17 @@
 
 namespace Authorization\Assertions;
 
+use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPerson;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
+use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\Security\User;
-use Nette\Security\IResource;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class OwnerAssertion {
@@ -24,8 +27,8 @@ class OwnerAssertion {
     }
 
     /**
-     * 
-     * @param \Authorization\Permission $acl
+     *
+     * @param Permission $acl
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
@@ -38,7 +41,7 @@ class OwnerAssertion {
         }
 
         $submit = $acl->getQueriedResource();
-        
+
         if (!$submit instanceof IResource) {
             return false;
         }
@@ -47,8 +50,8 @@ class OwnerAssertion {
 
     /**
      * Checks whether contestant belongs to the same contest as the role was assigned.
-     * 
-     * @param \Authorization\Permission $acl
+     *
+     * @param Permission $acl
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
@@ -68,8 +71,8 @@ class OwnerAssertion {
 
     /**
      * Checks whether person is contestant in any of the role-assigned contests.
-     * 
-     * @param \Authorization\Permission $acl
+     *
+     * @param Permission $acl
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
@@ -89,13 +92,26 @@ class OwnerAssertion {
         return count($contestants) > 0;
     }
 
+    public function isOwnPayment(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+        /**
+         * @var $loggedPerson ModelPerson
+        $payment
+         */
+        $loggedPerson = $this->user->getIdentity()->getPerson();
+        $payment = $acl->getQueriedResource();
+        return $loggedPerson->person_id === $payment->getPerson()->person_id;
+    }
+
     /**
      * Checks the user is the org in queried contest.
      * @param \Nette\Security\Permission $acl
-     * @param type $role
-     * @param type $resourceId
-     * @param type $privilege
-     * @return type
+     * @param mixed $role
+     * @param mixed $resourceId
+     * @param mixed $privilege
+     * @return bool
      * @throws InvalidStateException
      */
     public function isOrgSelf(Permission $acl, $role, $resourceId, $privilege) {
@@ -112,14 +128,14 @@ class OwnerAssertion {
 
     /**
      * Check that the person is the person of logged user.
-     * 
+     *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
-     * 
+     *
      * @param \Nette\Security\Permission $acl
-     * @param type $role
-     * @param type $resourceId
-     * @param type $privilege
-     * @return type
+     * @param mixed $role
+     * @param mixed $resourceId
+     * @param mixed $privilege
+     * @return bool
      * @throws InvalidStateException
      */
     public function isSelf(Permission $acl, $role, $resourceId, $privilege) {
