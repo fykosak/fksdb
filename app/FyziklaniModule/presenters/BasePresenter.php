@@ -2,54 +2,26 @@
 
 namespace FyziklaniModule;
 
-use AuthenticatedPresenter;
+use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\BrawlChooser;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
-use FKSDB\ORM\ModelEvent;
 
 /**
  *
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-abstract class BasePresenter extends AuthenticatedPresenter {
-
-    /**
-     *
-     * @var \FKSDB\ORM\ModelEvent
-     */
-    private $event;
-
-    /**
-     * @var int $eventID
-     * @persistent
-     */
-    public $eventID;
+abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @var FyziklaniFactory
      */
     protected $fyziklaniFactory;
-
-    /**
-     *
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     *
-     * @var ServiceEvent
-     */
-    protected $serviceEvent;
 
     /**
      *
@@ -99,14 +71,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
 
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -128,37 +92,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $control;
     }
 
-    protected function createComponentLanguageChooser() {
-        $control = new LanguageChooser($this->session);
-
-        return $control;
-    }
-
     /**
      * @throws BadRequestException
      */
     public function startup() {
+        parent::startup();
+        if ($this->getEvent()->event_type_id !== 1) {
+            $this->flashMessage('Event nieje fyziklani', 'warning');
+            $this->redirect(':Event:Dashboard:default');
+        }
         /**
-         * @var $languageChooser LanguageChooser
          * @var $brawlChooser BrawlChooser
          */
-        $languageChooser = $this['languageChooser'];
         $brawlChooser = $this['brawlChooser'];
-        $languageChooser->syncRedirect();
         $brawlChooser->setEvent($this->getEvent());
-
-        $this->event = $this->getEvent();
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event nebyl nalezen.', 404);
-        }
-        parent::startup();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function eventExist() {
-        return $this->getEvent() ? true : false;
     }
 
     public function getSubtitle() {
@@ -172,41 +119,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
     }
 
-    /**
-     * @return integer
-     */
-    public function getEventId() {
-        if (!$this->eventID) {
-            $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventID;
-    }
-
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
-        if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
-        }
-        return $this->event;
-    }
-
-    protected function eventIsAllowed($resource, $privilege) {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
-        }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
-    }
-
-    public function getNavBarVariant() {
-        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-    }
+    /*  public function getNavBarVariant() {
+          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+      }*/
 
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
