@@ -5,14 +5,14 @@ namespace FyziklaniModule;
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('FYKOSí Fyziklání'));
+        $this->setTitle(_('Fyziklani dashboard'));
         $this->setIcon('fa fa-dashboard');
     }
 
     public function authorizedDefault() {
-        if ($this->getEvent()->event_type_id !== 1) {
+        if (!$this->isEventFyziklani()) {
             return $this->setAuthorized(false);
         }
-        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'dashboard'));
+        return $this->setAuthorized($this->eventIsAllowed('fyziklani', 'dashboard'));
     }
 }

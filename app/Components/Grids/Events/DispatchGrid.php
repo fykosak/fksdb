@@ -34,9 +34,7 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -48,17 +46,11 @@ class DispatchGrid extends BaseGrid {
         $dataSource = new NDataSource($events);
 
         $this->setDataSource($dataSource);
-        $this->setDefaultOrder('year DESC begin DESC');
+        $this->setDefaultOrder('begin DESC');
 
         //
         // columns
         //
-
-
-        /*
-
-          <th>{_('Your permissions')}</th>
-          <th>{_('Actions')}</th>*/
         $this->addColumn('event_id', _('Event Id'))->setRenderer(function ($row) {
             return '#' . $row->event_id;
         });
@@ -67,7 +59,7 @@ class DispatchGrid extends BaseGrid {
             return $row->event_type->contest->name;
         })->setSortable(false);
         $this->addColumn('year', _('Year'));
-        $this->addColumn('permissions', _('Permissions'))->setRenderer(function ($row) {
+        $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
             $container = Html::el('span');
             $modelEvent = ModelEvent::createFromTableRow($row);
             $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
@@ -89,13 +81,11 @@ class DispatchGrid extends BaseGrid {
         // operations
         //
         $this->addButton('detail', _('Detail'))
-            ->setText('Detail')//todo i18n
+            ->setText('Detail')
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('Dashboard:default', [
                     'eventId' => $row->event_id,
                 ]);
             });
-
-
     }
 }

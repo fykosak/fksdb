@@ -7,7 +7,6 @@ use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
 use Nette\DI\Container;
 use ServiceEvent;
@@ -51,9 +50,10 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Výber eventu'));
+        $this->setTitle(_('List of events'));
         $this->setIcon(_('fa fa-calendar'));
     }
+
     /**
      */
     public function startup() {
@@ -67,6 +67,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function getNavBarVariant() {
-        return ['event bg-light', 'light'];
+        return ['event bg-dark', 'dark'];
     }
 }

@@ -2,6 +2,7 @@
     <a href="{$control->getLink($node)}"
             n:class="($level == 0) ? 'nav-link dropdown-toggle':'dropdown-item',$control->isActive($node)?'active':''"
             n:attr="data-toggle => ($level == 0) ? 'dropdown' : null">
+        <i class="{$control->getIcon($node)}"></i>
         {$control->getTitle($node)}
     </a>
 

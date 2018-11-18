@@ -50,6 +50,7 @@ acl:
     - addResource(fyziklani)
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
+    - addResource(event.dashboard) # default
 
     # ACL
     - allow(contestant, submit, upload)
@@ -113,6 +114,8 @@ acl:
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
     - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
+    # eventModule
+    - allow(registered, event.dashboard)
 
 
     - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
