@@ -269,3 +269,7 @@ body[data-contest="vyfuk"] h6 {
     height: 1px;
     border: solid 2px;
 }
+
+.event-type-1 {
+    background-color: #d7392e;
+}

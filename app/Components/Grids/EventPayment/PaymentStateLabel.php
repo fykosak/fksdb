@@ -43,7 +43,7 @@ class PaymentStateLabel extends Control {
             case ModelEventPayment::STATE_CANCELED:
                 $label = _('Zrušená platba');
                 break;
-            case ModelEventPayment::STATE_CONFIRMED:
+            case ModelEventPayment::STATE_RECEIVED:
                 $label = _('Platba prijatá');
         }
 

@@ -28,22 +28,20 @@
     <thead>
     <tr>
         <th>{_('Item')}</th>
-        <th>{_('Price Kč')}</th>
-        <th>{_('Price €')}</th>
+        <th>{_('Price')}</th>
     </tr>
     </thead>
     <tbody>
     {foreach $items as $item}
         <tr>
             <td>{$item['label']}</td>
-            <td>{$item['kc']}</td>
-            <td>{$item['eur']}</td>
+            <td>{$item['price']->getAmount()}
+                {FKSDB\EventPayment\PriceCalculator\Price::getLabel($item['price']->getCurrency())}</td>
         </tr>
     {/foreach}
     <tr class="table-primary">
         <td>{_('Spolu')}</td>
-        <td>{$model->price_kc}</td>
-        <td>{$model->price_eur}</td>
+        <td>{$model->price} {FKSDB\EventPayment\PriceCalculator\Price::getLabel($model->currency)}</td>
     </tr>
     </tbody>
 
@@ -98,24 +96,14 @@
                 </div>
             </div>
         {/if}
-        {if $model->price_kc}
+
+        {if $model->price}
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Price Kč')}</label>
+                <label class="col-sm-2 col-form-label">{_('Price')}</label>
                 <div class="col-sm-10">
                     <input class="form-control-plaintext"
                            readonly
-                           value="{$model->price_kc}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-        {if $model->price_eur}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Price €')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->price_eur}"
+                           value="{$model->price} {FKSDB\EventPayment\PriceCalculator\Price::getLabel($model->currency)}"
                            title="name"/>
                 </div>
             </div>

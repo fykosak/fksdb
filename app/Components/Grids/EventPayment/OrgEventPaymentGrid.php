@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\EventPayment;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\EventPayment\Transition\UnavailableTransitionException;
@@ -65,7 +66,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         });
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
             $model = ModelEventPayment::createFromTableRow($row);
-            return $model->price_kc . ' Kč/' . $model->price_eur . ' €';
+            return $model->price . ' ' . Price::getLabel($model->currency);
         });
         $this->addColumn('constant_symbol', _('CS'));
         $this->addColumn('variable_symbol', _('VS'));

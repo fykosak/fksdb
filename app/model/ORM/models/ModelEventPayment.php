@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
+use Nette\DateTime;
 use Nette\Diagnostics\Debugger;
 use Nette\Security\IResource;
 
@@ -18,18 +19,20 @@ use Nette\Security\IResource;
  * @property integer event_id
  * @property string data
  * @property string state
- * @property float price_kc
- * @property float price_eur
+ * @property float price
+ * @property string currency
+ * @property DateTime created
+ * @property DateTime received
  * @property string constant_symbol
  * @property string variable_symbol
  * @property string specific_symbol
  * @property string bank_account
  */
 class ModelEventPayment extends AbstractModelSingle implements IResource {
-    const STATE_WAITING = 'waiting';
-    const STATE_CONFIRMED = 'confirmed';
-    const STATE_CANCELED = 'canceled';
-    const STATE_NEW = 'new';
+    const STATE_WAITING = 'waiting'; // waitign for confimr payment
+    const STATE_RECEIVED = 'received'; // platba prijatá
+    const STATE_CANCELED = 'canceled'; // platba zrušená
+    const STATE_NEW = 'new'; // nová platba
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
@@ -86,7 +89,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
             case ModelEventPayment::STATE_CANCELED:
                 $class .= 'badge-secondary';
                 break;
-            case ModelEventPayment::STATE_CONFIRMED:
+            case ModelEventPayment::STATE_RECEIVED:
                 $class .= 'badge-success';
                 break;
             case ModelEventPayment::STATE_NEW:

@@ -85,7 +85,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public function getEventId() {
         if (!$this->eventId) {
-            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
+            $this->redirect('Dispatch:default');
         }
         return $this->eventId;
     }
@@ -112,8 +112,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
+    protected function isContestsOrgAllowed($resource, $privilege) {
+        $contest = $this->getContest();
+        if (!$contest) {
+            return false;
+        }
+        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
+    }
+
+
     public function getNavBarVariant() {
-        return ['event event-type-' . $this->getEvent()->event_type_id, 'light'];
+
+        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
     }
 
     public function getNavRoot() {

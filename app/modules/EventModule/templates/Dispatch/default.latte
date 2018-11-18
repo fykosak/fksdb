@@ -1,0 +1,42 @@
+{layout '../@layout.v4.latte'}
+{block content}
+    {dump $events}
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_('Event id')}</th>
+            <th>{_('Name')}</th>
+            <th>{_('Contest')}</th>
+            <th>{_('Centest year')}</th>
+            <th>{_('Your permissions')}</th>
+            <th>{_('Actions')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $events as $event}
+            <tr>
+                <td>{$event['model']->event_id}</td>
+                <td>{$event['model']->name}</td>
+                <td>{control contestBadge $event['model']->event_type->contest_id}</td>
+                <td>{$event['model']->year}</td>
+                <td>
+                    {foreach $event['permissions'] as $name=>$value}
+                        {if $value}
+                            {if $name=='isOrg'}
+                                <span class="badge badge-warning">{_('Contest org')}</span>
+                            {elseif $name=='isEventParticipant'}
+                                <span class="badge badge-primary">{_('Event participant')}</span>
+                            {elseif $name=='isEventOrg'}
+                                <span class="badge badge-info">{_('Event org')}</span>
+                            {/if}
+                        {/if}
+                    {/foreach}
+                </td>
+                <td><a class="btn btn-sm btn-primary"
+                       href="{link Dashboard:default eventId=>$event['model']->event_id}">{_('Detail')}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

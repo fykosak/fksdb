@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
+use FKSDB\Components\Forms\Factories\EventPayment\CurrencyField;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\ORM\ModelEventPayment;
@@ -36,6 +37,7 @@ class EventPaymentFactory {
         if ($isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         }
+        $form->addComponent(new CurrencyField(), 'currency');
         $form->addText('data', _('Data')); // todo react?
         $form->addSubmit('save', _('Save'));
         return $control;
@@ -44,6 +46,7 @@ class EventPaymentFactory {
     public function createCreateForm(Machine $machine, $isOrg) {
         $control = new FormControl();
         $form = $control->getForm();
+        $form->addComponent(new CurrencyField(), 'currency');
         $form->addText('data', _('Data'));
         $this->appendTransitionsButtons(null, $machine, $form, $isOrg);
         return $control;

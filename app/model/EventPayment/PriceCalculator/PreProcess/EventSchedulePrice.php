@@ -2,6 +2,7 @@
 
 namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
 use Nette\Application\BadRequestException;
@@ -12,7 +13,8 @@ class EventSchedulePrice extends AbstractPreProcess {
      */
     private $serviceEventParticipant;
 
-    public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(\ServiceEventParticipant $serviceEventParticipant, $currency) {
+        parent::__construct($currency);
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -23,8 +25,7 @@ class EventSchedulePrice extends AbstractPreProcess {
             $participantSchedule = $this->getParticipantSchedule($id);
             if ($participantSchedule) {
                 $price = $this->calculateSchedule($participantSchedule, $schedule);
-                $this->price['kc'] += $price['kc'];
-                $this->price['eur'] += $price['eur'];
+                $this->price->add($price);
             }
         }
     }
@@ -45,8 +46,7 @@ class EventSchedulePrice extends AbstractPreProcess {
                 $price = $this->calculateSchedule($participantSchedule, $schedule);
                 $items[] = [
                     'label' => '',
-                    'kc' => $price['kc'],
-                    'eur' => $price['eur'],
+                    'price' => $price,
                 ];
 
             }
@@ -54,13 +54,20 @@ class EventSchedulePrice extends AbstractPreProcess {
         return $items;
     }
 
-    private function calculateSchedule($participantSchedule, $schedule) {
+    private function calculateSchedule($participantSchedule, $schedule): Price {
         $data = \json_decode($participantSchedule);
-        $price = ['eur' => 0, 'kc' => 0];
+
+        $price = new Price(0, $this->price->getCurrency());
         foreach ($data as $key => $selectedId) {
             $parallel = $this->findScheduleItem($schedule, $key, $selectedId);
-            $price['kc'] += $parallel['price']['kc'];
-            $price['eur'] += $parallel['price']['eur'];
+            switch ($price->getCurrency()) {
+                case Price::CURRENCY_EUR:
+                    $price->addAmount($parallel['price']['eur']);
+                    break;
+                case Price::CURRENCY_KC:
+                    $price->addAmount($parallel['price']['kc']);
+                    break;
+            }
         }
         return $price;
     }

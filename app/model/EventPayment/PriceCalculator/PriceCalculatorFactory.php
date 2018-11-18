@@ -21,13 +21,11 @@ class PriceCalculatorFactory {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-    public function createCalculator(ModelEvent $event) {
-        $calculator = new PriceCalculator($event);
-        $calculator->addPreProcess(new EventPrice($this->serviceEventParticipant));
+    public function createCalculator(ModelEvent $event, $currency) {
+        $calculator = new PriceCalculator($event, $currency);
+        $calculator->addPreProcess(new EventPrice($this->serviceEventParticipant, $currency));
         // $calculator->addPreProcess(new EventSchedulePrice($this->serviceEventParticipant));// TODO mergnuť s programom pre FOF
-        $calculator->addPreProcess(new EventAccommodationPrice($this->serviceEventPersonAccommodation));
+        $calculator->addPreProcess(new EventAccommodationPrice($this->serviceEventPersonAccommodation, $currency));
         return $calculator;
     }
-
-
 }

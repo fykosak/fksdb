@@ -14,9 +14,14 @@ class PriceCalculator {
      * @var ModelEvent
      */
     private $event;
+    /**
+     * @var string
+     */
+    private $currency;
 
-    public function __construct(ModelEvent $event) {
+    public function __construct(ModelEvent $event, $currency) {
         $this->event = $event;
+        $this->currency = $currency;
     }
 
     public function addPreProcess(AbstractPreProcess $preProcess) {
@@ -24,11 +29,10 @@ class PriceCalculator {
     }
 
     public function execute(array $data) {
-        $price = ['kc' => 0, 'eur' => 0];
+        $price = new Price(0, $this->currency);
         foreach ($this->preProcess as $preProcess) {
             $preProcess->calculate($data, $this->event);
-            $price['kc'] += $preProcess->getPrice()['kc'];
-            $price['eur'] += $preProcess->getPrice()['eur'];
+            $price->add($preProcess->getPrice());
         }
         return $price;
     }
@@ -39,6 +43,10 @@ class PriceCalculator {
             $items = \array_merge($items, $preProcess->getGridItems($data, $this->event));
         }
         return $items;
+    }
+
+    public function getCurrencies() {
+        return Price::getAllCurrencies();
     }
 
 }

@@ -227,7 +227,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function isEventParticipant($eventId = null): bool {
         $tmp = $this->getEventParticipant();
         if ($eventId) {
-            $tmp->where('action_id = ?', $eventId);
+            $tmp->where('event_id = ?', $eventId);
         }
 
         if ($tmp->count() > 0) {

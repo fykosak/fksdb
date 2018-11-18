@@ -2,8 +2,10 @@
 
 namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
+use Nette\NotImplementedException;
 
 class EventPrice extends AbstractPreProcess {
     /**
@@ -11,7 +13,8 @@ class EventPrice extends AbstractPreProcess {
      */
     private $serviceEventParticipant;
 
-    public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
+    public function __construct(\ServiceEventParticipant $serviceEventParticipant, $currency) {
+        parent::__construct($currency);
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -20,7 +23,7 @@ class EventPrice extends AbstractPreProcess {
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
-            $this->price['kc'] += $model->price;
+            $this->price->add($this->getPriceFromModel($model));
         }
     }
 
@@ -35,11 +38,21 @@ class EventPrice extends AbstractPreProcess {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
             $items[] = [
-                'kc' => $model->price,
-                'eur' => 'N/A',
+                'price' => $this->getPriceFromModel($model),
                 'label' => '',// TODO
             ];
         }
         return $items;
+    }
+
+    private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation): Price {
+        switch ($this->price->getCurrency()) {
+            case Price::CURRENCY_KC:
+                $amount = $modelEventAccommodation->price;
+                break;
+            default:
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $this->price->getCurrency()));
+        }
+        return new Price($amount, $this->price->getCurrency());
     }
 }

@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
@@ -14,6 +15,7 @@ use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
+use Nette\NotImplementedException;
 
 class PaymentPresenter extends BasePresenter {
     /**
@@ -85,29 +87,29 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function titleDetail() {
-        $this->setTitle(\sprintf(_('Detail platby #%s'), $this->getModel()->getPaymentId()));
+        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
     public function titleList() {
-        $this->setTitle(\sprintf(_('List of payment')));
+        $this->setTitle(\sprintf(_('List of payments')));
         $this->setIcon('fa fa-credit-card');
     }
 
     public function authorizedDetail() {
-        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'detail', $this->getContest()));
+        return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
     public function authorizedEdit() {
-        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getContest()));
+        return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'edit'));
     }
 
     public function authorizedCreate() {
-        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.payment', 'create', $this->getContest()));
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
     public function authorizedList() {
-        return $this->setAuthorized($this->getContestAuthorizator()->isAllowed('event.payment', 'list', $this->getContest()));
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
 
     private function getModel(): ModelEventPayment {
@@ -119,7 +121,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function getPriceCalculator(): PriceCalculator {
-        return $this->priceCalculatorFactory->createCalculator($this->getEvent());
+        return $this->priceCalculatorFactory->createCalculator($this->getEvent(), $this->getModel()->currency);
     }
 
     private function getSymbolGenerator(): AbstractSymbolGenerator {
@@ -133,9 +135,22 @@ class PaymentPresenter extends BasePresenter {
         return $this->machine;
     }
 
+    public function startup() {
+        parent::startup();
+        // protection not implements eventPayment
+        try {
+            $this->getMachine();
+        } catch (NotImplementedException $e) {
+            $this->flashMessage('Event has not payment API');
+            $this->redirect(':Event:Dashboard:default');
+        }
+
+
+    }
+
     public function handleCreateForm(Form $form) {
         $values = $form->getValues();
-        $price = ['kc' => 251, 'eur' => 11];
+        $price = new Price(0, $values->currency);
 
         //$calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
         //$price = $calculator->execute($values->data);
@@ -147,8 +162,8 @@ class PaymentPresenter extends BasePresenter {
             'event_id' => $this->getEvent()->event_id,
             'data' => '',
             'state' => null,
-            'price_kc' => $price['kc'],
-            'price_eur' => $price['eur'],
+            'price' => $price->getAmount(),
+            'currency' => $price->getCurrency(),
         ]);
         $this->serviceEventPayment->save($model);
 
@@ -169,7 +184,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function actionEdit() {
-        if ($this->getModel()->canEdit() || $this->getContestAuthorizator()->isAllowed($this->getModel(), 'org.edit', $this->getContest())) {
+        if ($this->getModel()->canEdit() || $this->isContestsOrgAllowed($this->getModel(), 'org.edit')) {
             $this['editForm']->getForm()->setDefaults($this->getModel());
         } else {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
@@ -179,7 +194,9 @@ class PaymentPresenter extends BasePresenter {
 
     public function handleEditForm(Form $form) {
         $values = $form->getValues();
-        $price = ['kc' => 251, 'eur' => 11];
+
+        $price = new Price();
+        $price->setCurrency($values->currency);
 
         //$calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
         //$price = $calculator->execute($values->data);
@@ -189,8 +206,8 @@ class PaymentPresenter extends BasePresenter {
         $model = $this->getModel();
         $model->update([
             'data' => '',
-            'price_kc' => $price['kc'],
-            'price_eur' => $price['eur'],
+            'price' => $price->getAmount(),
+            'currency' => $price->getCurrency(),
         ]);
         $this->serviceEventPayment->save($model);
         $this->redirect('detail', ['id' => $model->payment_id]);
@@ -231,7 +248,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function createComponentEditForm(): FormControl {
-        $control = $this->eventPaymentFactory->createEditForm($this->getContestAuthorizator()->isAllowed($this->getModel(), 'org.edit', $this->getContest()));
+        $control = $this->eventPaymentFactory->createEditForm($this->isContestsOrgAllowed($this->getModel(), 'org.edit'));
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->handleEditForm($form);
         };

@@ -33,7 +33,7 @@ class Fyziklani13Payment extends AbstractEventTransitions {
         $machine->addTransition($transition);
 
 
-        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_CONFIRMED, _('Zaplatil'));
+        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_RECEIVED, _('Zaplatil'));
         //  $transition->onExecuted[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/confirm', 'michalc@fykos.cz', $options);
         $transition->setForOrgOnly(true);
         $transition->setType(Transition::TYPE_SUCCESS);

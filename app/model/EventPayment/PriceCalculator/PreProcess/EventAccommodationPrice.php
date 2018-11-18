@@ -2,9 +2,11 @@
 
 namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelEventPersonAccommodation;
+use Nette\NotImplementedException;
 
 class EventAccommodationPrice extends AbstractPreProcess {
     /**
@@ -12,7 +14,8 @@ class EventAccommodationPrice extends AbstractPreProcess {
      */
     private $serviceEventPersonAccommodation;
 
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, $currency) {
+        parent::__construct($currency);
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
@@ -20,8 +23,8 @@ class EventAccommodationPrice extends AbstractPreProcess {
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $eventAcc = $this->getAccommodation($id);
-            $this->price['kc'] += $eventAcc->price_kc;
-            $this->price['eur'] += $eventAcc->price_eur;
+            $price = $this->getPriceFromModel($eventAcc);
+            $this->price->add($price);
         }
     }
 
@@ -40,13 +43,27 @@ class EventAccommodationPrice extends AbstractPreProcess {
             $eventAcc = $model->getEventAccommodation();
             $fromDate = $eventAcc->date->format('d. m.');
             $toDate = $eventAcc->date->add(new \DateInterval('P1D'))->format('d. m. Y');
+
             $items[] = [
-                'label' => \sprintf(_('Ubytovaní pre osobu %s od %s do %s'), $model->getPerson()->getFullName(), $fromDate, $toDate),
-                'kc' => $eventAcc->price_kc,
-                'eur' => $eventAcc->price_eur,
+                'label' => \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $model->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name),
+                'price' => $this->getPriceFromModel($eventAcc),
             ];
         }
         return $items;
+    }
+
+    private function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation): Price {
+        switch ($this->price->getCurrency()) {
+            case Price::CURRENCY_KC:
+                $amount = $modelEventAccommodation->price_kc;
+                break;
+            case Price::CURRENCY_EUR:
+                $amount = $modelEventAccommodation->price_eur;
+                break;
+            default:
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $this->price->getCurrency()));
+        }
+        return new Price($amount, $this->price->getCurrency());
     }
 
     protected function getData(array $data) {
