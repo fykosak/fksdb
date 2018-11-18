@@ -2,11 +2,14 @@
 
 namespace FKSDB\EventPayment\Transition;
 
+use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
+use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Transitions\Fyziklani13Payment;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
 use Mail\MailTemplateFactory;
-use Nette\Diagnostics\Debugger;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\NotImplementedException;
@@ -19,6 +22,17 @@ use Nette\NotImplementedException;
 class TransitionsFactory {
     private $mailer;
     private $mailTemplateFactory;
+
+    /**
+     * @var PriceCalculatorFactory
+     */
+    private $priceCalculatorFactory;
+
+    /**
+     * @var SymbolGeneratorFactory
+     */
+    private $symbolGeneratorFactory;
+
 
     public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory) {
         $this->mailer = $mailer;
@@ -56,10 +70,19 @@ class TransitionsFactory {
         };
     }
 
+    private function getPriceCalculator(ModelEvent $event, $currency): PriceCalculator {
+        return $this->priceCalculatorFactory->createCalculator($event, $currency);
+    }
+
+    private function getSymbolGenerator(ModelEvent $event): AbstractSymbolGenerator {
+        return $this->symbolGeneratorFactory->createGenerator($event);
+    }
+
     public function setUpMachine(ModelEvent $event): Machine {
         $factory = $this->createEventTransitions($event);
         $machine = $factory->createMachine();
         $factory->createTransitions($machine);
+
         return $machine;
     }
 }

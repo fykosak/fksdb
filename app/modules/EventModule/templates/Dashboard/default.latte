@@ -1,4 +1,26 @@
 {layout '../@layout.v4.latte'}
 {block content}
+    <h2>{_('Info')}</h2>
+    <h3>{$event->name}</h3>
+    <p>{$event->report}</p>
+    <ul class="list-group mb-3">
+        <li class="list-group-item ">
+            <span class="col-6">{_('Ročník semináru')}: </span>
+            <span class="col-6">{$event->year}</span>
+        </li>
+        <li class="list-group-item">
+            <span class="col-6">{_('Ročník akcie')}: </span>
+            <span class="col-6">{$event->event_year}</span>
+        </li>
+        <li class="list-group-item">
+            <span class="col-6">{_('Začitaok')}: </span>
+            <span class="col-6">{$event->begin}</span>
+        </li>
+        <li class="list-group-item">
+            <span class="col-6">{_('Koniec')}: </span>
+            <span class="col-6">{$event->end}</span>
+        </li>
+    </ul>
+    <h2>{_('Akcie')}</h2>
     {control navigation, "event.dashboard.default"}
 {/block}

@@ -62,7 +62,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $languageChooser = $this['languageChooser'];
         $languageChooser->syncRedirect();
 
-        $this->event = $this->getEvent();
         if (!$this->eventExist()) {
             throw new BadRequestException('Event nebyl nalezen.', 404);
         }
@@ -122,7 +121,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
 
     public function getNavBarVariant() {
-
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
     }
 

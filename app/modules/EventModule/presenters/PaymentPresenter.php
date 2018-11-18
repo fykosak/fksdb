@@ -10,6 +10,7 @@ use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbols;
 use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
@@ -97,25 +98,46 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function authorizedDetail() {
+        if (!$this->hasApi()) {
+            return $this->setAuthorized(false);;
+        }
         return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
     public function authorizedEdit() {
-        return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'edit'));
+        if (!$this->hasApi()) {
+            return $this->setAuthorized(false);;
+        }
+        return $this->setAuthorized($this->canEdit());
     }
 
     public function authorizedCreate() {
+        if (!$this->hasApi()) {
+            return $this->setAuthorized(false);
+        }
         return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
     public function authorizedList() {
+        if (!$this->hasApi()) {
+            return $this->setAuthorized(false);;
+        }
         return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
+    }
+
+    /**
+     * Is org or (is own payment and can edit)
+     * @return bool
+     */
+    private function canEdit() {
+        return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) || $this->isContestsOrgAllowed($this->getModel(), 'org.edit');
     }
 
     private function getModel(): ModelEventPayment {
         if (!$this->model) {
             $row = $this->serviceEventPayment->findByPrimary($this->id);
             $this->model = ModelEventPayment::createFromTableRow($row);
+            $this->model->getRelatedPersonAccommodation();
         }
         return $this->model;
     }
@@ -138,22 +160,23 @@ class PaymentPresenter extends BasePresenter {
     public function startup() {
         parent::startup();
         // protection not implements eventPayment
+        if (!$this->hasApi()) {
+            $this->flashMessage('Event has not payment API');
+            $this->redirect(':Event:Dashboard:default');
+        };
+    }
+
+    private function hasApi() {
         try {
             $this->getMachine();
         } catch (NotImplementedException $e) {
-            $this->flashMessage('Event has not payment API');
-            $this->redirect(':Event:Dashboard:default');
+            return false;
         }
-
-
+        return true;
     }
 
     public function handleCreateForm(Form $form) {
         $values = $form->getValues();
-        $price = new Price(0, $values->currency);
-
-        //$calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
-        //$price = $calculator->execute($values->data);
         /**
          * @var $model ModelEventPayment
          */
@@ -162,10 +185,10 @@ class PaymentPresenter extends BasePresenter {
             'event_id' => $this->getEvent()->event_id,
             'data' => '',
             'state' => null,
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
         ]);
         $this->serviceEventPayment->save($model);
+
+        $this->updatePrice($model, $values);
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
@@ -173,6 +196,18 @@ class PaymentPresenter extends BasePresenter {
                 $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
+    }
+
+    private function updatePrice(ModelEventPayment &$modelEventPayment, $values) {
+        $price = new Price(0, $values->currency);
+
+        // $calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent(), $values->currency);
+        //  $price = $calculator->execute($values->data, $model);
+
+        $modelEventPayment->update([
+            'price' => $price->getAmount(),
+            'currency' => $price->getCurrency(),
+        ]);
     }
 
     public function createComponentCreateForm(): FormControl {
@@ -184,7 +219,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function actionEdit() {
-        if ($this->getModel()->canEdit() || $this->isContestsOrgAllowed($this->getModel(), 'org.edit')) {
+        if ($this->canEdit()) {
             $this['editForm']->getForm()->setDefaults($this->getModel());
         } else {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
@@ -194,22 +229,16 @@ class PaymentPresenter extends BasePresenter {
 
     public function handleEditForm(Form $form) {
         $values = $form->getValues();
-
-        $price = new Price();
-        $price->setCurrency($values->currency);
-
-        //$calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent());
-        //$price = $calculator->execute($values->data);
         /**
          * @var $model ModelEventPayment
          */
         $model = $this->getModel();
         $model->update([
             'data' => '',
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
         ]);
-        $this->serviceEventPayment->save($model);
+
+        $this->updatePrice($model, $values);
+
         $this->redirect('detail', ['id' => $model->payment_id]);
     }
 
@@ -223,10 +252,15 @@ class PaymentPresenter extends BasePresenter {
                     $this->redirect('edit');
                 } else {
                     $model = $this->getModel();
-                    $model->update($generator->crate($model));
-                    $this->serviceEventPayment->save($model);
-                    $model->executeTransition($this->getMachine(), $name, false);
-                    $this->redirect('detail');
+                    try {
+                        $model->update($generator->create($model));
+                        $this->serviceEventPayment->save($model);
+                        $model->executeTransition($this->getMachine(), $name, false);
+                        $this->redirect('detail');
+                    } catch (AlreadyGeneratedSymbols $e) {
+                        $this->flashMessage($e->getMessage(), 'danger');
+                        $this->redirect('this');
+                    }
                 }
             }
         }

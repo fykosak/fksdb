@@ -12,4 +12,8 @@ class DashboardPresenter extends BasePresenter {
     public function authorizedDefault() {
         //$this->setAuthorized($this->eventIsAllowed('event', 'dashboard'));
     }
+
+    public function renderDefault() {
+        $this->template->event = $this->getEvent();
+    }
 }

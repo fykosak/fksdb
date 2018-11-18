@@ -3,10 +3,10 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
+use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
 use Nette\Security\IResource;
 
 /**
@@ -42,6 +42,15 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
         return ModelEvent::createFromTableRow($this->event);
     }
 
+    public function getRelatedPersonAccommodation() {
+        $query = $this->related(\DbNames::TAB_EVENT_PAYMENT_TO_PERSON_ACCOMMODATION, 'payment_id');
+        $items = [];
+        foreach ($query as $row) {
+            $items[] = ModelEventPersonAccommodation::createFromTableRow($row->event_person_accommodation);
+        }
+        return $items;
+    }
+
     public function getResourceId(): string {
         return 'event.payment';
     }
@@ -68,6 +77,10 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
      */
     public function canEdit(): bool {
         return \in_array($this->state, [self::STATE_NEW]);
+    }
+
+    public function getPrice(): Price {
+        return new Price($this->price, $this->currency);
     }
 
     /**

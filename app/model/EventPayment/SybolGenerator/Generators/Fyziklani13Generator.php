@@ -2,18 +2,18 @@
 
 namespace FKSDB\EventPayment\SymbolGenerator\Generators;
 
+use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbols;
 use FKSDB\ORM\ModelEventPayment;
-use http\Exception\BadMethodCallException;
 
 class Fyziklani13Generator extends \FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator {
     public function __construct(\ServiceEventPayment $serviceEventPayment) {
         parent::__construct($serviceEventPayment);
     }
 
-    public function crate(ModelEventPayment $modelEventPayment) {
+    public function create(ModelEventPayment $modelEventPayment) {
 
-        if ($modelEventPayment->constant_symbol || $modelEventPayment->variable_symbol || $modelEventPayment->specific_symbol) {
-            throw new BadMethodCallException('Platba má už vygenerované symboly');
+        if ($modelEventPayment->hasGeneratedSymbols()) {
+            throw new AlreadyGeneratedSymbols(\sprintf(_('Payment #%s has already generated symbols.'), $modelEventPayment->getPaymentId()));
         }
         $maxVariableSymbol = $this->serviceEventPayment->where('event_id', $modelEventPayment->event_id)->max('variable_symbol');
         $variableId = $maxVariableSymbol % 7292000;

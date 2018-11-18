@@ -106,7 +106,7 @@ class OrgEventPaymentGrid extends BaseGrid {
     public function handleTransition(int $id, string $transition) {
         $row = $this->serviceEventPayment->findByPrimary($id);
         if (!$row) {
-            $this->flashMessage('Payment doesn\'t exists.');
+            $this->flashMessage('Payment doesnt exists.');
             return;
         }
         $model = ModelEventPayment::createFromTableRow($row);

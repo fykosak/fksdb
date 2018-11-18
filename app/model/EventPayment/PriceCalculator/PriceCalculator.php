@@ -4,6 +4,7 @@ namespace FKSDB\EventPayment\PriceCalculator;
 
 use FKSDB\EventPayment\PriceCalculator\PreProcess\AbstractPreProcess;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelEventPayment;
 
 class PriceCalculator {
     /**
@@ -28,7 +29,7 @@ class PriceCalculator {
         $this->preProcess[] = $preProcess;
     }
 
-    public function execute(array $data) {
+    public function execute(array $data, ModelEventPayment $modelEventPayment) {
         $price = new Price(0, $this->currency);
         foreach ($this->preProcess as $preProcess) {
             $preProcess->calculate($data, $this->event);

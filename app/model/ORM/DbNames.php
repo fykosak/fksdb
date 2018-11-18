@@ -44,6 +44,7 @@ class DbNames {
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
     const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
+    const TAB_EVENT_PAYMENT_TO_PERSON_ACCOMMODATION = 'event_payment_to_person_accommodation';
 
     /* Specified tables for events */
     const TAB_E_DSEF_GROUP = 'e_dsef_group';

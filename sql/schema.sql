@@ -1236,6 +1236,25 @@ CREATE TABLE IF NOT EXISTS `event_payment`(
     ON UPDATE NO ACTION
 ) ENGINE='InnoDB';
 
+
+CREATE TABLE IF NOT EXISTS `event_payment_to_person_accommodation`(
+  `event_payment_to_person_accommodation` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `payment_id` INT(11) NOT NULL,
+  `event_person_accommodation_id`  INT(11) NOT NULL,
+  INDEX `fk_event_payment_to_person_accommodation_1_idx` (`payment_id` ASC),
+  INDEX `fk_event_payment_to_person_accommodation_2_idx` (`event_person_accommodation_id` ASC),
+  CONSTRAINT `fk_event_payment_to_person_accommodation_event_person_accommodation1`
+  FOREIGN KEY (`event_person_accommodation_id`)
+  REFERENCES `event_person_accommodation` (`event_person_accommodation_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_payment_to_person_accommodation_payment_1`
+  FOREIGN KEY (`payment_id`)
+  REFERENCES `event_payment` (`payment_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE='InnoDB';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

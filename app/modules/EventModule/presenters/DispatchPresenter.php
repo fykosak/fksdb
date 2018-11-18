@@ -6,6 +6,7 @@ namespace EventModule;
 use AuthenticatedPresenter;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
+use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
 use Nette\DI\Container;
@@ -41,36 +42,18 @@ class DispatchPresenter extends AuthenticatedPresenter {
         return new ContestBadge();
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Výber eventu'));
-        $this->setIcon(_('fa fa-calendar'));
-    }
-
-    public function renderDefault() {
+    public function createComponentDispatchGrid() {
         /**
          * @var $person ModelPerson
          */
         $person = $this->user->getIdentity()->getPerson();
-        $events = [];
-        foreach ($this->serviceEvent->getTable() as $row) {
-            $modelEvent = ModelEvent::createFromTableRow($row);
-            $isEventParticipant = $person->isEventParticipant($modelEvent->event_id);
-            $isEventOrg = count($person->getEventOrg()->where('event_id', $modelEvent->event_id));
-            $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $person->getActiveOrgs($this->getYearCalculator()));
-            if ($isEventParticipant || $isEventOrg || $isOrg) {
-                $events[] = [
-                    'model' => $modelEvent,
-                    'permissions' => [
-                        'isEventParticipant' => $isEventParticipant,
-                        'isEventOrg' => $isEventOrg,
-                        'isOrg' => $isOrg,
-                    ],
-                ];
-            }
-        }
-        $this->template->events = $events;
+        return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
     }
 
+    public function titleDefault() {
+        $this->setTitle(_('Výber eventu'));
+        $this->setIcon(_('fa fa-calendar'));
+    }
     /**
      */
     public function startup() {
@@ -84,6 +67,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function getNavBarVariant() {
-        return ['event', 'light'];
+        return ['event bg-light', 'light'];
     }
 }

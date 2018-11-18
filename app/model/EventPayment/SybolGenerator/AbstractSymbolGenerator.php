@@ -14,5 +14,10 @@ abstract class AbstractSymbolGenerator {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 
-    abstract public function crate(ModelEventPayment $modelEventPayment);
+    /**
+     * @param ModelEventPayment $modelEventPayment
+     * @return mixed
+     * @throws AlreadyGeneratedSymbols
+     */
+    abstract public function create(ModelEventPayment $modelEventPayment);
 }

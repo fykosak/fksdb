@@ -44,7 +44,6 @@ navigation:
             - vyfuk
             - fyziklani
         fyziklani.dashboard.default:
-            - dispatch.default
             - fyziklani.submit.entry
             - fyziklani.submit.table
             - fyziklani.close.table
@@ -64,4 +63,5 @@ navigation:
         event.dashboard.default:
             - event.payment.list
             - event.payment.create
+            - fyziklani.dashboard.default
 
