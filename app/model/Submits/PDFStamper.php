@@ -5,6 +5,7 @@ namespace Submits;
 use fks_pdf_parser_exception;
 use FKSDB\ORM\ModelSubmit;
 use FPDI;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
@@ -81,6 +82,7 @@ class PDFStamper implements IStorageProcessing {
         try {
             $this->stampText($stampText);
         } catch (fks_pdf_parser_exception $e) {
+            Debugger::barDump($e);
             throw new ProcessingException('Cannot add stamp to the PDF.', null, $e);
         }
     }
@@ -106,12 +108,11 @@ class PDFStamper implements IStorageProcessing {
             $th = $this->getFontSize() * 0.35; // 1pt = 0.35mm
             $x = ($pw - $tw) / 2;
             $y = $th + $offset;
-            $tmpQRCodeFile = '';
             // stamp background
             $margin = 2;
             $pdf->SetFillColor(240, 240, 240);
             $pdf->Rect($x - $margin, $y - $th - $margin, $tw + 2 * $margin, ($th + 2 * $margin), 'F');
-            $pdf->Image($tmpQRCodeFile, $y, $y, $th, $th);
+
             $stampText = Strings::webalize($text, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Text($x, $y, $stampText);
         }
