@@ -14,11 +14,11 @@
         </li>
         <li class="list-group-item">
             <span class="col-6">{_('Event begin')}: </span>
-            <span class="col-6">{$event->begin}</span>
+            <span class="col-6">{$event->begin->format('d. m. Y')}</span>
         </li>
         <li class="list-group-item">
             <span class="col-6">{_('Event end')}: </span>
-            <span class="col-6">{$event->end}</span>
+            <span class="col-6">{$event->end->format('d. m. Y')}</span>
         </li>
         <li class="list-group-item">
             <a class="col-12" href="{$webUrl}">{_('Event web-site')}</a>

@@ -72,7 +72,7 @@ class DispatchGrid extends BaseGrid {
             }
             $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
             if ($isOrg) {
-                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('Event org')));
+                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('Contest org')));
             }
             return $container;
         })->setSortable(false);
@@ -86,6 +86,6 @@ class DispatchGrid extends BaseGrid {
                 return $this->getPresenter()->link('Dashboard:default', [
                     'eventId' => $row->event_id,
                 ]);
-            });
+            })->setClass('btn btn-sm btn-primary');
     }
 }

@@ -116,7 +116,7 @@ acl:
     - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
     # eventModule
     - allow(registered, event.dashboard)
-
+    - allow(org, event.dashboard)
 
     - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(guest, fyziklani, dashboard)

@@ -51,7 +51,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
 
     public function titleDefault() {
         $this->setTitle(_('List of events'));
-        $this->setIcon(_('fa fa-calendar'));
+        $this->setIcon('fa fa-calendar');
     }
 
     /**
