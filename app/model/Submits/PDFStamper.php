@@ -82,7 +82,6 @@ class PDFStamper implements IStorageProcessing {
         try {
             $this->stampText($stampText);
         } catch (fks_pdf_parser_exception $e) {
-            Debugger::barDump($e);
             throw new ProcessingException('Cannot add stamp to the PDF.', null, $e);
         }
     }
