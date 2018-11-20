@@ -2,16 +2,13 @@
 
 namespace FyziklaniModule;
 
-use AuthenticatedPresenter;
-use FKSDB\Components\Controls\Choosers\BrawlChooser;
-use FKSDB\Components\Controls\LanguageChooser;
+use EventModule\BasePresenter as EventBasePresenter;
+use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-use ServiceEvent;
 use ServiceFyziklaniSubmit;
 use ServiceFyziklaniTask;
 
@@ -20,19 +17,7 @@ use ServiceFyziklaniTask;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-abstract class BasePresenter extends AuthenticatedPresenter {
-
-    /**
-     *
-     * @var \FKSDB\ORM\ModelEvent
-     */
-    private $event;
-
-    /**
-     * @var int $eventID
-     * @persistent
-     */
-    public $eventID;
+abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @var FyziklaniFactory
@@ -40,31 +25,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected $fyziklaniFactory;
 
     /**
-     *
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     *
-     * @var ServiceEvent
-     */
-    protected $serviceEvent;
-
-    /**
-     *
      * @var ServiceFyziklaniTeam
      */
     protected $serviceFyziklaniTeam;
 
     /**
-     *
      * @var ServiceFyziklaniTask
      */
     protected $serviceFyziklaniTask;
 
     /**
-     *
      * @var ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
@@ -73,10 +43,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var \ServiceBrawlRoom
      */
     protected $serviceBrawlRoom;
+
     /**
      * @var \ServiceBrawlTeamPosition
      */
     protected $serviceBrawlTeamPosition;
+
     /**
      * @var FyziklaniComponentsFactory
      */
@@ -99,14 +71,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
 
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -120,96 +84,68 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return BrawlChooser
+     * @return FyziklaniChooser
      */
     protected function createComponentBrawlChooser() {
-        $control = new BrawlChooser($this->serviceEvent);
+        $control = new FyziklaniChooser($this->serviceEvent);
 
         return $control;
-    }
-
-    protected function createComponentLanguageChooser() {
-        $control = new LanguageChooser($this->session);
-
-        return $control;
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function startup() {
-        /**
-         * @var $languageChooser LanguageChooser
-         * @var $brawlChooser BrawlChooser
-         */
-        $languageChooser = $this['languageChooser'];
-        $brawlChooser = $this['brawlChooser'];
-        $languageChooser->syncRedirect();
-        $brawlChooser->setEvent($this->getEvent());
-
-        $this->event = $this->getEvent();
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event nebyl nalezen.', 404);
-        }
-        parent::startup();
     }
 
     /**
      * @return bool
+     * @throws \Nette\Application\AbortException
      */
-    protected function eventExist() {
-        return $this->getEvent() ? true : false;
+    protected function isEventFyziklani(): bool {
+        return $this->getEvent()->event_type_id === 1;
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function startup() {
+        parent::startup();
+        if (!$this->isEventFyziklani()) {
+            $this->flashMessage('Event nieje fyziklani', 'warning');
+            $this->redirect(':Event:Dashboard:default');
+        }
+        /**
+         * @var $brawlChooser FyziklaniChooser
+         */
+        $brawlChooser = $this['brawlChooser'];
+        $brawlChooser->setEvent($this->getEvent());
     }
 
     public function getSubtitle() {
-        return sprintf(_('%d. Fyziklání'), $this->getEvent()->event_year);
+        return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**
      * @return \ModelBrawlRoom[]
+     * @throws \Nette\Application\AbortException
      */
     protected function getRooms() {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
-    /**
-     * @return integer
-     */
-    public function getEventId() {
-        if (!$this->eventID) {
-            $this->eventID = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
-        }
-        return $this->eventID;
-    }
-
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
-        if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
-        }
-        return $this->event;
-    }
-
-    protected function eventIsAllowed($resource, $privilege) {
-        $event = $this->getEvent();
-        if (!$event) {
-            return false;
-        }
-        return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
-    }
-
-    public function getNavBarVariant() {
-        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-    }
+    /*  public function getNavBarVariant() {
+          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+      }*/
 
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
+    }
+
+    /**
+     * @return int
+     * @throws \Nette\Application\AbortException
+     */
+    public function getEventId() {
+        if (!$this->eventId) {
+            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
+        }
+        return $this->eventId;
     }
 
 }
