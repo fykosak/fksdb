@@ -40,6 +40,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return ModelLogin::createFromTableRow($logins->current());
     }
 
+    /**
+     * @return ModelPersonInfo|null
+     */
     public function getInfo() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -224,7 +227,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function isEventParticipant($eventId = null): bool {
         $tmp = $this->getEventParticipant();
         if ($eventId) {
-            $tmp->where('action_id = ?', $eventId);
+            $tmp->where('event_id = ?', $eventId);
         }
 
         if ($tmp->count() > 0) {

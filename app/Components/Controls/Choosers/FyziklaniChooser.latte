@@ -4,11 +4,11 @@
             {$currentEvent?  $currentEvent->name: _('Event') }
         </a>
         <div class="dropdown-menu">
-            {foreach $availableBrawls as $key => $brawl}
-                {if $brawl->event_id == $currentEvent->event_id}
-                    <span class="dropdown-item active">{$brawl->name}</span>
+            {foreach $availableFyziklani as $key => $fyziklani}
+                {if $fyziklani->event_id == $currentEvent->event_id}
+                    <span class="dropdown-item active">{$fyziklani->name}</span>
                 {else}
-                    <a class="dropdown-item" href="{link change! $brawl->event_id}">{$brawl->name}</a>
+                    <a class="dropdown-item" href="{link change! $fyziklani->event_id}">{$fyziklani->name}</a>
                 {/if}
             {/foreach}
         </div>
