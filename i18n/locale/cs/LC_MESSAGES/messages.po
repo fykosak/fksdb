@@ -776,13 +776,13 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:149
 #, php-format
 msgid "List of accommodated people of hostel \"%s\" at %s of event \"%s\""
-msgstr ""
+msgstr "Sezznam ubytovaných v hoteli \"%s\" v %s akce \"%s\""
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:160
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:12
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:37
-#: i18n/../app/Components/Grids/TeachersGrid.php:47
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:57
+#: i18n/../app/Components/Grids/TeachersGrid.php:47
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:37
 msgid "Name"
 msgstr ""
@@ -791,24 +791,24 @@ msgstr ""
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:13
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 msgid "Capacity"
-msgstr ""
+msgstr "Kapacita"
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:163
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:14
 msgid "Price Kč"
-msgstr ""
+msgstr "Cena Kč"
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:165
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:15
 msgid "Price €"
-msgstr ""
+msgstr "Cena €"
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:166
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:16
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:41
 #: i18n/../www/js/TypeScriptSources/src/events/accommodation/components/matrix/index.tsx.tsx2php:44
 msgid "Date"
-msgstr ""
+msgstr "Dátum"
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:242
 msgid "Ubytovaní založeno"
