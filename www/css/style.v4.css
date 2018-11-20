@@ -268,3 +268,7 @@ body[data-contest="vyfuk"] h6 {
 .event-type-1 {
     background-color: #d7392e;
 }
+
+h1 .small {
+    font-weight: 300;
+}

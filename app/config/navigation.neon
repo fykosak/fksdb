@@ -61,5 +61,5 @@ navigation:
             - fyziklani.results.teamStatistics
             - fyziklani.results.taskStatistics
         event.dashboard.default:
+            - event.dispatch.default
             - fyziklani.dashboard.default
-

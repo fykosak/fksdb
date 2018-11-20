@@ -43,23 +43,23 @@ class DashboardPresenter extends BasePresenter {
                 return \sprintf('https://fykos.cz/rocnik%02d/tsaf/', $this->getEvent()->year);
             case 8:
                 // MFnáboj
-                return '#';
+                return '#'; // FIXME
             case 9:
                 // FOL
                 return \sprintf('https://online.fyziklani.cz', $this->getEvent()->year);
             // 1 Fyziklání online
             case 10:
                 // Tábor výfuku
-                return \sprintf('http://vyfuk.mff.cuni.cz/', $this->getEvent()->year);
+                return \sprintf('http://vyfuk.mff.cuni.cz/akce/tabor/tabor%d', $this->getEvent()->begin->format('Y'));
             case 11:
                 // setkani jaro
-                return \sprintf('http://vyfuk.mff.cuni.cz/', $this->getEvent()->year);
+                return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/jaro%d', $this->getEvent()->begin->format('Y'));
             case 12:
                 // setkani podzim
-                return \sprintf('http://vyfuk.mff.cuni.cz/', $this->getEvent()->year);
+                return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/podzim%d', $this->getEvent()->begin->format('Y'));
             case 13:
                 // Náboj Junior
-                return \sprintf('#', $this->getEvent()->year);
+                return \sprintf('#'); // FIXME
             case 14:
                 //DSEF 2
                 return \sprintf('https://fykos.cz/rocnik%02d/dsef2/', $this->getEvent()->year);
