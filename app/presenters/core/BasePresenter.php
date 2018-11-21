@@ -298,7 +298,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return [null, null];
     }
 
-    protected function getSubtitle() {
+    public function getSubtitle() {
         return $this->subtitle;
     }
 

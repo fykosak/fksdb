@@ -96,6 +96,21 @@ class Navigation extends Control {
         }
         return null;
     }
+    public function getSubTitle($node) {
+        if (isset($node->title)) {
+            return $node->title;
+        }
+        if (isset($node->linkPresenter)) {
+            /**
+             * @var $presenter \BasePresenter
+             */
+            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+            $presenter->setView($presenter->getView()); // to force update the title
+
+            return $presenter->getSubtitle();
+        }
+        return null;
+    }
 
     public function getIcon($node) {
         if (isset($node->icon)) {

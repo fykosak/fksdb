@@ -106,12 +106,11 @@ class PDFStamper implements IStorageProcessing {
             $th = $this->getFontSize() * 0.35; // 1pt = 0.35mm
             $x = ($pw - $tw) / 2;
             $y = $th + $offset;
-            $tmpQRCodeFile = '';
             // stamp background
             $margin = 2;
             $pdf->SetFillColor(240, 240, 240);
             $pdf->Rect($x - $margin, $y - $th - $margin, $tw + 2 * $margin, ($th + 2 * $margin), 'F');
-            $pdf->Image($tmpQRCodeFile, $y, $y, $th, $th);
+
             $stampText = Strings::webalize($text, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Text($x, $y, $stampText);
         }

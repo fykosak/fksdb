@@ -17,6 +17,7 @@ use Nette\Security\IResource;
  * @property string name
  * @property integer event_id
  * @property ActiveRow event_type
+ * @property integer event_type_id
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
