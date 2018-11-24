@@ -1,49 +1,49 @@
-.brawl-results, fyziklani-results {
+.brawl-results, .fyziklani-results {
   margin: 2em 0;
 }
-.brawl-results table tbody, fyziklani-results table tbody {
+.brawl-results table tbody, .fyziklani-results table tbody {
   counter-reset: results-table;
 }
-.brawl-results table tbody tr td, fyziklani-results table tbody tr td {
+.brawl-results table tbody tr td, .fyziklani-results table tbody tr td {
   text-align: center;
   border: solid 1px #ccc;
   font-weight: bold;
 }
-.brawl-results table tbody tr td[data-points="5"], fyziklani-results table tbody tr td[data-points="5"] {
+.brawl-results table tbody tr td[data-points="5"], .fyziklani-results table tbody tr td[data-points="5"] {
   background-color: #2d7dd2;
 }
-.brawl-results table tbody tr td[data-points="3"], fyziklani-results table tbody tr td[data-points="3"] {
+.brawl-results table tbody tr td[data-points="3"], .fyziklani-results table tbody tr td[data-points="3"] {
   background-color: #98cc04;
 }
-.brawl-results table tbody tr td[data-points="2"], fyziklani-results table tbody tr td[data-points="2"] {
+.brawl-results table tbody tr td[data-points="2"], .fyziklani-results table tbody tr td[data-points="2"] {
   background-color: #eeb902;
 }
-.brawl-results table tbody tr td[data-points="1"], fyziklani-results table tbody tr td[data-points="1"] {
+.brawl-results table tbody tr td[data-points="1"], .fyziklani-results table tbody tr td[data-points="1"] {
   background-color: #f45d01;
 }
-.brawl-results table tbody tr td:first-child::before, fyziklani-results table tbody tr td:first-child::before {
+.brawl-results table tbody tr td:first-child::before, .fyziklani-results table tbody tr td:first-child::before {
   counter-increment: results-table;
   content: counter(results-table) ".";
 }
-.brawl-results table thead tr th[data-task_label^=A], fyziklani-results table thead tr th[data-task_label^=A] {
+.brawl-results table thead tr th[data-task_label^=A], .fyziklani-results table thead tr th[data-task_label^=A] {
   background-color: lightgreen;
 }
-.brawl-results table thead tr th[data-task_label^=B], fyziklani-results table thead tr th[data-task_label^=B] {
+.brawl-results table thead tr th[data-task_label^=B], .fyziklani-results table thead tr th[data-task_label^=B] {
   background-color: lightyellow;
 }
-.brawl-results table thead tr th[data-task_label^=C], fyziklani-results table thead tr th[data-task_label^=C] {
+.brawl-results table thead tr th[data-task_label^=C], .fyziklani-results table thead tr th[data-task_label^=C] {
   background-color: lightgoldenrodyellow;
 }
-.brawl-results table thead tr th[data-task_label^=D], fyziklani-results table thead tr th[data-task_label^=D] {
+.brawl-results table thead tr th[data-task_label^=D], .fyziklani-results table thead tr th[data-task_label^=D] {
   background-color: lightsalmon;
 }
-.brawl-results table thead tr th[data-task_label^=E], fyziklani-results table thead tr th[data-task_label^=E] {
+.brawl-results table thead tr th[data-task_label^=E], .fyziklani-results table thead tr th[data-task_label^=E] {
   background-color: lightcoral;
 }
-.brawl-results table thead tr th[data-task_label^=F], fyziklani-results table thead tr th[data-task_label^=F] {
+.brawl-results table thead tr th[data-task_label^=F], .fyziklani-results table thead tr th[data-task_label^=F] {
   background-color: lightpink;
 }
-.brawl-results table thead tr th[data-task_label^=G], fyziklani-results table thead tr th[data-task_label^=G] {
+.brawl-results table thead tr th[data-task_label^=G], .fyziklani-results table thead tr th[data-task_label^=G] {
   background-color: lightskyblue;
 }
 
@@ -54,6 +54,7 @@
 }
 .navigation-item .card[data-background-id="0"] {
   border-color: #1175da;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #1175da;
@@ -71,6 +72,7 @@
 }
 .navigation-item .card[data-background-id="1"] {
   border-color: #75da11;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #75da11;
@@ -88,6 +90,7 @@
 }
 .navigation-item .card[data-background-id="2"] {
   border-color: #da1175;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #da1175;
@@ -105,6 +108,7 @@
 }
 .navigation-item .card[data-background-id="3"] {
   border-color: #7511da;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #7511da;
@@ -122,6 +126,7 @@
 }
 .navigation-item .card[data-background-id="4"] {
   border-color: #11da75;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #11da75;
@@ -139,6 +144,7 @@
 }
 .navigation-item .card[data-background-id="5"] {
   border-color: #da7511;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #da7511;
@@ -153,6 +159,59 @@
 }
 .navigation-item .card[data-background-id="5"]:hover a, .navigation-item .card[data-background-id="5"]:focus a {
   color: white;
+}
+
+[data-contest~=event-type-1] .navigation-item .card {
+  border-color: #d7392e;
+  border-radius: 0;
+  background-color: white;
+  transition-duration: 200ms;
+  color: #d7392e;
+}
+[data-contest~=event-type-1] .navigation-item .card a {
+  color: #d7392e;
+}
+[data-contest~=event-type-1] .navigation-item .card:hover, [data-contest~=event-type-1] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #d7392e;
+  color: white;
+}
+[data-contest~=event-type-1] .navigation-item .card:hover a, [data-contest~=event-type-1] .navigation-item .card:focus a {
+  color: white;
+}
+
+.schedule-field-container {
+  color: #f44336;
+}
+.schedule-field-container .schedule-row {
+  padding: 0.5rem;
+  border-bottom: #f44336 1px dashed;
+}
+.schedule-field-container .schedule-row:first-of-type {
+  border-top: #f44336 1px dashed;
+}
+.schedule-field-container .schedule-row .schedule-container .chooser-container, .schedule-field-container .schedule-row .schedule-container .info-container {
+  width: 100%;
+  padding: 1rem 0;
+}
+.schedule-field-container .schedule-row .schedule-container .chooser-container {
+  border: solid 1px #f44336;
+  border-radius: 1rem;
+}
+.schedule-field-container .schedule-row .schedule-container .chooser-container.active {
+  color: white;
+  background-color: #f44336;
+}
+.schedule-field-container .schedule-row .schedule-container .info-container {
+  cursor: not-allowed;
+}
+.schedule-field-container .schedule-row .schedule-container .chooser-container {
+  cursor: pointer;
+}
+
+[data-contest~=event-type-1] main {
+  background-image: url("/images/fyziklani/Prague Layout.svg");
+  background-repeat: no-repeat;
 }
 
 /*# sourceMappingURL=bundle.css.map */

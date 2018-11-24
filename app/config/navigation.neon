@@ -63,3 +63,4 @@ navigation:
         event.dashboard.default:
             - event.dispatch.default
             - fyziklani.dashboard.default
+            - event.schedule.default

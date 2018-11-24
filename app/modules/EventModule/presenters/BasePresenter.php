@@ -54,7 +54,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function startup() {
         /**
@@ -71,7 +71,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return bool
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     protected function eventExist() {
         return $this->getEvent() ? true : false;
@@ -83,18 +83,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return int
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function getEventId() {
         if (!$this->eventId) {
-            $this->redirect(':Event:Dispatch:default');
+            throw new BadRequestException(\sprintf(_('Event id je povinné')));
         }
         return $this->eventId;
     }
 
     /**
      * @return ModelEvent|null
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     protected function getEvent() {
         if (!$this->event) {

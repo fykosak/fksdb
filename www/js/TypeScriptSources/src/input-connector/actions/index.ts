@@ -1,13 +1,18 @@
 import { IInputConnectorItems } from '../reducers';
+import { Action } from 'redux';
 
 export const ACTION_SET_INITIAL_DATA = '@@input-connector/ACTION_SET_INITIAL_DATA';
 
-export function setInitialData(data: IInputConnectorItems) {
+export interface IActionSetInitialData extends Action {
+    data: IInputConnectorItems;
+}
+
+export const setInitialData = (data: IInputConnectorItems): IActionSetInitialData => {
     return {
         data,
         type: ACTION_SET_INITIAL_DATA,
     };
-}
+};
 
 export const ACTION_CHANGE_DATA = '@@input-connector/ACTION_CHANGE_DATA';
 

@@ -22,7 +22,6 @@ parameters:
                     address:
                         required: true
 
-
 events:
     dsef24:
         event_type_id: 2

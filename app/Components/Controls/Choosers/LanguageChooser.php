@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Choosers;
 
 
 use Nette\Application\UI\Control;
-
 use Nette\Http\Session;
+use Nette\Templating\FileTemplate;
 use Nette\Templating\Template;
 
 
@@ -13,6 +13,7 @@ use Nette\Templating\Template;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
+ * @property FileTemplate $template
  */
 class LanguageChooser extends Control {
 
@@ -124,12 +125,13 @@ class LanguageChooser extends Control {
 
     /**
      * @return array of existing languages
+     * @throws \Exception
      */
     private function getSupportedLanguages() {
-        /**
-         * @var $presenter \AuthenticationPresenter
-         */
         $presenter = $this->getPresenter();
+        if (!($presenter instanceof \BasePresenter)) {
+            throw new \Exception('Wrong presenter');
+        }
         return $presenter->getTranslator()->getSupportedLanguages();
 
     }
@@ -138,8 +140,12 @@ class LanguageChooser extends Control {
         /**
          * @var $template Template
          */
+        $presenter = $this->getPresenter();
+
         $template = parent::createTemplate($class);
-        $template->setTranslator($this->getPresenter()->getTranslator());
+        if ($presenter instanceof \BasePresenter) {
+            $template->setTranslator($presenter->getTranslator());
+        }
         return $template;
     }
 
@@ -149,7 +155,7 @@ class LanguageChooser extends Control {
         $this->template->languageNames = $this->languageNames;
         $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
         $this->template->render();
     }
 

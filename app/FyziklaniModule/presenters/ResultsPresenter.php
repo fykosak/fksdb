@@ -37,27 +37,27 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Výsledky a statistiky FYKOSího Fyziklání'));
+        $this->setTitle(_('Results and statistics of Fyziklani'));
         $this->setIcon('fa fa-trophy');
     }
 
     public function titleResultsView() {
-        $this->setTitle(_('Výsledky FYKOSího Fyziklání'));
+        $this->setTitle(_('Results of Fyziklani'));
         $this->setIcon('fa fa-trophy');
     }
 
     public function titleResultsPresentation() {
         $this->setIcon('fa fa-table');
-        return $this->setTitle(_('Presentace FYKOSího Fyziklání'));
+        return $this->setTitle(_('Results presentation of Fyziklani'));
     }
 
     public function titleTeamStatistics() {
-        $this->setTitle(_('Tímové statistiky FYKOSího Fyzikláni'));
+        $this->setTitle(_('Teams statistics of Fyziklani'));
         $this->setIcon('fa fa-line-chart');
     }
 
     public function titleTaskStatistics() {
-        $this->setTitle(_('Statistiky úloh FYKOSího Fyzikláni'));
+        $this->setTitle(_('Tasks statistics of Fyziklani'));
         $this->setIcon('fa fa-pie-chart');
     }
 

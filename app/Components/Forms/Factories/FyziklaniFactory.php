@@ -28,7 +28,7 @@ class FyziklaniFactory {
     private function createPointsField(ModelEvent $event): RadioList {
         $field = new RadioList(_('Počet bodů'));
         $items = [];
-        foreach ($event->getParameter('availablePoints') as $points) {
+        foreach ($event->getParameter('gameSetup')['availablePoints'] as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);
@@ -67,7 +67,7 @@ class FyziklaniFactory {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('taskCode')->setAttribute('readonly', true);
-        foreach ($event->getParameter('availablePoints') as $points) {
+        foreach ($event->getParameter('gameSetup')['availablePoints'] as $points) {
             $label = ($points == 1) ? _('bod') : (($points < 5) ? _('body') : _('bodů'));
             $form->addSubmit('points' . $points, _($points . ' ' . $label))
                 ->setAttribute('class', 'btn-' . $points . '-points')->setDisabled(true);
