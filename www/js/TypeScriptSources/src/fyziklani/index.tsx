@@ -35,15 +35,15 @@ const registerResults: IApp = (element, module, component, mode, rawData, action
 
     switch (mode) {
         case 'presentation':
-            element.parentElement.className = 'container-fluid';
-            document.querySelectorAll('.breadcrumb')
-                .forEach((breadcrumbElement: Element) => {
-                    breadcrumbElement.remove();
-                });
-            document.querySelectorAll('h1')
-                .forEach((hElement: Element) => {
-                    hElement.remove();
-                });
+            /* element.parentElement.className = 'container-fluid';
+             document.querySelectorAll('.breadcrumb')
+                 .forEach((breadcrumbElement: Element) => {
+                     breadcrumbElement.remove();
+                 });
+             document.querySelectorAll('h1')
+                 .forEach((hElement: Element) => {
+                     hElement.remove();
+                 });*/
             ReactDOM.render(<Results mode={'presentation'} actions={actions}/>, element);
             return true;
         case 'view':
