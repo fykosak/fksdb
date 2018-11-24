@@ -1,6 +1,7 @@
 /* use https://www.sassmeister.com/ */
 @mixin navigation-item($color,$background) {
   border-color: $color;
+  border-radius: 0;
   background-color: $background;
   transition-duration: 200ms;
   color: $color;
@@ -47,6 +48,6 @@
   }
 }
 
-[data-contest~="fyziklani"] .navigation-item .card {
+[data-contest~="event-type-1"] .navigation-item .card {
   @include navigation-item(#d7392e, white);
 }

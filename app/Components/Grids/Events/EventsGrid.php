@@ -3,7 +3,12 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
+use OrgModule\OrgPresenter;
 use ServiceEvent;
 use SQL\SearchableDataSource;
 
@@ -25,10 +30,11 @@ class EventsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @param OrgPresenter $presenter
+     * @throws InvalidLinkException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -50,7 +56,7 @@ class EventsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('event_id', _('ID akce'));
+        $this->addColumn('event_id', _('Id akce'));
         $this->addColumn('type_name', _('Typ akce'));
         $this->addColumn('name', _('Název'));
         $this->addColumn('year', _('Ročník semináře'));
@@ -62,12 +68,12 @@ class EventsGrid extends BaseGrid {
         $this->addButton('model', _('Model'))
             ->setText('Model')//todo i18n
             ->setLink(function ($row) {
-                return $this->getPresenter()->link("model", $row->event_id);
+                return $this->getPresenter()->link('model', $row->event_id);
             });
         $this->addButton('edit', _('Upravit'))
             ->setText('Upravit')//todo i18n
             ->setLink(function ($row) {
-                return $this->getPresenter()->link("edit", $row->event_id);
+                return $this->getPresenter()->link('edit', $row->event_id);
             });
         $this->addButton('applications')
             ->setText('Přihlášky')//todo i18n
@@ -83,6 +89,12 @@ class EventsGrid extends BaseGrid {
             ->setText(_('Accommodation'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('EventAccommodation:list', ['eventId' => $row->event_id]);
+            });
+
+        $this->addButton('schedule')
+            ->setText(_('Schedule'))
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link(':Event:Schedule:', ['eventId' => $row->event_id]);
             });
 
         $this->addGlobalButton('add')

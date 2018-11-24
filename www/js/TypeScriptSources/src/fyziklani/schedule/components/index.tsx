@@ -70,7 +70,7 @@ export interface IData {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const {data, input, label, description} = this.props;
         // <CompactValue data={data}/>
         return (

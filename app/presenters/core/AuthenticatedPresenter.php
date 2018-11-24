@@ -142,9 +142,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;
         }
-        $backlink = $this->application->storeRequest(); //TODO this doesn't work in cross domain environment
+
         $this->redirect(':Authentication:login', array(
-            'backlink' => $backlink,
+            'backlink' => $this->storeRequest(),
             AuthenticationPresenter::PARAM_REASON => $reason
         ));
     }

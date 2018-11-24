@@ -2,9 +2,12 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\ModelOrg;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 
+use OrgModule\OrgPresenter;
 use ServiceOrg;
 use SQL\SearchableDataSource;
 
@@ -26,10 +29,11 @@ class OrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param OrgPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -54,7 +58,8 @@ class OrgsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
+            $model = ModelOrg::createFromTableRow($row);
+            $person = $model->getPerson();
             return $person->getFullname();
         });
         $this->addColumn('since', _('Začal'));
@@ -66,13 +71,13 @@ class OrgsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton("edit", _("Upravit"))
-            ->setText('Upravit')//todo i18n
+        $this->addButton('edit', _('Upravit'))
+            ->setText(_('Upravit'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link("edit", $row->org_id);
+                return $this->getPresenter()->link('edit', $row->org_id);
             })
             ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized("edit", array('id' => $row->org_id));
+                return $presenter->authorized('edit', array('id' => $row->org_id));
             });
 
         if ($presenter->authorized('create')) {

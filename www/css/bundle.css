@@ -54,6 +54,7 @@
 }
 .navigation-item .card[data-background-id="0"] {
   border-color: #1175da;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #1175da;
@@ -71,6 +72,7 @@
 }
 .navigation-item .card[data-background-id="1"] {
   border-color: #75da11;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #75da11;
@@ -88,6 +90,7 @@
 }
 .navigation-item .card[data-background-id="2"] {
   border-color: #da1175;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #da1175;
@@ -105,6 +108,7 @@
 }
 .navigation-item .card[data-background-id="3"] {
   border-color: #7511da;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #7511da;
@@ -122,6 +126,7 @@
 }
 .navigation-item .card[data-background-id="4"] {
   border-color: #11da75;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #11da75;
@@ -139,6 +144,7 @@
 }
 .navigation-item .card[data-background-id="5"] {
   border-color: #da7511;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #da7511;
@@ -155,21 +161,22 @@
   color: white;
 }
 
-[data-contest~=fyziklani] .navigation-item .card {
+[data-contest~=event-type-1] .navigation-item .card {
   border-color: #d7392e;
+  border-radius: 0;
   background-color: white;
   transition-duration: 200ms;
   color: #d7392e;
 }
-[data-contest~=fyziklani] .navigation-item .card a {
+[data-contest~=event-type-1] .navigation-item .card a {
   color: #d7392e;
 }
-[data-contest~=fyziklani] .navigation-item .card:hover, [data-contest~=fyziklani] .navigation-item .card:focus {
+[data-contest~=event-type-1] .navigation-item .card:hover, [data-contest~=event-type-1] .navigation-item .card:focus {
   transition-duration: 200ms;
   background-color: #d7392e;
   color: white;
 }
-[data-contest~=fyziklani] .navigation-item .card:hover a, [data-contest~=fyziklani] .navigation-item .card:focus a {
+[data-contest~=event-type-1] .navigation-item .card:hover a, [data-contest~=event-type-1] .navigation-item .card:focus a {
   color: white;
 }
 
@@ -200,6 +207,11 @@
 }
 .schedule-field-container .schedule-row .schedule-container .chooser-container {
   cursor: pointer;
+}
+
+[data-contest~=event-type-1] main {
+  background-image: url("/images/fyziklani/Prague Layout.svg");
+  background-repeat: no-repeat;
 }
 
 /*# sourceMappingURL=bundle.css.map */
