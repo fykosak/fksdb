@@ -2,6 +2,12 @@ parameters:
     events:
         fyziklani13:
             appCond: or(regOpen(), role('admin'))
+            scheduleField:
+                label: _('Schedule')
+                description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="https://fykos.cz/akce/fyziklani/start">na špecialni strance</a>.')
+                factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
+
+
             teacher:
                 person:
                     other_name:
@@ -12,6 +18,10 @@ parameters:
                     email:
                         required: true
                     id_number:
+                        required: false
+                    academic_degree_prefix:
+                        required: false
+                    academic_degree_suffix:
                         required: false
                 person_has_flag:
                     spam_mff:
@@ -43,19 +53,21 @@ parameters:
                         required: false
             dep:
                 require:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.matrix
-                    p*.person_id.person_info.id_number: p*.person_accommodation.matrix
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_accommodation.multiNights
                 visible:
-                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.matrix
-                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.matrix
+                    team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
                     team.teacher_present: team.teacher_id
+                    team.teacher_schedule: team.teacher_id
+                    p*.schedule: p*.person_id
 
 events:
     fyziklani13:
         event_type_id: 1
         eventYears: [13] # specify for which years this machine is valid, by default all years
         tableLayout: fyziklani.grid
-        formLayout: fyziklani.form
+        formLayout: fyziklani/fyziklani13.form
         paramScheme:
             notifyBcc:
                 default: fyziklani@fykos.cz
@@ -66,30 +78,11 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            availablePoints:
-                default: [5, 3, 2, 1]
-            tasksOnBoard:
-                default: 7
-            refreshDelay:
-                default: 30000
-            resultsHardDisplay:
-                default: false
-            # TODO make relative to game
-            resultsDisplay:
-                default: '1970-01-01T00:00:00'
-            # TODO make relative to game
-            resultsHide:
-                default: '1970-01-01T01:00:00'
-            # TODO infer from event begin date
-            gameStart:
-                default: '1970-01-01T00:00:00'
-            # TODO infer from event end date
-            gameEnd:
-                default: '1970-01-01T01:00:00'
-            rooms:
-                default: []
-            buildings:
-                 default: []
+            gameSetup:
+                default:
+                    %events.fyziklaniGameSetup%
+            schedule:
+                default: %events.fyziklani13.schedule% # aby sa k tomu dalo dokopať
 
         baseMachines:
             #
@@ -101,35 +94,25 @@ events:
                 eventId: e_fyziklani_team.event_id
 
                 states:
-                    pending: _('Čeká na schválení')
-                    spare: _('Náhradník')
-                    approved: _('Potvrzen')
+                    approved: _('Přihlásen')
                     participated: _('Účastnil se')
                     cancelled: _('Zrušen')
                     missed: _('Nepřijel')
 
                 transitions:
-                    __init->pending:
+                    __init->approved:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
                             - Events\Transitions\MailSender(team, .*)
-                    pending->approved:
-                        condition: role('admin')
-                        label: _('Schválit účast')
-                        onExecuted:
-                            - Events\Transitions\MailSender(team, *)
-                    pending->spare:
-                        condition: role('admin')
-                        label: _('Potvrdit jako náhradníka')
-                    approved|spare->participated:
+                    approved->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
-                    approved|spare->missed:
+                    approved->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
                         dangerous: true
-                    pending|spare|approved->cancelled:
+                    approved->cancelled:
                         condition: role('admin')
                         label: _('Zrušit tým')
                         dangerous: true
@@ -139,19 +122,19 @@ events:
 
                 fields:
                     name:
-                        label: _('Název týmu') # i18n
+                        label: _('Název týmu')
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani13.appCond%
                     category:
-                        label: _('Kategorie') # i18n
+                        label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
                     force_a:
                         label: _('Chceme se účastnit v kategorii A')
                         visible: true
-                        description: _('Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+                        description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
 
                     phone:
                         label: _('Kontaktní telefon')
@@ -165,11 +148,10 @@ events:
                         modifiable: %events.fyziklani13.appCond%
                         factory: RefPerson(%events.fyziklani13.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: _('Učitel má zájem o program')
+                        label: _('Učitel má zájem o program počas fyziklani') # FIXME
                         visible: true
                         modifiable: %events.fyziklani13.appCond%
-
-            #
+                    teacher_schedule: %events.fyziklani13.scheduleField%
             #   PARTICIPANT
             #
             PARTICIPANT:
@@ -209,6 +191,7 @@ events:
                         modifiable: %events.fyziklani13.appCond%
                         determining: true
                         factory: RefPerson(%events.fyziklani13.participant%, email, true, role('admin'), false)
+                    schedule:  %events.fyziklani13.scheduleField%
 
 
         #
@@ -248,7 +231,7 @@ events:
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
                 - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
-                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+                - Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()

@@ -3,66 +3,91 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import Powered from '../../../shared/powered';
-import { IFyziklaniScheduleStore } from '../reducers/';
+import { lang } from '../../../i18n/i18n';
+import DateDisplay from '../../../shared/components/displays/date';
 import {
-    IData,
-    IScheduleItem,
-} from './index';
-import PriceDisplay from '../../../shared/components/displays/price';
-
-interface IState {
-}
+    setVisibility,
+    toggleChooser,
+} from '../actions';
+import { IFyziklaniScheduleStore } from '../reducers';
+import { IData } from './index';
+import Row from './row';
 
 interface IProps {
-    data: IData;
+    data: {
+        data: IData;
+        visible: boolean;
+    };
+    description: string;
+    label: string;
 }
 
-class RoutingApp extends React.Component<IState & IProps, {}> {
+interface IState {
+    showChooser?: boolean;
+
+    onToggleChooser?(): void;
+
+    onSetVisibility?(state: boolean): void;
+}
+
+class Schedule extends React.Component<IProps & IState, {}> {
+    public componentDidMount() {
+        this.props.onSetVisibility(this.props.data.visible);
+    }
 
     public render() {
-        const {data} = this.props;
+        const {data: {data}, showChooser, label, description, onToggleChooser} = this.props;
         const rows = [];
+        let lastBlockDay = null;
         for (const blockName in data) {
             if (data.hasOwnProperty(blockName)) {
-                const blockData = data[blockName];
 
-                rows.push(<div>{this.createdDateLabel(blockData.date)}</div>);
-                blockData.parallels.map((item, index) => {
-                    return this.createItem(item, index);
-                });
+                const blockData = data[blockName];
+                const startBlockDay = (new Date(blockData.date.start)).getDay();
+                if (lastBlockDay !== startBlockDay) {
+                    rows.push(<div key={startBlockDay} className={'schedule-row schedule-row-weekday row'}>
+                        <h3>
+                            <DateDisplay date={blockData.date.start} options={{weekday: 'long'}}/>
+                        </h3>
+                    </div>);
+                }
+                lastBlockDay = startBlockDay;
+                rows.push(<Row key={blockName} blockData={blockData} blockName={blockName}/>);
             }
         }
-
         return (
-            <div>
-                <Powered/>
+            <div className={'bd-callout bd-callout-fyziklani'}>
+                <h4>{label}</h4>
+                <p className={'text-muted mb-3'} dangerouslySetInnerHTML={{__html: description}}/>
+                {showChooser && (<div className={'schedule-field-container mb-3'}>
+                    {rows}
+                </div>)}
+                <div className={'text-center'}>
+                    <button
+                        className={'btn btn-fyziklani btn-block'}
+                        onClick={(event) => {
+                            event.preventDefault();
+                            onToggleChooser();
+                        }}
+                    >{showChooser ? lang.getText('Hide schedule') : lang.getText('Show schedule')}
+                    </button>
+                </div>
             </div>
         );
     }
-
-    private createdDateLabel(dates: { start: string; end: string }) {
-        return <span>{dates.start}{dates.end}</span>;
-    }
-
-    private createItem(item: IScheduleItem, index: number) {
-        return <div key={index}
-                    onClick={() => {
-                        console.log(item.id);
-                    }}>
-            <div>{item.name}</div>
-            <div>{item.description}</div>
-            <div><PriceDisplay price={item.price}/></div>
-        </div>;
-    }
 }
 
-const mapStateToProps = (): IState => {
-    return {};
+const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
+    return {
+        showChooser: store.compactValue.showChooser,
+    };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
-    return {};
+    return {
+        onSetVisibility: (state) => dispatch(setVisibility(state)),
+        onToggleChooser: () => dispatch(toggleChooser()),
+    };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoutingApp);
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);

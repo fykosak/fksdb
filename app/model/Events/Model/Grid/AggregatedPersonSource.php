@@ -5,9 +5,9 @@ namespace Events\Model\Grid;
 use ArrayIterator;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\ModelEvent;
+use Nette\DI\Container;
 use Nette\Object;
 use ORM\Tables\TypedTableSelection;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,7 +27,7 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
     private $events;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     protected $container;
 
@@ -37,14 +37,15 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
      */
     private $holders = null;
 
-    function __construct(TypedTableSelection $events, SystemContainer $container) {
+    function __construct(TypedTableSelection $events, Container $container) {
         $this->events = $events;
         $this->container = $container;
     }
 
     private function loadData() {
         $this->holders = [];
-        foreach ($this->events as $eventKey => $event) {
+        foreach ($this->events as $eventKey => $row) {
+            $event = ModelEvent::createFromTableRow($row);
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
@@ -67,14 +68,14 @@ abstract class AggregatedPersonSource extends Object implements IHolderSource {
      * @staticvar array $delegated
      * @param string $name
      * @param array $args
-     * @return \Events\Model\Grid\SingleEventSource
+     * @return self
      */
     public function __call($name, $args) {
         static $delegated = array(
-    'where' => false,
-    'order' => false,
-    'limit' => false,
-    'count' => true,
+            'where' => false,
+            'order' => false,
+            'limit' => false,
+            'count' => true,
         );
         if (!isset($delegated[$name])) {
             return parent::__call($name, $args);

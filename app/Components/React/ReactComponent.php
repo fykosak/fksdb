@@ -24,6 +24,11 @@ abstract class ReactComponent extends Control implements IReactComponent {
      */
     protected $container;
 
+    public function __construct(Container $context) {
+        parent::__construct();
+        $this->container = $context;
+    }
+
     /**
      * @param $obj IComponent
      */

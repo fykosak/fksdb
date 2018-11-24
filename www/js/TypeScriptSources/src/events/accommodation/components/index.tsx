@@ -6,12 +6,12 @@ import {
 } from 'redux';
 import logger from 'redux-logger';
 import { config } from '../../../config/';
-import InputConnector from '../../../input-connector/compoenents/';
+import InputConnector from '../../../input-connector/compoenents/index';
 import { IEventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Matrix from './matrix/index';
-import MultiNights from './multi-nights';
-import Single from './single';
+import MultiNights from './multi-nights/';
+import Single from './single/';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];

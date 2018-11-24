@@ -11,14 +11,14 @@ export const eventAccommodation: IApp = (element, module, component, mode, rawDa
         return false;
     }
 
-    const accommodationDef = JSON.parse(element.getAttribute('data-data'));
+    const accommodationDef = JSON.parse(rawData);
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-
     element.style.display = 'none';
+
     ReactDOM.render(<Index accommodationDef={accommodationDef} input={element} mode={mode}/>, container);
 
     return true;

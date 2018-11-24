@@ -22,9 +22,10 @@
                     </li>
                 {/if}
                 {if $iterator->nextValue > $step + 1}
-                    <li class="divider">
-                        <span>…</span>
-                    </li>{/if}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                {/if}
             {/foreach}
 
             {if $paginator->isLast()}

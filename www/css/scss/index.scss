@@ -1,4 +1,9 @@
 // compilation by 'sass scss/index.scss bundle.css'
-
 @import "fyziklani-results";
 @import "navigation-item";
+@import "schedule";
+
+[data-contest~="event-type-1"] main {
+  background-image: url('/images/fyziklani/Prague Layout.svg');
+  background-repeat: no-repeat;
+}

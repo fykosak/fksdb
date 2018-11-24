@@ -10,11 +10,11 @@ use Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
-use SystemContainer;
+
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,7 +27,7 @@ class ApplicationsGrid extends Control {
 
     /**
      *
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -76,7 +76,7 @@ class ApplicationsGrid extends Control {
      */
     private $searchable = false;
 
-    function __construct(SystemContainer $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
+    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->container = $container;

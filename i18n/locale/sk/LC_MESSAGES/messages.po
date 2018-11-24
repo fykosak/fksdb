@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 21:39+0100\n"
+"POT-Creation-Date: 2018-11-24 15:31+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -26,8 +26,18 @@ msgstr ""
 msgid "Event \"%s\"."
 msgstr ""
 
+#: i18n/../app/modules/EventModule/presenters/BasePresenter.php:90
+#, php-format
+msgid "Event id je povinné"
+msgstr ""
+
 #: i18n/../app/modules/EventModule/presenters/DispatchPresenter.php:53
 msgid "List of events"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:19
+#, php-format
+msgid "Schedule."
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:25
@@ -82,7 +92,7 @@ msgid "Úlohy FYKOSího Fyziklání"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:26
-msgid "Import úloh FYKOSího Fyziklání"
+msgid "Tasks Import of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:39
@@ -108,26 +118,27 @@ msgid "Importovat"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:40
-msgid "Výsledky a statistiky FYKOSího Fyziklání"
+msgid "Results and statistics of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:45
-msgid "Výsledky FYKOSího Fyziklání"
+#: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/results-table.tsx.tsx2php:62
+msgid "Results of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:51
-msgid "Presentace FYKOSího Fyziklání"
+msgid "Results presentation of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:55
-msgid "Tímové statistiky FYKOSího Fyzikláni"
+msgid "Teams statistics of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:60
-msgid "Statistiky úloh FYKOSího Fyzikláni"
+msgid "Tasks statistics of Fyziklani"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/BasePresenter.php:120
+#: i18n/../app/FyziklaniModule/presenters/BasePresenter.php:121
 #, php-format
 msgid "fyziklani%d"
 msgstr ""
@@ -192,19 +203,19 @@ msgstr ""
 msgid "Body byly změněny."
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:17
+#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:14
 msgid "Rozdělení do místností"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:22
+#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:19
 msgid "Edit routing"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:27
+#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:24
 msgid "Download routing"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:54
+#: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:53
 #: i18n/../app/Components/React/Fyziklani/RoutingEdit.php:40
 msgid "Zmeny boli uložené"
 msgstr ""
@@ -225,7 +236,8 @@ msgid "Chybí deadline série."
 msgstr ""
 
 #: i18n/../app/model/Tasks/TasksFromXML2.php:52
-msgid "Nesouhlasí importovaná (%i) a nastavená (%i) série."
+#, php-format
+msgid "Nesouhlasí importovaná (%s) a nastavená (%s) série."
 msgstr ""
 
 #: i18n/../app/model/Tasks/ContributionsFromXML2.php:87
@@ -306,7 +318,7 @@ msgid "Založení účtu"
 msgstr ""
 
 #: i18n/../app/model/Authentication/AccountManager.php:137
-#: i18n/../app/presenters/AuthenticationPresenter.php:197
+#: i18n/../app/presenters/AuthenticationPresenter.php:193
 msgid "Obnova hesla"
 msgstr ""
 
@@ -380,41 +392,41 @@ msgstr ""
 msgid "CSV soubor neobsahuje platnou hlavičku."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:149
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:150
 #, php-format
 msgid "Přihláška '%s' vytvořena."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:152
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:153
 msgid "Přihláška smazána."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:154
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:155
 #, php-format
 msgid "Stav přihlášky '%s' změněn."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:157
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:158
 #, php-format
 msgid "Přihláška '%s' uložena."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:163
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:164
 #, php-format
 msgid "Některá pole skupiny '%s' neodpovídají existujícímu záznamu."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:168
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:169
 #, php-format
 msgid "Data ve skupině '%s' kolidují s již existující přihláškou."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:210
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:215
 #, php-format
 msgid "Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:255
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:260
 msgid "Chyba při ukládání přihlášky."
 msgstr ""
 
@@ -491,6 +503,11 @@ msgstr ""
 #: i18n/../app/model/Events/Spec/Fyziklani/TeamsPerSchool.php:67
 #, php-format
 msgid "Škola nemůže mít v soutěži více týmů než %d."
+msgstr ""
+
+#: i18n/../app/model/Events/Spec/Fyziklani/TeamsPerSchool.php:120
+#, php-format
+msgid "Přihlásené týmy z rovnaké školy %s."
 msgstr ""
 
 #: i18n/../app/model/Events/Spec/Dsef/GroupOptions.php:103
@@ -580,11 +597,11 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/ExtendedPersonPresenter.php:85
 #: i18n/../app/OrgModule/presenters/StalkingPresenter.php:170
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:90
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:71
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:70
 #: i18n/../data/events/fol/fol1.neon.neon2php:141
 #: i18n/../data/events/fol/fol8.neon.neon2php:141
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:207
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:220
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:189
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:199
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:48
 msgid "Osoba"
 msgstr ""
@@ -606,6 +623,11 @@ msgstr ""
 #: i18n/../app/Components/Controls/Events/ApplicationComponent.php:140
 #: i18n/../app/presenters/SettingsPresenter.php:112
 msgid "Uložit"
+msgstr ""
+
+#: i18n/../app/OrgModule/presenters/EventSchedulePresenter.php:47
+#, php-format
+msgid "Schedule of event %s."
 msgstr ""
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:49
@@ -1020,7 +1042,7 @@ msgid "Založit organizátora"
 msgstr ""
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:55
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:78
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:84
 msgid "Organizátoři"
 msgstr ""
 
@@ -1132,8 +1154,8 @@ msgstr ""
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:348
 #: i18n/../app/PublicModule/presenters/SubmitPresenter.php:153
 #: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:75
-#: i18n/../app/presenters/AuthenticationPresenter.php:224
-#: i18n/../app/presenters/AuthenticationPresenter.php:241
+#: i18n/../app/presenters/AuthenticationPresenter.php:220
+#: i18n/../app/presenters/AuthenticationPresenter.php:237
 msgid "Vypršela časová platnost formuláře. Odešlete jej prosím znovu."
 msgstr ""
 
@@ -1198,33 +1220,38 @@ msgstr ""
 msgid "Došlo k chybě při ukládání úloh."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:129
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:120
+#, php-format
+msgid "Application for %s: %s"
+msgstr ""
+
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:130
 #, php-format
 msgid "Moje přihlášky (%s)"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:131
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:132
 msgid "Moje přihlášky"
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:153
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:203
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:154
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:204
 msgid "Neexistující akce."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:156
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:157
 msgid "Neexistující přihláška."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:173
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:174
 msgid "Přihlašování není povoleno."
 msgstr ""
 
-#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:175
+#: i18n/../app/PublicModule/presenters/ApplicationPresenter.php:176
 msgid "Automat přihlášky nemá aktuálně žádné možné přechody."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedContainer.php:191
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedContainer.php:192
 msgid "Najít"
 msgstr ""
 
@@ -1243,7 +1270,7 @@ msgstr ""
 #: i18n/../app/Components/Forms/Containers/PersonContainer.php:101
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:341
 #: i18n/../app/Components/Forms/Factories/Person/OtherNameField.php:10
-#: i18n/../app/Components/Grids/OrgsGrid.php:56
+#: i18n/../app/Components/Grids/OrgsGrid.php:60
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:39
 #: i18n/../app/Components/Grids/ContestantsGrid.php:40
 msgid "Jméno"
@@ -1304,7 +1331,7 @@ msgid "%label očekává YYYY-MM-DD hh:mm[:ss]."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Controls/PersonAccommodation/AccommodationField.php:23
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:83
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:89
 msgid "Accommodation"
 msgstr ""
 
@@ -1405,7 +1432,7 @@ msgstr ""
 #: i18n/../app/Components/Forms/Factories/StoredQueryFactory.php:98
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:34
 #: i18n/../app/Components/Grids/SchoolsGrid.php:46
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:55
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:61
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:62
 msgid "Název"
 msgstr ""
@@ -1452,7 +1479,7 @@ msgid "V Neon syntaxi, schéma je specifické pro definici akce."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/EventFactory.php:80
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:54
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:60
 msgid "Typ akce"
 msgstr ""
 
@@ -1567,7 +1594,7 @@ msgid "Koncový ročník není v intervalu [%d, %d]."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/OrgFactory.php:56
-#: i18n/../app/Components/Grids/OrgsGrid.php:64
+#: i18n/../app/Components/Grids/OrgsGrid.php:69
 msgid "Funkce"
 msgstr ""
 
@@ -1624,7 +1651,7 @@ msgid "Staré heslo"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/LoginFactory.php:44
-#: i18n/../app/presenters/AuthenticationPresenter.php:221
+#: i18n/../app/presenters/AuthenticationPresenter.php:217
 msgid "Heslo"
 msgstr ""
 
@@ -1750,6 +1777,12 @@ msgstr ""
 #: i18n/../app/Components/Forms/Factories/PersonHistory/ClassField.php:11
 msgid "Třída"
 msgstr "Trieda"
+
+#: i18n/../app/Components/Forms/Factories/Events/ScheduleField.php:19
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:95
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:6
+msgid "Schedule"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:49
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:55
@@ -1904,8 +1937,8 @@ msgstr ""
 #: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:40
 #: i18n/../data/events/fol/fol1.neon.neon2php:157
 #: i18n/../data/events/fol/fol8.neon.neon2php:157
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:222
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:242
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:205
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:221
 msgid "Tým"
 msgstr ""
 
@@ -2023,15 +2056,17 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:38
 #: i18n/../www/js/TypeScriptSources/src/events/accommodation/components/price.tsx.tsx2php:25
+#: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:59
 msgid "Price"
 msgstr ""
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:48
 #: i18n/../app/Components/Grids/SchoolsGrid.php:55
-#: i18n/../app/Components/Grids/OrgsGrid.php:69
+#: i18n/../app/Components/Grids/OrgsGrid.php:74
+#: i18n/../app/Components/Grids/OrgsGrid.php:75
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:44
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:61
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:67
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:73
 #: i18n/../app/Components/Grids/ContestantsGrid.php:47
 #: i18n/../app/Components/Grids/ContestantsGrid.php:48
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:81
@@ -2092,15 +2127,15 @@ msgstr ""
 msgid "Nejde o duplicitu"
 msgstr ""
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:60
+#: i18n/../app/Components/Grids/OrgsGrid.php:65
 msgid "Začal"
 msgstr ""
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:61
+#: i18n/../app/Components/Grids/OrgsGrid.php:66
 msgid "Skončil"
 msgstr ""
 
-#: i18n/../app/Components/Grids/OrgsGrid.php:62
+#: i18n/../app/Components/Grids/OrgsGrid.php:67
 msgid "Still organizes"
 msgstr ""
 
@@ -2154,16 +2189,16 @@ msgstr ""
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:52
 #: i18n/../data/events/fol/fol1.neon.neon2php:84
 #: i18n/../data/events/fol/fol8.neon.neon2php:84
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:142
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:148
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:125
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:127
 msgid "Název týmu"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:67
 #: i18n/../data/events/fol/fol1.neon.neon2php:89
 #: i18n/../data/events/fol/fol8.neon.neon2php:89
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:147
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:153
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:130
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:132
 msgid "Kategorie"
 msgstr ""
 
@@ -2215,15 +2250,15 @@ msgstr ""
 msgid "Odkaz"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:53
-msgid "ID akce"
-msgstr ""
-
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:56
-msgid "Ročník semináře"
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:59
+msgid "Id akce"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:62
+msgid "Ročník semináře"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:68
 msgid "Model"
 msgstr ""
 
@@ -2375,45 +2410,45 @@ msgstr ""
 msgid "Stránka požaduje přihlášení."
 msgstr "Stránka požaduje prihlásenie."
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:193
+#: i18n/../app/presenters/AuthenticationPresenter.php:189
 msgid "Login"
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:219
-#: i18n/../app/presenters/AuthenticationPresenter.php:236
+#: i18n/../app/presenters/AuthenticationPresenter.php:215
+#: i18n/../app/presenters/AuthenticationPresenter.php:232
 msgid "Přihlašovací jméno nebo email"
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:220
-#: i18n/../app/presenters/AuthenticationPresenter.php:237
+#: i18n/../app/presenters/AuthenticationPresenter.php:216
+#: i18n/../app/presenters/AuthenticationPresenter.php:233
 msgid "Zadejte přihlašovací jméno nebo emailovou adresu."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:222
+#: i18n/../app/presenters/AuthenticationPresenter.php:218
 msgid "Zadejte heslo."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:223
+#: i18n/../app/presenters/AuthenticationPresenter.php:219
 msgid "Přihlásit"
 msgstr "Prihlásiť"
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:239
+#: i18n/../app/presenters/AuthenticationPresenter.php:235
 msgid "Pokračovat"
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:274
+#: i18n/../app/presenters/AuthenticationPresenter.php:270
 #, php-format
 msgid "Na email %s byly poslány další instrukce k obnovení přístupu."
 msgstr ""
 
-#: i18n/../app/presenters/AuthenticationPresenter.php:320
+#: i18n/../app/presenters/AuthenticationPresenter.php:316
 #, php-format
 msgid "Nedovolený backlink %s."
 msgstr ""
 
 #: i18n/../app/presenters/SettingsPresenter.php:58
 #: i18n/../app/templates/@layout.latte.latte2php:48
-#: i18n/../app/templates/@layout.v4.latte.latte2php:49
+#: i18n/../app/templates/@layout.v4.latte.latte2php:50
 msgid "Nastavení"
 msgstr ""
 
@@ -2502,7 +2537,7 @@ msgid "záznamů"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.@layout.latte.latte2php:16
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:95
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:94
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:96
 msgid "Účastník"
 msgstr ""
@@ -2587,17 +2622,17 @@ msgid "Zapomenuté heslo"
 msgstr "Zabudnuté heslo"
 
 #: i18n/../app/templates/@layout.latte.latte2php:46
-#: i18n/../app/templates/@layout.v4.latte.latte2php:47
+#: i18n/../app/templates/@layout.v4.latte.latte2php:48
 msgid "Uživatel"
 msgstr ""
 
 #: i18n/../app/templates/@layout.latte.latte2php:50
-#: i18n/../app/templates/@layout.v4.latte.latte2php:51
+#: i18n/../app/templates/@layout.v4.latte.latte2php:52
 msgid "Odhlásit"
 msgstr "Odhlásiť"
 
 #: i18n/../app/templates/@layout.latte.latte2php:78
-#: i18n/../app/templates/@layout.v4.latte.latte2php:80
+#: i18n/../app/templates/@layout.v4.latte.latte2php:81
 msgid "Správce systému"
 msgstr ""
 
@@ -2626,60 +2661,59 @@ msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:58
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:43
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:42
 #: i18n/../data/events/fol/fol1.neon.neon2php:56
 #: i18n/../data/events/fol/fol1.neon.neon2php:117
 #: i18n/../data/events/fol/fol8.neon.neon2php:56
 #: i18n/../data/events/fol/fol8.neon.neon2php:117
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:181
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:194
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:163
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:173
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:20
 msgid "Přihlášen"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:59
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:105
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:110
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:89
 msgid "Náhradník"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:60
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:44
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:43
 #: i18n/../data/events/fol/fol1.neon.neon2php:58
 #: i18n/../data/events/fol/fol1.neon.neon2php:118
 #: i18n/../data/events/fol/fol8.neon.neon2php:58
 #: i18n/../data/events/fol/fol8.neon.neon2php:118
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:107
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:182
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:112
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:195
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:98
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:164
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:91
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:174
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:21
 msgid "Účastnil se"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:61
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:78
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:45
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:59
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:109
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:130
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:183
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:114
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:136
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:196
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:44
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:58
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:100
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:113
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:165
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:93
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:115
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:175
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:22
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:36
 msgid "Nepřijel"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:62
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:46
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:45
 #: i18n/../data/events/fol/fol1.neon.neon2php:57
 #: i18n/../data/events/fol/fol8.neon.neon2php:57
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:108
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:184
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:113
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:197
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:99
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:166
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:92
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:176
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:23
 msgid "Zrušen"
 msgstr ""
@@ -2694,21 +2728,21 @@ msgid "Nasadit náhradníka"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:75
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:56
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:127
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:133
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:55
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:110
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:112
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:33
 msgid "Prezentovat"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:82
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:63
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:62
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:40
 msgid "Zrušit přihlášku"
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:86
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:67
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:66
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:44
 msgid "Smazat přihlášku"
 msgstr ""
@@ -2754,26 +2788,26 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:51
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:50
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:28
 #, fuzzy
 msgid "Přihlásit účastníka"
 msgstr "Prihlásiť"
 
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:77
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:76
 msgid "Preferovaná skupina"
 msgstr ""
 
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:80
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:79
 #, fuzzy
 msgid "Zvolit skupinu"
 msgstr "Zvoliť seminár"
 
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:82
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:81
 msgid "Počet baget k obědu"
 msgstr ""
 
-#: i18n/../data/events/dsef/dsef24.neon.neon2php:84
+#: i18n/../data/events/dsef/dsef24.neon.neon2php:83
 msgid "à 30 Kč"
 msgstr ""
 
@@ -2805,8 +2839,8 @@ msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:64
 #: i18n/../data/events/fol/fol8.neon.neon2php:64
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:114
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:120
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:105
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:99
 msgid "Přihlásit tým"
 msgstr ""
 
@@ -2848,36 +2882,36 @@ msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:162
 #: i18n/../data/events/fol/fol8.neon.neon2php:162
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:227
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:247
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:210
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:226
 msgid "1. člen"
 msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:166
 #: i18n/../data/events/fol/fol8.neon.neon2php:166
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:231
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:251
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:214
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:230
 msgid "2. člen"
 msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:169
 #: i18n/../data/events/fol/fol8.neon.neon2php:169
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:234
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:254
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:217
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:233
 msgid "3. člen"
 msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:172
 #: i18n/../data/events/fol/fol8.neon.neon2php:172
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:237
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:257
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:220
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:236
 msgid "4. člen"
 msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:175
 #: i18n/../data/events/fol/fol8.neon.neon2php:175
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:240
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:260
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:223
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:239
 msgid "5. člen"
 msgstr ""
 
@@ -2896,43 +2930,86 @@ msgid ""
 "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky."
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:104
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:109
-msgid "Čeká na schválení"
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:7
+msgid ""
+"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"https://"
+"fykos.cz/akce/fyziklani/start\">na špecialni strance</a>."
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:106
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:111
-msgid "Potvrzen"
-msgstr ""
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:97
+#, fuzzy
+msgid "Přihlásen"
+msgstr "Prihlásiť"
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:119
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:125
-msgid "Schválit účast"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:124
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:130
-msgid "Potvrdit jako náhradníka"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:134
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:140
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:117
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:119
 msgid "Zrušit tým"
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:138
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:144
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:121
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:123
 msgid "Smazat tým"
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:152
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:158
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:135
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:137
 msgid "Chceme se účastnit v kategorii A"
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:154
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:160
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:137
+msgid ""
+"Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
+"nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A "
+"soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, "
+"která je součástí programu MŠMT Excelence SŠ."
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:140
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:142
+msgid "Kontaktní telefon"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:145
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:147
+msgid "Učitel/doprovod"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:151
+msgid "Učitel má zájem o program počas fyziklani"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:171
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:181
+#, fuzzy
+msgid "Přihlásit člena"
+msgstr "Prihlásiť"
+
+#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:176
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:186
+msgid "Odebrat člena"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:88
+msgid "Čeká na schválení"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:90
+msgid "Potvrzen"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:94
+msgid "Diskvalifikován"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:104
+msgid "Schválit účast"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:109
+msgid "Potvrdit jako náhradníka"
+msgstr ""
+
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:139
 msgid ""
 "Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu "
 "na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní "
@@ -2940,51 +3017,25 @@ msgid ""
 "Excelence SŠ."
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:157
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:163
-msgid "Kontaktní telefon"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:162
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:168
-msgid "Učitel/doprovod"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:168
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:174
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:153
 msgid "Učitel má zájem o program"
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:189
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:202
-#, fuzzy
-msgid "Přihlásit člena"
-msgstr "Prihlásiť"
-
-#: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:194
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:207
-msgid "Odebrat člena"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:115
-msgid "Diskvalifikován"
-msgstr ""
-
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:178
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:157
 msgid "Ubytování pro učitele"
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:181
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:229
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:160
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:208
 msgid "Nechceme ubytování."
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:182
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:230
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:161
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:209
 msgid "Ubytování noc před soutěží."
 msgstr ""
 
-#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:226
+#: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:205
 msgid "Ubytování"
 msgstr ""
 
@@ -3054,6 +3105,10 @@ msgstr ""
 msgid "Accommodation price"
 msgstr ""
 
+#: i18n/../www/js/TypeScriptSources/src/shared/components/displays/price/index.tsx.tsx2php:14
+msgid "for free"
+msgstr ""
+
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/multi-filter-control.tsx.tsx2php:35
 msgid "Active filters"
 msgstr ""
@@ -3064,10 +3119,6 @@ msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/auto-switch-control.tsx.tsx2php:21
 msgid "Auto switch"
-msgstr ""
-
-#: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/results-table.tsx.tsx2php:62
-msgid "Results of Fyziklani"
 msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/line-chart/index.tsx.tsx2php:11
@@ -3093,6 +3144,18 @@ msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/index.tsx.tsx2php:38
 msgid "Statistics from single problem"
+msgstr ""
+
+#: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:58
+msgid "Number of events"
+msgstr ""
+
+#: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:65
+msgid "Edit schedule"
+msgstr ""
+
+#: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/app.tsx.tsx2php:72
+msgid "Hide schedule"
 msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:25

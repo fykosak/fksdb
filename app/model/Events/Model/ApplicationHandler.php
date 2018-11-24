@@ -17,9 +17,9 @@ use FKSDB\ORM\ModelEvent;
 use FormUtils;
 use Nette\ArrayHash;
 use Nette\Database\Connection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
-use RuntimeException;
-use SystemContainer;
+use Submits\StorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -54,7 +54,7 @@ class ApplicationHandler {
     private $connection;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -63,7 +63,7 @@ class ApplicationHandler {
      */
     private $machine;
 
-    function __construct(ModelEvent $event, ILogger $logger, Connection $connection, SystemContainer $container) {
+    function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
         $this->connection = $connection;
@@ -79,6 +79,7 @@ class ApplicationHandler {
     }
 
     /**
+     * @param Holder $holder
      * @return Machine
      */
     public function getMachine(Holder $holder) {
@@ -97,8 +98,8 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
-     * @param type $explicitTransitionName
-     * @param type $explicitMachineName
+     * @param mixed $explicitTransitionName
+     * @param mixed $explicitMachineName
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null, $explicitMachineName = null) {
         $this->_storeAndExecute($holder, $data, $explicitTransitionName, $explicitMachineName, self::STATE_TRANSITION);
@@ -108,7 +109,7 @@ class ApplicationHandler {
         $this->initializeMachine($holder);
 
         try {
-            $explicitMachineName = $explicitMachineName ? : $this->machine->getPrimaryMachine()->getName();
+            $explicitMachineName = $explicitMachineName ?: $this->machine->getPrimaryMachine()->getName();
 
             $this->beginTransaction();
 
@@ -146,15 +147,15 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
                 $this->logger->log(_("Přihláška smazána."), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             }
         } catch (ModelDataConflictException $e) {
             $container = $e->getReferencedId()->getReferencedContainer();
@@ -179,6 +180,10 @@ class ApplicationHandler {
             $this->formRollback($data);
             $this->reraise($e);
         } catch (SubmitProcessingException $e) {
+            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (StorageException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);
@@ -251,12 +256,8 @@ class ApplicationHandler {
         }
     }
 
-    private function reraise(Exception $e) {
+    private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
-
-}
-
-class ApplicationHandlerException extends RuntimeException {
 
 }

@@ -3,8 +3,8 @@
 namespace Events\Model\Grid;
 
 use FKSDB\ORM\ModelEvent;
+use Nette\DI\Container;
 use ORM\Tables\TypedTableSelection;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,7 +19,7 @@ use SystemContainer;
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 
 
-    function __construct(TypedTableSelection $events, SystemContainer $container) {
+    function __construct(TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
     }
 
