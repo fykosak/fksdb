@@ -75,38 +75,4 @@ $(document).ready(function () {
             return list;
         }
     });
-    $('ul.inbox-swappable').swappable({
-        items: '.swappable',
-        cursorAt: {top: -5},
-        update: function (event, ui) {
-            var item = ui.item;
-            var container = item.parent();
-            var dataEl = container.parent().children('input.inbox');
-            var fingerprintEl = $('input[name="__fp"]');
-            var ctId = container.data('contestant');
-
-            var order = $(this).swappable('toArray');
-
-            var data = {order: order, ctId: ctId};
-            $.post('?do=swapSubmits', data, function (response) {
-                for (var tasknr in response.data) {
-                    // refresh content of li-s one by one
-                    var taskData = response.data[tasknr];
-                    var li = container.children('li:nth-child(' + tasknr + ')');
-                    li.empty();
-                    var innerElement = createElement(taskData, dataEl, response.data);
-                    li.append(innerElement);
-                    // update fingerprint
-                    fingerprintEl.val(response.fingerprint);
-                }
-                console.log('DONE');
-            }).fail(function () {
-                alert('Error :-(');
-                window.location.reload();
-            });
-        }
-    });
-
-
 });
-
