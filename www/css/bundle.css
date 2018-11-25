@@ -221,6 +221,44 @@
   color: white;
 }
 
+[data-contest~=fykos] .navigation-item .card {
+  border-color: #1175da;
+  border-radius: 0;
+  background-color: white;
+  transition-duration: 200ms;
+  color: #1175da;
+}
+[data-contest~=fykos] .navigation-item .card a {
+  color: #1175da;
+}
+[data-contest~=fykos] .navigation-item .card:hover, [data-contest~=fykos] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #1175da;
+  color: white;
+}
+[data-contest~=fykos] .navigation-item .card:hover a, [data-contest~=fykos] .navigation-item .card:focus a {
+  color: white;
+}
+
+[data-contest~=vyfuk] .navigation-item .card {
+  border-color: #ff4800;
+  border-radius: 0;
+  background-color: white;
+  transition-duration: 200ms;
+  color: #ff4800;
+}
+[data-contest~=vyfuk] .navigation-item .card a {
+  color: #ff4800;
+}
+[data-contest~=vyfuk] .navigation-item .card:hover, [data-contest~=vyfuk] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #ff4800;
+  color: white;
+}
+[data-contest~=vyfuk] .navigation-item .card:hover a, [data-contest~=vyfuk] .navigation-item .card:focus a {
+  color: white;
+}
+
 .schedule-field-container {
   color: #f44336;
 }
@@ -254,5 +292,13 @@
   background-image: url("/images/fyziklani/Prague Layout.svg");
   background-repeat: no-repeat;
 }
+
+.bg-white-container {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/*.badge, .btn, .form-control {
+  border-radius: 0;
+}*/
 
 /*# sourceMappingURL=bundle.css.map */

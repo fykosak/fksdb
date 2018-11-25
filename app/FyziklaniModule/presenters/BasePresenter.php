@@ -118,7 +118,8 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     public function getSubtitle() {
-        return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
+        return $this->getEvent()->name;
+       // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**

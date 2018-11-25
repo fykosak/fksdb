@@ -108,7 +108,7 @@ class TaskCodeHandler {
 
         try {
             $this->serviceFyziklaniSubmit->save($submit);
-            return [sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName), 'success'];
+            return sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName);
         } catch (\Exception $e) {
             throw $e;
         }

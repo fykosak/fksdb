@@ -156,7 +156,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->getEventId(), $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
+        return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
     }
 
     public function createComponentSubmitEditForm() {
@@ -186,7 +186,7 @@ class SubmitPresenter extends BasePresenter {
         try {
             $log = $handler->preProcess($values->taskCode, $points);
             $this->flashMessage($log, 'success');
-            $this->redirect('this');
+            $this->redirect('table');
         } catch (TaskCodeException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
         }
