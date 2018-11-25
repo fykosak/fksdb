@@ -23,10 +23,10 @@ class PipelineFactory {
     }
 
     /**
-     *
+     * @param ModelEvent $event
      * @return Pipeline
      */
-    public function create(ModelEvent $event) {
+    public function create(ModelEvent $event): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 

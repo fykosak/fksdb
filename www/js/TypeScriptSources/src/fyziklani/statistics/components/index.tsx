@@ -5,8 +5,8 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { config } from '../../../config';
 import { INetteActions } from '../../../app-collector/';
+import { config } from '../../../config';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
 import App from './app';
@@ -23,10 +23,10 @@ export default class StatisticApp extends React.Component<IProps, {}> {
         const {mode, actions} = this.props;
         return (
             <Provider store={store}>
-                <>
+                <div className={'brawl-results fyziklani-results'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
                     <App mode={mode} accessKey={accessKey}/>
-                </>
+                </div>
             </Provider>
         );
     }

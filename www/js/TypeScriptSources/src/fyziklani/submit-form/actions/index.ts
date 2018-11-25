@@ -11,7 +11,9 @@ interface ISubmitFormRequest {
     points: number;
 }
 
-export const submitStart = (dispatch: Dispatch<IFyziklaniSubmitStore>, values: ISubmitFormRequest): Promise<IResponse<void>> => {
+export const ACCESS_KEY = '@fyziklani-submit-form';
+
+export const submitStart = (dispatch: Dispatch<IFyziklaniSubmitStore>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
     const data = {
         act: 'submit',
         requestData: {
@@ -19,7 +21,7 @@ export const submitStart = (dispatch: Dispatch<IFyziklaniSubmitStore>, values: I
             code: getFullCode(values.code),
         },
     };
-    return dispatchNetteFetch<ISubmitFormRequest, void, IFyziklaniSubmitStore>('@@fyziklani-submit', dispatch, data, () => {
+    return dispatchNetteFetch<ISubmitFormRequest, void, IFyziklaniSubmitStore>(ACCESS_KEY, dispatch, data, () => {
         dispatch(reset(FORM_NAME));
-    }, () => null);
+    }, () => null, url);
 };

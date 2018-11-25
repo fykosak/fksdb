@@ -11,10 +11,12 @@ import {
 import { submitStart } from '../actions/';
 import { IFyziklaniSubmitStore } from '../reducers/';
 import FormContainer from './form-container';
+import { INetteActions } from '../../../app-collector';
 
 interface IProps {
     tasks: ITask[];
     teams: ITeam[];
+    actions: INetteActions;
 }
 
 interface IState {
@@ -35,9 +37,9 @@ class TaskCode extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniSubmitStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniSubmitStore>, ownProps: IProps): IState => {
     return {
-        onSubmit: (values) => submitStart(dispatch, values),
+        onSubmit: (values) => submitStart(dispatch, values, ownProps.actions.save),
     };
 };
 
