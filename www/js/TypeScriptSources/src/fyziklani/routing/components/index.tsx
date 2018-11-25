@@ -21,7 +21,7 @@ interface IProps {
 export default class extends React.Component<IProps, {}> {
 
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const {teams, rooms} = this.props;
 
         return (
