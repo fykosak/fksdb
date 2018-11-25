@@ -27,7 +27,7 @@ const registerSubmitForm: IApp = (element, module, component, mode, rawData, act
     const c = document.createElement('div');
     const {tasks, teams} = JSON.parse(rawData);
     element.appendChild(c);
-    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams}/>, c);
+    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} actions={actions}/>, c);
     return true;
 };
 

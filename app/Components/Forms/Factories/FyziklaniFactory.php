@@ -3,8 +3,10 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\ORM\ModelEvent;
+use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -19,10 +21,15 @@ class FyziklaniFactory {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
+    /**
+     * @var FyziklaniComponentsFactory
+     */
+    private $fyziklaniComponentsFactory;
 
-    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, FyziklaniComponentsFactory $fyziklaniComponentsFactory) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
     private function createPointsField(ModelEvent $event): RadioList {
@@ -54,8 +61,8 @@ class FyziklaniFactory {
         return $field;
     }
 
-    public function createEntryForm($eventId): TaskCodeInput {
-        $control = new TaskCodeInput($this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $eventId);
+    public function createEntryForm(Container $container, ModelEvent $event): TaskCodeInput {
+        $control = $this->fyziklaniComponentsFactory->createTaskCodeInput($container, $event);
         return $control;
     }
 
