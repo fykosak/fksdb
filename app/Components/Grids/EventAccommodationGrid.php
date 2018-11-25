@@ -47,11 +47,11 @@ class EventAccommodationGrid extends BaseGrid {
         });
         $this->addButton('edit', _('Upravit'))->setText('Upravit')//todo i18n
         ->setLink(function ($row) {
-            return $this->getPresenter()->link('edit', $row->event_accommodation_id);
+            return $this->getPresenter()->link('edit', ['id' => $row->event_accommodation_id]);
         });
         $this->addButton('billeted', _('Accommodated persons'))->setText(_('Accommodated persons'))//todo i18n
         ->setLink(function ($row) {
-            return $this->getPresenter()->link('billeted', ['eventAccommodationId' => $row->event_accommodation_id]);
+            return $this->getPresenter()->link('billeted', ['id' => $row->event_accommodation_id]);
         });
 
         $this->addButton('delete', _('Smazat'))->setClass('btn btn-sm btn-danger')->setText('Smazat')//todo i18n

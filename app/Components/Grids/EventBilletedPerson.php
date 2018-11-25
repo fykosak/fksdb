@@ -79,7 +79,7 @@ class EventBilletedPerson extends BaseGrid {
                                 return $this->link('deletePaymentAll!', $row->person_id);
                             });
         */
-        $this->addGlobalButton('list')
+        $this->addGlobalButton('list', ['id' => null])
             ->setLabel(_('Zoznam ubytovaní'))
             ->setLink($this->getPresenter()->link('list'));
 
