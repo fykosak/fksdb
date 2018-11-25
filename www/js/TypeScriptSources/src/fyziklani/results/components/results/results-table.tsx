@@ -62,7 +62,7 @@ class ResultsTable extends React.Component<IState, {}> {
                 <h1>{filter ? filter.getHeadline() : lang.getText('Results of Fyziklani')}</h1>
                 <table ref={(table) => {
                     this.table = table;
-                }} className="tablesorter table-striped table-hover">
+                }} className="tablesorter table-striped table-hover table table-sm bg-white">
                     <thead>
                     <tr>
                         <th/>

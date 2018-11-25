@@ -10,6 +10,7 @@ import {
 } from '../../helpers/interfaces/';
 import { validate } from '../middleware/form';
 import FormSection from './form-section';
+import { ACCESS_KEY } from '../actions';
 
 export interface IProps {
     tasks: ITask[];
@@ -22,11 +23,11 @@ class FormContainer extends React.Component<IProps & InjectedFormProps<{ code: s
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
-        const accessKey = '@fyziklani-submit-form';
+
         return (
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <FormSection
-                    accessKey={accessKey}
+                    accessKey={ACCESS_KEY}
                     tasks={tasks}
                     teams={teams}
                     onSubmit={onSubmit}

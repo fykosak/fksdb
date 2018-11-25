@@ -2812,7 +2812,7 @@ msgstr ""
 #: i18n/../data/events/fol/fol8.neon.neon2php:22
 msgid ""
 "Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje "
-"rychle."
+"rychle. Pokud nejste student, vyplňte \"not a student\"."
 msgstr ""
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:25

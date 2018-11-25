@@ -1,5 +1,46 @@
-.brawl-results, .fyziklani-results {
-  margin: 2em 0;
+.brawl-results h1, .fyziklani-results h1 {
+  color: white;
+}
+.brawl-results .inner-headline, .fyziklani-results .inner-headline {
+  margin-top: 15%;
+}
+.brawl-results .clock, .fyziklani-results .clock {
+  justify-content: space-between;
+  color: #d7392e;
+  padding: 0.25em;
+  font-weight: bold;
+}
+.brawl-results .clock > span, .fyziklani-results .clock > span {
+  display: flex;
+  flex-wrap: wrap;
+}
+.brawl-results .clock.small, .fyziklani-results .clock.small {
+  font-size: 200%;
+  background: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+.brawl-results .clock.small .time-label, .fyziklani-results .clock.small .time-label {
+  width: 100%;
+  font-size: 0.75rem;
+}
+.brawl-results .clock.big, .fyziklani-results .clock.big {
+  text-align: center;
+  position: initial;
+}
+.brawl-results .clock.big .time-value, .fyziklani-results .clock.big .time-value {
+  width: 100%;
+  font-size: 8rem;
+}
+.brawl-results .clock.big .time-label, .fyziklani-results .clock.big .time-label {
+  width: 100%;
+  font-size: 2rem;
+}
+.brawl-results .image-wp, .fyziklani-results .image-wp {
+  color: #d7392e;
+  font-size: 5rem;
+  text-align: center;
 }
 .brawl-results table tbody, .fyziklani-results table tbody {
   counter-reset: results-table;
@@ -180,6 +221,44 @@
   color: white;
 }
 
+[data-contest~=fykos] .navigation-item .card {
+  border-color: #1175da;
+  border-radius: 0;
+  background-color: white;
+  transition-duration: 200ms;
+  color: #1175da;
+}
+[data-contest~=fykos] .navigation-item .card a {
+  color: #1175da;
+}
+[data-contest~=fykos] .navigation-item .card:hover, [data-contest~=fykos] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #1175da;
+  color: white;
+}
+[data-contest~=fykos] .navigation-item .card:hover a, [data-contest~=fykos] .navigation-item .card:focus a {
+  color: white;
+}
+
+[data-contest~=vyfuk] .navigation-item .card {
+  border-color: #ff4800;
+  border-radius: 0;
+  background-color: white;
+  transition-duration: 200ms;
+  color: #ff4800;
+}
+[data-contest~=vyfuk] .navigation-item .card a {
+  color: #ff4800;
+}
+[data-contest~=vyfuk] .navigation-item .card:hover, [data-contest~=vyfuk] .navigation-item .card:focus {
+  transition-duration: 200ms;
+  background-color: #ff4800;
+  color: white;
+}
+[data-contest~=vyfuk] .navigation-item .card:hover a, [data-contest~=vyfuk] .navigation-item .card:focus a {
+  color: white;
+}
+
 .schedule-field-container {
   color: #f44336;
 }
@@ -213,5 +292,13 @@
   background-image: url("/images/fyziklani/Prague Layout.svg");
   background-repeat: no-repeat;
 }
+
+.bg-white-container {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/*.badge, .btn, .form-control {
+  border-radius: 0;
+}*/
 
 /*# sourceMappingURL=bundle.css.map */

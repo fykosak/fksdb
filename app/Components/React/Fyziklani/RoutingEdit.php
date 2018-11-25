@@ -18,7 +18,7 @@ class RoutingEdit extends FyziklaniModule {
     }
 
     public function getMode(): string {
-        return null;
+        return '';
     }
 
     public function getComponentName(): string {
@@ -33,7 +33,7 @@ class RoutingEdit extends FyziklaniModule {
 
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');
-        $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
+        $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
         $response = new \ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
