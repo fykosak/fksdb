@@ -27,5 +27,3 @@ class ModelContainer extends ContainerWithOptions {
     }
 
 }
-
-?>

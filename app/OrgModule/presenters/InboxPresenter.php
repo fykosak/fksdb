@@ -4,13 +4,14 @@ namespace OrgModule;
 
 use DbNames;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\FormControl\OptimisticFormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\ORM\ModelContestant;
 use FKSDB\ORM\ModelSubmit;
 use FKSDB\ORM\ModelTaskContribution;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
@@ -112,7 +113,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderDefault() {
-        $this['inboxForm']->setDefaults();
+        $this['inboxForm']->getForm()->setDefaults();
     }
 
     public function titleHandout() {
@@ -151,24 +152,29 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     protected function createComponentInboxForm($name) {
-        $form = new OptimisticForm(
+        $controlForm = new OptimisticFormControl(array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues'));
+        /*$form = new OptimisticForm(
             array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
-        );
-        $renderer = new BootstrapRenderer();
-        $renderer->setColLeft(2);
-        $renderer->setColRight(10);
-        $form->setRenderer($renderer);
+        );*/
+        $form = $controlForm->getForm();
+        /*  $renderer = new BootstrapRenderer();
+          $renderer->setColLeft(2);
+          $renderer->setColRight(10);
+          $form->setRenderer($renderer);*/
 
         $contestants = $this->seriesTable->getContestants();
         $tasks = $this->seriesTable->getTasks();
+        $container = new ModelContainer();
+        $form->addComponent($container, SeriesTable::FORM_CONTESTANT);
+        // $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
 
-        $container = $form->addContainer(SeriesTable::FORM_CONTESTANT);
-
-        foreach ($contestants as $contestant) {
+        foreach ($contestants as $row) {
+            $contestant = ModelContestant::createFromTableRow($row);
             $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
             $control->setClassName('inbox');
-
-            $namingContainer = $container->addContainer($contestant->ct_id);
+            $namingContainer = new ModelContainer();
+            $container->addComponent($namingContainer, $contestant->ct_id);
+            // $namingContainer = $container->addContainer($contestant->ct_id);
             $namingContainer->addComponent($control, SeriesTable::FORM_SUBMIT);
         }
 
@@ -180,7 +186,7 @@ class InboxPresenter extends SeriesPresenter {
         $this->registerJSFile('js/jquery.ui.swappable.js');
         $this->registerJSFile('js/inbox.js');
 
-        return $form;
+        return $controlForm;
     }
 
     protected function createComponentHandoutForm() {
