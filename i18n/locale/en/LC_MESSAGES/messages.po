@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-24 15:31+0100\n"
+"POT-Creation-Date: 2018-11-26 00:20+0100\n"
 "PO-Revision-Date: 2018-10-06 02:01+0200\n"
 "Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -55,32 +55,32 @@ msgstr ""
 msgid "Tým %s má již uzavřeno bodování"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:98
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:106
 msgid "Úkoly a počty bodů jsou správně."
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:99
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:107
 msgid "Zkontrolujte správnost zadání bodů!"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:100
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:108
 msgid "Úloha u vydavačů"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:103
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:111
 msgid "Úloha u vydavačů se shoduje."
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:104
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:112
 msgid "Zkontrolujte prosím shodnost úlohy u vydavačů"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:132
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:146
 #, fuzzy, php-format
 msgid "Uzavřít kategorii %s."
 msgstr "Team inserted to category %s."
 
-#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:167
+#: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:198
 msgid "Uzavřít celé Fyziklání"
 msgstr ""
 
@@ -140,70 +140,30 @@ msgstr ""
 msgid "Tasks statistics of Fyziklani"
 msgstr ""
 
-#: i18n/../app/FyziklaniModule/presenters/BasePresenter.php:121
-#, php-format
-msgid "fyziklani%d"
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:65
-#, fuzzy
-msgid "Zadávání bodů"
-msgstr "Grade series %d"
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:86
-msgid "Úprava bodování"
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:95
-msgid "Submits"
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:138
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:89
-#, php-format
-msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:141
-#: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:64
-msgid "Vyskytla se chyba"
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:206
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:98
-msgid "Chybně zadaný kód úlohy."
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:213
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:106
-#, php-format
-msgid "Tým %s neexistuje."
-msgstr "Team with name '%s' already exists."
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:222
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:266
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:115
-msgid "Bodování tohoto týmu je uzavřené."
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:229
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:122
-#, php-format
-msgid "Úloha %s neexistuje."
-msgstr ""
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:234
-#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:127
-#, fuzzy, php-format
-msgid "Úloha %s už byla zadaná."
-msgstr "Task %s submitted."
-
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:255
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:76
 #, fuzzy
 msgid "Neexistující submit."
 msgstr "Unknown account."
 
-#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:301
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:84
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:137
+msgid "Bodování tohoto týmu je uzavřené."
+msgstr ""
+
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:103
+#, fuzzy
+msgid "Zadávání bodů"
+msgstr "Grade series %d"
+
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:124
+msgid "Úprava bodování"
+msgstr ""
+
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:133
+msgid "Submits"
+msgstr ""
+
+#: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:212
 msgid "Body byly změněny."
 msgstr ""
 
@@ -351,11 +311,11 @@ msgstr "Account not ready."
 msgid "Neplatné přihlašovací údaje."
 msgstr "Invalid credentials."
 
-#: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:69
+#: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:72
 msgid "TeamID"
 msgstr ""
 
-#: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:69
+#: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:72
 msgid "Pořadí"
 msgstr ""
 
@@ -368,6 +328,30 @@ msgstr ""
 #, php-format
 msgid "Tým %s (%d, %s) nemá přiřazenou místnost."
 msgstr ""
+
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:111
+#, php-format
+msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+msgstr ""
+
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:125
+msgid "Chybně zadaný kód úlohy."
+msgstr ""
+
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:131
+#, php-format
+msgid "Tým %s neexistuje."
+msgstr "Team with name '%s' already exists."
+
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:143
+#, php-format
+msgid "Úloha %s neexistuje."
+msgstr ""
+
+#: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:147
+#, fuzzy, php-format
+msgid "Úloha %s už byla zadaná."
+msgstr "Task %s submitted."
 
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:49
 #, php-format
@@ -382,6 +366,10 @@ msgstr ""
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:58
 #, php-format
 msgid "Úloha %s \"%s\" nebyla aktualizována"
+msgstr ""
+
+#: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:64
+msgid "Vyskytla se chyba"
 msgstr ""
 
 #: i18n/../app/model/Events/Exceptions.php:22
@@ -623,7 +611,7 @@ msgstr "Create"
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:361
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:368
 #: i18n/../app/OrgModule/presenters/PointsPresenter.php:150
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:87
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:94
 #: i18n/../app/Components/Controls/Events/ApplicationComponent.php:140
 #: i18n/../app/presenters/SettingsPresenter.php:112
 msgid "Uložit"
@@ -1169,7 +1157,7 @@ msgstr "Register"
 
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:348
 #: i18n/../app/PublicModule/presenters/SubmitPresenter.php:153
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:75
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:82
 #: i18n/../app/presenters/AuthenticationPresenter.php:220
 #: i18n/../app/presenters/AuthenticationPresenter.php:237
 msgid "Vypršela časová platnost formuláře. Odešlete jej prosím znovu."
@@ -1949,12 +1937,12 @@ msgstr ""
 msgid "Note"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:29
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:36
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:54
 msgid "Počet bodů"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:40
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:47
 #: i18n/../data/events/fol/fol1.neon.neon2php:157
 #: i18n/../data/events/fol/fol8.neon.neon2php:157
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:205
@@ -1962,35 +1950,34 @@ msgstr ""
 msgid "Tým"
 msgstr "Team"
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:46
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:54
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:53
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:53
 #, fuzzy
 msgid "ID týmu"
 msgstr "Team name"
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:52
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:59
 #: i18n/../app/Components/Grids/SubmitsGrid.php:59
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:55
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:58
 msgid "Úloha"
 msgstr "Task"
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:71
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:78
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/legend.tsx.tsx2php:28
 msgid "bod"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:71
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:78
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/legend.tsx.tsx2php:32
 msgid "body"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:71
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:78
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/legend.tsx.tsx2php:35
 msgid "bodů"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:72
+#: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:79
 msgid " "
 msgstr ""
 
@@ -2086,7 +2073,7 @@ msgstr ""
 #: i18n/../app/Components/Grids/OrgsGrid.php:74
 #: i18n/../app/Components/Grids/OrgsGrid.php:75
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:44
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:61
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:64
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:73
 #: i18n/../app/Components/Grids/ContestantsGrid.php:47
 #: i18n/../app/Components/Grids/ContestantsGrid.php:48
@@ -2101,7 +2088,7 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:57
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:51
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:69
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:72
 msgid "Smazat"
 msgstr ""
 
@@ -2176,32 +2163,37 @@ msgstr "Submitted via"
 msgid "Zrušit"
 msgstr "Cancel"
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:53
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:56
 msgid "Jméno týmu"
 msgstr "Name"
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:56
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:57
+#, fuzzy
+msgid "Id týmu"
+msgstr "Team name"
+
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:59
 msgid "Body"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:57
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:60
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:56
 msgid "Místnost"
 msgstr "Place"
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:58
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:61
 msgid "Zadané"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:68
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:71
 msgid "Opravdu vzít submit úlohy zpět?"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:93
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:109
 msgid "Submit neexistuje"
 msgstr ""
 
-#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:111
+#: i18n/../app/Components/Grids/Fyziklani/FyziklaniSubmitsGrid.php:127
 #, fuzzy
 msgid "Úloha byla smazána."
 msgstr "Task %s submitted."
@@ -2510,6 +2502,12 @@ msgstr ""
 msgid "Nebyl vybrán žádný záznam."
 msgstr "No record selectd."
 
+#: i18n/../app/FyziklaniModule/templates/Results/results-layout.latte.latte2php:53
+#: i18n/../app/templates/@layout.latte.latte2php:78
+#: i18n/../app/templates/@layout.v4.latte.latte2php:81
+msgid "Správce systému"
+msgstr "Administrator"
+
 #: i18n/../app/FyziklaniModule/templates/Submit/autoClose.latte.latte2php:2
 msgid "Stránku možno zavrieť"
 msgstr ""
@@ -2658,11 +2656,6 @@ msgstr "User"
 #: i18n/../app/templates/@layout.v4.latte.latte2php:52
 msgid "Odhlásit"
 msgstr "Log out"
-
-#: i18n/../app/templates/@layout.latte.latte2php:78
-#: i18n/../app/templates/@layout.v4.latte.latte2php:81
-msgid "Správce systému"
-msgstr "Administrator"
 
 #: i18n/../app/config/exports.neon.neon2php:12
 #: i18n/../app/config/exports.neon.neon2php:14
@@ -2857,10 +2850,10 @@ msgid "Pouze pro české a slovenské studenty."
 msgstr "Only for Czech and Slovak students."
 
 #: i18n/../data/events/fol/fol1.neon.neon2php:22
-#: i18n/../data/events/fol/fol8.neon.neon2php:22
+#, fuzzy
 msgid ""
 "Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje "
-"rychle. Pokud nejste student, vyplňte \"not a student\"."
+"rychle."
 msgstr ""
 "If you cannot find the school, report to schola.novum () fykos.cz. We reply "
 "quickly. If you are not a student, fill \"not a student\"."
@@ -2967,6 +2960,14 @@ msgstr "Team with name '%value' already exists."
 #: i18n/../data/events/fol/fol8.neon.neon2php:180
 msgid "Osoba je již na Fyziklání online přihlášena."
 msgstr "Person is already applied to Online Physics Brawl."
+
+#: i18n/../data/events/fol/fol8.neon.neon2php:22
+msgid ""
+"Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje "
+"rychle. Pokud nejste student, vyplňte \"not a student\"."
+msgstr ""
+"If you cannot find the school, report to schola.novum () fykos.cz. We reply "
+"quickly. If you are not a student, fill \"not a student\"."
 
 #: i18n/../data/events/fol/fol8.neon.neon2php:183
 msgid ""
