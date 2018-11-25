@@ -33,8 +33,14 @@ class Results extends React.Component<IState & IProps, {}> {
             <div>
                 {msg}
 
-                {(mode === 'presentation') && <><Timer/><AutoFilter/></>}
-                {(visible || hardVisible) ? (<ResultsTable/>) : (<Images basePath={basePath}/>)}
+                {(mode === 'presentation') && (<>
+                    <div className={'inner-headline'}>
+                        <Timer/>
+                        {(visible || hardVisible) ? null : (<Images basePath={basePath}/>)}
+                    </div>
+                    <AutoFilter/>
+                </>)}
+                {(visible || hardVisible) ? (<ResultsTable/>) : null}
             </div>
         );
     }

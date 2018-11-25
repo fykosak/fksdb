@@ -12,20 +12,22 @@ import {
 } from '../../helpers/interfaces/';
 import { app } from '../reducers/';
 import Container from './container';
+import { INetteActions } from '../../../app-collector';
 
 interface ITaskCodeProps {
     tasks: ITask[];
     teams: ITeam[];
+    actions: INetteActions;
 }
 
 export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
     public render() {
-        const {tasks, teams} = this.props;
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const {tasks, teams, actions} = this.props;
+        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>
-                <Container tasks={tasks} teams={teams}/>
+                <Container tasks={tasks} teams={teams} actions={actions}/>
             </Provider>
         );
     }

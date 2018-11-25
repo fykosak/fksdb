@@ -87,12 +87,20 @@ class ClosePresenter extends BasePresenter {
         }
     }
 
-    public function createComponentCloseGrid() {
-        $grid = new FyziklaniTeamsGrid($this->getEventId(), $this->serviceFyziklaniTeam);
-        return $grid;
+    /**
+     * @return FyziklaniTeamsGrid
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseGrid(): FyziklaniTeamsGrid {
+        return new FyziklaniTeamsGrid($this->getEventId(), $this->serviceFyziklaniTeam);
     }
 
-    public function createComponentCloseForm() {
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentCloseForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
@@ -103,14 +111,16 @@ class ClosePresenter extends BasePresenter {
         $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
             ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
-        $form->onSuccess[] = [$this, 'closeFormSucceeded'];
+        $form->onSuccess[] = function () {
+            $this->closeFormSucceeded();
+        };
         return $control;
     }
 
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function closeFormSucceeded() {
+    private function closeFormSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
@@ -125,28 +135,46 @@ class ClosePresenter extends BasePresenter {
         $this->redirect('table'); // if there's no backlink
     }
 
-    private function createComponentCloseCategoryForm($category) {
+    /**
+     * @param $category
+     * @return FormControl
+     */
+    private function createComponentCloseCategoryForm($category): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addHidden('category', $category);
         $form->addSubmit('send', sprintf(_('Uzavřít kategorii %s.'), $category));
-        $form->onSuccess[] = [$this, 'closeCategoryFormSucceeded'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->closeCategoryFormSucceeded($form);
+        };
         return $control;
     }
 
-    public function createComponentCloseCategoryAForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentCloseCategoryAForm(): FormControl {
         return $this->createComponentCloseCategoryForm('A');
     }
 
-    public function createComponentCloseCategoryBForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentCloseCategoryBForm(): FormControl {
         return $this->createComponentCloseCategoryForm('B');
     }
 
-    public function createComponentCloseCategoryCForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentCloseCategoryCForm(): FormControl {
         return $this->createComponentCloseCategoryForm('C');
     }
 
-    public function createComponentCloseCategoryFForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentCloseCategoryFForm(): FormControl {
         return $this->createComponentCloseCategoryForm('F');
     }
 
@@ -161,25 +189,35 @@ class ClosePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    public function createComponentCloseGlobalForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentCloseGlobalForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addSubmit('send', _('Uzavřít celé Fyziklání'));
-        $form->onSuccess[] = [$this, 'closeGlobalFormSucceeded'];
+        $form->onSuccess[] = function () {
+            $this->closeGlobalFormSucceeded();
+        };
         return $control;
     }
 
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function closeGlobalFormSucceeded() {
+    private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
     }
 
-    private function isReadyToClose($category = null) {
+    /**
+     * @param null $category
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     */
+    private function isReadyToClose($category = null): bool {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->getEventId());
         if ($category) {
             $query->where('category', $category);
@@ -189,7 +227,12 @@ class ClosePresenter extends BasePresenter {
         return $count == 0;
     }
 
-    private function getNextTask() {
+    /**
+     * @return string
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    private function getNextTask(): string {
         $submits = count($this->team->getSubmits());
 
         $tasksOnBoard = $this->getEvent()->getParameter('gameSetup')['tasksOnBoard'];

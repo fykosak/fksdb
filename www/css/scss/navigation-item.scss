@@ -51,3 +51,12 @@
 [data-contest~="event-type-1"] .navigation-item .card {
   @include navigation-item(#d7392e, white);
 }
+
+[data-contest~="fykos"] .navigation-item .card {
+  @include navigation-item(#1175da, white);
+}
+
+[data-contest~="vyfuk"] .navigation-item .card {
+  @include navigation-item(#ff4800, white);
+}
+
