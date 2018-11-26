@@ -73,7 +73,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return bool
      * @throws BadRequestException
      */
-    protected function eventExist() {
+    protected function eventExist(): bool {
         return $this->getEvent() ? true : false;
     }
 
@@ -85,11 +85,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return int
      * @throws BadRequestException
      */
-    public function getEventId() {
+    public function getEventId(): int {
         if (!$this->eventId) {
             throw new BadRequestException(\sprintf(_('Event id je povinné')));
         }
-        return $this->eventId;
+        return +$this->eventId;
     }
 
     /**

@@ -6,7 +6,6 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
-use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
@@ -129,10 +128,6 @@ abstract class BasePresenter extends EventBasePresenter {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
-    /*  public function getNavBarVariant() {
-          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-      }*/
-
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
     }
@@ -141,7 +136,7 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return int
      * @throws \Nette\Application\AbortException
      */
-    public function getEventId() {
+    public function getEventId(): int {
         if (!$this->eventId) {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }

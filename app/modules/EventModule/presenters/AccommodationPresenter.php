@@ -5,11 +5,12 @@ namespace EventModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInput;
-use FKSDB\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Grids\EventAccommodationGrid;
 use FKSDB\Components\Grids\EventBilletedPerson;
 use FKSDB\ORM\ModelEventAccommodation;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceEventAccommodation;
@@ -62,56 +63,29 @@ class AccommodationPresenter extends BasePresenter {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-    protected function createComponentCreateForm() {
-        $control = $this->createForm();
-        $form = $control->getForm();
 
-        $form->addSubmit('send', _('Vložit'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleCreateFormSuccess($form);
-        };
-        return $control;
+    public function authorizedList() {
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'list'));
     }
 
-    protected function createComponentEditForm() {
-        $control = $this->createForm();
-        $form = $control->getForm();
-        $form->addSubmit('send', _('Uložit'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleEditFormSuccess($form);
-        };
-
-        return $control;
+    public function authorizedCreate() {
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'create'));
     }
 
-    public function actionEdit() {
-        $this['editForm']->getForm()->setDefaults($this->getDefaults());
+    public function authorizedEdit() {
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'edit'));
     }
 
-    protected function getDefaults() {
-        $model = $this->getModel();
-        if (!$model) {
-            return null;
-        }
-        /**
-         * @var $model \FKSDB\ORM\ModelEventAccommodation
-         */
-        return [
-            self::CONT_ACCOMMODATION => $model->toArray(),
-            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : [],
-        ];
-
+    public function authorizedBilleted() {
+        return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'billeted'));
     }
 
     public function titleEdit() {
-        /**
-         * @var $model \FKSDB\ORM\ModelEventAccommodation
-         */
         $model = $this->getModel();
         $this->setTitle(sprintf(
             _('Úprava ubytovaní v hoteli "%s" v dni %s'),
             $model->name,
-            $model->date->format('Y-m-d')
+            $model->date->format('d. m. Y')
         ));
         $this->setIcon('fa fa-pencil');
     }
@@ -127,19 +101,62 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     public function titleBilleted() {
-        /**
-         * @var $model \FKSDB\ORM\ModelEventAccommodation
-         */
-        $model = $this->serviceEventAccommodation->findByPrimary($this->id);
+        $model = $this->getModel();
         $this->setTitle(
             sprintf(_('List of accommodated people of hostel "%s" at %s'),
                 $model->name,
-                $model->date->format('Y-m-d')
+                $model->date->format('d. m. Y')
             ));
         $this->setIcon('fa fa-users');
     }
 
-    private function createAccommodationContainer() {
+    /**
+     * @throws BadRequestException
+     */
+    public function actionEdit() {
+        $this['editForm']->getForm()->setDefaults($this->getDefaults());
+    }
+
+    /**
+     * @return FormControl
+     */
+    public function createComponentCreateForm(): FormControl {
+        $control = $this->createForm();
+        $form = $control->getForm();
+
+        $form->addSubmit('send', _('Vložit'));
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleCreateFormSuccess($form);
+        };
+        return $control;
+    }
+
+    /**
+     * @return FormControl
+     */
+    public function createComponentEditForm(): FormControl {
+        $control = $this->createForm();
+        $form = $control->getForm();
+        $form->addSubmit('send', _('Uložit'));
+        $form->onSuccess[] = function (Form $form) {
+            $this->handleEditFormSuccess($form);
+        };
+
+        return $control;
+    }
+
+    public function createComponentGrid(): EventAccommodationGrid {
+        return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
+    }
+
+    public function createComponentBilletedGrid(): EventBilletedPerson {
+        return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
+    }
+
+    /**
+     * @return ModelContainer
+     */
+    private function createAccommodationContainer(): ModelContainer {
         $container = new ModelContainer();
 
         $container->addText('name', _('Name'))->setRequired(true);
@@ -152,7 +169,10 @@ class AccommodationPresenter extends BasePresenter {
         return $container;
     }
 
-    public function createForm() {
+    /**
+     * @return FormControl
+     */
+    private function createForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -166,11 +186,35 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @return ModelEventAccommodation
+     * @return array|null
+     * @throws BadRequestException
      */
-    public function getModel() {
+    private function getDefaults() {
+        $model = $this->getModel();
+        if (!$model) {
+            return null;
+        }
+        return [
+            self::CONT_ACCOMMODATION => $model->toArray(),
+            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : [],
+        ];
+    }
+
+
+    /**
+     * @return ModelEventAccommodation
+     * @throws BadRequestException
+     */
+    public function getModel(): ModelEventAccommodation {
         $row = $this->serviceEventAccommodation->findByPrimary($this->id);
-        return ModelEventAccommodation::createFromTableRow($row);
+        if (!$row) {
+            throw new BadRequestException(_('Accommodation does not exists'));
+        }
+        $model = ModelEventAccommodation::createFromTableRow($row);
+        if ($this->getEventId() !== $model->event_id) {
+            throw new ForbiddenRequestException(_('Ubytovanie nepatrí k tomuto eventu'));
+        }
+        return $model;
 
     }
 
@@ -178,7 +222,7 @@ class AccommodationPresenter extends BasePresenter {
      * @param Form $form
      * @throws \Nette\Application\AbortException
      */
-    public function handleCreateFormSuccess(Form $form) {
+    private function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
         $values = $form->getValues();
 
@@ -224,19 +268,28 @@ class AccommodationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $values
+     * @return array
+     */
     private function getAccommodationFormData($values) {
         return \FormUtils::emptyStrToNull($values[self::CONT_ACCOMMODATION]);
     }
 
+    /**
+     * @param $values
+     * @return array
+     */
     private function getAddressFormData($values) {
         return \FormUtils::emptyStrToNull($values[self::CONT_ADDRESS]);
     }
 
     /**
      * @param Form $form
+     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function handleEditFormSuccess(Form $form) {
+    private function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceEventAccommodation->getConnection();
         $values = $form->getValues();
 
@@ -286,11 +339,4 @@ class AccommodationPresenter extends BasePresenter {
         }
     }
 
-    protected function createComponentGrid() {
-        return new EventAccommodationGrid($this->getEventId(), $this->serviceEventAccommodation);
-    }
-
-    protected function createComponentBilletedGrid() {
-        return new EventBilletedPerson($this->id, $this->serviceEventPersonAccommodation);
-    }
 }
