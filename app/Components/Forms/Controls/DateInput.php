@@ -4,22 +4,14 @@ namespace FKSDB\Components\Forms\Controls;
 
 use Nette\DateTime;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DateTimeBox extends TextInput {
+class DateInput extends TextInput {
 
-    const FORMAT = 'Y-m-d\TH:i:s';
+    const FORMAT = 'Y-m-d';
 
     public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
         parent::__construct($label, $cols, $maxLength);
-
-        $this->addCondition(Form::FILLED)
-                ->addRule(Form::REGEXP, _('%label očekává YYYY-MM-DD hh:mm[:ss].'), '/^\d{4}-\d{2}-\d{2} [0-2]?\d:[0-5]\d(:[0-5]\d)?$/');
+        $this->setType('date');
     }
 
     public function getControl() {
@@ -38,5 +30,4 @@ class DateTimeBox extends TextInput {
             $this->value = null;
         }
     }
-
 }

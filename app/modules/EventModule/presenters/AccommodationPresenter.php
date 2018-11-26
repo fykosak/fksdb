@@ -4,6 +4,7 @@ namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\DateInput;
 use FKSDB\Components\Forms\Controls\DateTimeBox;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Grids\EventAccommodationGrid;
@@ -142,12 +143,12 @@ class AccommodationPresenter extends BasePresenter {
         $container = new ModelContainer();
 
         $container->addText('name', _('Name'))->setRequired(true);
-        $container->addText('capacity', _('Capacity'))->setRequired(true);
+        $container->addText('capacity', _('Capacity'))->addRule(Form::INTEGER)->setRequired(true);
 
-        $container->addText('price_kc', _('Price Kč'));
+        $container->addText('price_kc', _('Price Kč'))->addRule(Form::FLOAT, _('Cena by mala byť číslo'));
 
-        $container->addText('price_eur', _('Price €'));
-        $container->addComponent(new DateTimeBox(_('Date')), 'date');
+        $container->addText('price_eur', _('Price €'))->addRule(Form::FLOAT, _('Cena by mala byť číslo'));
+        $container->addComponent(new DateInput(_('Date')), 'date');
         return $container;
     }
 
