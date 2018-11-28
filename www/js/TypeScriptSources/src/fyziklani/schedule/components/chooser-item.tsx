@@ -37,12 +37,12 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
             }}>
                 <Item className={'chooser-container ' + (active ? 'active' : '')}
                       icon={<span className={active ? 'w-100 fa fa-check-square-o' : 'w-100 fa fa-square-o'}/>}>
-                    <span className={'h5'}>{localizedData.name}</span>
-                    {localizedData.description && (<div>
-                        <span className={'fa fa-question-circle-o mr-2'}/>{localizedData.description}
+                    <span className={'font-weight-bold'}>{localizedData.name}</span>
+                    {localizedData.description && (<div className={'font-italic'}>
+                        {localizedData.description}
                     </div>)}
                     <div className={'small'}>
-                        <span className={'fa fa-dollar mr-2'}/><PriceDisplay price={item.price}/>
+                        <PriceDisplay price={item.price}/>
                     </div>
                 </Item>
             </div>
