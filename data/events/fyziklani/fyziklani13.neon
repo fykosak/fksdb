@@ -4,7 +4,7 @@ parameters:
             appCond: or(regOpen(), role('admin'))
             scheduleField:
                 label: _('Schedule')
-                description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="https://fykos.cz/akce/fyziklani/start">na špecialni strance</a>.')
+                description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="http://fyziklani.cz/program">na špecialni strance</a>.')
                 factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
 
 
@@ -94,25 +94,36 @@ events:
                 eventId: e_fyziklani_team.event_id
 
                 states:
-                    approved: _('Přihlásen')
+                    pending: _('Čeká na schválení')
+                    spare: _('Náhradník')
+                    approved: _('Potvrzen')
                     participated: _('Účastnil se')
                     cancelled: _('Zrušen')
                     missed: _('Nepřijel')
+                    disqualified: _('Diskvalifikován')
 
                 transitions:
-                    __init->approved:
+                    __init->pending:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
                             - Events\Transitions\MailSender(team, .*)
-                    approved->participated:
+                    pending->approved:
+                        condition: role('admin')
+                        label: _('Schválit účast')
+                        onExecuted:
+                            - Events\Transitions\MailSender(team, *)
+                    pending->spare:
+                        condition: role('admin')
+                        label: _('Potvrdit jako náhradníka')
+                    approved|spare->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
-                    approved->missed:
+                    approved|spare->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Nepřijel')
                         dangerous: true
-                    approved->cancelled:
+                    pending|spare|approved->cancelled:
                         condition: role('admin')
                         label: _('Zrušit tým')
                         dangerous: true
@@ -134,7 +145,7 @@ events:
                     force_a:
                         label: _('Chceme se účastnit v kategorii A')
                         visible: true
-                        description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+                        description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
 
                     phone:
                         label: _('Kontaktní telefon')
@@ -148,7 +159,7 @@ events:
                         modifiable: %events.fyziklani13.appCond%
                         factory: RefPerson(%events.fyziklani13.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: _('Učitel má zájem o program počas fyziklani') # FIXME
+                        label: _('Učitel má zájem o program během soutěže.') # FIXME
                         visible: true
                         modifiable: %events.fyziklani13.appCond%
                     teacher_schedule: %events.fyziklani13.scheduleField%
@@ -231,7 +242,7 @@ events:
                 - Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
                 - Events\FormAdjustments\RegexpCheck('team.name', "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.", '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
-                - Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+                #- Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
             processings:
                 - Events\Spec\Fyziklani\CategoryProcessing()
