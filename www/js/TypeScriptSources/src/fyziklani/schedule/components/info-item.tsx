@@ -18,11 +18,11 @@ export default class InfoItem extends React.Component<IProps, {}> {
         }
         const localizedData = item[langKey];
         return <div>
-            <Item className={'info-container'} icon={<span className={'fa fa-info w-100'}/>}>
+            <Item className={'info-container text-muted'} icon={<span className={'fa fa-info w-100'}/>}>
                 <div>
-                    <span className={'h5'}>{localizedData.name}</span>
+                    <span className={'font-weight-bold'}>{localizedData.name}</span>
                 </div>
-                <div>{localizedData.description}</div>
+                <div className={'font-italic'}>{localizedData.description}</div>
             </Item>
         </div>;
     }

@@ -3,7 +3,6 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import Card from '../../../shared/components/card';
 import Powered from '../../../shared/powered';
 import {
     IRoom,
@@ -36,16 +35,14 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
 
         return (
             <div>
-                <Card headline={null} level="secondary">
-                    <div className="row">
-                        <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                            <Rooms rooms={rooms}/>
-                        </div>
-                        <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                            <UnRoutedTeams/>
-                        </div>
+                <div className="row">
+                    <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                        <Rooms rooms={rooms}/>
                     </div>
-                </Card>
+                    <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                        <UnRoutedTeams/>
+                    </div>
+                </div>
                 <div>
                     <Form accessKey={'@@fyziklani/routing'}/>
                 </div>
