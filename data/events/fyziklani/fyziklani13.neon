@@ -9,7 +9,7 @@ parameters:
 
             gameLangs:
                 en: English
-                cz: Česky
+                cs: Česky
             teacher:
                 person:
                     other_name:
