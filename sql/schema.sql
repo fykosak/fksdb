@@ -642,6 +642,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `rank_category` INT(11) NULL DEFAULT NULL,
   `rank_total` INT(11) NULL DEFAULT NULL,
   `room` VARCHAR(3) NULL DEFAULT NULL COMMENT '@DEPRECATED',
+  `game_lang` VARCHAR(2) NULL DEFAULT NULL COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),
   INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
   INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),

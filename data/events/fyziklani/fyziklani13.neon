@@ -7,7 +7,9 @@ parameters:
                 description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="http://fyziklani.cz/program">na špecialni strance</a>.')
                 factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
 
-
+            gameLangs:
+                en: English
+                cz: Česky
             teacher:
                 person:
                     other_name:
@@ -137,6 +139,12 @@ events:
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani13.appCond%
+                    game_lang:
+                        label: _('Jazyk ve kterém chcete soutěžit.')
+                        required: true
+                        visible: true
+                        modifiable: %events.fyziklani13.appCond%
+                        factory: Chooser('Select lang/Vyberte jazyk',Options(%events.fyziklani13.gameLangs%))
                     category:
                         label: _('Kategorie')
                         required: true
