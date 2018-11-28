@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-28 18:28+0100\n"
-"PO-Revision-Date: 2018-11-28 17:56+0100\n"
+"POT-Creation-Date: 2018-11-28 19:27+0100\n"
+"PO-Revision-Date: 2018-11-28 18:52+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -496,7 +496,7 @@ msgstr ""
 #: i18n/../app/model/Events/Spec/Fyziklani/TeamsPerSchool.php:120
 #, php-format
 msgid "Přihlásené týmy z rovnaké školy %s."
-msgstr ""
+msgstr "Přihlášené týmy ze stejné školy %s."
 
 #: i18n/../app/model/Events/Spec/Dsef/GroupOptions.php:103
 #, php-format
@@ -772,12 +772,12 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:125
 #, php-format
 msgid "Úprava ubytovaní v hoteli \"%s\" v dni %s akce \"%s\""
-msgstr "Úprava ubytovaných v ho(s)telu \"%s\" dne %s akce \"%s\""
+msgstr "Úprava ubytovaných v hotelu \"%s\" dne %s akce \"%s\""
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:134
 #, php-format
 msgid "Založit ubytovaní akce \"%s\""
-msgstr "Založit ubytování akce \"%s\""
+msgstr "Založit ubytování na akci \"%s\""
 
 #: i18n/../app/OrgModule/presenters/EventAccommodationPresenter.php:139
 #, php-format
@@ -1325,12 +1325,12 @@ msgstr "Ubytování"
 #: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:53
 #, php-format
 msgid "Osobu %s sa nepodarilo ubytovať na hotely \"%s\" v dni %s"
-msgstr ""
+msgstr "Osobu %s se nepodařilo ubytovat na hotelu \"%s\" dne %s"
 
 #: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:77
 #, php-format
 msgid "Type \"%s\" is not implement."
-msgstr ""
+msgstr "Typ \"%s\" není implementovaný."
 
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:134
 msgid "Doručovací adresa"
@@ -1904,15 +1904,15 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/TeacherFactory.php:17
 msgid "Since year"
-msgstr ""
+msgstr "Od ročníku"
 
 #: i18n/../app/Components/Forms/Factories/TeacherFactory.php:18
 msgid "Until year"
-msgstr ""
+msgstr "Do ročníku"
 
 #: i18n/../app/Components/Forms/Factories/TeacherFactory.php:19
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #: i18n/../app/Components/Forms/Factories/FyziklaniFactory.php:36
 #: i18n/../app/Components/Grids/Fyziklani/FyziklaniTeamsGrid.php:54
@@ -2479,7 +2479,7 @@ msgstr ""
 
 #: i18n/../app/FyziklaniModule/templates/Submit/autoClose.latte.latte2php:2
 msgid "Stránku možno zavrieť"
-msgstr ""
+msgstr "Stránku můžete zavřít"
 
 #: i18n/../app/OrgModule/templates/Deduplicate/person.latte.latte2php:4
 msgid "Sloučit (A<-B) všechny přípustné osoby"
@@ -2921,8 +2921,8 @@ msgstr ""
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:7
 #, fuzzy
 msgid ""
-"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"fyziklani."
-"cz/program\">na špecialni strance</a>."
+"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"http://"
+"fyziklani.cz/program\">na špecialni strance</a>."
 msgstr ""
 "Program v průběhu víkendu po Fyziklání. Podrobnosti najdete <a href="
 "\"https://fykos.cz/akce/fyziklani/start\">na speciální stránce</a>."
@@ -3149,8 +3149,9 @@ msgid "turn off"
 msgstr "vypnout"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:27
+#, fuzzy
 msgid "This function don't turn on id results are projected!"
-msgstr ""
+msgstr "Tato funkci nezapínej!"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/downloader/components/index.tsx.tsx2php:53
 msgid "lastUpdated"

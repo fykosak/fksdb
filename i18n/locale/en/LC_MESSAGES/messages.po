@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-28 18:28+0100\n"
-"PO-Revision-Date: 2018-10-06 02:01+0200\n"
-"Last-Translator: Lukáš Timko <lukast@fykos.cz>\n"
+"POT-Creation-Date: 2018-11-28 19:27+0100\n"
+"PO-Revision-Date: 2018-11-28 19:15+0100\n"
+"Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: i18n/../app/modules/EventModule/presenters/DashboardPresenter.php:8
@@ -28,9 +28,9 @@ msgid "Event \"%s\"."
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/BasePresenter.php:90
-#, fuzzy, php-format
+#, php-format
 msgid "Event id je povinné"
-msgstr "Field %label is required."
+msgstr "Event ID is mandatory"
 
 #: i18n/../app/modules/EventModule/presenters/DispatchPresenter.php:53
 msgid "List of events"
@@ -42,26 +42,28 @@ msgid "Schedule."
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:25
+#, fuzzy
 msgid "Uzavírání bodování"
-msgstr ""
+msgstr "Sealing of scoring"
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:30
-#, php-format
+#, fuzzy, php-format
 msgid "Uzavírání bodování týmu \"%s\""
-msgstr ""
+msgstr "Sealing of scoring for team \"%s\""
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:84
-#, php-format
+#, fuzzy, php-format
 msgid "Tým %s má již uzavřeno bodování"
-msgstr ""
+msgstr "Scoring for team %s is sealed"
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:106
 msgid "Úkoly a počty bodů jsou správně."
-msgstr ""
+msgstr "Problems and scoring is correct."
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:107
+#, fuzzy
 msgid "Zkontrolujte správnost zadání bodů!"
-msgstr ""
+msgstr "Check the correctness of scoring!"
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:108
 msgid "Úloha u vydavačů"
@@ -81,28 +83,32 @@ msgid "Uzavřít kategorii %s."
 msgstr "Team inserted to category %s."
 
 #: i18n/../app/FyziklaniModule/presenters/ClosePresenter.php:198
+#, fuzzy
 msgid "Uzavřít celé Fyziklání"
-msgstr ""
+msgstr "Seal entire Fyziklani"
 
 #: i18n/../app/FyziklaniModule/presenters/DashboardPresenter.php:8
 msgid "Fyziklani dashboard"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:17
+#, fuzzy
 msgid "Úlohy FYKOSího Fyziklání"
-msgstr ""
+msgstr "Fyziklani problems"
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:26
 msgid "Tasks Import of Fyziklani"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:39
+#, fuzzy
 msgid "Vyberte akci"
-msgstr ""
+msgstr "Choose action"
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:40
+#, fuzzy
 msgid "Updatovat úlohy a přidat pokud neexistuje"
-msgstr ""
+msgstr "Update problems and add nonexisting"
 
 #: i18n/../app/FyziklaniModule/presenters/TaskPresenter.php:41
 msgid "Odstranit všechny úlohy a nahrát nové"
@@ -117,7 +123,7 @@ msgstr "Add address"
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:106
 #: i18n/../app/Components/Controls/Events/ImportComponent.php:94
 msgid "Importovat"
-msgstr ""
+msgstr "Import"
 
 #: i18n/../app/FyziklaniModule/presenters/ResultsPresenter.php:40
 msgid "Results and statistics of Fyziklani"
@@ -147,8 +153,9 @@ msgstr "Unknown account."
 
 #: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:84
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:137
+#, fuzzy
 msgid "Bodování tohoto týmu je uzavřené."
-msgstr ""
+msgstr "Scoring of this team is closed."
 
 #: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:103
 #, fuzzy
@@ -156,20 +163,22 @@ msgid "Zadávání bodů"
 msgstr "Grade series %d"
 
 #: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:124
+#, fuzzy
 msgid "Úprava bodování"
-msgstr ""
+msgstr "Change of scoring"
 
 #: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:133
 msgid "Submits"
 msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/SubmitPresenter.php:212
+#, fuzzy
 msgid "Body byly změněny."
-msgstr ""
+msgstr "Points have been changed."
 
 #: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:14
 msgid "Rozdělení do místností"
-msgstr ""
+msgstr "Routing"
 
 #: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:19
 msgid "Edit routing"
@@ -181,8 +190,9 @@ msgstr ""
 
 #: i18n/../app/FyziklaniModule/presenters/RoomsPresenter.php:53
 #: i18n/../app/Components/React/Fyziklani/RoutingEdit.php:40
+#, fuzzy
 msgid "Zmeny boli uložené"
-msgstr ""
+msgstr "Changes have been saved"
 
 #: i18n/../app/model/Tasks/StudyYearsFromXML2.php:87
 #: i18n/../app/model/Tasks/Legacy/StudyYearsFromXML.php:79
@@ -196,8 +206,9 @@ msgid "Doplnění defaultních ročníků i přes nesprávnou specifikaci."
 msgstr ""
 
 #: i18n/../app/model/Tasks/DeadlineFromXML2.php:55
+#, fuzzy
 msgid "Chybí deadline série."
-msgstr ""
+msgstr "Missing deadline of the series."
 
 #: i18n/../app/model/Tasks/TasksFromXML2.php:52
 #, php-format
@@ -208,7 +219,7 @@ msgstr ""
 #: i18n/../app/model/Tasks/Legacy/ContributionsFromXML.php:80
 #, php-format
 msgid "Neznámý TeX identifikátor '%s'."
-msgstr ""
+msgstr "Unknown TeX ident '%s'."
 
 #: i18n/../app/model/Exports/StoredQueryFactory.php:100
 msgid "Kontext série pro dotazy není dostupný"
@@ -219,21 +230,22 @@ msgid "Uložit CSV"
 msgstr "Save CSV"
 
 #: i18n/../app/model/Exports/ExportFormatFactory.php:62
+#, fuzzy
 msgid "Uložit CSV (bez hlavičky)"
-msgstr ""
+msgstr "Save CSV (without heading)"
 
 #: i18n/../app/model/Exports/ExportFormatFactory.php:63
-#, fuzzy
 msgid "Uložit CSV s uvozovkami"
-msgstr "Save CSV"
+msgstr "Save CSV with quotes"
 
 #: i18n/../app/model/Persons/ExtendedPersonHandler.php:143
 msgid "Zvací e-mail odeslán."
 msgstr "E-mail invitation sent."
 
 #: i18n/../app/model/Persons/ExtendedPersonHandler.php:145
+#, fuzzy
 msgid "Zvací e-mail se nepodařilo odeslat."
-msgstr ""
+msgstr "E-mail invitation could not be sent."
 
 #: i18n/../app/model/Persons/ExtendedPersonHandler.php:181
 msgid "Zadaná data se neshodují s již uloženými."
@@ -316,8 +328,9 @@ msgid "TeamID"
 msgstr ""
 
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:72
+#, fuzzy
 msgid "Pořadí"
-msgstr ""
+msgstr "Ranking"
 
 #: i18n/../app/model/Fyziklani/Rooms/RoomsFromCSV.php:61
 #, php-format
@@ -495,7 +508,7 @@ msgstr "Cannot determine category."
 #: i18n/../app/model/Events/Spec/Fyziklani/TeamsPerSchool.php:67
 #, php-format
 msgid "Škola nemůže mít v soutěži více týmů než %d."
-msgstr "Schoola cannot have more than %d teams in the contest."
+msgstr "A school cannot have more than %d teams in the contest."
 
 #: i18n/../app/model/Events/Spec/Fyziklani/TeamsPerSchool.php:120
 #, php-format
@@ -532,7 +545,7 @@ msgstr "Task import"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:85
 msgid "Zdroj úloh"
-msgstr ""
+msgstr "Problem source"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:86
 msgid "Astrid"
@@ -544,7 +557,7 @@ msgstr ""
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:88
 msgid "XML soubor"
-msgstr ""
+msgstr "XML file"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:94
 #: i18n/../app/Components/Controls/SeriesChooser.latte.latte2php:3
@@ -559,8 +572,9 @@ msgid "Jazyk"
 msgstr "Language"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:102
+#, fuzzy
 msgid "XML soubor úloh"
-msgstr ""
+msgstr "XML problems file"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:129
 #, php-format
@@ -1137,14 +1151,12 @@ msgid "Zvolit ročník"
 msgstr "Choose study year"
 
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:229
-#, fuzzy
 msgid "Zadejte e-mail"
-msgstr "Type password."
+msgstr "Type e-mail"
 
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:268
-#, fuzzy
 msgid "e-mail"
-msgstr "E-mail"
+msgstr "e-mail"
 
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:269
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.@layout.latte.latte2php:9
@@ -1295,7 +1307,7 @@ msgstr "hidden value"
 
 #: i18n/../app/Components/Forms/Controls/PersonFlag.php:27
 msgid "Ano"
-msgstr "yes"
+msgstr "Yes"
 
 #: i18n/../app/Components/Forms/Controls/PersonFlag.php:28
 msgid "Ne"
@@ -1685,7 +1697,7 @@ msgstr "Passwords don't match."
 
 #: i18n/../app/Components/Forms/Factories/LoginFactory.php:60
 msgid "Aktivní účet"
-msgstr "Active account."
+msgstr "Active account"
 
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:30
 msgid "Plný název"
@@ -1714,7 +1726,7 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:41
 msgid "Zkrácený název je povinný."
-msgstr "Short name is required"
+msgstr "Short name is required."
 
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:42
 msgid "Název krátký do výsledkovky."
@@ -1841,7 +1853,7 @@ msgstr "How did you hear about us?"
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/AccountField.php:11
 msgid "Číslo bankovního účtu"
-msgstr "Bank account no."
+msgstr "Bank account number"
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/LinkedinIdField.php:10
 msgid "Linkedin Id"
@@ -2032,7 +2044,7 @@ msgstr "Country"
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:96
 msgid "Určit stát dle PSČ"
-msgstr "Detect country from postal code (CR, SK only)."
+msgstr "Detect country from postal code (CR, SK only)"
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:99
 msgid "Při vyplněném městě musí mít adresa vyplněno i místo."
@@ -2490,9 +2502,8 @@ msgid "Úspešné přihlášení pomocí tokenu."
 msgstr "Successfull token authentication."
 
 #: i18n/../app/presenters/core/AuthenticatedPresenter.php:253
-#, fuzzy
 msgid "Chyba autentizace."
-msgstr "Authentication"
+msgstr "Authentication failure."
 
 #: i18n/../app/presenters/DispatchPresenter.php:80
 msgid "Rozcestník"
@@ -2613,12 +2624,11 @@ msgstr "Method not allowed."
 #: i18n/../app/templates/Error/403.latte.latte2php:11
 #, fuzzy
 msgid "K zobrazení stránky nemáte dostatečné oprávnění."
-msgstr "You are not authorized to view this page. Possible solutions:"
+msgstr "You are not authorized to view this page."
 
 #: i18n/../app/templates/Error/403.latte.latte2php:12
-#, fuzzy
 msgid "Možná řešení:"
-msgstr "Submitted solutions"
+msgstr "Submitted solutions:"
 
 #: i18n/../app/templates/Error/403.latte.latte2php:14
 msgid "Zaregistrovat se jako řešitel"
@@ -2795,7 +2805,7 @@ msgid ""
 msgstr ""
 "Do you have any special dietary habits - vegetarianism, vegans, diets, ...? "
 "If so, do you want to have a special menu or do you bring your own food "
-"(especially in the case of vegans)? "
+"(especially in the case of vegans)?"
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:103
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:83
@@ -2977,9 +2987,9 @@ msgstr ""
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:7
 msgid ""
-"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"fyziklani."
-"cz/program\">na špecialni strance</a>."
-msgstr ""
+"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"http://"
+"fyziklani.cz/program\">na špecialni strance</a>."
+msgstr "Schedule of weekend after Fyziklání. For addition information follow <a href=\"http://fyziklani.cz/schedule\">link</a>."
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:97
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:88
@@ -3046,9 +3056,8 @@ msgstr "Teacher/escort"
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:162
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:153
-#, fuzzy
 msgid "Učitel má zájem o program během soutěže."
-msgstr "The teacher is interested in the program"
+msgstr "The teacher is interested in the program."
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:182
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:181
@@ -3084,7 +3093,7 @@ msgstr "We don't want accommodation."
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:161
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:209
 msgid "Ubytování noc před soutěží."
-msgstr "Accommodation the night before the competition"
+msgstr "Accommodation the night before the competition."
 
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:205
 msgid "Ubytování"

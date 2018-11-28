@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-28 18:28+0100\n"
+"POT-Creation-Date: 2018-11-28 19:27+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2932,8 +2932,8 @@ msgstr ""
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:7
 msgid ""
-"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"fyziklani."
-"cz/program\">na špecialni strance</a>."
+"Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"http://"
+"fyziklani.cz/program\">na špecialni strance</a>."
 msgstr ""
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:97
