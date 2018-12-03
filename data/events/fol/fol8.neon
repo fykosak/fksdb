@@ -57,6 +57,7 @@ events:
                     cancelled: _('Zrušen')
                     participated: _('Účastnil se')
                     missed: _('Nezúčastnil se')
+                    disqualified: _('Diskvalifikován')
 
                 transitions:
                     __init->applied:
