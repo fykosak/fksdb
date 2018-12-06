@@ -5,8 +5,8 @@ namespace FKSDB\Components\Grids\EventPayment;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\Transition\Machine;
-use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\EventPayment\Transition\UnavailableTransitionException;
+use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
 use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
@@ -24,21 +24,19 @@ class OrgEventPaymentGrid extends BaseGrid {
      */
     private $serviceEventPayment;
     /**
-     * @var integer
+     * @var ModelEvent
      */
-    private $eventId;
+    private $event;
 
-    private $transitionFactory;
     /**
      * @var Machine
      */
     private $machine;
 
-    public function __construct(Machine $machine, \ServiceEventPayment $servicePayment, TransitionsFactory $transitionFactory, $eventId) {
+    public function __construct(Machine $machine, \ServiceEventPayment $servicePayment, ModelEvent $event) {
         parent::__construct();
-        $this->eventId = $eventId;
+        $this->event = $event;
         $this->serviceEventPayment = $servicePayment;
-        $this->transitionFactory = $transitionFactory;
         $this->machine = $machine;
     }
 
@@ -47,7 +45,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         //
         // data
         //
-        $schools = $this->serviceEventPayment->where('event_id', $this->eventId);
+        $schools = $this->serviceEventPayment->where('event_id', $this->event->event_id);
 
         $dataSource = new NDataSource($schools);
         $this->setDataSource($dataSource);
@@ -80,7 +78,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         $this->addColumn('tr', _('Actions'))->setRenderer(function ($row) {
             $model = ModelEventPayment::createFromTableRow($row);
             $container = Html::el('span')->addAttributes(['class' => 'btn-group']);
-            foreach ($this->machine->getAvailableTransitions($model->state, true) as $transition) {
+            foreach ($this->machine->getAvailableTransitions($model) as $transition) {
                 $container->add(Html::el('a')->addAttributes([
                     'href' => $this->link('transition', [
                             'id' => $model->payment_id,
@@ -111,7 +109,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         }
         $model = ModelEventPayment::createFromTableRow($row);
         try {
-            $this->machine->executeTransition($transition, $model, true);
+            $this->machine->executeTransition($transition, $model);
             $this->flashMessage(_('Prechod vykonaný'));
             $this->redirect('this');
         } catch (UnavailableTransitionException $e) {

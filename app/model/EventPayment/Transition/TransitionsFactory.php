@@ -2,41 +2,33 @@
 
 namespace FKSDB\EventPayment\Transition;
 
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
-use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
-use FKSDB\EventPayment\Transition\Transitions\Fyziklani13Payment;
+use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
 use Mail\MailTemplateFactory;
+use Nette\DateTime;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use Nette\NotImplementedException;
+use Nette\Security\IResource;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TransitionsFactory {
+    /**
+     * @var IMailer
+     */
     private $mailer;
+    /**
+     * @var MailTemplateFactory
+     */
     private $mailTemplateFactory;
-
     /**
-     * @var PriceCalculatorFactory
+     * @var EventAuthorizator
      */
-    private $priceCalculatorFactory;
+    private $eventAuthorizator;
 
-    /**
-     * @var SymbolGeneratorFactory
-     */
-    private $symbolGeneratorFactory;
-
-
-    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory) {
+    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator) {
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     public function createTransition(string $fromState = null, string $toState, string $label) {
@@ -45,14 +37,8 @@ class TransitionsFactory {
         return $transition;
     }
 
-    private function createEventTransitions(ModelEvent $event): AbstractEventTransitions {
-        if (($event->event_type_id === 1) && ($event->event_year === 13)) {
-            return new Fyziklani13Payment($this);
-        }
-        throw new NotImplementedException('Not implemented');
-    }
 
-    public function createMailCallback($templateFile, string $address, $options) {
+    public function createMailCallback(string $templateFile, string $address, $options): \Closure {
         $template = $this->mailTemplateFactory->createFromFile($templateFile);
         $message = new Message();
 
@@ -63,27 +49,32 @@ class TransitionsFactory {
         //  $message->addAttachment()
 
         return function (ModelEventPayment $model) use ($message, $template) {
-
             $template->model = $model;
             $message->setHtmlBody($template);
             $this->mailer->send($message);
         };
     }
-
-    private function getPriceCalculator(ModelEvent $event, $currency): PriceCalculator {
-        return $this->priceCalculatorFactory->createCalculator($event, $currency);
+    /* conditions */
+    /**
+     * @param ModelEvent $event
+     * @param IResource $resource
+     * @param string $privilege
+     * @return bool
+     */
+    public function getConditionEventRole(ModelEvent $event, IResource $resource, string $privilege): bool {
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $event);
     }
 
-    private function getSymbolGenerator(ModelEvent $event): AbstractSymbolGenerator {
-        return $this->symbolGeneratorFactory->createGenerator($event);
+    public function getConditionDateBetween(DateTime $from, DateTime $to): bool {
+        return $this->getConditionDateFrom($from) && $this->getConditionDateTo($to);
     }
 
-    public function setUpMachine(ModelEvent $event): Machine {
-        $factory = $this->createEventTransitions($event);
-        $machine = $factory->createMachine();
-        $factory->createTransitions($machine);
+    public function getConditionDateFrom(DateTime $from): bool {
+        return \time() >= $from->getTimestamp();
+    }
 
-        return $machine;
+    public function getConditionDateTo(DateTime $to): bool {
+        return \time() <= $to->getTimestamp();
     }
 }
 

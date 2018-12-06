@@ -30,6 +30,7 @@ use Nette\DateTime;
  * @property boolean departure_ticket společný lístek na cestu zpět
  * @property boolean swimmer plavec?
  * @property string used_drugs užívané léky
+ * @property string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle {
 

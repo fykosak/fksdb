@@ -28,6 +28,7 @@ services:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 
     paymentTransitionsFactory: FKSDB\EventPayment\Transition\TransitionsFactory
+    machineFactory: FKSDB\EventPayment\Transition\MachineFactory
     priceCalculatorFactory: FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory
     symbolGeneratorFactory: FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory
 

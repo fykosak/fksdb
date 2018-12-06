@@ -2,7 +2,6 @@
 
 namespace FKSDB\EventPayment\Transition;
 
-use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -15,6 +14,10 @@ class Transition {
     const TYPE_WARNING = 'warning';
     const TYPE_DANGER = 'danger';
     const TYPE_PRIMARY = 'primary';
+    /**
+     * @var  \Closure
+     */
+    private $condition;
 
     private $type = self::TYPE_PRIMARY;
     /**
@@ -22,13 +25,13 @@ class Transition {
      */
     private $label;
     /**
-     * @var bool
+     * @var \Closure[]
      */
-    private $forOrgOnly = true;
+    public $onExecutedClosures = [];
     /**
      * @var \Closure[]
      */
-    public $onExecuted = [];
+    public $onExecuteClosures = [];
 
     /**
      * @var string
@@ -75,19 +78,30 @@ class Transition {
         return $this->label;
     }
 
-    public function setForOrgOnly($state) {
-        $this->forOrgOnly = $state;
+    public function setCondition(\Closure $closure) {
+        $this->condition = $closure;
     }
 
-    public function canExecute($isOrg) {
-        if (!$this->forOrgOnly) {
-            return true;
+    /**
+     * @param IStateModel $model
+     * @return mixed
+     */
+    public function canExecute($model) {
+        return ($this->condition)($model);
+    }
+
+    public final function onExecute(IStateModel $model) {
+        if ($this->canExecute($model)) {
+            foreach ($this->onExecuteClosures as $closure) {
+                $closure($model);
+            }
+        } else {
+            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
-        return $isOrg;
     }
 
-    public final function execute(ModelEventPayment $model) {
-        foreach ($this->onExecuted as $closure) {
+    public final function onExecuted(IStateModel $model) {
+        foreach ($this->onExecutedClosures as $closure) {
             $closure($model);
         }
     }

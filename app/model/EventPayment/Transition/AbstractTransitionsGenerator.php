@@ -2,7 +2,9 @@
 
 namespace FKSDB\EventPayment\Transition;
 
-abstract class AbstractEventTransitions {
+use FKSDB\ORM\ModelEvent;
+
+abstract class AbstractTransitionsGenerator {
     protected $transitionFactory;
 
     public function __construct(TransitionsFactory $transitionFactory) {
@@ -11,5 +13,5 @@ abstract class AbstractEventTransitions {
 
     abstract public function createTransitions(Machine &$machine);
 
-    abstract public function createMachine(string $state = null): Machine;
+    abstract public function createMachine(ModelEvent $event): Machine;
 }

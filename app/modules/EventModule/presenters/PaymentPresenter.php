@@ -6,42 +6,20 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
-use FKSDB\EventPayment\PriceCalculator\Price;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbols;
-use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Machine;
-use FKSDB\EventPayment\Transition\TransitionsFactory;
+use FKSDB\EventPayment\Transition\MachineFactory;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
 
 class PaymentPresenter extends BasePresenter {
-    /**
-     * @var \ServiceEventPayment
-     */
-    private $serviceEventPayment;
+
     /**
      * @var integer
      * @persistent
      */
     public $id;
-    /**
-     * @var TransitionsFactory
-     */
-    private $transitionsFactory;
-
-    /**
-     * @var PriceCalculatorFactory
-     */
-    private $priceCalculatorFactory;
-
-    /**
-     * @var EventPaymentFactory
-     */
-    private $eventPaymentFactory;
 
     /**
      * @var ModelEventPayment
@@ -51,26 +29,26 @@ class PaymentPresenter extends BasePresenter {
      * @var Machine
      */
     private $machine;
-    /**
-     * @var SymbolGeneratorFactory
-     */
-    private $symbolGeneratorFactory;
 
+    /**
+     * @var \ServiceEventPayment
+     */
+    private $serviceEventPayment;
+    /**
+     * @var EventPaymentFactory
+     */
+    private $eventPaymentFactory;
+    /**
+     * @var MachineFactory
+     */
+    private $machineFactory;
 
     public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 
-    public function injectEventTransitionFactory(TransitionsFactory $transitionsFactory) {
-        $this->transitionsFactory = $transitionsFactory;
-    }
-
-    public function injectSymbolGeneratorFactory(SymbolGeneratorFactory $symbolGeneratorFactory) {
-        $this->symbolGeneratorFactory = $symbolGeneratorFactory;
-    }
-
-    public function injectPriceCalculatorFactory(PriceCalculatorFactory $priceCalculatorFactory) {
-        $this->priceCalculatorFactory = $priceCalculatorFactory;
+    public function injectMachineFactory(MachineFactory $machineFactory) {
+        $this->machineFactory = $machineFactory;
     }
 
     public function injectEventPaymentFactory(EventPaymentFactory $eventPaymentFactory) {
@@ -99,14 +77,14 @@ class PaymentPresenter extends BasePresenter {
 
     public function authorizedDetail() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);;
+            return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
     public function authorizedEdit() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);;
+            return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->canEdit());
     }
@@ -120,7 +98,7 @@ class PaymentPresenter extends BasePresenter {
 
     public function authorizedList() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);;
+            return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
@@ -142,17 +120,9 @@ class PaymentPresenter extends BasePresenter {
         return $this->model;
     }
 
-    public function getPriceCalculator(): PriceCalculator {
-        return $this->priceCalculatorFactory->createCalculator($this->getEvent(), $this->getModel()->currency);
-    }
-
-    private function getSymbolGenerator(): AbstractSymbolGenerator {
-        return $this->symbolGeneratorFactory->createGenerator($this->getEvent());
-    }
-
     private function getMachine(): Machine {
         if (!$this->machine) {
-            $this->machine = $this->transitionsFactory->setUpMachine($this->getEvent());
+            $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
         }
         return $this->machine;
     }
@@ -188,30 +158,18 @@ class PaymentPresenter extends BasePresenter {
         ]);
         $this->serviceEventPayment->save($model);
 
-        $this->updatePrice($model, $values);
+        $model->updatePrice($this->getMachine()->getPriceCalculator());
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
-                $model->executeTransition($this->getMachine(), $name, false);
+                $model->executeTransition($this->getMachine(), $name);
                 $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
     }
 
-    private function updatePrice(ModelEventPayment &$modelEventPayment, $values) {
-        $price = new Price(0, $values->currency);
-
-        // $calculator = $this->priceCalculatorFactory->createCalculator($this->getEvent(), $values->currency);
-        //  $price = $calculator->execute($values->data, $model);
-
-        $modelEventPayment->update([
-            'price' => $price->getAmount(),
-            'currency' => $price->getCurrency(),
-        ]);
-    }
-
     public function createComponentCreateForm(): FormControl {
-        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine(), false);
+        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine());
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->handleCreateForm($form);
         };
@@ -236,15 +194,13 @@ class PaymentPresenter extends BasePresenter {
         $model->update([
             'data' => '',
         ]);
-
-        $this->updatePrice($model, $values);
+        $model->updatePrice($this->getMachine()->getPriceCalculator());
 
         $this->redirect('detail', ['id' => $model->payment_id]);
     }
 
 
     public function handleDetailForm(Form $form) {
-        $generator = $this->getSymbolGenerator();
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
@@ -253,9 +209,7 @@ class PaymentPresenter extends BasePresenter {
                 } else {
                     $model = $this->getModel();
                     try {
-                        $model->update($generator->create($model));
-                        $this->serviceEventPayment->save($model);
-                        $model->executeTransition($this->getMachine(), $name, false);
+                        $model->executeTransition($this->getMachine(), $name);
                         $this->redirect('detail');
                     } catch (AlreadyGeneratedSymbols $e) {
                         $this->flashMessage($e->getMessage(), 'danger');
@@ -267,8 +221,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     public function createComponentDetailControl(): DetailControl {
-        $machine = $this->getMachine();
-        $control = $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getPriceCalculator(), $this->getTranslator(), $machine, false);
+        $control = $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getTranslator(), $this->getMachine());
         $form = $control->getFormControl()->getForm();
 
         $form->onSuccess[] = function (Form $form) {
@@ -278,7 +231,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     protected function createComponentOrgGrid(): OrgEventPaymentGrid {
-        return new OrgEventPaymentGrid($this->getMachine(), $this->serviceEventPayment, $this->transitionsFactory, $this->eventId);
+        return new OrgEventPaymentGrid($this->getMachine(), $this->serviceEventPayment, $this->getEvent());
     }
 
     public function createComponentEditForm(): FormControl {

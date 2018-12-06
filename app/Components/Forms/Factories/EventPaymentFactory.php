@@ -8,11 +8,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPayment\CurrencyField;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 
 class EventPaymentFactory {
@@ -33,7 +31,7 @@ class EventPaymentFactory {
     public function createEditForm(bool $isOrg) {
         $control = new FormControl();
         $form = $control->getForm();
-        Debugger::barDump($isOrg);
+
         if ($isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         }
@@ -43,29 +41,31 @@ class EventPaymentFactory {
         return $control;
     }
 
-    public function createCreateForm(Machine $machine, $isOrg) {
+    public function createCreateForm(Machine $machine) {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addComponent(new CurrencyField(), 'currency');
+        $currencyField = new CurrencyField();
+        $currencyField->setRequired(true);
+        $form->addComponent($currencyField, 'currency');
         $form->addText('data', _('Data'));
-        $this->appendTransitionsButtons(null, $machine, $form, $isOrg);
+        $this->appendTransitionsButtons(null, $machine, $form);
         return $control;
     }
 
-    public function createDetailControl(ModelEventPayment $modelEventPayment, PriceCalculator $calculator, ITranslator $translator, Machine $machine, $isOrg) {
+    public function createDetailControl(ModelEventPayment $modelEventPayment, ITranslator $translator, Machine $machine) {
 
-        $control = new DetailControl($translator, $calculator, $modelEventPayment);
+        $control = new DetailControl($translator, $machine->getPriceCalculator(), $modelEventPayment);
         $form = $control->getFormControl()->getForm();
         if ($modelEventPayment->canEdit()) {
             $form->addSubmit('edit', _('Edit payment'));
         }
 
-        $this->appendTransitionsButtons($modelEventPayment->state, $machine, $form, $isOrg);
+        $this->appendTransitionsButtons($modelEventPayment, $machine, $form);
         return $control;
     }
 
-    private function appendTransitionsButtons($state, Machine $machine, Form $form, $isOrg) {
-        $transitions = $machine->getAvailableTransitions($state, $isOrg);
+    private function appendTransitionsButtons($model, Machine $machine, Form $form) {
+        $transitions = $machine->getAvailableTransitions($model);
         foreach ($transitions as $transition) {
             $button = $form->addSubmit($transition->getId(), $transition->getLabel());
             $button->getControlPrototype()->addAttributes(['class' => 'btn btn-' . $transition->getType()]);

@@ -13,18 +13,19 @@ class EventPrice extends AbstractPreProcess {
      */
     private $serviceEventParticipant;
 
-    public function __construct(\ServiceEventParticipant $serviceEventParticipant, $currency) {
-        parent::__construct($currency);
+    public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public function calculate(array $data, ModelEvent $event) {
+    public function calculate(array $data, ModelEvent $event, $currency): Price  {
+        $this->price = new Price(0, $currency);
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
             $this->price->add($this->getPriceFromModel($model));
         }
+        return $this->price;
     }
 
     protected function getData(array $data) {

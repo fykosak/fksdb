@@ -64,7 +64,7 @@ class DetailControl extends Control {
     public function render() {
         //$data = \json_decode($this->model->data);
         $data = [
-            'accommodated_person_ids' => [94, 95],
+            'accommodated_person_ids' => [93, 95],
             'event_participants' => [],
         ];
         $this->template->items = $this->calculator->getGridItems($data);

@@ -14,18 +14,20 @@ class EventAccommodationPrice extends AbstractPreProcess {
      */
     private $serviceEventPersonAccommodation;
 
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, $currency) {
-        parent::__construct($currency);
+
+    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-    public function calculate(array $data, ModelEvent $event) {
+    public function calculate(array $data, ModelEvent $event, $currency): Price {
+        $this->price = new Price(0, $currency);
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $eventAcc = $this->getAccommodation($id);
             $price = $this->getPriceFromModel($eventAcc);
             $this->price->add($price);
         }
+        return $this->price;
     }
 
     private function getAccommodation($id): ModelEventAccommodation {

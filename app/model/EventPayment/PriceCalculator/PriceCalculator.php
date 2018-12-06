@@ -4,7 +4,6 @@ namespace FKSDB\EventPayment\PriceCalculator;
 
 use FKSDB\EventPayment\PriceCalculator\PreProcess\AbstractPreProcess;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPayment;
 
 class PriceCalculator {
     /**
@@ -20,8 +19,11 @@ class PriceCalculator {
      */
     private $currency;
 
-    public function __construct(ModelEvent $event, $currency) {
+    public function __construct(ModelEvent $event) {
         $this->event = $event;
+    }
+
+    public function setCurrency($currency) {
         $this->currency = $currency;
     }
 
@@ -29,11 +31,14 @@ class PriceCalculator {
         $this->preProcess[] = $preProcess;
     }
 
-    public function execute(array $data, ModelEventPayment $modelEventPayment) {
+    public function execute(array $data) {
+        if ($this->currency == null) {
+            throw new \InvalidArgumentException('Currency is not set');
+        }
         $price = new Price(0, $this->currency);
         foreach ($this->preProcess as $preProcess) {
-            $preProcess->calculate($data, $this->event);
-            $price->add($preProcess->getPrice());
+            $subPrice = $preProcess->calculate($data, $this->event);
+            $price->add($subPrice);
         }
         return $price;
     }

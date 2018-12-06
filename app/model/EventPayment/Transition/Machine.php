@@ -4,7 +4,6 @@ namespace FKSDB\EventPayment\Transition;
 
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
-use FKSDB\ORM\ModelEventPayment;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,11 +14,11 @@ class Machine {
     /**
      * @var PriceCalculator
      */
-    // private $priceCalculator;
+    private $priceCalculator;
     /**
      * @var AbstractSymbolGenerator
      */
-    // private $symbolGenerator;
+    private $symbolGenerator;
     /**
      * @var Transition[]
      */
@@ -40,37 +39,37 @@ class Machine {
     }
 
     /**
-     * @param string? $state
-     * @param boolean $isOrg
+     * @param IStateModel $model
      * @return Transition[]
      */
-    public function getAvailableTransitions($state, $isOrg): array {
-        return array_filter($this->transitions, function (Transition $transition) use ($state, $isOrg) {
-            return ($transition->getFromState() === $state) && $transition->canExecute($isOrg);
+    public function getAvailableTransitions($model): array {
+        return array_filter($this->transitions, function (Transition $transition) use ($model) {
+            return ($transition->getFromState() === ($model ? $model->getState() : null)) && $transition->canExecute($model);
         });
     }
 
     /**
      * @param string? $id
-     * @param ModelEventPayment $model
-     * @param boolean $isOrg
+     * @param IStateModel $model
      * @return void
      * @throws UnavailableTransitionException
+     * @throws \Nette\Application\ForbiddenRequestException
      */
-    public function executeTransition($id, ModelEventPayment $model, bool $isOrg) {
-        $availableTransitions = $this->getAvailableTransitions($model->state, $isOrg);
+    public function executeTransition($id, IStateModel $model) {
+        $availableTransitions = $this->getAvailableTransitions($model);
         foreach ($availableTransitions as $transition) {
             if ($transition->getId() === $id) {
-                $transition->execute($model);
-                $model->update(['state' => $transition->getToState()]);
+                $transition->onExecute($model);
+                $model->updateState($transition->getToState());
+                $transition->onExecuted($model);
                 return;
             }
         }
         throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));
     }
-/*
-    public function getPriceCalculator(): PriceCalculator {
-        return $this->priceCalculator;
+
+    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
+        $this->symbolGenerator = $abstractSymbolGenerator;
     }
 
     public function getSymbolGenerator(): AbstractSymbolGenerator {
@@ -81,7 +80,7 @@ class Machine {
         $this->priceCalculator = $priceCalculator;
     }
 
-    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
-        $this->symbolGenerator = $abstractSymbolGenerator;
-    }*/
+    public function getPriceCalculator(): PriceCalculator {
+        return $this->priceCalculator;
+    }
 }

@@ -4,6 +4,9 @@ namespace FKSDB\ORM;
 
 use AbstractModelSingle;
 use FKSDB\EventPayment\PriceCalculator\Price;
+use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
+use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\EventPayment\Transition\IStateModel;
 use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
@@ -28,7 +31,7 @@ use Nette\Security\IResource;
  * @property string specific_symbol
  * @property string bank_account
  */
-class ModelEventPayment extends AbstractModelSingle implements IResource {
+class ModelEventPayment extends AbstractModelSingle implements IResource, IStateModel {
     const STATE_WAITING = 'waiting'; // waitign for confimr payment
     const STATE_RECEIVED = 'received'; // platba prijatá
     const STATE_CANCELED = 'canceled'; // platba zrušená
@@ -58,11 +61,11 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
     /**
      * @param Machine $machine
      * @param $id
-     * @param $isOrg
      * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     * @throws \Nette\Application\ForbiddenRequestException
      */
-    public function executeTransition(Machine $machine, $id, $isOrg) {
-        $machine->executeTransition($id, $this, $isOrg);
+    public function executeTransition(Machine $machine, $id) {
+        $machine->executeTransition($id, $this);
     }
 
     /**
@@ -112,6 +115,28 @@ class ModelEventPayment extends AbstractModelSingle implements IResource {
                 $class .= 'badge-light';
         }
         return $class;
+    }
+
+    public function updateState($newState) {
+        $this->update(['state' => $newState]);
+    }
+
+    public function getState() {
+        return $this->state;
+    }
+
+    public function updatePrice(PriceCalculator $priceCalculator) {
+        $price = new Price(0, $this->currency);
+
+        // $calculator = $priceCalculatorFactory->createCalculator($this->getEvent(), $this->currency);
+        //$price = $calculator->execute($this->data);
+
+        $this->update([
+            'price' => $price->getAmount(),
+            'currency' => $price->getCurrency(),
+        ]);
+
+
     }
 
 }
