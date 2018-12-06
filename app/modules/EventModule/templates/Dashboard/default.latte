@@ -5,22 +5,26 @@
     <p>{$event->report}</p>
     <ul class="list-group mb-3">
         <li class="list-group-item ">
-            <span class="col-6">{_('Ročník semináru')}: </span>
+
+            <span class="col-6">{_('Contest year')}: </span>
             <span class="col-6">{$event->year}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Ročník akcie')}: </span>
+            <span class="col-6">{_('Event year')}: </span>
             <span class="col-6">{$event->event_year}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Začitaok')}: </span>
-            <span class="col-6">{$event->begin}</span>
+            <span class="col-6">{_('Event begin')}: </span>
+            <span class="col-6">{$event->begin->format('d. m. Y')}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Koniec')}: </span>
-            <span class="col-6">{$event->end}</span>
+            <span class="col-6">{_('Event end')}: </span>
+            <span class="col-6">{$event->end->format('d. m. Y')}</span>
+        </li>
+        <li class="list-group-item">
+            <a class="col-12" href="{$webUrl}">{_('Event web-site')}</a>
         </li>
     </ul>
-    <h2>{_('Akcie')}</h2>
+    <h2>{_('Actions')}</h2>
     {control navigation, "event.dashboard.default"}
 {/block}

@@ -7,10 +7,10 @@ use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Holder;
 use FKSDB\ORM\ModelEvent;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Object;
 use ORM\IModel;
-use SystemContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,7 +29,7 @@ class SingleEventSource extends Object implements IHolderSource {
     private $event;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 
@@ -60,7 +60,7 @@ class SingleEventSource extends Object implements IHolderSource {
      */
     private $holders = [];
 
-    function __construct(ModelEvent $event, SystemContainer $container) {
+    function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;
         $this->container = $container;
 

@@ -1,4 +1,5 @@
 html, body {
+    font-family: 'Source Sans Pro', sans-serif;
     /*padding-top: 35px;*/
     height: 100%;
     /* The html and body elements cannot have any padding or margin. */
@@ -25,7 +26,6 @@ html, body {
 .clear-referenced {
     position: absolute;
     right: 1em;
-    top: -3em;
     z-index: 3;
 }
 
@@ -120,14 +120,26 @@ body[data-contest="vyfuk"] h6 {
 
 .btn-brawl:hover {
     color: #fff;
-    background-color: #5C00C1;
-    border-color: #4200A7;
+    background-color: #f44336;
+    border-color: #f44336;
 }
 
 .btn-brawl {
     color: #fff;
-    background-color: #7511da;
-    border-color: #5C00C1;
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.btn-fyziklani:hover {
+    color: #fff;
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.btn-fyziklani {
+    color: #fff;
+    background-color: #f44336;
+    border-color: #f44336;
 }
 
 .bg-vyfuk {
@@ -138,8 +150,12 @@ body[data-contest="vyfuk"] h6 {
     background-color: #1175da;
 }
 
-.bg-brawl {
-    background-color: #7611da;
+.bg-fyziklani {
+    background-color: #d7392e;
+}
+
+.bg-fykos.event-type-1 {
+    background-color: #d7392e;
 }
 
 .bg-error {
@@ -270,6 +286,26 @@ body[data-contest="vyfuk"] h6 {
     border: solid 2px;
 }
 
+.bd-callout-fyziklani {
+    border-left-color: #f44336;
+}
+
+.bd-callout-fyziklani h4 {
+    color: #f44336;
+}
+
+[data-contest~="event-type-1"] .bd-callout {
+    border-left-color: #f44336;
+}
+
+[data-contest~="event-type-1"] .bd-callout h4 {
+    color: #f44336;
+}
+
 .event-type-1 {
     background-color: #d7392e;
+}
+
+h1 .small {
+    font-weight: 300;
 }

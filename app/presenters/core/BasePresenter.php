@@ -2,16 +2,16 @@
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
-use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\PresenterBuilder;
+use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
+use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Components\Controls\Navigation\Navigation;
+use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
-use FKSDB\Components\Controls\Navigation\INavigablePresenter;
-use FKSDB\Components\Controls\Navigation\Navigation;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -287,7 +287,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
-    public function getNavRoot(){
+    public function getNavRoot() {
         return null;
     }
 
@@ -298,7 +298,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return [null, null];
     }
 
-    protected function getSubtitle() {
+    public function getSubtitle() {
         return $this->subtitle;
     }
 

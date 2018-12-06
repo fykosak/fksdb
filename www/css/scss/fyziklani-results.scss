@@ -1,5 +1,51 @@
-.brawl-results, fyziklani-results {
-  margin: 2em 0;
+.brawl-results, .fyziklani-results {
+  h1 {
+    color: white;
+  }
+  .inner-headline {
+    margin-top: 15%;
+  }
+  .clock {
+    justify-content: space-between;
+    color: #d7392e;
+    padding: .25em;
+    font-weight: bold;
+    & > span {
+      display: flex;
+      flex-wrap: wrap;
+
+    }
+    &.small {
+      font-size: 200%;
+      background: white;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      .time-label {
+        width: 100%;
+        font-size: .75rem;
+      }
+    }
+    &.big {
+
+      text-align: center;
+      position: initial;
+      .time-value {
+        width: 100%;
+        font-size: 8rem;
+      }
+      .time-label {
+        width: 100%;
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .image-wp {
+    color: #d7392e;
+    font-size: 5rem;
+    text-align: center;
+  }
   table {
     tbody {
       counter-reset: results-table;

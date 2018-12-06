@@ -1,6 +1,7 @@
 import {
     ACTION_CHANGE_DATA,
     ACTION_SET_INITIAL_DATA,
+    IActionSetInitialData,
 } from '../actions/';
 
 export interface IInputConnectorItems {
@@ -25,7 +26,7 @@ const setData = (state: IInputConnectorState, action): IInputConnectorState => {
     };
 };
 
-const setInitialData = (state: IInputConnectorState, action): IInputConnectorState => {
+const setInitialData = (state: IInputConnectorState, action: IActionSetInitialData): IInputConnectorState => {
     if (action.data) {
         return {
             ...state,

@@ -34,9 +34,8 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -50,15 +49,10 @@ class DispatchGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->setDefaultOrder('year DESC begin DESC');
 
+
         //
         // columns
         //
-
-
-        /*
-
-          <th>{_('Your permissions')}</th>
-          <th>{_('Actions')}</th>*/
         $this->addColumn('event_id', _('Event Id'))->setRenderer(function ($row) {
             return '#' . $row->event_id;
         });
@@ -67,7 +61,7 @@ class DispatchGrid extends BaseGrid {
             return $row->event_type->contest->name;
         })->setSortable(false);
         $this->addColumn('year', _('Year'));
-        $this->addColumn('permissions', _('Permissions'))->setRenderer(function ($row) {
+        $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
             $container = Html::el('span');
             $modelEvent = ModelEvent::createFromTableRow($row);
             $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
@@ -80,7 +74,7 @@ class DispatchGrid extends BaseGrid {
             }
             $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
             if ($isOrg) {
-                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('Event org')));
+                $container->add(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->add(_('Contest org')));
             }
             return $container;
         })->setSortable(false);
@@ -88,14 +82,13 @@ class DispatchGrid extends BaseGrid {
         //
         // operations
         //
+
         $this->addButton('detail', _('Detail'))
-            ->setText('Detail')//todo i18n
+            ->setText(_('Detail'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('Dashboard:default', [
                     'eventId' => $row->event_id,
                 ]);
-            });
-
-
+            })->setClass('btn btn-sm btn-primary');
     }
 }

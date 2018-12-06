@@ -23,7 +23,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function titleImport() {
-        $this->setTitle(_('Import úloh FYKOSího Fyziklání'));
+        $this->setTitle(_('Tasks Import of Fyziklani'));
         $this->setIcon('fa fa-upload');
     }
 

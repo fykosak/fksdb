@@ -159,7 +159,7 @@ final class AuthenticationPresenter extends BasePresenter {
              */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } else {
             if ($this->flag == self::FLAG_SSO_PROBE) {
                 $this->loginBackLinkRedirect();
@@ -181,11 +181,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function actionRecover() {
         if ($this->isLoggedIn()) {
-            /**
-             * @var $login ModelLogin
-             */
-            $login = $this->getUser()->getIdentity();
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         }
     }
 
@@ -252,7 +248,7 @@ final class AuthenticationPresenter extends BasePresenter {
              */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect($login);
+            $this->initialRedirect();
         } catch (AuthenticationException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
         }
@@ -322,16 +318,11 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    private function initialRedirect(ModelLogin $login) {
+    private function initialRedirect() {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }
-        if (count($login->getActiveOrgs($this->yearCalculator)) > 0) {
-            $this->redirect(':Org:Dashboard:', [self::PARAM_DISPATCH => 1]);
-        } else {
-            $this->redirect(':Public:Dashboard:', [self::PARAM_DISPATCH => 1]);
-        }
-        // or else redirect to page suggesting registration
+        $this->redirect(':Dispatch:');
     }
 
     public function renderLogin() {

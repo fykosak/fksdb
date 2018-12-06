@@ -11,8 +11,8 @@ use FormUtils;
 use ModelException;
 use Nette\ArrayHash;
 use Nette\InvalidArgumentException;
-use Nette\Mail\Message;
 use Nette\Object;
+use Nette\Utils\JsonException;
 use ORM\IModel;
 use ServiceMPersonHasFlag;
 use ServiceMPostContact;
@@ -108,6 +108,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->resolution = $resolution;
     }
 
+    /**
+     * @param ArrayHash $values
+     * @return \AbstractModelSingle|ModelPerson|null
+     * @throws JsonException
+     */
     public function createFromValues(ArrayHash $values) {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
@@ -121,7 +126,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
     /**
      * @param IModel $model
      * @param ArrayHash $values
-     * @param $messages
+     * @throws JsonException
      */
     public function update(IModel $model, ArrayHash $values) {
         /**
@@ -138,6 +143,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param ModelPerson $person
      * @param ArrayHash $data
      * @throws StorageException
+     * @throws ModelException
+     * @throws ModelDataConflictException
+     * @throws JsonException
      * @return void
      */
     private function store(ModelPerson &$person, ArrayHash $data) {

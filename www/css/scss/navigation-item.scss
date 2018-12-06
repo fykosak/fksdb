@@ -1,6 +1,7 @@
 /* use https://www.sassmeister.com/ */
 @mixin navigation-item($color,$background) {
   border-color: $color;
+  border-radius: 0;
   background-color: $background;
   transition-duration: 200ms;
   color: $color;
@@ -45,5 +46,17 @@
   &[data-background-id="5"] {
     @include navigation-item(#da7511, white);
   }
+}
+
+[data-contest~="event-type-1"] .navigation-item .card {
+  @include navigation-item(#d7392e, white);
+}
+
+[data-contest~="fykos"] .navigation-item .card {
+  @include navigation-item(#1175da, white);
+}
+
+[data-contest~="vyfuk"] .navigation-item .card {
+  @include navigation-item(#ff4800, white);
 }
 

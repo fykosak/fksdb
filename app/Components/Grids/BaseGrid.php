@@ -3,7 +3,9 @@
 namespace FKSDB\Components\Grids;
 
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\Component;
 use Nette\InvalidStateException;
+use NiftyGrid\Components\Button;
 use NiftyGrid\Grid;
 use SQL\SearchableDataSource;
 
@@ -72,7 +74,7 @@ abstract class BaseGrid extends Grid {
         return $this->dataSource instanceof SearchableDataSource;
     }
 
-    protected function createComponentSearchForm($name) {
+    protected function createComponentSearchForm() {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
         }
@@ -99,13 +101,14 @@ abstract class BaseGrid extends Grid {
 
     /**
      * Adds button with Bootstrap CSS classes (default is 'default').
-     *
      * @param string $name
      * @param string $label
+     * @return Button
+     * @throws \NiftyGrid\DuplicateButtonException
      */
     protected function addButton($name, $label = NULL) {
         $button = parent::addButton($name, $label);
-        $button->setClass('btn btn-xs btn-sm btn-secondary btn-default');
+        $button->setClass('btn btn-sm btn-secondary');
         return $button;
     }
 

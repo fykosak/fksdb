@@ -1,0 +1,35 @@
+$fyziklaniMainColor: #f44336;
+
+.schedule-field-container {
+  color: $fyziklaniMainColor;
+  .schedule-row {
+    padding: .5rem;
+    border-bottom: $fyziklaniMainColor 1px dashed;
+    &:first-of-type {
+      border-top: $fyziklaniMainColor 1px dashed;
+    }
+    .schedule-container {
+      .chooser-container, .info-container {
+        width: 100%;
+        padding: 1rem 0;
+      }
+
+      .chooser-container {
+
+        border: solid 1px $fyziklaniMainColor;
+        border-radius: 1rem;
+        &.active {
+          color: white;
+          background-color: $fyziklaniMainColor;
+        }
+      }
+
+      .info-container {
+        cursor: not-allowed;
+      }
+      .chooser-container {
+        cursor: pointer;
+      }
+    }
+  }
+}

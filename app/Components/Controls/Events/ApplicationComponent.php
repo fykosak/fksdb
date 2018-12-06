@@ -162,7 +162,7 @@ class ApplicationComponent extends Control {
             };
 
             if ($transition->isCreating()) {
-                $submit->getControlPrototype()->addClass('btn-success');
+                $submit->getControlPrototype()->addClass('btn-sm btn-success');
                 $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
@@ -170,13 +170,13 @@ class ApplicationComponent extends Control {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
             } else if ($transition->isTerminating()) {
-                $submit->getControlPrototype()->addClass('btn-danger');
+                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 3);
             } else if ($transition->isDangerous()) {
-                $submit->getControlPrototype()->addClass('btn-danger');
+                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
                 $submit->setOption('row', 2);
             } else {
-                $submit->getControlPrototype()->addClass('btn-secondary');
+                $submit->getControlPrototype()->addClass('btn-sm btn-secondary');
                 $submit->setOption('row', 2);
             }
         }

@@ -63,7 +63,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $languageChooser->syncRedirect();
 
         if (!$this->eventExist()) {
-            throw new BadRequestException('Event nebyl nalezen.', 404);
+            throw new BadRequestException('Event not found.', 404);
         }
         parent::startup();
     }
@@ -90,11 +90,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return ModelEvent
+     * @return ModelEvent|null
+     * @throws BadRequestException
      */
     protected function getEvent() {
         if (!$this->event) {
-            $this->event = $this->serviceEvent->findByPrimary($this->getEventId());
+            $row = $this->serviceEvent->findByPrimary($this->getEventId());
+            if (!$row) {
+                return null;
+            }
+            $this->event = ModelEvent::createFromTableRow($row);
             if ($this->event) {
                 $holder = $this->container->createEventHolder($this->getEvent());
                 $this->event->setHolder($holder);
@@ -103,7 +108,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
-    protected function eventIsAllowed($resource, $privilege) {
+    protected function eventIsAllowed($resource, $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
             return false;
@@ -111,7 +116,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
-    protected function isContestsOrgAllowed($resource, $privilege) {
+    protected function isContestsOrgAllowed($resource, $privilege): bool {
         $contest = $this->getContest();
         if (!$contest) {
             return false;
@@ -125,7 +130,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     public function getNavRoot() {
-        return 'fyziklani.dashboard.default';
+        return 'event.dashboard.default';
     }
 
     protected function getContest(): ModelContest {

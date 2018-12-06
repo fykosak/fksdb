@@ -51,6 +51,8 @@ acl:
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
     - addResource(event.payment) # create, edit, list
+    - addResource(event.dashboard) # default
+    - addResource(event.schedule) # default
 
     # ACL
     - allow(contestant, submit, upload)
@@ -115,10 +117,14 @@ acl:
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
     - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
-
+    # eventModule
+    - allow(registered, event.dashboard)
+    - allow(org, event.dashboard)
 
     - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(guest, fyziklani, dashboard)
+
+    - allow(org, event.schedule)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
     # payment

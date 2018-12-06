@@ -1,32 +1,36 @@
 import { data } from './i18n-data';
 
-interface ILanguageData {
-    [lang: string]: {
-        [msqId: string]: string;
-    };
-}
+export type ILangMap<TValue> = {
+    [key in availableLanguages]: TValue;
+};
+
+type ILanguageData = ILangMap<{
+    [msqId: string]: string;
+}>;
+
+export type availableLanguages = 'cs' | 'en' | 'sk';
 
 class Lang {
 
-    private readonly data: ILanguageData = {};
+    private readonly data: ILanguageData = {cs: {}, en: {}, sk: {}};
 
-    private currentLocale = 'cs';
+    private currentLocale: availableLanguages = 'cs';
 
     public constructor(langData: ILanguageData) {
         this.data = langData;
         window.location.search.slice(1).split('&').forEach((s) => {
             const [key, value] = s.split('=');
             if (key === 'lang') {
-                this.currentLocale = value;
+                this.setLocale(value as availableLanguages);
             }
         });
     }
 
-    public getCurrentLocale(): string {
+    public getCurrentLocale(): availableLanguages {
         return this.currentLocale;
     }
 
-    public setLocale(locale: string): void {
+    public setLocale(locale: availableLanguages): void {
         this.currentLocale = locale;
     }
 

@@ -183,8 +183,6 @@ class ReferencedId extends HiddenField {
             } catch (ModelDataConflictException $e) {
                 $e->setReferencedId($this);
                 throw $e;
-            } catch (StorageException $e) {
-                $this->getForm()->addError($e->getMessage());
             }
         });
         $this->setValue($referencedId);

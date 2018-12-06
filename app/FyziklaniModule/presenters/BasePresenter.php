@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use EventModule\BasePresenter as EventBasePresenter;
-use FKSDB\Components\Controls\Choosers\BrawlChooser;
+use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use Nette\Application\BadRequestException;
@@ -24,19 +24,16 @@ abstract class BasePresenter extends EventBasePresenter {
     protected $fyziklaniFactory;
 
     /**
-     *
      * @var ServiceFyziklaniTeam
      */
     protected $serviceFyziklaniTeam;
 
     /**
-     *
      * @var ServiceFyziklaniTask
      */
     protected $serviceFyziklaniTask;
 
     /**
-     *
      * @var ServiceFyziklaniSubmit
      */
     protected $serviceFyziklaniSubmit;
@@ -45,10 +42,12 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var \ServiceBrawlRoom
      */
     protected $serviceBrawlRoom;
+
     /**
      * @var \ServiceBrawlTeamPosition
      */
     protected $serviceBrawlTeamPosition;
+
     /**
      * @var FyziklaniComponentsFactory
      */
@@ -84,47 +83,69 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @return BrawlChooser
+     * @return FyziklaniChooser
      */
     protected function createComponentBrawlChooser() {
-        $control = new BrawlChooser($this->serviceEvent);
+        $control = new FyziklaniChooser($this->serviceEvent);
 
         return $control;
     }
 
     /**
+     * @return bool
      * @throws BadRequestException
+     */
+    protected function isEventFyziklani(): bool {
+        return $this->getEvent()->event_type_id === 1;
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function startup() {
         parent::startup();
-        if ($this->getEvent()->event_type_id !== 1) {
+        if (!$this->isEventFyziklani()) {
+
             $this->flashMessage('Event nieje fyziklani', 'warning');
             $this->redirect(':Event:Dashboard:default');
         }
         /**
-         * @var $brawlChooser BrawlChooser
+         * @var $brawlChooser FyziklaniChooser
          */
         $brawlChooser = $this['brawlChooser'];
         $brawlChooser->setEvent($this->getEvent());
     }
 
     public function getSubtitle() {
-        return sprintf(_('%d. Fyziklání'), $this->getEvent()->event_year);
+        return $this->getEvent()->name;
+        // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**
-     * @return \ModelBrawlRoom[]
+     * @return array
+     * @throws BadRequestException
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('rooms'));
+        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
-
-    /*  public function getNavBarVariant() {
-          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-      }*/
+/*
+    public function getNavBarVariant() {
+        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+    }*/
 
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
+    }
+
+    /**
+     * @return int
+     */
+    public function getEventId() {
+        if (!$this->eventId) {
+            $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
+        }
+        return $this->eventId;
     }
 
 }

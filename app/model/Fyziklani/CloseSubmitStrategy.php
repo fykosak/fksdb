@@ -5,11 +5,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 namespace FKSDB\model\Fyziklani;
 
-use Nette\Application\BadRequestException;
 use FyziklaniModule\BasePresenter;
+use Nette\Application\BadRequestException;
+use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
 /**
@@ -32,12 +35,12 @@ class CloseSubmitStrategy {
     /**
      * @var int
      */
-    private $eventID;
+    private $eventId;
 
 
-    public function __construct($eventID, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct($eventId, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventID = $eventID;
+        $this->eventId = $eventId;
     }
 
     public function closeByCategory($category, &$msg = null) {
@@ -58,7 +61,7 @@ class CloseSubmitStrategy {
     private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
-            $team = $this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']);
+            $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
             if ($total) {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
@@ -70,9 +73,15 @@ class CloseSubmitStrategy {
         }
     }
 
-    private function getTeamsStats($teams) {
+    /**
+     * @param $teams
+     * @return array
+     * @throws BadRequestException
+     */
+    private function getTeamsStats($teams): array {
         $teamsData = [];
-        foreach ($teams as $team) {
+        foreach ($teams as $row) {
+            $team = ModelFyziklaniTeam::createFromTableRow($row);
             $teamData = [];
             $team_id = $team->e_fyziklani_team_id;
             $teamData['e_fyziklani_team_id'] = $team_id;
@@ -86,7 +95,10 @@ class CloseSubmitStrategy {
         return $teamsData;
     }
 
-    private static function getSortFunction() {
+    /**
+     * @return \Closure
+     */
+    private static function getSortFunction(): \Closure {
         return function ($b, $a) {
             if ($a['points'] > $b['points']) {
                 return 1;
@@ -103,16 +115,24 @@ class CloseSubmitStrategy {
         };
     }
 
-    private function getAllTeams($category = null) {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventID);
+    /**
+     * @param null $category
+     * @return Selection
+     */
+    private function getAllTeams($category = null): Selection {
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventId);
         if ($category) {
             $query->where('category', $category);
         }
         return $query;
     }
 
-    protected function getAllSubmits($team_id) {
-        $submits = $this->serviceFyziklaniTeam->findByPrimary($team_id)->getSubmits();
+    /**
+     * @param integer $team_id
+     * @return array
+     */
+    protected function getAllSubmits(int $team_id): array {
+        $submits = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($team_id))->getSubmits();
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
@@ -121,7 +141,7 @@ class CloseSubmitStrategy {
                 $sum += $submit->points;
                 $count++;
                 $arraySubmits[] = [
-                    'task_id' => $submit->task_id,
+                    'task_id' => $submit->fyziklani_task_id,
                     'points' => $submit->points,
                     'time' => $submit->modified
                 ];

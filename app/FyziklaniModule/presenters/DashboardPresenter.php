@@ -9,8 +9,11 @@ class DashboardPresenter extends BasePresenter {
         $this->setIcon('fa fa-dashboard');
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
-        if ($this->getEvent()->event_type_id !== 1) {
+        if (!$this->isEventFyziklani()) {
             return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->eventIsAllowed('fyziklani', 'dashboard'));
