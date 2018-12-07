@@ -207,16 +207,4 @@ class StalkingPresenter extends BasePresenter {
         $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
         $this->setIcon('fa fa-eye');
     }
-
-    protected function getNavBarVariant() {
-        /**
-         * @var $contest \FKSDB\ORM\ModelContest
-         */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
-        if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
-        }
-        return [null, null];
-    }
-
 }

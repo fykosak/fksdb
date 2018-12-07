@@ -8,7 +8,7 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         return ['error', 'dark'];
     }
 

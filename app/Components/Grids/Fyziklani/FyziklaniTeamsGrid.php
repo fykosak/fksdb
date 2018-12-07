@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\ModelEvent;
 use FyziklaniModule\BasePresenter;
-use \NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DataSource\NDataSource;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
-use \FKSDB\Components\Grids\BaseGrid;
 
 /**
  *
@@ -20,30 +21,24 @@ class FyziklaniTeamsGrid extends BaseGrid {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var integer
+     * @var ModelEvent
      */
-    private $eventId;
+    private $event;
 
     /**
      * FyziklaniTeamsGrid constructor.
-     * @param integer $eventId
+     * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct($eventId, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventId = $eventId;
+        $this->event = $event;
         parent::__construct();
     }
-
-//    public function isSearchable() {
-//        return $this->searchable;
-//    }
-//
-//    public function setSearchable($searchable) {
-//        $this->searchable = $searchable;
-//    }
     /**
-     * @param $presenter BasePresenter
+     * @param  BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -65,10 +60,10 @@ class FyziklaniTeamsGrid extends BaseGrid {
             return $room->name;
         });
         $this->addColumn('category', _('Kategorie'));
-        $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
-                'eventID' => $this->eventId
+                'eventId' => $this->event->event_id
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
             /**
@@ -76,7 +71,7 @@ class FyziklaniTeamsGrid extends BaseGrid {
              */
             return $row->hasOpenSubmit();
         });
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->eventId);//->where('points',NULL);
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));
     }
 }

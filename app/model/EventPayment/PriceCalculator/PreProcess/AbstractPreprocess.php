@@ -6,14 +6,10 @@ use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 
 abstract class AbstractPreProcess {
-    /**
-     * @var Price
-     */
-    protected $price;
 
     abstract public function calculate(array $data, ModelEvent $event, $currency): Price;
 
-    abstract public function getGridItems(array $data, ModelEvent $event): array;
+    abstract public function getGridItems(array $data, ModelEvent $event, $currency): array;
 
     protected function getData(array $data) {
         return null;

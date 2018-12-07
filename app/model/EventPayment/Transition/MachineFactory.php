@@ -4,6 +4,7 @@
 namespace FKSDB\EventPayment\Transition;
 
 
+use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\EventPayment\Transition\Transitions\Fyziklani13Payment;
 use FKSDB\ORM\ModelEvent;
@@ -18,10 +19,15 @@ class MachineFactory {
      * @var SymbolGeneratorFactory
      */
     private $symbolGeneratorFactory;
+    /**
+     * @var PriceCalculatorFactory
+     */
+    private $priceCalculatorFactory;
 
-    public function __construct(TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory) {
+    public function __construct(TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         $this->transitionsFactory = $transitionsFactory;
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;
+        $this->priceCalculatorFactory = $priceCalculatorFactory;
     }
 
     /**
@@ -43,7 +49,7 @@ class MachineFactory {
      */
     private function createTransitionsGenerator(ModelEvent $event): AbstractTransitionsGenerator {
         if (($event->event_type_id === 1) && ($event->event_year === 13)) {
-            return new Fyziklani13Payment($this->transitionsFactory, $this->symbolGeneratorFactory);
+            return new Fyziklani13Payment($this->transitionsFactory, $this->symbolGeneratorFactory, $this->priceCalculatorFactory);
         }
         throw new NotImplementedException('Not implemented');
     }

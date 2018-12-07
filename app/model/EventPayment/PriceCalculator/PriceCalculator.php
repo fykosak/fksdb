@@ -32,12 +32,9 @@ class PriceCalculator {
     }
 
     public function execute(array $data) {
-        if ($this->currency == null) {
-            throw new \InvalidArgumentException('Currency is not set');
-        }
-        $price = new Price(0, $this->currency);
+        $price = new Price(0, $this->getCurrency());
         foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($data, $this->event);
+            $subPrice = $preProcess->calculate($data, $this->event, $this->getCurrency());
             $price->add($subPrice);
         }
         return $price;
@@ -46,9 +43,16 @@ class PriceCalculator {
     public function getGridItems(array $data) {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($data, $this->event));
+            $items = \array_merge($items, $preProcess->getGridItems($data, $this->event, $this->getCurrency()));
         }
         return $items;
+    }
+
+    private function getCurrency() {
+        if ($this->currency == null) {
+            throw new \InvalidArgumentException('Currency is not set');
+        }
+        return $this->currency;
     }
 
     public function getCurrencies() {

@@ -20,14 +20,14 @@ class EventAccommodationPrice extends AbstractPreProcess {
     }
 
     public function calculate(array $data, ModelEvent $event, $currency): Price {
-        $this->price = new Price(0, $currency);
+        $price = new Price(0, $currency);
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $eventAcc = $this->getAccommodation($id);
-            $price = $this->getPriceFromModel($eventAcc);
-            $this->price->add($price);
+            $modelPrice = $this->getPriceFromModel($eventAcc, $price);
+            $price->add($modelPrice);
         }
-        return $this->price;
+        return $price;
     }
 
     private function getAccommodation($id): ModelEventAccommodation {
@@ -36,7 +36,8 @@ class EventAccommodationPrice extends AbstractPreProcess {
         return $model->getEventAccommodation();
     }
 
-    public function getGridItems(array $data, ModelEvent $event): array {
+    public function getGridItems(array $data, ModelEvent $event, $currency): array {
+        $price = new Price(0, $currency);
         $items = [];
         $ids = $this->getData($data);
         foreach ($ids as $id) {
@@ -48,14 +49,14 @@ class EventAccommodationPrice extends AbstractPreProcess {
 
             $items[] = [
                 'label' => \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $model->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name),
-                'price' => $this->getPriceFromModel($eventAcc),
+                'price' => $this->getPriceFromModel($eventAcc, $price),
             ];
         }
         return $items;
     }
 
-    private function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation): Price {
-        switch ($this->price->getCurrency()) {
+    private function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation, Price &$price): Price {
+        switch ($price->getCurrency()) {
             case Price::CURRENCY_KC:
                 $amount = $modelEventAccommodation->price_kc;
                 break;
@@ -63,13 +64,12 @@ class EventAccommodationPrice extends AbstractPreProcess {
                 $amount = $modelEventAccommodation->price_eur;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $this->price->getCurrency()));
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()));
         }
-        return new Price($amount, $this->price->getCurrency());
+        return new Price($amount, $price->getCurrency());
     }
 
     protected function getData(array $data) {
         return $data['accommodated_person_ids'];
     }
-
 }

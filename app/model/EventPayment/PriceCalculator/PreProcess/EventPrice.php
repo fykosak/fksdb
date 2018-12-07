@@ -17,43 +17,44 @@ class EventPrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public function calculate(array $data, ModelEvent $event, $currency): Price  {
-        $this->price = new Price(0, $currency);
+    public function calculate(array $data, ModelEvent $event, $currency): Price {
+        $price = new Price(0, $currency);
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
-            $this->price->add($this->getPriceFromModel($model));
+            $price->add($this->getPriceFromModel($model, $price));
         }
-        return $this->price;
+        return $price;
     }
 
     protected function getData(array $data) {
         return $data['event_participants'];
     }
 
-    public function getGridItems(array $data, ModelEvent $event): array {
+    public function getGridItems(array $data, ModelEvent $event, $currency): array {
+        $price = new Price(0, $currency);
         $items = [];
         $ids = $this->getData($data);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
             $items[] = [
-                'price' => $this->getPriceFromModel($model),
+                'price' => $this->getPriceFromModel($model, $price),
                 'label' => '',// TODO
             ];
         }
         return $items;
     }
 
-    private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation): Price {
-        switch ($this->price->getCurrency()) {
+    private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {
+        switch ($price->getCurrency()) {
             case Price::CURRENCY_KC:
                 $amount = $modelEventAccommodation->price;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $this->price->getCurrency()));
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()));
         }
-        return new Price($amount, $this->price->getCurrency());
+        return new Price($amount, $price->getCurrency());
     }
 }

@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPayment\CurrencyField;
 use FKSDB\EventPayment\Transition\Machine;
+use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -41,7 +42,7 @@ class EventPaymentFactory {
         return $control;
     }
 
-    public function createCreateForm(Machine $machine) {
+    public function createCreateForm(PaymentMachine $machine) {
         $control = new FormControl();
         $form = $control->getForm();
         $currencyField = new CurrencyField();
@@ -52,7 +53,7 @@ class EventPaymentFactory {
         return $control;
     }
 
-    public function createDetailControl(ModelEventPayment $modelEventPayment, ITranslator $translator, Machine $machine) {
+    public function createDetailControl(ModelEventPayment $modelEventPayment, ITranslator $translator, PaymentMachine $machine) {
 
         $control = new DetailControl($translator, $machine->getPriceCalculator(), $modelEventPayment);
         $form = $control->getFormControl()->getForm();
@@ -64,7 +65,7 @@ class EventPaymentFactory {
         return $control;
     }
 
-    private function appendTransitionsButtons($model, Machine $machine, Form $form) {
+    private function appendTransitionsButtons($model, PaymentMachine $machine, Form $form) {
         $transitions = $machine->getAvailableTransitions($model);
         foreach ($transitions as $transition) {
             $button = $form->addSubmit($transition->getId(), $transition->getLabel());

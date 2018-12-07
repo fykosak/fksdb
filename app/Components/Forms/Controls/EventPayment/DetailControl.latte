@@ -39,10 +39,12 @@
                 {FKSDB\EventPayment\PriceCalculator\Price::getLabel($item['price']->getCurrency())}</td>
         </tr>
     {/foreach}
-    <tr class="table-primary">
-        <td>{_('Spolu')}</td>
-        <td>{$model->price} {FKSDB\EventPayment\PriceCalculator\Price::getLabel($model->currency)}</td>
-    </tr>
+    {if !is_null($model->price)}
+        <tr class="table-primary">
+            <td>{_('Spolu')}</td>
+            <td>{$model->price} {FKSDB\EventPayment\PriceCalculator\Price::getLabel($model->currency)}</td>
+        </tr>
+    {/if}
     </tbody>
 
 </table>

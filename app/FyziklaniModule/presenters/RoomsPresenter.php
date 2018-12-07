@@ -60,7 +60,7 @@ class RoomsPresenter extends BasePresenter {
         $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
         $control->setBuildings($buildings);
         $control->setRooms($this->getRooms());
-        $control->setTeams($this->serviceFyziklaniTeam->getTeams($this->getEventId()));
+        $control->setTeams($this->serviceFyziklaniTeam->getTeamsArray($this->getEvent()));
         return $control;
     }
 

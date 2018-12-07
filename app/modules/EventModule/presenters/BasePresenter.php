@@ -75,14 +75,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEvent() ? true : false;
     }
 
-    public function getSubtitle() {
+    public function getSubtitle(): string {
         return sprintf(_('Event "%s".'), $this->getEvent()->name);
     }
 
     /**
-     * @return integer
+     * @return int
+     * @throws \Nette\Application\AbortException
      */
-    public function getEventId() {
+    public function getEventId(): int {
         if (!$this->eventId) {
             $this->redirect('Dispatch:default');
         }
@@ -90,14 +91,15 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return ModelEvent|null
+     * @return ModelEvent
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
-    protected function getEvent() {
+    protected function getEvent(): ModelEvent {
         if (!$this->event) {
             $row = $this->serviceEvent->findByPrimary($this->getEventId());
             if (!$row) {
-                return null;
+                throw new BadRequestException('Event not found');
             }
             $this->event = ModelEvent::createFromTableRow($row);
             if ($this->event) {
@@ -108,6 +110,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->event;
     }
 
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     protected function eventIsAllowed($resource, $privilege): bool {
         $event = $this->getEvent();
         if (!$event) {
@@ -125,7 +134,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
     }
 

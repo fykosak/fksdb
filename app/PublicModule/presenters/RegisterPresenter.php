@@ -374,7 +374,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
          */

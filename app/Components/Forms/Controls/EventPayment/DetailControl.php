@@ -67,11 +67,13 @@ class DetailControl extends Control {
             'accommodated_person_ids' => [93, 95],
             'event_participants' => [],
         ];
+        Debugger::barDump($this->model);
+        $this->calculator->setCurrency($this->model->currency);
+
         $this->template->items = $this->calculator->getGridItems($data);
         $this->template->model = $this->model;
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'DetailControl.latte');
         $this->template->render();
     }
-
 }

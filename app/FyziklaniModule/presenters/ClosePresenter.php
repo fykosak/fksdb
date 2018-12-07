@@ -92,7 +92,7 @@ class ClosePresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseGrid(): FyziklaniTeamsGrid {
-        return new FyziklaniTeamsGrid($this->getEventId(), $this->serviceFyziklaniTeam);
+        return new FyziklaniTeamsGrid($this->getEvent(), $this->serviceFyziklaniTeam);
     }
 
     /**
@@ -218,7 +218,7 @@ class ClosePresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     private function isReadyToClose($category = null): bool {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEventId());
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEvent());
         if ($category) {
             $query->where('category', $category);
         }
@@ -239,7 +239,7 @@ class ClosePresenter extends BasePresenter {
         /**
          * @var $nextTask \ModelFyziklaniTask
          */
-        $nextTask = $this->serviceFyziklaniTask->findAll($this->getEventId())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->serviceFyziklaniTask->findAll($this->getEvent())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 

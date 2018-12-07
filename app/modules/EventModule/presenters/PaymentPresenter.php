@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbols;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\MachineFactory;
+use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEventPayment;
 use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
@@ -25,6 +26,7 @@ class PaymentPresenter extends BasePresenter {
      * @var ModelEventPayment
      */
     private $model;
+
     /**
      * @var Machine
      */
@@ -34,10 +36,12 @@ class PaymentPresenter extends BasePresenter {
      * @var \ServiceEventPayment
      */
     private $serviceEventPayment;
+
     /**
      * @var EventPaymentFactory
      */
     private $eventPaymentFactory;
+
     /**
      * @var MachineFactory
      */
@@ -120,9 +124,12 @@ class PaymentPresenter extends BasePresenter {
         return $this->model;
     }
 
-    private function getMachine(): Machine {
+    private function getMachine(): PaymentMachine {
         if (!$this->machine) {
             $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
+        }
+        if (!$this->machine instanceof PaymentMachine) {
+            throw new \InvalidArgumentException('Očakávaná trieda PaymentMachine');
         }
         return $this->machine;
     }
@@ -155,10 +162,9 @@ class PaymentPresenter extends BasePresenter {
             'event_id' => $this->getEvent()->event_id,
             'data' => '',
             'state' => null,
+            'currency' => $values->currency,
         ]);
         $this->serviceEventPayment->save($model);
-
-        $model->updatePrice($this->getMachine()->getPriceCalculator());
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
@@ -178,7 +184,11 @@ class PaymentPresenter extends BasePresenter {
 
     public function actionEdit() {
         if ($this->canEdit()) {
-            $this['editForm']->getForm()->setDefaults($this->getModel());
+            /**
+             * @var $formControl FormControl
+             */
+            $formControl = $this['editForm'];
+            $formControl->getForm()->setDefaults($this->getModel());
         } else {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
             $this->redirect(':MyPayment:');
@@ -187,14 +197,12 @@ class PaymentPresenter extends BasePresenter {
 
     public function handleEditForm(Form $form) {
         $values = $form->getValues();
-        /**
-         * @var $model ModelEventPayment
-         */
         $model = $this->getModel();
         $model->update([
             'data' => '',
+            'currency' => $values->currency,
+            'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
         ]);
-        $model->updatePrice($this->getMachine()->getPriceCalculator());
 
         $this->redirect('detail', ['id' => $model->payment_id]);
     }

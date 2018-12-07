@@ -322,7 +322,7 @@ class ApplicationPresenter extends BasePresenter {
         );
     }
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         $event = $this->getEvent();
         $parent = parent::getNavBarVariant();;
         if (!$event) {

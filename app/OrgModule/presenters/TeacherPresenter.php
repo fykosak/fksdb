@@ -93,16 +93,5 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     public function messageExists() {
         return _('Teacher already exist');
     }
-
-    protected function getNavBarVariant() {
-        /**
-         * @var $contest \FKSDB\ORM\ModelContest
-         */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
-        if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
-        }
-        return [null, null];
-    }
 }
 

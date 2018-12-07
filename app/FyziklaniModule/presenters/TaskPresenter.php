@@ -52,7 +52,7 @@ class TaskPresenter extends BasePresenter {
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEventId(), $this->serviceFyziklaniTask);
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->serviceFyziklaniTask);
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -62,6 +62,6 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function createComponentTaskGrid() {
-        return new FyziklaniTaskGrid($this->getEventId(), $this->serviceFyziklaniTask);
+        return new FyziklaniTaskGrid($this->getEvent(), $this->serviceFyziklaniTask);
     }
 }

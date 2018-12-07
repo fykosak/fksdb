@@ -104,7 +104,7 @@ class TaskCodeHandler {
          */
         $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
 
-        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event->event_id)->name;
+        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event)->name;
 
         try {
             $this->serviceFyziklaniSubmit->save($submit);
@@ -127,7 +127,7 @@ class TaskCodeHandler {
         /* Existenica týmu */
         $teamId = TaskCodePreprocessor::extractTeamId($taskCode);
 
-        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event->event_id)) {
+        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
             throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
@@ -138,7 +138,7 @@ class TaskCodeHandler {
         }
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($taskCode);
-        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event->event_id);
+        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
         if (!$taskId) {
             throw new TaskCodeException(sprintf(_('Úloha %s neexistuje.'), $taskLabel));
         }

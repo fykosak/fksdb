@@ -5,11 +5,14 @@ namespace FKSDB\EventPayment\Transition;
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\DateTime;
+use Nette\InvalidStateException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Security\IResource;
+use Nette\Security\User;
 
 class TransitionsFactory {
     /**
@@ -24,11 +27,16 @@ class TransitionsFactory {
      * @var EventAuthorizator
      */
     private $eventAuthorizator;
+    /**
+     * @var User
+     */
+    private $user;
 
-    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator) {
+    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user) {
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->user = $user;
     }
 
     public function createTransition(string $fromState = null, string $toState, string $label) {
@@ -38,18 +46,20 @@ class TransitionsFactory {
     }
 
 
-    public function createMailCallback(string $templateFile, string $address, $options): \Closure {
+    public function createMailCallback(string $templateFile, $options): \Closure {
         $template = $this->mailTemplateFactory->createFromFile($templateFile);
         $message = new Message();
 
         $message->setSubject($options->subject);
         $message->setFrom($options->from);
         $message->addBcc($options->bcc);
-        $message->addTo($address);
+
         //  $message->addAttachment()
 
         return function (ModelEventPayment $model) use ($message, $template) {
+
             $template->model = $model;
+            $message->addTo($model->getPerson()->getInfo()->email);
             $message->setHtmlBody($template);
             $this->mailer->send($message);
         };
@@ -75,6 +85,17 @@ class TransitionsFactory {
 
     public function getConditionDateTo(DateTime $to): bool {
         return \time() <= $to->getTimestamp();
+    }
+
+    public function getConditionOwnerAssertion(ModelPerson $ownerPerson): bool {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+        /**
+         * @var $loggedPerson ModelPerson
+         */
+        $loggedPerson = $this->user->getIdentity()->getPerson();
+        return $loggedPerson->person_id === $ownerPerson->person_id;
     }
 }
 

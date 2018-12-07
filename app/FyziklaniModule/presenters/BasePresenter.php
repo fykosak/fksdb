@@ -117,9 +117,8 @@ abstract class BasePresenter extends EventBasePresenter {
         $brawlChooser->setEvent($this->getEvent());
     }
 
-    public function getSubtitle() {
+    public function getSubtitle(): string {
         return $this->getEvent()->name;
-        // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**
@@ -129,10 +128,11 @@ abstract class BasePresenter extends EventBasePresenter {
     protected function getRooms() {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
-/*
-    public function getNavBarVariant() {
-        return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-    }*/
+
+    /*
+        public function getNavBarVariant() {
+            return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+        }*/
 
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
@@ -141,7 +141,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return int
      */
-    public function getEventId() {
+    public function getEventId(): int {
         if (!$this->eventId) {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }

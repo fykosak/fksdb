@@ -66,7 +66,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         parent::startup();
     }
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         return ['event bg-dark', 'dark'];
     }
 }
