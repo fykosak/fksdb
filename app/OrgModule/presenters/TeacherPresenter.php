@@ -59,19 +59,15 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->setIcon('fa fa-graduation-cap');
     }
 
-    protected function createComponentGrid($name) {
-        $grid = new TeachersGrid($this->serviceTeacher);
-
-        return $grid;
+    protected function createComponentGrid($name): TeachersGrid {
+        return new TeachersGrid($this->serviceTeacher);
     }
 
     protected function appendExtendedContainer(Form $form) {
         $container = $this->teacherFactory->createTeacher();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
-
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
-
     }
 
     protected function getORMService() {

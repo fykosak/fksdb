@@ -25,15 +25,27 @@ class RoomsPresenter extends BasePresenter {
         $this->setIcon('fa fa-download');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedEdit() {
         // TODO now can edit routing anybody
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.edit')));
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDownload() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.download')));
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $download = $this->eventIsAllowed('fyziklani', 'rooms.download');
         $edit = $this->eventIsAllowed('fyziklani', 'rooms.edit');
@@ -55,6 +67,11 @@ class RoomsPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return RoutingDownload
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
         $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
@@ -64,7 +81,11 @@ class RoomsPresenter extends BasePresenter {
         return $control;
     }
 
-
+    /**
+     * @return \FKSDB\Components\React\Fyziklani\RoutingEdit
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentRouting() {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context, $this->getEvent());
     }

@@ -68,7 +68,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    public function getContestAuthorizator() {
+    public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 

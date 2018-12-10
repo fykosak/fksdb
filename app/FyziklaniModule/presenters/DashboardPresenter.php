@@ -11,6 +11,7 @@ class DashboardPresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function authorizedDefault() {
         if (!$this->isEventFyziklani()) {

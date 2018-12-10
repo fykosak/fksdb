@@ -19,7 +19,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      *
-     * @var \FKSDB\ORM\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
@@ -47,13 +47,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    protected function createComponentLanguageChooser() {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    /**+
+     * @return LanguageChooser
+     */
+    protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->session);
     }
 
     /**
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function startup() {
         /**
@@ -70,13 +73,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
-    protected function eventExist() {
+    protected function eventExist(): bool {
         return $this->getEvent() ? true : false;
     }
 
+    /**
+     * @return string
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function getSubtitle(): string {
-        return sprintf(_('Event "%s".'), $this->getEvent()->name);
+        return $this->getEvent()->name;
     }
 
     /**
@@ -125,6 +135,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
+    /**
+     * @param $resource
+     * @param $privilege
+     * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     protected function isContestsOrgAllowed($resource, $privilege): bool {
         $contest = $this->getContest();
         if (!$contest) {
@@ -132,7 +149,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         }
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
     }
-
 
     public function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
@@ -142,7 +158,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return 'event.dashboard.default';
     }
 
-    protected function getContest(): ModelContest {
+    /**
+     * @return ModelContest
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 

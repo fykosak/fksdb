@@ -24,6 +24,9 @@ class ResultsPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function requiresLogin(): bool {
         switch ($this->getAction()) {
             case 'default':
@@ -77,23 +80,47 @@ class ResultsPresenter extends BasePresenter {
         $this->authorizedDefault();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedResultsPresentation() {
         $this->getHttpRequest();
         $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
     }
 
+    /**
+     * @return ResultsView
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentResultsView(): ResultsView {
         return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
     }
 
+    /**
+     * @return ResultsPresentation
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentResultsPresentation(): ResultsPresentation {
         return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
     }
 
+    /**
+     * @return TeamStatistics
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentTeamStatistics(): TeamStatistics {
         return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
     }
 
+    /**
+     * @return TaskStatistics
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentTaskStatistics(): TaskStatistics {
         return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
     }

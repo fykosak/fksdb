@@ -90,6 +90,7 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FyziklaniTeamsGrid
      * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function createComponentCloseGrid(): FyziklaniTeamsGrid {
         return new FyziklaniTeamsGrid($this->getEvent(), $this->serviceFyziklaniTeam);
@@ -181,9 +182,10 @@ class ClosePresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
-        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -204,9 +206,10 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     private function closeGlobalFormSucceeded() {
-        $closeStrategy = new CloseSubmitStrategy($this->getEventId(), $this->serviceFyziklaniTeam);
+        $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
         $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
         $this->redirect('this');
@@ -216,6 +219,7 @@ class ClosePresenter extends BasePresenter {
      * @param null $category
      * @return bool
      * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     private function isReadyToClose($category = null): bool {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->getEvent());

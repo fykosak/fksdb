@@ -32,6 +32,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function actionQrEntry($id) {
         if (!$id) {
