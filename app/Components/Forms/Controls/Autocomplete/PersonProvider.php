@@ -33,8 +33,7 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param ModelContest $contest
-     * @param YearCalculator $yearCalculator
+     * Syntactic sugar, should be solved more generally.
      */
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $orgs = $this->servicePerson->getTable()->where([
@@ -62,8 +61,8 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     public function getItemLabel($id) {
-        $row = $this->servicePerson->findByPrimary($id);
-        return ModelPerson::createFromTableRow($row)->getFullname();
+        $person = $this->servicePerson->findByPrimary($id);
+        return $person->getFullname();
     }
 
     public function getItems() {
@@ -72,8 +71,7 @@ class PersonProvider implements IFilteredDataProvider {
 
 
         $result = [];
-        foreach ($persons as $row) {
-            $person = ModelPerson::createFromTableRow($row);
+        foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
         return $result;
