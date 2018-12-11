@@ -10,7 +10,7 @@ use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\EventPayment\Transition\Transition;
 use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\BadRequestException;
 use Nette\DateTime;
 
@@ -36,11 +36,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             throw new BadRequestException('Očakvaná sa trieda PaymentMachine');
         }
 
-        $this->addTransitionInitNew($machine);
-        $this->addTransitionNewWaiting($machine);
-        $this->addTransitionNewCanceled($machine);
-        $this->addTransitionWaitingReceived($machine);
-        $this->addTransitionWaitingCancel($machine);
+        $this->addTransitionInitToNew($machine);
+        $this->addTransitionNewToWaiting($machine);
+        $this->addTransitionNewToCanceled($machine);
+        $this->addTransitionWaitingToReceived($machine);
+        $this->addTransitionWaitingToCancel($machine);
     }
 
     public function createMachine(ModelEvent $event): Machine {
@@ -50,8 +50,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         return $machine;
     }
 
-    private function addTransitionInitNew(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(null, ModelEventPayment::STATE_NEW, _('Pokračovať k vytvoreniu platby'));
+    private function addTransitionInitToNew(PaymentMachine &$machine) {
+        $transition = $this->transitionFactory->createTransition(null, ModelPayment::STATE_NEW, _('Pokračovať k vytvoreniu platby'));
         $transition->setCondition(
             function () {
                 return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-01-01 00:00:00'));
@@ -59,7 +59,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    private function addTransitionNewWaiting(PaymentMachine &$machine) {
+    private function addTransitionNewToWaiting(PaymentMachine &$machine) {
 
         $options = (object)[
             'bcc' => 'miso@fykos.cz',
@@ -67,17 +67,17 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             'subject' => 'prijali sme platbu'
         ];
         $transition = $this->transitionFactory->createTransition(
-            ModelEventPayment::STATE_NEW,
-            ModelEventPayment::STATE_WAITING,
+            ModelPayment::STATE_NEW,
+            ModelPayment::STATE_WAITING,
             _('Potvrdiť platbu a napočítať cenu')
         );
 
         $transition->setType(Transition::TYPE_SUCCESS);
-        $transition->setCondition(function (ModelEventPayment $eventPayment) {
+        $transition->setCondition(function (ModelPayment $eventPayment) {
             return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit') ||
                 $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
         });
-        $transition->onExecuteClosures[] = function (ModelEventPayment $modelEventPayment) use ($machine) {
+        $transition->onExecuteClosures[] = function (ModelPayment $modelEventPayment) use ($machine) {
             $modelEventPayment->update($machine->getSymbolGenerator()->create($modelEventPayment));
             $modelEventPayment->updatePrice($machine->getPriceCalculator());
         };
@@ -86,8 +86,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    private function addTransitionNewCanceled(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_NEW, ModelEventPayment::STATE_CANCELED, _('Zrusit platbu'));
+    private function addTransitionNewToCanceled(PaymentMachine &$machine) {
+        $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_NEW, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
         $transition->setType(Transition::TYPE_DANGER);
         $transition->setCondition(function () {
             return true;
@@ -95,11 +95,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    private function addTransitionWaitingReceived(PaymentMachine &$machine) {
+    private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
         $options = [];
-        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_RECEIVED, _('Zaplatil'));
+        $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Zaplatil'));
         //$transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/confirm', $options);
-        $transition->setCondition(function (ModelEventPayment $eventPayment) {
+        $transition->setCondition(function (ModelPayment $eventPayment) {
             return $this->transitionFactory->getConditionDateBetween(new DateTime('2018-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
                 && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
         });
@@ -107,10 +107,10 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    private function addTransitionWaitingCancel(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(ModelEventPayment::STATE_WAITING, ModelEventPayment::STATE_CANCELED, _('Zrusit platbu'));
+    private function addTransitionWaitingToCancel(PaymentMachine &$machine) {
+        $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
         $transition->setType(Transition::TYPE_DANGER);
-        $transition->setCondition(function (ModelEventPayment $eventPayment) {
+        $transition->setCondition(function (ModelPayment $eventPayment) {
             $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
         });
         $machine->addTransition($transition);

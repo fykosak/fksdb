@@ -2,7 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;

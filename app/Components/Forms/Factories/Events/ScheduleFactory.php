@@ -20,7 +20,6 @@ class ScheduleFactory extends AbstractFactory {
             'data' => (array)$data,
             'visible' => $visible,
         ];
-        Debugger::barDump($visible);
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {

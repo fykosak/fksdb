@@ -5,13 +5,15 @@ namespace EventModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
 use FKSDB\Components\Forms\Factories\EventPaymentFactory;
+use FKSDB\Components\Forms\Factories\PaymentFactory;
 use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
-use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbols;
+use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\MachineFactory;
 use FKSDB\EventPayment\Transition\PaymentMachine;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
 
 class PaymentPresenter extends BasePresenter {
@@ -23,7 +25,7 @@ class PaymentPresenter extends BasePresenter {
     public $id;
 
     /**
-     * @var ModelEventPayment
+     * @var ModelPayment
      */
     private $model;
 
@@ -33,12 +35,12 @@ class PaymentPresenter extends BasePresenter {
     private $machine;
 
     /**
-     * @var \ServiceEventPayment
+     * @var \ServicePayment
      */
     private $serviceEventPayment;
 
     /**
-     * @var EventPaymentFactory
+     * @var PaymentFactory
      */
     private $eventPaymentFactory;
 
@@ -47,7 +49,7 @@ class PaymentPresenter extends BasePresenter {
      */
     private $machineFactory;
 
-    public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
+    public function injectServiceEventPayment(\ServicePayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 
@@ -55,7 +57,7 @@ class PaymentPresenter extends BasePresenter {
         $this->machineFactory = $machineFactory;
     }
 
-    public function injectEventPaymentFactory(EventPaymentFactory $eventPaymentFactory) {
+    public function injectEventPaymentFactory(PaymentFactory $eventPaymentFactory) {
         $this->eventPaymentFactory = $eventPaymentFactory;
     }
 
@@ -110,18 +112,20 @@ class PaymentPresenter extends BasePresenter {
     /**
      * Is org or (is own payment and can edit)
      * @return bool
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     private function canEdit() {
         return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) || $this->isContestsOrgAllowed($this->getModel(), 'org.edit');
     }
 
     /**
-     * @return ModelEventPayment
+     * @return ModelPayment
      */
-    private function getModel(): ModelEventPayment {
+    private function getModel(): ModelPayment {
         if (!$this->model) {
             $row = $this->serviceEventPayment->findByPrimary($this->id);
-            $this->model = ModelEventPayment::createFromTableRow($row);
+            $this->model = ModelPayment::createFromTableRow($row);
             $this->model->getRelatedPersonAccommodation();
         }
         return $this->model;
@@ -171,6 +175,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @param Form $form
+     * @throws AlreadyGeneratedSymbolsException
      * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
@@ -178,13 +183,14 @@ class PaymentPresenter extends BasePresenter {
      */
     public function handleCreateForm(Form $form) {
         $values = $form->getValues();
+        Debugger::barDump($values);
         /**
-         * @var $model ModelEventPayment
+         * @var $model ModelPayment
          */
         $model = $this->serviceEventPayment->createNew([
             'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
             'event_id' => $this->getEvent()->event_id,
-            'data' => '',
+
             'state' => null,
             'currency' => $values->currency,
         ]);
@@ -193,7 +199,7 @@ class PaymentPresenter extends BasePresenter {
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
                 $model->executeTransition($this->getMachine(), $name);
-                $this->redirect('detail', ['id' => $model->payment_id]);
+                //  $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
     }
@@ -204,7 +210,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentCreateForm(): FormControl {
-        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine());
+        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine(), $this->getEvent());
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->handleCreateForm($form);
         };
@@ -212,9 +218,11 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
+     * @param $id
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
-    public function actionEdit() {
+    public function actionEdit($id) {
         if ($this->canEdit()) {
             /**
              * @var $formControl FormControl
@@ -235,7 +243,6 @@ class PaymentPresenter extends BasePresenter {
         $values = $form->getValues();
         $model = $this->getModel();
         $model->update([
-            'data' => '',
             'currency' => $values->currency,
             'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
         ]);
@@ -249,6 +256,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\ForbiddenRequestException
      * @throws \Nette\Application\BadRequestException
+     *
      */
     public function handleDetailForm(Form $form) {
 
@@ -261,7 +269,7 @@ class PaymentPresenter extends BasePresenter {
                     try {
                         $model->executeTransition($this->getMachine(), $name);
                         $this->redirect('detail');
-                    } catch (AlreadyGeneratedSymbols $e) {
+                    } catch (AlreadyGeneratedSymbolsException $e) {
                         $this->flashMessage($e->getMessage(), 'danger');
                         $this->redirect('this');
                     }
@@ -296,9 +304,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return FormControl
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function createComponentEditForm(): FormControl {
-        $control = $this->eventPaymentFactory->createEditForm($this->isContestsOrgAllowed($this->getModel(), 'org.edit'));
+        $control = $this->eventPaymentFactory->createEditForm($this->isContestsOrgAllowed($this->getModel(), 'org.edit'), $this->getEvent());
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->handleEditForm($form);
         };

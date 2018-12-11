@@ -3,6 +3,7 @@
 namespace FKSDB\ORM;
 
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 
 /**
  * Class FKSDB\ORM\ModelEventPersonAccommodation
@@ -25,5 +26,19 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
+    }
+
+    /**
+     * @return \Nette\Database\Table\Selection
+     */
+    public function getPaymentsAccommodation(): Selection {
+        return $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id');//->where('payment.state !=', ModelPayment::STATE_CANCELED);
+    }
+
+    public function getLabel() {
+        $eventAcc = $this->getEventAccommodation();
+        $fromDate = $eventAcc->date->format('d. m.');
+        $toDate = $eventAcc->date->add(new \DateInterval('P1D'))->format('d. m. Y');
+        return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
 }

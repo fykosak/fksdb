@@ -8,11 +8,11 @@ use Nette\NotImplementedException;
 
 class SymbolGeneratorFactory {
     /**
-     * @var \ServiceEventPayment;
+     * @var \ServicePayment;
      */
     protected $serviceEventPayment;
 
-    public function __construct(\ServiceEventPayment $serviceEventPayment) {
+    public function __construct(\ServicePayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 

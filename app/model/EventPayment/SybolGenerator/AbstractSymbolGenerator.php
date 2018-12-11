@@ -2,22 +2,22 @@
 
 namespace FKSDB\EventPayment\SymbolGenerator;
 
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 
 abstract class AbstractSymbolGenerator {
     /**
-     * @var \ServiceEventPayment;
+     * @var \ServicePayment;
      */
     protected $serviceEventPayment;
 
-    public function __construct(\ServiceEventPayment $serviceEventPayment) {
+    public function __construct(\ServicePayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 
     /**
-     * @param ModelEventPayment $modelEventPayment
+     * @param ModelPayment $modelEventPayment
      * @return mixed
-     * @throws AlreadyGeneratedSymbols
+     * @throws AlreadyGeneratedSymbolsException
      */
-    abstract public function create(ModelEventPayment $modelEventPayment);
+    abstract public function create(ModelPayment $modelEventPayment);
 }

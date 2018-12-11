@@ -24,6 +24,7 @@ class ErrorPresenter extends BasePresenter {
     /**
      * @param  Exception
      * @return void
+     * @throws \Nette\Application\AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.

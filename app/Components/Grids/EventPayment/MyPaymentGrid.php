@@ -4,17 +4,17 @@ namespace FKSDB\Components\Grids\EventPayment;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EventPayment\PriceCalculator\Price;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
 class MyPaymentGrid extends BaseGrid {
     /**
-     * @var \ServiceEventPayment
+     * @var \ServicePayment
      */
     private $serviceEventPayment;
 
-    function __construct(\ServiceEventPayment $serviceEventPayment) {
+    function __construct(\ServicePayment $serviceEventPayment) {
         parent::__construct();
 
         $this->serviceEventPayment = $serviceEventPayment;
@@ -22,8 +22,8 @@ class MyPaymentGrid extends BaseGrid {
 
     /**
      * @param \BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \Nette\Application\UI\InvalidLinkException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -41,17 +41,17 @@ class MyPaymentGrid extends BaseGrid {
             return $person->getFullname();
         });*/
         $this->addColumn('id', _('#'))->setRenderer(function ($row) {
-            return '#' . ModelEventPayment::createFromTableRow($row)->getPaymentId();
+            return '#' . ModelPayment::createFromTableRow($row)->getPaymentId();
         });;
         $this->addColumn('event', _('Event'))->setRenderer(function ($row) {
-            return ModelEventPayment::createFromTableRow($row)->getEvent()->name;
+            return ModelPayment::createFromTableRow($row)->getEvent()->name;
         });;
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelEventPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromTableRow($row);
             return $model->price . ' ' . Price::getLabel($model->currency);
         });
         $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
-            $class = ModelEventPayment::createFromTableRow($row)->getUIClass();
+            $class = ModelPayment::createFromTableRow($row)->getUIClass();
             return Html::el('span')->addAttributes(['class' => $class])->add(_($row->state));
         });
 
@@ -61,7 +61,7 @@ class MyPaymentGrid extends BaseGrid {
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setShow(function ($row) {
-                return ModelEventPayment::createFromTableRow($row)->canEdit();
+                return ModelPayment::createFromTableRow($row)->canEdit();
             })
             ->setLink(function ($row) {
                 return $this->getPresenter()->link(':Event:payment:edit', [

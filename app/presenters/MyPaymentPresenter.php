@@ -4,11 +4,11 @@ use FKSDB\Components\Grids\EventPayment\MyPaymentGrid;
 
 class MyPaymentPresenter extends AuthenticatedPresenter {
     /**
-     * @var \ServiceEventPayment
+     * @var \ServicePayment
      */
     private $serviceEventPayment;
 
-    public function injectServiceEventPayment(\ServiceEventPayment $serviceEventPayment) {
+    public function injectServiceEventPayment(\ServicePayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
     }
 

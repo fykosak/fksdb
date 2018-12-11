@@ -6,6 +6,7 @@ use AbstractModelSingle;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\EventPayment\Transition\IStateModel;
 use FKSDB\EventPayment\Transition\Machine;
 use Nette\Database\Table\ActiveRow;
@@ -20,7 +21,6 @@ use Nette\Security\IResource;
  * @property integer payment_id
  * @property ActiveRow event
  * @property integer event_id
- * @property string data
  * @property string state
  * @property float price
  * @property string currency
@@ -31,7 +31,7 @@ use Nette\Security\IResource;
  * @property string specific_symbol
  * @property string bank_account
  */
-class ModelEventPayment extends AbstractModelSingle implements IResource, IStateModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel {
     const STATE_WAITING = 'waiting'; // waitign for confimr payment
     const STATE_RECEIVED = 'received'; // platba prijatá
     const STATE_CANCELED = 'canceled'; // platba zrušená
@@ -46,7 +46,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource, IState
     }
 
     public function getRelatedPersonAccommodation() {
-        $query = $this->related(\DbNames::TAB_EVENT_PAYMENT_TO_PERSON_ACCOMMODATION, 'payment_id');
+        $query = $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
             $items[] = ModelEventPersonAccommodation::createFromTableRow($row->event_person_accommodation);
@@ -62,6 +62,7 @@ class ModelEventPayment extends AbstractModelSingle implements IResource, IState
      * @param Machine $machine
      * @param $id
      * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     * @throws AlreadyGeneratedSymbolsException
      * @throws \Nette\Application\ForbiddenRequestException
      */
     public function executeTransition(Machine $machine, $id) {
@@ -99,16 +100,16 @@ class ModelEventPayment extends AbstractModelSingle implements IResource, IState
     public function getUIClass(): string {
         $class = 'badge ';
         switch ($this->state) {
-            case ModelEventPayment::STATE_WAITING:
+            case ModelPayment::STATE_WAITING:
                 $class .= 'badge-warning';
                 break;
-            case ModelEventPayment::STATE_CANCELED:
+            case ModelPayment::STATE_CANCELED:
                 $class .= 'badge-secondary';
                 break;
-            case ModelEventPayment::STATE_RECEIVED:
+            case ModelPayment::STATE_RECEIVED:
                 $class .= 'badge-success';
                 break;
-            case ModelEventPayment::STATE_NEW:
+            case ModelPayment::STATE_NEW:
                 $class .= 'badge-primary';
                 break;
             default:
@@ -135,8 +136,5 @@ class ModelEventPayment extends AbstractModelSingle implements IResource, IState
             'price' => $price->getAmount(),
             'currency' => $price->getCurrency(),
         ]);
-
-
     }
-
 }

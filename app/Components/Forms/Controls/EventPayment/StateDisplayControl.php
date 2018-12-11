@@ -4,7 +4,7 @@
 namespace FKSDB\Components\Forms\Controls\EventPayment;
 
 
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -16,7 +16,7 @@ use Nette\Templating\FileTemplate;
  */
 class StateDisplayControl extends Control {
     /**
-     * @var ModelEventPayment
+     * @var ModelPayment
      */
     private $model;
     /**
@@ -24,7 +24,7 @@ class StateDisplayControl extends Control {
      */
     private $translator;
 
-    public function __construct(ITranslator $translator, ModelEventPayment $model) {
+    public function __construct(ITranslator $translator, ModelPayment $model) {
         parent::__construct();
         $this->model = $model;
         $this->translator = $translator;

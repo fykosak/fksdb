@@ -44,11 +44,8 @@ class EventAccommodationPrice extends AbstractPreProcess {
             $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             $eventAcc = $model->getEventAccommodation();
-            $fromDate = $eventAcc->date->format('d. m.');
-            $toDate = $eventAcc->date->add(new \DateInterval('P1D'))->format('d. m. Y');
-
             $items[] = [
-                'label' => \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $model->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name),
+                'label' => $model->getLabel(),
                 'price' => $this->getPriceFromModel($eventAcc, $price),
             ];
         }

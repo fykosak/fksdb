@@ -7,7 +7,7 @@ use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\UnavailableTransitionException;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;
 use Nette\Diagnostics\Debugger;
 use Nette\Utils\Html;
@@ -20,7 +20,7 @@ use NiftyGrid\DataSource\NDataSource;
 class OrgEventPaymentGrid extends BaseGrid {
 
     /**
-     * @var \ServiceEventPayment
+     * @var \ServicePayment
      */
     private $serviceEventPayment;
     /**
@@ -33,7 +33,7 @@ class OrgEventPaymentGrid extends BaseGrid {
      */
     private $machine;
 
-    public function __construct(Machine $machine, \ServiceEventPayment $servicePayment, ModelEvent $event) {
+    public function __construct(Machine $machine, \ServicePayment $servicePayment, ModelEvent $event) {
         parent::__construct();
         $this->event = $event;
         $this->serviceEventPayment = $servicePayment;
@@ -54,7 +54,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('id', '#')->setRenderer(function ($row) {
-            return '#' . ModelEventPayment::createFromTableRow($row)->getPaymentId();
+            return '#' . ModelPayment::createFromTableRow($row)->getPaymentId();
         });
         $this->addColumn('person_name', _('Person'))->setRenderer(function ($row) {
             return ModelPerson::createFromTableRow($row->person)->getFullName();
@@ -63,7 +63,7 @@ class OrgEventPaymentGrid extends BaseGrid {
             return ModelPerson::createFromTableRow($row->person)->getInfo()->email;
         });
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
-            $model = ModelEventPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromTableRow($row);
             return $model->price . ' ' . Price::getLabel($model->currency);
         });
         $this->addColumn('constant_symbol', _('CS'));
@@ -71,12 +71,12 @@ class OrgEventPaymentGrid extends BaseGrid {
         $this->addColumn('specific_symbol', _('SS'));
         $this->addColumn('bank_account', _('Bank acc.'));
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $model = ModelEventPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromTableRow($row);
             return Html::el('span')->addAttributes(['class' => $model->getUIClass()])->add(_($model->state));
         });
 
         $this->addColumn('tr', _('Actions'))->setRenderer(function ($row) {
-            $model = ModelEventPayment::createFromTableRow($row);
+            $model = ModelPayment::createFromTableRow($row);
             $container = Html::el('span')->addAttributes(['class' => 'btn-group']);
             foreach ($this->machine->getAvailableTransitions($model) as $transition) {
                 $container->add(Html::el('a')->addAttributes([
@@ -95,7 +95,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         // operations
         //
         $this->addButton('edit', _('Edit'))
-            ->setText('Edit')
+            ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->payment_id);
             });
@@ -104,17 +104,16 @@ class OrgEventPaymentGrid extends BaseGrid {
     public function handleTransition(int $id, string $transition) {
         $row = $this->serviceEventPayment->findByPrimary($id);
         if (!$row) {
-            $this->flashMessage('Payment doesnt exists.');
+            $this->flashMessage(_('Payment doesnt exists.'));
             return;
         }
-        $model = ModelEventPayment::createFromTableRow($row);
+        $model = ModelPayment::createFromTableRow($row);
         try {
             $this->machine->executeTransition($transition, $model);
-            $this->flashMessage(_('Prechod vykonaný'));
+            $this->flashMessage(_('Prechod vykonaný'), 'success');
             $this->redirect('this');
         } catch (UnavailableTransitionException $e) {
             Debugger::log($e);
-            Debugger::barDump($e);
             $this->flashMessage($e->getMessage(), 'danger');
         }
     }

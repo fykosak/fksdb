@@ -23,7 +23,7 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
-    const TAB_EVENT_PAYMENT = 'event_payment';
+
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
@@ -44,7 +44,9 @@ class DbNames {
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
     const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
-    const TAB_EVENT_PAYMENT_TO_PERSON_ACCOMMODATION = 'event_payment_to_person_accommodation';
+    /* payment */
+    const TAB_PAYMENT_ACCOMMODATION = 'payment_accommodation';
+    const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */
     const TAB_E_DSEF_GROUP = 'e_dsef_group';

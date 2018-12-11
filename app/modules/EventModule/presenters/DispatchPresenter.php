@@ -24,23 +24,38 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     protected $serviceEvent;
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @return LanguageChooser
+     */
     protected function createComponentLanguageChooser(): LanguageChooser {
         $control = new LanguageChooser($this->session);
         return $control;
     }
 
+    /**
+     * @return ContestBadge
+     */
     public function createComponentContestBadge(): ContestBadge {
         return new ContestBadge();
     }
 
+    /**
+     * @return DispatchGrid
+     */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
          * @var $person ModelPerson
@@ -53,6 +68,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('List of events'));
         $this->setIcon('fa fa-calendar');
     }
+
 
     public function startup() {
         /**

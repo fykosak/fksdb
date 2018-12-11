@@ -2,8 +2,7 @@
 
 namespace FKSDB\EventPayment\Transition;
 
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -42,22 +41,37 @@ class Machine {
     }
 
     /**
+     * @param $id
+     * @param IStateModel $model
+     * @return Transition
+     * @throws UnavailableTransitionException
+     */
+    protected function findTransitionById($id, IStateModel $model): Transition {
+        $matchedTransitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+            return $transition->getId() === $id;
+        });
+
+        if (\count($matchedTransitions) > 1) {
+            // moc veľa
+        }
+        if (\count($matchedTransitions) === 1) {
+            return $matchedTransitions[0];
+        }
+        throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));
+    }
+
+    /**
      * @param string? $id
      * @param IStateModel $model
      * @return void
      * @throws UnavailableTransitionException
      * @throws \Nette\Application\ForbiddenRequestException
+     * @throws AlreadyGeneratedSymbolsException
      */
     public function executeTransition($id, IStateModel $model) {
-        $availableTransitions = $this->getAvailableTransitions($model);
-        foreach ($availableTransitions as $transition) {
-            if ($transition->getId() === $id) {
-                $transition->onExecute($model);
-                $model->updateState($transition->getToState());
-                $transition->onExecuted($model);
-                return;
-            }
-        }
-        throw new UnavailableTransitionException(\sprintf(_('Transition %s is not available'), $id));
+        $transition = $this->findTransitionById($id, $model);
+        $transition->onExecute($model);
+        $model->updateState($transition->getToState());
+        $transition->onExecuted($model);
     }
 }

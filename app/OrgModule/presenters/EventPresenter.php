@@ -301,6 +301,9 @@ class EventPresenter extends EntityPresenter {
 
     /**
      * @param Form $form
+     * @param $isNew
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     private function handleFormSuccess(Form $form, $isNew) {
         $connection = $this->serviceEvent->getConnection();

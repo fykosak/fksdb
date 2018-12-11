@@ -176,8 +176,6 @@ class StoredQuery implements IDataSource, IResource {
      * @return Statement
      */
     private function bindParams($sql) {
-        Debugger::$maxLen = 100000000;
-        Debugger::barDump($sql);
         $statement = $this->connection->prepare($sql);
         if ($this->postProcessing) {
             $this->postProcessing->resetParameters();
@@ -266,7 +264,6 @@ class StoredQuery implements IDataSource, IResource {
             Debugger::$maxLen = 100000000;
 
             $statement = $this->bindParams($sql);
-            Debugger::barDump($statement);
             $statement->execute();
             $this->data = $statement;
             if ($this->postProcessing) {

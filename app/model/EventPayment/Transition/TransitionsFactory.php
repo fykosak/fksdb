@@ -4,7 +4,7 @@ namespace FKSDB\EventPayment\Transition;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\DateTime;
@@ -32,6 +32,13 @@ class TransitionsFactory {
      */
     private $user;
 
+    /**
+     * TransitionsFactory constructor.
+     * @param IMailer $mailer
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param EventAuthorizator $eventAuthorizator
+     * @param User $user
+     */
     public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user) {
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -39,13 +46,23 @@ class TransitionsFactory {
         $this->user = $user;
     }
 
+    /**
+     * @param string|null $fromState
+     * @param string $toState
+     * @param string $label
+     * @return Transition
+     */
     public function createTransition(string $fromState = null, string $toState, string $label) {
         $transition = new Transition($fromState, $toState, $label);
 
         return $transition;
     }
 
-
+    /**
+     * @param string $templateFile
+     * @param $options
+     * @return \Closure
+     */
     public function createMailCallback(string $templateFile, $options): \Closure {
         $template = $this->mailTemplateFactory->createFromFile($templateFile);
         $message = new Message();
@@ -56,7 +73,7 @@ class TransitionsFactory {
 
         //  $message->addAttachment()
 
-        return function (ModelEventPayment $model) use ($message, $template) {
+        return function (ModelPayment $model) use ($message, $template) {
 
             $template->model = $model;
             $message->addTo($model->getPerson()->getInfo()->email);
@@ -75,18 +92,36 @@ class TransitionsFactory {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $event);
     }
 
+    /**
+     * @param DateTime $from
+     * @param DateTime $to
+     * @return bool
+     */
     public function getConditionDateBetween(DateTime $from, DateTime $to): bool {
         return $this->getConditionDateFrom($from) && $this->getConditionDateTo($to);
     }
 
+    /**
+     * @param DateTime $from
+     * @return bool
+     */
     public function getConditionDateFrom(DateTime $from): bool {
         return \time() >= $from->getTimestamp();
     }
 
+    /**
+     * @param DateTime $to
+     * @return bool
+     */
     public function getConditionDateTo(DateTime $to): bool {
         return \time() <= $to->getTimestamp();
     }
 
+    /**
+     * @param ModelPerson $ownerPerson
+     * @return bool
+     * @throws InvalidStateException
+     */
     public function getConditionOwnerAssertion(ModelPerson $ownerPerson): bool {
         if (!$this->user->isLoggedIn()) {
             throw new InvalidStateException('Expecting logged user.');

@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Payment\PaymentStateLabel;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
 use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
@@ -19,7 +19,7 @@ use Nette\Templating\FileTemplate;
  */
 class DetailControl extends Control {
     /**
-     * @var ModelEventPayment
+     * @var ModelPayment
      */
     private $model;
     /**
@@ -31,7 +31,7 @@ class DetailControl extends Control {
      */
     private $calculator;
 
-    public function __construct(ITranslator $translator, PriceCalculator $calculator, ModelEventPayment $model) {
+    public function __construct(ITranslator $translator, PriceCalculator $calculator, ModelPayment $model) {
         parent::__construct();
         $this->model = $model;
         $this->translator = $translator;
@@ -67,7 +67,6 @@ class DetailControl extends Control {
             'accommodated_person_ids' => [93, 95],
             'event_participants' => [],
         ];
-        Debugger::barDump($this->model);
         $this->calculator->setCurrency($this->model->currency);
 
         $this->template->items = $this->calculator->getGridItems($data);

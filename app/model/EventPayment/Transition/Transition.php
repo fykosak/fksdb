@@ -90,6 +90,10 @@ class Transition {
         return ($this->condition)($model);
     }
 
+    /**
+     * @param IStateModel $model
+     * @throws ForbiddenRequestException
+     */
     public final function onExecute(IStateModel $model) {
         if ($this->canExecute($model)) {
             foreach ($this->onExecuteClosures as $closure) {
@@ -100,6 +104,9 @@ class Transition {
         }
     }
 
+    /**
+     * @param IStateModel $model
+     */
     public final function onExecuted(IStateModel $model) {
         foreach ($this->onExecutedClosures as $closure) {
             $closure($model);

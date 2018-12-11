@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\ORM\ModelEventPayment;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -14,7 +14,7 @@ use Nette\Templating\FileTemplate;
  */
 class PaymentStateLabel extends Control {
     /**
-     * @var ModelEventPayment
+     * @var ModelPayment
      */
     private $modelEventPayment;
     /**
@@ -22,7 +22,7 @@ class PaymentStateLabel extends Control {
      */
     private $translator;
 
-    public function __construct(ModelEventPayment $modelEventPayment, ITranslator $translator) {
+    public function __construct(ModelPayment $modelEventPayment, ITranslator $translator) {
         parent::__construct();
         $this->modelEventPayment = $modelEventPayment;
         $this->translator = $translator;
@@ -34,16 +34,16 @@ class PaymentStateLabel extends Control {
 
         $label = $this->modelEventPayment->state;
         switch ($this->modelEventPayment->state) {
-            case ModelEventPayment::STATE_NEW:
+            case ModelPayment::STATE_NEW:
                 $label = _('Nová platba');
                 break;
-            case ModelEventPayment::STATE_WAITING:
+            case ModelPayment::STATE_WAITING:
                 $label = _('Čaká na zaplatenie');
                 break;
-            case ModelEventPayment::STATE_CANCELED:
+            case ModelPayment::STATE_CANCELED:
                 $label = _('Zrušená platba');
                 break;
-            case ModelEventPayment::STATE_RECEIVED:
+            case ModelPayment::STATE_RECEIVED:
                 $label = _('Platba prijatá');
         }
 

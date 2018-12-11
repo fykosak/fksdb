@@ -202,6 +202,7 @@ class Breadcrumbs extends Control {
      *
      * @param AppRequest|string $request
      * @return string
+     * @throws \ReflectionException
      */
     private function getPathKey($request) {
         if ($request instanceof AppRequest) {

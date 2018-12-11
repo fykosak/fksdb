@@ -1211,11 +1211,10 @@ CREATE TABLE IF NOT EXISTS `teacher`(
     ON UPDATE CASCADE
 ) ENGINE='InnoDB';
 
-CREATE TABLE IF NOT EXISTS `event_payment`(
+CREATE TABLE IF NOT EXISTS `payment`(
   `payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `person_id`  INT(11) NOT NULL,
   `event_id` INT NOT NULL,
-  `data` TEXT,
   `state` VARCHAR(256) NULL DEFAULT NULL,
   `price` DECIMAL(11,2) NULL DEFAULT NULL,
   `currency` VARCHAR(5) NULL DEFAULT NULL,
@@ -1225,14 +1224,14 @@ CREATE TABLE IF NOT EXISTS `event_payment`(
   `variable_symbol` VARCHAR(256) NULL DEFAULT NULL,
   `specific_symbol` VARCHAR(256) NULL DEFAULT NULL,
   `bank_account` VARCHAR(32) NULL DEFAULT NULL,
-  INDEX `fk_event_payment_1_idx` (`event_id` ASC),
-  INDEX `fk_event_payment_2_idx` (`person_id` ASC),
-  CONSTRAINT `fk_event_payment_person_id1`
+  INDEX `fk_payment_1_idx` (`event_id` ASC),
+  INDEX `fk_payment_2_idx` (`person_id` ASC),
+  CONSTRAINT `fk_payment_person_id1`
   FOREIGN KEY (`person_id`)
   REFERENCES `person` (`person_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_event_payment_event_1`
+  CONSTRAINT `fk_payment_event_1`
   FOREIGN KEY (`event_id`)
   REFERENCES `event` (`event_id`)
     ON DELETE NO ACTION
@@ -1240,20 +1239,20 @@ CREATE TABLE IF NOT EXISTS `event_payment`(
 ) ENGINE='InnoDB';
 
 
-CREATE TABLE IF NOT EXISTS `event_payment_to_person_accommodation`(
-  `event_payment_to_person_accommodation` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS `payment_accommodation`(
+  `payment_accommodation_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `payment_id` INT(11) NOT NULL,
   `event_person_accommodation_id`  INT(11) NOT NULL,
-  INDEX `fk_event_payment_to_person_accommodation_1_idx` (`payment_id` ASC),
-  INDEX `fk_event_payment_to_person_accommodation_2_idx` (`event_person_accommodation_id` ASC),
-  CONSTRAINT `fk_event_payment_to_person_accommodation_event_person_accommodation1`
+  INDEX `fk_accommodation_payment_1_idx` (`payment_id` ASC),
+  INDEX `fk_accommodation_payment_2_idx` (`event_person_accommodation_id` ASC),
+  CONSTRAINT `fk_accommodation_payment_event_person_accommodation1`
   FOREIGN KEY (`event_person_accommodation_id`)
   REFERENCES `event_person_accommodation` (`event_person_accommodation_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_event_payment_to_person_accommodation_payment_1`
+  CONSTRAINT `fk_accommodation_payment_payment_1`
   FOREIGN KEY (`payment_id`)
-  REFERENCES `event_payment` (`payment_id`)
+  REFERENCES `payment` (`payment_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE='InnoDB';
