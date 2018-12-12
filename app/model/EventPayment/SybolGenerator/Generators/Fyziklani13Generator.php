@@ -10,12 +10,12 @@ class Fyziklani13Generator extends \FKSDB\EventPayment\SymbolGenerator\AbstractS
         parent::__construct($serviceEventPayment);
     }
 
-    public function create(ModelPayment $modelEventPayment) {
+    public function create(ModelPayment $modelPayment) {
 
-        if ($modelEventPayment->hasGeneratedSymbols()) {
-            throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelEventPayment->getPaymentId()));
+        if ($modelPayment->hasGeneratedSymbols()) {
+            throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
-        $maxVariableSymbol = $this->serviceEventPayment->where('event_id', $modelEventPayment->event_id)->max('variable_symbol');
+        $maxVariableSymbol = $this->serviceEventPayment->where('event_id', $modelPayment->event_id)->max('variable_symbol');
         $variableId = $maxVariableSymbol % 7292000;
         $variableNumber = $variableId + 1 + 7292000;
 

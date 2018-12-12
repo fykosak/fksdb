@@ -15,9 +15,9 @@ abstract class AbstractSymbolGenerator {
     }
 
     /**
-     * @param ModelPayment $modelEventPayment
+     * @param ModelPayment $modelPayment
      * @return mixed
      * @throws AlreadyGeneratedSymbolsException
      */
-    abstract public function create(ModelPayment $modelEventPayment);
+    abstract public function create(ModelPayment $modelPayment);
 }

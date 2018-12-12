@@ -16,24 +16,24 @@ class PaymentStateLabel extends Control {
     /**
      * @var ModelPayment
      */
-    private $modelEventPayment;
+    private $modelPayment;
     /**
      * @var ITranslator
      */
     private $translator;
 
-    public function __construct(ModelPayment $modelEventPayment, ITranslator $translator) {
+    public function __construct(ModelPayment $modelPayment, ITranslator $translator) {
         parent::__construct();
-        $this->modelEventPayment = $modelEventPayment;
+        $this->modelPayment = $modelPayment;
         $this->translator = $translator;
     }
 
     public function render() {
         $this->template->setTranslator($this->translator);
-        $this->template->className = $this->modelEventPayment->getUIClass();
+        $this->template->className = $this->modelPayment->getUIClass();
 
-        $label = $this->modelEventPayment->state;
-        switch ($this->modelEventPayment->state) {
+        $label = $this->modelPayment->state;
+        switch ($this->modelPayment->state) {
             case ModelPayment::STATE_NEW:
                 $label = _('Nová platba');
                 break;

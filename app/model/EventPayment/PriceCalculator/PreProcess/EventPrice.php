@@ -5,6 +5,7 @@ namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
+use FKSDB\ORM\ModelPayment;
 use Nette\NotImplementedException;
 
 class EventPrice extends AbstractPreProcess {
@@ -32,10 +33,10 @@ class EventPrice extends AbstractPreProcess {
         return $data['event_participants'];
     }
 
-    public function getGridItems(array $data, ModelEvent $event, $currency): array {
-        $price = new Price(0, $currency);
+    public function getGridItems(ModelPayment $modelPayment): array {
+        $price = new Price(0, $modelPayment->currency);
         $items = [];
-        $ids = $this->getData($data);
+        $ids = $this->getData([]);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);

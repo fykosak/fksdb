@@ -73,15 +73,15 @@ class PaymentFactory {
         $form->addComponent($container, 'payment_accommodation');
     }
 
-    public function createDetailControl(ModelPayment $modelEventPayment, ITranslator $translator, PaymentMachine $machine) {
+    public function createDetailControl(ModelPayment $modelPayment, ITranslator $translator, PaymentMachine $machine) {
 
-        $control = new DetailControl($translator, $machine->getPriceCalculator(), $modelEventPayment);
+        $control = new DetailControl($translator, $machine->getPriceCalculator(), $modelPayment);
         $form = $control->getFormControl()->getForm();
-        if ($modelEventPayment->canEdit()) {
+        if ($modelPayment->canEdit()) {
             $form->addSubmit('edit', _('Edit payment'));
         }
 
-        $this->appendTransitionsButtons($modelEventPayment, $machine, $form);
+        $this->appendTransitionsButtons($modelPayment, $machine, $form);
         return $control;
     }
 

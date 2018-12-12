@@ -4,16 +4,17 @@ namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
-use FKSDB\Components\Forms\Factories\EventPaymentFactory;
 use FKSDB\Components\Forms\Factories\PaymentFactory;
 use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
+use FKSDB\EventPayment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\EventPayment\Handler\EmptyDataException;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\MachineFactory;
 use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 use Nette\NotImplementedException;
 
 class PaymentPresenter extends BasePresenter {
@@ -48,9 +49,17 @@ class PaymentPresenter extends BasePresenter {
      * @var MachineFactory
      */
     private $machineFactory;
+    /**
+     * @var ServicePaymentAccommodation
+     */
+    private $servicePaymentAccommodation;
 
     public function injectServiceEventPayment(\ServicePayment $serviceEventPayment) {
         $this->serviceEventPayment = $serviceEventPayment;
+    }
+
+    public function injectServicePaymentAccommodation(ServicePaymentAccommodation $servicePaymentAccommodation) {
+        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
     }
 
     public function injectMachineFactory(MachineFactory $machineFactory) {
@@ -183,7 +192,6 @@ class PaymentPresenter extends BasePresenter {
      */
     public function handleCreateForm(Form $form) {
         $values = $form->getValues();
-        Debugger::barDump($values);
         /**
          * @var $model ModelPayment
          */
@@ -196,12 +204,25 @@ class PaymentPresenter extends BasePresenter {
         ]);
         $this->serviceEventPayment->save($model);
 
+        try {
+            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
+        } catch (DuplicateAccommodationPaymentException $e) {
+            $this->flashMessage($e->getMessage());
+            $this->redirect('edit', ['id' => $model->payment_id]);
+        } catch (EmptyDataException $e) {
+            $this->flashMessage($e->getMessage(), 'danger');
+            $model->delete();
+            return;
+        }
+
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
                 $model->executeTransition($this->getMachine(), $name);
                 //  $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
+        $this->flashMessage('Platba bola zaregistrovaná');
+
     }
 
     /**
@@ -246,6 +267,16 @@ class PaymentPresenter extends BasePresenter {
             'currency' => $values->currency,
             'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
         ]);
+
+        try {
+            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
+        } catch (DuplicateAccommodationPaymentException $e) {
+            $this->flashMessage($e->getMessage(), 'danger');
+            $this->redirect('this');
+        } catch (EmptyDataException $e) {
+            $this->flashMessage($e->getMessage(), 'danger');
+            $this->redirect('this');
+        }
 
         $this->redirect('detail', ['id' => $model->payment_id]);
     }

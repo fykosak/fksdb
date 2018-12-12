@@ -5,6 +5,7 @@ namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
+use FKSDB\ORM\ModelPayment;
 use Nette\Application\BadRequestException;
 
 class EventSchedulePrice extends AbstractPreProcess {
@@ -37,14 +38,14 @@ class EventSchedulePrice extends AbstractPreProcess {
         return $model->schedule;
     }
 
-    public function getGridItems(array $data, ModelEvent $event, $currency): array {
-        $ids = $this->getData($data);
+    public function getGridItems(ModelPayment $modelPayment): array {
+        $ids = $this->getData([]);
         $items = [];
-        $schedule = $event->getParameter('schedule');
+        $schedule = $modelPayment->getEvent()->getParameter('schedule');
         foreach ($ids as $id) {
             $participantSchedule = $this->getParticipantSchedule($id);
             if ($participantSchedule) {
-                $price = $this->calculateSchedule($participantSchedule, $schedule, $currency);
+                $price = $this->calculateSchedule($participantSchedule, $schedule, $modelPayment->currency);
                 $items[] = [
                     'label' => '',
                     'price' => $price,

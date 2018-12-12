@@ -4,6 +4,7 @@ namespace FKSDB\EventPayment\PriceCalculator;
 
 use FKSDB\EventPayment\PriceCalculator\PreProcess\AbstractPreProcess;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelPayment;
 
 class PriceCalculator {
     /**
@@ -40,10 +41,10 @@ class PriceCalculator {
         return $price;
     }
 
-    public function getGridItems(array $data) {
+    public function getGridItems(ModelPayment $modelPayment) {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($data, $this->event, $this->getCurrency()));
+            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
     }

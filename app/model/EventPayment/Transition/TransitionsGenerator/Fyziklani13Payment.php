@@ -77,9 +77,9 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit') ||
                 $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
         });
-        $transition->onExecuteClosures[] = function (ModelPayment $modelEventPayment) use ($machine) {
-            $modelEventPayment->update($machine->getSymbolGenerator()->create($modelEventPayment));
-            $modelEventPayment->updatePrice($machine->getPriceCalculator());
+        $transition->onExecuteClosures[] = function (ModelPayment $modelPayment) use ($machine) {
+            $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
+            $modelPayment->updatePrice($machine->getPriceCalculator());
         };
         $transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create', $options);
 

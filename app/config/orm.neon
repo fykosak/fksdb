@@ -11,7 +11,6 @@ services:
     ServiceContestYear:      ServiceContestYear
     ServiceEvent:            ServiceEvent
     ServiceEventOrg:         ServiceEventOrg
-    ServicePayment:          ServicePayment
     ServiceEventType:        ServiceEventType
     ServiceFlag:             ServiceFlag
     ServiceFyziklaniSubmit:  ServiceFyziklaniSubmit
@@ -41,7 +40,9 @@ services:
     ServiceEventAccommodation: ServiceEventAccommodation
     ServiceEventPersonAccommodation: ServiceEventPersonAccommodation
     ServiceTeacher:          ServiceTeacher
-
+#payments
+    ServicePayment:          ServicePayment
+    ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup

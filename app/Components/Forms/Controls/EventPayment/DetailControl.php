@@ -63,13 +63,9 @@ class DetailControl extends Control {
 
     public function render() {
         //$data = \json_decode($this->model->data);
-        $data = [
-            'accommodated_person_ids' => [93, 95],
-            'event_participants' => [],
-        ];
         $this->calculator->setCurrency($this->model->currency);
 
-        $this->template->items = $this->calculator->getGridItems($data);
+        $this->template->items = $this->calculator->getGridItems($this->model);
         $this->template->model = $this->model;
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'DetailControl.latte');
