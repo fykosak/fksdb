@@ -65,7 +65,6 @@ services:
             - setLogPath(%logDir%/mail)
 
 
-
     #
     # Events
     #
