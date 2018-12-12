@@ -11,7 +11,6 @@ use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelLogin;
 use Mail\MailTemplateFactory;
-use Nette\Diagnostics\Debugger;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
@@ -194,9 +193,7 @@ class MailSender extends Object {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        Debugger::barDump($group, 'groups');
-                        $names = array_merge($names, array_map(function ($it) {
-                            Debugger::barDump($it);
+                        $names = array_merge($names, array_map(function (BaseHolder $it) {
                             return $it->getName();
                         }, $group['holders']));
                     }
