@@ -109,8 +109,8 @@ events:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/teacher,primary)
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/participant,secondary)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/teacher,.primary)
+                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
