@@ -109,11 +109,12 @@ events:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/teacher,primary)
-                            - Events\Transitions\MailSender(fyziklani/fyziklani2019/participant,secondary)
+                            - Events\Transitions\MailSender(team, .*)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
+                        onExecuted:
+                            - Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
@@ -187,6 +188,8 @@ events:
                     __init->applied:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit člena')
+                        onExecuted:
+                            - Events\Transitions\MailSender(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani13.appCond% # TODO the time period is not specified in rules
                         label: _('Odebrat člena')
