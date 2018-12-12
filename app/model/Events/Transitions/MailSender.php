@@ -103,9 +103,9 @@ class MailSender extends Object {
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
-            ->where('person.person_id', $personIds)
-            ->where('person_info:email IS NOT NULL')
-            ->fetchPairs('person_id');
+                ->where('person.person_id', $personIds)
+                ->where('person_info:email IS NOT NULL')
+                ->fetchPairs('person_id');
 
         $logins = [];
         foreach ($persons as $row) {
@@ -173,12 +173,13 @@ class MailSender extends Object {
     }
 
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
-        $application = Strings::truncate((string)$application, 20); //TODO extension point
+        $application = Strings::truncate((string) $application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
     }
 
     private function getUntil(ModelEvent $event) {
-        return $event->registration_end ?: $event->end;
+        return $event->registration_end ? : $event->end; //TODO extension point
+
     }
 
     private function hasBcc() {
@@ -208,6 +209,7 @@ class MailSender extends Object {
                         $names = array_merge($names, array_map(function (BaseHolder $it) {
                             return $it->getName();
                         }, $group['holders']));
+
                     }
                     break;
                 case self::ADDR_ALL:
