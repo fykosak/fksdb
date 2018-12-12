@@ -189,8 +189,6 @@ events:
                     __init->applied:
                         condition: %events.fyziklani13.appCond%
                         label: _('Přihlásit člena')
-                        onExecuted:
-                            - Events\Transitions\MailSender(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani13.appCond% # TODO the time period is not specified in rules
                         label: _('Odebrat člena')
