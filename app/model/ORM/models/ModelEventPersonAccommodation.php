@@ -41,4 +41,6 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle {
         $toDate = $eventAcc->date->add(new \DateInterval('P1D'))->format('d. m. Y');
         return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
+
+
 }

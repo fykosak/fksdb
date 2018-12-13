@@ -208,7 +208,10 @@ class PaymentPresenter extends BasePresenter {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
         } catch (DuplicateAccommodationPaymentException $e) {
             $this->flashMessage($e->getMessage());
-            $this->redirect('edit', ['id' => $model->payment_id]);
+            $model->delete();
+            return;
+            // $this->redirect('this');
+            // $this->redirect('edit', ['id' => $model->payment_id]);
         } catch (EmptyDataException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
             $model->delete();
@@ -218,7 +221,7 @@ class PaymentPresenter extends BasePresenter {
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
                 $model->executeTransition($this->getMachine(), $name);
-                //  $this->redirect('detail', ['id' => $model->payment_id]);
+                $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
         $this->flashMessage('Platba bola zaregistrovaná');
@@ -249,11 +252,22 @@ class PaymentPresenter extends BasePresenter {
              * @var $formControl FormControl
              */
             $formControl = $this['editForm'];
-            $formControl->getForm()->setDefaults($this->getModel());
+            $values = $this->getModel()->toArray();
+            $values['payment_accommodation'] = $this->serializePaymentAccommodation();
+            $formControl->getForm()->setDefaults($values);
         } else {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
             $this->redirect(':MyPayment:');
         }
+    }
+
+    private function serializePaymentAccommodation() {
+        $query = $this->getModel()->getRelatedPersonAccommodation();
+        $items = [];
+        foreach ($query as $row) {
+            $items[$row->event_person_accommodation_id] = true;
+        }
+        return \json_encode($items);
     }
 
     /**
@@ -278,7 +292,7 @@ class PaymentPresenter extends BasePresenter {
             $this->redirect('this');
         }
 
-        $this->redirect('detail', ['id' => $model->payment_id]);
+        //$this->redirect('detail', ['id' => $model->payment_id]);
     }
 
     /**

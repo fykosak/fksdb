@@ -9,6 +9,7 @@ use FKSDB\EventPayment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\EventPayment\Handler\EmptyDataException;
 use FKSDB\ORM\ModelPayment;
 use Nette\ArrayHash;
+use Nette\Diagnostics\Debugger;
 
 class ServicePaymentAccommodation extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_PAYMENT_ACCOMMODATION;
@@ -20,14 +21,14 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      * @throws DuplicateAccommodationPaymentException
      * @throws EmptyDataException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPayment $payment) {
-        $oldRows =$this->where('payment_id',$payment->payment_id);
+    public function prepareAndUpdate($data, ModelPayment $payment) {
+        $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);
         // $payment->getRelatedPersonAccommodation();
 
         $newAccommodationIds = $this->prepareData($data);
-        if (count($newAccommodationIds) == 0) {
-            throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
-        };
+        /* if (count($newAccommodationIds) == 0) {
+             throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
+         };*/
         /**
          * @var $row \FKSDB\ORM\ModelPaymentAccommodation
          */
@@ -37,26 +38,25 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
                 $index = array_search($row->event_person_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
+                Debugger::barDump($row);
                 $row->delete();
             }
         }
         foreach ($newAccommodationIds as $id) {
-            try {
-                /**
-                 * @var $model \FKSDB\ORM\ModelPaymentAccommodation
-                 */
-                $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
-                $this->save($model);
-            } catch (\PDOException $e) {
-                if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
-                    throw new DuplicateAccommodationPaymentException(sprintf(
-                        _('Ubytovanie "%s" má už vygenrovanú platbu.'),
-                        $model->getEventPersonAccommodation()->getLabel()
-                    ));
-                }
-                throw $e;
-            }
 
+            /**
+             * @var $model \FKSDB\ORM\ModelPaymentAccommodation
+             */
+            $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
+            $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
+            if ($count > 0) {
+                throw new DuplicateAccommodationPaymentException(sprintf(
+                    _('Ubytovanie "%s" má už vygenrovanú platbu.'),
+                    $model->getEventPersonAccommodation()->getLabel()
+
+                ));
+            }
+            $this->save($model);
         }
     }
 
@@ -65,10 +65,10 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      * @param ArrayHash $data
      * @return integer[]
      */
-    private function prepareData(ArrayHash $data): array {
-        //$data = (array)json_decode($data);
-
-        return \array_keys(\array_filter((array)$data, function ($value) {
+    private function prepareData($data): array {
+        $data = (array)json_decode($data);
+        Debugger::barDump($data);
+        return \array_keys(\array_filter($data, function ($value) {
             return $value;
         }));
     }

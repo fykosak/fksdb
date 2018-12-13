@@ -5,14 +5,12 @@ namespace FKSDB\Components\Forms\Factories;
 
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
+use FKSDB\Components\Forms\Controls\EventPayment\PaymentSelectField;
 use FKSDB\Components\Forms\Factories\EventPayment\CurrencyField;
 use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelEventAccommodation;
-use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -44,8 +42,10 @@ class PaymentFactory {
         if ($isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         }
-        $form->addComponent(new CurrencyField(), 'currency');
-        $this->appendDataContainer($form, $event);
+        $currencyField = new CurrencyField();
+        $currencyField->setRequired(true);
+        $form->addComponent($currencyField, 'currency');
+        $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $event), 'payment_accommodation');
         $form->addSubmit('save', _('Save'));
         return $control;
     }
@@ -56,21 +56,9 @@ class PaymentFactory {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(true);
         $form->addComponent($currencyField, 'currency');
-        $this->appendDataContainer($form, $event);
+        $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $event), 'payment_accommodation');
         $this->appendTransitionsButtons(null, $machine, $form);
         return $control;
-    }
-
-    private function appendDataContainer(Form &$form, ModelEvent $event) {
-        $container = new ModelContainer();
-        foreach ($event->getEventAccommodations() as $accRow) {
-            $model = ModelEventAccommodation::createFromTableRow($accRow);
-            foreach ($model->related(\DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'event_accommodation_id') as $accPersRow) {
-                $modelAccPerson = ModelEventPersonAccommodation::createFromTableRow($accPersRow);
-                $container->addCheckbox($modelAccPerson->event_person_accommodation_id, $modelAccPerson->getLabel());
-            };
-        }
-        $form->addComponent($container, 'payment_accommodation');
     }
 
     public function createDetailControl(ModelPayment $modelPayment, ITranslator $translator, PaymentMachine $machine) {
