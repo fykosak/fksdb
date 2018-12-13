@@ -3,7 +3,6 @@
 namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
 
 use FKSDB\EventPayment\PriceCalculator\Price;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;
@@ -20,9 +19,9 @@ class EventAccommodationPrice extends AbstractPreProcess {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-    public function calculate(array $data, ModelEvent $event, $currency): Price {
-        $price = new Price(0, $currency);
-        $ids = $this->getData($data);
+    public function calculate(ModelPayment $modelPayment): Price {
+        $price = new Price(0, $modelPayment->currency);
+        $ids = $this->getData($modelPayment);
         foreach ($ids as $id) {
             $eventAcc = $this->getAccommodation($id);
             $modelPrice = $this->getPriceFromModel($eventAcc, $price);
@@ -66,7 +65,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
         return new Price($amount, $price->getCurrency());
     }
 
-    protected function getData(array $data) {
-        return $data['accommodated_person_ids'];
+    protected function getData(ModelPayment $modelPayment) {
+        return $modelPayment->getRelatedPersonAccommodation();
     }
 }

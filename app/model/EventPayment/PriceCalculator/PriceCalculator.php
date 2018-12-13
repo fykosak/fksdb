@@ -32,10 +32,10 @@ class PriceCalculator {
         $this->preProcess[] = $preProcess;
     }
 
-    public function execute(array $data) {
+    public function execute(ModelPayment $modelPayment) {
         $price = new Price(0, $this->getCurrency());
         foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($data, $this->event, $this->getCurrency());
+            $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
         return $price;

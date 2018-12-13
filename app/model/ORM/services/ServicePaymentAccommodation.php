@@ -60,7 +60,6 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
         }
     }
 
-
     /**
      * @param ArrayHash $data
      * @return integer[]

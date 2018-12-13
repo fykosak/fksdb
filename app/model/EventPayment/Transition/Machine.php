@@ -3,6 +3,7 @@
 namespace FKSDB\EventPayment\Transition;
 
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -47,9 +48,9 @@ class Machine {
      * @throws UnavailableTransitionException
      */
     protected function findTransitionById($id, IStateModel $model): Transition {
-        $matchedTransitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+        $matchedTransitions = \array_values(\array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
-        });
+        }));
 
         if (\count($matchedTransitions) > 1) {
             // moc veľa

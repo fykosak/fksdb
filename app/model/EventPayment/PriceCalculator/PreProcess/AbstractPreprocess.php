@@ -8,11 +8,11 @@ use FKSDB\ORM\ModelPayment;
 
 abstract class AbstractPreProcess {
 
-    abstract public function calculate(array $data, ModelEvent $event, $currency): Price;
+    abstract public function calculate(ModelPayment $modelPayment): Price;
 
     abstract public function getGridItems(ModelPayment $modelPayment): array;
 
-    protected function getData(array $data) {
+    protected function getData(ModelPayment $modelPayment) {
         return null;
     }
 

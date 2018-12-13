@@ -291,8 +291,8 @@ class PaymentPresenter extends BasePresenter {
             $this->flashMessage($e->getMessage(), 'danger');
             $this->redirect('this');
         }
-
-        //$this->redirect('detail', ['id' => $model->payment_id]);
+        $this->flashMessage(_('Platba bola upravená'));
+        $this->redirect('detail', ['id' => $model->payment_id]);
     }
 
     /**

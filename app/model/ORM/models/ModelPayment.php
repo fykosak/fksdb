@@ -5,7 +5,6 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\EventPayment\Transition\IStateModel;
 use FKSDB\EventPayment\Transition\Machine;
@@ -127,10 +126,8 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     public function updatePrice(PriceCalculator $priceCalculator) {
-        $price = new Price(0, $this->currency);
-
-        // $calculator = $priceCalculatorFactory->createCalculator($this->getEvent(), $this->currency);
-        //$price = $calculator->execute($this->data);
+        $priceCalculator->setCurrency($this->currency);
+        $price = $priceCalculator->execute($this);
 
         $this->update([
             'price' => $price->getAmount(),
