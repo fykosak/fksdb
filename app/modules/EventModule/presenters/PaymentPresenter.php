@@ -220,7 +220,7 @@ class PaymentPresenter extends BasePresenter {
 
         foreach ($form->getComponents() as $name => $component) {
             if ($form->isSubmitted() === $component) {
-                $model->executeTransition($this->getMachine(), $name);
+                $this->getMachine()->executeTransition($name, $model);
                 $this->redirect('detail', ['id' => $model->payment_id]);
             }
         }
@@ -312,7 +312,7 @@ class PaymentPresenter extends BasePresenter {
                 } else {
                     $model = $this->getModel();
                     try {
-                        $model->executeTransition($this->getMachine(), $name);
+                        $this->getMachine()->executeTransition($name, $model);
                         $this->redirect('detail');
                     } catch (AlreadyGeneratedSymbolsException $e) {
                         $this->flashMessage($e->getMessage(), 'danger');
