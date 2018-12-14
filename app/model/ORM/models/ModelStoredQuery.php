@@ -72,10 +72,10 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         }
         $result = [];
         foreach ($tags as $tag) {
-            $tag->tag_type_id; // stupid touch
-            $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
+            // $tag->tag_type_id; // stupid touch
+            // $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
             $result[] = ModelMStoredQueryTag::createFromExistingModels(
-                ModelStoredQueryTagType::createFromTableRow($tagType), ModelStoredQueryTag::createFromTableRow($tag)
+                ModelStoredQueryTagType::createFromTableRow($tag->tag_type), ModelStoredQueryTag::createFromTableRow($tag)
             );
         }
         return $result;
