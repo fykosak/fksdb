@@ -34,19 +34,19 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         $lastUpdated = $requestData ? $requestData : null;
         $response = new \ReactResponse();
         $response->setAct('results-update');
-        $gameSetup = $this->getEvent()->getParameter('gameSetup');
+        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$gameSetup['gameStart'],
-            'gameEnd' => (string)$gameSetup['gameEnd'],
+            'gameStart' => (string)$gameSetup->game_start,
+            'gameEnd' => (string)$gameSetup->game_end,
             'times' => [
-                'toStart' => strtotime($gameSetup['gameStart']) - time(),
-                'toEnd' => strtotime($gameSetup['gameEnd']) - time(),
+                'toStart' => strtotime($gameSetup->game_start) - time(),
+                'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->__toString(),
             'isOrg' => $isOrg,
-            'refreshDelay' => $gameSetup['refreshDelay'],
+            'refreshDelay' => $gameSetup->refresh_delay,
             'submits' => [],
         ];
 
@@ -69,10 +69,10 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
      * @return boolean
      */
     private function isResultsVisible() {
-        $gameSetup = $this->getEvent()->getParameter('gameSetup');
-        $hardDisplay = $gameSetup['resultsHardDisplay'];
-        $before = (time() < strtotime($gameSetup['resultsHide']));
-        $after = (time() > strtotime($gameSetup['resultsDisplay']));
+        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+        $hardDisplay = $gameSetup->hard_display;
+        $before = (time() < strtotime($gameSetup->result_hide));
+        $after = (time() > strtotime($gameSetup->result_display));
 
         return $hardDisplay || ($before && $after);
     }

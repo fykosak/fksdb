@@ -1211,6 +1211,24 @@ CREATE TABLE IF NOT EXISTS `teacher`(
     ON UPDATE CASCADE
 ) ENGINE='InnoDB';
 
+-- -----------------------------------------------------
+-- Table `fyziklani_game_setup`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`(
+  `event_id` INT(11) NOT NULL PRIMARY KEY,
+  `game_start` DATETIME,
+  `game_end` DATETIME,
+  `result_display` DATETIME,
+  `result_hide` DATETIME,
+  `refresh_delay` INT(11) COMMENT 'in s',
+  `hard_display` BOOLEAN,
+  CONSTRAINT `fk_fyziklani_game_setup_event`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `event` (`event_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+) ENGINE='InnoDB';
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use DbNames;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -63,7 +64,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return int
      */
     public function getAcYear() {
-            return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
+        return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
     public function getParameter($name) {
@@ -79,6 +80,14 @@ class ModelEvent extends AbstractModelSingle implements IResource {
 
     public function __toString() {
         return $this->name;
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup|null
+     */
+    public function getFyziklaniGameSetup() {
+        $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
+        return $gameSetup ? ModelFyziklaniGameSetup::createFromTableRow($gameSetup) : null;
     }
 
 }

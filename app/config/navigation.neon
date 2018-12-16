@@ -51,6 +51,7 @@ navigation:
             - fyziklani.task.table
             - fyziklani.task.import
             - fyziklani.rooms.default
+            - fyziklani.gameSetup.default
         fyziklani.rooms.default:
             - fyziklani.rooms.edit
             - fyziklani.rooms.download

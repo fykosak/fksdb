@@ -6,7 +6,8 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
-use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
@@ -53,6 +54,18 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var FyziklaniComponentsFactory
      */
     protected $fyziklaniComponentsFactory;
+    /**
+     * @var
+     */
+    protected $serviceFyziklaniGameSetup;
+    /**
+     * @var ModelFyziklaniGameSetup
+     */
+    private $gameSetup;
+
+    public function injectServiceFyziklaniGameSetup(ServiceFyziklaniGameSetup $serviceFyziklaniGameSetup) {
+        $this->serviceFyziklaniGameSetup = $serviceFyziklaniGameSetup;
+    }
 
 
     public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
@@ -119,7 +132,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     public function getSubtitle() {
         return $this->getEvent()->name;
-       // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
+        // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**
@@ -146,6 +159,21 @@ abstract class BasePresenter extends EventBasePresenter {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
         return $this->eventId;
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup
+     * @throws BadRequestException
+     */
+    protected function getGameSetup(): ModelFyziklaniGameSetup {
+        if (!$this->gameSetup) {
+            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            if (!$gameSetup) {
+                throw new BadRequestException(_('Herné paramtre niesu nastavené'));
+            }
+            $this->gameSetup = $gameSetup;
+        }
+        return $this->gameSetup;
     }
 
 }
