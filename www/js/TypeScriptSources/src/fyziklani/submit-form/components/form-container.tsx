@@ -8,13 +8,14 @@ import {
     ITask,
     ITeam,
 } from '../../helpers/interfaces/';
+import { ACCESS_KEY } from '../actions';
 import { validate } from '../middleware/form';
 import FormSection from './form-section';
-import { ACCESS_KEY } from '../actions';
 
 export interface IProps {
     tasks: ITask[];
     teams: ITeam[];
+    availablePoints: number[];
 
     onSubmit(values: any): Promise<any>;
 }
@@ -22,7 +23,7 @@ export interface IProps {
 class FormContainer extends React.Component<IProps & InjectedFormProps<{ code: string }, IProps>, {}> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit, tasks, teams} = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints} = this.props;
 
         return (
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -30,6 +31,7 @@ class FormContainer extends React.Component<IProps & InjectedFormProps<{ code: s
                     accessKey={ACCESS_KEY}
                     tasks={tasks}
                     teams={teams}
+                    availablePoints={availablePoints}
                     onSubmit={onSubmit}
                     valid={valid}
                     submitting={submitting}
@@ -41,6 +43,7 @@ class FormContainer extends React.Component<IProps & InjectedFormProps<{ code: s
 }
 
 export const FORM_NAME = 'codeForm';
+
 
 export default reduxForm({
     form: FORM_NAME,

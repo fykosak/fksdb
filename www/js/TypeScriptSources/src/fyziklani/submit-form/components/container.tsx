@@ -17,6 +17,7 @@ interface IProps {
     tasks: ITask[];
     teams: ITeam[];
     actions: INetteActions;
+    availablePoints: number[];
 }
 
 interface IState {
@@ -25,11 +26,11 @@ interface IState {
 
 class TaskCode extends React.Component<IProps & IState, {}> {
     public render() {
-        const {tasks, teams, onSubmit} = this.props;
+        const {tasks, teams, onSubmit, availablePoints} = this.props;
         return (
             <div className="row">
                 <div className="col-lg-12 col-md-12">
-                    <FormContainer tasks={tasks} teams={teams} onSubmit={onSubmit}/>
+                    <FormContainer tasks={tasks} teams={teams} availablePoints={availablePoints} onSubmit={onSubmit}/>
                 </div>
                 <Powered/>
             </div>

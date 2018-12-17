@@ -1,13 +1,5 @@
 parameters:
     events:
         fyziklaniGameSetup:
-            availablePoints: [5, 3, 2, 1]
-            tasksOnBoard: 7
-            refreshDelay: 30000
-            resultsHardDisplay: false
-            resultsDisplay: '1970-01-01T00:00:00' # TODO make relative to game
-            resultsHide: '1970-01-01T01:00:00' # TODO make relative to game
-            gameStart: '1970-01-01T00:00:00' # TODO infer from event begin date
-            gameEnd: '1970-01-01T01:00:00' # TODO infer from event end date
             rooms: []
             buildings: []

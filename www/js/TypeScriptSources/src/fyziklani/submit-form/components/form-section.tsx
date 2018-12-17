@@ -24,6 +24,7 @@ export interface IProps {
     valid: boolean;
     submitting: boolean;
     handleSubmit: (args: any) => any;
+    availablePoints: number[];
 
     onSubmit(values: any): Promise<any>;
 }
@@ -36,7 +37,7 @@ interface IState {
 class FormSection extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages} = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages, availablePoints} = this.props;
 
         return (
             <div>
@@ -52,7 +53,11 @@ class FormSection extends React.Component<IProps & IState, {}> {
                             <div className="form-inline">
                                 <Field name="code" component={CodeInputError}/>
                             </div>
-                            <SubmitButtons valid={valid} submitting={submitting} handleSubmit={handleSubmit} onSubmit={onSubmit}/>
+                            <SubmitButtons availablePoints={availablePoints}
+                                           valid={valid}
+                                           submitting={submitting}
+                                           handleSubmit={handleSubmit}
+                                           onSubmit={onSubmit}/>
                         </Card>
                     </div>
                     <div className="col-6">

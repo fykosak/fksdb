@@ -11,7 +11,10 @@ class AppCollector {
         this.items.push(item);
     }
 
-    public run() {
+    /**
+     * @throws Error
+     */
+    public run(): void {
 
         document.querySelectorAll('.react-root,[data-react-root]').forEach((element: Element) => {
             // if (element.className.match(/.*react-element-served.*/)) {

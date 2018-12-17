@@ -3,6 +3,7 @@ import * as React from 'react';
 interface IProps {
     valid: boolean;
     submitting: boolean;
+    availablePoints: number[];
 
     handleSubmit(values: any): any;
 
@@ -12,9 +13,9 @@ interface IProps {
 export default class TaskInput extends React.Component<IProps, {}> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit} = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, availablePoints} = this.props;
 
-        const buttons = [5, 3, 2, 1].map((value, index) => {
+        const buttons = availablePoints.map((value, index) => {
             return (
                 <button
                     className={valid ? 'btn btn-success' : 'btn btn-outline-secondary'}

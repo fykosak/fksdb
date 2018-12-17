@@ -3,8 +3,8 @@ import {
     connect,
     Dispatch,
 } from 'react-redux';
-import { lang } from '../../../../i18n/i18n';
 import { INetteActions } from '../../../../app-collector/';
+import { lang } from '../../../../i18n/i18n';
 import { IFyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,
@@ -28,12 +28,10 @@ interface IProps {
 }
 
 class Downloader extends React.Component<IState & IProps, {}> {
-    private f = false;
 
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
-        this.f = true;
     }
 
     public componentWillReceiveProps(nextProps: IState & IProps) {

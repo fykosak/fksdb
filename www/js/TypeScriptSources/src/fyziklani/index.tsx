@@ -25,9 +25,9 @@ const registerRouting: IApp = (element, module, component, mode, rawData, action
 const registerSubmitForm: IApp = (element, module, component, mode, rawData, actions) => {
 
     const c = document.createElement('div');
-    const {tasks, teams} = JSON.parse(rawData);
+    const {tasks, teams, availablePoints} = JSON.parse(rawData);
     element.appendChild(c);
-    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} actions={actions}/>, c);
+    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} availablePoints={availablePoints} actions={actions}/>, c);
     return true;
 };
 
@@ -35,15 +35,6 @@ const registerResults: IApp = (element, module, component, mode, rawData, action
 
     switch (mode) {
         case 'presentation':
-            /* element.parentElement.className = 'container-fluid';
-             document.querySelectorAll('.breadcrumb')
-                 .forEach((breadcrumbElement: Element) => {
-                     breadcrumbElement.remove();
-                 });
-             document.querySelectorAll('h1')
-                 .forEach((hElement: Element) => {
-                     hElement.remove();
-                 });*/
             ReactDOM.render(<Results mode={'presentation'} actions={actions}/>, element);
             return true;
         case 'view':
