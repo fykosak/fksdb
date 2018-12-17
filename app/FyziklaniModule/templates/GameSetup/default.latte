@@ -34,9 +34,15 @@
         </li>
         <li class="list-group-item">
             <span class="row">
+                <span class="col-6">{_('Tasks on bard')}</span>
+                <span class="col-6">{$gameSetup->tasks_on_board}</span>
+            </span>
+        </li>
+        <li class="list-group-item">
+            <span class="row">
                 <span class="col-6">{_('Hard display')}</span>
                 <span class="col-6">
-                {if $gameSetup->hard_display}
+                {if $gameSetup->result_hard_display}
                     <span class="badge badge-warning">1</span>
                 {else}
                     <span class="badge badge-info">0</span>

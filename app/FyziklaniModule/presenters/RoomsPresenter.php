@@ -55,6 +55,10 @@ class RoomsPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return RoutingDownload
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentDownload() {
         $control = new RoutingDownload($this->getTranslator());
         $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
@@ -64,7 +68,10 @@ class RoomsPresenter extends BasePresenter {
         return $control;
     }
 
-
+    /**
+     * @return \FKSDB\Components\React\Fyziklani\RoutingEdit
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentRouting() {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context, $this->getEvent());
     }

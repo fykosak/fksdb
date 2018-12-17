@@ -13,9 +13,17 @@ use Nette\DateTime;
  * @property DateTime result_display
  * @property DateTime result_hide
  * @property int refresh_delay
- * @property bool hard_display
+ * @property bool result_hard_display
+ * @property int tasks_on_board
+ * @property string available_points
  */
 class ModelFyziklaniGameSetup extends \AbstractModelSingle {
-
-
+    /**
+     * @return array
+     */
+    public function getAvailablePoints(): array {
+        return \array_map(function ($value) {
+            return trim($value);
+        }, \explode(',', $this->available_points));
+    }
 }

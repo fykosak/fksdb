@@ -18,10 +18,6 @@ use SQL\SearchableDataSource;
  */
 class FyziklaniSubmitsGrid extends BaseGrid {
     /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
      *
      * @var ServiceFyziklaniSubmit
      */
@@ -36,11 +32,9 @@ class FyziklaniSubmitsGrid extends BaseGrid {
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
         parent::__construct();
     }

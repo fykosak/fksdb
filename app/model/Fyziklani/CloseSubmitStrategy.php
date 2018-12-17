@@ -1,14 +1,7 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FKSDB\model\Fyziklani;
 
-use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
@@ -21,11 +14,6 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  * @author Lukáš Timko
  */
 class CloseSubmitStrategy {
-    /**
-     * @var BasePresenter
-     * @deprecated
-     */
-    protected $presenter;
 
     /**
      *
@@ -128,11 +116,11 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param integer $team_id
+     * @param int $teamId
      * @return array
      */
-    protected function getAllSubmits(int $team_id): array {
-        $submits = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($team_id))->getSubmits();
+    protected function getAllSubmits(int $teamId): array {
+        $submits = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId))->getSubmits();
         $arraySubmits = [];
         $sum = 0;
         $count = 0;

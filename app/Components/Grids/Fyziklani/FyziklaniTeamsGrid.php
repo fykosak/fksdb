@@ -44,6 +44,8 @@ class FyziklaniTeamsGrid extends BaseGrid {
 //    }
     /**
      * @param $presenter BasePresenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -65,10 +67,10 @@ class FyziklaniTeamsGrid extends BaseGrid {
             return $room->name;
         });
         $this->addColumn('category', _('Kategorie'));
-        $this->addButton('edit', null)->setClass('btn btn-xs btn-success')->setLink(function ($row) use ($presenter) {
+        $this->addButton('edit', null)->setClass('btn btn-sm btn-success')->setLink(function ($row) use ($presenter) {
             return $presenter->link(':Fyziklani:Close:team', [
                 'id' => $row->e_fyziklani_team_id,
-                'eventID' => $this->eventId
+                'eventId' => $this->eventId
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
             /**

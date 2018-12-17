@@ -37,7 +37,7 @@ class FyziklaniTaskGrid extends BaseGrid {
 
     protected function configure($presenter) {
         parent::configure($presenter);
-        $this->addColumn('fyziklani_task_id',_('ID úlohy'));
+        $this->addColumn('fyziklani_task_id',_('Id úlohy'));
         $this->addColumn('label',_('#'));
         $this->addColumn('name',_('Název úlohy'));
 

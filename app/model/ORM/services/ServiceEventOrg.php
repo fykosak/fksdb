@@ -18,7 +18,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }
 
-    public function findByEventID($eventID) {
-        return $this->getTable()->where('event_id', $eventID);
+    public function findByEventId($eventId) {
+        return $this->getTable()->where('event_id', $eventId);
     }
 }

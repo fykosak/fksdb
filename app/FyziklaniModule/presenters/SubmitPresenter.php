@@ -56,7 +56,7 @@ class SubmitPresenter extends BasePresenter {
          */
         $form = $this['entryQRForm']->getForm();
         $form->setDefaults(['taskCode' => $code]);
-        foreach ($this->getEvent()->getParameter('gameSetup')['availablePoints'] as $points) {
+        foreach ($this->getGameSetup()->getAvailablePoints() as $points) {
             /**
              * @var $button Button
              */
@@ -64,6 +64,7 @@ class SubmitPresenter extends BasePresenter {
             $button->setDisabled(false);
         }
     }
+
     /**
      * @param $id
      * @throws BadRequestException
@@ -147,7 +148,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryQRForm() {
-        $form = $this->fyziklaniFactory->createEntryQRForm($this->getEvent());
+        $form = $this->fyziklaniFactory->createEntryQRForm($this->getGameSetup());
 
         $form->getForm()->onSuccess[] = function (Form $form) {
             $this->entryFormSucceeded($form);
@@ -155,12 +156,20 @@ class SubmitPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @return FyziklaniSubmitsGrid
+     * @throws BadRequestException
+     */
     public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit, $this->serviceFyziklaniTeam);
+        return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
     public function createComponentSubmitEditForm() {
-        $control = $this->fyziklaniFactory->createEditForm($this->getEvent());
+        $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->editFormSucceeded($form);
         };

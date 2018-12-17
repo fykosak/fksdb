@@ -70,7 +70,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
      */
     private function isResultsVisible() {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-        $hardDisplay = $gameSetup->hard_display;
+        $hardDisplay = $gameSetup->result_hard_display;
         $before = (time() < strtotime($gameSetup->result_hide));
         $after = (time() > strtotime($gameSetup->result_display));
 

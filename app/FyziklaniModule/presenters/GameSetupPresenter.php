@@ -14,6 +14,9 @@ class GameSetupPresenter extends BasePresenter {
         $this->setIcon('fa fa-cogs');
     }
 
+    /**
+     * @return FormControl
+     */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
@@ -26,6 +29,9 @@ class GameSetupPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         $this->template->gameSetup = $this->getGameSetup();
     }

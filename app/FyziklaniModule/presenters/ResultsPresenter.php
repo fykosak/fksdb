@@ -82,18 +82,34 @@ class ResultsPresenter extends BasePresenter {
         $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
     }
 
+    /**
+     * @return ResultsView
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentResultsView(): ResultsView {
         return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
     }
 
+    /**
+     * @return ResultsPresentation
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentResultsPresentation(): ResultsPresentation {
         return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
     }
 
+    /**
+     * @return TeamStatistics
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentTeamStatistics(): TeamStatistics {
         return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
     }
 
+    /**
+     * @return TaskStatistics
+     * @throws \Nette\Application\BadRequestException
+     */
     public function createComponentTaskStatistics(): TaskStatistics {
         return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
     }
