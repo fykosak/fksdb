@@ -48,7 +48,7 @@
   }
   table {
     tbody {
-      counter-reset: results-table;
+
       tr td {
         &[data-points="5"] {
           background-color: #2d7dd2;
@@ -69,10 +69,17 @@
         text-align: center;
         border: solid 1px #ccc;
         font-weight: bold;
+      }
+    }
 
-        &:first-child::before {
-          counter-increment: results-table;
-          content: counter(results-table) ".";
+    &.table-indexed {
+      tbody {
+        counter-reset: results-table;
+        tr td {
+          &:first-child::before {
+            counter-increment: results-table;
+            content: counter(results-table) ".";
+          }
         }
       }
     }
@@ -107,4 +114,15 @@
     }
 
   }
+}
+
+.fyziklani-chart-container {
+  h3 {
+    padding-bottom: 1rem;
+    color: #d7392e;
+    font-weight: bold;
+  }
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: solid 1px #d7392e;
 }

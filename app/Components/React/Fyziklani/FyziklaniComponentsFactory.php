@@ -4,6 +4,7 @@ namespace FKSDB\Components\React\Fyziklani;
 
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
@@ -76,6 +77,10 @@ class FyziklaniComponentsFactory {
 
     public function createRoutingEdit(Container $context, ModelEvent $event) {
         return new RoutingEdit($context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
+
+    public function createCorrelationStatistics(Container $context, ModelEvent $event) {
+        return new CorrelationStatistics($context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createTaskCodeInput(Container $context, ModelEvent $event) {

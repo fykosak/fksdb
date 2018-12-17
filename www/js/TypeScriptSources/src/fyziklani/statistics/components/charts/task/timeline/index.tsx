@@ -6,11 +6,9 @@ export default class Timeline extends React.Component<{}, {}> {
 
     public render() {
         return (
-            <div>
+            <div className={'fyziklani-chart-container'}>
                 <h3>{lang.getText('timeProgress')}</h3>
-                <div className="row">
-                    <Chart/>
-                </div>
+                <Chart/>
             </div>
         );
     }

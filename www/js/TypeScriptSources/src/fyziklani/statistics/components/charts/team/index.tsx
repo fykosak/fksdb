@@ -38,7 +38,7 @@ class TeamStats extends React.Component<IState, {}> {
             return team.teamId === teamId;
         })[0];
 //
-        const headline = (<h3>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h3>);
+        const headline = (<h2>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h2>);
         return (<div>
 
             {teamSelect}

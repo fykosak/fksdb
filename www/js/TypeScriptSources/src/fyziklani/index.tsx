@@ -84,15 +84,8 @@ const registerSchedule: IApp = (element, module, component, mode, rawData, actio
 };
 
 const registerStatistics: IApp = (element, module, component, mode, rawData, actions) => {
-
-    switch (mode) {
-        case 'team':
-        case 'task':
-            ReactDOM.render(<Statistics mode={mode} actions={actions}/>, element);
-            return true;
-        default:
-            throw Error('Not implement');
-    }
+    ReactDOM.render(<Statistics mode={mode} actions={actions}/>, element);
+    return true;
 };
 
 export const fyziklani: IApp = (element, module, component, mode, rawData, actions) => {

@@ -1,0 +1,124 @@
+import * as d3 from 'd3';
+import * as React from 'react';
+import { findDOMNode } from 'react-dom';
+import {
+    connect,
+    Dispatch,
+} from 'react-redux';
+import {
+    ISubmits,
+    ITask,
+    ITeam,
+} from '../../../../../helpers/interfaces';
+import {
+    calculateCorrelation,
+    getTimeLabel,
+    IPreprocessedSubmit,
+} from '../../../../middleware/charts/correlation';
+import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import {
+    setFirstTeamId,
+    setSecondTeamId,
+} from '../../../../actions';
+
+interface IState {
+    submits?: ISubmits;
+    tasks?: ITask[];
+    teams?: ITeam[];
+    firstTeamId?: number;
+    secondTeamId?: number;
+
+    onChangeFirstTeam?(id: number): void;
+
+    onChangeSecondTeam?(id: number): void;
+}
+
+class GlobalCorrelation extends React.Component<IState, {}> {
+    private table;
+
+    public componentDidMount() {
+        const table: any = $(findDOMNode(this.table));
+        table.tablesorter();
+    }
+
+    public render() {
+
+        const color = d3.scaleLinear<string, number>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
+        const {submits, teams} = this.props;
+        const submitsForTeams: { [teamId: number]: { [taskId: number]: IPreprocessedSubmit } } = {};
+        for (const index in submits) {
+            if (submits.hasOwnProperty(index)) {
+                const submit = submits[index];
+                const {teamId, taskId: taskId} = submit;
+                submitsForTeams[teamId] = submitsForTeams[teamId] || {};
+                submitsForTeams[teamId][taskId] = {
+                    ...submit,
+                    timestamp: (new Date(submit.created)).getTime(),
+                };
+            }
+        }
+        const rows = [];
+        teams.forEach((firstTeam) => {
+            teams.forEach((secondTeam) => {
+                if (secondTeam.teamId <= firstTeam.teamId) {
+                    return;
+                }
+                const {avgNStdDev, countFiltered, countTotal} = calculateCorrelation(
+                    submitsForTeams.hasOwnProperty(firstTeam.teamId) ? submitsForTeams[firstTeam.teamId] : {},
+                    submitsForTeams.hasOwnProperty(secondTeam.teamId) ? submitsForTeams[secondTeam.teamId] : {},
+                );
+                rows.push(<tr key={secondTeam.teamId + '__' + firstTeam.teamId}>
+                    <td>{firstTeam.name}</td>
+                    <td>{secondTeam.name}</td>
+                    <td style={{backgroundColor: color(avgNStdDev.average)}}>
+                        {getTimeLabel(avgNStdDev.average, avgNStdDev.standardDeviation)}
+                    </td>
+                    <td>{countFiltered}</td>
+                    <td>{countTotal}</td>
+                    <td>
+                        <span className={'btn btn-primary btn-sm'} onClick={() => {
+                            this.props.onChangeFirstTeam(firstTeam.teamId);
+                            this.props.onChangeSecondTeam(secondTeam.teamId);
+                        }}>Detail</span>
+                    </td>
+                </tr>);
+
+            });
+        });
+        return <table className={'table table-striped tablesorter table-sm'}
+                      ref={(table) => {
+                          this.table = table;
+                      }}
+        >
+            <thead>
+            <tr>
+                <th>Team 1</th>
+                <th>Team 2</th>
+                <th>AVG</th>
+                <th>pod 2 min</th>
+                <th>match</th>
+            </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+        </table>;
+    }
+}
+
+const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+    return {
+        firstTeamId: state.statistics.firstTeamId,
+        secondTeamId: state.statistics.secondTeamId,
+        submits: state.data.submits,
+        tasks: state.data.tasks,
+        teams: state.data.teams,
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+    return {
+        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
+        onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalCorrelation);
