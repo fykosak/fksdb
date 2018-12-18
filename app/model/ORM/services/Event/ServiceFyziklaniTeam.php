@@ -4,12 +4,13 @@ namespace ORM\Services\Events;
 
 use AbstractServiceSingle;
 use DbNames;
+use Nette\Security\IResource;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceFyziklaniTeam extends AbstractServiceSingle {
+class ServiceFyziklaniTeam extends AbstractServiceSingle implements IResource {
 
     protected $tableName = DbNames::TAB_E_FYZIKLANI_TEAM;
 
@@ -35,16 +36,15 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $team = $this->findByPrimary($teamId);
         return $team && $team->event_id == $eventId;
     }
+
     /**
      * Syntactic sugar.
      * @param int $eventId
      * @return \Nette\Database\Table\Selection|null
      */
-    public function findPossiblyAttending($eventId = null) {
+    public function findPossiblyAttending($eventId) {
         $result = $this->getTable()->where('status', ['participated', 'approved', 'spare']);
-        if ($eventId) {
-            $result->where('event_id', $eventId);
-        }
+        $result->where('event_id', $eventId);
         return $result ?: null;
     }
 
@@ -63,13 +63,17 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
                 'category' => $row->category,
                 'roomId' => $position ? $position->getRoom()->room_id : '',
                 'name' => $row->name,
-                'status'=>$row->status,
+                'status' => $row->status,
                 'teamId' => $row->e_fyziklani_team_id,
                 'x' => $position ? $position->col : null,
                 'y' => $position ? $position->row : null,
             ];
         }
         return $teams;
+    }
+
+    public function getResourceId() {
+        return 'fyziklani.team';
     }
 
 }

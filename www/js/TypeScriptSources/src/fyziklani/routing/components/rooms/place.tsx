@@ -13,9 +13,10 @@ import { IFyziklaniRoutingStore } from '../../reducers/';
 import Team from '../team/';
 
 interface IState {
-    onDrop?: (teamId: number, place: IPlace) => void;
     teams?: ITeam[];
     draggedTeamId?: number;
+
+    onDrop?(teamId: number, place: IPlace): void;
 }
 
 interface IProps {
@@ -38,7 +39,12 @@ class Place extends React.Component<IState & IProps, {}> {
                     e.preventDefault();
                 }
             }}
-            onClick={() => draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null}
+            onClick={() => {
+                if (!team) {
+                    return draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null;
+                }
+            }
+            }
             onDrop={() => {
                 onDrop(draggedTeamId, {x, y, roomId, room: null});
             }}>

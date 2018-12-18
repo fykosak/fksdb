@@ -1,5 +1,9 @@
 <?php
 
+use Authorization\ContestAuthorizator;
+use Nette\Application\BadRequestException;
+use ORM\Models\Events\ModelFyziklaniTeam;
+
 class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
 
     protected $tableName = \DbNames::TAB_BRAWL_TEAM_POSITION;
@@ -19,10 +23,32 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
 
     /**
      * @param $data
+     * @param ContestAuthorizator $authorizator
      * @return string[]
      */
-    public function updateRouting($data) {
+    public function updateRouting($data, ContestAuthorizator $authorizator) {
         $updatedTeams = [];
+        $this->connection->beginTransaction();
+        foreach ($data as $teamData) {
+            $teamData = (object)$teamData;
+            try {
+                $row = $this->findByTeamId($teamData->teamId);
+                if ($row) {
+                    $model = ModelFyziklaniTeam::createFromTableRow($row);
+                } else {
+                    throw new BadRequestException(_('Team neexistuje'));
+                }
+                if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
+                } else {
+                    if ($model) {
+                        $model->delete();
+                        $updatedTeams[] = $teamData->teamId;
+                    }
+                }
+            } catch (\Exception $e) {
+                $this->connection->rollBack();
+            }
+        }
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
             try {
@@ -45,16 +71,13 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
                     }
                     $this->save($model);
                     $updatedTeams[] = $teamData->teamId;
-                } else {
-                    if ($model) {
-                        $model->delete();
-                        $updatedTeams[] = $teamData->teamId;
-                    }
                 }
             } catch (\Exception $e) {
+                $this->connection->rollBack();
             }
-
         }
+        $this->connection->commit();
+        
         return $updatedTeams;
     }
 }

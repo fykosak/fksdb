@@ -3,13 +3,14 @@
 namespace Authorization\Assertions;
 
 use Nette\InvalidStateException;
+use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\Security\User;
-use Nette\Security\IResource;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class OwnerAssertion {
@@ -24,7 +25,7 @@ class OwnerAssertion {
     }
 
     /**
-     * 
+     *
      * @param \Authorization\Permission $acl
      * @param string $role
      * @param string $resourceId
@@ -38,7 +39,7 @@ class OwnerAssertion {
         }
 
         $submit = $acl->getQueriedResource();
-        
+
         if (!$submit instanceof IResource) {
             return false;
         }
@@ -47,7 +48,7 @@ class OwnerAssertion {
 
     /**
      * Checks whether contestant belongs to the same contest as the role was assigned.
-     * 
+     *
      * @param \Authorization\Permission $acl
      * @param string $role
      * @param string $resourceId
@@ -68,7 +69,7 @@ class OwnerAssertion {
 
     /**
      * Checks whether person is contestant in any of the role-assigned contests.
-     * 
+     *
      * @param \Authorization\Permission $acl
      * @param string $role
      * @param string $resourceId
@@ -112,9 +113,9 @@ class OwnerAssertion {
 
     /**
      * Check that the person is the person of logged user.
-     * 
+     *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
-     * 
+     *
      * @param \Nette\Security\Permission $acl
      * @param type $role
      * @param type $resourceId
@@ -131,6 +132,22 @@ class OwnerAssertion {
         $person = $acl->getQueriedResource();
 
         return ($loggedPerson && $loggedPerson->person_id == $person->person_id);
+    }
+
+    public function isOwnTeam(Permission $acl, $role, $resourceId, $privilege) {
+        if (!$this->user->isLoggedIn()) {
+            throw new InvalidStateException('Expecting logged user.');
+        }
+        /**
+         * @var $team ModelFyziklaniTeam
+         */
+        $team = $acl->getQueriedResource();
+        foreach ($team->related(\DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id')->select('event_participant.person_id') as $member) {
+            if ($member->person_id == $this->user->getIdentity()->getPerson()->person_id) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

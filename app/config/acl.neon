@@ -52,11 +52,13 @@ acl:
     - addResource(eventAccommodation) # create, edit, list
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
+    - addResource(fyziklani.team)
 
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
+    - allow(contestant, fyziklani.team, routing , [@ownerAssertion, 'isOwnTeam'])
 
     - allow(org, submit, edit)      # zadávání bodů
     - allow(org, contestant, list)
@@ -70,6 +72,7 @@ acl:
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+
     # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
@@ -105,6 +108,7 @@ acl:
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, person, stalk.full)
+    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])

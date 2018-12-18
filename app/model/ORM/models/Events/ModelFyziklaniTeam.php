@@ -5,6 +5,7 @@ namespace ORM\Models\Events;
 use AbstractModelSingle;
 use DbNames;
 use ModelFyziklaniSubmit;
+use Nette\Security\IResource;
 
 /**
  * @property string category
@@ -18,7 +19,7 @@ use ModelFyziklaniSubmit;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IResource {
 
     public function __toString() {
         return $this->name;
@@ -50,6 +51,10 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
     public function hasOpenSubmit() {
         $points = $this->points;
         return !is_numeric($points);
+    }
+
+    public function getResourceId() {
+        return 'fyziklani.team';
     }
 
 }
