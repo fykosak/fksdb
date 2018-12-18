@@ -12,6 +12,8 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictExcep
 use Events\SubmitProcessingException;
 use Exception;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\FullAccommodationCapacityException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\ModelEvent;
 use FormUtils;
@@ -19,7 +21,6 @@ use Nette\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Submits\StorageException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -183,7 +184,11 @@ class ApplicationHandler {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);
-        } catch (StorageException $e) {
+        } catch (FullAccommodationCapacityException $e) {
+            $this->logger->log($e->getMessage(), ILogger::ERROR);
+            $this->formRollback($data);
+            $this->reraise($e);
+        } catch (ExistingPaymentException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);

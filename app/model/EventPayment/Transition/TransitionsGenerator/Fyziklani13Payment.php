@@ -62,8 +62,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
 
         $options = (object)[
-            'bcc' => 'miso@fykos.cz',
-            'from' => 'db@fykos.cz',
+            'bcc' => 'fyziklani@fykos.cz',
+            'from' => 'fyziklani@fykos.cz',
             'subject' => 'prijali sme platbu'
         ];
         $transition = $this->transitionFactory->createTransition(
@@ -96,9 +96,13 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
-        $options = [];
+        $options = (object)[
+            'bcc' => 'fyziklani@fykos.cz',
+            'from' => 'fyziklani@fykos.cz',
+            'subject' => 'prijali sme platbu'
+        ];
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Zaplatil'));
-        //$transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/confirm', $options);
+        $transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
         $transition->setCondition(function (ModelPayment $eventPayment) {
             return $this->transitionFactory->getConditionDateBetween(new DateTime('2018-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
                 && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');

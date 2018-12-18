@@ -48,7 +48,7 @@ class MyPaymentGrid extends BaseGrid {
         });;
         $this->addColumn('price', _('Price'))->setRenderer(function ($row) {
             $model = ModelPayment::createFromTableRow($row);
-            return $model->price . ' ' . Price::getLabel($model->currency);
+            return $model->getPrice()->__toString();
         });
         $this->addColumn('state', _('Status'))->setRenderer(function ($row) {
             $class = ModelPayment::createFromTableRow($row)->getUIClass();

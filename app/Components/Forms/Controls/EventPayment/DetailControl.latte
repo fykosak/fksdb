@@ -23,7 +23,7 @@
         </div>
     </div>
 </form>
-<h3>{_('Položky')}</h3>
+<h3>{_('Items')}</h3>
 <table class="table table-striped">
     <thead>
     <tr>
@@ -35,14 +35,13 @@
     {foreach $items as $item}
         <tr>
             <td>{$item['label']}</td>
-            <td>{$item['price']->getAmount()}
-                {FKSDB\EventPayment\PriceCalculator\Price::getLabel($item['price']->getCurrency())}</td>
+            <td>{$item['price']->__toString()}</td>
         </tr>
     {/foreach}
     {if !is_null($model->price)}
         <tr class="table-primary">
             <td>{_('Spolu')}</td>
-            <td>{$model->price} {FKSDB\EventPayment\PriceCalculator\Price::getLabel($model->currency)}</td>
+            <td>{$model->getPrice()->__toString()}</td>
         </tr>
     {/if}
     </tbody>

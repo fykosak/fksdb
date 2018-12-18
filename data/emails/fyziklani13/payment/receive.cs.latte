@@ -1,10 +1,10 @@
 <div>
-        Platba {$model->getPaymentId()} vytvorená.
-        Platba vo výške {$model->getPrice()->__toString()}
+    Platba {$model->getPaymentId()} vytvorená.
+    Platba vo výške {$model->getPrice()->__toString()}
     <div>
         {foreach $model->getRelatedPersonAccommodation() as $item}
             <div>
-                {$item}
+                {$item->getLabel()}
             </div>
         {/foreach}
     </div>

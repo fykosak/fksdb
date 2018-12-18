@@ -9,6 +9,7 @@ use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\DateTime;
 use Nette\InvalidStateException;
+use Nette\Localization\ITranslator;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Security\IResource;
@@ -31,6 +32,10 @@ class TransitionsFactory {
      * @var User
      */
     private $user;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     /**
      * TransitionsFactory constructor.
@@ -39,11 +44,12 @@ class TransitionsFactory {
      * @param EventAuthorizator $eventAuthorizator
      * @param User $user
      */
-    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user) {
+    public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user, ITranslator $translator) {
         $this->mailer = $mailer;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->user = $user;
+        $this->translator = $translator;
     }
 
     /**
@@ -65,8 +71,9 @@ class TransitionsFactory {
      */
     public function createMailCallback(string $templateFile, $options): \Closure {
         $template = $this->mailTemplateFactory->createFromFile($templateFile);
-        $message = new Message();
+        $template->setTranslator($this->translator);
 
+        $message = new Message();
         $message->setSubject($options->subject);
         $message->setFrom($options->from);
         $message->addBcc($options->bcc);
@@ -76,6 +83,7 @@ class TransitionsFactory {
         return function (ModelPayment $model) use ($message, $template) {
 
             $template->model = $model;
+
             $message->addTo($model->getPerson()->getInfo()->email);
             $message->setHtmlBody($template);
             $this->mailer->send($message);

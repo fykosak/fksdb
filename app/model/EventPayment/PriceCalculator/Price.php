@@ -57,4 +57,8 @@ class Price {
                 throw new OutOfRangeException(\sprintf(_('Currency %s doesnt exists'), $currency));
         }
     }
+
+    public function __toString() {
+        return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
+    }
 }
