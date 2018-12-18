@@ -1,5 +1,9 @@
 /* use https://www.sassmeister.com/ */
+@import "colors";
+
 @mixin navigation-item($color,$background) {
+  height: 12rem;
+  width: 12rem;
   border-color: $color;
   border-radius: 0;
   background-color: $background;
@@ -20,8 +24,6 @@
 }
 
 .navigation-item .card {
-  height: 12rem;
-  width: 12rem;
 
   &[data-background-id="0"] {
     @include navigation-item(#1175da, white);
@@ -48,15 +50,13 @@
   }
 }
 
-[data-contest~="event-type-1"] .navigation-item .card {
-  @include navigation-item(#d7392e, white);
-}
+
 
 [data-contest~="fykos"] .navigation-item .card {
-  @include navigation-item(#1175da, white);
+  @include navigation-item($fykosMainColor, white);
 }
 
 [data-contest~="vyfuk"] .navigation-item .card {
-  @include navigation-item(#ff4800, white);
+  @include navigation-item($vyfukMainColor, white);
 }
 

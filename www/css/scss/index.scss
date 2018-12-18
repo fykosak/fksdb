@@ -2,17 +2,276 @@
 @import "fyziklani-results";
 @import "navigation-item";
 @import "schedule";
-
-[data-contest~="event-type-1"] main {
-  background-image: url('/images/fyziklani/Prague Layout.svg');
-  background-repeat: no-repeat;
-}
+@import "fyziklani-theme";
+@import "inbox";
+@import "login";
+@import "colors";
+@import "fyziklani";
+@import "points";
+@import "storedquery-tag";
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
 }
 
-/*.badge, .btn, .form-control {
-  border-radius: 0;
-}*/
+h1 .small {
+  font-weight: 300;
+}
 
+#spinner {
+  background-image: url('../images/spinner.gif');
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  display: none;
+}
+
+html, body {
+  font-family: 'Source Sans Pro', sans-serif;
+  /*padding-top: 35px;*/
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  /* Negative indent footer by its height */
+  margin: 0 auto -55px;
+  /* Pad bottom by footer height */
+  padding: 55px 0;
+}
+
+.list-piped > * {
+  display: inline-block;
+}
+
+.list-piped > * + *:before {
+  color: #CCCCCC;
+  content: "| ";
+  padding: 0;
+}
+
+.clear-referenced {
+  position: absolute;
+  right: 1em;
+  z-index: 3;
+}
+
+.right-inner-addon {
+  position: relative;
+}
+
+.right-inner-addon input {
+  padding-right: 30px;
+}
+
+.right-inner-addon i {
+  position: absolute;
+  right: 0;
+  padding: 8px 12px;
+  cursor: pointer; /* TODO not general enough, might be a static icon */
+}
+
+.required .control-label:before {
+  color: #b94a48;
+  /*content: '* ';*/
+  display: inline;
+}
+
+body[data-contest="vyfuk"] {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Gloria Hallelujah', cursive;
+  }
+}
+
+.task-code-container input.valid {
+  color: #3c763d;
+}
+
+.task-code-container input.invalid {
+  color: #a94442;
+}
+
+.task-code-container .team {
+  width: 6em;
+}
+
+.task-code-container .task {
+  width: 2em;
+}
+
+.task-code-container .control {
+  width: 1em;
+}
+
+.task-code-container .control, .task-code-container .task, .task-code-container .team {
+  border: none;
+  outline-offset: 0;
+  outline-color: transparent;
+}
+
+.task-code-container > div {
+  font-size: 120%;
+  border: 1px solid #66afe9;
+}
+
+.dispatch-logo {
+  height: 10rem;
+}
+
+.btn-fykos {
+  color: #fff;
+  background-color: $fykosMainColor;
+  border-color: #005CC1;
+}
+
+.btn-vyfuk {
+  color: #fff;
+  background-color: $vyfukMainColor;
+  border-color: #E62F00;
+}
+
+.btn-fykos:hover {
+  color: #fff;
+  background-color: #005CC1;
+  border-color: #0042A7;
+}
+
+.btn-vyfuk:hover {
+  color: #fff;
+  background-color: #E62F00;
+  border-color: #CC1500;
+}
+
+.bg-vyfuk {
+  background-color: #9c3;;
+}
+
+.bg-fykos {
+  background-color: $fykosMainColor;
+}
+
+.bg-error {
+  background-color: #dc3545;
+}
+
+.link-fykos {
+  color: $fykosMainColor;
+}
+
+.link-fykos:hover {
+  color: #fff;
+  background-color: $fykosMainColor;
+  border-color: #005CC1;
+}
+
+.link-vyfuk {
+  color: $vyfukMainColor;
+}
+
+.link-vyfuk:hover {
+  color: #fff;
+  background-color: $vyfukMainColor;
+  border-color: #E62F00;
+}
+
+.image-error {
+  width: 100%;
+  text-align: center;
+}
+
+.image-error img {
+  height: 20rem;
+}
+
+.card-columns {
+  -webkit-column-count: 3;
+  column-count: 2;
+}
+
+.bs-callout {
+  margin: 20px 0;
+  padding: 15px 30px 15px 15px;
+  border-left: 5px solid #eee;
+}
+
+.bs-callout h4 {
+  margin-top: 0;
+}
+
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.bs-callout code,
+.bs-callout .highlight {
+  background-color: #fff;
+}
+
+/* Themes for different contexts */
+.bs-callout-danger {
+  background-color: #fcf2f2;
+  border-color: #dFb5b4;
+}
+
+.bs-callout-warning {
+  background-color: #fefbed;
+  border-color: #f1e7bc;
+}
+
+.bs-callout-info {
+  background-color: #f0f7fd;
+  border-color: #d0e3f0;
+}
+
+.bd-callout {
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #eee;
+  border-left-width: .25rem;
+  border-radius: .25rem
+}
+
+.bd-callout h4 {
+  margin-top: 0;
+  margin-bottom: .25rem
+}
+
+.bd-callout p:last-child {
+  margin-bottom: 0
+}
+
+.bd-callout code {
+  border-radius: .25rem
+}
+
+.bd-callout + .bd-callout {
+  margin-top: -.25rem
+}
+
+.bd-callout-info {
+  border-left-color: #5bc0de
+}
+
+.bd-callout-info h4 {
+  color: #5bc0de
+}
+
+.bd-callout-warning {
+  border-left-color: #f0ad4e
+}
+
+.bd-callout-warning h4 {
+  color: #f0ad4e
+}
+
+.bd-callout-danger {
+  border-left-color: #d9534f
+}
+
+.bd-callout-danger h4 {
+  color: #d9534f
+}
