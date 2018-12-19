@@ -9,6 +9,7 @@
 @import "points";
 @import "storedquery-tag";
 @import "contests";
+@import "callout";
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -78,8 +79,6 @@ html, body {
   content: '* ';
   display: inline;
 }
-
-
 
 .task-code-container input.valid {
   color: #3c763d;
