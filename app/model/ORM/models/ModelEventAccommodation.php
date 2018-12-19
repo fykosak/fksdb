@@ -57,6 +57,13 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
+     * @return \Nette\Database\Table\GroupedSelection
+     */
+    public function getAccommodated() {
+        return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION);
+    }
+
+    /**
      * @return integer
      */
     public function getUsedCapacity(): int {
