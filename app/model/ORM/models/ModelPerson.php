@@ -354,7 +354,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    public function getAccommodationByEventId($eventId) {
+    public function getSerializedAccommodationByEventId($eventId) {
         if (!$eventId) {
             return null;
         }
