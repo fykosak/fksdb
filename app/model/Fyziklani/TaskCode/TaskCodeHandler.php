@@ -76,7 +76,7 @@ class TaskCodeHandler {
     private function savePoints($fullCode, $points): string {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
-        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event->event_id);
+        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
 
         if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskId, $teamId))) {
             $submit = $this->serviceFyziklaniSubmit->createNew([
