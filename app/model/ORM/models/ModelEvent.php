@@ -40,14 +40,10 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelEventAccommodation[]
+     * @return \Nette\Database\Table\GroupedSelection
      */
     public function getEventAccommodations() {
-        $data = [];
-        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromTableRow($item);
-        }
-        return $data;
+        return $this->related(DbNames::TAB_EVENT_ACCOMMODATION);
     }
 
     /**
@@ -63,7 +59,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      * @return int
      */
     public function getAcYear() {
-            return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
+        return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
     public function getParameter($name) {
