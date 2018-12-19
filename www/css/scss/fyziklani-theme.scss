@@ -1,5 +1,6 @@
 @import "colors";
-@import "navigation-item";
+@import "mixins/navigation-item";
+@import "mixins/callout";
 
 [data-contest~="event-type-1"] main:not(.no-bg) {
   background: url('/images/fof/prague-layout.svg') no-repeat;
@@ -21,7 +22,7 @@
 }
 
 .bd-callout-fyziklani {
-  border-left-color: $fyziklaniMainColor;
+  @include bd-callout($fyziklaniMainColor);
 }
 
 .bd-callout-fyziklani h4 {
