@@ -12,12 +12,12 @@ abstract class FyziklaniModule extends ReactComponent {
     /**
      * @var \ServiceBrawlRoom
      */
-    protected $serviceBrawlRoom;
+    protected $serviceFyziklaniRoom;
 
     /**
      * @var \ServiceBrawlTeamPosition
      */
-    protected $serviceBrawlTeamPosition;
+    protected $serviceFyziklaniTeamPosition;
 
     /**
      * @var ServiceFyziklaniTeam
@@ -58,8 +58,8 @@ abstract class FyziklaniModule extends ReactComponent {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-        $this->serviceBrawlRoom = $serviceBrawlRoom;
+        $this->serviceFyziklaniTeamPosition = $serviceBrawlTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceBrawlRoom;
 
     }
 
@@ -76,6 +76,6 @@ abstract class FyziklaniModule extends ReactComponent {
      * @return \ModelBrawlRoom[]
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 }

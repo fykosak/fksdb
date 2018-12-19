@@ -150,7 +150,7 @@ events:
                         modifiable: %events.fyziklani12.appCond%
                         factory: RefPerson(%events.fyziklani12.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: _('Učitel má zájem o program')
+                        label: _('Učitel má zájem o program během soutěže.')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
                     teacher_accomodation:

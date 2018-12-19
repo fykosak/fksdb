@@ -2,14 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
-import HardVisibleSwitch from '../../helpers/options/compoents/hard-visible-switch';
 import { IFyziklaniResultsStore } from '../reducers';
 import Results from './results/';
 import FilterSelect from './results/filter/select';
 
 interface IState {
     isReady?: boolean;
-    isOrg?: boolean;
 }
 
 interface IProps {
@@ -20,22 +18,19 @@ interface IProps {
 class App extends React.Component<IState & IProps, {}> {
     public render() {
 
-        const {isReady, mode, accessKey, isOrg} = this.props;
+        const {isReady, mode, accessKey} = this.props;
         if (!isReady) {
             return <Loading/>;
         }
         return (<>
-            {isOrg && <HardVisibleSwitch/>}
             <FilterSelect mode={mode}/>
             <Results accessKey={accessKey} basePath={'/'} mode={mode}/>
-            <Powered/>
         </>);
     }
 }
 
 const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     return {
-        isOrg: state.options.isOrg,
         isReady: state.options.isReady,
     };
 };

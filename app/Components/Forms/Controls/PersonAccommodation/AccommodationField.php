@@ -42,7 +42,7 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
             $model = ModelEventAccommodation::createFromTableRow($accommodation);
             $accommodationDef[] = $model->__toArray();
         }
-        return count($accommodationDef) ? json_encode($accommodationDef) : NULL;
+        return json_encode($accommodationDef);
     }
 
     public function attached($obj) {

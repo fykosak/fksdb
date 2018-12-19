@@ -93,7 +93,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @return bool
-     * @throws \Nette\Application\AbortException
+     * @throws BadRequestException
      */
     protected function isEventFyziklani(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -117,12 +117,13 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     public function getSubtitle() {
-        return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
+        return $this->getEvent()->name;
+       // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
     }
 
     /**
-     * @return \ModelBrawlRoom[]
-     * @throws \Nette\Application\AbortException
+     * @return array
+     * @throws BadRequestException
      */
     protected function getRooms() {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
@@ -134,7 +135,6 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @return int
-     * @throws \Nette\Application\AbortException
      */
     public function getEventId(): int {
         if (!$this->eventId) {

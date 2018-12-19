@@ -2,11 +2,13 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\model\Fyziklani\TaskCodePreprocessor;
+use FKSDB\ORM\ModelEvent;
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
-use \FKSDB\Components\Grids\BaseGrid;
 use SQL\SearchableDataSource;
 
 /**
@@ -26,32 +28,33 @@ class FyziklaniSubmitsGrid extends BaseGrid {
     private $serviceFyziklaniSubmit;
 
     /**
-     * @var integer
+     * @var ModelEvent
      */
-    private $eventID;
+    private $event;
 
     /**
      * FyziklaniSubmitsGrid constructor.
-     * @param integer $eventID
+     * @param ModelEvent $event
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      */
-    public function __construct($eventID, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventID = $eventID;
+        $this->event = $event;
         parent::__construct();
     }
 
     /**
-     * @param $presenter BasePresenter
+     * @param BasePresenter $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
 
         $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('ID týmu'));
+        $this->addColumn('e_fyziklani_team_id', _('Id týmu'));
         $this->addColumn('label', _('Úloha'));
         $this->addColumn('points', _('Body'));
         $this->addColumn('room', _('Místnost'));
@@ -63,24 +66,37 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         });
 
         $this->addButton('delete', null)->setClass('btn btn-sm btn-danger')->setLink(function ($row) {
-            return $this->link("delete!", $row->fyziklani_submit_id);
+            return $this->link('delete!', $row->fyziklani_submit_id);
         })->setConfirmationDialog(function () {
-            return _("Opravdu vzít submit úlohy zpět?"); //todo i18n
+            return _('Opravdu vzít submit úlohy zpět?');
         })->setText(_('Smazat'))->setShow(function (\ModelFyziklaniSubmit $row) {
 
             return $row->getTeam()->hasOpenSubmit() && !is_null($row->points);
         });
 
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->eventID)
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event->event_id)
             ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
         $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('e_fyziklani_team_id.name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task.label LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-            }
-        });
+        $dataSource->setFilterCallback($this->getFilterCallBack());
         $this->setDataSource($dataSource);
+    }
+
+    private function getFilterCallBack() {
+        return function (Selection $table, $value) {
+            $l = strlen($value);
+            $code = str_repeat('0', 9 - $l) . strtoupper($value);
+            if (TaskCodePreprocessor::checkControlNumber($code)) {
+                $taskLabel = TaskCodePreprocessor::extractTaskLabel($code);
+                $teamId = TaskCodePreprocessor::extractTeamId($code);
+                $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
+
+            } else {
+                $tokens = preg_split('/\s+/', $value);
+                foreach ($tokens as $token) {
+                    $table->where('e_fyziklani_team_id.name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task.label LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+                }
+            }
+        };
     }
 
     public function handleDelete($id) {

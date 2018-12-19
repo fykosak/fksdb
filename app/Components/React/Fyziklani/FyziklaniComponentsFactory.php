@@ -6,6 +6,7 @@ use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresent
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
+use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -36,19 +37,25 @@ class FyziklaniComponentsFactory {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
+    /**
+     * @var TaskCodeHandlerFactory
+     */
+    private $taskCodeHandlerFactory;
 
     public function __construct(
         \ServiceBrawlRoom $serviceBrawlRoom,
         \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         \ServiceFyziklaniTask $serviceFyziklaniTask,
-        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+        \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        TaskCodeHandlerFactory $taskCodeHandlerFactory
     ) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
         $this->serviceBrawlRoom = $serviceBrawlRoom;
+        $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
     }
 
     public function createResultsView(Container $context, ModelEvent $event) {
@@ -69,5 +76,10 @@ class FyziklaniComponentsFactory {
 
     public function createRoutingEdit(Container $context, ModelEvent $event) {
         return new RoutingEdit($context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+    }
+
+    public function createTaskCodeInput(Container $context, ModelEvent $event) {
+        $handler = $this->taskCodeHandlerFactory->createHandler($event);
+        return new TaskCodeInput($handler, $context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 }

@@ -33,23 +33,32 @@ class Images extends React.Component<IState & IProps, {}> {
             return (<div/>);
         }
         let imgSRC = basePath + 'images/fyziklani/';
+        let label = '';
         if (currentToStart > 300 * 1000) {
             imgSRC += 'nezacalo.svg';
+            label = 'Have not begun yet/Ješte nezačalo';
         } else if (currentToStart > 0) {
             imgSRC += 'brzo.svg';
+            label = 'Will soon begin/Brzo začne';
         } else if (currentToStart > -120 * 1000) {
             imgSRC += 'start.svg';
+            label = 'Start!';
         } else if (currentToEnd > 0) {
             imgSRC += 'fyziklani.svg';
-
+            label = null;
         } else if (currentToEnd > -240 * 1000) {
             imgSRC += 'skoncilo.svg';
+            label = 'Ended/Skončilo';
         } else {
             imgSRC += 'ceka.svg';
+            label = 'Waiting for results/Čeká na výsledky';
         }
+
+        // <img src={imgSRC} alt="" style={{width: '80%'}}/>
+
         return (
-            <div id='imageWP' data-basepath={basePath}>
-                <img src={imgSRC} alt="" style={{width: '80%'}}/>
+            <div className="image-wp" data-basepath={basePath}>
+                {label}
             </div>
         );
     }
