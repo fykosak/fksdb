@@ -39,7 +39,6 @@ class EventBilletedPerson extends BaseGrid {
         $dataSource = new SearchableDataSource($accommodations);
 
         $this->setDataSource($dataSource);
-        // $this->addColumn('name', _('Name'));
         $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             return $model->getPerson()->getFullName();
