@@ -2,6 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
+use EventModule\AccommodationPresenter;
+use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\ModelEventPersonAccommodation;
 use Nette\Utils\Html;
 use SQL\SearchableDataSource;
 
@@ -10,17 +13,19 @@ class EventBilletedPerson extends BaseGrid {
      * @var \ServiceEventPersonAccommodation
      */
     private $serviceEventPersonAccommodation;
+    /**
+     * @var ModelEventAccommodation
+     */
+    private $eventAccommodation;
 
-    private $eventAccommodationId;
-
-    function __construct($eventAccommodationId, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
+    function __construct(ModelEventAccommodation $eventAccommodation, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         parent::__construct();
-        $this->eventAccommodationId = $eventAccommodationId;
+        $this->eventAccommodation = $eventAccommodation;
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
     /**
-     * @param $presenter
+     * @param AccommodationPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
@@ -28,24 +33,23 @@ class EventBilletedPerson extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
+        $accommodations = $this->eventAccommodation->getAccommodated();
 
-        $accommodations = $this->serviceEventPersonAccommodation->getTable()->where('event_accommodation_id', $this->eventAccommodationId);
 
         $dataSource = new SearchableDataSource($accommodations);
 
         $this->setDataSource($dataSource);
-        // $this->addColumn('name', _('Name'));
         $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
-            $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
+            $model = ModelEventPersonAccommodation::createFromTableRow($row);
             return $model->getPerson()->getFullName();
         });
 
         $this->addColumn('status', _('State'))->setRenderer(function ($row) {
-            $model = \FKSDB\ORM\ModelEventPersonAccommodation::createFromTableRow($row);
-            $classNames = ($model->status === \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
+            $model = ModelEventPersonAccommodation::createFromTableRow($row);
+            $classNames = ($model->status === ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
             return Html::el('span')
                 ->addAttributes(['class' => $classNames])
-                ->add((($model->status == \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
+                ->add((($model->status == ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
 
         });
 
@@ -55,7 +59,7 @@ class EventBilletedPerson extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->link('confirmPayment!', $row->event_person_accommodation_id);
             })->setShow(function ($row) {
-                return $row->status !== \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID;
+                return $row->status !== ModelEventPersonAccommodation::STATUS_PAID;
             });
 
         $this->addButton('deletePayment', _('Delete payment'))->setText(_('Delete payment'))
@@ -63,7 +67,7 @@ class EventBilletedPerson extends BaseGrid {
             ->setLink(function ($row) {
                 return $this->link('deletePayment!', $row->event_person_accommodation_id);
             })->setShow(function ($row) {
-                return $row->status == \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID;
+                return $row->status == ModelEventPersonAccommodation::STATUS_PAID;
             });
 
         /*/
@@ -80,32 +84,34 @@ class EventBilletedPerson extends BaseGrid {
                                 return $this->link('deletePaymentAll!', $row->person_id);
                             });
         */
-        $this->addGlobalButton('list')
+        $this->addGlobalButton('list', ['id' => null])
             ->setLabel(_('Zoznam ubytovaní'))
             ->setLink($this->getPresenter()->link('list'));
 
     }
 
     public function handleConfirmPayment($id) {
-        $model = $this->serviceEventPersonAccommodation->findByPrimary($id);
+        $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
+        $model = ModelEventPersonAccommodation::createFromTableRow($row);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
             $this->redirect('this');
             return;
         }
-        $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_PAID]);
+        $model->update(['status' => ModelEventPersonAccommodation::STATUS_PAID]);
         $this->serviceEventPersonAccommodation->save($model);
         $this->redirect('this');
     }
 
     public function handleDeletePayment($id) {
-        $model = $this->serviceEventPersonAccommodation->findByPrimary($id);
+        $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
+        $model = ModelEventPersonAccommodation::createFromTableRow($row);
         if (!$model) {
             $this->flashMessage(_('some bullshit....'));
             $this->redirect('this');
             return;
         }
-        $model->update(['status' => \FKSDB\ORM\ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
+        $model->update(['status' => ModelEventPersonAccommodation::STATUS_WAITING_FOR_PAYMENT]);
         $this->serviceEventPersonAccommodation->save($model);
         $this->redirect('this');
     }

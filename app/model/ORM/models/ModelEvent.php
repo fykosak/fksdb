@@ -43,14 +43,10 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelEventAccommodation[]
+     * @return \Nette\Database\Table\GroupedSelection
      */
-    public function getEventAccommodations(): array {
-        $data = [];
-        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
-            $data[] = ModelEventAccommodation::createFromTableRow($item);
-        }
-        return $data;
+    public function getEventAccommodations() {
+        return $this->related(DbNames::TAB_EVENT_ACCOMMODATION);
     }
 
     /**

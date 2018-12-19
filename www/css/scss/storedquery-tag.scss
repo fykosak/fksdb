@@ -1,0 +1,78 @@
+/* general setting */
+@import "colors";
+@import "mixins/stored-query-tag";
+
+.stored-query-tags a:hover, .stored-query-tags a:focus {
+  text-decoration: none;
+}
+
+.stored-query-tag {
+  color: black;
+  background-color: silver;
+}
+
+/* color palette from D3.js d3.scale.category10() */
+/* style 1 */
+.stored-query-tag-1 {
+  @include stored-query-tag(white, #1f77b4);
+}
+
+/* style 2 */
+.stored-query-tag-2 {
+  @include stored-query-tag(black, #ff7f0e);
+}
+
+/* style 3 */
+.stored-query-tag-3 {
+  @include stored-query-tag(white, #2ca02c)
+}
+
+/* style 4 */
+.stored-query-tag-4 {
+  @include stored-query-tag(white, #d62728);
+}
+
+/* style 5 */
+.stored-query-tag-5 {
+  @include stored-query-tag(white, #9467bd)
+}
+
+/* style 6 */
+.stored-query-tag-6 {
+  @include stored-query-tag(white, #8c564b);
+}
+
+/* style 7 */
+.stored-query-tag-7 {
+  @include stored-query-tag(black, #e377c2);
+}
+
+/* style 8 */
+.stored-query-tag-8 {
+  @include stored-query-tag(black, #cccccc);
+}
+
+/* style 9 */
+.stored-query-tag-9 {
+  @include stored-query-tag(black, #bcbd22)
+}
+
+/* style 10 */
+.stored-query-tag-10 {
+  @include stored-query-tag(black, #17becf)
+}
+
+/* style 11 */
+.stored-query-tag-11 {
+  @include stored-query-tag(white, #000000);
+}
+
+/* style 12 */
+.stored-query-tag-12 {
+  @include stored-query-tag(white, $fykosMainColor);
+}
+
+/* style 13 */
+.stored-query-tag-13 {
+  @include stored-query-tag(white, $vyfukMainColor);
+}

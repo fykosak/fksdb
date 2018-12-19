@@ -82,7 +82,7 @@ class PersonFactory extends AbstractFactory {
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getEvent();
-        $this->referencedEventPersonFactory->setEventId($event->event_id);
+        $this->referencedEventPersonFactory->setEvent($event);
         $acYear = $event->getAcYear();
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);

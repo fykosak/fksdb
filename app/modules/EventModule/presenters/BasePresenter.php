@@ -97,7 +97,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         if (!$this->eventId) {
             $this->redirect('Dispatch:default');
         }
-        return $this->eventId;
+        return +$this->eventId;
     }
 
     /**
