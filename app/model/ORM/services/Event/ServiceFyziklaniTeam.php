@@ -26,12 +26,12 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $result ?: null;
     }
 
-    public function teamExist($teamId, $eventId) {
+    public function teamExist(int $teamId, ModelEvent $event) {
         /**
          * @var $team ModelFyziklaniTeam
          */
         $team = $this->findByPrimary($teamId);
-        return $team && $team->event_id == $eventId;
+        return $team && $team->event_id == $event->event_id;
     }
 
     /**

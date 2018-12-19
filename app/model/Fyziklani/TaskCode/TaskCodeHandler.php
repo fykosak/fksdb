@@ -52,10 +52,10 @@ class TaskCodeHandler {
     /**
      * @param string $fullCode
      * @param int $points
-     * @return array
+     * @return string
      * @throws TaskCodeException
      */
-    public function preProcess(string $fullCode, int $points) {
+    public function preProcess(string $fullCode, int $points): string {
         $response = new \ReactResponse();
         $response->setAct('submit');
 
@@ -70,10 +70,10 @@ class TaskCodeHandler {
     /**
      * @param $fullCode
      * @param $points
-     * @return array
+     * @return string
      * @throws \Exception
      */
-    private function savePoints($fullCode, $points) {
+    private function savePoints($fullCode, $points): string {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
         $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event->event_id);
@@ -119,7 +119,7 @@ class TaskCodeHandler {
      * @return bool
      * @throws TaskCodeException
      */
-    public function checkTaskCode($taskCode) {
+    public function checkTaskCode($taskCode): bool {
         /** skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($taskCode)) {
             throw new TaskCodeException(_('Chybně zadaný kód úlohy.'));
