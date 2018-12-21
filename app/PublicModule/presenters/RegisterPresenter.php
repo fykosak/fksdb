@@ -382,7 +382,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if ($contest) {
             return [$contest->getContestSymbol(), 'dark'];
         }
-        return null;
+        return parent::getNavBarVariant();
     }
 
     public function getNavRoot() {
