@@ -27,7 +27,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\ModelEvent
+     * @var ModelEvent
      */
     private $modelEvent;
 
@@ -47,7 +47,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullname(), $model->getEvent()->name));
-    $this->setIcon('fa fa-user');
+        $this->setIcon('fa fa-user');
     }
 
     public function titleCreate() {
@@ -73,10 +73,9 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     public function actionDelete($id) {
         $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
-        if($success){
+        if ($success) {
             $this->flashMessage(_('Organizátor akce smazán.'), self::FLASH_SUCCESS);
-        }
-        else{
+        } else {
             $this->flashMessage(_('Nepodařilo se smazat organizátora akce.'), self::FLASH_ERROR);
         }
         $this->redirect('list');
@@ -87,11 +86,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
-    protected function createComponentGrid($name) {
+    protected function createComponentGrid($name): EventOrgsGrid {
         return new EventOrgsGrid($this->eventId, $this->serviceEventOrg);
     }
 
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup(null);
         $container->addText('note', _('Poznámka'));
@@ -99,7 +98,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    protected function getORMService() {
+    protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
 
@@ -120,12 +119,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     *
      * @return ModelEvent
      */
-    private function getEvent() {
-        if(!$this->modelEvent) {
-            $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
+    private function getEvent(): ModelEvent {
+        if (!$this->modelEvent) {
+            $this->modelEvent = ModelEvent::createFromTableRow($this->serviceEvent->findByPrimary($this->eventId));
         }
         return $this->modelEvent;
     }

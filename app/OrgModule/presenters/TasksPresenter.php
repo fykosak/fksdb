@@ -78,7 +78,7 @@ class TasksPresenter extends BasePresenter {
         $this->setIcon('fa fa-upload');
     }
 
-    protected function createComponentSeriesForm() {
+    protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -92,7 +92,7 @@ class TasksPresenter extends BasePresenter {
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
         $form->addSelect('series', _('Série'))
-                ->setItems($seriesItems, false);
+            ->setItems($seriesItems, false);
 
         // File upload
         $language = $form->addSelect('lang', _('Jazyk'));

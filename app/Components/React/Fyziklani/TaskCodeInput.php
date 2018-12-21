@@ -22,8 +22,8 @@ class TaskCodeInput extends FyziklaniModule {
 
     public function getData(): string {
         return Json::encode([
-            'tasks' => $this->serviceFyziklaniTask->getTasks($this->event->event_id),
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->event->event_id),
+            'tasks' => $this->serviceFyziklaniTask->getTasks($this->event),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsArray($this->event),
         ]);
     }
 

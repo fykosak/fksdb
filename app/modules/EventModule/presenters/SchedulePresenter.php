@@ -20,6 +20,11 @@ class SchedulePresenter extends BasePresenter {
         $this->setIcon('fa fa-calendar-check-o');
     }
 
+    /**
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function hasEventSchedule() {
         try {
             $this->getEvent()->getParameter('schedule');
@@ -29,6 +34,10 @@ class SchedulePresenter extends BasePresenter {
         return true;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
 
         if ($this->hasEventSchedule()) {
@@ -37,6 +46,10 @@ class SchedulePresenter extends BasePresenter {
         return $this->setAuthorized(false);
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         $query = $this->connection->query('SELECT p.name,p.person_id,apps.type, group_concat(DISTINCT apps.team separator \', \') AS `team`,schedule
 FROM v_person p
@@ -85,6 +98,5 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
         $this->template->participants = $results;
         $this->template->schedule = $schedule;
         $this->template->stats = $stats;
-
     }
 }

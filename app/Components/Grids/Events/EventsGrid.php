@@ -31,10 +31,11 @@ class EventsGrid extends BaseGrid {
 
     /**
      * @param OrgPresenter $presenter
-     * @throws InvalidLinkException
+     * @throws BadRequestException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
-     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

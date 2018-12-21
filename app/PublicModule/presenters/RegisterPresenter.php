@@ -374,7 +374,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
          */
@@ -382,7 +382,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if ($contest) {
             return [$contest->getContestSymbol(), 'dark'];
         }
-        return null;
+        return parent::getNavBarVariant();
     }
 
     public function getNavRoot() {

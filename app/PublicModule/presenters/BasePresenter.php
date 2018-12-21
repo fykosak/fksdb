@@ -99,7 +99,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $this->contestant;
     }
 
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
          */
@@ -109,6 +109,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         }
         return [null, null];
     }
+
     public function getNavRoot() {
         return 'public.dashboard.default';
     }

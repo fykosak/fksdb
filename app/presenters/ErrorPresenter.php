@@ -8,7 +8,7 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         return ['error', 'dark'];
     }
 
@@ -24,6 +24,7 @@ class ErrorPresenter extends BasePresenter {
     /**
      * @param  Exception
      * @return void
+     * @throws \Nette\Application\AbortException
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.

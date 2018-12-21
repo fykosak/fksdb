@@ -94,6 +94,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     protected function isEventFyziklani(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -106,6 +107,7 @@ abstract class BasePresenter extends EventBasePresenter {
     public function startup() {
         parent::startup();
         if (!$this->isEventFyziklani()) {
+
             $this->flashMessage('Event nieje fyziklani', 'warning');
             $this->redirect(':Event:Dashboard:default');
         }
@@ -116,19 +118,18 @@ abstract class BasePresenter extends EventBasePresenter {
         $brawlChooser->setEvent($this->getEvent());
     }
 
-    public function getSubtitle() {
-        return $this->getEvent()->name;
-       // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
-    }
-
     /**
      * @return array
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
-    protected function getRooms() {
+    protected function getRooms(): array {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
+    /**
+     * @return null|string
+     */
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
     }
