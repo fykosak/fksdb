@@ -95,7 +95,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $languageChooser->getLanguage();
     }
 
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
          */
@@ -106,9 +106,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return [null, null];
     }
 
-    public function getSubtitle() {
+    public function getSubtitle(): string {
         return sprintf(_('%d. ročník'), $this->year);
     }
+
     public function getNavRoot() {
         return 'org.dashboard.default';
     }

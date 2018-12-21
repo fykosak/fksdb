@@ -31,7 +31,10 @@ class TaskPresenter extends BasePresenter {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'taskImport')));
     }
 
-    public function createComponentTaskImportForm() {
+    /**
+     * @return FormControl
+     */
+    public function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -49,10 +52,11 @@ class TaskPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEventId(), $this->serviceFyziklaniTask);
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->serviceFyziklaniTask);
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -61,7 +65,12 @@ class TaskPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    public function createComponentTaskGrid() {
-        return new FyziklaniTaskGrid($this->getEventId(), $this->serviceFyziklaniTask);
+    /**
+     * @return FyziklaniTaskGrid
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function createComponentTaskGrid(): FyziklaniTaskGrid {
+        return new FyziklaniTaskGrid($this->getEvent(), $this->serviceFyziklaniTask);
     }
 }

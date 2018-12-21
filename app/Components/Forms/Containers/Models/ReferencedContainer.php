@@ -133,6 +133,7 @@ class ReferencedContainer extends ContainerWithOptions {
      *
      * @staticvar array $searchComponents
      * @param boolean $value
+     * @throws \Nette\Utils\RegexpException
      */
     public function setSearchButton($value) {
         static $searchComponents = array(

@@ -152,12 +152,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Loading assets
      * ****************************** */
 
-    protected function createComponentJsLoader($name) {
+    protected function createComponentJsLoader() {
         $component = new JavaScriptLoader();
         return $component;
     }
 
-    protected function createComponentCssLoader($name) {
+    protected function createComponentCssLoader() {
         $component = new StylesheetLoader();
         return $component;
     }
@@ -294,24 +294,24 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return array
      */
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         return [null, null];
     }
 
-    public function getSubtitle() {
-        return $this->subtitle;
+    public function getSubtitle(): string {
+        return $this->subtitle ?: '';
     }
 
     protected function putIntoBreadcrumbs() {
         $this['breadcrumbs']->setBacklink($this->getRequest());
     }
 
-    protected function createComponentBreadcrumbs($name) {
+    protected function createComponentBreadcrumbs() {
         $component = $this->breadcrumbsFactory->create();
         return $component;
     }
 
-    protected function createComponentNavigation($name) {
+    protected function createComponentNavigation() {
         $this->navigationControl->setParent();
         return $this->navigationControl;
     }

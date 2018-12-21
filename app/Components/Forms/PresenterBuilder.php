@@ -22,15 +22,16 @@ class PresenterBuilder {
         $this->presenterFactory = $presenterFactory;
     }
 
-        /**
+    /**
      * Provides an instance of a presenter prepared for calling action*, render*, etc. methods.
      *
      * @param string $presenterName
      * @param string $action
      * @param string $params
-     * @param string $baseParams
+     * @param array $baseParams
      * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
+     * @throws \Nette\Application\BadRequestException
      */
     public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
         if ($newInstance) {

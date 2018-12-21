@@ -132,3 +132,8 @@ html, body {
   -webkit-column-count: 3;
   column-count: 2;
 }
+
+.state-timeline .line {
+  height: 1px;
+  border: solid 2px;
+}

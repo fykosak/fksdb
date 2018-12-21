@@ -6,6 +6,7 @@ use AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
 use AuthenticationPresenter;
 use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\ModelPerson;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -153,7 +154,7 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @return IIdentity|NULL
+     * @return ModelLogin|NULL
      */
     public function getIdentity() {
         $local = parent::getIdentity();

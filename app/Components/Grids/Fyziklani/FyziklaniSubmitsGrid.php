@@ -74,7 +74,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             return $row->getTeam()->hasOpenSubmit() && !is_null($row->points);
         });
 
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event->event_id)
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)
             ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name,e_fyziklani_team_id.room');
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback($this->getFilterCallBack());

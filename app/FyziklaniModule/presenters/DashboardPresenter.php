@@ -5,12 +5,13 @@ namespace FyziklaniModule;
 class DashboardPresenter extends BasePresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani dashboard'));
+        $this->setTitle(_('Herní systém Fyziklání'));
         $this->setIcon('fa fa-dashboard');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function authorizedDefault() {
         if (!$this->isEventFyziklani()) {
