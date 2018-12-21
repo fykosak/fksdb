@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import Powered from '../../../shared/powered';
 import {
     IRoom,
@@ -56,7 +57,7 @@ const mapStateToProps = (): IState => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

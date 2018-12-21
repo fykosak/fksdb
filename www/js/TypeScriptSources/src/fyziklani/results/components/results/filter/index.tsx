@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { config } from '../../../../../config';
 import { setNextFilter } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
@@ -26,7 +27,7 @@ class AutoFilter extends React.Component<IState, {}> {
     private async scroll() {
         const {autoSwitch} = this.props;
         if (autoSwitch) {
-            await  window.scroll(0, 0);
+            await window.scroll(0, 0);
             $(document).scrollTop(0);
             const {onSetNextFilter} = this.props;
             const documentHeight = $(document).height();
@@ -51,7 +52,7 @@ class AutoFilter extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onSetNextFilter: () => dispatch(setNextFilter()),
     };

@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../i18n/i18n';
 import { changeData } from '../../../input-connector/actions';
 import PriceDisplay from '../../../shared/components/displays/price';
@@ -57,7 +58,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore, ownProps: IProps): ISta
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
     return {
         setSchedule: (id: number) => dispatch(changeData(ownProps.blockName, id)),
     };

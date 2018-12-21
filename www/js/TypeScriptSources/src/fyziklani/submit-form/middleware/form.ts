@@ -1,5 +1,5 @@
-import { IProps } from '../components/form-section';
 import { FormErrors } from 'redux-form';
+import { IProps } from '../components/form-section';
 
 export const getFullCode = (code): string => {
     const length = code.length;

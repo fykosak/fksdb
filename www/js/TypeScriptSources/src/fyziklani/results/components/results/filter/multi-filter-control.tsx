@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { IRoom } from '../../../../helpers/interfaces';
 import {
@@ -28,7 +29,7 @@ interface IState {
 class MultiFilterControl extends React.Component<IState, {}> {
 
     public render() {
-        const {categories, filters, index, rooms,  onRemoveFilter, onAddFilter} = this.props;
+        const {categories, filters, index, rooms, onRemoveFilter, onAddFilter} = this.props;
         const availableFilters = createFilters(rooms, categories);
 
         return <>
@@ -65,7 +66,7 @@ class MultiFilterControl extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onAddFilter: (filter: Filter) => dispatch(addFilter(filter)),
         onRemoveFilter: (filter: Filter) => dispatch(removeFilter(filter)),

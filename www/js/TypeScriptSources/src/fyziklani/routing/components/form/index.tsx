@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { ITeam } from '../../../helpers/interfaces/';
 import { saveTeams } from '../../actions/save';
 import { IFyziklaniRoutingStore } from '../../reducers/';
@@ -34,7 +35,7 @@ class Form extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
     const {accessKey} = ownProps;
     return {
         onSaveRouting: (data: ITeam[]) => saveTeams(accessKey, dispatch, data),
