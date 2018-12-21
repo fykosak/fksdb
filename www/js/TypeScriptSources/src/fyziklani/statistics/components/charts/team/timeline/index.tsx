@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { lang } from '../../../../../../i18n/i18n';
+import Card from '../../../../../../shared/components/card';
 import Legend from '../legend';
 import Chart from './chart';
-import Card from '../../../../../../shared/components/card';
 
 export default class TimeLine extends React.Component<{}, {}> {
     public render() {

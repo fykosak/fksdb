@@ -1,4 +1,7 @@
-import { Dispatch } from 'react-redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import {
     submitFail,
     submitStart,
@@ -63,7 +66,7 @@ export async function uploadFile<F, D, T>(
 
 export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= any>(
     accessKey: string,
-    dispatch: Dispatch<TStore>,
+    dispatch: Dispatch<Action>,
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
@@ -83,7 +86,7 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= an
 
 export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= any>(
     accessKey: string,
-    dispatch: Dispatch<TStore>,
+    dispatch: Dispatch<Action>,
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,

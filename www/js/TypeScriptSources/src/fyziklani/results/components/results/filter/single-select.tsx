@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
+import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
 import { setFilter } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
 import { Filter } from './filter';
 import FilterComponent from './filter-component';
 import { createFilters } from './filters';
-import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
 
 interface IState {
     filters?: Filter[];
@@ -38,7 +39,7 @@ class Select extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
     };

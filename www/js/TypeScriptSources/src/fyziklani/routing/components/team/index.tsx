@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { ITeam } from '../../../helpers/interfaces/';
 import {
     dragEnd,
@@ -70,7 +71,7 @@ const mapStateToProps = (state: IFyziklaniRoutingStore, ownProps: IProps): IStat
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: (teamId) => dispatch(dragStart<IRoutingDragNDropData>({teamId})),
