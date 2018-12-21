@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { lang } from '../../../i18n/i18n';
 import { changeData } from '../../../input-connector/actions';
 import { IPaymentAccommodationItem } from '../interfaces';
 import { IPaymentSelectStore } from '../reducer';
-import { lang } from '../../../i18n/i18n';
 
 interface IProps {
     item?: IPaymentAccommodationItem;
@@ -41,7 +41,7 @@ class Row extends React.Component<IProps & IState, {}> {
 // <small className={'ml-3'}>{lang.getText('Price')}: <PriceDisplay price={price}/></small>
 // </span>
 
-const mapDispatchToProps = (dispatch: Dispatch<IPaymentSelectStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch): IState => {
     return {
         onChange: (date, value) => dispatch(changeData(date, value)),
     };

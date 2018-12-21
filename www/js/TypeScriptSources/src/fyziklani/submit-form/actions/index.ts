@@ -1,4 +1,7 @@
-import { Dispatch } from 'react-redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { reset } from 'redux-form';
 import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
 import { IResponse } from '../../../fetch-api/middleware/interfaces';
@@ -13,7 +16,7 @@ interface ISubmitFormRequest {
 
 export const ACCESS_KEY = '@fyziklani-submit-form';
 
-export const submitStart = (dispatch: Dispatch<IFyziklaniSubmitStore>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
+export const submitStart = (dispatch: Dispatch<Action>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
     const data = {
         act: 'submit',
         requestData: {

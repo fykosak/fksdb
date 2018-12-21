@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Row from './row';
 import { IPaymentAccommodationItem } from '../interfaces';
+import Row from './row';
 
 interface IProps {
     items: IPaymentAccommodationItem[];

@@ -180,6 +180,16 @@
   border-color: #d7392e;
 }
 
+.fyziklani-headline {
+  color: black;
+  font-weight: bold;
+}
+
+.fyziklani-headline-color {
+  color: #f44336;
+  font-weight: bold;
+}
+
 .inbox-field {
   display: block;
   width: 100px;

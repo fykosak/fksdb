@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { lang } from '../../../../i18n/i18n';
 import { setHardVisible } from '../actions/';
 import { IFyziklaniOptionsState } from '../reducers';
-import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     hardVisible?: boolean;
