@@ -149,7 +149,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return int
      */
-    public function getEventId() {
+    public function getEventId(): int {
         if (!$this->eventId) {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
