@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use DbNames;
 use Events\Model\Holder\Holder;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -83,11 +84,15 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelFyziklaniGameSetup|null
+     * @return ModelFyziklaniGameSetup
+     * @throws NotSetGameParametersException
      */
-    public function getFyziklaniGameSetup() {
+    public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
-        return $gameSetup ? ModelFyziklaniGameSetup::createFromTableRow($gameSetup) : null;
+        if (!$gameSetup) {
+            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+        }
+        return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
     }
 
 }
