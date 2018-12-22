@@ -95,7 +95,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentResultsView(): ResultsView {
-        return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createResultsView($this->getEvent());
     }
 
     /**
@@ -104,7 +104,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentResultsPresentation(): ResultsPresentation {
-        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->getEvent());
     }
 
     /**
@@ -113,7 +113,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTeamStatistics(): TeamStatistics {
-        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->getEvent());
     }
 
     /**
@@ -122,6 +122,6 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTaskStatistics(): TaskStatistics {
-        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->getEvent());
     }
 }

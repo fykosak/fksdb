@@ -7,7 +7,6 @@ use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 use ORM\Services\Events\ServiceFyziklaniTeam;
@@ -76,13 +75,11 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param Container $container
      * @param ModelEvent $event
      * @return TaskCodeInput
      */
-    public function createEntryForm(Container $container, ModelEvent $event): TaskCodeInput {
-        $control = $this->fyziklaniComponentsFactory->createTaskCodeInput($container, $event);
-        return $control;
+    public function createEntryForm(ModelEvent $event): TaskCodeInput {
+        return $this->fyziklaniComponentsFactory->createTaskCodeInput($event);
     }
 
     /**
