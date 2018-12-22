@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\EventPayment;
+namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Transitions\Machine;
@@ -16,12 +16,12 @@ use NiftyGrid\DataSource\NDataSource;
  *
  * @author Mišo <miso@fykoscz>
  */
-class OrgEventPaymentGrid extends BaseGrid {
+class OrgPaymentGrid extends BaseGrid {
 
     /**
      * @var \ServicePayment
      */
-    private $serviceEventPayment;
+    private $servicePayment;
     /**
      * @var ModelEvent
      */
@@ -35,7 +35,7 @@ class OrgEventPaymentGrid extends BaseGrid {
     public function __construct(Machine $machine, \ServicePayment $servicePayment, ModelEvent $event) {
         parent::__construct();
         $this->event = $event;
-        $this->serviceEventPayment = $servicePayment;
+        $this->servicePayment = $servicePayment;
         $this->machine = $machine;
     }
 
@@ -44,7 +44,7 @@ class OrgEventPaymentGrid extends BaseGrid {
         //
         // data
         //
-        $schools = $this->serviceEventPayment->where('event_id', $this->event->event_id);
+        $schools = $this->servicePayment->where('event_id', $this->event->event_id);
 
         $dataSource = new NDataSource($schools);
         $this->setDataSource($dataSource);
@@ -101,7 +101,7 @@ class OrgEventPaymentGrid extends BaseGrid {
     }
 
     public function handleTransition(int $id, string $transition) {
-        $row = $this->serviceEventPayment->findByPrimary($id);
+        $row = $this->servicePayment->findByPrimary($id);
         if (!$row) {
             $this->flashMessage(_('Payment doesnt exists.'));
             return;

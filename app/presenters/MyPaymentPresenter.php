@@ -1,15 +1,15 @@
 <?php
 
-use FKSDB\Components\Grids\EventPayment\MyPaymentGrid;
+use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 
 class MyPaymentPresenter extends AuthenticatedPresenter {
     /**
      * @var \ServicePayment
      */
-    private $serviceEventPayment;
+    private $servicePayment;
 
-    public function injectServiceEventPayment(\ServicePayment $serviceEventPayment) {
-        $this->serviceEventPayment = $serviceEventPayment;
+    public function injectServicePayment(\ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
     }
 
     public function titleDefault() {
@@ -18,7 +18,7 @@ class MyPaymentPresenter extends AuthenticatedPresenter {
     }
 
     public function createComponentMyPaymentGrid(): MyPaymentGrid {
-        return new MyPaymentGrid($this->serviceEventPayment);
+        return new MyPaymentGrid($this->servicePayment);
     }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\EventPayment;
+namespace FKSDB\Components\Forms\Factories\Payment;
 
-use FKSDB\EventPayment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\Price;
 use Nette\Forms\Controls\SelectBox;
 
 class CurrencyField extends SelectBox {

@@ -26,11 +26,12 @@ services:
         class: FKSDB\Logging\FlashDumpFactory(%logToFlash%)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-
-    paymentTransitionsFactory: FKSDB\EventPayment\Transition\TransitionsFactory
-    machineFactory: FKSDB\EventPayment\Transition\MachineFactory
-    priceCalculatorFactory: FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory
-    symbolGeneratorFactory: FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory
+#transition
+    machineFactory: FKSDB\Transitions\MachineFactory
+    transitionsFactory: FKSDB\Transitions\TransitionsFactory
+    #payment
+    priceCalculatorFactory: FKSDB\Payment\PriceCalculator\PriceCalculatorFactory
+    symbolGeneratorFactory: FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory
 
 
 factories:

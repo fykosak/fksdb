@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\EventPayment;
+namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
@@ -10,7 +10,7 @@ use Nette\Templating\FileTemplate;
 /**
  * Class StateDisplayControl
  * @property FileTemplate $template
- * @package FKSDB\Components\Forms\Controls\EventPayment
+ * @package FKSDB\Components\Forms\Controls\Payment
  */
 class StateDisplayControl extends Control {
     /**

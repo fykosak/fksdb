@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\EventPayment;
+namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Payment\PaymentStateLabel;
-use FKSDB\EventPayment\PriceCalculator\Price;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
+use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -13,7 +13,7 @@ use Nette\Templating\FileTemplate;
 
 /**
  * Class DetailControl
- * @package FKSDB\Components\Forms\Controls\EventPayment
+ * @package FKSDB\Components\Forms\Controls\Payment
  * @property FileTemplate $template
  */
 class DetailControl extends Control {

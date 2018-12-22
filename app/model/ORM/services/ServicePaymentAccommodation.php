@@ -5,8 +5,8 @@ namespace FKSDB\ORM\Services;
 
 use AbstractServiceSingle;
 use DbNames;
-use FKSDB\EventPayment\Handler\DuplicateAccommodationPaymentException;
-use FKSDB\EventPayment\Handler\EmptyDataException;
+use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\ORM\ModelPayment;
 use Nette\ArrayHash;
 use Nette\Diagnostics\Debugger;

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
-use FKSDB\EventPayment\Transition\Transitions\Fyziklani13Payment;
+use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
+use FKSDB\Payment\Transition\Transitions\Fyziklani13Payment;
 use FKSDB\ORM\ModelEvent;
 use Nette\NotImplementedException;
 

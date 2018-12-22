@@ -1,17 +1,17 @@
 <?php
 
 
-namespace FKSDB\Components\Forms\Controls\EventPayment;
+namespace FKSDB\Components\Forms\Controls\Payment;
 
 
-use FKSDB\EventPayment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\Price;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
  * Class PriceControl
- * @package FKSDB\Components\Forms\Controls\EventPayment
+ * @package FKSDB\Components\Forms\Controls\Payment
  * @property FileTemplate $template
  */
 class PriceControl extends Control {

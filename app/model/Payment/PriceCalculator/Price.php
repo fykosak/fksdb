@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\EventPayment\PriceCalculator;
+namespace FKSDB\Payment\PriceCalculator;
 
 
 use Nette\OutOfRangeException;

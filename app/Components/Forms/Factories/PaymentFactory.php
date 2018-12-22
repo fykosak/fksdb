@@ -6,10 +6,10 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
-use FKSDB\Components\Forms\Controls\EventPayment\PaymentSelectField;
-use FKSDB\Components\Forms\Factories\EventPayment\CurrencyField;
-use FKSDB\EventPayment\Transition\PaymentMachine;
+use FKSDB\Components\Forms\Controls\Payment\DetailControl;
+use FKSDB\Components\Forms\Controls\Payment\PaymentSelectField;
+use FKSDB\Components\Forms\Factories\Payment\CurrencyField;
+use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Form;

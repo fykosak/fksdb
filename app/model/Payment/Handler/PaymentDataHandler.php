@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventPayment\Handler;
+namespace FKSDB\Payment\Handler;
 
 use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPaymentAccommodation;

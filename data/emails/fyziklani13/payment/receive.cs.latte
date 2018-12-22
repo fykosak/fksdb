@@ -1,12 +1,8 @@
 <div>
-    Platba {$model->getPaymentId()} vytvorená.
+    Platba {$model->getPaymentId()} prijatá
     Platba vo výške {$model->getPrice()->__toString()}
-    <div>
-        {foreach $model->getRelatedPersonAccommodation() as $item}
-            <div>
-                {$item->getLabel()}
-            </div>
-        {/foreach}
-    </div>
+
+        {include './items.latte'}
+
 
 </div>

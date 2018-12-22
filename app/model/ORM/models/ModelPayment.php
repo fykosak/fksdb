@@ -3,9 +3,9 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
-use FKSDB\EventPayment\PriceCalculator\Price;
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\PriceCalculator;
+use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;

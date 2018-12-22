@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventPayment\SymbolGenerator;
+namespace FKSDB\Payment\SymbolGenerator;
 
 use FKSDB\ORM\ModelPayment;
 
@@ -8,10 +8,10 @@ abstract class AbstractSymbolGenerator {
     /**
      * @var \ServicePayment;
      */
-    protected $serviceEventPayment;
+    protected $servicePayment;
 
-    public function __construct(\ServicePayment $serviceEventPayment) {
-        $this->serviceEventPayment = $serviceEventPayment;
+    public function __construct(\ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
     }
 
     /**

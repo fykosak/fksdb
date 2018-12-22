@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\EventPayment\Handler;
+namespace FKSDB\Payment\Handler;
 
 
 class DuplicateAccommodationPaymentException extends \Exception {

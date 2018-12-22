@@ -3,15 +3,15 @@
 namespace EventModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Controls\EventPayment\DetailControl;
+use FKSDB\Components\Forms\Controls\Payment\DetailControl;
 use FKSDB\Components\Forms\Factories\PaymentFactory;
-use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
-use FKSDB\EventPayment\Handler\DuplicateAccommodationPaymentException;
-use FKSDB\EventPayment\Handler\EmptyDataException;
-use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
+use FKSDB\Payment\Handler\EmptyDataException;
+use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
-use FKSDB\EventPayment\Transition\PaymentMachine;
+use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use Nette\Application\UI\Form;
@@ -38,7 +38,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @var \ServicePayment
      */
-    private $serviceEventPayment;
+    private $servicePayment;
 
     /**
      * @var PaymentFactory
@@ -54,8 +54,8 @@ class PaymentPresenter extends BasePresenter {
      */
     private $servicePaymentAccommodation;
 
-    public function injectServiceEventPayment(\ServicePayment $serviceEventPayment) {
-        $this->serviceEventPayment = $serviceEventPayment;
+    public function injectServicePayment(\ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
     }
 
     public function injectServicePaymentAccommodation(ServicePaymentAccommodation $servicePaymentAccommodation) {
@@ -66,7 +66,7 @@ class PaymentPresenter extends BasePresenter {
         $this->machineFactory = $machineFactory;
     }
 
-    public function injectEventPaymentFactory(PaymentFactory $eventPaymentFactory) {
+    public function injectPaymentFactory(PaymentFactory $eventPaymentFactory) {
         $this->eventPaymentFactory = $eventPaymentFactory;
     }
 
@@ -133,7 +133,7 @@ class PaymentPresenter extends BasePresenter {
      */
     private function getModel(): ModelPayment {
         if (!$this->model) {
-            $row = $this->serviceEventPayment->findByPrimary($this->id);
+            $row = $this->servicePayment->findByPrimary($this->id);
             $this->model = ModelPayment::createFromTableRow($row);
             $this->model->getRelatedPersonAccommodation();
         }
@@ -195,14 +195,14 @@ class PaymentPresenter extends BasePresenter {
         /**
          * @var $model ModelPayment
          */
-        $model = $this->serviceEventPayment->createNew([
+        $model = $this->servicePayment->createNew([
             'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
             'event_id' => $this->getEvent()->event_id,
 
             'state' => null,
             'currency' => $values->currency,
         ]);
-        $this->serviceEventPayment->save($model);
+        $this->servicePayment->save($model);
 
         try {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
@@ -339,12 +339,12 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return OrgEventPaymentGrid
+     * @return OrgPaymentGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    protected function createComponentOrgGrid(): OrgEventPaymentGrid {
-        return new OrgEventPaymentGrid($this->getMachine(), $this->serviceEventPayment, $this->getEvent());
+    protected function createComponentOrgGrid(): OrgPaymentGrid {
+        return new OrgPaymentGrid($this->getMachine(), $this->servicePayment, $this->getEvent());
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\EventPayment;
+namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelPayment;
@@ -11,12 +11,12 @@ class MyPaymentGrid extends BaseGrid {
     /**
      * @var \ServicePayment
      */
-    private $serviceEventPayment;
+    private $servicePayment;
 
-    function __construct(\ServicePayment $serviceEventPayment) {
+    function __construct(\ServicePayment $servicePayment) {
         parent::__construct();
 
-        $this->serviceEventPayment = $serviceEventPayment;
+        $this->servicePayment = $servicePayment;
     }
 
     /**
@@ -27,7 +27,7 @@ class MyPaymentGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $payments = $this->serviceEventPayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id)->order('payment_id DESC');
+        $payments = $this->servicePayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id)->order('payment_id DESC');
 
         $dataSource = new NDataSource($payments);
         $this->setDataSource($dataSource);

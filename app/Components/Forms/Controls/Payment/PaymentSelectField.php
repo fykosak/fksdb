@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\Components\Forms\Controls\EventPayment;
+namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;

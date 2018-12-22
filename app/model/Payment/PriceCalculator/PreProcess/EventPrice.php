@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\EventPayment\PriceCalculator\PreProcess;
+namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\EventPayment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
 use FKSDB\ORM\ModelPayment;

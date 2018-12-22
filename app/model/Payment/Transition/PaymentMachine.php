@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\EventPayment\Transition;
+namespace FKSDB\Payment\Transition;
 
-use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
-use FKSDB\EventPayment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\Payment\PriceCalculator\PriceCalculator;
+use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Transitions\Machine;
 
 class PaymentMachine extends Machine {

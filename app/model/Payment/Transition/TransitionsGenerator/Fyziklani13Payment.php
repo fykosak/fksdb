@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\EventPayment\Transition\Transitions;
+namespace FKSDB\Payment\Transition\Transitions;
 
-use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
-use FKSDB\EventPayment\Transition\PaymentMachine;
+use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
+use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;

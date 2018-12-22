@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\EventPayment\SymbolGenerator;
+namespace FKSDB\Payment\SymbolGenerator;
 
 
 class AlreadyGeneratedSymbolsException extends \Exception {

@@ -1,0 +1,7 @@
+<div>
+    {foreach $model->getRelatedPersonAccommodation() as $item}
+        <div>
+            {$item->getLabel()}
+        </div>
+    {/foreach}
+</div>
