@@ -6,6 +6,8 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
@@ -52,6 +54,18 @@ abstract class BasePresenter extends EventBasePresenter {
      * @var FyziklaniComponentsFactory
      */
     protected $fyziklaniComponentsFactory;
+    /**
+     * @var
+     */
+    protected $serviceFyziklaniGameSetup;
+    /**
+     * @var ModelFyziklaniGameSetup
+     */
+    private $gameSetup;
+
+    public function injectServiceFyziklaniGameSetup(ServiceFyziklaniGameSetup $serviceFyziklaniGameSetup) {
+        $this->serviceFyziklaniGameSetup = $serviceFyziklaniGameSetup;
+    }
 
 
     public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
@@ -107,7 +121,6 @@ abstract class BasePresenter extends EventBasePresenter {
     public function startup() {
         parent::startup();
         if (!$this->isEventFyziklani()) {
-
             $this->flashMessage('Event nieje fyziklani', 'warning');
             $this->redirect(':Event:Dashboard:default');
         }
@@ -123,13 +136,14 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    protected function getRooms(): array {
+    protected function getRooms() {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
-    /**
-     * @return null|string
-     */
+    /*  public function getNavBarVariant() {
+          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
+      }*/
+
     public function getNavRoot() {
         return 'fyziklani.dashboard.default';
     }
@@ -142,6 +156,22 @@ abstract class BasePresenter extends EventBasePresenter {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }
         return $this->eventId;
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    protected function getGameSetup(): ModelFyziklaniGameSetup {
+        if (!$this->gameSetup) {
+            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            if (!$gameSetup) {
+                throw new BadRequestException(_('Herné paramtre niesu nastavené'));
+            }
+            $this->gameSetup = $gameSetup;
+        }
+        return $this->gameSetup;
     }
 
 }
