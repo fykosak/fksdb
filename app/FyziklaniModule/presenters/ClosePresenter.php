@@ -48,24 +48,43 @@ class ClosePresenter extends BasePresenter {
          * @var $button Button
          */
         if (!$this->isReadyToClose('A')) {
-            $button = $this['closeCategoryAForm']->getForm()['send'];
-            $button->setDisabled();
+            $control = $this['closeCategoryAForm'];
+            if ($control instanceof FormControl) {
+                $button = $control->getForm()['send'];
+                $button->setDisabled();
+            }
         }
         if (!$this->isReadyToClose('B')) {
-            $button = $this['closeCategoryBForm']->getForm()['send'];
-            $button->setDisabled();
+            $control = $this['closeCategoryBForm'];
+
+            if ($control instanceof FormControl) {
+                $button = $control->getForm()['send'];
+                $button->setDisabled();
+            }
         }
         if (!$this->isReadyToClose('C')) {
-            $button = $this['closeCategoryCForm']->getForm()['send'];
-            $button->setDisabled();
+            $control = $this['closeCategoryCForm'];
+
+            if ($control instanceof FormControl) {
+                $button = $control->getForm()['send'];
+                $button->setDisabled();
+            }
         }
         if (!$this->isReadyToClose('F')) {
-            $button = $this['closeCategoryFForm']->getForm()['send'];
-            $button->setDisabled();
+            $control = $this['closeCategoryFForm'];
+
+            if ($control instanceof FormControl) {
+                $button = $control->getForm()['send'];
+                $button->setDisabled();
+            }
         }
         if (!$this->isReadyToClose()) {
-            $button = $this['closeGlobalForm']->getForm()['send'];
-            $button->setDisabled();
+            $control = $this['closeGlobalForm'];
+
+            if ($control instanceof FormControl) {
+                $button = $control->getForm()['send'];
+                $button->setDisabled();
+            }
         }
     }
 
@@ -89,8 +108,6 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return FyziklaniTeamsGrid
-     * @throws \Nette\Application\AbortException
-     * @throws BadRequestException
      */
     public function createComponentCloseGrid(): FyziklaniTeamsGrid {
         return new FyziklaniTeamsGrid($this->getEvent(), $this->serviceFyziklaniTeam);
@@ -99,7 +116,6 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function createComponentCloseForm(): FormControl {
         $control = new FormControl();
@@ -182,7 +198,6 @@ class ClosePresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
-     * @throws BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
@@ -206,7 +221,6 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\AbortException
-     * @throws BadRequestException
      */
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
@@ -218,8 +232,6 @@ class ClosePresenter extends BasePresenter {
     /**
      * @param null $category
      * @return bool
-     * @throws \Nette\Application\AbortException
-     * @throws BadRequestException
      */
     private function isReadyToClose($category = null): bool {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->getEvent());
@@ -231,15 +243,28 @@ class ClosePresenter extends BasePresenter {
         return $count == 0;
     }
 
+    private function isClosedCategory(string $category) {
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEvent());
+        $query->where('category', $category)->where('rank_category', null);
+        $count = $query->count();
+        return $count == 0;
+    }
+
+    private function isClosedTotal() {
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->getEvent());
+        $query->where('rank_total', null);
+        $count = $query->count();
+        return $count == 0;
+    }
+
     /**
      * @return string
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     private function getNextTask(): string {
         $submits = count($this->team->getSubmits());
 
-        $tasksOnBoard = $this->getEvent()->getParameter('gameSetup')['tasksOnBoard'];
+        $tasksOnBoard = $this->getGameSetup()->tasks_on_board;
         /**
          * @var $nextTask \ModelFyziklaniTask
          */
