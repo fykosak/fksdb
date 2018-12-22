@@ -130,11 +130,6 @@ abstract class BasePresenter extends EventBasePresenter {
         $brawlChooser->setEvent($this->getEvent());
     }
 
-    public function getSubtitle() {
-        return $this->getEvent()->name;
-        // return sprintf(_('fyziklani%d'), $this->getEvent()->begin->format('Y'));
-    }
-
     /**
      * @return array
      * @throws BadRequestException
