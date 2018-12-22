@@ -51,3 +51,20 @@ export const setChartType = (chartType: string): IActionSetChartType => {
         type: ACTION_SET_CHART_TYPE,
     };
 };
+
+export const ACTION_SET_FIRST_TEAM_ID = 'ACTION_SET_FIRST_TEAM_ID';
+
+export const setFirstTeamId = (teamId: number): IActionSetTeamId => {
+    return {
+        teamId,
+        type: ACTION_SET_FIRST_TEAM_ID,
+    };
+};
+
+export const ACTION_SET_SECOND_TEAM_ID = 'ACTION_SET_SECOND_TEAM_ID';
+export const setSecondTeamId = (teamId: number): IActionSetTeamId => {
+    return {
+        teamId,
+        type: ACTION_SET_SECOND_TEAM_ID,
+    };
+};
