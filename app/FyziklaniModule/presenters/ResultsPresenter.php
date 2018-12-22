@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 
@@ -37,6 +38,11 @@ class ResultsPresenter extends BasePresenter {
             default:
                 return true;
         }
+    }
+
+    public function titleCorrelationStatistics() {
+        $this->setTitle(_('Correlation statistics'));
+        $this->setIcon('fa fa-pie-chart');
     }
 
     public function titleDefault() {
@@ -80,6 +86,10 @@ class ResultsPresenter extends BasePresenter {
         $this->authorizedDefault();
     }
 
+    public function authorizedCorrelationStatistics() {
+        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani', 'correlation'));
+    }
+
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
@@ -95,7 +105,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentResultsView(): ResultsView {
-        return $this->fyziklaniComponentsFactory->createResultsView($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createResultsView($this->getEvent());
     }
 
     /**
@@ -104,7 +114,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentResultsPresentation(): ResultsPresentation {
-        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createResultsPresentation($this->getEvent());
     }
 
     /**
@@ -113,7 +123,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTeamStatistics(): TeamStatistics {
-        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createTeamStatistics($this->getEvent());
     }
 
     /**
@@ -122,6 +132,15 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTaskStatistics(): TaskStatistics {
-        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createTaskStatistics($this->getEvent());
+    }
+
+    /**
+     * @return CorrelationStatistics
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function createComponentCorrelationStatistics(): CorrelationStatistics {
+        return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
     }
 }

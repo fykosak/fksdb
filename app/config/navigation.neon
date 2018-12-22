@@ -51,6 +51,7 @@ navigation:
             - fyziklani.task.table
             - fyziklani.task.import
             - fyziklani.rooms.default
+            - fyziklani.gameSetup.default
         fyziklani.rooms.default:
             - fyziklani.rooms.edit
             - fyziklani.rooms.download
@@ -60,8 +61,8 @@ navigation:
             - fyziklani.results.resultsView
             - fyziklani.results.teamStatistics
             - fyziklani.results.taskStatistics
+            - fyziklani.results.correlationStatistics
         event.dashboard.default:
             - event.dispatch.default
             - fyziklani.dashboard.default
             - event.schedule.default
-            - event.accommodation.list

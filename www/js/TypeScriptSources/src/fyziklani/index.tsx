@@ -97,6 +97,7 @@ const registerStatistics: IApp = (element, module, component, mode, rawData, act
     switch (mode) {
         case 'team':
         case 'task':
+        case 'correlation':
             ReactDOM.render(<Statistics mode={mode} actions={actions}/>, element);
             return true;
         default:

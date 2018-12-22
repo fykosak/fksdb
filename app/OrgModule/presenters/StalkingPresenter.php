@@ -23,7 +23,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
-use ServiceEvent;
 use ServicePerson;
 
 class StalkingPresenter extends BasePresenter {
@@ -32,11 +31,6 @@ class StalkingPresenter extends BasePresenter {
      * @var ServicePerson
      */
     private $servicePerson;
-
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
 
     /**
      * @var ReferencedPersonFactory
@@ -57,7 +51,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function getPerson(): ModelPerson {
-        if ($this->person === false) {
+        if (!$this->person) {
             $id = $this->getParameter('id');
             $row = $this->servicePerson->findByPrimary($id);
             if (!$row) {
@@ -90,10 +84,6 @@ class StalkingPresenter extends BasePresenter {
 
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
-    }
-
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
     }
 
     function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {

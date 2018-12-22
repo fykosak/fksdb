@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { ITeam } from '../../../../helpers/interfaces';
 import { setTeamId } from '../../../actions';
@@ -36,7 +39,7 @@ class TeamStats extends React.Component<IState, {}> {
             return team.teamId === teamId;
         })[0];
 //
-        const headline = (<h3>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h3>);
+        const headline = (<h2>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h2>);
         return (<div>
 
             {teamSelect}
@@ -55,7 +58,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onchangeTeam: (teamId) => dispatch(setTeamId(+teamId)),
     };
