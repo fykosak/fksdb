@@ -30,6 +30,7 @@ class GameSetupPresenter extends BasePresenter {
     }
 
     /**
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function renderDefault() {

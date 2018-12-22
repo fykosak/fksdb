@@ -32,6 +32,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function actionQrEntry($id) {
         if (!$id) {
@@ -159,6 +160,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FyziklaniSubmitsGrid
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit);
@@ -167,6 +169,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentSubmitEditForm() {
         $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());

@@ -108,6 +108,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return bool
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     protected function isEventFyziklani(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -133,6 +134,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return array
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     protected function getRooms() {
         return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
@@ -159,6 +161,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ModelFyziklaniGameSetup
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {
