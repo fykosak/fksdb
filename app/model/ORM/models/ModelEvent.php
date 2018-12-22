@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use DbNames;
 use Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -28,9 +29,6 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      */
     private $holder;
 
-    /**
-     * @param Holder $holder
-     */
     function setHolder(Holder $holder) {
         $this->holder = $holder;
     }
@@ -38,22 +36,26 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     /**
      * @return ModelEventType
      */
-    public function getEventType(): ModelEventType {
+    public function getEventType() {
         return ModelEventType::createFromTableRow($this->event_type);
     }
 
     /**
-     * @return \Nette\Database\Table\GroupedSelection
+     * @return ModelEventAccommodation[]
      */
     public function getEventAccommodations() {
-        return $this->related(DbNames::TAB_EVENT_ACCOMMODATION);
+        $data = [];
+        foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
+            $data[] = ModelEventAccommodation::createFromTableRow($item);
+        }
+        return $data;
     }
 
     /**
      * @return ModelContest
      */
-    public function getContest(): ModelContest {
-        return ModelContest::createFromTableRow($this->getEventType()->contest);
+    public function getContest() {
+        return ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
     /**
@@ -61,15 +63,10 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      *
      * @return int
      */
-    public function getAcYear(): int {
+    public function getAcYear() {
         return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     * @throws InvalidStateException
-     */
     public function getParameter($name) {
         if (!$this->holder) {
             throw new InvalidStateException('Event does not have any holder assigned.');
@@ -77,18 +74,20 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return $this->holder->getParameter($name);
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'event';
     }
 
-    /**
-     * @return string
-     */
     public function __toString() {
         return $this->name;
+    }
+
+    /**
+     * @return ModelFyziklaniGameSetup|null
+     */
+    public function getFyziklaniGameSetup() {
+        $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
+        return $gameSetup ? ModelFyziklaniGameSetup::createFromTableRow($gameSetup) : null;
     }
 
 }
