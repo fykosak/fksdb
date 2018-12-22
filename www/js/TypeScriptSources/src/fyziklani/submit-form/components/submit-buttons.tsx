@@ -17,7 +17,7 @@ export default class TaskInput extends React.Component<IProps, {}> {
         const buttons = [5, 3, 2, 1].map((value, index) => {
             return (
                 <button
-                    className={valid ? 'btn btn-success' : 'btn btn-outline-secondary'}
+                    className={'btn btn-lg ' + (valid ? 'btn-success' : 'btn-outline-secondary')}
                     key={index}
                     type="button"
                     disabled={!valid || submitting}
@@ -30,7 +30,7 @@ export default class TaskInput extends React.Component<IProps, {}> {
             );
         });
         return (
-            <div className="btn-group">
+            <div className="d-flex justify-content-around">
                 {buttons}
             </div>
         );

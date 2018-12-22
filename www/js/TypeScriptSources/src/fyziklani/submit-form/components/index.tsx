@@ -5,6 +5,7 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
+import { INetteActions } from '../../../app-collector';
 import { config } from '../../../config/';
 import {
     ITask,
@@ -12,7 +13,6 @@ import {
 } from '../../helpers/interfaces/';
 import { app } from '../reducers/';
 import Container from './container';
-import { INetteActions } from '../../../app-collector';
 
 interface ITaskCodeProps {
     tasks: ITask[];

@@ -50,7 +50,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch): IState => {
     return {
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
     };

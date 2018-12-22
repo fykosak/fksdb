@@ -118,6 +118,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();

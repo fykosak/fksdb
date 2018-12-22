@@ -180,6 +180,20 @@
   border-color: #d7392e;
 }
 
+.fyziklani-headline {
+  color: black;
+  font-weight: bold;
+}
+
+.fyziklani-headline-color, .fyziklani-headline-red {
+  color: #f44336;
+  font-weight: bold;
+}
+
+hr.fyziklani-hr-red {
+  border-color: #f44336;
+}
+
 .inbox-field {
   display: block;
   width: 100px;
@@ -840,6 +854,11 @@ html, body {
 .card-columns {
   -webkit-column-count: 3;
   column-count: 2;
+}
+
+.state-timeline .line {
+  height: 1px;
+  border: solid 2px;
 }
 
 /*# sourceMappingURL=bundle.css.map */

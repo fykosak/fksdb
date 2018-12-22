@@ -2,6 +2,7 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\ORM\ModelEvent;
 use FKSDB\Utils\CSVParser;
 use FyziklaniModule\TaskPresenter;
 use ServiceFyziklaniTask;
@@ -20,12 +21,12 @@ class FyziklaniTaskImportProcessor {
      */
     private $serviceFyziklaniTask;
     /**
-     * @var integer
+     * @var ModelEvent
      */
-    private $eventId;
+    private $event;
 
-    public function __construct($eventId, ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->eventId = $eventId;
+    public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
@@ -34,17 +35,17 @@ class FyziklaniTaskImportProcessor {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
-            $this->serviceFyziklaniTask->findAll($this->eventId)->delete();
+            $this->serviceFyziklaniTask->findAll($this->event)->delete();
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {
             try {
-                $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->eventId);
+                $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
                     $task = $this->serviceFyziklaniTask->createNew([
                         'label' => $row['label'],
                         'name' => $row['name'],
-                        'event_id' => $this->eventId
+                        'event_id' => $this->event->event_id,
                     ]);
                     $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {

@@ -33,6 +33,7 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param $presenter \AuthenticatedPresenter
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {

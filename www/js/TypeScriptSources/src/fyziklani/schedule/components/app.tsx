@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../i18n/i18n';
 import DateDisplay from '../../../shared/components/displays/date';
 import {
@@ -83,7 +84,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onSetVisibility: (state) => dispatch(setVisibility(state)),
         onToggleChooser: () => dispatch(toggleChooser()),

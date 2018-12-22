@@ -44,3 +44,17 @@
   background-color: $fyziklaniMainColor;
   border-color: $fyziklaniDarkColor;
 }
+
+.fyziklani-headline {
+  color: black;
+  font-weight: bold;
+}
+
+.fyziklani-headline-color, .fyziklani-headline-red {
+  color: #f44336;
+  font-weight: bold;
+}
+
+hr.fyziklani-hr-red {
+  border-color: $fyziklaniMainColor;
+}
