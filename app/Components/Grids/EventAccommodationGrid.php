@@ -34,7 +34,8 @@ class EventAccommodationGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $accommodations =$this->event->getEventAccommodations();
+        $accommodations = $this->event->related(\DbNames::TAB_EVENT_ACCOMMODATION);
+
 
         $dataSource = new SearchableDataSource($accommodations);
 
@@ -51,20 +52,20 @@ class EventAccommodationGrid extends BaseGrid {
             return $model->getUsedCapacity() . '/' . $row->capacity;
         });
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
-        ->setLink(function ($row) {
-            return $this->getPresenter()->link('edit', ['id' => $row->event_accommodation_id]);
-        });
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('edit', ['id' => $row->event_accommodation_id]);
+            });
         $this->addButton('billeted', _('Accommodated persons'))->setText(_('Accommodated persons'))
-        ->setLink(function ($row) {
-            return $this->getPresenter()->link('billeted', ['id' => $row->event_accommodation_id]);
-        });
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('billeted', ['id' => $row->event_accommodation_id]);
+            });
 
         $this->addButton('delete', _('Remove'))->setClass('btn btn-sm btn-danger')->setText(_('Remove'))
-        ->setLink(function ($row) {
-            return $this->link('delete!', $row->event_accommodation_id);
-        })->setConfirmationDialog(function () {
-            return _('Opravdu smazat ubytovaní?');
-        });
+            ->setLink(function ($row) {
+                return $this->link('delete!', $row->event_accommodation_id);
+            })->setConfirmationDialog(function () {
+                return _('Opravdu smazat ubytovaní?');
+            });
 
         $this->addGlobalButton('add')
             ->setLabel(_('Přidat ubytovaní'))
