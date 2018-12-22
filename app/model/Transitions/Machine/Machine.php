@@ -1,8 +1,6 @@
 <?php
 
-namespace FKSDB\EventPayment\Transition;
-
-use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+namespace FKSDB\Transitions;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -34,9 +32,10 @@ class Machine {
      * @param IStateModel $model
      * @return Transition[]
      */
-    public function getAvailableTransitions($model): array {
-        return array_filter($this->transitions, function (Transition $transition) use ($model) {
-            return ($transition->getFromState() === ($model ? $model->getState() : null)) && $transition->canExecute($model);
+    public function getAvailableTransitions(IStateModel $model = null): array {
+        $state = $model ? $model->getState() : null;
+        return array_filter($this->transitions, function (Transition $transition) use ($model, $state) {
+            return ($transition->getFromState() === $state) && $transition->canExecute($model);
         });
     }
 

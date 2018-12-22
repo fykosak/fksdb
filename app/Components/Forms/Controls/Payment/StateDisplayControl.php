@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\EventPayment;
-
 
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;

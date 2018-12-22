@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventPayment\Transition;
+namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;

@@ -1,8 +1,6 @@
 <?php
 
-
-namespace FKSDB\EventPayment\Transition;
-
+namespace FKSDB\Transitions;
 
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;

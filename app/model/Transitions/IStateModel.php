@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\EventPayment\Transition;
+namespace FKSDB\Transitions;
 
 
 interface IStateModel {

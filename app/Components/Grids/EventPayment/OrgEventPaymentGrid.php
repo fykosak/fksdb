@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids\EventPayment;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\EventPayment\Transition\Machine;
-use FKSDB\EventPayment\Transition\UnavailableTransitionException;
+use FKSDB\Transitions\Machine;
+use FKSDB\Transitions\UnavailableTransitionException;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;

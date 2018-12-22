@@ -9,8 +9,8 @@ use FKSDB\Components\Grids\EventPayment\OrgEventPaymentGrid;
 use FKSDB\EventPayment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\EventPayment\Handler\EmptyDataException;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use FKSDB\EventPayment\Transition\Machine;
-use FKSDB\EventPayment\Transition\MachineFactory;
+use FKSDB\Transitions\Machine;
+use FKSDB\Transitions\MachineFactory;
 use FKSDB\EventPayment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
@@ -185,7 +185,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AlreadyGeneratedSymbolsException
-     * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     * @throws \FKSDB\Transitions\UnavailableTransitionException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Application\ForbiddenRequestException
@@ -297,7 +297,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     * @throws \FKSDB\Transitions\UnavailableTransitionException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\ForbiddenRequestException
      * @throws \Nette\Application\BadRequestException

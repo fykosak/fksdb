@@ -8,7 +8,6 @@ use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 

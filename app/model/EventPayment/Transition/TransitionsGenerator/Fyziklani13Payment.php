@@ -4,13 +4,14 @@ namespace FKSDB\EventPayment\Transition\Transitions;
 
 use FKSDB\EventPayment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\EventPayment\SymbolGenerator\SymbolGeneratorFactory;
-use FKSDB\EventPayment\Transition\AbstractTransitionsGenerator;
-use FKSDB\EventPayment\Transition\Machine;
 use FKSDB\EventPayment\Transition\PaymentMachine;
-use FKSDB\EventPayment\Transition\Transition;
-use FKSDB\EventPayment\Transition\TransitionsFactory;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Transitions\AbstractTransitionsGenerator;
+use FKSDB\Transitions\Machine;
+use FKSDB\Transitions\Transition;
+use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\DateTime;
 
@@ -102,7 +103,13 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             'subject' => 'prijali sme platbu'
         ];
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Zaplatil'));
+        $transition->onExecutedClosures[] = function (ModelPayment $modelPayment) {
+            foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
+                $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
+            }
+        };
         $transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
+
         $transition->setCondition(function (ModelPayment $eventPayment) {
             return $this->transitionFactory->getConditionDateBetween(new DateTime('2018-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
                 && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');

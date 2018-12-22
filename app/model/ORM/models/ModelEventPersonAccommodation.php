@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
@@ -15,7 +16,7 @@ use Nette\Database\Table\Selection;
  * @property ActiveRow event_accommodation
  *
  */
-class ModelEventPersonAccommodation extends \AbstractModelSingle {
+class ModelEventPersonAccommodation extends \AbstractModelSingle implements IStateModel {
 
     const STATUS_PAID = 'paid';
     const STATUS_WAITING_FOR_PAYMENT = 'waiting';
@@ -37,10 +38,17 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle {
 
     public function getLabel() {
         $eventAcc = $this->getEventAccommodation();
-        $fromDate = $eventAcc->date->format('d. m.');
-        $toDate = $eventAcc->date->add(new \DateInterval('P1D'))->format('d. m. Y');
+        $date = clone $eventAcc->date;
+        $fromDate = $date->format('d. m.');
+        $toDate = $date->add(new \DateInterval('P1D'))->format('d. m. Y');
         return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
 
+    public function updateState($newState) {
+        $this->update(['status' => $newState]);
+    }
 
+    public function getState() {
+        return $this->status;
+    }
 }

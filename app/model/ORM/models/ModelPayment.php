@@ -6,8 +6,8 @@ use AbstractModelSingle;
 use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\EventPayment\PriceCalculator\PriceCalculator;
 use FKSDB\EventPayment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use FKSDB\EventPayment\Transition\IStateModel;
-use FKSDB\EventPayment\Transition\Machine;
+use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
@@ -44,6 +44,9 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return ModelEvent::createFromTableRow($this->event);
     }
 
+    /**
+     * @return ModelEventPersonAccommodation[]
+     */
     public function getRelatedPersonAccommodation() {
         $query = $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
@@ -60,7 +63,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     /**
      * @param Machine $machine
      * @param $id
-     * @throws \FKSDB\EventPayment\Transition\UnavailableTransitionException
+     * @throws \FKSDB\Transitions\UnavailableTransitionException
      * @throws AlreadyGeneratedSymbolsException
      * @throws \Nette\Application\ForbiddenRequestException
      */

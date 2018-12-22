@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\EventPayment;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\EventPayment\PriceCalculator\Price;
 use FKSDB\ORM\ModelPayment;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;

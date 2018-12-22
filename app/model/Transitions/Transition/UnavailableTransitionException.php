@@ -1,8 +1,6 @@
 <?php
 
-
-namespace FKSDB\EventPayment\Transition;
-
+namespace FKSDB\Transitions;
 
 class UnavailableTransitionException extends \Exception {
 

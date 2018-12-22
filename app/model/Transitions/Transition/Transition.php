@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventPayment\Transition;
+namespace FKSDB\Transitions;
 
 use Nette\Application\ForbiddenRequestException;
 
