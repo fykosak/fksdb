@@ -128,6 +128,9 @@ acl:
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
+    - allow(superuser, fyziklani, correlation)
+
+
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 

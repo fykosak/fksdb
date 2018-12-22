@@ -1,7 +1,10 @@
 import * as d3 from 'd3';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import {
     ISubmit,
     ISubmits,
@@ -142,7 +145,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onActivePoints: (points) => dispatch(setActivePoints(+points)),
     };

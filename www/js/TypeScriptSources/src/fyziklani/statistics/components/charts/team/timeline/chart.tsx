@@ -118,7 +118,8 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
 
 export default connect(mapStateToProps, null)(TimeLine);
 
-const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: number, gameStart: Date, teamId: number): { activeTasks: IExtendedTask[]; teamSubmits: ISubmit[] } => {
+const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: number, gameStart: Date, teamId: number):
+    { activeTasks: IExtendedTask[]; teamSubmits: ISubmit[] } => {
     const taskBuffer = [...(tasks.slice(taskOnBoard))];
     const teamSubmits = [];
     const activeTasks: IExtendedTask[] = [];

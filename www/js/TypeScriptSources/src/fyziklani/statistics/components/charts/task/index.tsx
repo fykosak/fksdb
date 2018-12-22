@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { ITask } from '../../../../helpers/interfaces';
 import { setTaskId } from '../../../actions';
@@ -32,10 +35,13 @@ class TaskStats extends React.Component<IState, {}> {
         );
         return (
             <div>
-                <h3>{lang.getText('Global statistics')}</h3>
-                <Progress/>
+                <h2>{lang.getText('Global statistics')}</h2>
+                <div className={'fyziklani-chart-container'}>
+                    <h3>{lang.getText('Počet vyriešených úloh')}</h3>
+                    <Progress/>
+                </div>
 
-                <h3>{lang.getText('Statistics from single problem')}</h3>
+                <h2>{lang.getText('Statistics from single problem')}</h2>
                 {taskSelect}
                 {taskId && <Timeline/>}
             </div>
@@ -50,7 +56,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
     };
