@@ -6,6 +6,7 @@ use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
+use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
@@ -167,11 +168,7 @@ abstract class BasePresenter extends EventBasePresenter {
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!$this->gameSetup) {
-            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-            if (!$gameSetup) {
-                throw new BadRequestException(_('Herné paramtre niesu nastavené'));
-            }
-            $this->gameSetup = $gameSetup;
+            $this->gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         }
         return $this->gameSetup;
     }

@@ -73,6 +73,6 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentRouting() {
-        return $this->fyziklaniComponentsFactory->createRoutingEdit($this->context, $this->getEvent());
+        return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());
     }
 }

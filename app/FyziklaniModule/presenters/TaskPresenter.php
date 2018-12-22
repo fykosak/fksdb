@@ -61,7 +61,7 @@ class TaskPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    public function createComponentTaskGrid() {
+    public function createComponentTaskGrid(): FyziklaniTaskGrid {
         return new FyziklaniTaskGrid($this->getEventId(), $this->serviceFyziklaniTask);
     }
 }

@@ -36,10 +36,9 @@ class TaskCodeInput extends FyziklaniModule {
         return 'submit-form';
     }
 
-    protected function getActions() {
-        $actions = parent::getActions();
-        $actions['save'] = $this->link('save!');
-        return $actions;
+    protected function prepareActionLinks() {
+        parent::prepareActionLinks();
+        $this->addActionLink('save', $this->link('save!'));
     }
 
     public function handleSave() {

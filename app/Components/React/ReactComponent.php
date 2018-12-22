@@ -23,6 +23,10 @@ abstract class ReactComponent extends Control implements IReactComponent {
      * @var Container
      */
     protected $container;
+    /**
+     * @var array
+     */
+    private $actionLinks = [];
 
     public function __construct(Container $context) {
         parent::__construct();
@@ -46,15 +50,23 @@ abstract class ReactComponent extends Control implements IReactComponent {
         $this->template->moduleName = $this->getModuleName();
         $this->template->componentName = $this->getComponentName();
         $this->template->mode = $this->getMode();
-        $this->template->actions = Json::encode($this->getActions());
+        $this->template->actions = Json::encode($this->getActionLinks());
 
         $this->template->data = $this->getData();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }
 
-    protected function getActions() {
-        return [];
+    protected function prepareActionLinks() {
+    }
+
+    protected function getActionLinks(): array {
+        $this->prepareActionLinks();
+        return $this->actionLinks;
+    }
+
+    protected function addActionLink(string $key, string $link) {
+        $this->actionLinks[$key] = $link;
     }
 
     protected function getHttpRequest(): IRequest {

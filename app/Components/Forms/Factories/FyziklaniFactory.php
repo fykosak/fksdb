@@ -76,12 +76,11 @@ class FyziklaniFactory {
     }
 
     /**
-     * @param Container $container
      * @param ModelEvent $event
      * @return TaskCodeInput
      */
-    public function createEntryForm(Container $container, ModelEvent $event): TaskCodeInput {
-        $control = $this->fyziklaniComponentsFactory->createTaskCodeInput($container, $event);
+    public function createEntryForm(ModelEvent $event): TaskCodeInput {
+        $control = $this->fyziklaniComponentsFactory->createTaskCodeInput($event);
         return $control;
     }
 

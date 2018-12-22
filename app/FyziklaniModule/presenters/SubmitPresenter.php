@@ -144,7 +144,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function createComponentEntryForm() {
-        return $this->fyziklaniFactory->createEntryForm($this->container, $this->getEvent());
+        return $this->fyziklaniFactory->createEntryForm($this->getEvent());
     }
 
     public function createComponentEntryQRForm() {

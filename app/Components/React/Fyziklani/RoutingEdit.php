@@ -25,10 +25,9 @@ class RoutingEdit extends FyziklaniModule {
         return 'routing';
     }
 
-    protected function getActions(): array {
-        $actions = parent::getActions();
-        $actions['save'] = $this->link('save!');
-        return $actions;
+    protected function prepareActionLinks(): array {
+        parent::prepareActionLinks();
+        $this->addActionLink('save', $this->link('save!'));
     }
 
     public function handleSave() {
