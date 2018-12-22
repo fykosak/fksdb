@@ -3,8 +3,9 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use ServiceFyziklaniTask;
+use FKSDB\ORM\ModelEvent;
 use Nette\Database\Table\Selection;
+use ServiceFyziklaniTask;
 use SQL\SearchableDataSource;
 
 /**
@@ -20,18 +21,18 @@ class FyziklaniTaskGrid extends BaseGrid {
      */
     private $serviceFyziklaniTask;
     /**
-     * @var int
+     * @var ModelEvent
      */
-    private $eventId;
+    private $event;
 
     /**
      * FyziklaniTaskGrid constructor.
-     * @param integer $eventId
+     * @param ModelEvent $event
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      */
-    public function __construct($eventId, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->eventId = $eventId;
+        $this->event = $event;
         parent::__construct();
     }
 
@@ -41,14 +42,14 @@ class FyziklaniTaskGrid extends BaseGrid {
         $this->addColumn('label',_('#'));
         $this->addColumn('name',_('Název úlohy'));
 
-        $submits = $this->serviceFyziklaniTask->findAll($this->eventId);
+        $submits = $this->serviceFyziklaniTask->findAll($this->event);
         $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function(Selection $table, $value) {
-                    $tokens = preg_split('/\s+/', $value);
-                    foreach ($tokens as $token) {
-                        $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-                    }
-                });
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
         $this->setDataSource($dataSource);
     }
 }

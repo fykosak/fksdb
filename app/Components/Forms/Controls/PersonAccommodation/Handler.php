@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
@@ -29,16 +30,15 @@ class Handler {
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 
         $newAccommodationIds = $this->prepareData($data);
-        /**
-         * @var $row \FKSDB\ORM\ModelEventPersonAccommodation
-         */
+
         foreach ($oldRows as $row) {
-            if (in_array($row->event_accommodation_id, $newAccommodationIds)) {
+            $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromTableRow($row);
+            if (in_array($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds)) {
                 // do nothing
-                $index = array_search($row->event_accommodation_id, $newAccommodationIds);
+                $index = array_search($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
-                $row->delete();
+                $modelEventPersonAccommodation->delete();
             }
         }
         foreach ($newAccommodationIds as $id) {

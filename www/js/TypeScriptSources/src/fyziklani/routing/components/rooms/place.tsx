@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import {
     IPlace,
     ITeam,
@@ -49,7 +50,7 @@ class Place extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onDrop: (teamId, place) => dispatch(dropItem<IRoutingDragNDropData>({teamId, place})),
     };

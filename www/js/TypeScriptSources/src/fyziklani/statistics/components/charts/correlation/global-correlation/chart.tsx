@@ -1,25 +1,26 @@
 import * as d3 from 'd3';
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import {
     ISubmits,
     ITask,
     ITeam,
 } from '../../../../../helpers/interfaces';
 import {
+    setFirstTeamId,
+    setSecondTeamId,
+} from '../../../../actions';
+import {
     calculateCorrelation,
     getTimeLabel,
     IPreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
-import {
-    setFirstTeamId,
-    setSecondTeamId,
-} from '../../../../actions';
 
 interface IState {
     submits?: ISubmits;
@@ -43,7 +44,7 @@ class GlobalCorrelation extends React.Component<IState, {}> {
 
     public render() {
 
-        const color = d3.scaleLinear<string, number>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
+        const color = d3.scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
         const {submits, teams} = this.props;
         const submitsForTeams: { [teamId: number]: { [taskId: number]: IPreprocessedSubmit } } = {};
         for (const index in submits) {
@@ -114,7 +115,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
         onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),

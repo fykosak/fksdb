@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
+use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
@@ -32,6 +33,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param $id
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function actionQrEntry($id) {
         if (!$id) {
@@ -143,7 +145,12 @@ class SubmitPresenter extends BasePresenter {
         return $this->taskCodeHandlerFactory->createHandler($this->getEvent());
     }
 
-    public function createComponentEntryForm() {
+    /**
+     * @return TaskCodeInput
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentEntryForm(): TaskCodeInput {
         return $this->fyziklaniFactory->createEntryForm($this->getEvent());
     }
 
@@ -159,6 +166,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FyziklaniSubmitsGrid
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentSubmitsGrid() {
         return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit);
@@ -167,6 +175,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function createComponentSubmitEditForm() {
         $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());

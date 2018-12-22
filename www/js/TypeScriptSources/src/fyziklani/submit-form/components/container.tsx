@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
+import { INetteActions } from '../../../app-collector';
 import Powered from '../../../shared/powered';
 import {
     ITask,
@@ -11,7 +13,6 @@ import {
 import { submitStart } from '../actions/';
 import { IFyziklaniSubmitStore } from '../reducers/';
 import FormContainer from './form-container';
-import { INetteActions } from '../../../app-collector';
 
 interface IProps {
     tasks: ITask[];
@@ -38,7 +39,7 @@ class TaskCode extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniSubmitStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
     return {
         onSubmit: (values) => submitStart(dispatch, values, ownProps.actions.save),
     };

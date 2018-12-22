@@ -13,7 +13,7 @@ use Nette\Forms\Form;
  */
 class DateTimeBox extends TextInput {
 
-    const FORMAT = 'Y-m-d H:i:s';
+    const FORMAT = 'Y-m-d\TH:i:s';
 
     public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
         parent::__construct($label, $cols, $maxLength);

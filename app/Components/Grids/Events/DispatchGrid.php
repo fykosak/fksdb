@@ -34,6 +34,7 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      */
     protected function configure($presenter) {
@@ -46,7 +47,8 @@ class DispatchGrid extends BaseGrid {
         $dataSource = new NDataSource($events);
 
         $this->setDataSource($dataSource);
-        $this->setDefaultOrder('begin DESC');
+        $this->setDefaultOrder('year DESC begin DESC');
+
 
         //
         // columns
@@ -80,8 +82,9 @@ class DispatchGrid extends BaseGrid {
         //
         // operations
         //
+
         $this->addButton('detail', _('Detail'))
-            ->setText('Detail')
+            ->setText(_('Detail'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('Dashboard:default', [
                     'eventId' => $row->event_id,

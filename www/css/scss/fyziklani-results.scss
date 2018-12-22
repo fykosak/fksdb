@@ -1,3 +1,5 @@
+@import "colors";
+
 .brawl-results, .fyziklani-results {
   h1 {
     color: white;
@@ -7,7 +9,7 @@
   }
   .clock {
     justify-content: space-between;
-    color: #d7392e;
+    color: $fyziklaniDarkColor;
     padding: .25em;
     font-weight: bold;
     & > span {
@@ -42,7 +44,7 @@
   }
 
   .image-wp {
-    color: #d7392e;
+    color: $fyziklaniDarkColor;
     font-size: 5rem;
     text-align: center;
   }

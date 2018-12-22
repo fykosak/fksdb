@@ -2,6 +2,8 @@
 
 namespace FKSDB\model\Fyziklani;
 
+use FKSDB\ORM\ModelEvent;
+use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
@@ -21,14 +23,14 @@ class CloseSubmitStrategy {
      */
     private $serviceFyziklaniTeam;
     /**
-     * @var int
+     * @var ModelEvent
      */
-    private $eventId;
+    private $event;
 
 
-    public function __construct($eventId, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventId = $eventId;
+        $this->event = $event;
     }
 
     public function closeByCategory($category, &$msg = null) {
@@ -108,7 +110,7 @@ class CloseSubmitStrategy {
      * @return Selection
      */
     private function getAllTeams($category = null): Selection {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->eventId);
+        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);
         }

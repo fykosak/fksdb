@@ -65,31 +65,31 @@ class FyziklaniComponentsFactory {
         $this->context = $context;
     }
 
-    public function createResultsView(ModelEvent $event) {
+    public function createResultsView(ModelEvent $event): ResultsView {
         return new ResultsView($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createResultsPresentation(ModelEvent $event) {
+    public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
         return new ResultsPresentation($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createTeamStatistics(ModelEvent $event) {
+    public function createTeamStatistics(ModelEvent $event): TeamStatistics {
         return new TeamStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createTaskStatistics(ModelEvent $event) {
+    public function createTaskStatistics(ModelEvent $event): TaskStatistics {
         return new TaskStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createRoutingEdit(ModelEvent $event) {
+    public function createRoutingEdit(ModelEvent $event): RoutingEdit {
         return new RoutingEdit($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createCorrelationStatistics(ModelEvent $event) {
+    public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
         return new CorrelationStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
-    public function createTaskCodeInput(ModelEvent $event) {
+    public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
         $handler = $this->taskCodeHandlerFactory->createHandler($event);
         return new TaskCodeInput($handler, $this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }

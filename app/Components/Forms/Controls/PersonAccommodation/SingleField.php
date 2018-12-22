@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
-
 class SingleField extends AccommodationField {
     const RESOLUTION_ID = 'single';
 

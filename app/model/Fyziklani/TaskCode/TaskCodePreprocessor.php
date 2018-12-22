@@ -8,8 +8,7 @@ namespace FKSDB\model\Fyziklani;
  */
 class TaskCodePreprocessor {
 
-
-    public static function checkControlNumber($taskCode) {
+    public static function checkControlNumber($taskCode): bool {
         if (strlen($taskCode) != 9) {
             return false;
         }
@@ -18,15 +17,15 @@ class TaskCodePreprocessor {
         return $c % 10 == 0;
     }
 
-    public static function extractTeamId($numLabel) {
-        return (int) substr($numLabel, 0, 6);
+    public static function extractTeamId($numLabel): int {
+        return (int)substr($numLabel, 0, 6);
     }
 
-    public static function extractTaskLabel($teamTaskLabel) {
-        return (string) substr($teamTaskLabel, 6, 2);
+    public static function extractTaskLabel($teamTaskLabel): string {
+        return (string)substr($teamTaskLabel, 6, 2);
     }
 
-    public static function getNumLabel($teamTaskLabel) {
+    public static function getNumLabel($teamTaskLabel): string {
         return str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $teamTaskLabel);
     }
 }

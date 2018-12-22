@@ -80,8 +80,7 @@ class FyziklaniFactory {
      * @return TaskCodeInput
      */
     public function createEntryForm(ModelEvent $event): TaskCodeInput {
-        $control = $this->fyziklaniComponentsFactory->createTaskCodeInput($event);
-        return $control;
+        return $this->fyziklaniComponentsFactory->createTaskCodeInput($event);
     }
 
     /**

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { ITask } from '../../../../helpers/interfaces';
 import { setTaskId } from '../../../actions';
@@ -53,7 +56,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
     };

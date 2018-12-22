@@ -52,6 +52,7 @@ acl:
     - addResource(eventAccommodation) # create, edit, list
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
+    - addResource(event.accommodation) # list, create, edit, billeted
 
     # ACL
     - allow(contestant, submit, upload)
@@ -103,7 +104,8 @@ acl:
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL)) # in OrgModule
+    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
     - allow(eventManager, person, stalk.full)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
@@ -126,6 +128,9 @@ acl:
     - allow(org, event.schedule)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+
+    - allow(superuser, fyziklani, correlation)
+
 
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))

@@ -81,7 +81,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setIcon('fa fa-home');
     }
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         return ['dark', 'dark'];
     }
 

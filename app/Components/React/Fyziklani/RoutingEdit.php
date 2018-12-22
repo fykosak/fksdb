@@ -12,7 +12,7 @@ class RoutingEdit extends FyziklaniModule {
     public function getData(): string {
 
         return Json::encode([
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->event),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsArray($this->event),
             'rooms' => $this->getRooms(),
         ]);
     }

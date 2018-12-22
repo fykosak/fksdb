@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
 import { IFyziklaniResultsStore } from '../../../reducers';
 import AutoSwitchControl from './auto-switch-control';
 import MultiFilterControl from './multi-filter-control';
-import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
 
 interface IState {
     autoSwitch?: boolean;

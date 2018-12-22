@@ -30,10 +30,11 @@ class OrgsGrid extends BaseGrid {
 
     /**
      * @param OrgPresenter $presenter
+     * @throws BadRequestException
      * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
-     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

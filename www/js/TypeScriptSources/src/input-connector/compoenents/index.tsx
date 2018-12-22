@@ -20,7 +20,7 @@ export default class InputConnector extends React.Component<ICoreProps, {}> {
         return <ConnectedComponent input={this.props.input}/>;
     }
 
-    private mapDispatchToProps(dispatch: Dispatch<IInputConnectorStore>): IState {
+    private mapDispatchToProps(dispatch: Dispatch): IState {
         return {
             onSetInitialData: (data: IInputConnectorItems) => dispatch(setInitialData(data)),
         };
