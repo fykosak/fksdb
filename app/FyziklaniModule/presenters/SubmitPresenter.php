@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
+use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
@@ -144,8 +145,13 @@ class SubmitPresenter extends BasePresenter {
         return $this->taskCodeHandlerFactory->createHandler($this->getEvent());
     }
 
-    public function createComponentEntryForm() {
-        return $this->fyziklaniFactory->createEntryForm($this->container, $this->getEvent());
+    /**
+     * @return TaskCodeInput
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentEntryForm(): TaskCodeInput {
+        return $this->fyziklaniFactory->createEntryForm($this->getEvent());
     }
 
     public function createComponentEntryQRForm() {
