@@ -52,7 +52,6 @@ acl:
     - addResource(eventAccommodation) # create, edit, list
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
-    - addResource(event.accommodation) # list, create, edit, billeted
 
     # ACL
     - allow(contestant, submit, upload)
@@ -104,8 +103,7 @@ acl:
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL)) # in OrgModule
-    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
+    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, person, stalk.full)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
@@ -123,6 +121,7 @@ acl:
 
     - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(guest, fyziklani, dashboard)
+    - allow(superuser, fyziklani, correlation)
 
     - allow(org, event.schedule)
 
