@@ -15,7 +15,7 @@ use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DateTime;
-use Nette\Diagnostics\Debugger;
+use Nette\NotImplementedException;
 
 
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
@@ -60,7 +60,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     private function addTransitionInitToNew(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(null, ModelPayment::STATE_NEW, _('Pokračovať k sumarizácii'));
+        $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Pokračovať k sumarizácii'));
         $transition->setCondition(
             function () {
                 return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-01-01 00:00:00'));
@@ -87,7 +87,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
         });
         $transition->beforeExecuteClosures[] = function (ModelPayment &$modelPayment) use ($machine) {
-            Debugger::barDump($modelPayment);
             $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
             $modelPayment->updatePrice($machine->getPriceCalculator());
         };
@@ -145,5 +144,24 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 $row->delete();
             }
         };
+    }
+
+    /**
+     * @param string $type
+     * @param $args
+     * @return bool
+     */
+    private function getCondition(string $type, $args): bool {
+        switch ($type) {
+            case 'dateTo':
+                return $this->transitionFactory->getConditionDateTo($args['dateTo']);
+            case 'dataFrom':
+                return $this->transitionFactory->getConditionDateFrom($args['dateFrom']);
+            case 'dateBetween':
+                return $this->transitionFactory->getConditionDateBetween($args['dateFrom'], $args['dateTo']);
+            default:
+                throw new NotImplementedException();
+
+        }
     }
 }

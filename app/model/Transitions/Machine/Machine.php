@@ -2,7 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\ModelPayment;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Connection;
 
@@ -12,6 +11,9 @@ use Nette\Database\Connection;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Machine {
+
+    const STATE_INIT = '__init';
+    const STATE_TERMINATED = '__terminated';
 
     /**
      * @var Transition[]
@@ -46,7 +48,7 @@ class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
-        $state = $model ? $model->getState() : null;
+        $state = $model ? $model->getState() : self::STATE_INIT;
         return array_filter($this->transitions, function (Transition $transition) use ($model, $state) {
             return ($transition->getFromState() === $state) && $transition->canExecute($model);
         });

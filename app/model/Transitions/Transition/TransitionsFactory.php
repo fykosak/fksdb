@@ -53,14 +53,13 @@ class TransitionsFactory {
     }
 
     /**
-     * @param string|null $fromState
+     * @param string $fromState
      * @param string $toState
      * @param string $label
      * @return Transition
      */
-    public function createTransition(string $fromState = null, string $toState, string $label) {
+    public function createTransition(string $fromState, string $toState, string $label): Transition {
         $transition = new Transition($fromState, $toState, $label);
-
         return $transition;
     }
 

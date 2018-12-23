@@ -184,7 +184,6 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AlreadyGeneratedSymbolsException
      * @throws \FKSDB\Transitions\UnavailableTransitionException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
