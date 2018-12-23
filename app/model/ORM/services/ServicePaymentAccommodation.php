@@ -5,9 +5,9 @@ namespace FKSDB\ORM\Services;
 
 use AbstractServiceSingle;
 use DbNames;
+use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
-use FKSDB\ORM\ModelPayment;
 use Nette\ArrayHash;
 use Nette\Diagnostics\Debugger;
 
@@ -38,10 +38,10 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
                 $index = array_search($row->event_person_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
-                Debugger::barDump($row);
                 $row->delete();
             }
         }
+        $this->connection->beginTransaction();
         foreach ($newAccommodationIds as $id) {
 
             /**
@@ -50,14 +50,15 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
             $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
             $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
             if ($count > 0) {
+                $this->connection->rollBack();
                 throw new DuplicateAccommodationPaymentException(sprintf(
-                    _('Ubytovanie "%s" má už vygenrovanú platbu.'),
+                    _('Ubytovanie "%s" má už vygenrovanú inú platbu.'),
                     $model->getEventPersonAccommodation()->getLabel()
-
                 ));
             }
             $this->save($model);
         }
+        $this->connection->commit();
     }
 
     /**

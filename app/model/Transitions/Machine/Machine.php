@@ -2,6 +2,10 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\ORM\ModelPayment;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Connection;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -13,6 +17,15 @@ class Machine {
      * @var Transition[]
      */
     private $transitions = [];
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    public function __construct(Connection $connection) {
+        $this->connection = $connection;
+    }
+
 
     /**
      * @param Transition $transition
@@ -63,13 +76,26 @@ class Machine {
      * @param string? $id
      * @param IStateModel $model
      * @return void
+     * @throws ForbiddenRequestException
      * @throws UnavailableTransitionException
-     * @throws \Nette\Application\ForbiddenRequestException
      */
     public function executeTransition($id, IStateModel $model) {
         $transition = $this->findTransitionById($id, $model);
-        $transition->onExecute($model);
+        if (!$transition->canExecute($model)) {
+            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+        }
+        $this->connection->beginTransaction();
+        try {
+            $transition->beforeExecute($model);
+        } catch (\Exception $exception) {
+            $this->connection->rollBack();
+            throw $exception;
+        }
+
+        $this->connection->commit();
         $model->updateState($transition->getToState());
-        $transition->onExecuted($model);
+        /* select from DB new (updated) model */
+        $model = $model->refresh();
+        $transition->afterExecute($model);
     }
 }

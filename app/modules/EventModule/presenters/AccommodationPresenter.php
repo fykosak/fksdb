@@ -112,6 +112,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
         $this['editForm']->getForm()->setDefaults($this->getDefaults());
@@ -145,10 +146,20 @@ class AccommodationPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @return EventAccommodationGrid
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function createComponentGrid(): EventAccommodationGrid {
         return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
     }
 
+    /**
+     * @return EventBilletedPerson
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function createComponentBilletedGrid(): EventBilletedPerson {
         return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
     }
@@ -188,6 +199,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return array|null
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     private function getDefaults() {
         $model = $this->getModel();
@@ -204,6 +216,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return ModelEventAccommodation
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function getModel(): ModelEventAccommodation {
         $row = $this->serviceEventAccommodation->findByPrimary($this->id);

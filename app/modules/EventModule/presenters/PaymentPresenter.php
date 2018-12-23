@@ -6,14 +6,14 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Payment\DetailControl;
 use FKSDB\Components\Forms\Factories\PaymentFactory;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\ORM\ModelPayment;
+use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
-use FKSDB\Payment\Transition\PaymentMachine;
-use FKSDB\ORM\ModelPayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use Nette\Application\UI\Form;
 use Nette\NotImplementedException;
 
@@ -259,6 +259,10 @@ class PaymentPresenter extends BasePresenter {
             $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
             $this->redirect(':MyPayment:');
         }
+    }
+
+    public function renderEdit() {
+        $this->template->model = $this->getModel();
     }
 
     private function serializePaymentAccommodation() {

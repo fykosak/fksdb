@@ -77,7 +77,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws \Nette\Application\AbortException
      */
     protected function eventExist(): bool {
-        return $this->getEvent() ? true : false;
+        return !!$this->getEvent();
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws \Nette\Application\AbortException
      */
     public function getSubtitle(): string {
-        return $this->getEvent()->name;
+        return $this->getEvent()->__toString();
     }
 
     /**

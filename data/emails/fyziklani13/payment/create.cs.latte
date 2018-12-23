@@ -1,12 +1,6 @@
 <div>
-        Platba {$model->getPaymentId()} vytvorená.
-        Platba vo výške {$model->getPrice()->__toString()}
-    <div>
-        {foreach $model->getRelatedPersonAccommodation() as $item}
-            <div>
-                {$item}
-            </div>
-        {/foreach}
-    </div>
+    Platba {$model->getPaymentId()} vytvorená.
+    Platba vo výške {$model->getPrice()->__toString()}
 
+    {include './items.latte'}
 </div>

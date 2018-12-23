@@ -22,10 +22,13 @@ class PaymentSelectField extends TextInput implements IReactComponent {
      */
     private $event;
 
-    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event) {
+    private $showAll = true;
+
+    public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {
         parent::__construct();
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->event = $event;
+        $this->showAll = $showAll;
         $this->appendProperty();
     }
 
@@ -34,14 +37,15 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         $items = [];
         foreach ($query as $row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
-
-            $items[] = [
-                'hasPayment' => false, /*!!$model->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')
+            if ($this->showAll || !$model->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->count()) {
+                $items[] = [
+                    'hasPayment' => false, /*
                     ->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count(),*/
-                'label' => $model->getLabel(),
-                'id' => $model->event_person_accommodation_id,
-                'accommodation' => $model->getEventAccommodation()->__toArray(),
-            ];
+                    'label' => $model->getLabel(),
+                    'id' => $model->event_person_accommodation_id,
+                    'accommodation' => $model->getEventAccommodation()->__toArray(),
+                ];
+            }
         }
         return \json_encode($items);
     }

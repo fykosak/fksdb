@@ -27,11 +27,11 @@ class Transition {
     /**
      * @var \Closure[]
      */
-    public $onExecutedClosures = [];
+    public $beforeExecuteClosures = [];
     /**
      * @var \Closure[]
      */
-    public $onExecuteClosures = [];
+    public $afterExecuteClosures = [];
 
     /**
      * @var string
@@ -92,23 +92,18 @@ class Transition {
 
     /**
      * @param IStateModel $model
-     * @throws ForbiddenRequestException
      */
-    public final function onExecute(IStateModel $model) {
-        if ($this->canExecute($model)) {
-            foreach ($this->onExecuteClosures as $closure) {
-                $closure($model);
-            }
-        } else {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+    public final function beforeExecute(IStateModel &$model) {
+        foreach ($this->beforeExecuteClosures as $closure) {
+            $closure($model);
         }
     }
 
     /**
      * @param IStateModel $model
      */
-    public final function onExecuted(IStateModel $model) {
-        foreach ($this->onExecutedClosures as $closure) {
+    public final function afterExecute(IStateModel &$model) {
+        foreach ($this->afterExecuteClosures as $closure) {
             $closure($model);
         }
     }

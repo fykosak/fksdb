@@ -2,18 +2,21 @@
 
 namespace FKSDB\Payment\Transition\Transitions;
 
-use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
-use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
+use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
+use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Transition;
 use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
+use Nette\Database\Connection;
 use Nette\DateTime;
+use Nette\Diagnostics\Debugger;
+
 
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
     /**
@@ -25,9 +28,14 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @var PriceCalculatorFactory
      */
     private $priceCalculatorFactory;
+    /**
+     * @var Connection
+     */
+    private $connection;
 
-    public function __construct(TransitionsFactory $transitionFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
+    public function __construct(Connection $connection, TransitionsFactory $transitionFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         parent::__construct($transitionFactory);
+        $this->connection = $connection;
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;
         $this->priceCalculatorFactory = $priceCalculatorFactory;
     }
@@ -45,14 +53,14 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     public function createMachine(ModelEvent $event): Machine {
-        $machine = new PaymentMachine();
+        $machine = new PaymentMachine($this->connection);
         $machine->setSymbolGenerator($this->symbolGeneratorFactory->createGenerator($event));
         $machine->setPriceCalculator($this->priceCalculatorFactory->createCalculator($event));
         return $machine;
     }
 
     private function addTransitionInitToNew(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(null, ModelPayment::STATE_NEW, _('Pokračovať k vytvoreniu platby'));
+        $transition = $this->transitionFactory->createTransition(null, ModelPayment::STATE_NEW, _('Pokračovať k sumarizácii'));
         $transition->setCondition(
             function () {
                 return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-01-01 00:00:00'));
@@ -78,11 +86,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit') ||
                 $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
         });
-        $transition->onExecuteClosures[] = function (ModelPayment $modelPayment) use ($machine) {
+        $transition->beforeExecuteClosures[] = function (ModelPayment &$modelPayment) use ($machine) {
+            Debugger::barDump($modelPayment);
             $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
             $modelPayment->updatePrice($machine->getPriceCalculator());
         };
-        $transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create', $options);
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create', $options);
 
         $machine->addTransition($transition);
     }
@@ -93,6 +102,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->setCondition(function () {
             return true;
         });
+        $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
         $machine->addTransition($transition);
     }
 
@@ -103,12 +113,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             'subject' => 'prijali sme platbu'
         ];
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Zaplatil'));
-        $transition->onExecutedClosures[] = function (ModelPayment $modelPayment) {
+        $transition->beforeExecuteClosures[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
                 $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
             }
         };
-        $transition->onExecutedClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
 
         $transition->setCondition(function (ModelPayment $eventPayment) {
             return $this->transitionFactory->getConditionDateBetween(new DateTime('2018-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
@@ -124,6 +134,16 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->setCondition(function (ModelPayment $eventPayment) {
             $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
         });
+        $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
+
         $machine->addTransition($transition);
+    }
+
+    private function getClosureDeleteRows(): \Closure {
+        return function (ModelPayment $modelPayment) {
+            foreach ($modelPayment->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
+                $row->delete();
+            }
+        };
     }
 }

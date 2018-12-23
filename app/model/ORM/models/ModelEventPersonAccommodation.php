@@ -44,11 +44,22 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle implements ISta
         return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
 
+    public function __toString() {
+        return $this->getLabel();
+    }
+
     public function updateState($newState) {
         $this->update(['status' => $newState]);
     }
 
     public function getState() {
         return $this->status;
+    }
+
+    /**
+     * @return ModelPayment
+     */
+    public function refresh(): IStateModel {
+        return self::createFromTableRow($this->getTable()->wherePrimary($this->event_person_accommodation_id)->fetch());
     }
 }

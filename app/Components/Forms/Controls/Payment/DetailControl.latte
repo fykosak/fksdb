@@ -1,8 +1,6 @@
-{dump $items}
 <div class="h2">{control stateLabel}</div>
 {control stateDisplay}
-<h3>{_('Informace o platcovi')}</h3>
-
+<h2>{_('Informace o platcovi')}</h2>
 <form>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">{_('Name')}</label>
@@ -23,7 +21,8 @@
         </div>
     </div>
 </form>
-<h3>{_('Items')}</h3>
+<hr/>
+<h2>{_('Items')}</h2>
 <table class="table table-striped">
     <thead>
     <tr>
@@ -47,10 +46,10 @@
     </tbody>
 
 </table>
-
+<hr/>
 
 {if $model->hasGeneratedSymbols()}
-    <h3>{_('Informacie o platbe')}</h3>
+    <h2>{_('Informacie o platbe')}</h2>
     <form>
         {if $model->constant_symbol}
             <div class="form-group row">

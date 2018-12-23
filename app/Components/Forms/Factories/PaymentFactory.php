@@ -9,9 +9,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\DetailControl;
 use FKSDB\Components\Forms\Controls\Payment\PaymentSelectField;
 use FKSDB\Components\Forms\Factories\Payment\CurrencyField;
-use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 
@@ -56,7 +56,7 @@ class PaymentFactory {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(true);
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $event), 'payment_accommodation');
+        $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $event, false), 'payment_accommodation');
         $this->appendTransitionsButtons(null, $machine, $form);
         return $control;
     }

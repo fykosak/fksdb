@@ -57,18 +57,6 @@ class MyPaymentGrid extends BaseGrid {
         /*
         /* operations
         */
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setShow(function ($row) {
-                return ModelPayment::createFromTableRow($row)->canEdit();
-            })
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:payment:edit', [
-                    'id' => $row->payment_id,
-                    'eventId' => $row->event_id,
-                ]);
-            });
-
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
             ->setLink(function ($row) {

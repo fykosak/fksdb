@@ -120,8 +120,15 @@
 [data-contest~=event-type-1] main:not(.no-bg) {
   background: url("/images/fof/prague-layout.svg") no-repeat;
 }
-[data-contest~=event-type-1] main:not(.no-bg) h1 {
+[data-contest~=event-type-1] main:not(.no-bg) h1, [data-contest~=event-type-1] main:not(.no-bg) h2, [data-contest~=event-type-1] main:not(.no-bg) h3 {
   font-weight: bold;
+}
+[data-contest~=event-type-1] main:not(.no-bg) h2 {
+  color: #f44336;
+  font-weight: bold;
+}
+[data-contest~=event-type-1] main:not(.no-bg) hr {
+  border-color: #f44336;
 }
 
 [data-contest~=event-type-1] .bd-callout {

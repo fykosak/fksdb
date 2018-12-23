@@ -82,7 +82,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return bool
      */
     public function canEdit(): bool {
-        return \in_array($this->state, [self::STATE_NEW]);
+        return \in_array($this->getState(), [self::STATE_NEW]);
     }
 
     public function getPrice(): Price {
@@ -136,5 +136,12 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
             'price' => $price->getAmount(),
             'currency' => $price->getCurrency(),
         ]);
+    }
+
+    /**
+     * @return ModelPayment
+     */
+    public function refresh(): IStateModel {
+        return self::createFromTableRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
     }
 }
