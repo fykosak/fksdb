@@ -5,8 +5,6 @@ namespace OrgModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Config\NeonScheme;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
@@ -14,8 +12,10 @@ use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
-use FormUtils;
+use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\MemoryLogger;
+use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -273,12 +273,12 @@ class EventPresenter extends EntityPresenter {
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
             $item = Html::el('li');
-            $result->add($item);
+            $result->addText($item);
 
-            $item->add(Html::el(null)->setText($key));
+            $item->addHtml(Html::el(null)->setText($key));
             if (isset($meta['default'])) {
-                $item->add(': ');
-                $item->add(Html::el(null)->setText(Utils::getRepr($meta['default'])));
+                $item->addText(': ');
+                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
             }
         }
 

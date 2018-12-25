@@ -202,7 +202,7 @@ class ClosePresenter extends BasePresenter {
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
-        $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->flashMessage(Html::el()->addHtml('pořadí bylo uložené' . Html::el('ul')->addText($msg)), 'success');
         $this->redirect('this');
     }
 
@@ -225,7 +225,7 @@ class ClosePresenter extends BasePresenter {
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
-        $this->flashMessage(Html::el()->add('pořadí bylo uložené' . Html::el('ul')->add($msg)), 'success');
+        $this->flashMessage(Html::el()->addHtml('pořadí bylo uložené' . Html::el('ul')->addText($msg)), 'success');
         $this->redirect('this');
     }
 

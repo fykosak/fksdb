@@ -267,9 +267,9 @@ class PersonPresenter extends EntityPresenter {
                     $elVal = Html::el('span');
                     $elVal->setText($value);
                     $elVal->class('value');
-                    $trunk->add(_('Trunk') . ': ');
-                    $trunk->add($elVal);
-                    $description->add($trunk);
+                    $trunk->addText(_('Trunk') . ': ');
+                    $trunk->addText($elVal);
+                    $description->addHtml($trunk);
 
                     $merged = Html::el('div');
                     $merged->class('mergeSource');
@@ -277,9 +277,9 @@ class PersonPresenter extends EntityPresenter {
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
                     $elVal->class('value');
-                    $merged->add(_('Merged') . ': ');
-                    $merged->add($elVal);
-                    $description->add($merged);
+                    $merged->addText(_('Merged') . ': ');
+                    $merged->addText($elVal);
+                    $description->addHtml($merged);
 
                     $textElement->setOption('description', $description);
                 }
