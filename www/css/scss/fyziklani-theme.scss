@@ -4,8 +4,17 @@
 
 [data-contest~="event-type-1"] main:not(.no-bg) {
   background: url('/images/fof/prague-layout.svg') no-repeat;
-  h1 {
+  h1, h2, h3 {
     font-weight: bold;
+  }
+  h2 {
+    color: $fyziklaniMainColor;
+  }
+  h1, h3 {
+    color: black;
+  }
+  hr {
+    border-color: $fyziklaniMainColor;
   }
 }
 

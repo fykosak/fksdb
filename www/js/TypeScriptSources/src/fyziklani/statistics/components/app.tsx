@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
 import { IFyziklaniStatisticsStore } from '../reducers';
 import ChartsContainer from './charts/';
@@ -20,11 +19,7 @@ class App extends React.Component<IState & IProps, {}> {
         if (!isReady) {
             return <Loading/>;
         }
-
-        return (<>
-            <ChartsContainer mode={mode}/>
-            <Powered/>
-        </>);
+        return (<ChartsContainer mode={mode}/>);
     }
 }
 

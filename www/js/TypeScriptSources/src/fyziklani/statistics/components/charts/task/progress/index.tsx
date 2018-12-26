@@ -13,10 +13,20 @@ interface IState {
     submits?: ISubmits;
 }
 
+interface IStats {
+    [taskId: number]: {
+        5: number;
+        3: number;
+        2: number;
+        1: number;
+        total: number;
+    };
+}
+
 class TaskStats extends React.Component<IState, {}> {
     public render() {
         const {submits, tasks} = this.props;
-        const tasksSubmits = {};
+        const tasksSubmits: IStats = {};
 
         for (const task of tasks) {
             const {taskId} = task;

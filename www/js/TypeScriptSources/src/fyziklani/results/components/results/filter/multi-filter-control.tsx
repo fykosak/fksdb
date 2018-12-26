@@ -66,7 +66,7 @@ class MultiFilterControl extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onAddFilter: (filter: Filter) => dispatch(addFilter(filter)),
         onRemoveFilter: (filter: Filter) => dispatch(removeFilter(filter)),

@@ -34,10 +34,11 @@ class Results extends React.Component<IState & IProps, {}> {
                 {msg}
 
                 {(mode === 'presentation') && (<>
-                    <div className={'inner-headline'}>
-                        <Timer/>
-                        {(visible || hardVisible) ? null : (<Images basePath={basePath}/>)}
-                    </div>
+                    {(visible || hardVisible) ? (<Timer/>) :
+                        (<div className={'inner-headline'}>
+                            <Timer/>
+                            <Images basePath={basePath}/>
+                        </div>)}
                     <AutoFilter/>
                 </>)}
                 {(visible || hardVisible) ? (<ResultsTable/>) : null}
@@ -53,6 +54,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(mapStateToProps, (): IState => {
-    return {};
-})(Results);
+export default connect(mapStateToProps, null)(Results);

@@ -1,13 +1,9 @@
 import * as d3 from 'd3';
-import {
-    ScaleLinear,
-    ScaleTime,
-} from 'd3';
 import { IExtendedSubmit } from '../../components/charts/team/line-chart/chart';
 
 interface IScales {
-    xScale: ScaleTime<number, number>;
-    yScale: ScaleLinear<number, number>;
+    xScale: d3.ScaleTime<number, number>;
+    yScale: d3.ScaleLinear<number, number>;
 }
 
 export function getLinePath(scales: IScales, data: IExtendedSubmit[]): string {

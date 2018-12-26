@@ -7,6 +7,7 @@ import {
 import logger from 'redux-logger';
 import { INetteActions } from '../../../app-collector/';
 import { config } from '../../../config';
+import Powered from '../../../shared/powered';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
 import App from './app';
@@ -23,10 +24,11 @@ export default class StatisticApp extends React.Component<IProps, {}> {
         const {mode, actions} = this.props;
         return (
             <Provider store={store}>
-                <div className={'brawl-results fyziklani-results'}>
+                <div className={'fyziklani-statistics'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
                     <App mode={mode} accessKey={accessKey}/>
                 </div>
+                <Powered/>
             </Provider>
         );
     }

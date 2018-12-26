@@ -73,6 +73,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(mapStateToProps, (): IState => {
-    return {};
-})(Images);
+export default connect(mapStateToProps, null)(Images);

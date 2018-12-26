@@ -1,5 +1,5 @@
-import { getAverageNStandardDeviation } from './std-dev';
 import { ISubmit } from '../../../helpers/interfaces';
+import { getAverageNStandardDeviation } from './std-dev';
 
 export interface IPreprocessedSubmit extends ISubmit {
     timestamp: number;

@@ -29,12 +29,10 @@ interface IProps {
 }
 
 class Downloader extends React.Component<IState & IProps, {}> {
-    private f = false;
 
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
-        this.f = true;
     }
 
     public componentWillReceiveProps(nextProps: IState & IProps) {
@@ -49,12 +47,13 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        const {lastUpdated, isRefreshing, onFetch} = this.props;
+        const {lastUpdated, isRefreshing, isSubmitting, onFetch} = this.props;
         return (
             <div className="last-update-info">{lang.getText('lastUpdated')}: <span
                 className={isRefreshing ? 'text-success' : 'text-danger'}>
                 {lastUpdated}
                 </span>
+                {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
                 {!isRefreshing && (<button className="btn btn-primary" onClick={() => {
                     return onFetch();
                 }}>{lang.getText('Fetch')}</button>)}
@@ -73,7 +72,7 @@ const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IStat
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: IProps): IState => {
     const {accessKey, actions} = ownProps;
     if (!actions.hasOwnProperty('refresh')) {
         throw new Error('you need to have refresh URL');

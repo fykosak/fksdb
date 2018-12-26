@@ -16,7 +16,7 @@ interface ISubmitFormRequest {
 
 export const ACCESS_KEY = '@fyziklani-submit-form';
 
-export const submitStart = (dispatch: Dispatch<Action>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
+export const submitStart = (dispatch: Dispatch<Action<string>>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
     const data = {
         act: 'submit',
         requestData: {

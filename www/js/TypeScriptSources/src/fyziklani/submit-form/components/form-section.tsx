@@ -72,6 +72,4 @@ const mapStateToProps = (state: IFyziklaniSubmitStore, ownProps: IProps): IState
     };
 };
 
-export default connect(mapStateToProps, (): IState => {
-    return {};
-})(FormSection);
+export default connect(mapStateToProps, null)(FormSection);

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
 import { IFyziklaniResultsStore } from '../reducers';
 import Results from './results/';
@@ -35,9 +34,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    (): IState => {
-        return {};
-    },
-)(App);
+export default connect(mapStateToProps, null)(App);
