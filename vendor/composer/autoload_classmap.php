@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Nette\\ArgumentOutOfRangeException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
+    'Nette\\Bridges\\MailDI\\MailExtension' => $vendorDir . '/nette/mail/src/Bridges/MailDI/MailExtension.php',
     'Nette\\DeprecatedException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\DirectoryNotFoundException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\FileNotFoundException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
@@ -17,6 +18,15 @@ return array(
     'Nette\\Iterators\\Mapper' => $vendorDir . '/nette/utils/src/Iterators/Mapper.php',
     'Nette\\LegacyObject' => $vendorDir . '/nette/utils/src/Utils/LegacyObject.php',
     'Nette\\Localization\\ITranslator' => $vendorDir . '/nette/utils/src/Utils/ITranslator.php',
+    'Nette\\Mail\\FallbackMailer' => $vendorDir . '/nette/mail/src/Mail/FallbackMailer.php',
+    'Nette\\Mail\\FallbackMailerException' => $vendorDir . '/nette/mail/src/Mail/exceptions.php',
+    'Nette\\Mail\\IMailer' => $vendorDir . '/nette/mail/src/Mail/IMailer.php',
+    'Nette\\Mail\\Message' => $vendorDir . '/nette/mail/src/Mail/Message.php',
+    'Nette\\Mail\\MimePart' => $vendorDir . '/nette/mail/src/Mail/MimePart.php',
+    'Nette\\Mail\\SendException' => $vendorDir . '/nette/mail/src/Mail/exceptions.php',
+    'Nette\\Mail\\SendmailMailer' => $vendorDir . '/nette/mail/src/Mail/SendmailMailer.php',
+    'Nette\\Mail\\SmtpException' => $vendorDir . '/nette/mail/src/Mail/exceptions.php',
+    'Nette\\Mail\\SmtpMailer' => $vendorDir . '/nette/mail/src/Mail/SmtpMailer.php',
     'Nette\\MemberAccessException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\NotImplementedException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\NotSupportedException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
