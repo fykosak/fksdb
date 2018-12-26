@@ -1,7 +1,8 @@
 {
   "require": {
     "php": ">=7.0.0",
-    "nette/utils": "~2.5.3"
+    "nette/utils": "~2.5.3",
+    "nette/safe-stream": "~2.3.3"
   },
   "autoload": {
     "classmap": []
