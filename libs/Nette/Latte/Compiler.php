@@ -99,7 +99,7 @@ class Compiler extends Nette\Object
 	 */
 	public function compile(array $tokens)
 	{
-		$this->templateId = Strings::random();
+		$this->templateId = Nette\Utils\Random::generate();
 		$this->tokens = $tokens;
 		$output = '';
 		$this->output = & $output;
@@ -457,7 +457,7 @@ class Compiler extends Nette\Object
 		}
 
 		if (!$htmlNode->closing) {
-			$htmlNode->attrCode = & $this->attrCodes[$uniq = ' n:' . Nette\Utils\Strings::random()];
+			$htmlNode->attrCode = & $this->attrCodes[$uniq = ' n:' . Nette\Utils\Random::generate()];
 			$code = substr_replace($code, $uniq, strrpos($code, '/>') ?: strrpos($code, '>'), 0);
 		}
 

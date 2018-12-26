@@ -54,13 +54,13 @@ class TeachersGrid extends BaseGrid {
         });
         $this->addColumn('since', _('Since'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             if ($row->since === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->add(_('undefined'));
+                return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
             }
             return $row->since->format('Y-m-d');
         });
         $this->addColumn('until', _('Until'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
             if ($row->until === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still teaches'));
+                return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
             }
             return $row->until->format('Y-m-d');
         });

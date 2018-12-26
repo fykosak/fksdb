@@ -39,6 +39,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 	public static function initializePanel(Nette\Application\Application $application)
 	{
+
 		Debugger::$blueScreen->addPanel(function($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
