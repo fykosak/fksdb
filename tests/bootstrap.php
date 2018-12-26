@@ -31,7 +31,7 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
-
+error_reporting(~E_USER_DEPRECATED);
 
 require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
