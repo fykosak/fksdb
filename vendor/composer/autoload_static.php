@@ -8,6 +8,7 @@ class ComposerStaticInita3f44992ecfcf211db902b2355f8076f
 {
     public static $files = array (
         'a12da592622097d2b593a430e32e13fd' => __DIR__ . '/..' . '/nette/utils/src/loader.php',
+        'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
     );
 
     public static $classMap = array (

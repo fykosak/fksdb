@@ -3,7 +3,8 @@
     "php": ">=7.0.0",
     "nette/utils": "~2.5.3",
     "nette/component-model": "2.4.0",
-    "nette/http": "2.4.10"
+    "nette/http": "2.4.10",
+    "nette/safe-stream": "~2.3.3"
   },
   "autoload": {
     "classmap": []
