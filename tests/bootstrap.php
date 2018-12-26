@@ -79,6 +79,7 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
+error_reporting(~E_USER_DEPRECATED);
 Replicator::register();
 
 function dumpResponse(TextResponse $response) {
