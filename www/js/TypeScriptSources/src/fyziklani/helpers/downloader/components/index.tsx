@@ -11,8 +11,10 @@ import {
     fetchResults,
     waitForFetch,
 } from '../actions/';
+import jqXHR = JQuery.jqXHR;
 
 interface IState {
+    error?: jqXHR<any>;
     isSubmitting?: boolean;
     lastUpdated?: string;
     refreshDelay?: number;
@@ -47,16 +49,18 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        const {lastUpdated, isRefreshing, isSubmitting, onFetch} = this.props;
+        const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
         return (
-            <div className="last-update-info">{lang.getText('lastUpdated')}: <span
+            <div className="last-update-info bg-white">
+                <span
                 className={isRefreshing ? 'text-success' : 'text-danger'}>
                 {lastUpdated}
                 </span>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
-                {!isRefreshing && (<button className="btn btn-primary" onClick={() => {
+                {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
                     return onFetch();
                 }}>{lang.getText('Fetch')}</button>)}
+                {error && <span className={'text-danger'}>{error.status} {error.statusText}</span>}
             </div>
         );
     }
@@ -65,6 +69,7 @@ class Downloader extends React.Component<IState & IProps, {}> {
 const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IState => {
     const {accessKey} = ownProps;
     return {
+        error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
         isRefreshing: state.downloader.isRefreshing,
         isSubmitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
         lastUpdated: state.downloader.lastUpdated,

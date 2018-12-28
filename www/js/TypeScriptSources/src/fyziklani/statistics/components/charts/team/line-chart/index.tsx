@@ -13,7 +13,7 @@ export default class PointsInTime extends React.Component<IProps, {}> {
         const {teamId} = this.props;
         return (
             <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('timeProgress')}</h3>
+                <h3>{lang.getText('Time progress')}</h3>
                 <div className="row">
                     <Chart teamId={teamId}/>
                     <Legend inline={false}/>

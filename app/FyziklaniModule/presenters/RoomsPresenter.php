@@ -3,6 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
+use FKSDB\Components\React\Fyziklani\RoutingEdit;
 
 /**
  *
@@ -58,7 +59,7 @@ class RoomsPresenter extends BasePresenter {
     public function renderEdit() {
         if ($this->isAjax()) {
             $data = $this->getHttpRequest()->getPost('requestData');
-            $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
+            $updatedTeams = $this->getServiceFyziklaniTeamPosition()->updateRouting($data);
             $response = new \ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
@@ -72,21 +73,21 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentDownload() {
+    public function createComponentDownload(): RoutingDownload {
         $control = new RoutingDownload($this->getTranslator());
         $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
         $control->setBuildings($buildings);
         $control->setRooms($this->getRooms());
-        $control->setTeams($this->serviceFyziklaniTeam->getTeamsArray($this->getEvent()));
+        $control->setTeams($this->getServiceFyziklaniTeam()->getTeamsArray($this->getEvent()));
         return $control;
     }
 
     /**
-     * @return \FKSDB\Components\React\Fyziklani\RoutingEdit
+     * @return RoutingEdit
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentRouting() {
+    public function createComponentRouting(): RoutingEdit {
         return $this->fyziklaniComponentsFactory->createRoutingEdit($this->getEvent());
     }
 }

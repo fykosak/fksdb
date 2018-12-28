@@ -60,7 +60,7 @@ class CloseSubmitStrategy {
     }
 
     private function saveResults($data, $total, &$msg = null) {
-        $msg = '';
+        $msg = Html::el('ul');
         foreach ($data as $index => &$teamData) {
             $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamData['e_fyziklani_team_id']));
             if ($total) {
@@ -69,8 +69,8 @@ class CloseSubmitStrategy {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
             $this->serviceFyziklaniTeam->save($team);
-            $msg .= Html::el('li')
-                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
+            $msg->addHtml(Html::el('li')
+                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1)));
         }
     }
 

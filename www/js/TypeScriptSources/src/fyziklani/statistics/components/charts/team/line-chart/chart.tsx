@@ -125,11 +125,11 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
         );
     }
 
-    private getAxis() {
-        const xAxis = d3.axisBottom(this.xScale);
+    private getAxis(): void {
+        const xAxis = d3.axisBottom<Date>(this.xScale);
         d3.select(this.xAxis).call(xAxis);
 
-        const yAxis = d3.axisLeft(this.yScale);
+        const yAxis = d3.axisLeft<number>(this.yScale);
         d3.select(this.yAxis).call(yAxis);
     }
 }

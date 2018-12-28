@@ -102,7 +102,7 @@ class TimeLine extends React.Component<IState & IProps, {}> {
     }
 
     private getAxis() {
-        const xAxis = d3.axisBottom(this.xScale).tickSizeInner(-this.ySize).tickArguments([d3.timeMinute.every(30)]);
+        const xAxis = d3.axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([d3.timeMinute.every(30)]);
         d3.select(this.xAxis).call(xAxis);
     }
 }

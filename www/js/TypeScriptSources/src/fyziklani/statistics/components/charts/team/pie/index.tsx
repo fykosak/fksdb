@@ -13,7 +13,7 @@ export default class PointsPie extends React.Component<IProps, {}> {
         const {teamId} = this.props;
         return (
             <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('successOfSubmitting')}</h3>
+                <h3>{lang.getText('Success of submitting')}</h3>
                 <Chart teamId={teamId}/>
                 <Legend inline={false}/>
             </div>
