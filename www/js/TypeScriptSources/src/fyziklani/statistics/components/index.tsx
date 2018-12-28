@@ -26,7 +26,7 @@ export default class StatisticApp extends React.Component<IProps, {}> {
             <Provider store={store}>
                 <div className={'fyziklani-statistics'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
-                    <App mode={mode} accessKey={accessKey}/>
+                    <App mode={mode}/>
                 </div>
                 <Powered/>
             </Provider>

@@ -9,7 +9,7 @@ import { FORM_NAME } from '../components/form-container';
 import { getFullCode } from '../middleware/form';
 import { IFyziklaniSubmitStore } from '../reducers';
 
-interface ISubmitFormRequest {
+export interface ISubmitFormRequest {
     code: string;
     points: number;
 }

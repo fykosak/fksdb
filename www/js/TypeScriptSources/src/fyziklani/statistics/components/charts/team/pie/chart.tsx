@@ -25,7 +25,6 @@ class Chart extends React.Component<IState & IProps, {}> {
     public render() {
         const {submits, teamId, activePoints} = this.props;
 
-        const teamSubmits = [];
         const pointsCategories: Array<{ points: number; count: number }> = [
             {points: 0, count: 0},
             {points: 1, count: 0},
@@ -42,13 +41,12 @@ class Chart extends React.Component<IState & IProps, {}> {
                 const submit: ISubmit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
-                    totalSubmits++;
-                    pointsCategories[points].count++;
-                    maxPoints += +points;
-                    teamSubmits.push({
-                        ...submit,
-                        totalPoints: maxPoints,
-                    });
+
+                    if (points !== null && points !== 0) {
+                        totalSubmits++;
+                        pointsCategories[points].count++;
+                        maxPoints += +points;
+                    }
                 }
             }
         }

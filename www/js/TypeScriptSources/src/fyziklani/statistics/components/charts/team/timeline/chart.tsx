@@ -136,12 +136,14 @@ const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: num
             const submit: ISubmit = submits[index];
             const {teamId: submitTeamId, created} = submit;
             if (teamId === submitTeamId) {
-                teamSubmits.push(submit);
-                const task = taskBuffer.shift();
-                activeTasks.push({
-                    ...task,
-                    from: new Date(created),
-                });
+                if (submit.points !== null && submit.points !== 0) {
+                    teamSubmits.push(submit);
+                    const task = taskBuffer.shift();
+                    activeTasks.push({
+                        ...task,
+                        from: new Date(created),
+                    });
+                }
             }
         }
     }

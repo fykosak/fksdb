@@ -26,11 +26,11 @@ export default class TeamRow extends React.Component<IProps, {}> {
             const submit = submits[taskId] || null;
             const points = submit ? submit.points : null;
 
-            if (points !== null) {
+            if (points !== null || points !== 0) {
                 count++;
                 sum += +points;
             }
-            return (<td data-points={points} key={taskIndex}>{points}</td>);
+            return (<td data-points={points} key={taskIndex}>{points ? points : null}</td>);
         });
 
         const average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';

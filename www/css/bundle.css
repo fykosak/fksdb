@@ -1,93 +1,93 @@
-.fyziklani-results h1 {
+.fyziklani-results h1, .fyziklani-statistics h1 {
   color: #f44336;
   font-weight: bold;
 }
-.fyziklani-results .inner-headline {
+.fyziklani-results .inner-headline, .fyziklani-statistics .inner-headline {
   margin-top: 15%;
 }
-.fyziklani-results .clock {
+.fyziklani-results .clock, .fyziklani-statistics .clock {
   justify-content: space-between;
   color: #d7392e;
   padding: 0.25em;
   font-weight: bold;
 }
-.fyziklani-results .clock > span {
+.fyziklani-results .clock > span, .fyziklani-statistics .clock > span {
   display: flex;
   flex-wrap: wrap;
 }
-.fyziklani-results .clock.small {
+.fyziklani-results .clock.small, .fyziklani-statistics .clock.small {
   font-size: 200%;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
 }
-.fyziklani-results .clock.small .time-label {
+.fyziklani-results .clock.small .time-label, .fyziklani-statistics .clock.small .time-label {
   width: 100%;
   font-size: 0.75rem;
 }
-.fyziklani-results .clock.big {
+.fyziklani-results .clock.big, .fyziklani-statistics .clock.big {
   text-align: center;
   position: initial;
 }
-.fyziklani-results .clock.big .time-value {
+.fyziklani-results .clock.big .time-value, .fyziklani-statistics .clock.big .time-value {
   width: 100%;
   font-size: 8rem;
 }
-.fyziklani-results .clock.big .time-label {
+.fyziklani-results .clock.big .time-label, .fyziklani-statistics .clock.big .time-label {
   width: 100%;
   font-size: 2rem;
 }
-.fyziklani-results .image-wp {
+.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
   color: #d7392e;
   font-size: 5rem;
   text-align: center;
 }
-.fyziklani-results table tbody {
+.fyziklani-results table tbody, .fyziklani-statistics table tbody {
   counter-reset: results-table;
 }
-.fyziklani-results table tbody tr td {
+.fyziklani-results table tbody tr td, .fyziklani-statistics table tbody tr td {
   text-align: center;
   border: solid 1px #ccc;
   font-weight: bold;
 }
-.fyziklani-results table tbody tr td[data-points="5"] {
+.fyziklani-results table tbody tr td[data-points="5"], .fyziklani-statistics table tbody tr td[data-points="5"] {
   background-color: #2d7dd2;
 }
-.fyziklani-results table tbody tr td[data-points="3"] {
+.fyziklani-results table tbody tr td[data-points="3"], .fyziklani-statistics table tbody tr td[data-points="3"] {
   background-color: #98cc04;
 }
-.fyziklani-results table tbody tr td[data-points="2"] {
+.fyziklani-results table tbody tr td[data-points="2"], .fyziklani-statistics table tbody tr td[data-points="2"] {
   background-color: #eeb902;
 }
-.fyziklani-results table tbody tr td[data-points="1"] {
+.fyziklani-results table tbody tr td[data-points="1"], .fyziklani-statistics table tbody tr td[data-points="1"] {
   background-color: #f45d01;
 }
-.fyziklani-results table tbody tr td:first-child::before {
+.fyziklani-results table tbody tr td:first-child::before, .fyziklani-statistics table tbody tr td:first-child::before {
   counter-increment: results-table;
   content: counter(results-table) ".";
 }
-.fyziklani-results table thead tr th[data-task_label^=A] {
+.fyziklani-results table thead tr th[data-task_label^=A], .fyziklani-statistics table thead tr th[data-task_label^=A] {
   background-color: #fccbc7;
 }
-.fyziklani-results table thead tr th[data-task_label^=B] {
+.fyziklani-results table thead tr th[data-task_label^=B], .fyziklani-statistics table thead tr th[data-task_label^=B] {
   background-color: #f99d97;
 }
-.fyziklani-results table thead tr th[data-task_label^=C] {
+.fyziklani-results table thead tr th[data-task_label^=C], .fyziklani-statistics table thead tr th[data-task_label^=C] {
   background-color: #f77066;
 }
-.fyziklani-results table thead tr th[data-task_label^=D] {
+.fyziklani-results table thead tr th[data-task_label^=D], .fyziklani-statistics table thead tr th[data-task_label^=D] {
   background-color: #f44336;
 }
-.fyziklani-results table thead tr th[data-task_label^=E] {
+.fyziklani-results table thead tr th[data-task_label^=E], .fyziklani-statistics table thead tr th[data-task_label^=E] {
   background-color: #ea1c0d;
   color: white;
 }
-.fyziklani-results table thead tr th[data-task_label^=F] {
+.fyziklani-results table thead tr th[data-task_label^=F], .fyziklani-statistics table thead tr th[data-task_label^=F] {
   background-color: #ba160a;
   color: white;
 }
-.fyziklani-results table thead tr th[data-task_label^=G] {
+.fyziklani-results table thead tr th[data-task_label^=G], .fyziklani-statistics table thead tr th[data-task_label^=G] {
   background-color: #891008;
   color: white;
 }
@@ -205,6 +205,11 @@
 
 hr.fyziklani-hr-red {
   border-color: #f44336;
+}
+
+.badge-fyziklani {
+  background-color: #f44336;
+  color: white;
 }
 
 .inbox-field {

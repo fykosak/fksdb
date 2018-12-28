@@ -3,35 +3,37 @@ import { connect } from 'react-redux';
 import Loading from '../../helpers/components/loading';
 import { IFyziklaniStatisticsStore } from '../reducers';
 import ChartsContainer from './charts/';
+import ResultsShower from '../../helpers/components/results-shower';
+import HardVisibleSwitch from '../../helpers/options/compoents/hard-visible-switch';
 
 interface IState {
     isReady?: boolean;
+    isOrg?: boolean;
 }
 
 interface IProps {
-    accessKey: string;
     mode: string;
 }
 
 class App extends React.Component<IState & IProps, {}> {
     public render() {
-        const {isReady, mode} = this.props;
+        const {isReady, mode, isOrg} = this.props;
         if (!isReady) {
             return <Loading/>;
         }
-        return (<ChartsContainer mode={mode}/>);
+        return <>
+            {isOrg && <HardVisibleSwitch/>}
+            <ResultsShower>
+                <ChartsContainer mode={mode}/>
+            </ResultsShower></>;
     }
 }
 
 const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
+        isOrg: state.options.isOrg,
         isReady: state.options.isReady,
     };
 };
 
-export default connect(
-    mapStateToProps,
-    (): IState => {
-        return {};
-    },
-)(App);
+export default connect(mapStateToProps, null)(App);

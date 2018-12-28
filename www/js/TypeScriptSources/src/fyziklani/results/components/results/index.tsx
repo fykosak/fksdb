@@ -1,57 +1,23 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import Timer from '../../../helpers/components/timer';
-import { IFyziklaniResultsStore } from '../../reducers';
+import ResultsShower from '../../../helpers/components/results-shower';
 import AutoFilter from './filter/index';
-import Images from './images';
 import ResultsTable from './results-table';
 
-interface IState {
-    visible?: boolean;
-    hardVisible?: boolean;
-}
-
 interface IProps {
-    basePath: string;
-    accessKey: string;
     mode: string;
 }
 
-class Results extends React.Component<IState & IProps, {}> {
+export default class Results extends React.Component<IProps, {}> {
 
     public render() {
-        const {visible, hardVisible, basePath, mode} = this.props;
-
-        const msg = [];
-        // TODO do samostatného componentu všetky messages
-        if (hardVisible) {
-            msg.push(<div key={msg.length} className="alert alert-warning">
-                Výsledková listina je určená pouze pro organizátory!!!</div>);
-        }
-
+        const {mode} = this.props;
         return (
             <div>
-                {msg}
-
-                {(mode === 'presentation') && (<>
-                    {(visible || hardVisible) ? (<Timer/>) :
-                        (<div className={'inner-headline'}>
-                            <Timer/>
-                            <Images basePath={basePath}/>
-                        </div>)}
-                    <AutoFilter/>
-                </>)}
-                {(visible || hardVisible) ? (<ResultsTable/>) : null}
+                <ResultsShower className={(mode === 'presentation') ? 'inner-headline' : null}>
+                    <ResultsTable/>
+                </ResultsShower>
+                {(mode === 'presentation') && (<AutoFilter/>)}
             </div>
         );
     }
 }
-
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
-    return {
-        hardVisible: state.options.hardVisible,
-        visible: state.timer.visible,
-    };
-};
-
-export default connect(mapStateToProps, null)(Results);

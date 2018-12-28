@@ -27,7 +27,7 @@ export default class Room extends React.Component<IProps, {}> {
 
         return (
             <div className="routing-room">
-                <h3>{name}</h3>
+                <h2>{name}</h2>
                 <table className="table">
                     <thead>
                     <tr>

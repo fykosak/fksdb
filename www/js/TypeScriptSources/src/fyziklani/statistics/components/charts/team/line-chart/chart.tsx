@@ -7,7 +7,10 @@ import {
     ITask,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { getLinePath } from '../../../../middleware/charts/lines';
+import {
+    getLinePath,
+    IPointData,
+} from '../../../../middleware/charts/lines';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
 
 interface IState {
@@ -54,16 +57,7 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
         } = this.props;
 
         const teamSubmits: IExtendedSubmit[] = [];
-        const pointsCategories = [
-            {points: 0, count: 0},
-            {points: 1, count: 0},
-            {points: 2, count: 0},
-            {points: 3, count: 0},
-            {points: 4, count: 0},
-            {points: 5, count: 0},
-        ];
 
-        let totalSubmits = 0;
         let maxPoints = 0;
 
         for (const index in submits) {
@@ -74,19 +68,19 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
                     const currentTask = tasks.filter((task) => {
                         return submit.taskId === task.taskId;
                     })[0];
-                    totalSubmits++;
-                    pointsCategories[points].count++;
-                    maxPoints += +points;
-                    teamSubmits.push({
-                        ...submit,
-                        currentTask,
-                        totalPoints: maxPoints,
-                    });
+                    if (points !== null && points !== 0) {
+                        maxPoints += +points;
+                        teamSubmits.push({
+                            ...submit,
+                            currentTask,
+                            totalPoints: maxPoints,
+                        });
+                    }
                 }
             }
         }
 
-        this.xScale = d3.scaleTime<number, number>().domain([new Date(gameStart), new Date(gameEnd)]).range([30, 580]);
+        this.xScale = d3.scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
         this.yScale = d3.scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
         const dots = teamSubmits.map((submit, index) => {
             return (
@@ -104,7 +98,18 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
                 </circle>
             );
         });
-        const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, teamSubmits);
+        const pointsData: IPointData[] = [
+            {
+                created: gameStart.toString(),
+                totalPoints: 0,
+            },
+            ...teamSubmits,
+            {
+                created: gameEnd.toString(),
+                totalPoints: maxPoints,
+            },
+        ];
+        const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, pointsData);
 
         return (
             <div className="col-lg-8">

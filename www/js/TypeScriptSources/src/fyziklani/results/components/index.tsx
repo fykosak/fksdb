@@ -25,7 +25,7 @@ export default class ResultsApp extends React.Component<IProps, {}> {
             <Provider store={store}>
                 <div className={'brawl-results fyziklani-results'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
-                    <App mode={mode} accessKey={accessKey}/>
+                    <App mode={mode}/>
                 </div>
             </Provider>
         );

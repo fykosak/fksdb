@@ -10,20 +10,19 @@ interface IState {
 }
 
 interface IProps {
-    accessKey: string;
     mode: string;
 }
 
 class App extends React.Component<IState & IProps, {}> {
     public render() {
 
-        const {isReady, mode, accessKey} = this.props;
+        const {isReady, mode} = this.props;
         if (!isReady) {
             return <Loading/>;
         }
         return (<>
             <FilterSelect mode={mode}/>
-            <Results accessKey={accessKey} basePath={'/'} mode={mode}/>
+            <Results mode={mode}/>
         </>);
     }
 }

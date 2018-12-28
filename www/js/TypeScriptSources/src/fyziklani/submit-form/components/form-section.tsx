@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import {
     Field,
     formValueSelector,
+    SubmitHandler,
 } from 'redux-form';
-import { IMessage } from '../../../fetch-api/middleware/interfaces';
+import {
+    IMessage,
+    IResponse,
+} from '../../../fetch-api/middleware/interfaces';
 import {
     ITask,
     ITeam,
 } from '../../helpers/interfaces/';
+import { ISubmitFormRequest } from '../actions';
 import { IFyziklaniSubmitStore } from '../reducers/';
 import CodeInputError from './error-block';
 import { FORM_NAME } from './form-container';
@@ -22,9 +27,10 @@ export interface IProps {
     teams: ITeam[];
     valid: boolean;
     submitting: boolean;
-    handleSubmit: (args: any) => any;
+    availablePoints: number[];
+    handleSubmit: SubmitHandler<{ code: string }, any, string>;
 
-    onSubmit(values: any): Promise<any>;
+    onSubmit?(values: ISubmitFormRequest): Promise<IResponse<void>>;
 }
 
 interface IState {
@@ -35,7 +41,7 @@ interface IState {
 class FormSection extends React.Component<IProps & IState, {}> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages} = this.props;
+        const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages, availablePoints} = this.props;
 
         return (
             <div>
@@ -52,7 +58,12 @@ class FormSection extends React.Component<IProps & IState, {}> {
                         <div className="form-group">
                             <Field name="code" component={CodeInputError}/>
                         </div>
-                        <SubmitButtons valid={valid} submitting={submitting} handleSubmit={handleSubmit} onSubmit={onSubmit}/>
+                        <SubmitButtons
+                            availablePoints={availablePoints}
+                            valid={valid}
+                            submitting={submitting}
+                            handleSubmit={handleSubmit}
+                            onSubmit={onSubmit}/>
                     </div>
                     <div className="col-6">
                         <ValueDisplay code={code} tasks={tasks} teams={teams}/>

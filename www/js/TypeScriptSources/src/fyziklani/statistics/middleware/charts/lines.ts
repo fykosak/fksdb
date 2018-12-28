@@ -6,9 +6,14 @@ interface IScales {
     yScale: d3.ScaleLinear<number, number>;
 }
 
-export function getLinePath(scales: IScales, data: IExtendedSubmit[]): string {
+export interface IPointData {
+    created: string;
+    totalPoints: number;
+}
+
+export function getLinePath(scales: IScales, data: IPointData[]): string {
     const {xScale, yScale} = scales;
-    return d3.line<IExtendedSubmit>()
+    return d3.line<IPointData>()
         .x((element: IExtendedSubmit) => {
             return xScale(new Date(element.created));
         })

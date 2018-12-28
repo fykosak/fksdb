@@ -104,6 +104,7 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Fyziklani
+            presenter: Dashboard
             flags: SECURED
 
         '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]':
