@@ -84,7 +84,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onSetVisibility: (state) => dispatch(setVisibility(state)),
         onToggleChooser: () => dispatch(toggleChooser()),

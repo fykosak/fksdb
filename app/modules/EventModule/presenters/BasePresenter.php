@@ -154,8 +154,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
     }
 
-    public function getNavRoot() {
-        return 'event.dashboard.default';
+    public function getNavRoots(): array {
+        return ['event.dashboard.default'];
     }
 
     /**

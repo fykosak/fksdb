@@ -82,10 +82,15 @@ class ResultsPresenter extends BasePresenter {
         $this->authorizedDefault();
     }
 
+
     public function authorizedTeamStatistics() {
         $this->authorizedDefault();
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedCorrelationStatistics() {
         $this->setAuthorized($this->isContestsOrgAllowed('fyziklani', 'correlation'));
     }
@@ -95,7 +100,6 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedResultsPresentation() {
-        $this->getHttpRequest();
         $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
     }
 
@@ -142,5 +146,11 @@ class ResultsPresenter extends BasePresenter {
      */
     public function createComponentCorrelationStatistics(): CorrelationStatistics {
         return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
+    }
+
+    public function getNavRoots(): array {
+        $roots = parent::getNavRoots();
+        $roots[] = 'fyziklani.results.default';
+        return $roots;
     }
 }

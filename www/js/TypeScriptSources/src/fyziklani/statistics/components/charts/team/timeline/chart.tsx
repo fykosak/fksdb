@@ -13,7 +13,6 @@ interface IState {
     activePoints?: number;
     submits?: ISubmits;
     tasks?: ITask[];
-    teamId?: number;
     gameStart?: Date;
     gameEnd?: Date;
 }
@@ -22,7 +21,11 @@ interface IExtendedTask extends ITask {
     from: Date;
 }
 
-class TimeLine extends React.Component<IState, {}> {
+interface IProps {
+    teamId: number;
+}
+
+class TimeLine extends React.Component<IState & IProps, {}> {
 
     private xAxis: any;
     private ySize: number;
@@ -67,7 +70,6 @@ class TimeLine extends React.Component<IState, {}> {
                     active = activePoints === submit.points;
                 }
             }
-
             return (
                 <g style={{opacity: (active) ? 1 : 0.1}} key={index}>
                     <polyline
@@ -100,7 +102,7 @@ class TimeLine extends React.Component<IState, {}> {
     }
 
     private getAxis() {
-        const xAxis = d3.axisBottom(this.xScale).tickSizeInner(-this.ySize).tickArguments([d3.timeMinute.every(30)]);
+        const xAxis = d3.axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([d3.timeMinute.every(30)]);
         d3.select(this.xAxis).call(xAxis);
     }
 }
@@ -112,7 +114,6 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
         gameStart: new Date(state.timer.gameStart),
         submits: state.data.submits,
         tasks: state.data.tasks,
-        teamId: state.statistics.teamId,
     };
 };
 
@@ -135,12 +136,14 @@ const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: num
             const submit: ISubmit = submits[index];
             const {teamId: submitTeamId, created} = submit;
             if (teamId === submitTeamId) {
-                teamSubmits.push(submit);
-                const task = taskBuffer.shift();
-                activeTasks.push({
-                    ...task,
-                    from: new Date(created),
-                });
+                if (submit.points !== null && submit.points !== 0) {
+                    teamSubmits.push(submit);
+                    const task = taskBuffer.shift();
+                    activeTasks.push({
+                        ...task,
+                        from: new Date(created),
+                    });
+                }
             }
         }
     }

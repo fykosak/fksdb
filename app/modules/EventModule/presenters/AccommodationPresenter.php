@@ -42,7 +42,6 @@ class AccommodationPresenter extends BasePresenter {
     private $serviceAddress;
     /**
      * @var int
-     * @persistent
      */
     public $id;
 
@@ -63,23 +62,43 @@ class AccommodationPresenter extends BasePresenter {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedList() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'list'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedCreate() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'create'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedEdit() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'edit'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedBilleted() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'billeted'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(
@@ -100,6 +119,11 @@ class AccommodationPresenter extends BasePresenter {
         $this->setIcon('fa fa-table');
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleBilleted() {
         $model = $this->getModel();
         $this->setTitle(
@@ -112,6 +136,8 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
         $this['editForm']->getForm()->setDefaults($this->getDefaults());
@@ -145,10 +171,21 @@ class AccommodationPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @return EventAccommodationGrid
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function createComponentGrid(): EventAccommodationGrid {
         return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
     }
 
+    /**
+     * @return EventBilletedPerson
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function createComponentBilletedGrid(): EventBilletedPerson {
         return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
     }
@@ -188,6 +225,8 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return array|null
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
      */
     private function getDefaults() {
         $model = $this->getModel();
@@ -200,10 +239,11 @@ class AccommodationPresenter extends BasePresenter {
         ];
     }
 
-
     /**
      * @return ModelEventAccommodation
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function getModel(): ModelEventAccommodation {
         $row = $this->serviceEventAccommodation->findByPrimary($this->id);

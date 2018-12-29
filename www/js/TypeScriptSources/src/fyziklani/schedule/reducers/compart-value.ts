@@ -1,6 +1,7 @@
 import {
     ACTION_SET_VISIBILITY,
     ACTION_TOGGLE_CHOOSER,
+    IActionSetVisibility,
 } from '../actions';
 
 const toggleChooser = (state: ICompactValueState): ICompactValueState => {
@@ -10,7 +11,7 @@ const toggleChooser = (state: ICompactValueState): ICompactValueState => {
     };
 };
 
-const setInitialVisibility = (state: ICompactValueState, action): ICompactValueState => {
+const setInitialVisibility = (state: ICompactValueState, action: IActionSetVisibility): ICompactValueState => {
     return {
         ...state,
         showChooser: !action.state,

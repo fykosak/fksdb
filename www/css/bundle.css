@@ -1,91 +1,95 @@
-.brawl-results h1, .fyziklani-results h1 {
-  color: white;
+.fyziklani-results h1, .fyziklani-statistics h1 {
+  color: #f44336;
+  font-weight: bold;
 }
-.brawl-results .inner-headline, .fyziklani-results .inner-headline {
+.fyziklani-results .inner-headline, .fyziklani-statistics .inner-headline {
   margin-top: 15%;
 }
-.brawl-results .clock, .fyziklani-results .clock {
+.fyziklani-results .clock, .fyziklani-statistics .clock {
   justify-content: space-between;
   color: #d7392e;
   padding: 0.25em;
   font-weight: bold;
 }
-.brawl-results .clock > span, .fyziklani-results .clock > span {
+.fyziklani-results .clock > span, .fyziklani-statistics .clock > span {
   display: flex;
   flex-wrap: wrap;
 }
-.brawl-results .clock.small, .fyziklani-results .clock.small {
+.fyziklani-results .clock.small, .fyziklani-statistics .clock.small {
   font-size: 200%;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
 }
-.brawl-results .clock.small .time-label, .fyziklani-results .clock.small .time-label {
+.fyziklani-results .clock.small .time-label, .fyziklani-statistics .clock.small .time-label {
   width: 100%;
   font-size: 0.75rem;
 }
-.brawl-results .clock.big, .fyziklani-results .clock.big {
+.fyziklani-results .clock.big, .fyziklani-statistics .clock.big {
   text-align: center;
   position: initial;
 }
-.brawl-results .clock.big .time-value, .fyziklani-results .clock.big .time-value {
+.fyziklani-results .clock.big .time-value, .fyziklani-statistics .clock.big .time-value {
   width: 100%;
   font-size: 8rem;
 }
-.brawl-results .clock.big .time-label, .fyziklani-results .clock.big .time-label {
+.fyziklani-results .clock.big .time-label, .fyziklani-statistics .clock.big .time-label {
   width: 100%;
   font-size: 2rem;
 }
-.brawl-results .image-wp, .fyziklani-results .image-wp {
+.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
   color: #d7392e;
   font-size: 5rem;
   text-align: center;
 }
-.brawl-results table tbody, .fyziklani-results table tbody {
+.fyziklani-results table tbody, .fyziklani-statistics table tbody {
   counter-reset: results-table;
 }
-.brawl-results table tbody tr td, .fyziklani-results table tbody tr td {
+.fyziklani-results table tbody tr td, .fyziklani-statistics table tbody tr td {
   text-align: center;
   border: solid 1px #ccc;
   font-weight: bold;
 }
-.brawl-results table tbody tr td[data-points="5"], .fyziklani-results table tbody tr td[data-points="5"] {
+.fyziklani-results table tbody tr td[data-points="5"], .fyziklani-statistics table tbody tr td[data-points="5"] {
   background-color: #2d7dd2;
 }
-.brawl-results table tbody tr td[data-points="3"], .fyziklani-results table tbody tr td[data-points="3"] {
+.fyziklani-results table tbody tr td[data-points="3"], .fyziklani-statistics table tbody tr td[data-points="3"] {
   background-color: #98cc04;
 }
-.brawl-results table tbody tr td[data-points="2"], .fyziklani-results table tbody tr td[data-points="2"] {
+.fyziklani-results table tbody tr td[data-points="2"], .fyziklani-statistics table tbody tr td[data-points="2"] {
   background-color: #eeb902;
 }
-.brawl-results table tbody tr td[data-points="1"], .fyziklani-results table tbody tr td[data-points="1"] {
+.fyziklani-results table tbody tr td[data-points="1"], .fyziklani-statistics table tbody tr td[data-points="1"] {
   background-color: #f45d01;
 }
-.brawl-results table tbody tr td:first-child::before, .fyziklani-results table tbody tr td:first-child::before {
+.fyziklani-results table tbody tr td:first-child::before, .fyziklani-statistics table tbody tr td:first-child::before {
   counter-increment: results-table;
   content: counter(results-table) ".";
 }
-.brawl-results table thead tr th[data-task_label^=A], .fyziklani-results table thead tr th[data-task_label^=A] {
-  background-color: lightgreen;
+.fyziklani-results table thead tr th[data-task_label^=A], .fyziklani-statistics table thead tr th[data-task_label^=A] {
+  background-color: #fccbc7;
 }
-.brawl-results table thead tr th[data-task_label^=B], .fyziklani-results table thead tr th[data-task_label^=B] {
-  background-color: lightyellow;
+.fyziklani-results table thead tr th[data-task_label^=B], .fyziklani-statistics table thead tr th[data-task_label^=B] {
+  background-color: #f99d97;
 }
-.brawl-results table thead tr th[data-task_label^=C], .fyziklani-results table thead tr th[data-task_label^=C] {
-  background-color: lightgoldenrodyellow;
+.fyziklani-results table thead tr th[data-task_label^=C], .fyziklani-statistics table thead tr th[data-task_label^=C] {
+  background-color: #f77066;
 }
-.brawl-results table thead tr th[data-task_label^=D], .fyziklani-results table thead tr th[data-task_label^=D] {
-  background-color: lightsalmon;
+.fyziklani-results table thead tr th[data-task_label^=D], .fyziklani-statistics table thead tr th[data-task_label^=D] {
+  background-color: #f44336;
 }
-.brawl-results table thead tr th[data-task_label^=E], .fyziklani-results table thead tr th[data-task_label^=E] {
-  background-color: lightcoral;
+.fyziklani-results table thead tr th[data-task_label^=E], .fyziklani-statistics table thead tr th[data-task_label^=E] {
+  background-color: #ea1c0d;
+  color: white;
 }
-.brawl-results table thead tr th[data-task_label^=F], .fyziklani-results table thead tr th[data-task_label^=F] {
-  background-color: lightpink;
+.fyziklani-results table thead tr th[data-task_label^=F], .fyziklani-statistics table thead tr th[data-task_label^=F] {
+  background-color: #ba160a;
+  color: white;
 }
-.brawl-results table thead tr th[data-task_label^=G], .fyziklani-results table thead tr th[data-task_label^=G] {
-  background-color: lightskyblue;
+.fyziklani-results table thead tr th[data-task_label^=G], .fyziklani-statistics table thead tr th[data-task_label^=G] {
+  background-color: #891008;
+  color: white;
 }
 
 .schedule-field-container {
@@ -120,8 +124,17 @@
 [data-contest~=event-type-1] main:not(.no-bg) {
   background: url("/images/fof/prague-layout.svg") no-repeat;
 }
-[data-contest~=event-type-1] main:not(.no-bg) h1 {
+[data-contest~=event-type-1] main:not(.no-bg) h1, [data-contest~=event-type-1] main:not(.no-bg) h2, [data-contest~=event-type-1] main:not(.no-bg) h3 {
   font-weight: bold;
+}
+[data-contest~=event-type-1] main:not(.no-bg) h2 {
+  color: #f44336;
+}
+[data-contest~=event-type-1] main:not(.no-bg) h1, [data-contest~=event-type-1] main:not(.no-bg) h3 {
+  color: black;
+}
+[data-contest~=event-type-1] main:not(.no-bg) hr {
+  border-color: #f44336;
 }
 
 [data-contest~=event-type-1] .bd-callout {
@@ -192,6 +205,11 @@
 
 hr.fyziklani-hr-red {
   border-color: #f44336;
+}
+
+.badge-fyziklani {
+  background-color: #f44336;
+  color: white;
 }
 
 .inbox-field {
@@ -272,34 +290,6 @@ ul.inbox-swappable {
 
 .brawl-results table tbody tr td {
   text-align: center;
-}
-
-.brawl-results table thead tr th[data-task_label^=A] {
-  background-color: lightgreen;
-}
-
-.brawl-results table thead tr th[data-task_label^=B] {
-  background-color: lightyellow;
-}
-
-.brawl-results table thead tr th[data-task_label^=C] {
-  background-color: lightgoldenrodyellow;
-}
-
-.brawl-results table thead tr th[data-task_label^=D] {
-  background-color: lightsalmon;
-}
-
-.brawl-results table thead tr th[data-task_label^=E] {
-  background-color: lightcoral;
-}
-
-.brawl-results table thead tr th[data-task_label^=F] {
-  background-color: lightpink;
-}
-
-.brawl-results table thead tr th[data-task_label^=G] {
-  background-color: lightskyblue;
 }
 
 .brawl-results table tbody tr td {
