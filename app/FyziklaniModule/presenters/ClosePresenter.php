@@ -19,6 +19,7 @@ class ClosePresenter extends BasePresenter {
     private $team;
     /**
      * @var int
+     * @persistent
      */
     public $id;
 
@@ -126,15 +127,16 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function closeFormSucceeded() {
+        $team = $this->getTeam();
         $connection = $this->getServiceFyziklaniTeam()->getConnection();
         $connection->beginTransaction();
-        $submits = $this->getTeam()->getSubmits();
+        $submits = $team->getSubmits();
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        $this->getServiceFyziklaniTeam()->updateModel($this->getTeam(), ['points' => $sum]);
-        $this->getServiceFyziklaniTeam()->save($this->getTeam());
+        $this->getServiceFyziklaniTeam()->updateModel($team, ['points' => $sum]);
+        $this->getServiceFyziklaniTeam()->save($team);
         $connection->commit();
         $this->backlinkRedirect();
         $this->redirect('list'); // if there's no backlink
