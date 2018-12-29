@@ -17,24 +17,12 @@ class ClosePresenter extends BasePresenter {
 
     /** @var ModelFyziklaniTeam */
     private $team;
-    /**
-     * @var int
-     * @persistent
-     */
-    public $id;
 
     /**
      * @return ModelFyziklaniTeam
      * @throws BadRequestException
      */
     private function getTeam(): ModelFyziklaniTeam {
-        if (!$this->team) {
-            $row = $this->getServiceFyziklaniTeam()->findByPrimary($this->id);
-            if (!$row) {
-                throw new BadRequestException(_('Team does not exists'), 404);
-            }
-            $this->team = ModelFyziklaniTeam::createFromTableRow($row);
-        }
         return $this->team;
     }
 
@@ -70,12 +58,18 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
+     * @param $id
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function actionTeam() {
+    public function actionTeam(int $id) {
+        $row = $this->getServiceFyziklaniTeam()->findByPrimary($id);
+        if (!$row) {
+            throw new BadRequestException(_('Team does not exists'), 404);
+        }
+        $this->team = ModelFyziklaniTeam::createFromTableRow($row);
 
-        if (!$this->getTeam()->hasOpenSubmit()) {
+        if (!$this->team->hasOpenSubmit()) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->getTeam()->name), 'danger');
             $this->backlinkRedirect();
             $this->redirect('list'); // if there's no backlink
@@ -127,16 +121,15 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function closeFormSucceeded() {
-        $team = $this->getTeam();
         $connection = $this->getServiceFyziklaniTeam()->getConnection();
         $connection->beginTransaction();
-        $submits = $team->getSubmits();
+        $submits = $this->team->getSubmits();
         $sum = 0;
         foreach ($submits as $submit) {
             $sum += $submit->points;
         }
-        $this->getServiceFyziklaniTeam()->updateModel($team, ['points' => $sum]);
-        $this->getServiceFyziklaniTeam()->save($team);
+        $this->getServiceFyziklaniTeam()->updateModel($this->team, ['points' => $sum]);
+        $this->getServiceFyziklaniTeam()->save($this->team);
         $connection->commit();
         $this->backlinkRedirect();
         $this->redirect('list'); // if there's no backlink
@@ -149,7 +142,7 @@ class ClosePresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     private function getNextTask(): string {
-        $submits = count($this->getTeam()->getSubmits());
+        $submits = count($this->team->getSubmits());
 
         $tasksOnBoard = $this->getGameSetup()->tasks_on_board;
         /**
