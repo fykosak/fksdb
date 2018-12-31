@@ -25,9 +25,9 @@ const registerRouting: IApp = (element, module, component, mode, rawData, action
 const registerSubmitForm: IApp = (element, module, component, mode, rawData, actions) => {
 
     const c = document.createElement('div');
-    const {tasks, teams} = JSON.parse(rawData);
+    const {tasks, teams, availablePoints} = JSON.parse(rawData);
     element.appendChild(c);
-    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} actions={actions}/>, c);
+    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>, c);
     return true;
 };
 

@@ -3,13 +3,13 @@ import { Filter } from '../components/results/filter/filter';
 
 export const ACTION_SET_NEXT_TABLE_FILTER = '@@fyziklani/ACTION_SET_NEXT_TABLE_FILTER';
 
-export const setNextFilter = (): Action => {
+export const setNextFilter = (): Action<string> => {
     return {
         type: ACTION_SET_NEXT_TABLE_FILTER,
     };
 };
 
-export interface IActionWithFilter extends Action {
+export interface IActionWithFilter extends Action<string> {
     filter: Filter;
 }
 

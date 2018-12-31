@@ -1,6 +1,7 @@
 import {
     ACTION_CHANGE_DATA,
     ACTION_SET_INITIAL_DATA,
+    IActionChangeData,
     IActionSetInitialData,
 } from '../actions/';
 
@@ -16,7 +17,7 @@ export interface IInputConnectorStore {
     inputConnector: IInputConnectorState;
 }
 
-const setData = (state: IInputConnectorState, action): IInputConnectorState => {
+const setData = (state: IInputConnectorState, action: IActionChangeData): IInputConnectorState => {
     return {
         ...state,
         data: {

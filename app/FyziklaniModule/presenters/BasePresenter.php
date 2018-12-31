@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
 use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
@@ -28,48 +27,44 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @var ServiceFyziklaniTeam
      */
-    protected $serviceFyziklaniTeam;
+    private $serviceFyziklaniTeam;
 
     /**
      * @var ServiceFyziklaniTask
      */
-    protected $serviceFyziklaniTask;
+    private $serviceFyziklaniTask;
 
     /**
      * @var ServiceFyziklaniSubmit
      */
-    protected $serviceFyziklaniSubmit;
+    private $serviceFyziklaniSubmit;
 
     /**
      * @var \ServiceBrawlRoom
      */
-    protected $serviceBrawlRoom;
+    private $serviceBrawlRoom;
 
     /**
      * @var \ServiceBrawlTeamPosition
      */
-    protected $serviceBrawlTeamPosition;
+    private $serviceBrawlTeamPosition;
 
     /**
      * @var FyziklaniComponentsFactory
      */
     protected $fyziklaniComponentsFactory;
     /**
-     * @var
-     */
-    protected $serviceFyziklaniGameSetup;
-    /**
      * @var ModelFyziklaniGameSetup
      */
     private $gameSetup;
 
-    public function injectServiceFyziklaniGameSetup(ServiceFyziklaniGameSetup $serviceFyziklaniGameSetup) {
-        $this->serviceFyziklaniGameSetup = $serviceFyziklaniGameSetup;
-    }
-
 
     public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
         $this->serviceBrawlRoom = $serviceBrawlRoom;
+    }
+
+    protected function getServiceFyziklaniRoom(): \ServiceBrawlRoom {
+        return $this->serviceBrawlRoom;
     }
 
     public function injectFyziklaniComponentsFactory(FyziklaniComponentsFactory $fyziklaniComponentsFactory) {
@@ -80,6 +75,10 @@ abstract class BasePresenter extends EventBasePresenter {
         $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
     }
 
+    protected function getServiceFyziklaniTeamPosition(): \ServiceBrawlTeamPosition {
+        return $this->serviceBrawlTeamPosition;
+    }
+
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {
         $this->fyziklaniFactory = $fyziklaniFactory;
     }
@@ -88,8 +87,22 @@ abstract class BasePresenter extends EventBasePresenter {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    /**
+     * @return ServiceFyziklaniTeam
+     */
+    public function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
+        return $this->serviceFyziklaniTeam;
+    }
+
     public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    }
+
+    /**
+     * @return ServiceFyziklaniTask
+     */
+    public function getServiceFyziklaniTask(): ServiceFyziklaniTask {
+        return $this->serviceFyziklaniTask;
     }
 
     public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
@@ -97,12 +110,17 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
+     * @return ServiceFyziklaniSubmit
+     */
+    public function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
+        return $this->serviceFyziklaniSubmit;
+    }
+
+    /**
      * @return FyziklaniChooser
      */
-    protected function createComponentBrawlChooser() {
-        $control = new FyziklaniChooser($this->serviceEvent);
-
-        return $control;
+    protected function createComponentFyziklaniChooser(): FyziklaniChooser {
+        return new FyziklaniChooser($this->serviceEvent);
     }
 
     /**
@@ -127,7 +145,7 @@ abstract class BasePresenter extends EventBasePresenter {
         /**
          * @var $brawlChooser FyziklaniChooser
          */
-        $brawlChooser = $this['brawlChooser'];
+        $brawlChooser = $this['fyziklaniChooser'];
         $brawlChooser->setEvent($this->getEvent());
     }
 
@@ -137,15 +155,14 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws \Nette\Application\AbortException
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+        return $this->getServiceFyziklaniRoom()->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 
-    /*  public function getNavBarVariant() {
-          return ['fyziklani fyziklani' . $this->getEventId(), 'dark'];
-      }*/
-
-    public function getNavRoot() {
-        return 'fyziklani.dashboard.default';
+    /**
+     * @return string[]
+     */
+    public function getNavRoots(): array {
+        return ['fyziklani.dashboard.default'];
     }
 
     /**
