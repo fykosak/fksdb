@@ -68,3 +68,4 @@ navigation:
             - event.dispatch.default
             - fyziklani.dashboard.default
             - event.schedule.default
+            - event.accommodation.list
