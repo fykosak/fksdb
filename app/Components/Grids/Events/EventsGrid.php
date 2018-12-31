@@ -89,7 +89,7 @@ class EventsGrid extends BaseGrid {
         $this->addButton('accommodation')
             ->setText(_('Accommodation'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('EventAccommodation:list', ['eventId' => $row->event_id]);
+                return $this->getPresenter()->link(':Event:Accommodation:list', ['eventId' => $row->event_id]);
             });
 
         $this->addButton('schedule')
