@@ -37,14 +37,14 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$gameSetup->game_start,
-            'gameEnd' => (string)$gameSetup->game_end,
+            'gameStart' => $gameSetup->game_start->format(\DATE_ISO8601),
+            'gameEnd' => $gameSetup->game_end->format(\DATE_ISO8601),
             'times' => [
                 'toStart' => strtotime($gameSetup->game_start) - time(),
                 'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-            'lastUpdated' => (new DateTime())->__toString(),
+            'lastUpdated' => (new DateTime())->format(\DATE_ISO8601),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,
             'submits' => [],
