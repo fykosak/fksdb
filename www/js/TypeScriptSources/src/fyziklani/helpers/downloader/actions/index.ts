@@ -23,11 +23,10 @@ interface IState {
 
 export const fetchResults = (
     accessKey: string,
-    dispatch: Dispatch<Action>,
+    dispatch: Dispatch<Action<string>>,
     oldLastUpdated: string = null,
     url: string,
 ): Promise<IResponse<IResponseData>> => {
-    console.log((new Date()).getTime());
     const data: IRequest<string> = {
         act: '@@fyziklani/results',
         requestData: null,

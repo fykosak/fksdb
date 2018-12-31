@@ -69,7 +69,10 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setIcon('fa fa-calendar');
     }
 
-
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function startup() {
         /**
          * @var $languageChooser LanguageChooser

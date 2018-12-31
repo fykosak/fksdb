@@ -18,33 +18,6 @@
     text-align: center;
 }
 
-.brawl-results table thead tr th[data-task_label^="A"] {
-    background-color: lightgreen;
-}
-
-.brawl-results table thead tr th[data-task_label^="B"] {
-    background-color: lightyellow;
-}
-
-.brawl-results table thead tr th[data-task_label^="C"] {
-    background-color: lightgoldenrodyellow;
-}
-
-.brawl-results table thead tr th[data-task_label^="D"] {
-    background-color: lightsalmon;
-}
-
-.brawl-results table thead tr th[data-task_label^="E"] {
-    background-color: lightcoral;
-}
-
-.brawl-results table thead tr th[data-task_label^="F"] {
-    background-color: lightpink;
-}
-
-.brawl-results table thead tr th[data-task_label^="G"] {
-    background-color: lightskyblue;
-}
 
 .brawl-results table tbody tr td {
     border: solid 1px #ccc;

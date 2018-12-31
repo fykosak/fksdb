@@ -13,13 +13,17 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_REMOVE_N_INSERT = 2;
     const IMPORT_STATE_INSERT = 3;
 
-    public function titleTable() {
-        $this->setTitle(_('Úlohy FYKOSího Fyziklání'));
+    public function titleList() {
+        $this->setTitle(_('Úlohy Fyziklání'));
         $this->setIcon('fa fa-tasks');
     }
 
-    public function authorizedTable() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'task')));
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function authorizedList() {
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
     }
 
     public function titleImport() {
@@ -27,8 +31,12 @@ class TaskPresenter extends BasePresenter {
         $this->setIcon('fa fa-upload');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedImport() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'taskImport')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'import')));
     }
 
     /**
@@ -56,7 +64,7 @@ class TaskPresenter extends BasePresenter {
      */
     public function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->serviceFyziklaniTask);
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getEvent(), $this->getServiceFyziklaniTask());
         $messages = [];
         $taskImportProcessor($values, $messages);
         foreach ($messages as $message) {
@@ -71,6 +79,6 @@ class TaskPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentTaskGrid(): FyziklaniTaskGrid {
-        return new FyziklaniTaskGrid($this->getEvent(), $this->serviceFyziklaniTask);
+        return new FyziklaniTaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
     }
 }

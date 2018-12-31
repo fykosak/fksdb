@@ -43,9 +43,6 @@ class Select extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
-    return {};
-};
 const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     return {
         autoSwitch: state.tableFilter.autoSwitch,
@@ -53,7 +50,4 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(
-    mapStateToPros,
-    mapDispatchToProps,
-)(Select);
+export default connect(mapStateToPros, null)(Select);

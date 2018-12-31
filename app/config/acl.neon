@@ -48,6 +48,8 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(fyziklani)
+    - addResource(fyziklani.task) # list, import
+    - addResource(fyziklani.close) # list, team, results
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
     - addResource(event.dashboard) # default
@@ -117,10 +119,13 @@ acl:
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
     - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
+
     # eventModule
     - allow(registered, event.dashboard)
     - allow(org, event.dashboard)
 
+    - allow(org, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
+    - allow(org, fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
     - allow(guest, fyziklani, dashboard)
 

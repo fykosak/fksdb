@@ -10,11 +10,7 @@ interface IState {
     visible?: boolean;
 }
 
-interface IProps {
-    basePath: string;
-}
-
-class Images extends React.Component<IState & IProps, {}> {
+class Images extends React.Component<IState, {}> {
     private timerId = null;
 
     public componentDidMount() {
@@ -26,38 +22,31 @@ class Images extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        const {inserted, toStart, toEnd, basePath} = this.props;
+        const {inserted, toStart, toEnd} = this.props;
         const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
 
         if (currentToStart === 0 || currentToEnd === 0) {
             return (<div/>);
         }
-        let imgSRC = basePath + 'images/fyziklani/';
         let label = '';
         if (currentToStart > 300 * 1000) {
-            imgSRC += 'nezacalo.svg';
             label = 'Have not begun yet/Ješte nezačalo';
         } else if (currentToStart > 0) {
-            imgSRC += 'brzo.svg';
             label = 'Will soon begin/Brzo začne';
         } else if (currentToStart > -120 * 1000) {
-            imgSRC += 'start.svg';
             label = 'Start!';
         } else if (currentToEnd > 0) {
-            imgSRC += 'fyziklani.svg';
             label = null;
         } else if (currentToEnd > -240 * 1000) {
-            imgSRC += 'skoncilo.svg';
             label = 'Ended/Skončilo';
         } else {
-            imgSRC += 'ceka.svg';
             label = 'Waiting for results/Čeká na výsledky';
         }
 
         // <img src={imgSRC} alt="" style={{width: '80%'}}/>
 
         return (
-            <div className="image-wp" data-basepath={basePath}>
+            <div className="image-wp">
                 {label}
             </div>
         );
@@ -73,6 +62,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(mapStateToProps, (): IState => {
-    return {};
-})(Images);
+export default connect(mapStateToProps, null)(Images);

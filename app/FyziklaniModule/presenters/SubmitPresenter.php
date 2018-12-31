@@ -73,7 +73,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function actionEdit($id) {
-        $this->editSubmit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $this->editSubmit = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
 
         if (!$this->editSubmit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
@@ -82,7 +82,7 @@ class SubmitPresenter extends BasePresenter {
         $teamId = $this->editSubmit->e_fyziklani_team_id;
 
         /* Uzatvorené bodovanie nejde editovať; */
-        $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
+        $team = ModelFyziklaniTeam::createFromTableRow($this->getServiceFyziklaniTeam()->findByPrimary($teamId));
         if (!$team->hasOpenSubmit()) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->backlinkRedirect();
@@ -168,8 +168,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentSubmitsGrid() {
-        return new FyziklaniSubmitsGrid($this->getEvent(), $this->serviceFyziklaniSubmit);
+    public function createComponentSubmitsGrid(): FyziklaniSubmitsGrid {
+        return new FyziklaniSubmitsGrid($this->getEvent(), $this->getServiceFyziklaniSubmit());
     }
 
     /**
@@ -177,7 +177,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentSubmitEditForm() {
+    public function createComponentSubmitEditForm(): FormControl {
         $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());
         $control->getForm()->onSuccess[] = function (Form $form) {
             $this->editFormSucceeded($form);
@@ -218,7 +218,7 @@ class SubmitPresenter extends BasePresenter {
         $values = $form->getValues();
 
         $submit = $this->editSubmit;
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
+        $this->getServiceFyziklaniSubmit()->updateModel($submit, [
             'points' => $values->points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -226,7 +226,7 @@ class SubmitPresenter extends BasePresenter {
              */
             'modified' => null
         ]);
-        $this->serviceFyziklaniSubmit->save($submit);
+        $this->getServiceFyziklaniSubmit()->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
         $this->backlinkRedirect();
         $this->redirect('table'); // if there's no backlink

@@ -111,7 +111,7 @@ class FyziklaniSubmitsGrid extends BaseGrid {
         }
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'points' => null,
+            'points' => 0,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
@@ -119,6 +119,6 @@ class FyziklaniSubmitsGrid extends BaseGrid {
             'modified' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-        $this->flashMessage(_('Úloha byla smazána.'), 'success');
+        $this->flashMessage(_('Počet bodov bol upravený na 0, pre opätovné zadanie prosím použite funciu upraviť submit.'), 'success');
     }
 }
