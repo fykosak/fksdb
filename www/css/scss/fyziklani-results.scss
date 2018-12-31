@@ -1,6 +1,6 @@
 @import "colors";
 
-.fyziklani-results,.fyziklani-statistics {
+.fyziklani-results, .fyziklani-statistics {
   h1 {
     color: $fyziklaniMainColor;
     font-weight: bold;
@@ -116,5 +116,21 @@
       }
     }
 
+  }
+}
+
+.time-histogram {
+  polygon {
+    transition-duration: 1s;
+  }
+}
+
+.time-line-histogram {
+  .line {
+    fill: none;
+    stroke-width: 2px;
+  }
+  .area {
+    opacity: .1;
   }
 }

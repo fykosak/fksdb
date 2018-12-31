@@ -18,12 +18,12 @@ interface IProps {
 
 export default class ResultsApp extends React.Component<IProps, {}> {
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
         const {mode, actions} = this.props;
         return (
             <Provider store={store}>
-                <div className={'brawl-results fyziklani-results'}>
+                <div className={'fyziklani-results'}>
                     <Downloader accessKey={accessKey} actions={actions}/>
                     <App mode={mode}/>
                 </div>

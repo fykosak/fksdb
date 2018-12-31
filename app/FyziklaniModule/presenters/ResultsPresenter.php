@@ -2,31 +2,29 @@
 
 namespace FyziklaniModule;
 
+use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
+use Nette\Application\BadRequestException;
 
 class ResultsPresenter extends BasePresenter {
 
     /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\ForbiddenRequestException
      */
     protected function unauthorizedAccess() {
-        switch ($this->getAction()) {
-            case 'default':
-            case 'resultsView':
-            case 'taskStatistics':
-            case 'teamStatistics':
-                return;
-            default:
-                parent::unauthorizedAccess();
-        }
+        $this->requiresLogin() ? parent::unauthorizedAccess() : null;
     }
 
     /**
      * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
      */
     public function requiresLogin(): bool {
         switch ($this->getAction()) {
@@ -35,6 +33,8 @@ class ResultsPresenter extends BasePresenter {
             case 'taskStatistics':
             case 'teamStatistics':
                 return false;
+            case 'resultsFinal':
+                return !$this->getGameSetup()->result_hard_display;
             default:
                 return true;
         }
@@ -46,28 +46,33 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Results and statistics of Fyziklani'));
+        $this->setTitle(_('Results and statistics'));
         $this->setIcon('fa fa-trophy');
     }
 
     public function titleResultsView() {
-        $this->setTitle(_('Results of Fyziklani'));
+        $this->setTitle(_('Detailed results'));
         $this->setIcon('fa fa-trophy');
     }
 
     public function titleResultsPresentation() {
         $this->setIcon('fa fa-table');
-        return $this->setTitle(_('Results presentation of Fyziklani'));
+        return $this->setTitle(_('Results presentation'));
     }
 
     public function titleTeamStatistics() {
-        $this->setTitle(_('Teams statistics of Fyziklani'));
+        $this->setTitle(_('Teams statistics'));
         $this->setIcon('fa fa-line-chart');
     }
 
     public function titleTaskStatistics() {
-        $this->setTitle(_('Tasks statistics of Fyziklani'));
+        $this->setTitle(_('Tasks statistics'));
         $this->setIcon('fa fa-pie-chart');
+    }
+
+    public function titleResultsFinal() {
+        $this->setTitle(_('Final results'));
+        $this->setIcon('fa fa-trophy');
     }
 
     public function authorizedDefault() {
@@ -84,6 +89,10 @@ class ResultsPresenter extends BasePresenter {
 
 
     public function authorizedTeamStatistics() {
+        $this->authorizedDefault();
+    }
+
+    public function authorizedResultsFinal() {
         $this->authorizedDefault();
     }
 
@@ -146,6 +155,15 @@ class ResultsPresenter extends BasePresenter {
      */
     public function createComponentCorrelationStatistics(): CorrelationStatistics {
         return $this->fyziklaniComponentsFactory->createCorrelationStatistics($this->getEvent());
+    }
+
+    /**
+     * @return FinalResults
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentOrgResults(): FinalResults {
+        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator());
     }
 
     public function getNavRoots(): array {

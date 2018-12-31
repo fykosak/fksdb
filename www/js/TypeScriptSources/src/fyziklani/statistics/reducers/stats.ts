@@ -1,11 +1,17 @@
 import {
     ACTION_SET_ACTIVE_POINTS,
+    ACTION_SET_AGGREGATION_TIME,
     ACTION_SET_FIRST_TEAM_ID,
+    ACTION_SET_FROM_DATE,
     ACTION_SET_SECOND_TEAM_ID,
     ACTION_SET_TASK_ID,
+    ACTION_SET_TO_DATE,
     IActionSetActivePoints,
+    IActionSetAggregationTime,
+    IActionSetFromDate,
     IActionSetTaskId,
     IActionSetTeamId,
+    IActionSetToDate,
 } from '../actions/';
 
 export interface IFyziklaniStatisticsState {
@@ -13,6 +19,9 @@ export interface IFyziklaniStatisticsState {
     taskId?: number;
     firstTeamId?: number;
     secondTeamId?: number;
+    aggregationTime: number;
+    fromDate?: Date;
+    toDate?: Date;
 }
 
 const setTaskId = (state: IFyziklaniStatisticsState, action: IActionSetTaskId): IFyziklaniStatisticsState => {
@@ -45,7 +54,28 @@ const setSecondTeamId = (state: IFyziklaniStatisticsState, action: IActionSetTea
     };
 };
 
-export const stats = (state: IFyziklaniStatisticsState = {}, action): IFyziklaniStatisticsState => {
+const setAggregationTime = (state: IFyziklaniStatisticsState, action: IActionSetAggregationTime): IFyziklaniStatisticsState => {
+    return {
+        ...state,
+        aggregationTime: action.time,
+    };
+};
+
+const setFromDate = (state: IFyziklaniStatisticsState, action: IActionSetFromDate): IFyziklaniStatisticsState => {
+    return {
+        ...state,
+        fromDate: action.from,
+    };
+};
+
+const setToDate = (state: IFyziklaniStatisticsState, action: IActionSetToDate): IFyziklaniStatisticsState => {
+    return {
+        ...state,
+        toDate: action.to,
+    };
+};
+
+export const stats = (state: IFyziklaniStatisticsState = {aggregationTime: 5 * 60 * 1000}, action): IFyziklaniStatisticsState => {
     switch (action.type) {
         case ACTION_SET_ACTIVE_POINTS:
             return setActivePoints(state, action);
@@ -55,6 +85,12 @@ export const stats = (state: IFyziklaniStatisticsState = {}, action): IFyziklani
             return setFirstTeamId(state, action);
         case ACTION_SET_SECOND_TEAM_ID:
             return setSecondTeamId(state, action);
+        case ACTION_SET_AGGREGATION_TIME:
+            return setAggregationTime(state, action);
+        case ACTION_SET_FROM_DATE:
+            return setFromDate(state, action);
+        case ACTION_SET_TO_DATE:
+            return setToDate(state, action);
         default:
             return state;
     }

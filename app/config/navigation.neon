@@ -47,7 +47,6 @@ navigation:
             - fyziklani.submit.entry
             - fyziklani.submit.table
             - fyziklani.close.list
-            - fyziklani.close.results
             - fyziklani.results.default
             - fyziklani.task.list
             - fyziklani.task.import
@@ -59,6 +58,7 @@ navigation:
             - fyziklani.rooms.download
         fyziklani.results.default:
             - fyziklani.dashboard.default
+            - fyziklani.results.resultsFinal
             - fyziklani.results.resultsPresentation
             - fyziklani.results.resultsView
             - fyziklani.results.teamStatistics

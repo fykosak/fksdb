@@ -11,7 +11,7 @@ export interface IPointData {
     totalPoints: number;
 }
 
-export function getLinePath(scales: IScales, data: IPointData[]): string {
+export function getLinePath(scales: IScales, data: IPointData[], curve: d3.CurveFactory = d3.curveLinear): string {
     const {xScale, yScale} = scales;
     return d3.line<IPointData>()
         .x((element: IExtendedSubmit) => {
@@ -19,5 +19,17 @@ export function getLinePath(scales: IScales, data: IPointData[]): string {
         })
         .y((element: IExtendedSubmit) => {
             return yScale(element.totalPoints);
-        })(data);
+        })
+        .curve(curve)(data);
+}
+
+export function getAreaPath(scales: IScales, data: IPointData[], y0: number, curve: d3.CurveFactory = d3.curveLinear): string {
+    const {xScale, yScale} = scales;
+    return d3.area<IPointData>()
+        .x((element: IExtendedSubmit) => {
+            return xScale(new Date(element.created));
+        }).y0(y0)
+        .y1((element: IExtendedSubmit) => {
+            return yScale(element.totalPoints);
+        }).curve(curve)(data);
 }

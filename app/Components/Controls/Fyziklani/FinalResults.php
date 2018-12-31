@@ -15,7 +15,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  * @package FKSDB\Components\Controls\Fyziklani
  * @property FileTemplate $template
  */
-class OrgResults extends Control {
+class FinalResults extends Control {
     /**
      * @var ServiceFyziklaniTeam
      */
@@ -69,7 +69,7 @@ class OrgResults extends Control {
     public function render() {
         $this->template->that = $this;
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'OrgResults.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();
     }

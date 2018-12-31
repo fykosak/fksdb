@@ -24,7 +24,7 @@ interface ITaskCodeProps {
 export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
     public render() {
         const {tasks, teams, actions, availablePoints} = this.props;
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>

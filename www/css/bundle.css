@@ -92,6 +92,18 @@
   color: white;
 }
 
+.time-histogram polygon {
+  transition-duration: 1s;
+}
+
+.time-line-histogram .line {
+  fill: none;
+  stroke-width: 2px;
+}
+.time-line-histogram .area {
+  opacity: 0.1;
+}
+
 .schedule-field-container {
   color: #f44336;
 }

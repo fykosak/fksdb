@@ -4,7 +4,6 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
-use FKSDB\Components\Controls\Fyziklani\OrgResults;
 use Nette\Application\BadRequestException;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
@@ -20,7 +19,6 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return ModelFyziklaniTeam
-     * @throws BadRequestException
      */
     private function getTeam(): ModelFyziklaniTeam {
         return $this->team;
@@ -34,11 +32,6 @@ class ClosePresenter extends BasePresenter {
     public function titleTeam() {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getTeam()->name));
         $this->setIcon('fa fa-check-square-o');
-    }
-
-    public function titleResults() {
-        $this->setTitle(_('Výsledky na diplomy'));
-        $this->setIcon('fa fa-trophy');
     }
 
     public function authorizedList() {
@@ -86,15 +79,6 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @return OrgResults
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function createComponentOrgResults(): OrgResults {
-        return new OrgResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator());
-    }
-
-    /**
      * @return FormControl
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
@@ -118,7 +102,6 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @throws \Nette\Application\AbortException
-     * @throws BadRequestException
      */
     private function closeFormSucceeded() {
         $connection = $this->getServiceFyziklaniTeam()->getConnection();
