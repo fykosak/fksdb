@@ -21,7 +21,7 @@ class WebServicePresenter extends BasePresenter {
             $this->sendResponse($response);
         } catch (AbortException $e) {
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Debugger::log($e);
             $this->redirect('Dashboard:');
         }

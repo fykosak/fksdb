@@ -15,7 +15,7 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class FyziklaniTeamsGrid extends BaseGrid {
+class CloseTeamsGrid extends BaseGrid {
     /**
      * @var ServiceFyziklaniTeam
      */

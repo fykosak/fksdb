@@ -69,3 +69,5 @@ navigation:
             - fyziklani.dashboard.default
             - event.schedule.default
             - event.accommodation.list
+            - event.model.default
+            - event.applicationsTimeProgress.default

@@ -31,8 +31,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedEdit() {
-        // TODO now can edit routing anybody
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.edit')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.rooms', 'edit')));
     }
 
     /**
@@ -40,7 +39,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDownload() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'rooms.download')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.rooms', 'download')));
     }
 
     /**
@@ -48,8 +47,8 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedDefault() {
-        $download = $this->eventIsAllowed('fyziklani', 'rooms.download');
-        $edit = $this->eventIsAllowed('fyziklani', 'rooms.edit');
+        $download = $this->eventIsAllowed('fyziklani.rooms', 'download');
+        $edit = $this->eventIsAllowed('fyziklani.rooms', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
