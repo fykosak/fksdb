@@ -60,6 +60,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
             $position = $row->getPosition();
 
             $teams[] = [
+                'created' => $row->created->format('c'),
                 'category' => $row->category,
                 'roomId' => $position ? $position->getRoom()->room_id : '',
                 'name' => $row->name,

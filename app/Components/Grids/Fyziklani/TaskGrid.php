@@ -13,7 +13,7 @@ use SQL\SearchableDataSource;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class FyziklaniTaskGrid extends BaseGrid {
+class TaskGrid extends BaseGrid {
 
     /**
      *

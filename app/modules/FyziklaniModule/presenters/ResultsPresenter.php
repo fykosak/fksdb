@@ -87,13 +87,20 @@ class ResultsPresenter extends BasePresenter {
         $this->authorizedDefault();
     }
 
-
     public function authorizedTeamStatistics() {
         $this->authorizedDefault();
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedResultsFinal() {
-        $this->authorizedDefault();
+        if($this->getGameSetup()->result_hard_display){
+            $this->authorizedDefault();
+            return;
+        }
+        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'final'));
     }
 
     /**
@@ -101,7 +108,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedCorrelationStatistics() {
-        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani', 'correlation'));
+        $this->setAuthorized($this->isContestsOrgAllowed('fyziklani.results', 'correlation'));
     }
 
     /**
@@ -109,7 +116,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function authorizedResultsPresentation() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani', 'presentation'));
+        $this->setAuthorized($this->eventIsAllowed('fyziklani.results', 'presentation'));
     }
 
     /**
@@ -163,10 +170,11 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function createComponentOrgResults(): FinalResults {
-        return new FinalResults($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator());
+        return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
     }
 
-    public function getNavRoots(): array {
+
+    protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
         $roots[] = 'fyziklani.results.default';
         return $roots;

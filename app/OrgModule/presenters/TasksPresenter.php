@@ -144,7 +144,7 @@ class TasksPresenter extends BasePresenter {
                 break;
         }
 
-        $dump = $this->flashDumpFactory->createDefault();
+        $dump = $this->flashDumpFactory->create('default');
         foreach ($files as $language => $file) {
             try {
                 $xml = simplexml_load_file($file);

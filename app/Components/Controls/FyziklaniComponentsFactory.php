@@ -2,6 +2,9 @@
 
 namespace FKSDB\Components\React\Fyziklani;
 
+use FKSDB\Components\Controls\Fyziklani\CloseControl;
+use FKSDB\Components\Controls\Fyziklani\FinalResults;
+use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
 use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
@@ -10,6 +13,7 @@ use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatist
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
+use Nette\Localization\ITranslator;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
@@ -46,6 +50,10 @@ class FyziklaniComponentsFactory {
      * @var Container
      */
     private $context;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
     public function __construct(
         \ServiceBrawlRoom $serviceBrawlRoom,
@@ -54,7 +62,8 @@ class FyziklaniComponentsFactory {
         \ServiceFyziklaniTask $serviceFyziklaniTask,
         \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         TaskCodeHandlerFactory $taskCodeHandlerFactory,
-        Container $context
+        Container $context,
+        ITranslator $translator
     ) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -63,6 +72,7 @@ class FyziklaniComponentsFactory {
         $this->serviceBrawlRoom = $serviceBrawlRoom;
         $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
         $this->context = $context;
+        $this->translator = $translator;
     }
 
     public function createResultsView(ModelEvent $event): ResultsView {
@@ -93,4 +103,17 @@ class FyziklaniComponentsFactory {
         $handler = $this->taskCodeHandlerFactory->createHandler($event);
         return new TaskCodeInput($handler, $this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
+
+    public function createFinalResults(ModelEvent $event): FinalResults {
+        return new FinalResults($event, $this->serviceFyziklaniTeam, $this->translator);
+    }
+
+    public function createCloseControl(ModelEvent $event): CloseControl {
+        return new CloseControl($event, $this->serviceFyziklaniTeam, $this->translator);
+    }
+
+    public function createSubmitsGrid(ModelEvent $event): SubmitsGrid {
+        return new SubmitsGrid($event, $this->serviceFyziklaniSubmit);
+    }
+
 }

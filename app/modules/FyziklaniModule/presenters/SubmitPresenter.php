@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Grids\Fyziklani\FyziklaniSubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
@@ -116,7 +116,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function authorizedEntry() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani', 'submit')));
+        $this->setAuthorized(($this->eventIsAllowed('fyziklani.submit', 'default')));
     }
 
     public function authorizedQrEntry() {
@@ -164,12 +164,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return FyziklaniSubmitsGrid
+     * @return SubmitsGrid
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentSubmitsGrid(): FyziklaniSubmitsGrid {
-        return new FyziklaniSubmitsGrid($this->getEvent(), $this->getServiceFyziklaniSubmit());
+    public function createComponentSubmitsGrid(): SubmitsGrid {
+        return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
     }
 
     /**

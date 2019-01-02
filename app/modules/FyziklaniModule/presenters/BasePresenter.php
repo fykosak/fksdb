@@ -90,7 +90,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ServiceFyziklaniTeam
      */
-    public function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
+    protected function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }
 
@@ -101,7 +101,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ServiceFyziklaniTask
      */
-    public function getServiceFyziklaniTask(): ServiceFyziklaniTask {
+    protected function getServiceFyziklaniTask(): ServiceFyziklaniTask {
         return $this->serviceFyziklaniTask;
     }
 
@@ -112,7 +112,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return ServiceFyziklaniSubmit
      */
-    public function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
+    protected function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
         return $this->serviceFyziklaniSubmit;
     }
 
@@ -136,17 +136,17 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function startup() {
+    protected function startup() {
         parent::startup();
         if (!$this->isEventFyziklani()) {
             $this->flashMessage('Event nieje fyziklani', 'warning');
             $this->redirect(':Event:Dashboard:default');
         }
         /**
-         * @var $brawlChooser FyziklaniChooser
+         * @var $fyziklaniChooser FyziklaniChooser
          */
-        $brawlChooser = $this['fyziklaniChooser'];
-        $brawlChooser->setEvent($this->getEvent());
+        $fyziklaniChooser = $this['fyziklaniChooser'];
+        $fyziklaniChooser->setEvent($this->getEvent());
     }
 
     /**
@@ -161,14 +161,14 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return string[]
      */
-    public function getNavRoots(): array {
+    protected function getNavRoots(): array {
         return ['fyziklani.dashboard.default'];
     }
 
     /**
      * @return int
      */
-    public function getEventId(): int {
+    protected function getEventId(): int {
         if (!$this->eventId) {
             $this->eventId = $this->serviceEvent->getTable()->where('event_type_id', 1)->max('event_id');
         }

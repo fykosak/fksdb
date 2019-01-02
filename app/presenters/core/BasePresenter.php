@@ -277,7 +277,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
         list ($symbol, $type) = $this->getNavBarVariant();
         $this->template->contestSymbol = $symbol;
-        $this->template->navVariant = $type;
+        $this->template->navbarClass = $type;
 
         $this->template->subtitle = $this->getSubtitle();
         $this->template->icon = $this->getIcon();

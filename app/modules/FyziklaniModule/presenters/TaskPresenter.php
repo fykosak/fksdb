@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Grids\Fyziklani\FyziklaniTaskGrid;
+use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
 use Nette\Application\UI\Form;
 
@@ -74,11 +74,11 @@ class TaskPresenter extends BasePresenter {
     }
 
     /**
-     * @return FyziklaniTaskGrid
+     * @return TaskGrid
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentTaskGrid(): FyziklaniTaskGrid {
-        return new FyziklaniTaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
+    public function createComponentTaskGrid(): TaskGrid {
+        return new TaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
     }
 }
