@@ -12,6 +12,7 @@ import {
 } from '../../../../middleware/charts/correlation';
 import { getAverageNStandardDeviation } from '../../../../middleware/charts/std-dev';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { lang } from '../../../../../../i18n/i18n';
 
 interface IState {
     submits?: ISubmits;
@@ -78,20 +79,20 @@ class Table extends React.Component<IState, {}> {
             <table className={'table table-striped table-hover table-sm'}>
                 <thead>
                 <tr>
-                    <th>Task</th>
-                    <th>čas 1. tímu</th>
-                    <th>čas 2. tímu</th>
-                    <th>delta</th>
+                    <th>{lang.getText('Task')}</th>
+                    <th>{lang.getText('Time first team')}</th>
+                    <th>{lang.getText('Time second team')}</th>
+                    <th>{lang.getText('Difference')}</th>
                 </tr>
 
                 </thead>
                 <tbody>{rows}</tbody>
             </table>
             <p>
-                <span>{firstTeamSubmits.length} 1.tým</span>
-                <span>{secondTeamSubmits.length} 2. tým</span>
-                <span>{count} oba tímy</span>
-                <span>{getTimeLabel(avgNStdDev.average, avgNStdDev.standardDeviation)} na úlohu</span>
+                <span>{firstTeamSubmits.length} {lang.getText('first team')}</span>
+                <span>{secondTeamSubmits.length} {lang.getText('second team')}</span>
+                <span>{count} {lang.getText('both teams')}</span>
+                <span>{getTimeLabel(avgNStdDev.average, avgNStdDev.standardDeviation)} {lang.getText('per task')}</span>
             </p>
         </div>;
 

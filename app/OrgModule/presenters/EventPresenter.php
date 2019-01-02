@@ -128,18 +128,6 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedModel($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
-    }
-
-    public function actionModel($id) {
-
-    }
-
     public function titleList() {
         $this->setTitle(_('Akce'));
         $this->setIcon('fa fa-calendar-check-o');

@@ -36,19 +36,24 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
-        $this['contestChooser']->syncRedirect();
-        $this['languageChooser']->syncRedirect();
+        /**
+         * @var ContestChooser $contestChooser
+         * @var LanguageChooser $languageChooser
+         */
+        $contestChooser = $this['contestChooser'];
+        $contestChooser->syncRedirect();
+        $languageChooser = $this['languageChooser'];
+        $languageChooser->syncRedirect();
     }
 
-    protected function createComponentContestChooser($name) {
+    protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ModelRole::ORG);
         return $control;
     }
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->session);
     }
 
     /**
@@ -56,6 +61,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedContest() {
+        /**
+         * @var ContestChooser $contestChooser
+         */
         $contestChooser = $this['contestChooser'];
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
@@ -68,6 +76,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedYear() {
+        /**
+         * @var ContestChooser $contestChooser
+         */
         $contestChooser = $this['contestChooser'];
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
@@ -88,6 +99,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedLanguage() {
+        /**
+         * @var LanguageChooser $languageChooser
+         */
         $languageChooser = $this['languageChooser'];
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);

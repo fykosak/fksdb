@@ -52,14 +52,14 @@ class SchoolsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton("edit", _("Upravit"))
-            ->setText('Upravit')//todo i18n
+        $this->addButton('edit', _('Upravit'))
+            ->setText(_('Upravit'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link("edit", $row->school_id);
+                return $this->getPresenter()->link('edit', $row->school_id);
             });
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
-            ->setLabel('Vložit školu')
+            ->setLabel(_('Vložit školu'))
             ->setClass('btn btn-sm btn-primary');
 
         //

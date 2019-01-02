@@ -25,7 +25,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         if (!($presenter instanceof BasePresenter)) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
         /**
          * @var \DateTime $lastUpdated
          */

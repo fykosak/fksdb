@@ -68,7 +68,7 @@ class EventAccommodationGrid extends BaseGrid {
             });
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Přidat ubytovaní'))
+            ->setLabel(_('Add accommodation'))
             ->setLink($this->getPresenter()->link('create'));
 
 

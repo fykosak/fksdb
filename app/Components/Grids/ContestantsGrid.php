@@ -44,16 +44,16 @@ class ContestantsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton("editPerson", _("Upravit"))
+        $this->addButton('editPerson', _('Upravit'))
             ->setText(_('Upravit'))
             ->setLink(function ($row) use ($presenter) {
-                return $presenter->link("Contestant:edit", array(
+                return $presenter->link('Contestant:edit', array(
                     'id' => $row->ct_id,
                 ));
             });
 
         $this->addGlobalButton('add')
-            ->setLabel('Založit řešitele')
+            ->setLabel(_('Založit řešitele'))
             ->setLink($this->getPresenter()->link('create'));
 
 

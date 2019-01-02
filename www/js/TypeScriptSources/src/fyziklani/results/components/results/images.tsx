@@ -42,9 +42,6 @@ class Images extends React.Component<IState, {}> {
         } else {
             label = 'Waiting for results/Čeká na výsledky';
         }
-
-        // <img src={imgSRC} alt="" style={{width: '80%'}}/>
-
         return (
             <div className="image-wp">
                 {label}

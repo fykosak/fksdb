@@ -70,7 +70,7 @@ class Options extends React.Component<IState, {}> {
                             <select value={taskId} className="form-control" onChange={(event) => {
                                 onChangeTask(+event.target.value);
                             }}>
-                                <option value={null}>--select task--</option>
+                                <option value={null}>--{lang.getText('select task')}--</option>
                                 {tasks.map((task) => {
                                     return (<option key={task.taskId} value={task.taskId}>{task.label}</option>);
                                 })}
@@ -79,7 +79,7 @@ class Options extends React.Component<IState, {}> {
                     </div>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>Aggregation time</label>
+                            <label>{lang.getText('Aggregation time')}</label>
                             <input type={'range'} max={30 * 60 * 1000} min={60 * 1000}
                                    value={aggregationTime}
                                    step={60 * 1000}
@@ -94,7 +94,7 @@ class Options extends React.Component<IState, {}> {
                 <div className={'row'}>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>From</label>
+                            <label>{lang.getText('From')}</label>
                             <input type={'range'}
                                    className={'form-control'}
                                    value={fromDate.getTime()}
@@ -109,7 +109,7 @@ class Options extends React.Component<IState, {}> {
                     </div>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>To</label>
+                            <label>{lang.getText('To')}</label>
                             <input type={'range'}
                                    className={'form-control'}
                                    value={toDate.getTime()}
