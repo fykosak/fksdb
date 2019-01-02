@@ -380,7 +380,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+            return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
         }
         return parent::getNavBarVariant();
     }

@@ -59,30 +59,30 @@ class EventsGrid extends BaseGrid {
         //
         $this->addColumn('event_id', _('Id akce'));
         $this->addColumn('type_name', _('Typ akce'));
-        $this->addColumn('name', _('Název'));
+        $this->addColumn('name', _('Name'));
         $this->addColumn('year', _('Ročník semináře'));
-
+        $this->addColumn('event_year', _('Ročník akce'));
         //
         // operations
         //
 
         $this->addButton('model', _('Model'))
-            ->setText('Model')//todo i18n
+            ->setText(_('Model'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link('model', $row->event_id);
+                return $this->getPresenter()->link(':Event:Model:', ['eventId' => $row->event_id]);
             });
-        $this->addButton('edit', _('Upravit'))
-            ->setText('Upravit')//todo i18n
+        $this->addButton('edit', _('Edit'))
+            ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->event_id);
             });
         $this->addButton('applications')
-            ->setText('Přihlášky')//todo i18n
+            ->setText(_('Applications'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('applications', $row->event_id);
             });
         $this->addButton('org')
-            ->setText(_('Organizátoři'))
+            ->setText(_('Organisers'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
             });
@@ -100,7 +100,7 @@ class EventsGrid extends BaseGrid {
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
-            ->setLabel('Přidat akci')
+            ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
     }
 

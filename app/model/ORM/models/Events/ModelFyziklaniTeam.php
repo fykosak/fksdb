@@ -5,6 +5,7 @@ namespace ORM\Models\Events;
 use AbstractModelSingle;
 use DbNames;
 use ModelFyziklaniSubmit;
+use Nette\DateTime;
 
 /**
  * @property string category
@@ -13,6 +14,7 @@ use ModelFyziklaniSubmit;
  * @property integer event_id
  * @property integer points
  * @property string status
+ * @property DateTime created
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>

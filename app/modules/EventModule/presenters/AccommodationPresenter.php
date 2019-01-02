@@ -20,7 +20,7 @@ class AccommodationPresenter extends BasePresenter {
     const CONT_ACCOMMODATION = 'CONT_ACCOMMODATION';
     const CONT_ADDRESS = 'CONT_ADDRESS';
 
-    protected $modelResourceId = 'eventAccommodation';
+    protected $modelResourceId = 'event.accommodation';
 
     /**
      * @var ServiceEventAccommodation
@@ -42,6 +42,7 @@ class AccommodationPresenter extends BasePresenter {
     private $serviceAddress;
     /**
      * @var int
+     * @persistent
      */
     public $id;
 

@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Grids\Fyziklani\FyziklaniTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\model\Fyziklani\CloseSubmitStrategy;
 use FKSDB\ORM\ModelEvent;
 use Nette\Application\UI\Control;
@@ -119,10 +119,10 @@ class CloseControl extends Control {
     }
 
     /**
-     * @return FyziklaniTeamsGrid
+     * @return CloseTeamsGrid
      */
-    public function createComponentCloseGrid(): FyziklaniTeamsGrid {
-        return new FyziklaniTeamsGrid($this->event, $this->serviceFyziklaniTeam);
+    public function createComponentCloseGrid(): CloseTeamsGrid {
+        return new CloseTeamsGrid($this->event, $this->serviceFyziklaniTeam);
     }
 
     public function render() {

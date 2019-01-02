@@ -105,7 +105,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
         return [null, null];
     }

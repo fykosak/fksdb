@@ -9,7 +9,7 @@ use Nette\Diagnostics\Debugger;
 class ErrorPresenter extends BasePresenter {
 
     public function getNavBarVariant(): array {
-        return ['error', 'dark'];
+        return ['error', 'bg-error navbar-dark'];
     }
 
     protected function putIntoBreadcrumbs() {

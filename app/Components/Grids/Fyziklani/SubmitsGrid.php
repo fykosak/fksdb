@@ -16,7 +16,7 @@ use SQL\SearchableDataSource;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class FyziklaniSubmitsGrid extends BaseGrid {
+class SubmitsGrid extends BaseGrid {
 
     /**
      *

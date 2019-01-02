@@ -74,8 +74,8 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentCloseControl(): CloseControl {
-        return new CloseControl($this->getEvent(), $this->getServiceFyziklaniTeam(), $this->getTranslator());
+    protected function createComponentCloseControl(): CloseControl {
+        return $this->fyziklaniComponentsFactory->createCloseControl($this->getEvent());
     }
 
     /**
@@ -83,7 +83,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentCloseForm(): FormControl {
+    protected function createComponentCloseForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))

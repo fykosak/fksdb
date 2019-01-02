@@ -17,6 +17,6 @@ class DashboardPresenter extends BasePresenter {
         if (!$this->isEventFyziklani()) {
             return $this->setAuthorized(false);
         }
-        return $this->setAuthorized($this->eventIsAllowed('fyziklani', 'dashboard'));
+        return $this->setAuthorized($this->eventIsAllowed('fyziklani.dashboard', 'default'));
     }
 }
