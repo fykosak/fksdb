@@ -40,14 +40,14 @@ abstract class BasePresenter extends EventBasePresenter {
     private $serviceFyziklaniSubmit;
 
     /**
-     * @var \ServiceBrawlRoom
+     * @var \ServiceFyziklaniRoom
      */
-    private $serviceBrawlRoom;
+    private $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceBrawlTeamPosition
+     * @var \ServiceFyziklaniTeamPosition
      */
-    private $serviceBrawlTeamPosition;
+    private $serviceFyziklaniTeamPosition;
 
     /**
      * @var FyziklaniComponentsFactory
@@ -59,24 +59,24 @@ abstract class BasePresenter extends EventBasePresenter {
     private $gameSetup;
 
 
-    public function injectServiceBrawlRoom(\ServiceBrawlRoom $serviceBrawlRoom) {
-        $this->serviceBrawlRoom = $serviceBrawlRoom;
+    public function injectServiceFyziklaniRoom(\ServiceFyziklaniRoom $serviceFyziklaniRoom) {
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
-    protected function getServiceFyziklaniRoom(): \ServiceBrawlRoom {
-        return $this->serviceBrawlRoom;
+    protected function getServiceFyziklaniRoom(): \ServiceFyziklaniRoom {
+        return $this->serviceFyziklaniRoom;
     }
 
     public function injectFyziklaniComponentsFactory(FyziklaniComponentsFactory $fyziklaniComponentsFactory) {
         $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
-    public function injectServiceBrawlTeamPosition(\ServiceBrawlTeamPosition $serviceBrawlTeamPosition) {
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
+    public function injectServiceFyziklaniTeamPosition(\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
-    protected function getServiceFyziklaniTeamPosition(): \ServiceBrawlTeamPosition {
-        return $this->serviceBrawlTeamPosition;
+    protected function getServiceFyziklaniTeamPosition(): \ServiceFyziklaniTeamPosition {
+        return $this->serviceFyziklaniTeamPosition;
     }
 
     public function injectFyziklaniFactory(FyziklaniFactory $fyziklaniFactory) {

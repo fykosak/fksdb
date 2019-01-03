@@ -48,23 +48,23 @@ class TeachersGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
+        $this->addColumn('display_name', _('Name'))->setRenderer(function ($row) {
             $person = $row->getPerson();
             return $person->getFullname();
         });
-        $this->addColumn('since', _('Since'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
+        $this->addColumn('since', _('Since'))->setRenderer(function ($row) {
             if ($row->since === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->add(_('undefined'));
             }
             return $row->since->format('Y-m-d');
         });
-        $this->addColumn('until', _('Until'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
+        $this->addColumn('until', _('Until'))->setRenderer(function ($row) {
             if ($row->until === null) {
                 return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->add(_('Still teaches'));
             }
             return $row->until->format('Y-m-d');
         });
-        $this->addColumn('school_id', _('School'))->setRenderer(function (\FKSDB\ORM\ModelTeacher $row) {
+        $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
             return $row->getSchool()->name_abbrev;
         });
 
@@ -72,7 +72,7 @@ class TeachersGrid extends BaseGrid {
         // operations
         //
         $this->addButton('edit', _('Edit'))
-            ->setText('Edit')//todo i18n
+            ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->teacher_id);
             })
@@ -82,7 +82,7 @@ class TeachersGrid extends BaseGrid {
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Create new teacher')
+                ->setLabel(_('Create new teacher'))
                 ->setLink($this->getPresenter()->link('create'));
         }
     }

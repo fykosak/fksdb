@@ -84,8 +84,4 @@ class DispatchPresenter extends AuthenticatedPresenter {
     public function getNavBarVariant(): array {
         return [null, 'bg-dark navbar-dark'];
     }
-
-    public function getNavRoot() {
-        return '';
-    }
 }

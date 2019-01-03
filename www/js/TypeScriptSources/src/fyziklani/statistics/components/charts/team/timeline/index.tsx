@@ -12,7 +12,7 @@ export default class TimeLine extends React.Component<IProps, {}> {
         const {teamId} = this.props;
         return (
             <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('timeLine')}</h3>
+                <h3>{lang.getText('Timeline')}</h3>
                 <Chart teamId={teamId}/>
                 <Legend inline={true}/>
             </div>

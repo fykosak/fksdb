@@ -4,6 +4,7 @@ import Timer from '../../../helpers/components/timer';
 import Images from '../../../results/components/results/images';
 import { IFyziklaniOptionsState } from '../../options/reducers';
 import { IFyziklaniTimerState } from '../../reducers/timer';
+import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     visible?: boolean;
@@ -23,7 +24,8 @@ class ResultsShower extends React.Component<IState & IProps, {}> {
         const msg = [];
         if (hardVisible) {
             msg.push(<div key={msg.length} className="alert alert-warning">
-                Výsledková listina je určená pouze pro organizátory!!!</div>);
+                {lang.getText('Výsledková listina je určená pouze pro organizátory!!!')}
+            </div>);
         }
 
         return (

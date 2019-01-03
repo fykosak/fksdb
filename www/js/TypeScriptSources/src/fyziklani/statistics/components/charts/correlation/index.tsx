@@ -22,7 +22,6 @@ interface IState {
     onChangeFirstTeam?(id: number): void;
 
     onChangeSecondTeam?(id: number): void;
-
 }
 
 class CorrelationStats extends React.Component<IState, {}> {
@@ -42,7 +41,7 @@ class CorrelationStats extends React.Component<IState, {}> {
                     }}
                             value={this.props.firstTeamId}
                     >
-                        <option value={null}>--select team--</option>
+                        <option value={null}>--{lang.getText('select team')}--</option>
                         {teamsOptions}
                     </select>
                 </div>
@@ -51,7 +50,7 @@ class CorrelationStats extends React.Component<IState, {}> {
                         onChangeSecondTeam(+event.target.value);
                     }} value={this.props.secondTeamId}
                     >
-                        <option value={null}>--select team--</option>
+                        <option value={null}>--{lang.getText('select team')}--</option>
                         {teamsOptions}
                     </select>
                 </div>
@@ -66,7 +65,7 @@ class CorrelationStats extends React.Component<IState, {}> {
         })[0];
 
         const headline = (
-            <h2>{lang.getText('Correlation  ') +
+            <h2>{lang.getText('Correlation ') +
             ((firstSelectedTeam && secondSelectedTeam) ? (firstSelectedTeam.name + ' VS ' + secondSelectedTeam.name) : '')}</h2>
         );
 

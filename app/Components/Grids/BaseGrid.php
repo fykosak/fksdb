@@ -83,7 +83,6 @@ abstract class BaseGrid extends Grid {
         $form->setMethod(Form::GET);
         $form->addText('term')->setDefaultValue($this->searchTerm);
 
-
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
             $this->searchTerm = $values['term'];

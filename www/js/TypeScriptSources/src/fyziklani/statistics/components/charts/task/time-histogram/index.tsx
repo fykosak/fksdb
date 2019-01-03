@@ -11,7 +11,7 @@ interface IProps {
 export default class Timeline extends React.Component<IProps, {}> {
 
     public render() {
-        const {taskId,availablePoints} = this.props;
+        const {taskId, availablePoints} = this.props;
         return (
             <div className={'fyziklani-chart-container'}>
                 <h3>{lang.getText('Time histogram')}</h3>

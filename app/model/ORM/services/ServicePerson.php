@@ -14,23 +14,7 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @deprecated
-     * @see ServiceOrg::findByTeXSignature($signature, $contest_id)
-     * @param type $signature
-     * @return ModelPerson|null
-     */
-    public function findByTeXSignature($signature) {
-        if (!$signature) {
-            return null;
-        }
-        $result = $this->getTable()->where('person_info:tex_signature', $signature)->fetch();
-        return $result ? : null;
-    }
-
-    /**
-     * Syntactic sugar.
-     *
-     * @param type $email
+     * @param mixed $email
      * @return ModelPerson|null
      */
     public function findByEmail($email) {
@@ -38,7 +22,7 @@ class ServicePerson extends AbstractServiceSingle {
             return null;
         }
         $result = $this->getTable()->where('person_info:email', $email)->fetch();
-        return $result ? : null;
+        return $result ? ModelPerson::createFromTableRow($result) : null;
     }
 
     public function save(IModel &$model) {

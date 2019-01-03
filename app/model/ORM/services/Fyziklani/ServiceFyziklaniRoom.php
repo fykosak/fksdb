@@ -2,10 +2,10 @@
 
 use Nette\Database\Table\ActiveRow;
 
-class ServiceBrawlRoom extends \AbstractServiceSingle {
+class ServiceFyziklaniRoom extends \AbstractServiceSingle {
 
-    protected $tableName = \DbNames::TAB_BRAWL_ROOM;
-    protected $modelClassName = 'ModelBrawlRoom';
+    protected $tableName = \DbNames::TAB_FYZIKLANI_ROOM;
+    protected $modelClassName = 'ModelFyziklaniRoom';
 
     public function findByName($name): ActiveRow {
         return $this->getTable()->where('name', $name)->fetch();
@@ -15,9 +15,9 @@ class ServiceBrawlRoom extends \AbstractServiceSingle {
         $rooms = [];
         foreach ($ids as $roomId) {
             /**
-             * @var $room \ModelBrawlRoom
+             * @var $room \ModelFyziklaniRoom
              */
-            $room = ModelBrawlRoom::createFromTableRow($this->findByPrimary($roomId));
+            $room = ModelFyziklaniRoom::createFromTableRow($this->findByPrimary($roomId));
             if ($room) {
                 $rooms[] = $room->__toArray();
             }

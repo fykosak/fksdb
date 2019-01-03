@@ -20,14 +20,14 @@ use ServiceFyziklaniSubmit;
 class FyziklaniComponentsFactory {
 
     /**
-     * @var \ServiceBrawlRoom
+     * @var \ServiceFyziklaniRoom
      */
-    private $serviceBrawlRoom;
+    private $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceBrawlTeamPosition
+     * @var \ServiceFyziklaniTeamPosition
      */
-    private $serviceBrawlTeamPosition;
+    private $serviceFyziklaniTeamPosition;
 
     /**
      * @var ServiceFyziklaniTeam
@@ -56,8 +56,8 @@ class FyziklaniComponentsFactory {
     private $translator;
 
     public function __construct(
-        \ServiceBrawlRoom $serviceBrawlRoom,
-        \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
+        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         \ServiceFyziklaniTask $serviceFyziklaniTask,
         \ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
@@ -68,40 +68,40 @@ class FyziklaniComponentsFactory {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-        $this->serviceBrawlRoom = $serviceBrawlRoom;
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
         $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
         $this->context = $context;
         $this->translator = $translator;
     }
 
     public function createResultsView(ModelEvent $event): ResultsView {
-        return new ResultsView($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new ResultsView($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
-        return new ResultsPresentation($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new ResultsPresentation($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createTeamStatistics(ModelEvent $event): TeamStatistics {
-        return new TeamStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new TeamStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createTaskStatistics(ModelEvent $event): TaskStatistics {
-        return new TaskStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new TaskStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
-        return new RoutingEdit($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new RoutingEdit($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
-        return new CorrelationStatistics($this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
         $handler = $this->taskCodeHandlerFactory->createHandler($event);
-        return new TaskCodeInput($handler, $this->context, $event, $this->serviceBrawlRoom, $this->serviceBrawlTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
+        return new TaskCodeInput($handler, $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     public function createFinalResults(ModelEvent $event): FinalResults {

@@ -11,6 +11,9 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_EVENT_PARTICIPANT;
     protected $modelClassName = 'FKSDB\ORM\ModelEventParticipant';
 
+    /**
+     * @param IModel $model
+     */
     public function save(IModel &$model) {
         try {
             parent::save($model);

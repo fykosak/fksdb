@@ -29,7 +29,7 @@ class TeamStats extends React.Component<IState, {}> {
                 <select className="form-control" onChange={(event) => {
                     onChangeFirstTeam(+event.target.value);
                 }}>
-                    <option value={null}>--select team--</option>
+                    <option value={null}>--{lang.getText('select team')}--</option>
                     {teams.map((team) => {
                         return (<option key={team.teamId} value={team.teamId}>{team.name}</option>);
                     })}
@@ -42,7 +42,7 @@ class TeamStats extends React.Component<IState, {}> {
 //
         const headline = (
             <h2 className={'fyziklani-headline'}>
-                {lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}
+                {lang.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
             </h2>);
         return (<div>
 

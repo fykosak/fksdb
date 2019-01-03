@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class ModelBrawlRoom
+ * Class ModelFyziklaniRoom
  *
  * @property integer room_id
  * @property string name
@@ -9,7 +9,7 @@
  * @property integer columns
  */
 
-class ModelBrawlRoom extends \AbstractModelSingle {
+class ModelFyziklaniRoom extends \AbstractModelSingle {
 
     public function __toArray() {
         return [
