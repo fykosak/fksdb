@@ -171,10 +171,10 @@ class TasksPresenter extends BasePresenter {
                     $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
                 }
             } catch (PipelineException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě. %s', $language, $e->getMessage()), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě. %s'), $language, $e->getMessage()), self::FLASH_ERROR);
                 Debugger::log($e);
             } catch (ModelException $e) {
-                $this->flashMessage(sprintf('Při ukládání úloh pro jazyk %s došlo k chybě.', $language), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Při ukládání úloh pro jazyk %s došlo k chybě.'), $language), self::FLASH_ERROR);
                 Debugger::log($e);
             } finally {
 

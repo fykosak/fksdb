@@ -10,7 +10,9 @@ use Nette\Application\ForbiddenRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
 class ApplicationsTimeProgressPresenter extends BasePresenter {
-
+    /**
+     * @var ServiceFyziklaniTeam
+     */
     private $serviceFyziklaniTeam;
 
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
@@ -22,7 +24,7 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Time progress'));
+        $this->setTitle(_('Applications time progress'));
         $this->setIcon('fa fa-line-chart');
     }
 
@@ -41,6 +43,7 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
+     * @TODO hardcore eventIds
      */
     private function getEventIdsByType(): array {
         switch ($this->getEvent()->event_type_id) {

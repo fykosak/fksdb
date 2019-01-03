@@ -28,7 +28,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     /**
      *
-     * @param string $type
+     * @param string $loginId
      * @param DateTime $until
      * @param DateTime $since
      * @return ModelAuthToken

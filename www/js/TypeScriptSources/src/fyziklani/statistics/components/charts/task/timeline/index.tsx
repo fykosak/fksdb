@@ -17,7 +17,7 @@ export default class Timeline extends React.Component<IProps, {}> {
         const {taskId} = this.props;
         return (
             <div className={'fyziklani-chart-container'}>
-                <h3>{lang.getText('timeProgress')}</h3>
+                <h3>{lang.getText('Timeline')}</h3>
                 <Chart taskId={taskId}/>
             </div>
         );

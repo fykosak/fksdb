@@ -87,7 +87,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     protected function createComponentGrid($name): EventOrgsGrid {
-        return new EventOrgsGrid($this->eventId, $this->serviceEventOrg);
+        return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg);
     }
 
     protected function appendExtendedContainer(Form $form): ModelContainer {

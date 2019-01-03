@@ -21,6 +21,7 @@ import {
     IPreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { lang } from '../../../../../../i18n/i18n';
 
 interface IState {
     submits?: ISubmits;
@@ -93,11 +94,11 @@ class GlobalCorrelation extends React.Component<IState, {}> {
         >
             <thead>
             <tr>
-                <th>Team 1</th>
-                <th>Team 2</th>
-                <th>AVG</th>
-                <th>pod 2 min</th>
-                <th>match</th>
+                <th>{lang.getText('First team')}</th>
+                <th>{lang.getText('Second team')}</th>
+                <th>{lang.getText('Average')}</th>
+                <th>{lang.getText('Under 2 minutes')}</th>
+                <th>{lang.getText('Both teams')}</th>
             </tr>
             </thead>
             <tbody>{rows}</tbody>
