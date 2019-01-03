@@ -30,7 +30,6 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar isset($navRoot)?$navRoot:''}
                 {foreach $navRoots as $root}
                     {control navigation:navbar $root}
                 {/foreach}

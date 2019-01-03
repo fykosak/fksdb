@@ -51,12 +51,12 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent(), $lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
         }
         //if (!$lastUpdated) {
         $result['rooms'] = $this->getRooms();
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEvent());
+        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
         // }
 

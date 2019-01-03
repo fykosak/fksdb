@@ -110,8 +110,8 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return [null, null];
     }
 
-    public function getNavRoot() {
-        return 'public.dashboard.default';
+    public function getNavRoots(): array {
+        return ['public.dashboard.default'];
     }
 
 }

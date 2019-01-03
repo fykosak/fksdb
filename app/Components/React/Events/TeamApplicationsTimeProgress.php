@@ -60,7 +60,7 @@ class TeamApplicationsTimeProgress extends ReactComponent {
          * @var $event ModelEvent
          */
         foreach ($this->events as $event) {
-            $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsArray($event);
+            $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
             $data['events'][$event->event_id]=$event->__toArray();
         }
         return Json::encode($data);

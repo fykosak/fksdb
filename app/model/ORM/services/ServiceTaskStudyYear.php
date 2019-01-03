@@ -9,4 +9,3 @@ class ServiceTaskStudyYear extends AbstractServiceSingle {
     protected $modelClassName = 'FKSDB\ORM\ModelTaskStudyYear';
 
 }
-

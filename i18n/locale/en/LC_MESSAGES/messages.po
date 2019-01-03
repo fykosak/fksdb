@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-02 14:06+0100\n"
-"PO-Revision-Date: 2018-11-28 19:15+0100\n"
+"PO-Revision-Date: 2019-01-03 13:01+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: en\n"
@@ -25,12 +25,12 @@ msgstr ""
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:106
 #, php-format
 msgid "Úprava ubytovaní v hoteli \"%s\" v dni %s"
-msgstr ""
+msgstr "Edit of accommodation in hotel \"%s\" on %s"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:114
-#, fuzzy, php-format
+#, php-format
 msgid "Založit ubytovaní"
-msgstr "Error while registering."
+msgstr "Create an accommodation"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:119
 #, fuzzy, php-format
@@ -81,12 +81,12 @@ msgstr ""
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:14
 msgid "Price Kč"
-msgstr ""
+msgstr "Price CZK"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 msgid "Cena by mala byť číslo"
-msgstr ""
+msgstr "Price should be a number"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:15
@@ -106,27 +106,23 @@ msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:256
 msgid "Ubytovanie nepatrí k tomuto eventu"
-msgstr ""
+msgstr "The accommodation does not belong to this event"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:302
-#, fuzzy
 msgid "Ubytovaní založeno"
-msgstr "School created"
+msgstr "Accommodation created"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:308
-#, fuzzy
 msgid "Chyba při zakládání ubytovani."
-msgstr "Points store failed."
+msgstr "Error when creating an accommodation."
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:373
-#, fuzzy
 msgid "Ubytovaní upraveno"
-msgstr "Accommodation for teacher"
+msgstr "Accommodation edited"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:379
-#, fuzzy
 msgid "Chyba při ubytovaní."
-msgstr "Error while registering."
+msgstr "Error while accommodating."
 
 #: i18n/../app/modules/EventModule/presenters/ModelPresenter.php:26
 #, fuzzy
@@ -151,32 +147,30 @@ msgid "Schedule"
 msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:28
-#, fuzzy
 msgid "Uzavírání bodování"
-msgstr "Sealing of scoring"
+msgstr "Sealing of the scoring"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:33
-#, fuzzy, php-format
+#, php-format
 msgid "Uzavírání bodování týmu \"%s\""
-msgstr "Sealing of scoring for team \"%s\""
+msgstr "Sealing of the scoring for the team \"%s\""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:61
 msgid "Team does not exists"
 msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:66
-#, fuzzy, php-format
+#, php-format
 msgid "Tým %s má již uzavřeno bodování"
-msgstr "Scoring for team %s is sealed"
+msgstr "Scoring for the team %s is sealed"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:89
 msgid "Úkoly a počty bodů jsou správně."
-msgstr "Problems and scoring is correct."
+msgstr "Problems and scoring are correct."
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:90
-#, fuzzy
 msgid "Zkontrolujte správnost zadání bodů!"
-msgstr "Check the correctness of scoring!"
+msgstr "Check the correctness of the scoring!"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:91
 msgid "Úloha u vydavačů"
@@ -191,14 +185,12 @@ msgid "Zkontrolujte prosím shodnost úlohy u vydavačů"
 msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/DashboardPresenter.php:8
-#, fuzzy
 msgid "Herní systém Fyziklání"
-msgstr "Seal entire Fyziklani"
+msgstr "Fyziklani's game system"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:17
-#, fuzzy
 msgid "Úlohy Fyziklání"
-msgstr "Fyziklani problems"
+msgstr "Fyziklani tasks"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:30
 msgid "Tasks Import of Fyziklani"
@@ -210,18 +202,16 @@ msgid "Vyberte akci"
 msgstr "Choose action"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:51
-#, fuzzy
 msgid "Updatovat úlohy a přidat pokud neexistuje"
-msgstr "Update problems and add nonexisting"
+msgstr "Update tasks and add nonexisting"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:52
 msgid "Odstranit všechny úlohy a nahrát nové"
-msgstr ""
+msgstr "Delete all tasks and upload new ones"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:53
-#, fuzzy
 msgid "Přidat pokud neexistuje"
-msgstr "Add address"
+msgstr "Add if not exists"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/TaskPresenter.php:55
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:106
@@ -259,18 +249,16 @@ msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/BasePresenter.php:187
 msgid "Herné paramtre niesu nastavené"
-msgstr ""
+msgstr "Game parameters are not set"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/SubmitPresenter.php:79
-#, fuzzy
 msgid "Neexistující submit."
-msgstr "Unknown account."
+msgstr "Nonexistent submit."
 
 #: i18n/../app/modules/FyziklaniModule/presenters/SubmitPresenter.php:87
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:137
-#, fuzzy
 msgid "Bodování tohoto týmu je uzavřené."
-msgstr "Scoring of this team is closed."
+msgstr "Scoring of this team is sealed."
 
 #: i18n/../app/modules/FyziklaniModule/presenters/SubmitPresenter.php:106
 #, fuzzy
@@ -278,7 +266,6 @@ msgid "Zadávání bodů"
 msgstr "Grade series %d"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/SubmitPresenter.php:127
-#, fuzzy
 msgid "Úprava bodování"
 msgstr "Change of scoring"
 
@@ -305,7 +292,6 @@ msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/RoomsPresenter.php:65
 #: i18n/../app/Components/React/Fyziklani/RoutingEdit.php:40
-#, fuzzy
 msgid "Zmeny boli uložené"
 msgstr "Changes have been saved"
 
@@ -373,21 +359,21 @@ msgstr "Data don't match already stored data."
 #: i18n/../app/model/Persons/Deduplication/TableMerger.php:247
 #, php-format
 msgid "%s(%s) nové hodnoty: %s"
-msgstr ""
+msgstr "%s(%s) new values: %s"
 
 #: i18n/../app/model/Persons/Deduplication/TableMerger.php:252
 #, php-format
 msgid "%s(%s) sloučen a smazán."
-msgstr ""
+msgstr "%s(%s) merged and deleted."
 
 #: i18n/../app/model/Persons/Deduplication/TableMerger.php:256
 #, php-format
 msgid "%s(%s) rozšířen sloučením."
-msgstr ""
+msgstr "%s(%s) extended by merge."
 
 #: i18n/../app/model/Mail/SendFailedException.php:21
 msgid "Nepodařilo se odeslat e-mail."
-msgstr "Failed to send an e-mail."
+msgstr "Failed to send the e-mail."
 
 #: i18n/../app/model/Authentication/TokenAuthenticator.php:46
 msgid "Autentizační token je neplatný."
@@ -454,21 +440,21 @@ msgstr "Ranking"
 #: i18n/../app/model/Fyziklani/Rooms/RoomsFromCSV.php:61
 #, php-format
 msgid "Přeskočeno neexistující ID týmu %d."
-msgstr ""
+msgstr "Skipped nonexistent team ID %d."
 
 #: i18n/../app/model/Fyziklani/Rooms/RoomsFromCSV.php:77
 #, php-format
 msgid "Tým %s (%d, %s) nemá přiřazenou místnost."
-msgstr ""
+msgstr "Team %s (%d, %s) is not routed (missing a room)."
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:111
 #, php-format
 msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr ""
+msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:125
 msgid "Chybně zadaný kód úlohy."
-msgstr ""
+msgstr "Wrong task number."
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:131
 #, php-format
@@ -478,31 +464,31 @@ msgstr "Team with name '%s' already exists."
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:143
 #, php-format
 msgid "Úloha %s neexistuje."
-msgstr ""
+msgstr "Task %s does not exist."
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:147
-#, fuzzy, php-format
+#, php-format
 msgid "Úloha %s už byla zadaná."
-msgstr "Task %s submitted."
+msgstr "Task %s have been already submitted."
 
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:50
 #, php-format
 msgid "Úloha %s \"%s\" bola vložena"
-msgstr ""
+msgstr "Task %s \"%s\" was included"
 
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:56
 #, php-format
 msgid "Úloha %s \"%s\" byla aktualizována"
-msgstr ""
+msgstr "Task %s \"%s\" was updated."
 
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:59
 #, php-format
 msgid "Úloha %s \"%s\" nebyla aktualizována"
-msgstr ""
+msgstr "Task %s \"%s\" was not updated."
 
 #: i18n/../app/model/Fyziklani/FyziklaniTaskImportProcessor.php:65
 msgid "Vyskytla se chyba"
-msgstr ""
+msgstr "Some error emerged"
 
 #: i18n/../app/model/Events/Exceptions.php:22
 #, php-format
@@ -515,7 +501,7 @@ msgstr "Import failed."
 
 #: i18n/../app/model/Events/Model/ImportHandler.php:118
 msgid "CSV soubor neobsahuje platnou hlavičku."
-msgstr ""
+msgstr "CSV does not contain correct heading."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:150
 #, php-format
@@ -579,7 +565,7 @@ msgstr "This option is only available to secondary school students."
 
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:49
 msgid "Neplatná hodnota $rulesVersion."
-msgstr ""
+msgstr "Not valid $rulesVersion."
 
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:55
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:64
@@ -695,9 +681,8 @@ msgid "Jazyk"
 msgstr "Language"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:102
-#, fuzzy
 msgid "XML soubor úloh"
-msgstr "XML problems file"
+msgstr "XML tasks file"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:129
 #, php-format
@@ -750,33 +735,31 @@ msgid "Založit"
 msgstr "Create"
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:49
-#, fuzzy, php-format
+#, php-format
 msgid "Úprava organizátora %s akce %s"
-msgstr "Edit event %s"
+msgstr "Edit organiser %s of event %s"
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:54
 #, php-format
 msgid "Založit organizátora akce %s"
-msgstr ""
+msgstr "Create organiser of %s"
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:59
-#, fuzzy, php-format
+#, php-format
 msgid "Organizátoři akce %s"
-msgstr "Organizers"
+msgstr "Organisers of event %s"
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:69
 msgid "Editace organizátora akce mimo zvolenou akci."
-msgstr ""
+msgstr "Editation of an organiser out of the selected event."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:77
-#, fuzzy
 msgid "Organizátor akce smazán."
-msgstr "Organizer %s updated."
+msgstr "Organiser of event deleted."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:79
-#, fuzzy
 msgid "Nepodařilo se smazat organizátora akce."
-msgstr "Failed to send an e-mail."
+msgstr "Failed to delete the organisers of event."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:96
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:57
@@ -785,24 +768,22 @@ msgid "Poznámka"
 msgstr "Note"
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:106
-#, fuzzy, php-format
+#, php-format
 msgid "Organizátor akce %s založen."
-msgstr "Organizer %s created."
+msgstr "Organizer of event %s created."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:110
-#, fuzzy, php-format
+#, php-format
 msgid "Organizátor akce %s upraven."
-msgstr "Organizer %s updated."
+msgstr "Organizer of event %s updated."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:114
-#, fuzzy
 msgid "Chyba při zakládání organizátora akce."
-msgstr "Database error (store)."
+msgstr "Error while creating organiser of event."
 
 #: i18n/../app/OrgModule/presenters/EventOrgPresenter.php:118
-#, fuzzy
 msgid "Organizátor akce již existuje."
-msgstr "Organizer %s updated."
+msgstr "The organiser of event already exists."
 
 #: i18n/../app/OrgModule/presenters/InboxPresenter.php:110
 msgid "Příjem řešení"
@@ -823,12 +804,12 @@ msgstr "Handout saved."
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:24
 #, php-format
 msgid "Úprava řešitele %s"
-msgstr ""
+msgstr "Edit the contestant %s"
 
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:29
 #: i18n/../app/Components/Grids/ContestantsGrid.php:56
 msgid "Založit řešitele"
-msgstr ""
+msgstr "Create contestant"
 
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:34
 msgid "Řešitelé"
@@ -837,7 +818,7 @@ msgstr "Contestants"
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:60
 #, php-format
 msgid "Řešitel %s založen."
-msgstr ""
+msgstr "Contestant %s created."
 
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:64
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:362
@@ -847,7 +828,7 @@ msgstr "Contestant %s modified."
 
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:68
 msgid "Chyba při zakládání řešitele."
-msgstr ""
+msgstr "Error while creating the contestant."
 
 #: i18n/../app/OrgModule/presenters/ContestantPresenter.php:72
 msgid "Řešitel už existuje."
@@ -883,7 +864,7 @@ msgstr "Add"
 
 #: i18n/../app/OrgModule/presenters/EventPresenter.php:254
 msgid "Parametry nesplňují Neon schéma"
-msgstr ""
+msgstr "Parameters does not fulfull the Neon scheme."
 
 #: i18n/../app/OrgModule/presenters/EventPresenter.php:340
 #, php-format
@@ -953,20 +934,20 @@ msgstr "School created"
 
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:184
 msgid "Chyba při zakládání školy."
-msgstr ""
+msgstr "Error while creating school."
 
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:225
 msgid "Škola upravena"
-msgstr ""
+msgstr "School edited"
 
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:231
 msgid "Chyba při úpravě školy."
-msgstr ""
+msgstr "Error while editing school."
 
 #: i18n/../app/OrgModule/presenters/BasePresenter.php:124
-#, fuzzy, php-format
+#, php-format
 msgid "%d. ročník"
-msgstr "Since year"
+msgstr "%d. ročník"
 
 #: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:41
 msgid "Duplicitní osoby"
@@ -980,12 +961,12 @@ msgstr "%s (%d) and %s (%d) merged."
 #: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:70
 #, php-format
 msgid "%s (%d) a %s (%d) potřebují vyřešit konflitky."
-msgstr ""
+msgstr "%s (%d) and %s (%d) need to solve conflicts."
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:244
 #, php-format
 msgid "Úprava dotazu %s"
-msgstr ""
+msgstr "Editation of query %s"
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:264
 msgid ""
@@ -996,7 +977,7 @@ msgstr ""
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:109
 #, php-format
 msgid "Napsat dotaz"
-msgstr ""
+msgstr "Write query"
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:286
 msgid "Exporty"
@@ -1005,7 +986,7 @@ msgstr "Exports"
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:291
 #, php-format
 msgid "Detail dotazu %s"
-msgstr ""
+msgstr "Detail of query %s"
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:305
 #, php-format
@@ -1028,7 +1009,7 @@ msgstr "Execute"
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:424
 msgid "Dotaz upraven."
-msgstr ""
+msgstr "Query edited."
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:430
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:453
@@ -1037,16 +1018,15 @@ msgstr "Database error (store)."
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:447
 msgid "Dotaz vytvořen."
-msgstr ""
+msgstr "Query created."
 
 #: i18n/../app/OrgModule/presenters/StalkingPresenter.php:58
-#, fuzzy
 msgid "Osoba neexistuje"
-msgstr "Team with name '%s' already exists."
+msgstr "Person does not exist"
 
 #: i18n/../app/OrgModule/presenters/StalkingPresenter.php:204
 msgid "Stalkovat"
-msgstr ""
+msgstr "Let's stalk"
 
 #: i18n/../app/OrgModule/presenters/StalkingPresenter.php:235
 msgid "Stalking"
@@ -1102,31 +1082,29 @@ msgstr ""
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:55
 msgid "Organizátoři"
-msgstr "Organizers"
+msgstr "Organisers"
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:85
 #, php-format
 msgid "Organizátor %s založen."
-msgstr "Organizer %s created."
+msgstr "Organiser %s created."
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:89
 #, php-format
 msgid "Organizátor %s upraven."
-msgstr "Organizer %s updated."
+msgstr "Organiser %s updated."
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:93
 msgid "Chyba při zakládání organizátora."
 msgstr ""
 
 #: i18n/../app/OrgModule/presenters/OrgPresenter.php:97
-#, fuzzy
 msgid "Organizátor již existuje."
-msgstr "Organizer %s updated."
+msgstr "Organiser already exists."
 
 #: i18n/../app/OrgModule/presenters/PersonPresenter.php:192
-#, fuzzy
 msgid "Osoby úspešně nesloučeny."
-msgstr "Persons successfully merged."
+msgstr "Persons not merged."
 
 #: i18n/../app/OrgModule/presenters/PersonPresenter.php:197
 #, php-format
@@ -1457,19 +1435,16 @@ msgid "Zobrazované jméno"
 msgstr "Displayed name"
 
 #: i18n/../app/Components/Forms/Factories/Person/DisplayNameField.php:11
-#, fuzzy
 msgid "Pouze pokud je odlišné od \"jméno příjmení\"."
-msgstr "Only if it differs from \"first name surname\"."
+msgstr "Only if it differs from \"first name, surname\"."
 
 #: i18n/../app/Components/Forms/Factories/Person/BornFamilyNameField.php:9
-#, fuzzy
 msgid "Rodné příjmení"
-msgstr "Surname"
+msgstr "Birth surname"
 
 #: i18n/../app/Components/Forms/Factories/Person/BornFamilyNameField.php:10
-#, fuzzy
 msgid "Pouze pokud je odlišné od příjmení."
-msgstr "Only if it differs from \"first name surname\"."
+msgstr "Only if it differs from surname."
 
 #: i18n/../app/Components/Forms/Factories/EventFactory.php:42
 #: i18n/../app/Components/Forms/Factories/EventFactory.php:48
@@ -3233,9 +3208,8 @@ msgid "Předpokládaný odjezd"
 msgstr ""
 
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:66
-#, fuzzy
 msgid "Čas odjezdu"
-msgstr "Timestamp"
+msgstr "Time "
 
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:68
 msgid "Z jakého místa chceš odjíždět?"
@@ -3266,9 +3240,8 @@ msgstr ""
 "any other information about your health condition, what should we know?"
 
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:86
-#, fuzzy
 msgid "Další poznámky"
-msgstr "Next year"
+msgstr "Other notes"
 
 #: i18n/../www/js/TypeScriptSources/src/events/accommodation/components/capacity-label.tsx.tsx2php:15
 msgid "Used capacity/Total capacity"

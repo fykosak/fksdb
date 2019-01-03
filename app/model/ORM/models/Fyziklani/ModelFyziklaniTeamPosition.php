@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Class ModelBrawlTeamPosition
+ * Class ModelFyziklaniTeamPosition
  * @property integer room_id
  * @property integer e_fyziklani_team_id
  * @property integer row
  * @property integer col
- * @property ModelBrawlRoom room
+ * @property ModelFyziklaniRoom room
  */
-class ModelBrawlTeamPosition extends \AbstractModelSingle {
+class ModelFyziklaniTeamPosition extends \AbstractModelSingle {
 
     public function getRoom() {
         return $this->room;

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-02 14:06+0100\n"
-"PO-Revision-Date: 2018-11-28 18:52+0100\n"
+"PO-Revision-Date: 2019-01-03 12:11+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -86,7 +86,7 @@ msgstr "Cena Kč"
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 msgid "Cena by mala byť číslo"
-msgstr ""
+msgstr "Cena by měla být číslo"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:15
@@ -101,13 +101,12 @@ msgid "Date"
 msgstr "Datum"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:252
-#, fuzzy
 msgid "Accommodation does not exists"
-msgstr "Cena ubytování"
+msgstr "Ubytování neexistuje"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:256
 msgid "Ubytovanie nepatrí k tomuto eventu"
-msgstr ""
+msgstr "Ubytování nepatří k této akci"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:302
 msgid "Ubytovaní založeno"
@@ -130,9 +129,9 @@ msgid "Model akce"
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/DashboardPresenter.php:12
-#, fuzzy, php-format
+#, php-format
 msgid "Event %s"
-msgstr "Akce \"%s\"."
+msgstr "Akce \"%s\""
 
 #: i18n/../app/modules/EventModule/presenters/DispatchPresenter.php:68
 msgid "List of events"
@@ -157,7 +156,7 @@ msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:61
 msgid "Team does not exists"
-msgstr ""
+msgstr "Tým neexistuje"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ClosePresenter.php:66
 #, php-format
@@ -219,41 +218,36 @@ msgid "Importovat"
 msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:44
-#, fuzzy
 msgid "Correlation statistics"
-msgstr "Globální statistiky"
+msgstr "Korelační statistiky"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:49
-#, fuzzy
 msgid "Results and statistics"
-msgstr "Výsledky a statistiky Fyziklání"
+msgstr "Výsledky a statistiky"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:54
 msgid "Detailed results"
-msgstr ""
+msgstr "Podrobné výsledky"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:60
-#, fuzzy
 msgid "Results presentation"
-msgstr "Prezentace výsledků Fyziklání"
+msgstr "Prezentace výsledků"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:64
-#, fuzzy
 msgid "Teams statistics"
-msgstr "Globální statistiky"
+msgstr "Statistiky týmů"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:69
-#, fuzzy
 msgid "Tasks statistics"
-msgstr "Globální statistiky"
+msgstr "Statistiky úloh"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/ResultsPresenter.php:74
 msgid "Final results"
-msgstr ""
+msgstr "Konečné výsledky"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/BasePresenter.php:187
 msgid "Herné paramtre niesu nastavené"
-msgstr ""
+msgstr "Herní parametry nejsou nastavené"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/SubmitPresenter.php:79
 msgid "Neexistující submit."
@@ -645,7 +639,7 @@ msgstr "Neplatné PSČ %d."
 
 #: i18n/../app/model/ORM/models/ModelEvent.php:98
 msgid "Herné parametre niesu nastavené"
-msgstr ""
+msgstr "Herní parametry nejsou nastavené"
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:77
 msgid "Import úloh"
@@ -960,7 +954,7 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/DeduplicatePresenter.php:70
 #, php-format
 msgid "%s (%d) a %s (%d) potřebují vyřešit konflitky."
-msgstr ""
+msgstr "%s (%d) a %s (%d) potřebují vyřešit konflikty."
 
 #: i18n/../app/OrgModule/presenters/ExportPresenter.php:244
 #, php-format
@@ -1865,7 +1859,7 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/LinkedinIdField.php:10
 msgid "Linkedin Id"
-msgstr ""
+msgstr "LinkedIn ID"
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/BirthplaceField.php:11
 msgid "Místo narození"
@@ -1928,6 +1922,8 @@ msgid ""
 "%label smí obsahovat jen číslice a musí být v mezinárodím tvaru začínajícím "
 "+421 nebo +420."
 msgstr ""
+"%label smí obsahovat jen číslice a musí být v mezinárodním tvaru začínajícím "
+"+421, nebo +420."
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/AcademicDegreeSuffixField.php:11
 msgid "Titul za jménem"
@@ -1943,7 +1939,7 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/AgreedField.php:14
 msgid "http://fykos.cz/doc/souhlas.pdf"
-msgstr ""
+msgstr "https://fykos.cz/doc/souhlas.pdf"
 
 #: i18n/../app/Components/Forms/Factories/TeacherFactory.php:17
 msgid "Since year"
@@ -2107,16 +2103,15 @@ msgstr "Ubytované osoby"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:63
 msgid "Remove"
-msgstr ""
+msgstr "Odebrat"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:67
 msgid "Opravdu smazat ubytovaní?"
 msgstr "Opravdu smazat ubytování?"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:71
-#, fuzzy
 msgid "Add accommodation"
-msgstr "Ubytování"
+msgstr "Přidat ubytování"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:80
 msgid "some another bullshit"
@@ -2291,6 +2286,8 @@ msgid ""
 "Počet bodov bol upravený na 0, pre opätovné zadanie prosím použite funciu "
 "upraviť submit."
 msgstr ""
+"Počet bodů byl upravený na 0. Pro opětovné zadání, prosím, použijte funkci "
+"upravit submit."
 
 #: i18n/../app/Components/Grids/TeachersGrid.php:55
 msgid "Since"
@@ -3025,13 +3022,12 @@ msgid ""
 msgstr ""
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:7
-#, fuzzy
 msgid ""
 "Program počas víkendu po fyziklani. Podrobnosti nájdete <a href=\"http://"
 "fyziklani.cz/program\">na špecialni strance</a>."
 msgstr ""
 "Program v průběhu víkendu po Fyziklání. Podrobnosti najdete <a href="
-"\"https://fykos.cz/akce/fyziklani/start\">na speciální stránce</a>."
+"\"https://fyziklani.cz/program\">na speciální stránce</a>."
 
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:99
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:88
@@ -3246,73 +3242,72 @@ msgstr "Výsledky Fyziklání"
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/index.tsx.tsx2php:53
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/index.tsx.tsx2php:32
 msgid "select team"
-msgstr ""
+msgstr "vybrat tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/index.tsx.tsx2php:68
 msgid "Correlation "
-msgstr ""
+msgstr "Korelace"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:82
 msgid "Task"
-msgstr ""
+msgstr "Úloha"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:83
 msgid "Time first team"
-msgstr ""
+msgstr "Čas prvního týmu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:84
 msgid "Time second team"
-msgstr ""
+msgstr "Čas druhého týmu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:85
 msgid "Difference"
-msgstr ""
+msgstr "Rozdíl"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:92
 msgid "first team"
-msgstr ""
+msgstr "první tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:93
 msgid "second team"
-msgstr ""
+msgstr "druhý tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:94
 msgid "both teams"
-msgstr ""
+msgstr "oba týmy"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:95
 msgid "per task"
-msgstr ""
+msgstr "na úlohu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/global-correlation/chart.tsx.tsx2php:97
 msgid "First team"
-msgstr ""
+msgstr "První tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/global-correlation/chart.tsx.tsx2php:98
 msgid "Second team"
-msgstr ""
+msgstr "Druhý tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/global-correlation/chart.tsx.tsx2php:99
 msgid "Average"
-msgstr ""
+msgstr "Průměr"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/global-correlation/chart.tsx.tsx2php:100
 msgid "Under 2 minutes"
-msgstr ""
+msgstr "Pod 2 minuty"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/global-correlation/chart.tsx.tsx2php:101
 msgid "Both teams"
-msgstr ""
+msgstr "Oba týmy"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/index.tsx.tsx2php:45
-#, fuzzy
 msgid "Statistic for team "
-msgstr "Statistiky týmu "
+msgstr "Statistiky týmu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/timeline/index.tsx.tsx2php:15
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/timeline/index.tsx.tsx2php:20
 msgid "Timeline"
-msgstr ""
+msgstr "Časový průběh"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/pie/index.tsx.tsx2php:16
 #, fuzzy
@@ -3321,7 +3316,7 @@ msgstr "úspěšné odevzdání"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:73
 msgid "select task"
-msgstr ""
+msgstr "vyber úlohu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:82
 msgid "Aggregation time"
@@ -3329,11 +3324,11 @@ msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:97
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:112
 msgid "To"
-msgstr ""
+msgstr "Do"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/index.tsx.tsx2php:21
 msgid "Global statistics"
@@ -3346,13 +3341,14 @@ msgstr "Statistiky jedné úlohy"
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/time-histogram/index.tsx.tsx2php:17
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/time-histogram-lines/index.tsx.tsx2php:17
 msgid "Time histogram"
-msgstr ""
+msgstr "Časový histogram"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/progress/index.tsx.tsx2php:13
 msgid "Total solved problem"
-msgstr ""
+msgstr "Celkem vyřešených úloh"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:59
+#, fuzzy
 msgid "Number of events"
 msgstr "Program akce %s"
 
@@ -3366,7 +3362,7 @@ msgstr "Skrýt program"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:19
 msgid "Not public results"
-msgstr ""
+msgstr "Neveřejné výsledkovky"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:26
 #, fuzzy
@@ -3388,7 +3384,7 @@ msgstr "Fetchnout"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/filters.ts.ts2php:15
 msgid "All"
-msgstr ""
+msgstr "Vše"
 
 #~ msgid "Detail of event"
 #~ msgstr "Podrobnosti akce"

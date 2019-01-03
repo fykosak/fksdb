@@ -124,7 +124,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return sprintf(_('%d. ročník'), $this->year);
     }
 
-    public function getNavRoot() {
-        return 'org.dashboard.default';
+    public function getNavRoots(): array {
+        return ['org.dashboard.default'];
     }
 }

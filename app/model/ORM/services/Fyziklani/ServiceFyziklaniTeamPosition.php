@@ -1,18 +1,18 @@
 <?php
 
-class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
+class ServiceFyziklaniTeamPosition extends \AbstractServiceSingle {
 
-    protected $tableName = \DbNames::TAB_BRAWL_TEAM_POSITION;
-    protected $modelClassName = 'ModelBrawlTeamPosition';
+    protected $tableName = \DbNames::TAB_FYZIKLANI_TEAM_POSITION;
+    protected $modelClassName = 'ModelFyziklaniTeamPosition';
 
     /**
      * @param $teamId
-     * @return ModelBrawlTeamPosition
+     * @return ModelFyziklaniTeamPosition
      */
     public function findByTeamId($teamId) {
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
         if ($row) {
-            return ModelBrawlTeamPosition::createFromTableRow($row);
+            return ModelFyziklaniTeamPosition::createFromTableRow($row);
         }
         return null;
     }
@@ -27,7 +27,7 @@ class ServiceBrawlTeamPosition extends \AbstractServiceSingle {
             $teamData = (object)$teamData;
             try {
                 /**
-                 * @var $model \ModelBrawlTeamPosition
+                 * @var $model \ModelFyziklaniTeamPosition
                  */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {

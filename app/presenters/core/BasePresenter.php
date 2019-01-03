@@ -281,28 +281,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
         $this->template->subtitle = $this->getSubtitle();
         $this->template->icon = $this->getIcon();
-        $this->template->navRoot = $this->getNavRoot();
         $this->template->navRoots = $this->getNavRoots();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();
     }
 
-    /**
-     * @return null
-     * @deprecated use getNavRoots
-     */
-    public function getNavRoot() {
-        return null;
-    }
-
     protected function getNavRoots(): array {
         return [];
     }
 
-    /**
-     * @return array
-     */
     protected function getNavBarVariant(): array {
         return [null, null];
     }

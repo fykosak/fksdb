@@ -384,8 +384,4 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
         return parent::getNavBarVariant();
     }
-
-    public function getNavRoot() {
-        return '';
-    }
 }
