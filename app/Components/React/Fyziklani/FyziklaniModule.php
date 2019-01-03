@@ -58,8 +58,8 @@ abstract class FyziklaniModule extends ReactComponent {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniRoom;
-        $this->serviceFyziklaniRoom = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
 
     }
 
