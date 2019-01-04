@@ -20,10 +20,6 @@ class FyziklaniChooser extends Control {
     private $event;
 
     /**
-     * @var ModelEvent[]
-     */
-    private $brawls;
-    /**
      * @var ServiceEvent
      */
     private $serviceEvent;
@@ -48,14 +44,12 @@ class FyziklaniChooser extends Control {
      * @return ModelEvent[]
      */
     private function getAllFyziklani(): array {
-        if ($this->brawls === null) {
-            $this->brawls = [];
-            $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year DESC');
-            foreach ($query as $row) {
-                $this->brawls[] = ModelEvent::createFromTableRow($row);
-            }
+        $events = [];
+        $query = $this->serviceEvent->getTable()->where('event_type_id=?', self::EVENT_TYPE_ID)->order('event_year DESC');
+        foreach ($query as $row) {
+            $events[] = ModelEvent::createFromTableRow($row);
         }
-        return $this->brawls;
+        return $events;
     }
 
     public function render() {

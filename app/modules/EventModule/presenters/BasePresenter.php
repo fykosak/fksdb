@@ -58,7 +58,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function startup() {
+    protected function startup() {
         /**
          * @var $languageChooser LanguageChooser
          */
@@ -93,7 +93,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return int
      * @throws \Nette\Application\AbortException
      */
-    public function getEventId(): int {
+    protected function getEventId(): int {
         if (!$this->eventId) {
             $this->redirect('Dispatch:default');
         }
@@ -150,12 +150,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
     }
 
-    public function getNavBarVariant(): array {
-        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'dark' : 'light'];
+    protected function getNavBarVariant(): array {
+        return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
     }
 
-    public function getNavRoot() {
-        return 'event.dashboard.default';
+    protected function getNavRoots(): array {
+        return ['event.dashboard.default'];
     }
 
     /**

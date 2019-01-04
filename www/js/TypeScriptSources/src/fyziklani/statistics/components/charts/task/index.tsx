@@ -1,44 +1,37 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import { lang } from '../../../../../i18n/i18n';
-import { ITask } from '../../../../helpers/interfaces';
-import { setTaskId } from '../../../actions';
 import { IFyziklaniStatisticsStore } from '../../../reducers';
+import Options from './options';
 import Progress from './progress/';
+import TimeHistogramLines from './time-histogram-lines';
+import TimeHistogram from './time-histogram/';
 import Timeline from './timeline/';
 
 interface IState {
-    tasks?: ITask[];
     taskId?: number;
-
-    onChangeTask?(id: number): void;
 }
 
 class TaskStats extends React.Component<IState, {}> {
     public render() {
-        const {onChangeTask, taskId, tasks} = this.props;
-        const taskSelect = (
-            <p>
-                <select className="form-control" onChange={(event) => {
-                    onChangeTask(+event.target.value);
-                }}>
-                    <option value={null}>--select team--</option>
-                    {tasks.map((task) => {
-                        return (<option key={task.taskId} value={task.taskId}>{task.label}</option>);
-                    })}
-                </select>
-            </p>
-        );
+        const {taskId} = this.props;
+        const availablePoints = [5, 3, 2, 1];
         return (
-            <div>
-                <h3>{lang.getText('Global statistics')}</h3>
-                <Progress/>
+            <>
+                <h2>{lang.getText('Global statistics')}</h2>
+                <Progress availablePoints={availablePoints}/>
 
-                <h3>{lang.getText('Statistics from single problem')}</h3>
-                {taskSelect}
-                {taskId && <Timeline/>}
-            </div>
+                <h2>{lang.getText('Statistics from single problem')}</h2>
+                <Options/>
+                <hr/>
+                {taskId && <>
+                    <Timeline taskId={taskId} availablePoints={availablePoints}/>
+                    <hr/>
+                    <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
+                    <hr/>
+                    <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
+                </>}
+            </>
         );
     }
 }
@@ -46,14 +39,7 @@ class TaskStats extends React.Component<IState, {}> {
 const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
         taskId: state.statistics.taskId,
-        tasks: state.data.tasks,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch): IState => {
-    return {
-        onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TaskStats);
+export default connect(mapStateToProps, null)(TaskStats);

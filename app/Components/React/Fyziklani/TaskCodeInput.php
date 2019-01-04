@@ -15,15 +15,16 @@ class TaskCodeInput extends FyziklaniModule {
      */
     private $handler;
 
-    public function __construct(TaskCodeHandler $handler, Container $container, ModelEvent $event, \ServiceBrawlRoom $serviceBrawlRoom, \ServiceBrawlTeamPosition $serviceBrawlTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniTask $serviceFyziklaniTask, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        parent::__construct($container, $event, $serviceBrawlRoom, $serviceBrawlTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
+    public function __construct(TaskCodeHandler $handler, Container $container, ModelEvent $event, \ServiceFyziklaniRoom $serviceFyziklaniRoom, \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniTask $serviceFyziklaniTask, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+        parent::__construct($container, $event, $serviceFyziklaniRoom, $serviceFyziklaniTeamPosition, $serviceFyziklaniTeam, $serviceFyziklaniTask, $serviceFyziklaniSubmit);
         $this->handler = $handler;
     }
 
     public function getData(): string {
         return Json::encode([
-            'tasks' => $this->serviceFyziklaniTask->getTasks($this->event),
-            'teams' => $this->serviceFyziklaniTeam->getTeamsArray($this->event),
+            'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
+            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
         ]);
     }
 

@@ -26,9 +26,7 @@ interface IProps {
 }
 
 class Place extends React.Component<IState & IProps, {}> {
-
     public render() {
-
         const {x, y, onDrop, teams, draggedTeamId, roomId} = this.props;
         const team = teams && teams.filter((currentTeam) => {
             return (currentTeam.x === x) && (currentTeam.y === y) && (currentTeam.roomId === roomId);
@@ -39,7 +37,12 @@ class Place extends React.Component<IState & IProps, {}> {
                     e.preventDefault();
                 }
             }}
-            onClick={() => draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null}
+            onClick={() => {
+                if (team) {
+                    return null;
+                }
+                return draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null;
+            }}
             onDrop={() => {
                 onDrop(draggedTeamId, {x, y, roomId, room: null});
             }}>

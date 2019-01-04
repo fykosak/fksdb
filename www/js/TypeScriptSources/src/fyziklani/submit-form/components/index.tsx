@@ -18,16 +18,17 @@ interface ITaskCodeProps {
     tasks: ITask[];
     teams: ITeam[];
     actions: INetteActions;
+    availablePoints: number[];
 }
 
 export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
     public render() {
-        const {tasks, teams, actions} = this.props;
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const {tasks, teams, actions, availablePoints} = this.props;
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>
-                <Container tasks={tasks} teams={teams} actions={actions}/>
+                <Container tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
             </Provider>
         );
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { lang } from '../../../../i18n/i18n';
 import Timer from '../../../helpers/components/timer/';
+import CorrelationStats from './correlation/index';
 import TasksStats from './task/index';
 import TeamStats from './team/index';
 
@@ -20,6 +20,9 @@ export default class Statistics extends React.Component<IProps, {}> {
                 break;
             case 'task':
                 content = (<TasksStats/>);
+                break;
+            case 'correlation':
+                content = (<CorrelationStats/>);
         }
         return (
             <div className="container">

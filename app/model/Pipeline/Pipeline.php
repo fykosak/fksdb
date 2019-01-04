@@ -39,6 +39,9 @@ class Pipeline {
         $this->logger = $logger;
     }
 
+    /**
+     * @return ILogger
+     */
     public function getLogger() {
         return $this->logger;
     }

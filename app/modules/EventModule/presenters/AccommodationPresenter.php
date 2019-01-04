@@ -20,7 +20,7 @@ class AccommodationPresenter extends BasePresenter {
     const CONT_ACCOMMODATION = 'CONT_ACCOMMODATION';
     const CONT_ADDRESS = 'CONT_ADDRESS';
 
-    protected $modelResourceId = 'eventAccommodation';
+    protected $modelResourceId = 'event.accommodation';
 
     /**
      * @var ServiceEventAccommodation
@@ -63,23 +63,43 @@ class AccommodationPresenter extends BasePresenter {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedList() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'list'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedCreate() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'create'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedEdit() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'edit'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedBilleted() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'billeted'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleEdit() {
         $model = $this->getModel();
         $this->setTitle(sprintf(
@@ -100,6 +120,11 @@ class AccommodationPresenter extends BasePresenter {
         $this->setIcon('fa fa-table');
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleBilleted() {
         $model = $this->getModel();
         $this->setTitle(
@@ -112,6 +137,7 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
@@ -158,6 +184,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return EventBilletedPerson
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
     public function createComponentBilletedGrid(): EventBilletedPerson {
@@ -199,6 +226,7 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return array|null
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
     private function getDefaults() {
@@ -212,10 +240,10 @@ class AccommodationPresenter extends BasePresenter {
         ];
     }
 
-
     /**
      * @return ModelEventAccommodation
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
     public function getModel(): ModelEventAccommodation {

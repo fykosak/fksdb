@@ -69,7 +69,10 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setIcon('fa fa-calendar');
     }
 
-
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function startup() {
         /**
          * @var $languageChooser LanguageChooser
@@ -84,6 +87,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
      * @return array
      */
     public function getNavBarVariant(): array {
-        return ['event bg-dark', 'dark'];
+        return ['event', 'bg-dark navbar-dark'];
     }
 }

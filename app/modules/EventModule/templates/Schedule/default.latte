@@ -1,33 +1,61 @@
 {layout '../@layout.v4.latte'}
 {block content}
-    <h2>{_('Zoznamy po častiach')}</h2>
-    <div class="card-columns">
+    <h2 class="fyziklani-headline-red fyziklani-headline">{_('Zoznamy po častiach')}</h2>
+
+    <ul class="nav nav-tabs nav-justified" role="tablist">
         {foreach $schedule as $key => $item}
             {continueIf $item['type']!=='chooser'}
-            {foreach $item['parallels'] as $parallel}
-                <div class="card">
-                    <h4 class="card-header bg-primary text-white">
-                        {$key}--{$parallel['cs']['name']}/{$parallel['en']['name']}</h4>
-                    <ul class="list-group list-group-flush">
-                        {foreach $participants as $participant}
-                            {if array_key_exists($key,$participant['schedule']) && $parallel['id']==$participant['schedule']->{$key}}
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <span class="col">{$participant['person_id']}</span>
-                                        <span class="col">{$participant['name']}</span>
-                                        <span class="col">{$participant['team']}</span>
-                                        <span class="col">{$participant['type']}</span>
-                                    </div>
-                                </li>
-                            {/if}
-                        {/foreach}
-                    </ul>
+            <li class="nav-item">
+                <a n:class="'nav-link '.($iterator->isFirst()?'active':'')" id="home-tab" data-toggle="tab"
+                                                                            href="#{$key}"
+                                                                            role="tab" aria-controls="{$key}"
+                                                                            aria-selected="true">{$key}</a>
+            </li>
+        {/foreach}
+    </ul>
+    <div class="tab-content">
+        {foreach $schedule as $key => $item}
+            {continueIf $item['type']!=='chooser'}
+            <div n:class="'tab-pane fade mt-3 '. ($iterator->isFirst()?'active show':'')" id="{$key}" role="tabpanel">
+                <h3>{$key}</h3>
+                <div class="card-columns">
+
+                    {foreach $item['parallels'] as $parallel}
+                        <div class="card">
+                            <h4 class="card-header bg-primary text-white">
+                                {$parallel['cs']['name']}/{$parallel['en']['name']}</h4>
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                <tr>
+                                    <th>{_('Person Id')}</th>
+                                    <th>{_('Name')}</th>
+                                    <th>{_('Team')}</th>
+                                    <th>{_('Type')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {foreach $participants as $participant}
+                                    {if array_key_exists($key,$participant['schedule']) && $parallel['id']==$participant['schedule']->{$key}}
+                                        <tr>
+                                            <td>{$participant['person_id']}</td>
+                                            <td>{$participant['name']}</td>
+                                            <td>{$participant['team']}</td>
+                                            <td>{$participant['type']}</td>
+                                        </tr>
+                                    {/if}
+                                {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    {/foreach}
                 </div>
-            {/foreach}
+            </div>
         {/foreach}
     </div>
-    <h2>{_('Celkové zoznamy')}</h2>
-    <table class="table table-striped table-hover">
+    <hr class="fyziklani-hr-red"/>
+    <h2 class="fyziklani-headline-red fyziklani-headline">{_('Celkové zoznamy')}</h2>
+    <table class="table table-striped table-hover table-sm">
         <thead>
         <tr>
             <th>{_('Person Id')}</th>
@@ -55,7 +83,7 @@
                             {if $parallel['id']==$participant['schedule']->{$key}}
                                 <td>
                                     <span class="badge badge-success">
-                                        {$parallel['cs']['name']}/{$parallel['en']['name']}
+                                        {$parallel['cs']['name']}
                                     </span>
                                 </td>
                                 {var $match=true}
@@ -79,25 +107,32 @@
         {/foreach}
         </tbody>
     </table>
-    <h2>{_('Kumulačné počty')}</h2>
-    <div class="card-columns">
+    <hr class="fyziklani-hr-red"/>
+    <h2 class="fyziklani-headline fyziklani-headline-red">{_('Kumulačné počty')}</h2>
+
+    <table class="table-striped table table-sm">
+        <thead>
+        <tr>
+            <th>{_('Block')}</th>
+            <th>{_('Pararell')}</th>
+            <th>{_('Count')}</th>
+        </tr>
+        </thead>
+        <tbody>
         {foreach $schedule as $key => $item}
             {continueIf $item['type']!=='chooser'}
 
-            <div class="card">
-                <h4 class="card-header bg-primary text-white">{$key}</h4>
-                {foreach $item['parallels'] as $parallel}
-                    <h3 class="card-header">{$parallel['cs']['name']} /{$parallel['en']['name']}</h3>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <span class="col-5">{_('Count')}</span>
-                                <span class="col-7">{(isset($stats[$key]) && isset($stats[$key][$parallel['id']]))?$stats[$key][$parallel['id']]:0}</span>
-                            </div>
-                        </li>
-                    </ul>
-                {/foreach}
-            </div>
+
+            {foreach $item['parallels'] as $parallel}
+                <tr>
+                    <td>{$key}</td>
+                    <td>{$parallel['cs']['name']}</td>
+                    <td>{(isset($stats[$key]) && isset($stats[$key][$parallel['id']]))?$stats[$key][$parallel['id']]:0}</td>
+                </tr>
+            {/foreach}
+
         {/foreach}
-    </div>
+        </tbody>
+    </table>
+
 {/block}

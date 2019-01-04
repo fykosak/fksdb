@@ -26,15 +26,19 @@
 }
 
 .bg-vyfuk-alt {
-  background-color: $vyfukAltColor;
+  background-color: $vyfukMainColor;
 }
 
-.bg-vyfuk-alt {
-  background-color: $vyfukMainColor;
+.bg-vyfuk {
+  background-color: $vyfukAltColor;
 }
 
 .bg-fykos {
   background-color: $fykosMainColor;
+}
+
+.navigation-item .card {
+  @include navigation-item(black, white);
 }
 
 [data-contest~="fykos"] .navigation-item .card {

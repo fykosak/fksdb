@@ -25,7 +25,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     const ACC_DATE_FORMAT = 'Y-m-d';
 
     public function getResourceId(): string {
-        return 'eventAccommodation';
+        return 'event.accommodation';
     }
 
     public function getEvent(): ModelEvent {

@@ -9,4 +9,3 @@ class ServiceStoredQueryTagType extends AbstractServiceSingle {
     protected $modelClassName = 'FKSDB\ORM\ModelStoredQueryTagType';
 
 }
-

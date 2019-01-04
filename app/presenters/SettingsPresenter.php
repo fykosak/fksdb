@@ -141,9 +141,4 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
         $this->redirect('this');
     }
-
-    public function getNavRoot() {
-        return '';
-    }
-
 }

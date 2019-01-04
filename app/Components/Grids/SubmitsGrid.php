@@ -77,17 +77,17 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton("revoke", _("Zrušit"))
-                ->setClass("btn btn-xs btn-warning")
-                ->setText('Zrušit') //todo i18n
+        $this->addButton('revoke', _('Zrušit'))
+                ->setClass('btn btn-xs btn-warning')
+                ->setText(_('Zrušit'))
                 ->setShow(function($row) {
                             return $this->canRevoke($row);
                         })
                 ->setLink(function($row) {
-                            return $this->link("revoke!", $row->submit_id);
+                            return $this->link('revoke!', $row->submit_id);
                         })
                 ->setConfirmationDialog(function($row) {
-                            return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
+                            return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'),$row->getTask()->getFQName());
                         });
 
 

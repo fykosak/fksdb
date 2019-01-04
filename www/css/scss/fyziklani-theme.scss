@@ -10,7 +10,9 @@
 
   h2 {
     color: $fyziklaniMainColor;
-    font-weight: bold;
+  }
+  h1, h3 {
+    color: black;
   }
   hr {
     border-color: $fyziklaniMainColor;
@@ -58,7 +60,16 @@
   font-weight: bold;
 }
 
-.fyziklani-headline-color {
+.fyziklani-headline-color, .fyziklani-headline-red {
   color: #f44336;
   font-weight: bold;
+}
+
+hr.fyziklani-hr-red {
+  border-color: $fyziklaniMainColor;
+}
+
+.badge-fyziklani {
+  background-color: $fyziklaniMainColor;
+  color: white;
 }

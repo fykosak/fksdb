@@ -25,7 +25,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         if (!($presenter instanceof BasePresenter)) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
         /**
          * @var \DateTime $lastUpdated
          */
@@ -34,29 +34,29 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         $lastUpdated = $requestData ? $requestData : null;
         $response = new \ReactResponse();
         $response->setAct('results-update');
-        $gameSetup = $this->getEvent()->getParameter('gameSetup');
+        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$gameSetup['gameStart'],
-            'gameEnd' => (string)$gameSetup['gameEnd'],
+            'gameStart' => $gameSetup->game_start->format('c'),
+            'gameEnd' => $gameSetup->game_end->format('c'),
             'times' => [
-                'toStart' => strtotime($gameSetup['gameStart']) - time(),
-                'toEnd' => strtotime($gameSetup['gameEnd']) - time(),
+                'toStart' => strtotime($gameSetup->game_start) - time(),
+                'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-            'lastUpdated' => (new DateTime())->__toString(),
+            'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
-            'refreshDelay' => $gameSetup['refreshDelay'],
+            'refreshDelay' => $gameSetup->refresh_delay,
             'submits' => [],
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent(), $lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
         }
         //if (!$lastUpdated) {
         $result['rooms'] = $this->getRooms();
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEvent());
+        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
         // }
 
@@ -69,10 +69,10 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
      * @return boolean
      */
     private function isResultsVisible() {
-        $gameSetup = $this->getEvent()->getParameter('gameSetup');
-        $hardDisplay = $gameSetup['resultsHardDisplay'];
-        $before = (time() < strtotime($gameSetup['resultsHide']));
-        $after = (time() > strtotime($gameSetup['resultsDisplay']));
+        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+        $hardDisplay = $gameSetup->result_hard_display;
+        $before = (time() < strtotime($gameSetup->result_hide));
+        $after = (time() > strtotime($gameSetup->result_display));
 
         return $hardDisplay || ($before && $after);
     }
