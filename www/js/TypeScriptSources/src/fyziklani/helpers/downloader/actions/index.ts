@@ -1,4 +1,7 @@
-import { Dispatch } from 'react-redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { dispatchNetteFetch } from '../../../../fetch-api/middleware/fetch';
 import {
     IRequest,
@@ -20,11 +23,10 @@ interface IState {
 
 export const fetchResults = (
     accessKey: string,
-    dispatch: Dispatch<IState>,
+    dispatch: Dispatch<Action<string>>,
     oldLastUpdated: string = null,
     url: string,
 ): Promise<IResponse<IResponseData>> => {
-    console.log((new Date()).getTime());
     const data: IRequest<string> = {
         act: '@@fyziklani/results',
         requestData: null,
@@ -37,7 +39,7 @@ export const fetchResults = (
 
 export const waitForFetch = (
     accessKey: string,
-    dispatch: Dispatch<IState>,
+    dispatch: Dispatch<Action>,
     delay: number,
     lastUpdated: string = null,
     url: string,

@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
+import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
 import { setFilter } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
 import { Filter } from './filter';
@@ -12,6 +14,7 @@ import { createFilters } from './filters';
 interface IState {
     filters?: Filter[];
     categories?: string[];
+    isOrg?: boolean;
 
     onSetFilter?(filter: Filter): void;
 }
@@ -19,10 +22,11 @@ interface IState {
 class Select extends React.Component<IState, {}> {
 
     public render() {
-        const {categories, filters, onSetFilter} = this.props;
+        const {categories, filters, onSetFilter, isOrg} = this.props;
         const availableFilters = createFilters([], categories, false);
 
         return <>
+            {isOrg && <HardVisibleSwitch/>}
             {availableFilters.map((filter, key) => {
                 const active = filters.some((activeFilters) => {
                     return filter.same(activeFilters);
@@ -35,7 +39,7 @@ class Select extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
     };
@@ -44,6 +48,7 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
+        isOrg: state.options.isOrg,
     };
 };
 

@@ -10,7 +10,9 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  * @property integer points
  * @property integer fyziklani_task_id
  * @property integer fyziklani_submit_id
+ * @property integer task_id
  * @property \Nette\DateTime created
+ * @property \Nette\DateTime modified
  */
 class ModelFyziklaniSubmit extends \AbstractModelSingle {
 
@@ -35,7 +37,7 @@ class ModelFyziklaniSubmit extends \AbstractModelSingle {
             'points' => $this->points,
             'teamId' => $this->e_fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
-            'created' => $this->created->__toString(),
+            'created' => $this->created->format('c'),
         ];
     }
 }

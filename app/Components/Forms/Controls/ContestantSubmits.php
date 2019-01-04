@@ -55,7 +55,9 @@ class ContestantSubmits extends BaseControl {
     /**
      *
      * @param Traversable|array $tasks
-     * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
+     * @param ModelContestant $contestant
+     * @param ServiceSubmit $submitService
+     * @param $acYear
      * @param string|null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {

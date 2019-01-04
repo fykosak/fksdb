@@ -25,7 +25,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     const ACC_DATE_FORMAT = 'Y-m-d';
 
     public function getResourceId(): string {
-        return 'eventAccommodation';
+        return 'event.accommodation';
     }
 
     public function getEvent(): ModelEvent {
@@ -54,6 +54,13 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
      */
     public function getCapacity(): int {
         return $this->capacity;
+    }
+
+    /**
+     * @return \Nette\Database\Table\GroupedSelection
+     */
+    public function getAccommodated() {
+        return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION);
     }
 
     /**

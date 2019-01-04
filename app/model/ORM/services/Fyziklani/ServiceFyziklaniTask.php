@@ -1,5 +1,7 @@
 <?php
 
+use FKSDB\ORM\ModelEvent;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
@@ -11,33 +13,28 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param $label string
-     * @param $eventId integer
+     * @param $event ModelEvent
      * @return ModelFyziklaniTask|null
      */
-    public function findByLabel($label, $eventId) {
-        if (!$label || !$eventId) {
-            return null;
-        }
+    public function findByLabel(string $label, ModelEvent $event) {
         /**
          * @var $result ModelFyziklaniTask
          */
         $result = $this->getTable()->where([
             'label' => $label,
-            'event_id' => $eventId
+            'event_id' => $event->event_id,
         ])->fetch();
-        return $result ?: null;
+
+        return $result ? ModelFyziklaniTask::createFromTableRow($result) : null;
     }
 
     /**
      * Syntactic sugar.
-     * @param $eventId integer
+     * @param $event ModelEvent
      * @return \Nette\Database\Table\Selection|null
      */
-    public function findAll($eventId) {
-        $result = $this->getTable();
-        if ($eventId) {
-            $result->where('event_id', $eventId);
-        }
+    public function findAll(ModelEvent $event) {
+        $result = $this->getTable()->where('event_id', $event->event_id);
         return $result ?: null;
     }
 
@@ -53,17 +50,16 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     }
 
     /**
-     * @param integer $eventId
-     * @param bool $injectName
+     * @param ModelEvent $event
+     * @param bool $hideName
      * @return array
      */
-    public function getTasks($eventId, $injectName = true) {
+    public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {
         $tasks = [];
-        /**
-         * @var $row ModelFyziklaniTask
-         */
-        foreach ($this->findAll($eventId)->order('label') as $row) {
-            $tasks[] = $row->__toArray();
+
+        foreach ($this->findAll($event)->order('label') as $row) {
+            $model = ModelFyziklaniTask::createFromTableRow($row);
+            $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;
     }

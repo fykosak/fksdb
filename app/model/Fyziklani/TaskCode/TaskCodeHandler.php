@@ -34,8 +34,8 @@ class TaskCodeHandler {
     }
 
     public function saveTaskCode($values, $httpData) {
-
-        if ($this->checkTaskCode($values->taskCode, $msg)) {
+        try {
+            $this->checkTaskCode($values->taskCode);
             $points = 0;
             foreach ($httpData as $key => $value) {
                 if (preg_match('/points([0-9])/', $key, $match)) {
@@ -44,16 +44,39 @@ class TaskCodeHandler {
             }
             $log = $this->savePoints($values->taskCode, $points);
             return $log;
-        } else {
-            $this->flashMessage($msg, 'danger');
-            // $this->redirect('this');
+        } catch (TaskCodeException $e) {
+            throw $e;
         }
     }
 
-    private function savePoints($fullCode, $points) {
+    /**
+     * @param string $fullCode
+     * @param int $points
+     * @return string
+     * @throws TaskCodeException
+     */
+    public function preProcess(string $fullCode, int $points): string {
+        $response = new \ReactResponse();
+        $response->setAct('submit');
+
+        try {
+            $this->checkTaskCode($fullCode);
+            return $this->savePoints($fullCode, $points);
+        } catch (TaskCodeException $e) {
+            throw  $e;
+        }
+    }
+
+    /**
+     * @param $fullCode
+     * @param $points
+     * @return string
+     * @throws \Exception
+     */
+    private function savePoints($fullCode, $points): string {
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
-        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event->event_id);
+        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
 
         if (is_null($submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($taskId, $teamId))) {
             $submit = $this->serviceFyziklaniSubmit->createNew([
@@ -81,51 +104,47 @@ class TaskCodeHandler {
          */
         $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
 
-        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event->event_id)->name;
+        $taskName = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event)->name;
 
         try {
             $this->serviceFyziklaniSubmit->save($submit);
-
-            return [sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName), 'success'];
+            return sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'), $points, $team->name, $teamId, $taskLabel, $taskName);
         } catch (\Exception $e) {
             throw $e;
         }
     }
 
-    private function checkTaskCode($taskCode, &$msg) {
+    /**
+     * @param $taskCode
+     * @return bool
+     * @throws TaskCodeException
+     */
+    public function checkTaskCode($taskCode): bool {
         /** skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($taskCode)) {
-            $msg = _('Chybně zadaný kód úlohy.');
-            return false;
+            throw new TaskCodeException(_('Chybně zadaný kód úlohy.'));
         }
         /* Existenica týmu */
         $teamId = TaskCodePreprocessor::extractTeamId($taskCode);
 
-
-        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event->event_id)) {
-            $msg = sprintf(_('Tým %s neexistuje.'), $teamId);
-            return false;
+        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
+            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
-        /**
-         * @var $team ModelFyziklaniTeam
-         */
-        $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        $team = ModelFyziklaniTeam::createFromTableRow($teamRow);
         /* otvorenie submitu */
         if (!$team->hasOpenSubmit()) {
-            $msg = _('Bodování tohoto týmu je uzavřené.');
-            return false;
+            throw new TaskCodeException(_('Bodování tohoto týmu je uzavřené.'));
         }
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($taskCode);
-        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event->event_id);
+        $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
         if (!$taskId) {
-            $msg = sprintf(_('Úloha %s neexistuje.'), $taskLabel);
-            return false;
+            throw new TaskCodeException(sprintf(_('Úloha %s neexistuje.'), $taskLabel));
         }
         /* Nezadal sa duplicitne toto nieje editácia */
         if ($this->serviceFyziklaniSubmit->submitExist($taskId, $teamId)) {
-            $msg = sprintf(_('Úloha %s už byla zadaná.'), $taskLabel);
-            return false;
+            throw new TaskCodeException(sprintf(_('Úloha %s už byla zadaná.'), $taskLabel));
         }
         return true;
     }

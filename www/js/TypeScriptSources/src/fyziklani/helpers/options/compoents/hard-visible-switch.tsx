@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { lang } from '../../../../i18n/i18n';
 import { setHardVisible } from '../actions/';
 import { IFyziklaniOptionsState } from '../reducers';
-import { lang } from '../../../../i18n/i18n';
 
 interface IState {
     hardVisible?: boolean;
@@ -16,15 +16,16 @@ class HardVisibleSwitch extends React.Component<IState, {}> {
         const {onHardDisplayChange, hardVisible} = this.props;
 
         return <div className="form-group">
+            <label>{lang.getText('Not public results')}</label>
             <button
-                className={'btn btn-waring'}
+                className={hardVisible ? 'btn btn-outline-danger' : 'btn btn-danger'}
                 onClick={(event) => {
                     event.preventDefault();
                     onHardDisplayChange(!hardVisible);
                 }}>
-                {hardVisible ? lang.getText('turn off') : lang.getText('turn on')} {lang.getText('"Not public results"')}
+                {hardVisible ? lang.getText('Turn off') : lang.getText('Turn on')}
             </button>
-            <span className="text-danger">{lang.getText('This function don\'t turn on id results are projected!')}</span>
+            <span className="form-text text-danger">{lang.getText('This function don\'t turn on id results are projected!')}</span>
         </div>;
     }
 }

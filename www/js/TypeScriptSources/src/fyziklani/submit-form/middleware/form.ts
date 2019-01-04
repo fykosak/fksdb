@@ -1,3 +1,4 @@
+import { FormErrors } from 'redux-form';
 import { IProps } from '../components/form-section';
 
 export const getFullCode = (code): string => {
@@ -27,11 +28,11 @@ const getControl = (subCode: Array<string | number>): number => {
         (+subCode[2] + +subCode[5] + +subCode[8]);
 };
 
-export const validate = (values, props: IProps) => {
-    const errors: { code?: { type: string; msg: string; } } = {};
+export const validate = (values, props: IProps): FormErrors<any> => {
+    const errors: { code?: string } = {};
 
     if (!values.code) {
-        errors.code = {type: 'danger', msg: 'Code is empty'};
+        errors.code = 'Code is empty';
         return errors;
     }
     const length = values.code.length;
@@ -42,7 +43,7 @@ export const validate = (values, props: IProps) => {
     if (!props.teams.some((currentTeam) => {
         return currentTeam.teamId === +matchedTeam[1];
     })) {
-        errors.code = {type: 'danger', msg: 'Team does not exist'};
+        errors.code = 'Team does not exist';
     }
 
     const matchedLabel = code.match(/([a-zA-Z]{2})/);
@@ -51,17 +52,17 @@ export const validate = (values, props: IProps) => {
         if (!props.tasks.some((currentTask) => {
             return currentTask.label === matchedLabel[1].toUpperCase();
         })) {
-            errors.code = {type: 'danger', msg: 'Task does not exist'};
+            errors.code = 'Task does not exist';
         }
     }
     const matchedControl = code.match(/[a-zA-Z]{2}([0-9])/);
     if (matchedControl) {
         if (!isValidFullCode(code)) {
-            errors.code = {type: 'danger', msg: 'Invalid control'};
+            errors.code = 'Invalid control';
         }
     }
     if (!code.match(/([0-9]{6}[a-zA-Z]{2}[0-9])/)) {
-        errors.code = {type: 'danger', msg: 'Code is too sort'};
+        errors.code = 'Code is too sort';
     }
 
     return errors;

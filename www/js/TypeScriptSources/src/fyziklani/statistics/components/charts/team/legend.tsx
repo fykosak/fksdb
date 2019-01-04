@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { setActivePoints } from '../../../actions/';
 import { getColorByPoints } from '../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../reducers';
 
 interface IState {
     onActivePoints?: (points: number) => void;
@@ -55,7 +55,7 @@ class Legend extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): IState => {
     return {
         onActivePoints: (points) => dispatch(setActivePoints(+points)),
     };

@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../i18n/i18n';
 import { changeData } from '../../../input-connector/actions';
 import PriceDisplay from '../../../shared/components/displays/price';
@@ -37,12 +38,12 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
             }}>
                 <Item className={'chooser-container ' + (active ? 'active' : '')}
                       icon={<span className={active ? 'w-100 fa fa-check-square-o' : 'w-100 fa fa-square-o'}/>}>
-                    <span className={'h5'}>{localizedData.name}</span>
-                    <div>
-                        <span className={'fa fa-question-circle-o mr-2'}/>{localizedData.description}
-                    </div>
+                    <span className={'font-weight-bold'}>{localizedData.name}</span>
+                    {localizedData.description && (<div className={'font-italic'}>
+                        {localizedData.description}
+                    </div>)}
                     <div className={'small'}>
-                        <span className={'fa fa-dollar mr-2'}/><PriceDisplay price={item.price}/>
+                        <PriceDisplay price={item.price}/>
                     </div>
                 </Item>
             </div>
@@ -57,7 +58,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore, ownProps: IProps): ISta
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: IProps): IState => {
     return {
         setSchedule: (id: number) => dispatch(changeData(ownProps.blockName, id)),
     };

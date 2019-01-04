@@ -1,16 +1,15 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
-import Card from '../../../shared/components/card';
+} from 'redux';
 import Powered from '../../../shared/powered';
 import {
     IRoom,
     ITeam,
 } from '../../helpers/interfaces';
 import { addTeams } from '../actions/teams';
-import { IFyziklaniRoutingStore } from '../reducers/';
 import Form from './form/index';
 import Rooms from './rooms/index';
 import UnRoutedTeams from './unrouted-teams/';
@@ -36,16 +35,14 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
 
         return (
             <div>
-                <Card headline={null} level="secondary">
-                    <div className="row">
-                        <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                            <Rooms rooms={rooms}/>
-                        </div>
-                        <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                            <UnRoutedTeams/>
-                        </div>
+                <div className="row">
+                    <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                        <Rooms rooms={rooms}/>
                     </div>
-                </Card>
+                    <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                        <UnRoutedTeams/>
+                    </div>
+                </div>
                 <div>
                     <Form accessKey={'@@fyziklani/routing'}/>
                 </div>
@@ -59,7 +56,7 @@ const mapStateToProps = (): IState => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { lang } from '../../../../../../i18n/i18n';
-import Card from '../../../../../../shared/components/card';
 import Legend from '../legend';
 import Chart from './chart';
 
-export default class PointsPie extends React.Component<{}, {}> {
+interface IProps {
+    teamId: number;
+}
+
+export default class PointsPie extends React.Component<IProps, {}> {
 
     public render() {
+        const {teamId} = this.props;
         return (
-            <Card headline={lang.getText('successOfSubmitting')} level={'info'}>
-                <Chart/>
+            <div className={'fyziklani-chart-container'}>
+                <h3>{lang.getText('Success of submitting')}</h3>
+                <Chart teamId={teamId}/>
                 <Legend inline={false}/>
-            </Card>);
+            </div>
+        );
     }
 }

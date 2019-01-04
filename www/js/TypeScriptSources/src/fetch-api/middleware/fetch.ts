@@ -1,4 +1,7 @@
-import { Dispatch } from 'react-redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import {
     submitFail,
     submitStart,
@@ -10,7 +13,7 @@ import {
 } from './interfaces';
 import jqXHR = JQuery.jqXHR;
 
-export async function netteFetch<TFormData, TResponseData, T= any>(
+export async function netteFetch<TFormData, TResponseData, T = any>(
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
@@ -61,9 +64,9 @@ export async function uploadFile<F, D, T>(
     });
 }
 
-export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= any>(
+export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T = any>(
     accessKey: string,
-    dispatch: Dispatch<TStore>,
+    dispatch: Dispatch<Action<string>>,
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
@@ -81,9 +84,9 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T= an
         }, url);
 }
 
-export async function dispatchUploadFile<TFormData, TResponseData, TStore, T= any>(
+export async function dispatchUploadFile<TFormData, TResponseData, TStore, T = any>(
     accessKey: string,
-    dispatch: Dispatch<TStore>,
+    dispatch: Dispatch<Action>,
     data: IRequest<TFormData>,
     success: (data: IResponse<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,

@@ -1,12 +1,14 @@
-import { Dispatch } from 'react-redux';
-import { Action } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
 import { IResponse } from '../../../fetch-api/middleware/interfaces';
 import { ITeam } from '../../helpers/interfaces';
 import { IResponseData } from '../middleware/interfaces';
 import { IFyziklaniRoutingStore } from '../reducers/';
 
-export const saveTeams = (accessKey: string, dispatch: Dispatch<IFyziklaniRoutingStore>, teams: ITeam[]): Promise<IResponse<IResponseData>> => {
+export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: ITeam[]): Promise<IResponse<IResponseData>> => {
     const data = {act: 'routing-save', requestData: teams};
     return dispatchNetteFetch<ITeam[], IResponseData, IFyziklaniRoutingStore>
     (accessKey, dispatch, data, () => null, () => {

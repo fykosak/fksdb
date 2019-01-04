@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import {
     IPlace,
     ITeam,
@@ -25,9 +26,7 @@ interface IProps {
 }
 
 class Place extends React.Component<IState & IProps, {}> {
-
     public render() {
-
         const {x, y, onDrop, teams, draggedTeamId, roomId} = this.props;
         const team = teams && teams.filter((currentTeam) => {
             return (currentTeam.x === x) && (currentTeam.y === y) && (currentTeam.roomId === roomId);
@@ -38,7 +37,12 @@ class Place extends React.Component<IState & IProps, {}> {
                     e.preventDefault();
                 }
             }}
-            onClick={() => draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null}
+            onClick={() => {
+                if (team) {
+                    return null;
+                }
+                return draggedTeamId ? onDrop(draggedTeamId, {x, y, roomId, room: null}) : null;
+            }}
             onDrop={() => {
                 onDrop(draggedTeamId, {x, y, roomId, room: null});
             }}>
@@ -49,7 +53,7 @@ class Place extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniRoutingStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onDrop: (teamId, place) => dispatch(dropItem<IRoutingDragNDropData>({teamId, place})),
     };

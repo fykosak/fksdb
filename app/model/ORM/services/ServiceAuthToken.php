@@ -72,8 +72,8 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param string $token
-     * @partm bool $strict
+     * @param $tokenData
+     * @param bool $strict
      * @return ModelAuthToken|null
      */
     public function verifyToken($tokenData, $strict = true) {
@@ -95,7 +95,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param ModelAuthToken|string $tokenData
+     * @param $token
      */
     public function disposeToken($token) {
         if (!$token instanceof ModelAuthToken) {
@@ -106,6 +106,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
     }
 
+    /**
+     * @param $eventId
+     * @return array
+     */
     public function findTokensByEventId($eventId) {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)

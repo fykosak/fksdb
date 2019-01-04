@@ -12,13 +12,13 @@ class RoutingEdit extends FyziklaniModule {
     public function getData(): string {
 
         return Json::encode([
-            'teams' => $this->serviceFyziklaniTeam->getTeams($this->event),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
             'rooms' => $this->getRooms(),
         ]);
     }
 
     public function getMode(): string {
-        return null;
+        return '';
     }
 
     public function getComponentName(): string {
@@ -33,7 +33,7 @@ class RoutingEdit extends FyziklaniModule {
 
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');
-        $updatedTeams = $this->serviceBrawlTeamPosition->updateRouting($data);
+        $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
         $response = new \ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);

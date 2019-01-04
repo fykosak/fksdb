@@ -24,24 +24,39 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     protected $serviceEvent;
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
-    protected function createComponentLanguageChooser() {
+    /**
+     * @return LanguageChooser
+     */
+    protected function createComponentLanguageChooser(): LanguageChooser {
         $control = new LanguageChooser($this->session);
         return $control;
     }
 
-    public function createComponentContestBadge() {
+    /**
+     * @return ContestBadge
+     */
+    public function createComponentContestBadge(): ContestBadge {
         return new ContestBadge();
     }
 
-    public function createComponentDispatchGrid() {
+    /**
+     * @return DispatchGrid
+     */
+    public function createComponentDispatchGrid(): DispatchGrid {
         /**
          * @var $person ModelPerson
          */
@@ -55,6 +70,8 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function startup() {
         /**
@@ -66,7 +83,10 @@ class DispatchPresenter extends AuthenticatedPresenter {
         parent::startup();
     }
 
-    public function getNavBarVariant() {
-        return ['event bg-dark', 'dark'];
+    /**
+     * @return array
+     */
+    public function getNavBarVariant(): array {
+        return ['event', 'bg-dark navbar-dark'];
     }
 }

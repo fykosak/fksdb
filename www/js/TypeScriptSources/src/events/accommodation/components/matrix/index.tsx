@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { lang } from '../../../../i18n/i18n';
 import { IEventAccommodation } from '../../middleware/interfaces';
 import Price from '../price';
 import Row from './row';
-import { lang } from '../../../../i18n/i18n';
 
 interface IProps {
     accommodationDef: IEventAccommodation[];

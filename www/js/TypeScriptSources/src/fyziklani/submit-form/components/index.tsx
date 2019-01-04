@@ -5,6 +5,7 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
+import { INetteActions } from '../../../app-collector';
 import { config } from '../../../config/';
 import {
     ITask,
@@ -16,16 +17,18 @@ import Container from './container';
 interface ITaskCodeProps {
     tasks: ITask[];
     teams: ITeam[];
+    actions: INetteActions;
+    availablePoints: number[];
 }
 
 export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
     public render() {
-        const {tasks, teams} = this.props;
+        const {tasks, teams, actions, availablePoints} = this.props;
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
 
         return (
             <Provider store={store}>
-                <Container tasks={tasks} teams={teams}/>
+                <Container tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
             </Provider>
         );
     }

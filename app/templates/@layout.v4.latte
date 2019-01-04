@@ -8,11 +8,8 @@
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     {control cssLoader
         'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' => [screen],
-        'css/style.v4.css' => [screen],
         '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
-        'css/fyziklani.css' => [all],
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
-        'css/storedquery-tag.css'=>[all],
         'https://fonts.googleapis.com/css?family=Source+Sans+Pro'=>[all],
         'css/bundle.css'=>[all]
         }
@@ -21,7 +18,7 @@
 <!-- Random background generator -->
 <body data-bg="{rand(1,3)}" data-contest="{(!is_null($contestSymbol))?$contestSymbol:''}">
 {block body}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',!is_null($contestSymbol)?('bg-'.$contestSymbol.' navbar-'.$navVariant):('bg-light navbar-light')"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',(!is_null($navbarClass))?($navbarClass):('bg-light navbar-light')"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -33,7 +30,9 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {block nav }
-                {control navigation:navbar isset($navRoot)?$navRoot:''}
+                {foreach $navRoots as $root}
+                    {control navigation:navbar $root}
+                {/foreach}
             {/block}
 
             {block user-info}
@@ -58,7 +57,7 @@
         </div><!-- /.navbar-collapse -->
     </nav>
     <main id="wrap" style="min-height:100%">
-        <div class="container py-4 bg-white" style="height:100%">
+        <div class="container py-4 bg-white-container" style="height:100%">
             {control breadcrumbs}
             {block titleBody}
                 <h1 class="page-header"><i class="{$icon} mr-2"></i>{$title}

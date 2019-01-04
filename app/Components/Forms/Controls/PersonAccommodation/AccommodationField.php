@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\Components\React\IReactComponent;
 use FKSDB\Components\React\ReactField;
+use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventAccommodation;
 use Nette\Forms\Controls\TextInput;
 
@@ -11,18 +12,13 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
 
     use ReactField;
     /**
-     * @var \ServiceEventAccommodation
+     * @var ModelEvent
      */
-    private $serviceEventAccommodation;
-    /**
-     * @var integer
-     */
-    private $eventId;
+    private $event;
 
-    public function __construct(\ServiceEventAccommodation $serviceEventAccommodation, $eventId) {
+    public function __construct(ModelEvent $event) {
         parent::__construct(_('Accommodation'));
-        $this->serviceEventAccommodation = $serviceEventAccommodation;
-        $this->eventId = $eventId;
+        $this->event = $event;
         $this->appendProperty();
         $this->registerMonitor();
     }
@@ -39,14 +35,14 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
      * @return string
      */
     public function getData(): string {
-        $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($this->eventId);
+        $accommodations = $this->event->getEventAccommodations();
 
         $accommodationDef = [];
         foreach ($accommodations as $accommodation) {
             $model = ModelEventAccommodation::createFromTableRow($accommodation);
             $accommodationDef[] = $model->__toArray();
         }
-        return count($accommodationDef) ? json_encode($accommodationDef) : NULL;
+        return json_encode($accommodationDef);
     }
 
     public function attached($obj) {

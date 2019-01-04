@@ -69,7 +69,7 @@ class Row extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IAccommodationStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: IProps): IState => {
     return {
         onChange: (value) => dispatch(changeData(ownProps.date, value)),
     };

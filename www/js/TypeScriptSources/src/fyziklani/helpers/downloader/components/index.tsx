@@ -1,17 +1,20 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
-import { lang } from '../../../../i18n/i18n';
+} from 'redux';
 import { INetteActions } from '../../../../app-collector/';
+import { lang } from '../../../../i18n/i18n';
 import { IFyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,
     waitForFetch,
 } from '../actions/';
+import jqXHR = JQuery.jqXHR;
 
 interface IState {
+    error?: jqXHR<any>;
     isSubmitting?: boolean;
     lastUpdated?: string;
     refreshDelay?: number;
@@ -28,12 +31,10 @@ interface IProps {
 }
 
 class Downloader extends React.Component<IState & IProps, {}> {
-    private f = false;
 
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
-        this.f = true;
     }
 
     public componentWillReceiveProps(nextProps: IState & IProps) {
@@ -48,15 +49,18 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        const {lastUpdated, isRefreshing, onFetch} = this.props;
+        const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
         return (
-            <div className="last-update-info">{lang.getText('lastUpdated')}: <span
+            <div className="last-update-info bg-white">
+                <span
                 className={isRefreshing ? 'text-success' : 'text-danger'}>
                 {lastUpdated}
                 </span>
-                {!isRefreshing && (<button className="btn btn-primary" onClick={() => {
+                {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
+                {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
                     return onFetch();
                 }}>{lang.getText('Fetch')}</button>)}
+                {error && <span className={'text-danger'}>{error.status} {error.statusText}</span>}
             </div>
         );
     }
@@ -65,6 +69,7 @@ class Downloader extends React.Component<IState & IProps, {}> {
 const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IState => {
     const {accessKey} = ownProps;
     return {
+        error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
         isRefreshing: state.downloader.isRefreshing,
         isSubmitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
         lastUpdated: state.downloader.lastUpdated,
@@ -72,7 +77,7 @@ const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IStat
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: IProps): IState => {
     const {accessKey, actions} = ownProps;
     if (!actions.hasOwnProperty('refresh')) {
         throw new Error('you need to have refresh URL');

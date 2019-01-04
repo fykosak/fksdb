@@ -10,14 +10,14 @@ use ORM\Services\Events\ServiceFyziklaniTeam;
 abstract class FyziklaniModule extends ReactComponent {
 
     /**
-     * @var \ServiceBrawlRoom
+     * @var \ServiceFyziklaniRoom
      */
-    protected $serviceBrawlRoom;
+    protected $serviceFyziklaniRoom;
 
     /**
-     * @var \ServiceBrawlTeamPosition
+     * @var \ServiceFyziklaniTeamPosition
      */
-    protected $serviceBrawlTeamPosition;
+    protected $serviceFyziklaniTeamPosition;
 
     /**
      * @var ServiceFyziklaniTeam
@@ -46,8 +46,8 @@ abstract class FyziklaniModule extends ReactComponent {
     public function __construct(
         Container $container,
         ModelEvent $event,
-        \ServiceBrawlRoom $serviceBrawlRoom,
-        \ServiceBrawlTeamPosition $serviceBrawlTeamPosition,
+        \ServiceFyziklaniRoom $serviceFyziklaniRoom,
+        \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         \ServiceFyziklaniTask $serviceFyziklaniTask,
         \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
@@ -58,8 +58,8 @@ abstract class FyziklaniModule extends ReactComponent {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceBrawlTeamPosition = $serviceBrawlTeamPosition;
-        $this->serviceBrawlRoom = $serviceBrawlRoom;
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
 
     }
 
@@ -73,9 +73,9 @@ abstract class FyziklaniModule extends ReactComponent {
     }
 
     /**
-     * @return \ModelBrawlRoom[]
+     * @return \ModelFyziklaniRoom[]
      */
     protected function getRooms() {
-        return $this->serviceBrawlRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
+        return $this->serviceFyziklaniRoom->getRoomsByIds($this->getEvent()->getParameter('gameSetup')['rooms']);
     }
 }

@@ -153,7 +153,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     protected function createComponentInboxForm() {
-        $controlForm = new OptimisticFormControl(array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues'));
+        $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
         /*$form = new OptimisticForm(
             array($this->seriesTable, 'getFingerprint'), array($this->seriesTable, 'formatAsFormValues')
         );*/
@@ -180,7 +180,9 @@ class InboxPresenter extends SeriesPresenter {
         }
 
         $form->addSubmit('save', _('Uložit'));
-        $form->onSuccess[] = array($this, 'inboxFormSuccess');
+        $form->onSuccess[] = function (Form $form) {
+            $this->inboxFormSuccess($form);
+        };
 
         // JS dependencies
         $this->registerJSFile('js/datePicker.js');

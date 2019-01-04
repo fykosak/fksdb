@@ -12,16 +12,19 @@ import { IFyziklaniStatisticsStore } from '../../../../reducers';
 interface IState {
     submits?: ISubmits;
     teams?: ITeam[];
-    taskId?: number;
-    gameStart?: Date;
-    gameEnd?: Date;
+    fromDate?: Date;
+    toDate?: Date;
 }
 
 interface IExtendedSubmit extends ISubmit {
     currentTeam: ITeam;
 }
 
-class Timeline extends React.Component<IState, {}> {
+interface IProps {
+    taskId: number;
+}
+
+class Timeline extends React.Component<IState & IProps, {}> {
 
     private xAxis: SVGGElement;
 
@@ -38,14 +41,14 @@ class Timeline extends React.Component<IState, {}> {
     public render() {
         const taskSubmits: IExtendedSubmit[] = [];
         const {
-            gameStart,
-            gameEnd,
             taskId,
             submits,
             teams,
+            fromDate,
+            toDate,
         } = this.props;
 
-        this.xScale = d3.scaleTime().domain([gameStart, gameEnd]).range([30, 580]);
+        this.xScale = d3.scaleTime().domain([fromDate, toDate]).range([30, 580]);
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
@@ -63,10 +66,14 @@ class Timeline extends React.Component<IState, {}> {
                 }
             }
         }
+
         taskSubmits.sort((a, b) => {
             return (new Date(a.created)).getTime() - (new Date(b.created)).getTime();
         });
-        const dots = taskSubmits.map((submit, index: number) => {
+        const dots = taskSubmits.filter((submit) => {
+            const created = new Date(submit.created);
+            return created.getTime() > fromDate.getTime() && created.getTime() < toDate.getTime();
+        }).map((submit, index: number) => {
 
             const submitted = new Date(submit.created);
             const color = getColorByPoints(submit.points);
@@ -106,26 +113,11 @@ class Timeline extends React.Component<IState, {}> {
 
 const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
-        gameEnd: new Date(state.timer.gameEnd),
-        gameStart: new Date(state.timer.gameStart),
+        fromDate: state.statistics.fromDate,
         submits: state.data.submits,
-        taskId: state.statistics.taskId,
         teams: state.data.teams,
+        toDate: state.statistics.toDate,
     };
 };
 
-const mapDispatchToProps = (): IState => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Timeline);
-
-/*
- <text
- x={(fromCoordinates + toCoordinates) / 2}
- y={yCoordinates - 1}
- fontSize="10"
- textAnchor="middle"
- >
- {task.label}
- </text>*/
+export default connect(mapStateToProps, null)(Timeline);

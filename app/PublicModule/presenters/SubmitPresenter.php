@@ -165,6 +165,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @internal
      * @param type $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleUploadFormSuccess($form) {
         $values = $form->getValues();

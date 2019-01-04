@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../i18n/i18n';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { IPrice } from '../../../shared/components/displays/price/interfaces';
@@ -75,7 +76,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniScheduleStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onToggleChooser: () => dispatch(toggleChooser()),
     };

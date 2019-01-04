@@ -4,8 +4,8 @@
 services:
     ServiceAuthToken:        ServiceAuthToken
     ServiceAddress:          ServiceAddress
-    ServiceBrawlRoom:        ServiceBrawlRoom
-    ServiceBrawlTeamPosition: ServiceBrawlTeamPosition
+    ServiceFyziklaniRoom:        ServiceFyziklaniRoom
+    ServiceFyziklaniTeamPosition: ServiceFyziklaniTeamPosition
     ServiceContestant:       ServiceContestant
     ServiceContest:          ServiceContest
     ServiceContestYear:      ServiceContestYear
@@ -40,6 +40,8 @@ services:
     ServiceEventAccommodation: ServiceEventAccommodation
     ServiceEventPersonAccommodation: ServiceEventPersonAccommodation
     ServiceTeacher:          ServiceTeacher
+
+    fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
 
 
     event.ServiceEventParticipant:          ServiceEventParticipant

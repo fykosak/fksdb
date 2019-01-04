@@ -46,21 +46,28 @@ navigation:
         fyziklani.dashboard.default:
             - fyziklani.submit.entry
             - fyziklani.submit.table
-            - fyziklani.close.table
+            - fyziklani.close.list
             - fyziklani.results.default
-            - fyziklani.task.table
+            - fyziklani.task.list
             - fyziklani.task.import
             - fyziklani.rooms.default
+            - fyziklani.gameSetup.default
+
         fyziklani.rooms.default:
             - fyziklani.rooms.edit
             - fyziklani.rooms.download
         fyziklani.results.default:
             - fyziklani.dashboard.default
+            - fyziklani.results.resultsFinal
             - fyziklani.results.resultsPresentation
             - fyziklani.results.resultsView
             - fyziklani.results.teamStatistics
             - fyziklani.results.taskStatistics
+            - fyziklani.results.correlationStatistics
         event.dashboard.default:
             - event.dispatch.default
             - fyziklani.dashboard.default
             - event.schedule.default
+            - event.accommodation.list
+            - event.model.default
+            - event.applicationsTimeProgress.default

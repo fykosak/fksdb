@@ -39,14 +39,19 @@ class Timer extends React.Component<IState, {}> {
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'clock ' + ((visible || hardVisible) ? '' : 'big')}>
-                {
-                    (h < 10 ? '0' + h : '' + h)
-                    + ':' +
-                    (m < 10 ? '0' + m : '' + m)
-                    + ':' +
-                    (s < 10 ? '0' + s : '' + s)
-                }
+            <div className={'row clock ' + ((visible || hardVisible) ? 'small' : 'big')}>
+                <span className={'col'}>
+                    <span className={'time-value'}>{(h < 10 ? '0' + h : '' + h)}</span>
+                    <span className={'time-label'}>Hours/Hodin</span>
+                </span>
+                <span className={'col'}>
+                    <span className={'time-value'}>{(m < 10 ? '0' + m : '' + m)}</span>
+                    <span className={'time-label'}>Minutes/Minút</span>
+                </span>
+                <span className={'col'}>
+                    <span className={'time-value'}>{(s < 10 ? '0' + s : '' + s)}</span>
+                    <span className={'time-label'}>Seconds/Sekund</span>
+                </span>
             </div>
         );
     }

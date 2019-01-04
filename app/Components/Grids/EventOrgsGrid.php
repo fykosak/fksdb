@@ -2,11 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use /** @noinspection PhpUnusedAliasInspection */
-    Nette\Database\Table\Selection;
+use FKSDB\ORM\ModelEvent;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
-
 
 class EventOrgsGrid extends BaseGrid {
 
@@ -14,25 +12,28 @@ class EventOrgsGrid extends BaseGrid {
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
+    /**
+     * @var ModelEvent
+     */
+    private $event;
 
-    private $event_id;
-
-    function __construct($event_id, ServiceEventOrg $serviceEventOrg) {
+    function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg) {
         parent::__construct();
-        $this->event_id = $event_id;
+        $this->event = $event;
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
     /**
-     * @param $presenter
+     * @param \AuthenticatedPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $orgs = $this->serviceEventOrg->findByEventID($this->event_id);
+        $orgs = $this->serviceEventOrg->findByEventId($this->event);
 
         $dataSource = new SearchableDataSource($orgs);
         $this->setDataSource($dataSource);
@@ -40,15 +41,15 @@ class EventOrgsGrid extends BaseGrid {
             $person = $row->getPerson();
             return $person->getFullname();
         });
-        $this->addColumn('note', _('Poznámka'));
-        $this->addButton('edit', _('Upravit'))->setText('Upravit')//todo i18n
+        $this->addColumn('note', _('Note'));
+        $this->addButton('edit', _('Edit'))->setText(_('Edit'))
         ->setLink(function ($row) {
             return $this->getPresenter()->link('edit', $row->e_org_id);
         })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('edit', ['id' => $row->e_org_id]);
             });
-        $this->addButton('delete', _('Smazat'))->setClass('btn btn-sm btn-danger')->setText('Smazat')//todo i18n
+        $this->addButton('delete', _('Smazat'))->setClass('btn btn-sm btn-danger')->setText(_('Smazat'))
         ->setLink(function ($row) {
             return $this->getPresenter()->link('delete', $row->e_org_id);
         })
@@ -56,12 +57,12 @@ class EventOrgsGrid extends BaseGrid {
                 return $presenter->authorized('delete', ['id' => $row->e_org_id]);
             })
             ->setConfirmationDialog(function () {
-                return _('Opravdu smazat organizátora?'); //todo i18n
+                return _('Opravdu smazat organizátora?');
             });
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Přidat organizátora')
+                ->setLabel(_('Přidat organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
 

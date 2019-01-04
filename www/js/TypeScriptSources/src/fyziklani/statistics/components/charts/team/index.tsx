@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { ITeam } from '../../../../helpers/interfaces';
-import { setTeamId } from '../../../actions';
+import { setFirstTeamId } from '../../../actions';
 import { IFyziklaniStatisticsStore } from '../../../reducers';
 import PointsInTime from './line-chart/index';
 import PointsPie from './pie/index';
@@ -13,21 +14,22 @@ import TimeLine from './timeline/index';
 
 interface IState {
     teams?: ITeam[];
-    onchangeTeam?: (id: number) => void;
     teamId?: number;
+
+    onChangeFirstTeam?(id: number): void;
 }
 
 class TeamStats extends React.Component<IState, {}> {
 
     public render() {
-        const {teams, onchangeTeam, teamId} = this.props;
+        const {teams, onChangeFirstTeam, teamId} = this.props;
 
         const teamSelect = (
             <p>
                 <select className="form-control" onChange={(event) => {
-                    onchangeTeam(+event.target.value);
+                    onChangeFirstTeam(+event.target.value);
                 }}>
-                    <option value={null}>--select team--</option>
+                    <option value={null}>--{lang.getText('select team')}--</option>
                     {teams.map((team) => {
                         return (<option key={team.teamId} value={team.teamId}>{team.name}</option>);
                     })}
@@ -38,28 +40,35 @@ class TeamStats extends React.Component<IState, {}> {
             return team.teamId === teamId;
         })[0];
 //
-        const headline = (<h3>{lang.getText('Statistic of team ') + (selectedTeam ? selectedTeam.name : '')}</h3>);
+        const headline = (
+            <h2 className={'fyziklani-headline'}>
+                {lang.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
+            </h2>);
         return (<div>
 
             {teamSelect}
-            {teamId && headline}
-            {teamId && (<PointsPie/>)}
-            {teamId && (<PointsInTime/>)}
-            {teamId && (<TimeLine/>)}
+            {teamId && (<>
+                {headline}
+                <PointsPie teamId={teamId}/>
+                <hr/>
+                <PointsInTime teamId={teamId}/>
+                <hr/>
+                <TimeLine teamId={teamId}/>
+            </>)}
         </div>);
     }
 }
 
 const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
-        teamId: state.statistics.teamId,
+        teamId: state.statistics.firstTeamId,
         teams: state.data.teams,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniStatisticsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
-        onchangeTeam: (teamId) => dispatch(setTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
     };
 };
 

@@ -1,14 +1,16 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import {
-    connect,
+    Action,
     Dispatch,
-} from 'react-redux';
+} from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import { setAutoSwitch } from '../../../actions/table-filter';
 import { IFyziklaniResultsStore } from '../../../reducers';
 
 interface IState {
     autoSwitch?: boolean;
+
     onAutoSwitch?(state: boolean): void;
 }
 
@@ -25,8 +27,8 @@ class AutoSwitchControl extends React.Component<IState, {}> {
                     onAutoSwitch(!autoSwitch);
                 }}
             >{autoSwitch ?
-                (<><i className="fa fa-pause mr-3"/>stop auto switch</>) :
-                (<><i className="fa fa-play mr-3"/>run auto switch</>)
+                (<><i className="fa fa-pause mr-3"/>{lang.getText('stop auto switch')}</>) :
+                (<><i className="fa fa-play mr-3"/>{lang.getText('run auto switch')}</>)
             }</button>
 
         </>
@@ -34,7 +36,7 @@ class AutoSwitchControl extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<IFyziklaniResultsStore>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
     return {
         onAutoSwitch: (state) => dispatch(setAutoSwitch(state)),
     };

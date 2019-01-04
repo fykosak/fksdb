@@ -1,9 +1,139 @@
 // compilation by 'sass scss/index.scss bundle.css'
 @import "fyziklani-results";
-@import "navigation-item";
 @import "schedule";
+@import "fyziklani-theme";
+@import "inbox";
+@import "login";
+@import "colors";
+@import "fyziklani";
+@import "points";
+@import "storedquery-tag";
+@import "contests";
+@import "callout";
 
-[data-contest~="event-type-1"] main {
-  background-image: url('/images/fyziklani/Prague Layout.svg');
-  background-repeat: no-repeat;
+.bg-white-container {
+  background-color: rgba(255, 255, 255, .85);
+}
+
+h1 .small {
+  font-weight: 300;
+}
+
+#spinner {
+  background-image: url('../../images/spinner.gif');
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  display: none;
+}
+
+html, body {
+  font-family: 'Source Sans Pro', sans-serif;
+  /*padding-top: 35px;*/
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  /* Negative indent footer by its height */
+  margin: 0 auto -55px;
+  /* Pad bottom by footer height */
+  padding: 55px 0;
+}
+
+.list-piped {
+  & > * {
+    display: inline-block;
+  }
+  & > * + *:before {
+    color: #CCCCCC;
+    content: "| ";
+    padding: 0;
+  }
+}
+
+.clear-referenced {
+  position: absolute;
+  right: 1em;
+  z-index: 3;
+}
+
+.right-inner-addon {
+  position: relative;
+  input {
+    padding-right: 30px;
+  }
+  i {
+    position: absolute;
+    right: 0;
+    padding: 8px 12px;
+    cursor: pointer; /* TODO not general enough, might be a static icon */
+  }
+}
+
+.required .control-label:before {
+  color: #b94a48;
+  content: '* ';
+  display: inline;
+}
+
+.task-code-container input.valid {
+  color: #3c763d;
+}
+
+.task-code-container input.invalid {
+  color: #a94442;
+}
+
+.task-code-container .team {
+  width: 6em;
+}
+
+.task-code-container .task {
+  width: 2em;
+}
+
+.task-code-container .control {
+  width: 1em;
+}
+
+.task-code-container .control, .task-code-container .task, .task-code-container .team {
+  border: none;
+  outline-offset: 0;
+  outline-color: transparent;
+}
+
+.task-code-container > div {
+  font-size: 120%;
+  border: 1px solid #66afe9;
+}
+
+.dispatch-logo {
+  height: 10rem;
+}
+
+.bg-error {
+  background-color: #dc3545;
+}
+
+.image-error {
+  width: 100%;
+  text-align: center;
+  img {
+    height: 20rem;
+  }
+
+}
+
+.card-columns {
+  -webkit-column-count: 3;
+  column-count: 2;
+}
+
+.state-timeline .line {
+  height: 1px;
+  border: solid 2px;
 }

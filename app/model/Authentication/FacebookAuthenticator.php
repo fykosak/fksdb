@@ -43,6 +43,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * @param array $fbUser
      * @return Identity
+     * @throws AuthenticationException
+     * @throws InactiveLoginException
      */
     public function authenticate(array $fbUser) {
         $person = $this->findPerson($fbUser);

@@ -30,10 +30,11 @@ class OrgsGrid extends BaseGrid {
 
     /**
      * @param OrgPresenter $presenter
+     * @throws BadRequestException
      * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
-     * @throws BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -82,7 +83,7 @@ class OrgsGrid extends BaseGrid {
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Založit organizátora')
+                ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
 

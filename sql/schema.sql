@@ -642,6 +642,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `rank_category` INT(11) NULL DEFAULT NULL,
   `rank_total` INT(11) NULL DEFAULT NULL,
   `room` VARCHAR(3) NULL DEFAULT NULL COMMENT '@DEPRECATED',
+  `game_lang` VARCHAR(2) NULL DEFAULT NULL COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),
   INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
   INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),
@@ -1208,6 +1209,26 @@ CREATE TABLE IF NOT EXISTS `teacher`(
   REFERENCES `school` (`school_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE
+) ENGINE='InnoDB';
+
+-- -----------------------------------------------------
+-- Table `fyziklani_game_setup`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`(
+  `event_id` INT(11) NOT NULL PRIMARY KEY,
+  `game_start` DATETIME NOT NULL,
+  `game_end` DATETIME NOT NULL,
+  `result_display` DATETIME NULL DEFAULT NULL,
+  `result_hide` DATETIME NULL NULL DEFAULT NULL,
+  `refresh_delay` INT(11) NOT NULL COMMENT 'in s',
+  `result_hard_display` BOOLEAN NOT NULL,
+  `tasks_on_board` INTEGER NULL DEFAULT NULL,
+  `available_points` VARCHAR(64) NULL DEFAULT NULL COMMENT 'comma serialized points',
+  CONSTRAINT `fk_fyziklani_game_setup_event`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `event` (`event_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
 ) ENGINE='InnoDB';
 
 SET SQL_MODE=@OLD_SQL_MODE;

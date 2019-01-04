@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <title>{block titleHeader}{$title} | FKSDB{/block}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {control cssLoader
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' => [screen],
+        '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [screen,projection,tv],
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
+        'css/bundle.css'=>[all]
+        }
+    {block head}{/block}
+</head>
+<!-- Random background generator -->
+<body data-bg="{rand(1,3)}" data-contest="{(!is_null($contestSymbol))?$contestSymbol:''}">
+{block body}
+    <main class="no-bg">
+        <div class="container-fluid py-4" style="height:100%">
+            {block flashes}
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
+            {/block}
+            {include #content}
+        </div>
+    </main> <!-- wrap -->
+{/block body}
+{block footer}
+
+    <footer>
+        <div class="container-fluid justify-content-center d-flex align-content-center mt-5">
+            <span>Powered by</span>
+            <a href="https://reactjs.org/">
+                <img src="/images/react.svg" alt="react" style="height: 2rem;">
+            </a><a href="https://redux.js.org">
+                <img src="/images/redux.png" alt="redux" style="height: 1.75rem;">
+            </a>
+            <a href="https://www.typescriptlang.org/">
+                <img src="/images/typescript.svg" alt="typescript" style="height: 1.5rem;">
+            </a>
+        </div>
+        <div class="container text-center text-muted py-3">
+        <span class="">
+            <a href="http://fykos.cz/" title="Fyzikální korespondenční seminář MFF UK">FYKOS</a>
+            <span>| </span>
+            <a href="http://vyfuk.mff.cuni.cz/"
+               title="Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií">Výfuk</a> |
+            <span>{_'Správce systému'}: </span>
+            <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
+        </span>
+        </div>
+    </footer>
+{/block}
+
+<div id="spinner"></div>
+{block scripts}
+    {*TODO store this library localy*}
+    {control jsLoader
+        'js/netteForms.js',
+        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+        'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
+        'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
+        'js/nette.ajax.js',
+        'js/datePicker.js',
+        'js/jquery.confirm.js',
+        'js/main.js',
+        'js/lib/react.min.js',
+        'js/lib/react-dom.min.js',
+        'js/bundle-all.min.js'
+            }
+    {control jsLoader:inline}
+{/block}
+{control cssLoader}
+</body>
+</html>
