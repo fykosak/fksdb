@@ -24,7 +24,7 @@ class ApplicationPresenterTest extends ApplicationPresenterFolTestCase {
         Assert::type('Nette\Templating\ITemplate', $source);
 
         $html = (string) $source;
-        Assert::contains('Apply team', $html);
+        Assert::contains('Register team', $html);
     }
 
     public function testAnonymousRegistration() {
@@ -58,7 +58,7 @@ class ApplicationPresenterTest extends ApplicationPresenterFolTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type('Nette\Application\Responses\RedirectResponse', $response);
-        
+
         $teamApplication = $this->assertTeamApplication($this->eventId, 'Okurkový tým');
         Assert::equal(sha1('1234'), $teamApplication->password);
         Assert::equal(CategoryProcessing::OPEN, $teamApplication->category);
