@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-04 19:40+0100\n"
-"PO-Revision-Date: 2019-01-03 12:11+0100\n"
+"PO-Revision-Date: 2019-01-04 20:06+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -18,29 +18,28 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 
 #: i18n/../app/modules/EventModule/presenters/ApplicationsTimeProgressPresenter.php:27
-#, fuzzy
 msgid "Applications time progress"
-msgstr "Přihlášky pro %s: %s"
+msgstr "Počet přihlášek v čase"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:106
-#, fuzzy, php-format
+#, php-format
 msgid "Úprava ubytovaní v hoteli \"%s\" v dni %s"
-msgstr "Úprava ubytovaných v hotelu \"%s\" dne %s akce \"%s\""
+msgstr "Úprava ubytovaných v hotelu \"%s\" dne %s"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:114
-#, fuzzy, php-format
+#, php-format
 msgid "Založit ubytovaní"
-msgstr "Založit ubytování na akci \"%s\""
+msgstr "Založit ubytování"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:119
-#, fuzzy, php-format
+#, php-format
 msgid "Ubytovaní"
-msgstr "Ubytování upraveno"
+msgstr "Ubytování"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:131
-#, fuzzy, php-format
+#, php-format
 msgid "List of accommodated people of hostel \"%s\" at %s"
-msgstr "Seznam ubytovaných osob v ho(s)telu \"%s\" dne %s akce \"%s\""
+msgstr "Seznam ubytovaných osob v ho(s)telu \"%s\" dne %s"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:154
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:91
@@ -140,7 +139,7 @@ msgstr "Seznam akcí"
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:74
 #, php-format
 msgid "Nová platba akcie %s"
-msgstr ""
+msgstr "Nová platba akce %s"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:79
 #, php-format
@@ -150,21 +149,21 @@ msgstr ""
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:84
 #, php-format
 msgid "Payment detail #%s"
-msgstr ""
+msgstr "Detail platby #%s"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:89
-#, fuzzy, php-format
+#, php-format
 msgid "List of payments"
-msgstr "Seznam akcí"
+msgstr "Seznam plateb"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:258
 #, php-format
 msgid "Platba #%s sa nedá editvať"
-msgstr ""
+msgstr "Platba #%s se nedá editovat"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:297
 msgid "Platba bola upravená"
-msgstr ""
+msgstr "Platba byla upravená"
 
 #: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:20
 #: i18n/../app/Components/Forms/Factories/Events/ScheduleField.php:19
@@ -321,9 +320,8 @@ msgid "Zmeny boli uložené"
 msgstr "Změny byly uložené"
 
 #: i18n/../app/modules/FyziklaniModule/presenters/GameSetupPresenter.php:9
-#, fuzzy
 msgid "Fyziklani game setup"
-msgstr "Přehled Fyziklání"
+msgstr "Základní nastavení Fyziklání"
 
 #: i18n/../app/model/Tasks/StudyYearsFromXML2.php:87
 #: i18n/../app/model/Tasks/Legacy/StudyYearsFromXML.php:79
@@ -454,25 +452,25 @@ msgstr ""
 #: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:16
 #, php-format
 msgid "Payment #%s has already generated symbols."
-msgstr ""
+msgstr "Platba #%s má již vygenerované symboly."
 
 #: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:23
 #, php-format
 msgid "Event %s nemá nastavený generátor platieb"
-msgstr ""
+msgstr "Akce %s nemá nastavený generátor plateb"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:63
 msgid "Pokračovať k sumarizácii"
-msgstr ""
+msgstr "Pokračovat s sumarizaci"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:81
 msgid "Potvrdiť platbu a napočítať cenu"
-msgstr ""
+msgstr "Potvrdit platbu a napočítat cenu"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:99
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:131
 msgid "Zrusit platbu"
-msgstr ""
+msgstr "Zrušit platbu"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:114
 msgid "Zaplatil"
@@ -482,17 +480,17 @@ msgstr ""
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:57
 #, php-format
 msgid "Mena %s nieje implentovaná"
-msgstr ""
+msgstr "Měna %s není implementovaná"
 
 #: i18n/../app/model/Payment/PriceCalculator/Price.php:57
-#, fuzzy, php-format
+#, php-format
 msgid "Currency %s doesnt exists"
-msgstr "Tým neexistuje"
+msgstr "Měna %s neexistuje"
 
 #: i18n/../app/model/Payment/Handler/PaymentDataHandler.php:48
 #, php-format
 msgid "Ubytovanie \"%s\" má už vygenrovanú platbu."
-msgstr ""
+msgstr "Ubytování \"%s\" má už vygenerovanou platbu."
 
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:73
 msgid "TeamID"
@@ -558,11 +556,11 @@ msgstr ""
 #: i18n/../app/model/Transitions/Machine/Machine.php:74
 #, php-format
 msgid "Transition %s is not available"
-msgstr ""
+msgstr "Přechod %s není dostupný"
 
 #: i18n/../app/model/Transitions/Machine/Machine.php:87
 msgid "Prechod sa nedá vykonať"
-msgstr ""
+msgstr "Přechod není možné vykonat"
 
 #: i18n/../app/model/Events/Exceptions.php:22
 #, php-format
@@ -1884,24 +1882,23 @@ msgstr ""
 #: i18n/../app/Components/Forms/Factories/PaymentFactory.php:43
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:58
 msgid "Person"
-msgstr ""
+msgstr "Osoba"
 
 #: i18n/../app/Components/Forms/Factories/PaymentFactory.php:49
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #: i18n/../app/Components/Forms/Factories/PaymentFactory.php:69
-#, fuzzy
 msgid "Edit payment"
-msgstr "Smazat platbu"
+msgstr "Upravit platbu"
 
 #: i18n/../app/Components/Forms/Factories/Payment/CurrencyField.php:10
 msgid "Currency"
-msgstr ""
+msgstr "Měna"
 
 #: i18n/../app/Components/Forms/Factories/Payment/CurrencyField.php:15
 msgid "Select currency"
-msgstr ""
+msgstr "Vybrat měnu"
 
 #: i18n/../app/Components/Forms/Factories/PersonHistory/StudyYearField.php:21
 #: i18n/../app/Components/Grids/ContestantsGrid.php:41
@@ -2047,7 +2044,7 @@ msgid ""
 "+421 nebo +420."
 msgstr ""
 "%label smí obsahovat jen číslice a musí být v mezinárodním tvaru začínajícím "
-"+421, nebo +420."
+"+420, nebo +421."
 
 #: i18n/../app/Components/Forms/Factories/PersonInfo/AcademicDegreeSuffixField.php:11
 msgid "Titul za jménem"
@@ -2323,19 +2320,19 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:68
 msgid "CS"
-msgstr ""
+msgstr "Konstantní symbol"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:69
 msgid "VS"
-msgstr ""
+msgstr "Variabilní symbol"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:70
 msgid "SS"
-msgstr ""
+msgstr "Specifický symbol"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:71
 msgid "Bank acc."
-msgstr ""
+msgstr "Bankovní účet"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:72
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:49
@@ -2343,14 +2340,12 @@ msgid "State"
 msgstr "Stav"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:77
-#, fuzzy
 msgid "Actions"
-msgstr "akce"
+msgstr "Akce"
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:106
-#, fuzzy
 msgid "Payment doesnt exists."
-msgstr "Tým neexistuje"
+msgstr "Platba neexistuje."
 
 #: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:112
 msgid "Prechod vykonaný"
@@ -2378,12 +2373,10 @@ msgid "#"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:45
-#, fuzzy
 msgid "Event"
-msgstr "Akce \"%s\""
+msgstr "Akce"
 
 #: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:52
-#, fuzzy
 msgid "Status"
 msgstr "Stav"
 
@@ -2529,13 +2522,12 @@ msgid "Model"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:80
-#, fuzzy
 msgid "Applications"
-msgstr "Přihlášky pro %s: %s"
+msgstr "Přihlášky"
 
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:85
 msgid "Organisers"
-msgstr ""
+msgstr "Organizátoři"
 
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:56
 msgid "Event Id"
@@ -2672,9 +2664,8 @@ msgid "Klíčový atribut"
 msgstr ""
 
 #: i18n/../app/presenters/MyPaymentPresenter.php:16
-#, fuzzy
 msgid "My payment"
-msgstr "Smazat platbu"
+msgstr "Moje platba"
 
 #: i18n/../app/presenters/ErrorPresenter.php:20
 msgid "Chyba"
@@ -3425,20 +3416,17 @@ msgid "Auto switch"
 msgstr "Automatický přepínač"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/auto-switch-control.tsx.tsx2php:30
-#, fuzzy
 msgid "stop auto switch"
-msgstr "Automatický přepínač"
+msgstr "vypnout automatické vypínání"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/auto-switch-control.tsx.tsx2php:31
-#, fuzzy
 msgid "run auto switch"
-msgstr "Automatický přepínač"
+msgstr "zapnout automatické přepínání"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/multi-select.tsx.tsx2php:27
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:64
-#, fuzzy
 msgid "Options"
-msgstr "akce"
+msgstr "Možnosti"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/results-table.tsx.tsx2php:62
 msgid "Results of Fyziklani"
@@ -3452,7 +3440,7 @@ msgstr "vybrat tým"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/index.tsx.tsx2php:68
 msgid "Correlation "
-msgstr "Korelace"
+msgstr "Korelace "
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/correlation/table/chart.tsx.tsx2php:82
 msgid "Task"
@@ -3508,7 +3496,7 @@ msgstr "Oba týmy"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/index.tsx.tsx2php:45
 msgid "Statistic for team "
-msgstr "Statistiky týmu"
+msgstr "Statistiky týmu "
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/timeline/index.tsx.tsx2php:15
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/timeline/index.tsx.tsx2php:20
@@ -3516,9 +3504,8 @@ msgid "Timeline"
 msgstr "Časový průběh"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/team/pie/index.tsx.tsx2php:16
-#, fuzzy
 msgid "Success of submitting"
-msgstr "úspěšné odevzdání"
+msgstr "Úspěšné odevzdání"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:73
 msgid "select task"
@@ -3526,7 +3513,7 @@ msgstr "vyber úlohu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:82
 msgid "Aggregation time"
-msgstr ""
+msgstr "Čas pro agregaci do histogramu"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/statistics/components/charts/task/options/index.tsx.tsx2php:97
 msgid "From"
@@ -3554,9 +3541,8 @@ msgid "Total solved problem"
 msgstr "Celkem vyřešených úloh"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:59
-#, fuzzy
 msgid "Number of events"
-msgstr "Program akce %s"
+msgstr "Počet akcí"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:66
 msgid "Edit schedule"
@@ -3571,12 +3557,10 @@ msgid "Not public results"
 msgstr "Neveřejné výsledkovky"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:26
-#, fuzzy
 msgid "Turn off"
-msgstr "vypnout"
+msgstr "Vypnout"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/options/compoents/hard-visible-switch.tsx.tsx2php:28
-#, fuzzy
 msgid "This function don't turn on id results are projected!"
 msgstr "Tato funkci nezapínej!"
 
