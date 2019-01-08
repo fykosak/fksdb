@@ -145,7 +145,7 @@ class AccountManager {
         try {
             $this->mailer->send($message);
         } catch (InvalidStateException $e) {
-            throw new SendFailedException( $e);
+            throw new SendFailedException($e);
         }
     }
 
@@ -156,13 +156,18 @@ class AccountManager {
         ))->delete();
     }
 
-    public final function createLogin(ModelPerson $person, $login = null, $password = null): ModelLogin {
-        $row = $this->serviceLogin->createNew(array(
+    /**
+     * @param ModelPerson $person
+     * @param null $login
+     * @param null $password
+     * @return \AbstractModelSingle|ModelLogin
+     */
+    public final function createLogin(ModelPerson $person, $login = null, $password = null) {
+        $login = $this->serviceLogin->createNew(array(
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
         ));
-        $login = ModelLogin::createFromTableRow($row);
 
         $this->serviceLogin->save($login);
 
