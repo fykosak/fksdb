@@ -145,7 +145,7 @@ abstract class BasePresenter extends EventBasePresenter {
         /**
          * @var $fyziklaniChooser FyziklaniChooser
          */
-        $fyziklaniChooser =  $this->getComponent('fyziklaniChooser');
+        $fyziklaniChooser = $this->getComponent('fyziklaniChooser');
         $fyziklaniChooser->setEvent($this->getEvent());
     }
 
@@ -184,7 +184,7 @@ abstract class BasePresenter extends EventBasePresenter {
         if (!$this->gameSetup) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
-                throw new BadRequestException(_('Herné paramtre niesu nastavené'));
+                throw new BadRequestException(_('Herné paramtre niesu nastavené'), 404);
             }
             $this->gameSetup = $gameSetup;
         }
