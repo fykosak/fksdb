@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-02 14:06+0100\n"
-"PO-Revision-Date: 2019-01-03 13:01+0100\n"
-"Last-Translator: Karel Kolář <karel@fykos.cz>\n"
+"PO-Revision-Date: 2019-01-08 23:18+0100\n"
+"Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: i18n/../app/modules/EventModule/presenters/ApplicationsTimeProgressPresenter.php:27
@@ -1385,7 +1385,7 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:134
 msgid "Doručovací adresa"
-msgstr "Deliver address"
+msgstr "Mailing address"
 
 #: i18n/../app/Components/Forms/Factories/ReferencedPerson/AbstractReferencedPersonFactory.php:137
 msgid "Trvalá adresa"
