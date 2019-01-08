@@ -83,8 +83,8 @@ abstract class AbstractResultsModel implements IResultsModel {
 
     /**
      * @note Work only with numeric types.
-     * @param type $conditions
-     * @return type
+     * @param mixed $conditions
+     * @return string
      */
     protected function conditionsToWhere($conditions) {
         $where = [];
@@ -115,18 +115,18 @@ abstract class AbstractResultsModel implements IResultsModel {
     }
 
     /**
+     * @param $series
      * @return \Nette\Database\Table\Selection
-     * @throws \Nette\InvalidStateException
      */
     protected function getTasks($series) {
         return $this->serviceTask->getTable()
-                        ->select('task_id, label, points,series')
-                        ->where([
-                            'contest_id' => $this->contest->contest_id,
-                            'year' => $this->year,
-                            'series' => $series,
-                        ])
-                        ->order('tasknr');
+            ->select('task_id, label, points,series')
+            ->where([
+                'contest_id' => $this->contest->contest_id,
+                'year' => $this->year,
+                'series' => $series,
+            ])
+            ->order('tasknr');
     }
 
 }

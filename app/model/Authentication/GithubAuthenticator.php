@@ -34,9 +34,11 @@ class GithubAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param Request $request
+     * @param FullHttpRequest $request
      * @return \FKSDB\ORM\ModelLogin
      * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws NoLoginException
      */
     public function authenticate(FullHttpRequest $request) {
         $loginName = $this->globalParameters['github']['login'];

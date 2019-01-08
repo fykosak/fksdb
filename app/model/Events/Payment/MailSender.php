@@ -5,7 +5,6 @@ namespace Events\Payment;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
-use Nette\Object;
 use ServicePerson;
 
 /**
@@ -15,7 +14,7 @@ use ServicePerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class MailSender{
+class MailSender {
 
     /**
      * @var string

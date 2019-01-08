@@ -2,10 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\Payment\PriceCalculator\Price;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventParticipant;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\PriceCalculator\Price;
 use Nette\NotImplementedException;
 
 class EventPrice extends AbstractPreProcess {
@@ -54,7 +53,7 @@ class EventPrice extends AbstractPreProcess {
                 $amount = $modelEventAccommodation->price;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()),501);
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()), 501);
         }
         return new Price($amount, $price->getCurrency());
     }

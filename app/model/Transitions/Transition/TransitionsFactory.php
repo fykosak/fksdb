@@ -43,6 +43,7 @@ class TransitionsFactory {
      * @param MailTemplateFactory $mailTemplateFactory
      * @param EventAuthorizator $eventAuthorizator
      * @param User $user
+     * @param ITranslator $translator
      */
     public function __construct(IMailer $mailer, MailTemplateFactory $mailTemplateFactory, EventAuthorizator $eventAuthorizator, User $user, ITranslator $translator) {
         $this->mailer = $mailer;

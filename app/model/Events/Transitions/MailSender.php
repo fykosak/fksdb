@@ -6,7 +6,6 @@ use Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelLogin;
@@ -92,9 +91,9 @@ class MailSender extends Object {
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressee($transition);
         $persons = $this->servicePerson->getTable()
-                ->where('person.person_id', $personIds)
-                ->where('person_info:email IS NOT NULL')
-                ->fetchPairs('person_id');
+            ->where('person.person_id', $personIds)
+            ->where('person_info:email IS NOT NULL')
+            ->fetchPairs('person_id');
 
         $logins = [];
         foreach ($persons as $person) {
@@ -157,12 +156,12 @@ class MailSender extends Object {
     }
 
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
-        $application = Strings::truncate((string) $application, 20); //TODO extension point
+        $application = Strings::truncate((string)$application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
     }
 
     private function getUntil(ModelEvent $event) {
-        return $event->registration_end ? : $event->end; //TODO extension point
+        return $event->registration_end ?: $event->end; //TODO extension point
     }
 
     private function hasBcc() {
@@ -189,9 +188,9 @@ class MailSender extends Object {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function($it) {
-                                            return $it->getName();
-                                        }, $group->holders));
+                        $names = array_merge($names, array_map(function ($it) {
+                            return $it->getName();
+                        }, $group->holders));
                     }
                     break;
                 case self::ADDR_ALL:

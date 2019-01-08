@@ -66,7 +66,7 @@ class ExportFormatFactory extends Object {
 
     /**
      *
-     * @param type $name
+     * @param mixed $name
      * @param \Exports\StoredQuery $storedQuery
      * @return IExportFormat
      */

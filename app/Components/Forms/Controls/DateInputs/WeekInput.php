@@ -5,11 +5,11 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 
 class WeekInput extends AbstractDateInput {
-    protected function getFormat() {
+    protected function getFormat(): string {
         return 'Y-\WW';
     }
 
-    protected function getType() {
+    protected function getType(): string {
         return 'week';
     }
 }

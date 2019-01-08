@@ -30,7 +30,6 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceAuthToken;
 use ServiceEvent;
-use SystemContainer;
 use Utils;
 
 

@@ -22,7 +22,7 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param ModelMFyziklaniParticipant $model
+     * @param IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);

@@ -30,10 +30,11 @@ class GroupedContainer extends Container {
 
     /**
      * @note Copy+paste from Nette\Forms\Form.
-     * @param type $caption
-     * @return type
+     * @param string $caption
+     * @param bool $setAsCurrent
+     * @return ControlGroup
      */
-    public function addGroup($caption, $setAsCurrent = true) {
+    public function addGroup($caption, $setAsCurrent = true): ControlGroup {
         $group = new ControlGroup;
         $group->setOption('label', $caption);
         $group->setOption('visual', TRUE);

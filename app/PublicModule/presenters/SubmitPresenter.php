@@ -164,7 +164,7 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @internal
-     * @param type $form
+     * @param mixed $form
      * @throws \Nette\Application\AbortException
      */
     public function handleUploadFormSuccess($form) {

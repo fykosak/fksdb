@@ -24,9 +24,9 @@ class MultiTableSelection extends TableSelection {
 
     /**
      * This override ensures returned objects are of correct class.
-     * 
+     *
      * @param array $row
-     * @return AbstractModelSingle
+     * @return \AbstractModelMulti
      */
     protected function createRow(array $row) {
         $mainModel = $this->service->getMainService()->createFromArray($row);

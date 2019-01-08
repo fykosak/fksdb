@@ -133,7 +133,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param \FKSDB\Components\Grids\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

@@ -10,7 +10,7 @@ use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class SecondaryModelStrategy {
@@ -86,10 +86,11 @@ class SecondaryModelConflictException extends RuntimeException {
     }
 
     private function createMessage(IModel $model, $conflicts) {
+        $ids = null;
         foreach ($conflicts as $conflict) {
             $ids = $conflict->getPrimary();
         }
-        $id = $model->getPrimary(false) ? : 'null';
+        $id = $model->getPrimary(false) ?: 'null';
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 

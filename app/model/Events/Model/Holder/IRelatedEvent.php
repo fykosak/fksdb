@@ -12,6 +12,7 @@ use FKSDB\ORM\ModelEvent;
 interface IEventRelation {
 
     /**
+     * @param ModelEvent $event
      * @return \FKSDB\ORM\ModelEvent
      */
     public function getEvent(ModelEvent $event);

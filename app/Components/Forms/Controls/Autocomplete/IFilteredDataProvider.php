@@ -9,6 +9,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 interface IFilteredDataProvider extends IDataProvider {
 
     /**
+     * @param $search
      * @return see parent + filtered by the user input
      */
     public function getFilteredItems($search);

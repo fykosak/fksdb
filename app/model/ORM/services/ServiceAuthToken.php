@@ -17,10 +17,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
+     * @param ModelLogin $login
      * @param string $type
      * @param \Nette\DateTime $until
+     * @param null $data
+     * @param bool $refresh
      * @param \Nette\DateTime $since
-     * @param ModelLogin $login
      * @return ModelAuthToken
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {

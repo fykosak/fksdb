@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\Component;
 use Nette\InvalidStateException;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Grid;
@@ -20,7 +19,7 @@ abstract class BaseGrid extends Grid {
 
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $paginator =  $this->getComponent('paginator');
+        $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
     }
 

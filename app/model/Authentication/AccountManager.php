@@ -77,7 +77,7 @@ class AccountManager {
      * @param ModelPerson $person
      * @param string $email
      * @return \FKSDB\ORM\ModelLogin
-     * @throws MailNotSendException
+     * @throws SendFailedException
      */
     public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
         $login = $this->createLogin($person);
@@ -104,10 +104,14 @@ class AccountManager {
             $this->mailer->send($message);
             return $login;
         } catch (InvalidStateException $e) {
-            throw new SendFailedException(null, null, $e);
+            throw new SendFailedException($e);
         }
     }
 
+    /**
+     * @param ITemplate $template
+     * @param ModelLogin $login
+     */
     public function sendRecovery(ITemplate $template, ModelLogin $login) {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
@@ -115,10 +119,10 @@ class AccountManager {
             throw new RecoveryNotImplementedException();
         }
         $token = $this->serviceAuthToken->getTable()->where(array(
-                    'login_id' => $login->login_id,
-                    'type' => ModelAuthToken::TYPE_RECOVERY,
-                ))
-                ->where('until > ?', new DateTime())->fetch();
+            'login_id' => $login->login_id,
+            'type' => ModelAuthToken::TYPE_RECOVERY,
+        ))
+            ->where('until > ?', new DateTime())->fetch();
 
         if ($token) {
             throw new RecoveryExistsException();
@@ -141,7 +145,7 @@ class AccountManager {
         try {
             $this->mailer->send($message);
         } catch (InvalidStateException $e) {
-            throw new MailNotSendException(null, null, $e);
+            throw new SendFailedException( $e);
         }
     }
 
@@ -152,12 +156,13 @@ class AccountManager {
         ))->delete();
     }
 
-    public final function createLogin(ModelPerson $person, $login = null, $password = null) {
-        $login = $this->serviceLogin->createNew(array(
+    public final function createLogin(ModelPerson $person, $login = null, $password = null): ModelLogin {
+        $row = $this->serviceLogin->createNew(array(
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
         ));
+        $login = ModelLogin::createFromTableRow($row);
 
         $this->serviceLogin->save($login);
 

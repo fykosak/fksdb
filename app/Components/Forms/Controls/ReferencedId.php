@@ -9,7 +9,6 @@ use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use ORM\IModel;
 use ORM\IService;
-use Submits\StorageException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus

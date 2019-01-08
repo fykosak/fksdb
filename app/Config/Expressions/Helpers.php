@@ -61,6 +61,7 @@ class Helpers {
      * Transforms and evalutes the expression during runtime.
      *
      * @param mixed $expression
+     * @param Container $container
      * @return mixed
      */
     public static function evalExpression($expression, Container $container) {

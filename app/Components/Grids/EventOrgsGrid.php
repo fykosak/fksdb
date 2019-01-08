@@ -25,6 +25,7 @@ class EventOrgsGrid extends BaseGrid {
 
     /**
      * @param \AuthenticatedPresenter $presenter
+     * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException

@@ -4,9 +4,9 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Payment\PaymentStateLabel;
+use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -56,8 +56,12 @@ class DetailControl extends Control {
     /**
      * @return FormControl
      */
-    public function getFormControl() {
-        return  $this->getComponent('form');
+    public function getFormControl(): FormControl {
+        /**
+         * @var $control FormControl
+         */
+        $control = $this->getComponent('form');
+        return $control;
     }
 
     public function render() {

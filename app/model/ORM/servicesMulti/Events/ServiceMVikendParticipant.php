@@ -22,7 +22,7 @@ class ServiceMVikendParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param ModelMDsefParticipant $model
+     * @param IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);

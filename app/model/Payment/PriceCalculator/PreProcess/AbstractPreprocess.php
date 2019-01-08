@@ -2,9 +2,8 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\Payment\PriceCalculator\Price;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\PriceCalculator\Price;
 
 abstract class AbstractPreProcess {
 

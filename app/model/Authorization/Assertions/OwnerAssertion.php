@@ -2,9 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\Permission;
@@ -98,7 +96,7 @@ class OwnerAssertion {
         }
         /**
          * @var $loggedPerson ModelPerson
-        $payment
+         * $payment
          */
         $loggedPerson = $this->user->getIdentity()->getPerson();
         $payment = $acl->getQueriedResource();

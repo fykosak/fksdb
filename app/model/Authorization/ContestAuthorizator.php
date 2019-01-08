@@ -4,7 +4,6 @@ namespace Authorization;
 
 use FKSDB\ORM\ModelLogin;
 use Nette\Database\Table\ActiveRow;
-use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;
