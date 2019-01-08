@@ -10,7 +10,6 @@ use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
-use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
@@ -125,7 +124,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     private function canEdit() {
-        return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) || $this->isContestsOrgAllowed($this->getModel(), 'org.edit');
+        return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) ||
+            $this->isContestsOrgAllowed($this->getModel(), 'org');
     }
 
     /**
@@ -138,6 +138,10 @@ class PaymentPresenter extends BasePresenter {
             $this->model->getRelatedPersonAccommodation();
         }
         return $this->model;
+    }
+
+    protected function isOrg(): bool {
+        return $this->isContestsOrgAllowed('event.payment', 'org');
     }
 
     /**
@@ -215,6 +219,13 @@ class PaymentPresenter extends BasePresenter {
         }
     }
 
+    public function actionCreate() {
+        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0) && !$this->isOrg()) {
+            $this->flashMessage(_('Platby niesu spustené!'));
+            $this->redirect('Dashboard:default');
+        };
+    }
+
     public function renderEdit() {
         $this->template->model = $this->getModel();
     }
@@ -262,37 +273,8 @@ class PaymentPresenter extends BasePresenter {
         }
         $connection->commit();
 
-        $this->flashMessage($create ? _('Platba bola upravená') : _('Platba bola vytvorená'));
+        $this->flashMessage($create ? _('Platba bola vytvorená') : _('Platba bola upravená'));
         $this->redirect('detail', ['id' => $model->payment_id]);
-    }
-
-
-    /**
-     * @param Form $form
-     * @throws \FKSDB\Transitions\UnavailableTransitionException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     * @throws \Nette\Application\BadRequestException
-     *
-     */
-    public function handleDetailForm(Form $form) {
-
-        foreach ($form->getComponents() as $name => $component) {
-            if ($form->isSubmitted() === $component) {
-                if ($name === 'edit') {
-                    $this->redirect('edit');
-                } else {
-                    $model = $this->getModel();
-                    try {
-                        $this->getMachine()->executeTransition($name, $model);
-                        $this->redirect('detail');
-                    } catch (AlreadyGeneratedSymbolsException $e) {
-                        $this->flashMessage($e->getMessage(), 'danger');
-                        $this->redirect('this');
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -301,13 +283,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentDetailControl(): DetailControl {
-        $control = $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getTranslator(), $this->getMachine());
-        $form = $control->getFormControl()->getForm();
-
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleDetailForm($form);
-        };
-        return $control;
+        return $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getTranslator(), $this->getMachine());
     }
 
     /**

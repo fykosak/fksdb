@@ -43,7 +43,9 @@ class Handler {
                     $modelEventPersonAccommodation->delete();
                 } catch (\PDOException $e) {
                     if (\preg_match('/payment_accommodation/', $e->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(_('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'), $row->getLabel()));
+                        throw new ExistingPaymentException(\sprintf(
+                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                            $modelEventPersonAccommodation->getLabel()));
                     }
                     throw $e;
                 }

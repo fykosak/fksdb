@@ -2,10 +2,11 @@
 
 namespace FKSDB\Payment\SymbolGenerator\Generators;
 
-use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
-class Fyziklani13Generator extends \FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator {
+class Fyziklani13Generator extends AbstractSymbolGenerator {
     public function __construct(\ServicePayment $servicePayment) {
         parent::__construct($servicePayment);
     }

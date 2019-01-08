@@ -39,6 +39,11 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');

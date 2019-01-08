@@ -35,10 +35,6 @@ class MyPaymentGrid extends BaseGrid {
         /*
         * columns
         */
-        /*$this->addColumn('display_name', _('Name'))->setRenderer(function ($row) {
-            $person = ModelPayment::createFromTableRow($row)->getPerson();
-            return $person->getFullname();
-        });*/
         $this->addColumn('id', _('#'))->setRenderer(function ($row) {
             return '#' . ModelPayment::createFromTableRow($row)->getPaymentId();
         });;

@@ -35,16 +35,16 @@ class PaymentStateLabel extends Control {
         $label = $this->modelPayment->state;
         switch ($this->modelPayment->state) {
             case ModelPayment::STATE_NEW:
-                $label = _('Nová platba');
+                $label = _('New payment');
                 break;
             case ModelPayment::STATE_WAITING:
-                $label = _('Čaká na zaplatenie');
+                $label = _('Waiting for paying');
                 break;
             case ModelPayment::STATE_CANCELED:
-                $label = _('Zrušená platba');
+                $label = _('Payment canceled');
                 break;
             case ModelPayment::STATE_RECEIVED:
-                $label = _('Platba prijatá');
+                $label = _('Payment recieved');
         }
 
         $this->template->label = $label;

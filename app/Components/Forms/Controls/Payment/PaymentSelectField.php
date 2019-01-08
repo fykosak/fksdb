@@ -32,6 +32,9 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         $this->appendProperty();
     }
 
+    /**
+     * @return string
+     */
     public function getData(): string {
         $query = $this->serviceEventPersonAccommodation->where('event_accommodation.event_id', $this->event->event_id);
         $items = [];

@@ -10,8 +10,13 @@ class Price {
 
     const CURRENCY_EUR = 'eur';
     const CURRENCY_KC = 'kc';
-
+    /**
+     * @var string
+     */
     private $currency;
+    /**
+     * @var float
+     */
     private $amount = 0;
 
     public function __construct(float $amount = null, string $currency = null) {
@@ -19,6 +24,10 @@ class Price {
         $this->currency = $currency;
     }
 
+    /**
+     * @param Price $price
+     * @throws \LogicException
+     */
     public function add(Price $price) {
         if ($this->currency !== $price->getCurrency()) {
             throw new \LogicException('');
@@ -26,28 +35,47 @@ class Price {
         $this->amount += $price->getAmount();
     }
 
-    public function setCurrency($currency) {
+    /**
+     * @param string $currency
+     */
+    public function setCurrency(string $currency) {
         $this->currency = $currency;
     }
 
-    public function getCurrency() {
+    /**
+     * @return string
+     */
+    public function getCurrency(): string {
         return $this->currency;
     }
 
-    public function getAmount() {
+    /**
+     * @return float
+     */
+    public function getAmount(): float {
         return $this->amount;
     }
 
+    /**
+     * @param float $amount
+     */
     public function addAmount(float $amount) {
         $this->amount += $amount;
     }
 
-
-    public static function getAllCurrencies() {
+    /**
+     * @return array
+     */
+    public static function getAllCurrencies(): array {
         return [self::CURRENCY_KC, self::CURRENCY_EUR];
     }
 
-    public static function getLabel($currency) {
+    /**
+     * @param $currency
+     * @return string
+     * @throws OutOfRangeException
+     */
+    public static function getLabel($currency): string {
         switch ($currency) {
             case self::CURRENCY_EUR:
                 return '€';
@@ -58,7 +86,10 @@ class Price {
         }
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     */
+    public function __toString(): string {
         return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
     }
 }

@@ -48,8 +48,7 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(teacher)        # create, edit, list
-    - addResource(eventAccommodation) # create, edit, list
-    - addResource(event.payment) # create, edit, list
+
     #fyziklani
     - addResource(fyziklani.dashboard) # default
     - addResource(fyziklani.task) # list, import
@@ -66,7 +65,7 @@ acl:
     - addResource(event.accommodation) # list, create, edit, billeted
     - addResource(event.model) #default
     - addResource(event.applicationsTimeProgress) # default
-
+    - addResource(event.payment) # create, edit, list
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
@@ -118,7 +117,6 @@ acl:
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL)) # in OrgModule
 
     - allow(eventManager, person, stalk.full)
 
@@ -165,11 +163,8 @@ acl:
     - allow(org, event.payment, edit)
     - allow(org, event.payment, create)
     - allow(org, event.payment, detail)
-    - allow(org, event.payment, org.edit)
+    - allow(org, event.payment, org)
     - allow(org, event.payment, list)
-
-
-
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 

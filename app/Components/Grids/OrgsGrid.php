@@ -86,12 +86,5 @@ class OrgsGrid extends BaseGrid {
                 ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
-
-
-        //
-        // appeareance
-        //
-
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
+use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
 
 class PriceCalculator {
     /**
@@ -24,15 +24,25 @@ class PriceCalculator {
         $this->event = $event;
     }
 
-    public function setCurrency($currency) {
+    /**
+     * @param $currency
+     */
+    public function setCurrency(string $currency) {
         $this->currency = $currency;
     }
 
+    /**
+     * @param AbstractPreProcess $preProcess
+     */
     public function addPreProcess(AbstractPreProcess $preProcess) {
         $this->preProcess[] = $preProcess;
     }
 
-    public function execute(ModelPayment $modelPayment) {
+    /**
+     * @param ModelPayment $modelPayment
+     * @return Price
+     */
+    public function execute(ModelPayment $modelPayment): Price {
         $price = new Price(0, $this->getCurrency());
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
@@ -41,7 +51,11 @@ class PriceCalculator {
         return $price;
     }
 
-    public function getGridItems(ModelPayment $modelPayment) {
+    /**
+     * @param ModelPayment $modelPayment
+     * @return array[]
+     */
+    public function getGridItems(ModelPayment $modelPayment): array {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
             $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
@@ -49,14 +63,20 @@ class PriceCalculator {
         return $items;
     }
 
-    private function getCurrency() {
+    /**
+     * @return string
+     */
+    private function getCurrency(): string {
         if ($this->currency == null) {
             throw new \InvalidArgumentException('Currency is not set');
         }
         return $this->currency;
     }
 
-    public function getCurrencies() {
+    /**
+     * @return array
+     */
+    public function getCurrencies(): array {
         return Price::getAllCurrencies();
     }
 

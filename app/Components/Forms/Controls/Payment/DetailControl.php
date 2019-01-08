@@ -9,7 +9,6 @@ use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -39,27 +38,46 @@ class DetailControl extends Control {
         $this->translator = $translator;
     }
 
+    /**
+     * @return FormControl
+     */
     public function createComponentForm(): FormControl {
         $formControl = new FormControl();
         $form = $formControl->getForm();
         if ($this->model->canEdit()) {
-            $form->addSubmit('edit', _('Edit payment'));
+            $submit = $form->addSubmit('edit', _('Edit payment'));
+            $submit->onClick[] = function () {
+                $this->getPresenter()->redirect('edit');
+            };
         }
         return $formControl;
     }
 
+    /**
+     * @return StateDisplayControl
+     */
     public function createComponentStateDisplay(): StateDisplayControl {
         return new StateDisplayControl($this->translator, $this->model);
     }
 
+    /**
+     * @return PaymentStateLabel
+     */
     public function createComponentStateLabel(): PaymentStateLabel {
         return new PaymentStateLabel($this->model, $this->translator);
     }
 
+    /**
+     * @param Price $price
+     * @return PriceControl
+     */
     public function createComponentPriceControl(Price $price): PriceControl {
         return new PriceControl($this->translator, $price);
     }
 
+    /**
+     * @return TransitionButtonsControl
+     */
     public function createComponentTransitionButtons() {
         return new TransitionButtonsControl($this->machine, $this->translator, $this->model);
     }

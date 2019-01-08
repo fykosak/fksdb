@@ -13,18 +13,21 @@ class PaymentDataHandler {
      */
     private $serviceEventPersonAccommodation;
 
-
     public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-
+    /**
+     * @param ArrayHash $data
+     * @param ModelPayment $payment
+     * @throws StorageException
+     */
     public function prepareAndUpdate(ArrayHash $data, ModelPayment $payment) {
         $oldRows = $payment->getRelatedPersonAccommodation();
 
         $newAccommodationIds = $this->prepareData($data);
         /**
-         * @var $row \FKSDB\ORM\ModelPaymentAccommodation
+         * @var $row ModelPaymentAccommodation
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -55,18 +58,14 @@ class PaymentDataHandler {
         }
     }
 
-
     /**
      * @param ArrayHash $data
      * @return integer[]
      */
     private function prepareData(ArrayHash $data): array {
         $data = (array)json_decode($data);
-
         return \array_keys(\array_filter($data, function ($value) {
             return $value;
         }));
     }
-
-
 }

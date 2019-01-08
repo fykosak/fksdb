@@ -14,11 +14,14 @@ class EventAccommodationPrice extends AbstractPreProcess {
      */
     private $serviceEventPersonAccommodation;
 
-
     public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return Price
+     */
     public function calculate(ModelPayment $modelPayment): Price {
         $price = new Price(0, $modelPayment->currency);
         $ids = $this->getData($modelPayment);
@@ -30,12 +33,20 @@ class EventAccommodationPrice extends AbstractPreProcess {
         return $price;
     }
 
+    /**
+     * @param $id
+     * @return ModelEventAccommodation
+     */
     private function getAccommodation($id): ModelEventAccommodation {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
         $model = ModelEventPersonAccommodation::createFromTableRow($row);
         return $model->getEventAccommodation();
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return array
+     */
     public function getGridItems(ModelPayment $modelPayment): array {
         $price = new Price(0, $modelPayment->currency);
         $items = [];
@@ -51,6 +62,12 @@ class EventAccommodationPrice extends AbstractPreProcess {
         return $items;
     }
 
+    /**
+     * @param ModelEventAccommodation $modelEventAccommodation
+     * @param Price $price
+     * @return Price
+     * @throws NotImplementedException
+     */
     private function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation, Price &$price): Price {
         switch ($price->getCurrency()) {
             case Price::CURRENCY_KC:
@@ -65,6 +82,10 @@ class EventAccommodationPrice extends AbstractPreProcess {
         return new Price($amount, $price->getCurrency());
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return ModelEventPersonAccommodation[]|null
+     */
     protected function getData(ModelPayment $modelPayment) {
         return $modelPayment->getRelatedPersonAccommodation();
     }

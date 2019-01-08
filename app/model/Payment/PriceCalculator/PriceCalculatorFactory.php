@@ -2,8 +2,8 @@
 
 namespace FKSDB\Payment\PriceCalculator;
 
-use FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\Payment\PriceCalculator\PreProcess\EventAccommodationPrice;
 
 class PriceCalculatorFactory {
     /**
@@ -20,7 +20,7 @@ class PriceCalculatorFactory {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
 
-    public function createCalculator(ModelEvent $event) {
+    public function createCalculator(ModelEvent $event): PriceCalculator {
         $calculator = new PriceCalculator($event);
         // $calculator->addPreProcess(new EventPrice($this->serviceEventParticipant));
         // $calculator->addPreProcess(new EventSchedulePrice($this->serviceEventParticipant));// TODO mergnuť s programom pre FOF

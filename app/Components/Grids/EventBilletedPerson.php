@@ -92,6 +92,10 @@ class EventBilletedPerson extends BaseGrid {
 
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function handleConfirmPayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
         $model = ModelEventPersonAccommodation::createFromTableRow($row);
@@ -105,6 +109,10 @@ class EventBilletedPerson extends BaseGrid {
         $this->redirect('this');
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function handleDeletePayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
         $model = ModelEventPersonAccommodation::createFromTableRow($row);

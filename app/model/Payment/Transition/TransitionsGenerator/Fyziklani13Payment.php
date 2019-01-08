@@ -45,6 +45,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             throw new BadRequestException('Očakvaná sa trieda PaymentMachine');
         }
 
+        $this->addTransitionInitToNew($machine);
         $this->addTransitionNewToWaiting($machine);
         $this->addTransitionNewToCanceled($machine);
         $this->addTransitionWaitingToReceived($machine);
@@ -56,6 +57,23 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->setSymbolGenerator($this->symbolGeneratorFactory->createGenerator($event));
         $machine->setPriceCalculator($this->priceCalculatorFactory->createCalculator($event));
         return $machine;
+    }
+
+    protected function getConditionInitToNew(): bool {
+        return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-02-01 00:00:00'));
+    }
+
+    /**
+     * implicit transition when creating model (it's not executed only try condition!)
+     * @param PaymentMachine $machine
+     */
+    private function addTransitionInitToNew(PaymentMachine &$machine) {
+        $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Vytvoriť'));
+        $transition->setCondition(
+            function () {
+                return $this->getConditionInitToNew();
+            });
+        $machine->addTransition($transition);
     }
 
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
@@ -110,8 +128,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
 
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionDateBetween(new DateTime('2018-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
-                && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
+            return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
+                && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
         });
         $transition->setType(Transition::TYPE_SUCCESS);
         $machine->addTransition($transition);
@@ -121,7 +139,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
         $transition->setType(Transition::TYPE_DANGER);
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
+            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
         });
         $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
 

@@ -39,6 +39,11 @@ class OrgPaymentGrid extends BaseGrid {
         $this->machine = $machine;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
@@ -75,6 +80,7 @@ class OrgPaymentGrid extends BaseGrid {
         });
 
         $this->addColumn('tr', _('Actions'))->setRenderer(function ($row) {
+
             $model = ModelPayment::createFromTableRow($row);
             $container = Html::el('span')->addAttributes(['class' => 'btn-group']);
             foreach ($this->machine->getAvailableTransitions($model) as $transition) {
@@ -100,16 +106,22 @@ class OrgPaymentGrid extends BaseGrid {
             });
     }
 
+    /**
+     * @param int $id
+     * @param string $transition
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     public function handleTransition(int $id, string $transition) {
         $row = $this->servicePayment->findByPrimary($id);
         if (!$row) {
-            $this->flashMessage(_('Payment doesnt exists.'));
+            $this->flashMessage(_('Payment does not exists.'));
             return;
         }
         $model = ModelPayment::createFromTableRow($row);
         try {
             $this->machine->executeTransition($transition, $model);
-            $this->flashMessage(_('Prechod vykonaný'), 'success');
+            $this->flashMessage(_('Transition executed'), 'success');
             $this->redirect('this');
         } catch (UnavailableTransitionException $e) {
             Debugger::log($e);

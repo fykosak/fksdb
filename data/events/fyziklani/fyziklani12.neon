@@ -124,12 +124,12 @@ events:
 
                 fields:
                     name:
-                        label: _('Název týmu') # i18n
+                        label: _('Název týmu')
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani12.appCond%
                     category:
-                        label: _('Kategorie') # i18n
+                        label: _('Kategorie')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false

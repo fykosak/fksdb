@@ -16,6 +16,10 @@ class SymbolGeneratorFactory {
         $this->servicePayment = $servicePayment;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return AbstractSymbolGenerator
+     */
     public function createGenerator(ModelEvent $event): AbstractSymbolGenerator {
         if ($event->event_type_id === 1 && $event->event_year = 13) {
             return new Fyziklani13Generator($this->servicePayment);

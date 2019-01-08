@@ -17,22 +17,37 @@ class PaymentMachine extends Machine {
      */
     private $symbolGenerator;
 
+    /**
+     * @param AbstractSymbolGenerator $abstractSymbolGenerator
+     */
     public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
         $this->symbolGenerator = $abstractSymbolGenerator;
     }
 
+    /**
+     * @return AbstractSymbolGenerator
+     */
     public function getSymbolGenerator(): AbstractSymbolGenerator {
         return $this->symbolGenerator;
     }
 
+    /**
+     * @param PriceCalculator $priceCalculator
+     */
     public function setPriceCalculator(PriceCalculator $priceCalculator) {
         $this->priceCalculator = $priceCalculator;
     }
 
+    /**
+     * @return PriceCalculator
+     */
     public function getPriceCalculator(): PriceCalculator {
         return $this->priceCalculator;
     }
 
+    /**
+     * @return string
+     */
     public function getInitState(): string {
         return ModelPayment::STATE_NEW;
     }
