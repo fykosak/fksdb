@@ -145,7 +145,7 @@ abstract class BasePresenter extends EventBasePresenter {
         /**
          * @var $fyziklaniChooser FyziklaniChooser
          */
-        $fyziklaniChooser = $this['fyziklaniChooser'];
+        $fyziklaniChooser =  $this->getComponent('fyziklaniChooser');
         $fyziklaniChooser->setEvent($this->getEvent());
     }
 

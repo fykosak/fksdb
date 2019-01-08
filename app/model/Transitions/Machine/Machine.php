@@ -48,7 +48,10 @@ class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
-        $state = $model ? $model->getState() : self::STATE_INIT;
+        $state = $model ? $model->getState() : NULL;
+        if (\is_null($state)) {
+            $state = self::STATE_INIT;
+        }
         return array_filter($this->transitions, function (Transition $transition) use ($model, $state) {
             return ($transition->getFromState() === $state) && $transition->canExecute($model);
         });
@@ -60,7 +63,7 @@ class Machine {
      * @return Transition
      * @throws UnavailableTransitionException
      */
-    protected function findTransitionById($id, IStateModel $model): Transition {
+    protected function findTransitionById(string $id, IStateModel $model): Transition {
         $matchedTransitions = \array_values(\array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
         }));
@@ -75,13 +78,13 @@ class Machine {
     }
 
     /**
-     * @param string? $id
+     * @param string $id
      * @param IStateModel $model
      * @return void
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionException
      */
-    public function executeTransition($id, IStateModel $model) {
+    public function executeTransition(string $id, IStateModel $model) {
         $transition = $this->findTransitionById($id, $model);
         if (!$transition->canExecute($model)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
@@ -97,7 +100,7 @@ class Machine {
         $this->connection->commit();
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
-        $model = $model->refresh();
-        $transition->afterExecute($model);
+        $newModel = $model->refresh();
+        $transition->afterExecute($newModel);
     }
 }

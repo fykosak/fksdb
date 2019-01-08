@@ -55,6 +55,6 @@ class MachineFactory {
                 $this->symbolGeneratorFactory,
                 $this->priceCalculatorFactory);
         }
-        throw new NotImplementedException('Not implemented');
+        throw new NotImplementedException(_('Not implemented'),501);
     }
 }

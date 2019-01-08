@@ -57,7 +57,7 @@ class DetailControl extends Control {
      * @return FormControl
      */
     public function getFormControl() {
-        return $this['form'];
+        return  $this->getComponent('form');
     }
 
     public function render() {

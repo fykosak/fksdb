@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-02 14:06+0100\n"
+"POT-Creation-Date: 2019-01-04 19:40+0100\n"
 "PO-Revision-Date: 2019-01-03 12:11+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
@@ -136,6 +136,35 @@ msgstr "Akce \"%s\""
 #: i18n/../app/modules/EventModule/presenters/DispatchPresenter.php:68
 msgid "List of events"
 msgstr "Seznam akcí"
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:74
+#, php-format
+msgid "Nová platba akcie %s"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:79
+#, php-format
+msgid "Úprava platby #%s"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:84
+#, php-format
+msgid "Payment detail #%s"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:89
+#, fuzzy, php-format
+msgid "List of payments"
+msgstr "Seznam akcí"
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:258
+#, php-format
+msgid "Platba #%s sa nedá editvať"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:297
+msgid "Platba bola upravená"
+msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:20
 #: i18n/../app/Components/Forms/Factories/Events/ScheduleField.php:19
@@ -422,6 +451,49 @@ msgstr ""
 msgid "Neplatné přihlašovací údaje."
 msgstr ""
 
+#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:16
+#, php-format
+msgid "Payment #%s has already generated symbols."
+msgstr ""
+
+#: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:23
+#, php-format
+msgid "Event %s nemá nastavený generátor platieb"
+msgstr ""
+
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:63
+msgid "Pokračovať k sumarizácii"
+msgstr ""
+
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:81
+msgid "Potvrdiť platbu a napočítať cenu"
+msgstr ""
+
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:99
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:131
+msgid "Zrusit platbu"
+msgstr ""
+
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:114
+msgid "Zaplatil"
+msgstr ""
+
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:63
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:57
+#, php-format
+msgid "Mena %s nieje implentovaná"
+msgstr ""
+
+#: i18n/../app/model/Payment/PriceCalculator/Price.php:57
+#, fuzzy, php-format
+msgid "Currency %s doesnt exists"
+msgstr "Tým neexistuje"
+
+#: i18n/../app/model/Payment/Handler/PaymentDataHandler.php:48
+#, php-format
+msgid "Ubytovanie \"%s\" má už vygenrovanú platbu."
+msgstr ""
+
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:73
 msgid "TeamID"
 msgstr ""
@@ -483,6 +555,15 @@ msgstr ""
 msgid "Vyskytla se chyba"
 msgstr ""
 
+#: i18n/../app/model/Transitions/Machine/Machine.php:74
+#, php-format
+msgid "Transition %s is not available"
+msgstr ""
+
+#: i18n/../app/model/Transitions/Machine/Machine.php:87
+msgid "Prechod sa nedá vykonať"
+msgstr ""
+
 #: i18n/../app/model/Events/Exceptions.php:22
 #, php-format
 msgid "Nelze provést akci '%s' v automatu '%s'."
@@ -496,41 +577,41 @@ msgstr ""
 msgid "CSV soubor neobsahuje platnou hlavičku."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:150
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:151
 #, php-format
 msgid "Přihláška '%s' vytvořena."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:153
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:154
 msgid "Přihláška smazána."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:155
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:156
 #, php-format
 msgid "Stav přihlášky '%s' změněn."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:158
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:159
 #, php-format
 msgid "Přihláška '%s' uložena."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:164
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:165
 #, php-format
 msgid "Některá pole skupiny '%s' neodpovídají existujícímu záznamu."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:169
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:170
 #, php-format
 msgid "Data ve skupině '%s' kolidují s již existující přihláškou."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:215
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:220
 #, php-format
 msgid "Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'."
 msgstr ""
 
-#: i18n/../app/model/Events/Model/ApplicationHandler.php:260
+#: i18n/../app/model/Events/Model/ApplicationHandler.php:265
 msgid "Chyba při ukládání přihlášky."
 msgstr ""
 
@@ -626,6 +707,11 @@ msgstr ""
 msgid "zaniklý"
 msgstr ""
 
+#: i18n/../app/model/ORM/services/ServicePaymentAccommodation.php:55
+#, php-format
+msgid "Ubytovanie \"%s\" má už vygenrovanú inú platbu."
+msgstr ""
+
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateOrgException.php:8
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateApplicationException.php:8
 #, php-format
@@ -637,9 +723,19 @@ msgstr ""
 msgid "Invalid postal code %d."
 msgstr "Neplatné PSČ %d."
 
+#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:44
+#, php-format
+msgid "Ubytovaní pre osobu %s od %s do %s v hoteli %s"
+msgstr ""
+
 #: i18n/../app/model/ORM/models/ModelEvent.php:98
 msgid "Herné parametre niesu nastavené"
 msgstr "Herní parametry nejsou nastavené"
+
+#: i18n/../app/model/ORM/models/ModelEventAccommodation.php:94
+#, php-format
+msgid "Ubytovaní od %s do %s v hoteli %s."
+msgstr ""
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:77
 msgid "Import úloh"
@@ -1170,6 +1266,7 @@ msgid "Zadejte e-mail"
 msgstr ""
 
 #: i18n/../app/PublicModule/presenters/RegisterPresenter.php:268
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:61
 msgid "e-mail"
 msgstr ""
 
@@ -1365,12 +1462,17 @@ msgstr ""
 msgid "Accommodation"
 msgstr "Ubytování"
 
-#: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:53
+#: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:46
+#, php-format
+msgid "Položka \"%s\" má už vygenerovanú platu, teda nejde zmazať."
+msgstr ""
+
+#: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:61
 #, php-format
 msgid "Osobu %s sa nepodarilo ubytovať na hotely \"%s\" v dni %s"
 msgstr "Osobu %s se nepodařilo ubytovat na hotelu \"%s\" dne %s"
 
-#: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:77
+#: i18n/../app/Components/Forms/Controls/PersonAccommodation/Handler.php:85
 #, php-format
 msgid "Type \"%s\" is not implement."
 msgstr "Typ \"%s\" není implementovaný."
@@ -1779,6 +1881,28 @@ msgstr ""
 msgid "Pokud nelze školu nalézt, napište na %s."
 msgstr ""
 
+#: i18n/../app/Components/Forms/Factories/PaymentFactory.php:43
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:58
+msgid "Person"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PaymentFactory.php:49
+msgid "Save"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/PaymentFactory.php:69
+#, fuzzy
+msgid "Edit payment"
+msgstr "Smazat platbu"
+
+#: i18n/../app/Components/Forms/Factories/Payment/CurrencyField.php:10
+msgid "Currency"
+msgstr ""
+
+#: i18n/../app/Components/Forms/Factories/Payment/CurrencyField.php:15
+msgid "Select currency"
+msgstr ""
+
 #: i18n/../app/Components/Forms/Factories/PersonHistory/StudyYearField.php:21
 #: i18n/../app/Components/Grids/ContestantsGrid.php:41
 msgid "Ročník"
@@ -2081,13 +2205,18 @@ msgid "Zvolený stát neodpovídá zadanému PSČ."
 msgstr ""
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:64
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:48
 #: i18n/../www/js/TypeScriptSources/src/events/accommodation/components/price.tsx.tsx2php:25
+#: i18n/../www/js/TypeScriptSources/src/payment/select-field/components/row.tsx.tsx2php:41
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/schedule/components/compact-value.tsx.tsx2php:60
 msgid "Price"
 msgstr "Cena"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:54
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:45
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:96
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:97
 #: i18n/../app/Components/Grids/TeachersGrid.php:74
 #: i18n/../app/Components/Grids/TeachersGrid.php:75
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:74
@@ -2192,6 +2321,79 @@ msgstr ""
 msgid "Přidat organizátora"
 msgstr ""
 
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:68
+msgid "CS"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:69
+msgid "VS"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:70
+msgid "SS"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:71
+msgid "Bank acc."
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:72
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:49
+msgid "State"
+msgstr "Stav"
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:77
+#, fuzzy
+msgid "Actions"
+msgstr "akce"
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:106
+#, fuzzy
+msgid "Payment doesnt exists."
+msgstr "Tým neexistuje"
+
+#: i18n/../app/Components/Grids/Payment/OrgPaymentGrid.php:112
+msgid "Prechod vykonaný"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/PaymentStateLabel.php:38
+msgid "Nová platba"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/PaymentStateLabel.php:41
+msgid "Čaká na zaplatenie"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/PaymentStateLabel.php:44
+msgid "Zrušená platba"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/PaymentStateLabel.php:47
+msgid "Platba prijatá"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:42
+#: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:42
+msgid "#"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:45
+#, fuzzy
+msgid "Event"
+msgstr "Akce \"%s\""
+
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:52
+#, fuzzy
+msgid "Status"
+msgstr "Stav"
+
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:60
+#: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:61
+#: i18n/../app/Components/Grids/Events/DispatchGrid.php:86
+#: i18n/../app/Components/Grids/Events/DispatchGrid.php:87
+msgid "Detail"
+msgstr "Detail"
+
 #: i18n/../app/Components/Grids/SubmitsGrid.php:74
 msgid "Čas odevzdání"
 msgstr ""
@@ -2251,10 +2453,6 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:41
 msgid "Id úlohy"
-msgstr ""
-
-#: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:42
-msgid "#"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:43
@@ -2367,15 +2565,6 @@ msgstr "Organizátor akce"
 msgid "Contest org"
 msgstr "Organizátor soutěže"
 
-#: i18n/../app/Components/Grids/Events/DispatchGrid.php:86
-#: i18n/../app/Components/Grids/Events/DispatchGrid.php:87
-msgid "Detail"
-msgstr "Detail"
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:49
-msgid "State"
-msgstr "Stav"
-
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:54
 msgid "Paid"
 msgstr "Zaplaceno"
@@ -2482,6 +2671,11 @@ msgstr ""
 msgid "Klíčový atribut"
 msgstr ""
 
+#: i18n/../app/presenters/MyPaymentPresenter.php:16
+#, fuzzy
+msgid "My payment"
+msgstr "Smazat platbu"
+
 #: i18n/../app/presenters/ErrorPresenter.php:20
 msgid "Chyba"
 msgstr ""
@@ -2536,7 +2730,7 @@ msgstr ""
 
 #: i18n/../app/presenters/SettingsPresenter.php:58
 #: i18n/../app/templates/@layout.latte.latte2php:47
-#: i18n/../app/templates/@layout.v4.latte.latte2php:50
+#: i18n/../app/templates/@layout.v4.latte.latte2php:51
 msgid "Nastavení"
 msgstr ""
 
@@ -2575,7 +2769,7 @@ msgstr ""
 
 #: i18n/../app/modules/FyziklaniModule/templates/Results/results-layout.latte.latte2php:48
 #: i18n/../app/templates/@layout.latte.latte2php:77
-#: i18n/../app/templates/@layout.v4.latte.latte2php:81
+#: i18n/../app/templates/@layout.v4.latte.latte2php:84
 msgid "Správce systému"
 msgstr ""
 
@@ -2721,8 +2915,12 @@ msgid "Uživatel"
 msgstr ""
 
 #: i18n/../app/templates/@layout.latte.latte2php:49
-#: i18n/../app/templates/@layout.v4.latte.latte2php:52
+#: i18n/../app/templates/@layout.v4.latte.latte2php:54
 msgid "Odhlásit"
+msgstr ""
+
+#: i18n/../app/templates/@layout.v4.latte.latte2php:52
+msgid "Moje platby"
 msgstr ""
 
 #: i18n/../app/config/exports.neon.neon2php:12
@@ -3105,6 +3303,10 @@ msgstr ""
 msgid "Odebrat člena"
 msgstr ""
 
+#: i18n/../data/events/fyziklani/fyziklani12payment.neon.neon2php:9
+msgid "Pokračovať k vytvoreniu platby"
+msgstr ""
+
 #: i18n/../data/events/fyziklani/fyziklani12.neon.neon2php:139
 msgid ""
 "Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu "
@@ -3205,6 +3407,10 @@ msgstr ""
 #: i18n/../www/js/TypeScriptSources/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr "zdarma"
+
+#: i18n/../www/js/TypeScriptSources/src/payment/select-field/components/row.tsx.tsx2php:32
+msgid "Item has already another payment"
+msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/multi-filter-control.tsx.tsx2php:36
 msgid "Active filters"

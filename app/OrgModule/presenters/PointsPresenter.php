@@ -107,7 +107,7 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     public function renderDefault() {
-        $this['pointsForm']->getForm()->setDefaults();
+        $this->getComponent('pointsForm')->getForm()->setDefaults();
         $this->template->showAll = (bool)$this->all;
     }
 

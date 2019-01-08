@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use Nette\Application\ForbiddenRequestException;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -56,13 +54,13 @@ class Transition {
         return $this->toState;
     }
 
-    function __construct(string $fromState = null, string $toState, string $label) {
+    function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;
     }
 
-    public function getId() {
+    public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
 
@@ -84,9 +82,9 @@ class Transition {
 
     /**
      * @param IStateModel $model
-     * @return mixed
+     * @return bool
      */
-    public function canExecute($model) {
+    public function canExecute($model): bool {
         return ($this->condition)($model);
     }
 

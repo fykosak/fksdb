@@ -250,7 +250,7 @@ class PaymentPresenter extends BasePresenter {
             /**
              * @var $formControl FormControl
              */
-            $formControl = $this['editForm'];
+            $formControl = $this->getComponent('editForm');
             $values = $this->getModel()->toArray();
             $values['payment_accommodation'] = $this->serializePaymentAccommodation();
             $formControl->getForm()->setDefaults($values);

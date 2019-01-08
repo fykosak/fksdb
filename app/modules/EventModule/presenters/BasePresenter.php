@@ -62,7 +62,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         /**
          * @var $languageChooser LanguageChooser
          */
-        $languageChooser = $this['languageChooser'];
+        $languageChooser =  $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         if (!$this->eventExist()) {

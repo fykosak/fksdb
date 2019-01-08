@@ -54,7 +54,7 @@ class EventPrice extends AbstractPreProcess {
                 $amount = $modelEventAccommodation->price;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()));
+                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()),501);
         }
         return new Price($amount, $price->getCurrency());
     }

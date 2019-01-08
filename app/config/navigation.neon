@@ -45,7 +45,7 @@ navigation:
             - fyziklani
         fyziklani.dashboard.default:
             - fyziklani.submit.entry
-            - fyziklani.submit.table
+            - fyziklani.submit.list
             - fyziklani.close.list
             - fyziklani.results.default
             - fyziklani.task.list

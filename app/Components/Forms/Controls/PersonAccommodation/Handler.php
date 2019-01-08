@@ -82,7 +82,7 @@ class Handler {
                     $data = (array)json_decode($datum);
                     break;
                 default:
-                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
+                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type), 501);
             }
         }
 

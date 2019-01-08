@@ -42,7 +42,7 @@ class SubmitsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        $paginator = $this['paginator'];
+        $paginator =  $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
         //
         // data

@@ -20,12 +20,12 @@ abstract class BaseGrid extends Grid {
 
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
-        $paginator = $this['paginator'];
+        $paginator =  $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
     }
 
     protected function createTemplate($class = NULL) {
-        $this['paginator']->getTemplate()->setTranslator($this->presenter->getTranslator());
+        $this->getComponent('paginator')->getTemplate()->setTranslator($this->presenter->getTranslator());
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -61,7 +61,7 @@ abstract class BaseGrid extends Grid {
             sort($arr);
             $steps = array_values(array_unique($arr));
         }
-        $this['paginator']->getTemplate()->steps = $steps;
+        $this->getComponent('paginator')->getTemplate()->steps = $steps;
 
         parent::render();
     }

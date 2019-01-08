@@ -131,7 +131,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
         $transition->setType(Transition::TYPE_DANGER);
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
+            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit');
         });
         $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
 
