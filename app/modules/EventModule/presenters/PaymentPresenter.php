@@ -183,59 +183,14 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @param Form $form
-     * @throws \FKSDB\Transitions\UnavailableTransitionException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\ForbiddenRequestException
-     */
-    public function handleCreateForm(Form $form) {
-        $values = $form->getValues();
-        /**
-         * @var $model ModelPayment
-         */
-        $model = $this->servicePayment->createNew([
-            'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
-            'event_id' => $this->getEvent()->event_id,
-
-            'state' => null,
-            'currency' => $values->currency,
-        ]);
-        $this->servicePayment->save($model);
-
-        try {
-            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
-        } catch (DuplicateAccommodationPaymentException $e) {
-            $this->flashMessage($e->getMessage());
-            $model->delete();
-            return;
-            // $this->redirect('this');
-            // $this->redirect('edit', ['id' => $model->payment_id]);
-        } catch (EmptyDataException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-            $model->delete();
-            return;
-        }
-
-        foreach ($form->getComponents() as $name => $component) {
-            if ($form->isSubmitted() === $component) {
-                $this->getMachine()->executeTransition($name, $model);
-                $this->redirect('detail', ['id' => $model->payment_id]);
-            }
-        }
-        $this->flashMessage('Platba bola zaregistrovaná');
-
-    }
-
-    /**
      * @return FormControl
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentCreateForm(): FormControl {
-        $control = $this->eventPaymentFactory->createCreateForm($this->getMachine(), $this->getEvent());
+        $control = $this->eventPaymentFactory->createCreateForm($this->getEvent());
         $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleCreateForm($form);
+            $this->handleSubmit($form, true);
         };
         return $control;
     }
@@ -273,30 +228,44 @@ class PaymentPresenter extends BasePresenter {
         return \json_encode($items);
     }
 
-    /**
-     * @param Form $form
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleEditForm(Form $form) {
+    private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
-        $model = $this->getModel();
-        $model->update([
+        if ($create) {
+            $model = $this->servicePayment->createNew([
+                'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
+                'event_id' => $this->getEvent()->event_id,
+                'state' => $this->getMachine()->getInitState(),
+            ]);
+
+        } else {
+            $model = $this->getModel();
+        }
+        $this->servicePayment->updateModel($model, [
             'currency' => $values->currency,
             'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
         ]);
+        $this->servicePayment->save($model);
+
+        $connection = $this->servicePayment->getConnection();
+        $connection->beginTransaction();
 
         try {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
         } catch (DuplicateAccommodationPaymentException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
-            $this->redirect('this');
+            $connection->rollBack();
+            return;
         } catch (EmptyDataException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
-            $this->redirect('this');
+            $connection->rollBack();
+            return;
         }
-        $this->flashMessage(_('Platba bola upravená'));
+        $connection->commit();
+
+        $this->flashMessage($create ? _('Platba bola upravená') : _('Platba bola vytvorená'));
         $this->redirect('detail', ['id' => $model->payment_id]);
     }
+
 
     /**
      * @param Form $form
@@ -358,7 +327,7 @@ class PaymentPresenter extends BasePresenter {
     public function createComponentEditForm(): FormControl {
         $control = $this->eventPaymentFactory->createEditForm($this->isContestsOrgAllowed($this->getModel(), 'org.edit'), $this->getEvent());
         $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleEditForm($form);
+            $this->handleSubmit($form, false);
         };
         return $control;
     }

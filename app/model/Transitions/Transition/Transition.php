@@ -80,6 +80,10 @@ class Transition {
         $this->condition = $closure;
     }
 
+    public function isCreating(): bool {
+        return $this->fromState === Machine::STATE_INIT;
+    }
+
     /**
      * @param IStateModel $model
      * @return bool

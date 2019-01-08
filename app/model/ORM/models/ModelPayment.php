@@ -82,7 +82,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return bool
      */
     public function canEdit(): bool {
-        return \in_array($this->getState(), [self::STATE_NEW]);
+        return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
     public function getPrice(): Price {

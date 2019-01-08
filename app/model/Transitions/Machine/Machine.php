@@ -52,7 +52,7 @@ class Machine {
         if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
-        return array_filter($this->transitions, function (Transition $transition) use ($model, $state) {
+        return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
             return ($transition->getFromState() === $state) && $transition->canExecute($model);
         });
     }
@@ -102,5 +102,9 @@ class Machine {
         /* select from DB new (updated) model */
         $newModel = $model->refresh();
         $transition->afterExecute($newModel);
+    }
+
+    public function getInitState(): string {
+        return self::STATE_INIT;
     }
 }

@@ -93,24 +93,29 @@ class ApplicationHandler {
     }
 
     public final function store(Holder $holder, $data) {
-        $this->_storeAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
+        $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
     }
 
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
      * @param mixed $explicitTransitionName
-     * @param mixed $explicitMachineName
      */
-    public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null, $explicitMachineName = null) {
-        $this->_storeAndExecute($holder, $data, $explicitTransitionName, $explicitMachineName, self::STATE_TRANSITION);
+    public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
+        $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
-    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $explicitMachineName, $execute) {
+    /**
+     * @param Holder $holder
+     * @param $data
+     * @param $explicitTransitionName
+     * @param $execute
+     */
+    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
         $this->initializeMachine($holder);
 
         try {
-            $explicitMachineName = $explicitMachineName ?: $this->machine->getPrimaryMachine()->getName();
+            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
 
             $this->beginTransaction();
 
@@ -148,26 +153,26 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(sprintf(_("Přihláška '%s' vytvořena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-                $this->logger->log(_("Přihláška smazána."), ILogger::SUCCESS);
+                $this->logger->log(_('Přihláška smazána.'), ILogger::SUCCESS);
             } else if (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(sprintf(_("Stav přihlášky '%s' změněn."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
+                $this->logger->log(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO);
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(sprintf(_("Přihláška '%s' uložena."), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
+                $this->logger->log(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
             }
         } catch (ModelDataConflictException $e) {
             $container = $e->getReferencedId()->getReferencedContainer();
             $container->setConflicts($e->getConflicts());
 
-            $message = sprintf(_("Některá pole skupiny '%s' neodpovídají existujícímu záznamu."), $container->getOption('label'));
+            $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);
         } catch (SecondaryModelDataConflictException $e) {
-            $message = sprintf(_("Data ve skupině '%s' kolidují s již existující přihláškou."), $e->getBaseHolder()->getLabel());
+            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $e->getBaseHolder()->getLabel());
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
             $this->reraise($e);
@@ -195,6 +200,14 @@ class ApplicationHandler {
         }
     }
 
+    /**
+     * @param $data
+     * @param $transitions
+     * @param Holder $holder
+     * @param $execute
+     * @return mixed
+     * @throws MachineExecutionException
+     */
     private function processData($data, $transitions, Holder $holder, $execute) {
         if ($data instanceof Form) {
             $values = FormUtils::emptyStrToNull($data->getValues());
@@ -217,7 +230,7 @@ class ApplicationHandler {
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (!($this->machine->getBaseMachine($name)->getState() == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                    $msg = _("Ze stavu '%s' automatu '%s' neexistuje přechod do stavu '%s'.");
+                    $msg = _('Ze stavu "%s" automatu "%s" neexistuje přechod do stavu "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName(), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
@@ -225,6 +238,9 @@ class ApplicationHandler {
         return $transitions;
     }
 
+    /**
+     * @param Holder $holder
+     */
     private function initializeMachine(Holder $holder) {
         if (!$this->machine) {
             $this->machine = $this->container->createEventMachine($this->event);
@@ -234,6 +250,9 @@ class ApplicationHandler {
         }
     }
 
+    /**
+     * @param $data
+     */
     private function formRollback($data) {
         if ($data instanceof Form) {
             foreach ($data->getComponents(true, 'FKSDB\Components\Forms\Controls\ReferencedId') as $referencedId) {
@@ -255,12 +274,18 @@ class ApplicationHandler {
         }
     }
 
+    /**
+     * @param bool $final
+     */
     public function commit($final = false) {
         if ($this->connection->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
     }
 
+    /**
+     * @param Exception $e
+     */
     private function reRaise(Exception $e) {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }

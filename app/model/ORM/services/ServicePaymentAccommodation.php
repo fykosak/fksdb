@@ -10,6 +10,7 @@ use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use Nette\ArrayHash;
 use Nette\Diagnostics\Debugger;
+use Submits\StorageException;
 
 class ServicePaymentAccommodation extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_PAYMENT_ACCOMMODATION;
@@ -41,7 +42,9 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
                 $row->delete();
             }
         }
-        $this->connection->beginTransaction();
+        if (!$this->connection->inTransaction()) {
+            throw new StorageException(_('Not in transaction!'));
+        }
         foreach ($newAccommodationIds as $id) {
 
             /**
@@ -50,7 +53,6 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
             $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
             $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();
             if ($count > 0) {
-                $this->connection->rollBack();
                 throw new DuplicateAccommodationPaymentException(sprintf(
                     _('Ubytovanie "%s" má už vygenrovanú inú platbu.'),
                     $model->getEventPersonAccommodation()->getLabel()
@@ -58,7 +60,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
             }
             $this->save($model);
         }
-        $this->connection->commit();
+
     }
 
     /**

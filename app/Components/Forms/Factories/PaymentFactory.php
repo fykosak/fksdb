@@ -12,7 +12,6 @@ use FKSDB\Components\Forms\Factories\Payment\CurrencyField;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\Transition\PaymentMachine;
-use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 
 class PaymentFactory {
@@ -50,35 +49,20 @@ class PaymentFactory {
         return $control;
     }
 
-    public function createCreateForm(PaymentMachine $machine, ModelEvent $event) {
+    public function createCreateForm(ModelEvent $event) {
         $control = new FormControl();
         $form = $control->getForm();
         $currencyField = new CurrencyField();
         $currencyField->setRequired(true);
         $form->addComponent($currencyField, 'currency');
         $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $event, false), 'payment_accommodation');
-        $this->appendTransitionsButtons(null, $machine, $form);
+        $form->addSubmit('submit', _('Create payment'));
         return $control;
     }
 
     public function createDetailControl(ModelPayment $modelPayment, ITranslator $translator, PaymentMachine $machine) {
-
-        $control = new DetailControl($translator, $machine->getPriceCalculator(), $modelPayment);
-        $form = $control->getFormControl()->getForm();
-        if ($modelPayment->canEdit()) {
-            $form->addSubmit('edit', _('Edit payment'));
-        }
-
-        $this->appendTransitionsButtons($modelPayment, $machine, $form);
-        return $control;
+        return new DetailControl($translator, $machine, $modelPayment);
     }
 
-    private function appendTransitionsButtons($model, PaymentMachine $machine, Form $form) {
-        $transitions = $machine->getAvailableTransitions($model);
-        foreach ($transitions as $transition) {
-            $button = $form->addSubmit($transition->getId(), $transition->getLabel());
-            $button->getControlPrototype()->addAttributes(['class' => 'btn btn-' . $transition->getType()]);
-        }
 
-    }
 }

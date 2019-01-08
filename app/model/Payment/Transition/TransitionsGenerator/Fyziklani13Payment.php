@@ -45,7 +45,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             throw new BadRequestException('Očakvaná sa trieda PaymentMachine');
         }
 
-        $this->addTransitionInitToNew($machine);
         $this->addTransitionNewToWaiting($machine);
         $this->addTransitionNewToCanceled($machine);
         $this->addTransitionWaitingToReceived($machine);
@@ -57,15 +56,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->setSymbolGenerator($this->symbolGeneratorFactory->createGenerator($event));
         $machine->setPriceCalculator($this->priceCalculatorFactory->createCalculator($event));
         return $machine;
-    }
-
-    private function addTransitionInitToNew(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Pokračovať k sumarizácii'));
-        $transition->setCondition(
-            function () {
-                return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-01-01 00:00:00'));
-            });
-        $machine->addTransition($transition);
     }
 
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
