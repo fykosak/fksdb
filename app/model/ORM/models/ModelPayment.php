@@ -29,12 +29,14 @@ use Nette\Security\IResource;
  * @property string variable_symbol
  * @property string specific_symbol
  * @property string bank_account
+ * @property string iban
+ * @property string swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel {
-    const STATE_WAITING = 'waiting'; // waitign for confimr payment
-    const STATE_RECEIVED = 'received'; // platba prijatá
-    const STATE_CANCELED = 'canceled'; // platba zrušená
-    const STATE_NEW = 'new'; // nová platba
+    const STATE_WAITING = 'waiting'; // waiting for confirm payment
+    const STATE_RECEIVED = 'received'; // payment received
+    const STATE_CANCELED = 'canceled'; // payment canceled
+    const STATE_NEW = 'new'; // new payment
 
     /**
      * @return ModelPerson
@@ -147,7 +149,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
                 return _('Payment canceled');
 
             case ModelPayment::STATE_RECEIVED:
-                return _('Payment recieved');
+                return _('Payment received');
             default:
                 return $this->state;
         }

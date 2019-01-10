@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 01:24+0100\n"
+"POT-Creation-Date: 2019-01-10 04:19+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -19,32 +19,32 @@ msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/ApplicationsTimeProgressPresenter.php:27
 msgid "Applications time progress"
-msgstr ""
+msgstr "Časový vývoj prihlášiek"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:106
 #, php-format
 msgid "Úprava ubytovaní v hoteli \"%s\" v dni %s"
-msgstr ""
+msgstr "Úprava ubytovania v hoteli \"%s\" v dni %s"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:114
 #, php-format
 msgid "Založit ubytovaní"
-msgstr ""
+msgstr "založiť ubytovanie"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:119
 #, php-format
 msgid "Ubytovaní"
-msgstr ""
+msgstr "Ubytovanie"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:131
 #, php-format
 msgid "List of accommodated people of hostel \"%s\" at %s"
-msgstr ""
+msgstr "Zoznam ubytovaných ľudí v hosteli \"%s\" v %s"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:154
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:91
 msgid "Vložit"
-msgstr ""
+msgstr "Vložiť"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:167
 #: i18n/../app/OrgModule/presenters/ExtendedPersonPresenter.php:93
@@ -59,7 +59,7 @@ msgstr ""
 #: i18n/../app/Components/Controls/Events/ApplicationComponent.php:140
 #: i18n/../app/presenters/SettingsPresenter.php:115
 msgid "Uložit"
-msgstr ""
+msgstr "Uložiť"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:200
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:12
@@ -70,47 +70,47 @@ msgstr ""
 #: i18n/../app/Components/Grids/ContestantsGrid.php:49
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:44
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:201
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:13
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:50
 msgid "Capacity"
-msgstr ""
+msgstr "Kapacita"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:14
 msgid "Price Kč"
-msgstr ""
+msgstr "Cena v Kč"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 msgid "Cena by mala byť číslo"
-msgstr ""
+msgstr "Cena by mala byť číslo"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:15
 msgid "Price €"
-msgstr ""
+msgstr "Cena v €"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:206
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:16
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:47
 #: i18n/../www/js/TypeScriptSources/src/events/accommodation/components/matrix/index.tsx.tsx2php:44
 msgid "Date"
-msgstr ""
+msgstr "Dátum"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:252
 msgid "Accommodation does not exists"
-msgstr ""
+msgstr "Ubytnovanie neexistuje"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:256
 msgid "Ubytovanie nepatrí k tomuto eventu"
-msgstr ""
+msgstr "Ubytovanie nepatrí k tejto akcii"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:302
 msgid "Ubytovaní založeno"
-msgstr ""
+msgstr "Ubytovanie založené"
 
 #: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:308
 msgid "Chyba při zakládání ubytovani."
@@ -135,39 +135,51 @@ msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/DispatchPresenter.php:68
 msgid "List of events"
-msgstr ""
+msgstr "Zoznam akcií"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:66
-#, php-format
-msgid "Nová platba akcie %s"
-msgstr ""
+#: i18n/../app/model/ORM/models/ModelPayment.php:143
+msgid "New payment"
+msgstr "Nová platba"
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:74
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:76
 #, php-format
-msgid "Úprava platby #%s"
-msgstr ""
+msgid "Edit payment #%s"
+msgstr "Uprava platby #%s"
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:82
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:86
 #, php-format
 msgid "Payment detail #%s"
-msgstr ""
+msgstr "Detail platby #%s"
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:90
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:94
 #, php-format
 msgid "List of payments"
+msgstr "Zoznam platieb"
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:167
+msgid "Payment does not exists"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:161
-msgid "Platba neexistuje"
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:172
+msgid "Payment does not belong to this event"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:218
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:188
+msgid "Expected class PaymentMachine"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:201
+msgid "Event has not payment API"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:227
 #, php-format
-msgid "Platba #%s sa nedá editvať"
+msgid "Payment #%s can not be edited"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:229
-msgid "Platby niesu spustené!"
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:238
+msgid "Payment is not allowed in this time!"
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:19
@@ -458,9 +470,13 @@ msgstr ""
 msgid "Neplatné přihlašovací údaje."
 msgstr ""
 
-#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:17
+#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:19
 #, php-format
 msgid "Payment #%s has already generated symbols."
+msgstr ""
+
+#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:38
+msgid "Unsupported currency"
 msgstr ""
 
 #: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:27
@@ -485,8 +501,12 @@ msgstr ""
 msgid "Zaplatil"
 msgstr ""
 
-#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:59
-#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:57
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
+#, php-format
+msgid "Currency %s is not implemented."
+msgstr ""
+
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:53
 #, php-format
 msgid "Mena %s nieje implentovaná"
 msgstr ""
@@ -498,7 +518,7 @@ msgstr ""
 
 #: i18n/../app/model/Payment/Handler/PaymentDataHandler.php:51
 #, php-format
-msgid "Ubytovanie \"%s\" má už vygenrovanú platbu."
+msgid "Item \"%s\" has already generated payment."
 msgstr ""
 
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:73
@@ -748,20 +768,16 @@ msgstr ""
 msgid "Herné parametre niesu nastavené"
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:141
-msgid "New payment"
-msgstr ""
-
-#: i18n/../app/model/ORM/models/ModelPayment.php:144
+#: i18n/../app/model/ORM/models/ModelPayment.php:146
 msgid "Waiting for paying"
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:147
+#: i18n/../app/model/ORM/models/ModelPayment.php:149
 msgid "Payment canceled"
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:150
-msgid "Payment recieved"
+#: i18n/../app/model/ORM/models/ModelPayment.php:152
+msgid "Payment received"
 msgstr ""
 
 #: i18n/../app/model/ORM/models/ModelEventAccommodation.php:94
@@ -3600,11 +3616,11 @@ msgstr ""
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/helpers/downloader/components/index.tsx.tsx2php:62
 msgid "Fetch"
-msgstr ""
+msgstr "Stihnúť"
 
 #: i18n/../www/js/TypeScriptSources/src/fyziklani/results/components/results/filter/filters.ts.ts2php:15
 msgid "All"
-msgstr ""
+msgstr "Všetky"
 
 #, fuzzy
 #~ msgid "Přihlásen"

@@ -48,13 +48,12 @@ class PaymentDataHandler {
             } catch (\ModelException $e) {
                 if ($e->getPrevious() && $e->getPrevious()->getCode() == 23000) {
                     throw new StorageException(sprintf(
-                        _('Ubytovanie "%s" má už vygenrovanú platbu.'),
+                        _('Item "%s" has already generated payment.'),
                         $model->getEventPersonAccommodation()->getLabel()
                     ));
                 }
                 throw $e;
             }
-
         }
     }
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\Payment;
-
 
 use FKSDB\Payment\PriceCalculator\Price;
 use Nette\Application\UI\Control;

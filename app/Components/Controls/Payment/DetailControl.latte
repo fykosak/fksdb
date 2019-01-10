@@ -1,26 +1,65 @@
 <div class="h2">{control stateLabel}</div>
 {control stateDisplay}
+<hr/>
+{if $model->hasGeneratedSymbols()}
+    <h2>{_('Informacie o platbe')}</h2>
+
+    {if $model->constant_symbol}
+        <div class="row">
+            <b class="col-2">{_('Constant symbol')}:</b>
+            <span class="col-10">{$model->constant_symbol}</span>
+        </div>
+    {/if}
+    {if $model->variable_symbol}
+        <div class="row">
+            <b class="col-2">{_('Variable symbol')}:</b>
+            <span class="col-10">{$model->variable_symbol}</span>
+        </div>
+    {/if}
+    {if $model->specific_symbol}
+        <div class="row">
+            <b class="col-2">{_('Specific symbol')}:</b>
+            <span class="col-10">{$model->specific_symbol}</span>
+        </div>
+    {/if}
+    {if $model->bank_account}
+        <div class="row">
+            <b class="col-2">{_('Bank account')}:</b>
+            <span class="col-10">{$model->bank_account}</span>
+        </div>
+    {/if}
+    {if $model->iban}
+        <div class="row">
+            <b class="col-2">{_('IBAN')}:</b>
+            <span class="col-10">{$model->iban}</span>
+        </div>
+    {/if}
+    {if $model->swift}
+        <div class="row">
+            <b class="col-2">{_('SWIFT')}:</b>
+            <span class="col-10">{$model->swift}</span>
+        </div>
+    {/if}
+    {if $model->price}
+        <div class="row">
+            <b class="col-2">{_('Price')}:</b>
+            <span class="col-10">{$model->getPrice()->__toString()}</span>
+        </div>
+    {/if}
+    <hr/>
+{/if}
+
 <h2>{_('Informace o platcovi')}</h2>
-<form>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">{_('Name')}</label>
-        <div class="col-sm-10">
-            <input class="form-control-plaintext"
-                   readonly
-                   value="{$model->getPerson()->getFullName()}"
-                   title="name"/>
-        </div>
+<div>
+    <div class="row">
+        <b class="col-2">{_('Name')}:</b>
+        <span class="col-10">{$model->getPerson()->__toString()}</span>
     </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">{_('Email')}</label>
-        <div class="col-sm-10">
-            <input class="form-control-plaintext"
-                   readonly
-                   value="{$model->getPerson()->getInfo()->email}"
-                   title="email"/>
-        </div>
+    <div class="row">
+        <b class="col-2">{_('Email')}:</b>
+        <span class="col-10">{$model->getPerson()->getInfo()->email}</span>
     </div>
-</form>
+</div>
 <hr/>
 <h2>{_('Items')}</h2>
 <table class="table table-striped">
@@ -49,67 +88,5 @@
 {control form}
 <hr/>
 
-{if $model->hasGeneratedSymbols()}
-    <h2>{_('Informacie o platbe')}</h2>
-    <form>
-        {if $model->constant_symbol}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Constant symbol')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->constant_symbol}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-        {if $model->variable_symbol}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Variable_symbol')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->variable_symbol}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-        {if $model->specific_symbol}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Specific symbol')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->specific_symbol}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-
-        {if $model->bank_account}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Bank account')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->bank_account}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-
-        {if $model->price}
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">{_('Price')}</label>
-                <div class="col-sm-10">
-                    <input class="form-control-plaintext"
-                           readonly
-                           value="{$model->price} {FKSDB\Payment\PriceCalculator\Price::getLabel($model->currency)}"
-                           title="name"/>
-                </div>
-            </div>
-        {/if}
-    </form>
-{/if}
 {control transitionButtons}
 

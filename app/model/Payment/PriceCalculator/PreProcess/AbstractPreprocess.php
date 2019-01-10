@@ -10,9 +10,4 @@ abstract class AbstractPreProcess {
     abstract public static function calculate(ModelPayment $modelPayment): Price;
 
     abstract static public function getGridItems(ModelPayment $modelPayment): array;
-
-    protected function getData(ModelPayment $modelPayment) {
-        return null;
-    }
-
 }

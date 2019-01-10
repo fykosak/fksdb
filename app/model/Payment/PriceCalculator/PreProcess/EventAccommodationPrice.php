@@ -22,6 +22,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
         }
         return $price;
     }
+
     /**
      * @param ModelPayment $modelPayment
      * @return array
@@ -56,16 +57,8 @@ class EventAccommodationPrice extends AbstractPreProcess {
                 $amount = $modelEventAccommodation->price_eur;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Mena %s nieje implentovaná'), $price->getCurrency()), 501);
+                throw new NotImplementedException(\sprintf(_('Currency %s is not implemented.'), $price->getCurrency()), 501);
         }
         return new Price($amount, $price->getCurrency());
-    }
-
-    /**
-     * @param ModelPayment $modelPayment
-     * @return ModelEventPersonAccommodation[]|null
-     */
-    protected function getData(ModelPayment $modelPayment) {
-        return $modelPayment->getRelatedPersonAccommodation();
     }
 }

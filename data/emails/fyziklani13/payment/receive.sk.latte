@@ -1,0 +1,8 @@
+<div>
+    Platba {$model->getPaymentId()} prijatá
+    Platba vo výške {$model->getPrice()->__toString()}
+
+    {include './items.latte'}
+
+    {include './signature.cs.latte'}
+</div>

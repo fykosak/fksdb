@@ -28,10 +28,6 @@ class EventPrice extends AbstractPreProcess {
         return new Price(0, $modelPayment->currency);
     }
 
-    protected function getData(ModelPayment $modelPayment) {
-        return [];
-    }
-
     public static function getGridItems(ModelPayment $modelPayment): array {
         /*$price = new Price(0, $modelPayment->currency);
         $items = [];

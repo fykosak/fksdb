@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 01:24+0100\n"
+"POT-Creation-Date: 2019-01-10 04:19+0100\n"
 "PO-Revision-Date: 2019-01-05 07:32+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -139,37 +139,50 @@ msgid "List of events"
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:66
-#, php-format
-msgid "Nová platba akcie %s"
-msgstr "New payment of event %s"
+#: i18n/../app/model/ORM/models/ModelPayment.php:143
+msgid "New payment"
+msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:74
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:76
 #, php-format
-msgid "Úprava platby #%s"
-msgstr "Edit payment #%s"
+msgid "Edit payment #%s"
+msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:82
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:86
 #, php-format
 msgid "Payment detail #%s"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:90
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:94
 #, php-format
 msgid "List of payments"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:161
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:167
 #, fuzzy
-msgid "Platba neexistuje"
-msgstr "Person does not exist"
+msgid "Payment does not exists"
+msgstr "Payment doesn't exist."
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:218
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:172
+#, fuzzy
+msgid "Payment does not belong to this event"
+msgstr "Payment doesn't exist."
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:188
+msgid "Expected class PaymentMachine"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:201
+msgid "Event has not payment API"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:227
 #, php-format
-msgid "Platba #%s sa nedá editvať"
-msgstr "Payment #%s cannot be edited"
+msgid "Payment #%s can not be edited"
+msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:229
-msgid "Platby niesu spustené!"
+#: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:238
+msgid "Payment is not allowed in this time!"
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:19
@@ -460,9 +473,13 @@ msgstr "Account not ready."
 msgid "Neplatné přihlašovací údaje."
 msgstr "Invalid credentials."
 
-#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:17
+#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:19
 #, php-format
 msgid "Payment #%s has already generated symbols."
+msgstr ""
+
+#: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:38
+msgid "Unsupported currency"
 msgstr ""
 
 #: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:27
@@ -487,8 +504,12 @@ msgstr "Cancel payment"
 msgid "Zaplatil"
 msgstr "Payed"
 
-#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:59
-#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:57
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
+#, fuzzy, php-format
+msgid "Currency %s is not implemented."
+msgstr "Type \"%s\" is not implemented."
+
+#: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:53
 #, php-format
 msgid "Mena %s nieje implentovaná"
 msgstr "Currency %s is not implemented"
@@ -500,8 +521,8 @@ msgstr "Currency %s doesn't exist"
 
 #: i18n/../app/model/Payment/Handler/PaymentDataHandler.php:51
 #, php-format
-msgid "Ubytovanie \"%s\" má už vygenrovanú platbu."
-msgstr "Accommodation \"%s\" has already generated payment."
+msgid "Item \"%s\" has already generated payment."
+msgstr ""
 
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:73
 msgid "TeamID"
@@ -749,20 +770,16 @@ msgstr "Accommodation for person %s from %s to %s at hotel %s"
 msgid "Herné parametre niesu nastavené"
 msgstr "Game parameters not set"
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:141
-msgid "New payment"
-msgstr ""
-
-#: i18n/../app/model/ORM/models/ModelPayment.php:144
+#: i18n/../app/model/ORM/models/ModelPayment.php:146
 msgid "Waiting for paying"
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:147
+#: i18n/../app/model/ORM/models/ModelPayment.php:149
 msgid "Payment canceled"
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelPayment.php:150
-msgid "Payment recieved"
+#: i18n/../app/model/ORM/models/ModelPayment.php:152
+msgid "Payment received"
 msgstr ""
 
 #: i18n/../app/model/ORM/models/ModelEventAccommodation.php:94
@@ -3635,11 +3652,24 @@ msgstr ""
 msgid "All"
 msgstr ""
 
+#~ msgid "Ubytovanie \"%s\" má už vygenrovanú platbu."
+#~ msgstr "Accommodation \"%s\" has already generated payment."
+
+#~ msgid "Nová platba akcie %s"
+#~ msgstr "New payment of event %s"
+
+#~ msgid "Úprava platby #%s"
+#~ msgstr "Edit payment #%s"
+
+#, fuzzy
+#~ msgid "Platba neexistuje"
+#~ msgstr "Person does not exist"
+
+#~ msgid "Platba #%s sa nedá editvať"
+#~ msgstr "Payment #%s cannot be edited"
+
 #~ msgid "Pokračovať k sumarizácii"
 #~ msgstr "Continue to summary"
-
-#~ msgid "Payment doesnt exists."
-#~ msgstr "Payment doesn't exist."
 
 #~ msgid "Prechod vykonaný"
 #~ msgstr "Change of state done"

@@ -86,6 +86,6 @@ class EventSchedulePrice extends AbstractPreProcess {
                 }
             }
         }
-        throw new BadRequestException('Item nenájdený');
+        throw new BadRequestException('Item not found');
     }
 }
