@@ -1349,6 +1349,8 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
   `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+  `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
+  `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
   INDEX `fk_payment_1_idx` (`event_id` ASC),
   INDEX `fk_payment_2_idx` (`person_id` ASC),
   CONSTRAINT `fk_payment_person_id1`
@@ -1369,7 +1371,7 @@ CREATE TABLE IF NOT EXISTS `payment_accommodation` (
   `payment_accommodation_id`      INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `payment_id`                    INT(11) NOT NULL,
   `event_person_accommodation_id` INT(11) NOT NULL,
-  UNIQUE INDEX `UC_payment_accommodation_1` ( event_person_accommodation_id),
+  UNIQUE INDEX `UC_payment_accommodation_1` (event_person_accommodation_id),
   INDEX `fk_accommodation_payment_1_idx` (`payment_id` ASC),
   INDEX `fk_accommodation_payment_2_idx` (`event_person_accommodation_id` ASC),
   CONSTRAINT `fk_accommodation_payment_event_person_accommodation1`
@@ -1388,23 +1390,26 @@ CREATE TABLE IF NOT EXISTS `payment_accommodation` (
 -- -----------------------------------------------------
 -- Table `fyziklani_game_setup`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`(
-  `event_id` INT(11) NOT NULL PRIMARY KEY,
-  `game_start` DATETIME NOT NULL,
-  `game_end` DATETIME NOT NULL,
-  `result_display` DATETIME NULL DEFAULT NULL,
-  `result_hide` DATETIME NULL NULL DEFAULT NULL,
-  `refresh_delay` INT(11) NOT NULL COMMENT 'in s',
-  `result_hard_display` BOOLEAN NOT NULL,
-  `tasks_on_board` INTEGER NULL DEFAULT NULL,
-  `available_points` VARCHAR(64) NULL DEFAULT NULL COMMENT 'comma serialized points',
+CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
+  `event_id`            INT(11)     NOT NULL PRIMARY KEY,
+  `game_start`          DATETIME    NOT NULL,
+  `game_end`            DATETIME    NOT NULL,
+  `result_display`      DATETIME    NULL      DEFAULT NULL,
+  `result_hide`         DATETIME    NULL NULL DEFAULT NULL,
+  `refresh_delay`       INT(11)     NOT NULL
+  COMMENT 'in s',
+  `result_hard_display` BOOLEAN     NOT NULL,
+  `tasks_on_board`      INTEGER     NULL      DEFAULT NULL,
+  `available_points`    VARCHAR(64) NULL      DEFAULT NULL
+  COMMENT 'comma serialized points',
   CONSTRAINT `fk_fyziklani_game_setup_event`
   FOREIGN KEY (`event_id`)
   REFERENCES `event` (`event_id`)
     ON DELETE RESTRICT
     ON UPDATE RESTRICT
-) ENGINE='InnoDB';
+)
+  ENGINE = 'InnoDB';
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET SQL_MODE = @OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;

@@ -91,7 +91,7 @@ class PaymentPresenter extends BasePresenter {
      *
      */
     public function titleList() {
-        $this->setTitle(\sprintf(_('List of payments')));
+        $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
 
@@ -99,44 +99,48 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    protected function authorizedDetail() {
+    public function authorizedDetail() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);
+            $this->setAuthorized(false);
+            return;
         }
-        return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
+        $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    protected function authorizedEdit() {
+    public function authorizedEdit() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);
+            $this->setAuthorized(false);
+            return;
         }
-        return $this->setAuthorized($this->canEdit());
+        $this->setAuthorized($this->canEdit());
     }
 
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    protected function authorizedCreate() {
+    public function authorizedCreate() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);
+            $this->setAuthorized(false);
+            return;
         }
-        return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
+        $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    protected function authorizedList() {
+    public function authorizedList() {
         if (!$this->hasApi()) {
-            return $this->setAuthorized(false);
+            $this->setAuthorized(false);
+            return;
         }
-        return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
+        $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'list'));
     }
 
     /**

@@ -9,16 +9,20 @@ use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
+use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Transition;
 use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DateTime;
+use Nette\Mail\Message;
 use Nette\NotImplementedException;
 
 
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
+    const EMAIL_BCC = 'fyziklani@fykos.cz';
+    const EMAIL_FROM = 'fyziklani@fykos.cz';
     /**
      * @var SymbolGeneratorFactory
      */
@@ -40,27 +44,30 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $this->priceCalculatorFactory = $priceCalculatorFactory;
     }
 
+    /**
+     * @param Machine $machine
+     * @throws BadRequestException
+     */
     public function createTransitions(Machine &$machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException('Očakvaná sa trieda PaymentMachine');
+            throw new BadRequestException(\sprintf(_('Expected class PaymentMachine, got %s'), \get_class($machine)));
         }
 
         $this->addTransitionInitToNew($machine);
         $this->addTransitionNewToWaiting($machine);
-        $this->addTransitionNewToCanceled($machine);
+        $this->addTransitionAllToCanceled($machine);
         $this->addTransitionWaitingToReceived($machine);
-        $this->addTransitionWaitingToCancel($machine);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return Machine
+     */
     public function createMachine(ModelEvent $event): Machine {
         $machine = new PaymentMachine($this->connection);
         $machine->setSymbolGenerator($this->symbolGeneratorFactory->createGenerator($event));
         $machine->setPriceCalculator($this->priceCalculatorFactory->createCalculator($event));
         return $machine;
-    }
-
-    protected function getConditionInitToNew(): bool {
-        return $this->transitionFactory->getConditionDateFrom(new DateTime('2018-02-01 00:00:00'));
     }
 
     /**
@@ -71,22 +78,19 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Vytvoriť'));
         $transition->setCondition(
             function () {
-                return $this->getConditionInitToNew();
+                return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-15'), new DateTime('2019-02-15'));
             });
         $machine->addTransition($transition);
     }
 
+    /**
+     * @param PaymentMachine $machine
+     */
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
-
-        $options = (object)[
-            'bcc' => 'fyziklani@fykos.cz',
-            'from' => 'fyziklani@fykos.cz',
-            'subject' => 'prijali sme platbu'
-        ];
         $transition = $this->transitionFactory->createTransition(
             ModelPayment::STATE_NEW,
             ModelPayment::STATE_WAITING,
-            _('Potvrdiť platbu a napočítať cenu')
+            _('Confirm payment')
         );
 
         $transition->setType(Transition::TYPE_SUCCESS);
@@ -98,54 +102,68 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
             $modelPayment->updatePrice($machine->getPriceCalculator());
         };
-        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create', $options);
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create',
+            $this->getMailSetupCallback(_('Confirm payment #%s')));
 
         $machine->addTransition($transition);
     }
 
-    private function addTransitionNewToCanceled(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_NEW, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
-        $transition->setType(Transition::TYPE_DANGER);
-        $transition->setCondition(function () {
-            return true;
-        });
-        $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
-        $machine->addTransition($transition);
+    /**
+     * @param string $subject
+     * @return \Closure
+     */
+    private function getMailSetupCallback(string $subject): \Closure {
+        return function (IStateModel $model) use ($subject): Message {
+            $message = new Message();
+            if ($model instanceof ModelPayment) {
+                $message->setSubject(\sprintf($subject, $model->getPaymentId()));
+                $message->addTo($model->getPerson()->getInfo()->email);
+            }
+            $message->setFrom(self::EMAIL_FROM);
+            $message->addBcc(self::EMAIL_BCC);
+            return $message;
+        };
     }
 
+    /**
+     * @param PaymentMachine $machine
+     */
+    private function addTransitionAllToCanceled(PaymentMachine &$machine) {
+        foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
+            $transition = $this->transitionFactory->createTransition($state, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
+            $transition->setType(Transition::TYPE_DANGER);
+            $transition->setCondition(function () {
+                return true;
+            });
+            $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
+            $machine->addTransition($transition);
+        }
+    }
+
+    /**
+     * @param PaymentMachine $machine
+     */
     private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
-        $options = (object)[
-            'bcc' => 'fyziklani@fykos.cz',
-            'from' => 'fyziklani@fykos.cz',
-            'subject' => 'prijali sme platbu'
-        ];
         $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Zaplatil'));
         $transition->beforeExecuteClosures[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
                 $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
             }
         };
-        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive', $options);
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive',
+            $this->getMailSetupCallback(_('We are receive payment #%s')));
 
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-01 00:00:00'), new DateTime('2019-02-15 00:00:00'))
+            return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-01'), new DateTime('2019-02-15'))
                 && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
         });
         $transition->setType(Transition::TYPE_SUCCESS);
         $machine->addTransition($transition);
     }
 
-    private function addTransitionWaitingToCancel(PaymentMachine &$machine) {
-        $transition = $this->transitionFactory->createTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_CANCELED, _('Zrusit platbu'));
-        $transition->setType(Transition::TYPE_DANGER);
-        $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
-        });
-        $transition->beforeExecuteClosures[] = $this->getClosureDeleteRows();
-
-        $machine->addTransition($transition);
-    }
-
+    /**
+     * @return \Closure
+     */
     private function getClosureDeleteRows(): \Closure {
         return function (ModelPayment $modelPayment) {
             foreach ($modelPayment->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {

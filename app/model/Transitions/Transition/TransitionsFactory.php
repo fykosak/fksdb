@@ -4,14 +4,12 @@ namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Localization\ITranslator;
 use Nette\Mail\IMailer;
-use Nette\Mail\Message;
 use Nette\Security\IResource;
 use Nette\Security\User;
 
@@ -66,25 +64,17 @@ class TransitionsFactory {
 
     /**
      * @param string $templateFile
-     * @param $options
+     * @param \Closure $optionsCallback
      * @return \Closure
      */
-    public function createMailCallback(string $templateFile, $options): \Closure {
+    public function createMailCallback(string $templateFile, \Closure $optionsCallback): \Closure {
         $template = $this->mailTemplateFactory->createFromFile($templateFile);
         $template->setTranslator($this->translator);
-
-        $message = new Message();
-        $message->setSubject($options->subject);
-        $message->setFrom($options->from);
-        $message->addBcc($options->bcc);
-
-        //  $message->addAttachment()
-
-        return function (ModelPayment $model) use ($message, $template) {
+        return function (IStateModel $model) use ($optionsCallback, $template) {
+            $message = $optionsCallback($model);
 
             $template->model = $model;
 
-            $message->addTo($model->getPerson()->getInfo()->email);
             $message->setHtmlBody($template);
             $this->mailer->send($message);
         };
