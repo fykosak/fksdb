@@ -25,7 +25,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\BaseControl;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
-use Nette\Utils\Neon;
+use Nette\Neon\Neon;
 use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceAuthToken;

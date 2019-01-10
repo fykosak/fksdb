@@ -10,7 +10,7 @@ use FKSDB\ORM\ModelEvent;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Utils\Neon;
+use Nette\Neon\Neon;
 use ORM\IModel;
 use ORM\IService;
 
