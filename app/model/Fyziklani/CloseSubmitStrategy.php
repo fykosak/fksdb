@@ -70,7 +70,7 @@ class CloseSubmitStrategy {
             }
             $this->serviceFyziklaniTeam->save($team);
             $msg .= Html::el('li')
-                ->add(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
+                ->addText(_('TeamID') . ':' . $teamData['e_fyziklani_team_id'] . _('Pořadí') . ': ' . ($index + 1));
         }
     }
 

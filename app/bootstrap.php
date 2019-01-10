@@ -12,6 +12,9 @@ use Nette\Utils\Finder;
 
 // Load Nette Framework
 require LIBS_DIR . '/autoload.php';
+require LIBS_DIR . '/../vendor/autoload.php';
+
+
 
 define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
 

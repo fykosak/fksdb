@@ -53,7 +53,7 @@ class SchoolsGrid extends BaseGrid {
         $this->addColumn('name', _('Název'));
         $this->addColumn('city', _('Město'));
         $this->addColumn('active', _('Existuje?'))->setRenderer(function ($row) {
-            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->add(($row->active));
+            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
         //

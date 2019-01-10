@@ -51,7 +51,7 @@ class EventBilletedPerson extends BaseGrid {
             $classNames = ($model->status === ModelEventPersonAccommodation::STATUS_PAID) ? 'badge badge-success' : 'badge badge-danger';
             return Html::el('span')
                 ->addAttributes(['class' => $classNames])
-                ->add((($model->status == ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
+                ->addText((($model->status == ModelEventPersonAccommodation::STATUS_PAID) ? _('Paid') : _('Waiting')));
 
         });
 
