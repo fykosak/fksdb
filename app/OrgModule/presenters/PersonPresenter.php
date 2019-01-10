@@ -175,7 +175,7 @@ class PersonPresenter extends EntityPresenter {
 
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm($this['mergeForm']->getForm());
+        $this->updateMergeForm( $this->getComponent('mergeForm')->getForm());
     }
 
     public function actionDontMerge($trunkId, $mergedId) {

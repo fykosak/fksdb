@@ -39,10 +39,15 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        $paginator = $this['paginator'];
+        $paginator =  $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
         //
         // data
@@ -133,7 +138,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param \FKSDB\Components\Grids\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

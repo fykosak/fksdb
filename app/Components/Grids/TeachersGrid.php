@@ -29,6 +29,7 @@ class TeachersGrid extends BaseGrid {
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws \Nette\Application\BadRequestException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

@@ -101,7 +101,7 @@ class SeriesChooser extends Control {
 
         // 3) default (last resort)
         if (!$series || !$this->isValidSeries($series)) {
-            $series = $this->seriesCalculator->getCurrentSeries($contest, $year);
+            $series = $this->seriesCalculator->getCurrentSeries($contest);
         }
 
         $this->series = $series;

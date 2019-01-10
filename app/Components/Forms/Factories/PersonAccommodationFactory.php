@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiHotelsField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\MultiNightsField;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\SingleField;
 use FKSDB\ORM\ModelEvent;
-use Nette\InvalidArgumentException;
 use Nette\NotImplementedException;
 
 class PersonAccommodationFactory {
@@ -42,17 +41,15 @@ class PersonAccommodationFactory {
         switch ($fieldName) {
             case MatrixField::RESOLUTION_ID:
                 return $this->createMatrixSelect($event);
-            case self::RESOLUTION_AUTO:
-                throw  new NotImplementedException('Mode auto is not implement');
-                break;
             case MultiNightsField::RESOLUTION_ID:
                 return $this->createMultiNightsSelect($event);
             case MultiHotelsField::RESOLUTION_ID:
                 return $this->createMultiHotelsSelect($event);
             case SingleField::RESOLUTION_ID:
                 return $this->createBooleanSelect($event);
+            case self::RESOLUTION_AUTO:
             default:
-                throw new InvalidArgumentException();
+                throw new NotImplementedException(\sprintf(_('Mode %s is not implement'), $fieldName), 501);
         }
     }
 

@@ -88,6 +88,7 @@ abstract class AbstractProcessing extends Object implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
+     * @param $name
      * @return boolean
      */
     protected final function isBaseReallyEmpty($name) {
@@ -117,6 +118,9 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         }
     }
 
+    /**
+     * @param Form $form
+     */
     private function setForm($form) {
         $this->formPathCache = [];
         if (!$form) {

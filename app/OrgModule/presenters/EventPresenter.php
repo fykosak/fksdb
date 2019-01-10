@@ -5,8 +5,6 @@ namespace OrgModule;
 use Events\Model\ApplicationHandlerFactory;
 use Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Config\NeonScheme;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
@@ -14,8 +12,10 @@ use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
-use FormUtils;
+use FKSDB\Config\NeonScheme;
 use FKSDB\Logging\FlashDumpFactory;
+use FKSDB\Logging\MemoryLogger;
+use FormUtils;
 use ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -30,7 +30,6 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceAuthToken;
 use ServiceEvent;
-use SystemContainer;
 use Utils;
 
 
@@ -158,7 +157,7 @@ class EventPresenter extends EntityPresenter {
 
     public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
     public function renderApplications($id) {

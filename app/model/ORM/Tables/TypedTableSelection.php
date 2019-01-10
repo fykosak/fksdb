@@ -22,9 +22,9 @@ class TypedTableSelection extends TableSelection {
 
     /**
      * This override ensures returned objects are of correct class.
-     * 
+     *
      * @param array $row
-     * @return AbstractModelSingle
+     * @return \AbstractModelSingle
      */
     protected function createRow(array $row) {
         $className = $this->modelClassName;

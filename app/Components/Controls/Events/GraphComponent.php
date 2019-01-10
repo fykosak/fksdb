@@ -45,12 +45,12 @@ class GraphComponent extends Control {
     }
 
     public function renderCanvas() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . "GraphComponent.canvas.latte");
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.canvas.latte');
         $this->renderTemplate();
     }
 
     public function renderScript() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . "GraphComponent.script.latte");
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.script.latte');
         $this->renderTemplate();
     }
 

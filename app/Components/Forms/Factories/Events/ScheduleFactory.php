@@ -6,7 +6,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 
 class ScheduleFactory extends AbstractFactory {
@@ -49,7 +48,7 @@ class ScheduleFactory extends AbstractFactory {
     }
 
     /**
-     * @param ScheduleField $component
+     * @param Component $component
      * @return Component|\Nette\Forms\IControl
      */
     public function getMainControl(Component $component) {

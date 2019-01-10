@@ -56,7 +56,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $form Form
          */
-        $form = $this['entryQRForm']->getForm();
+        $form =  $this->getComponent('entryQRForm')->getForm();
         $form->setDefaults(['taskCode' => $code]);
         foreach ($this->getGameSetup()->getAvailablePoints() as $points) {
             /**
@@ -86,14 +86,14 @@ class SubmitPresenter extends BasePresenter {
         if (!$team->hasOpenSubmit()) {
             $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
             $this->backlinkRedirect();
-            $this->redirect('table'); // if there's no backlink
+            $this->redirect('list'); // if there's no backlink
         }
         $submit = $this->editSubmit;
         $this->template->fyziklani_submit_id = $submit ? true : false;
         /**
          * @var $control FormControl
          */
-        $control = $this['submitEditForm'];
+        $control =  $this->getComponent('submitEditForm');
         $control->getForm()->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,
@@ -137,7 +137,7 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-table');
     }
 
-    public function authorizedTable() {
+    public function authorizedList() {
         $this->authorizedEntry();
     }
 
@@ -204,7 +204,7 @@ class SubmitPresenter extends BasePresenter {
         try {
             $log = $handler->preProcess($values->taskCode, $points);
             $this->flashMessage($log, 'success');
-            $this->redirect('table');
+            $this->redirect('list');
         } catch (TaskCodeException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
         }
@@ -229,6 +229,6 @@ class SubmitPresenter extends BasePresenter {
         $this->getServiceFyziklaniSubmit()->save($submit);
         $this->flashMessage(_('Body byly změněny.'), 'success');
         $this->backlinkRedirect();
-        $this->redirect('table'); // if there's no backlink
+        $this->redirect('list'); // if there's no backlink
     }
 }
