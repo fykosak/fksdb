@@ -42,10 +42,6 @@ class ClosePresenter extends BasePresenter {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
     }
 
-    public function authorizedResults() {
-        $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'results'));
-    }
-
     public function renderTeam() {
         $this->template->submits = $this->getTeam()->getSubmits();
     }

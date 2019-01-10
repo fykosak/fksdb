@@ -54,7 +54,7 @@ trait LanguageNav {
         /**
          * @var $languageNav Controls\Navs\LanguageNav
          */
-        $languageNav = $this['languageNav'];
+        $languageNav =  $this->getComponent('languageNav');
         $this->newParams = $languageNav->init((object)[
             'lang' => $this->lang,
         ]);

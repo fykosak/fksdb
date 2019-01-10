@@ -25,21 +25,6 @@ class DeadlineFromXML2 extends Stage {
      */
     private $taskService;
 
-    private static $months = array(
-        'ledna' => '1.',
-        'února' => '2.',
-        'března' => '3.',
-        'dubna' => '4.',
-        'května' => '5.',
-        'června' => '6.',
-        'července' => '7.',
-        'srpna' => '8.',
-        'září' => '9.',
-        'října' => '10.',
-        'listopadu' => '11.',
-        'prosince' => '12.',
-    );
-
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }

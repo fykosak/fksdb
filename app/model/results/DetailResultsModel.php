@@ -20,7 +20,7 @@ class DetailResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     * 
+     *
      * @param ModelCategory $category
      * @return array
      */
@@ -112,4 +112,4 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
 }
 
-?>
+

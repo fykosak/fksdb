@@ -81,7 +81,7 @@ class SchoolPresenter extends EntityPresenter {
 
     public function actionDelete() {
         // This should set active flag to false.
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
     protected function createComponentCreateComponent($name) {

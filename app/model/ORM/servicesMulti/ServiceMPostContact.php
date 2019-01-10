@@ -16,7 +16,7 @@ class ServiceMPostContact extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param ModelMPostContact $model
+     * @param IModel $model
      */
     public function dispose(IModel $model) {
         parent::dispose($model);
@@ -25,4 +25,4 @@ class ServiceMPostContact extends AbstractServiceMulti {
 
 }
 
-?>
+

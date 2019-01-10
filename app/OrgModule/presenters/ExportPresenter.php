@@ -265,7 +265,7 @@ class ExportPresenter extends SeriesPresenter {
             }
         }
 
-        $this['editForm']->getForm()->setDefaults($values);
+        $this->getComponent('editForm')->getForm()->setDefaults($values);
     }
 
     public function titleCompose() {
@@ -274,11 +274,9 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function renderCompose() {
-        $query = $this->getPatternQuery();
-
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this['composeForm']->getForm()->setDefaults($values);
+            $this->getComponent('composeForm')->getForm()->setDefaults($values);
         }
     }
 

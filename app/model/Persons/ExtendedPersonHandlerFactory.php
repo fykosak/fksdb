@@ -52,7 +52,7 @@ class ExtendedPersonHandlerFactory extends Object {
     }
 
     public function create(IService $service, ModelContest $contest, $year, $invitationLang) {
-        $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager, $this->globalParameters);
+        $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
         $handler->setContest($contest);
         $handler->setYear($year);
         $handler->setInvitationLang($invitationLang);

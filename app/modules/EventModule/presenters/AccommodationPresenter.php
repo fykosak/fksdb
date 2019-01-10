@@ -141,7 +141,7 @@ class AccommodationPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
-        $this['editForm']->getForm()->setDefaults($this->getDefaults());
+        $this->getComponent('editForm')->getForm()->setDefaults($this->getDefaults());
     }
 
     /**
