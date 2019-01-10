@@ -7,7 +7,6 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\ModelContest;
 use Mail\MailTemplateFactory;
 use Nette\Database\Connection;
-use Nette\Object;
 use ORM\IService;
 use ServicePerson;
 
@@ -16,7 +15,7 @@ use ServicePerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ExtendedPersonHandlerFactory extends Object {
+class ExtendedPersonHandlerFactory {
 
     /**
      * @var ServicePerson
@@ -38,17 +37,11 @@ class ExtendedPersonHandlerFactory extends Object {
      */
     private $accountManager;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
-
     function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
-        $this->globalParameters = $globalParameters;
     }
 
     public function create(IService $service, ModelContest $contest, $year, $invitationLang) {
@@ -58,5 +51,4 @@ class ExtendedPersonHandlerFactory extends Object {
         $handler->setInvitationLang($invitationLang);
         return $handler;
     }
-
 }
