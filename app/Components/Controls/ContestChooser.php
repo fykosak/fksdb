@@ -74,7 +74,7 @@ class ContestChooser extends Control {
     private $initialized = false;
 
     /**
-     * @var enum DEFAULT_*
+     * @var string DEFAULT_*
      */
     private $defaultContest = self::DEFAULT_SMART_FIRST;
 

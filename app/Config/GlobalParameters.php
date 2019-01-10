@@ -41,4 +41,4 @@ class GlobalParameters extends Object implements ArrayAccess {
 
 }
 
-?>
+

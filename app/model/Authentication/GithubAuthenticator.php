@@ -6,7 +6,6 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\ModelLogin;
 use FullHttpRequest;
 use Github\Events\Event;
-use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 use ServiceLogin;
@@ -34,9 +33,11 @@ class GithubAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param Request $request
+     * @param FullHttpRequest $request
      * @return \FKSDB\ORM\ModelLogin
      * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws NoLoginException
      */
     public function authenticate(FullHttpRequest $request) {
         $loginName = $this->globalParameters['github']['login'];

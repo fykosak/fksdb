@@ -95,8 +95,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     /**
      * Updates values in model from given data.
      *
-     * @param AbstractModelSingle $model
-     * @param boolean $alive
+     * @param IModel $model
      * @param array $data
      * @param boolean $alive
      */

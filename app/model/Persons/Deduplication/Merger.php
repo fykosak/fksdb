@@ -97,7 +97,7 @@ class Merger {
     }
 
     /**
-     * @param booled $commit
+     * @param bool $commit
      * @return boolean
      */
     public function merge($commit = null) {
@@ -185,7 +185,7 @@ class Merger {
      * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param type $column
+     * @param mixed $column
      */
     public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
         $data = & $this->getPairData($trunkRow, $mergedRow);
@@ -197,7 +197,8 @@ class Merger {
      * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param type $column
+     * @param mixed $column
+     * @return bool
      */
     public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
         $data = $this->getPairData($trunkRow, $mergedRow);
@@ -208,7 +209,8 @@ class Merger {
      * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param type $column
+     * @param mixed $column
+     * @return mixed
      */
     public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
         $data = $this->getPairData($trunkRow, $mergedRow);

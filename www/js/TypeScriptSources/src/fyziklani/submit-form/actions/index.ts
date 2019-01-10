@@ -9,14 +9,14 @@ import { FORM_NAME } from '../components/form-container';
 import { getFullCode } from '../middleware/form';
 import { IFyziklaniSubmitStore } from '../reducers';
 
-interface ISubmitFormRequest {
+export interface ISubmitFormRequest {
     code: string;
     points: number;
 }
 
 export const ACCESS_KEY = '@fyziklani-submit-form';
 
-export const submitStart = (dispatch: Dispatch<Action>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
+export const submitStart = (dispatch: Dispatch<Action<string>>, values: ISubmitFormRequest, url): Promise<IResponse<void>> => {
     const data = {
         act: 'submit',
         requestData: {

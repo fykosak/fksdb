@@ -2,27 +2,27 @@ import * as d3 from 'd3';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    Action,
-    Dispatch,
-} from 'redux';
-import {
     ISubmit,
     ISubmits,
     ITask,
 } from '../../../../../helpers/interfaces';
-import { setActivePoints } from '../../../../actions/';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { getLinePath } from '../../../../middleware/charts/lines';
+import {
+    getLinePath,
+    IPointData,
+} from '../../../../middleware/charts/lines';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
 
 interface IState {
     submits?: ISubmits;
     tasks?: ITask[];
-    teamId?: number;
     gameStart?: Date;
     gameEnd?: Date;
-    onActivePoints?: (points: number) => void;
     activePoints?: number;
+}
+
+interface IProps {
+    teamId: number;
 }
 
 export interface IExtendedSubmit extends ISubmit {
@@ -30,7 +30,7 @@ export interface IExtendedSubmit extends ISubmit {
     currentTask: ITask;
 }
 
-class PointsInTime extends React.Component<IState, {}> {
+class PointsInTime extends React.Component<IState & IProps, {}> {
 
     private xAxis: any;
     private yAxis: any;
@@ -52,19 +52,12 @@ class PointsInTime extends React.Component<IState, {}> {
             submits,
             tasks,
             activePoints,
+            gameEnd,
+            gameStart,
         } = this.props;
 
         const teamSubmits: IExtendedSubmit[] = [];
-        const pointsCategories = [
-            {points: 0, count: 0},
-            {points: 1, count: 0},
-            {points: 2, count: 0},
-            {points: 3, count: 0},
-            {points: 4, count: 0},
-            {points: 5, count: 0},
-        ];
 
-        let totalSubmits = 0;
         let maxPoints = 0;
 
         for (const index in submits) {
@@ -75,23 +68,19 @@ class PointsInTime extends React.Component<IState, {}> {
                     const currentTask = tasks.filter((task) => {
                         return submit.taskId === task.taskId;
                     })[0];
-                    totalSubmits++;
-                    pointsCategories[points].count++;
-                    maxPoints += +points;
-                    teamSubmits.push({
-                        ...submit,
-                        currentTask,
-                        totalPoints: maxPoints,
-                    });
+                    if (points !== null && points !== 0) {
+                        maxPoints += +points;
+                        teamSubmits.push({
+                            ...submit,
+                            currentTask,
+                            totalPoints: maxPoints,
+                        });
+                    }
                 }
             }
         }
 
-        const [minDate, maxDate] = d3.extent(teamSubmits, (element) => {
-            return new Date(element.created);
-        });
-
-        this.xScale = d3.scaleTime<number, number>().domain([minDate, maxDate]).range([30, 580]);
+        this.xScale = d3.scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
         this.yScale = d3.scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
         const dots = teamSubmits.map((submit, index) => {
             return (
@@ -109,7 +98,18 @@ class PointsInTime extends React.Component<IState, {}> {
                 </circle>
             );
         });
-        const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, teamSubmits);
+        const pointsData: IPointData[] = [
+            {
+                created: gameStart.toString(),
+                totalPoints: 0,
+            },
+            ...teamSubmits,
+            {
+                created: gameEnd.toString(),
+                totalPoints: maxPoints,
+            },
+        ];
+        const linePath = getLinePath({xScale: this.xScale, yScale: this.yScale}, pointsData);
 
         return (
             <div className="col-lg-8">
@@ -125,11 +125,11 @@ class PointsInTime extends React.Component<IState, {}> {
         );
     }
 
-    private getAxis() {
-        const xAxis = d3.axisBottom(this.xScale);
+    private getAxis(): void {
+        const xAxis = d3.axisBottom<Date>(this.xScale);
         d3.select(this.xAxis).call(xAxis);
 
-        const yAxis = d3.axisLeft(this.yScale);
+        const yAxis = d3.axisLeft<number>(this.yScale);
         d3.select(this.yAxis).call(yAxis);
     }
 }
@@ -141,14 +141,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
         gameStart: new Date(state.timer.gameStart),
         submits: state.data.submits,
         tasks: state.data.tasks,
-        teamId: state.statistics.teamId,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
-    return {
-        onActivePoints: (points) => dispatch(setActivePoints(+points)),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PointsInTime);
+export default connect(mapStateToProps, null)(PointsInTime);

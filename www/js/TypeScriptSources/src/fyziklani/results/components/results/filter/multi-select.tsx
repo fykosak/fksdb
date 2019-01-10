@@ -4,6 +4,7 @@ import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visibl
 import { IFyziklaniResultsStore } from '../../../reducers';
 import AutoSwitchControl from './auto-switch-control';
 import MultiFilterControl from './multi-filter-control';
+import { lang } from '../../../../../i18n/i18n';
 
 interface IState {
     autoSwitch?: boolean;
@@ -23,7 +24,7 @@ class Select extends React.Component<IState, {}> {
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Options</h5>
+                            <h5 className="modal-title">{lang.getText('Options')}</h5>
                             <button type="button" className="close" data-dismiss="modal">
                                 <span>&times;</span>
                             </button>
@@ -43,9 +44,6 @@ class Select extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
-    return {};
-};
 const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     return {
         autoSwitch: state.tableFilter.autoSwitch,
@@ -53,7 +51,4 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(
-    mapStateToPros,
-    mapDispatchToProps,
-)(Select);
+export default connect(mapStateToPros, null)(Select);

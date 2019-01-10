@@ -134,7 +134,7 @@ class StoredQueryComponent extends Control {
                 $defaults[$key] = array('value' => $value);
             }
             $defaults = array(self::CONT_PARAMS => $defaults);
-            $this['parametrizeForm']->getForm()->setDefaults($defaults);
+            $this->getComponent('parametrizeForm')->getForm()->setDefaults($defaults);
         }
         if (!$this->isAuthorized()) {
             $this->template->error = _('Nedostatečné oprávnění.');

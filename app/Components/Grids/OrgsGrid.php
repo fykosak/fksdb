@@ -83,15 +83,8 @@ class OrgsGrid extends BaseGrid {
 
         if ($presenter->authorized('create')) {
             $this->addGlobalButton('add')
-                ->setLabel('Založit organizátora')
+                ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
-
-
-        //
-        // appeareance
-        //
-
     }
-
 }

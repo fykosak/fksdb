@@ -59,11 +59,14 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     public function renderDefault() {
+        /**
+         * @var $login \FKSDB\ORM\ModelLogin
+         */
         $login = $this->getUser()->getIdentity();
 
-        $defaults = array(
+        $defaults = [
             self::CONT_LOGIN => $login->toArray(),
-        );
+        ];
         $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
@@ -141,9 +144,4 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
         $this->redirect('this');
     }
-
-    public function getNavRoot() {
-        return '';
-    }
-
 }

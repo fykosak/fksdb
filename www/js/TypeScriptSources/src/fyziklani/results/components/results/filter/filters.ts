@@ -1,5 +1,6 @@
 import { IRoom } from '../../../../helpers/interfaces';
 import { Filter } from './filter';
+import { lang } from '../../../../../i18n/i18n';
 
 export const createFilters = (rooms: IRoom[] = [], categories: string[] = [], includeAll: boolean = true): Filter[] => {
     const roomFilters = rooms.map((room: IRoom) => {
@@ -7,11 +8,11 @@ export const createFilters = (rooms: IRoom[] = [], categories: string[] = [], in
     });
 
     const categoriesFilters = categories.map((category: string) => {
-        return new Filter({roomId: null, category, name: 'Category ' + category});
+        return new Filter({roomId: null, category, name: lang.getText('Category') + ' ' + category});
     });
     const filters = [];
     if (includeAll) {
-        filters.push(new Filter({roomId: null, category: null, name: 'All'}));
+        filters.push(new Filter({roomId: null, category: null, name: lang.getText('All')}));
     }
     return filters.concat(roomFilters).concat(categoriesFilters);
 };

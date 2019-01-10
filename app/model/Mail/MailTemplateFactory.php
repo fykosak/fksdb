@@ -11,7 +11,7 @@ use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailTemplateFactory {
@@ -40,14 +40,18 @@ class MailTemplateFactory {
     }
 
     /**
+     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @return FileTemplate
      */
     public function createLoginInvitation(Control $control = null, $lang = null) {
         return $this->createFromFile('loginInvitation', $lang, $control);
     }
 
     /**
+     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @return FileTemplate
      */
     public function createPasswordRecovery(Control $control = null, $lang = null) {
         return $this->createFromFile('passwordRecovery', $lang, $control);

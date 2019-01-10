@@ -62,12 +62,12 @@ class ServiceAddress extends AbstractServiceSingle {
 
     /**
      *
-     * @param strnig $postalCode
+     * @param string $postalCode
      * @return boolean
      */
-    public function tryInferRegion($postalCode) {
+    public function tryInferRegion($postalCode): bool {
         try {
-            $r = $this->inferRegion($postalCode);
+            $this->inferRegion($postalCode);
             return true;
         } catch (InvalidPostalCode $e) {
             return false;

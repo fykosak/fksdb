@@ -13,19 +13,18 @@ import { IFyziklaniStatisticsStore } from '../../../../reducers';
 interface IState {
     teams?: ITeam[];
     submits?: ISubmits;
-    teamId?: number;
     activePoints?: number;
 }
 
-class Chart extends React.Component<IState, {}> {
+interface IProps {
+    teamId: number;
+}
+
+class Chart extends React.Component<IState & IProps, {}> {
 
     public render() {
         const {submits, teamId, activePoints} = this.props;
 
-        if (!teamId) {
-            return (<div/>);
-        }
-        const teamSubmits = [];
         const pointsCategories: Array<{ points: number; count: number }> = [
             {points: 0, count: 0},
             {points: 1, count: 0},
@@ -42,13 +41,12 @@ class Chart extends React.Component<IState, {}> {
                 const submit: ISubmit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
-                    totalSubmits++;
-                    pointsCategories[points].count++;
-                    maxPoints += +points;
-                    teamSubmits.push({
-                        ...submit,
-                        totalPoints: maxPoints,
-                    });
+
+                    if (points !== null && points !== 0) {
+                        totalSubmits++;
+                        pointsCategories[points].count++;
+                        maxPoints += +points;
+                    }
                 }
             }
         }
@@ -96,7 +94,6 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     return {
         activePoints: state.statistics.activePoints,
         submits: state.data.submits,
-        teamId: state.statistics.teamId,
         teams: state.data.teams,
     };
 };

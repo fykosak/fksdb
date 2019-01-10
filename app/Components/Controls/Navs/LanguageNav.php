@@ -43,7 +43,7 @@ class LanguageNav extends Control {
         /**
          * @var $languageChooser LanguageChooser
          */
-        $languageChooser = $this['languageChooser'];
+        $languageChooser =  $this->getComponent('languageChooser');
         $redirect = $languageChooser->syncRedirect($params);
         if ($redirect) {
             return $params;
