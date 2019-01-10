@@ -82,7 +82,15 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
                 'kc' => $this->price_kc,
                 'eur' => $this->price_eur,
             ],
+            'label' => $this->__toString(),
             'date' => $this->date->format(self::ACC_DATE_FORMAT),
         ];
+    }
+
+    public function __toString() {
+        $date = clone $this->date;
+        $fromDate = $date->format('d. m.');
+        $toDate = $date->add(new \DateInterval('P1D'))->format('d. m. Y');
+        return \sprintf(_('Ubytovaní od %s do %s v hoteli %s.'), $fromDate, $toDate, $this->name);
     }
 }

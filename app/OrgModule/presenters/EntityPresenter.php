@@ -84,7 +84,8 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstracModelSingle
+     * @param $id
+     * @return \AbstractModelSingle
      */
     abstract protected function loadModel($id);
 

@@ -20,7 +20,8 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     * 
+     *
+     * @param ModelCategory $category
      * @return array
      */
     public function getDataColumns($category) {
@@ -37,7 +38,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
-            
+
                 $dataColumns[] = array(
                     self::COL_DEF_LABEL => $series,
                     self::COL_DEF_LIMIT => $points,
@@ -127,4 +128,4 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
 
 }
 
-?>
+

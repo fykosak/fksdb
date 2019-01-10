@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 
+use OrgModule\BasePresenter;
 use ServiceContestant;
 use SQL\ViewDataSource;
 
@@ -23,6 +24,14 @@ class ContestantsGrid extends BaseGrid {
         $this->serviceContestant = $serviceContestant;
     }
 
+    /**
+     * @param BasePresenter $presenter
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
@@ -37,15 +46,15 @@ class ContestantsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Jméno'));
+        $this->addColumn('name', _('Name'));
         $this->addColumn('study_year', _('Ročník'));
         $this->addColumn('school_name', _('Škola'));
 
         //
         // operations
         //
-        $this->addButton('editPerson', _('Upravit'))
-            ->setText(_('Upravit'))
+        $this->addButton('editPerson', _('Edit'))
+            ->setText(_('Edit'))
             ->setLink(function ($row) use ($presenter) {
                 return $presenter->link('Contestant:edit', array(
                     'id' => $row->ct_id,

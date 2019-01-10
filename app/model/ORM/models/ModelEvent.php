@@ -95,7 +95,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetup) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
         }
         return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
     }

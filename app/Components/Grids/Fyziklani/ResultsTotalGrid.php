@@ -28,7 +28,6 @@ class ResultsTotalGrid extends BaseGrid {
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param string $category
      */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;

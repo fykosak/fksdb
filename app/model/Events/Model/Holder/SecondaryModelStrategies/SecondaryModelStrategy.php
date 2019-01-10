@@ -6,11 +6,10 @@ use Events\Model\Holder\BaseHolder;
 use Nette\InvalidStateException;
 use ORM\IModel;
 use ORM\IService;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class SecondaryModelStrategy {
@@ -65,40 +64,4 @@ abstract class SecondaryModelStrategy {
     }
 
     abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
-}
-
-class SecondaryModelConflictException extends RuntimeException {
-
-    /**
-     * @var BaseHolder
-     */
-    private $baseHolder;
-
-    /**
-     * @var IModel[]
-     */
-    private $conflicts;
-
-    function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
-        parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
-        $this->baseHolder = $baseHolder;
-        $this->conflicts = $conflicts;
-    }
-
-    private function createMessage(IModel $model, $conflicts) {
-        foreach ($conflicts as $conflict) {
-            $ids = $conflict->getPrimary();
-        }
-        $id = $model->getPrimary(false) ? : 'null';
-        return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
-    }
-
-    public function getBaseHolder() {
-        return $this->baseHolder;
-    }
-
-    public function getConflicts() {
-        return $this->conflicts;
-    }
-
 }

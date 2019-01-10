@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelEventOrg;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
 
@@ -25,6 +26,7 @@ class EventOrgsGrid extends BaseGrid {
 
     /**
      * @param \AuthenticatedPresenter $presenter
+     * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
@@ -38,21 +40,21 @@ class EventOrgsGrid extends BaseGrid {
         $dataSource = new SearchableDataSource($orgs);
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
+            $eventOrg = ModelEventOrg::createFromTableRow($row);
+            return $eventOrg->getPerson()->getFullname();
         });
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
-        ->setLink(function ($row) {
-            return $this->getPresenter()->link('edit', $row->e_org_id);
-        })
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('edit', $row->e_org_id);
+            })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('edit', ['id' => $row->e_org_id]);
             });
         $this->addButton('delete', _('Smazat'))->setClass('btn btn-sm btn-danger')->setText(_('Smazat'))
-        ->setLink(function ($row) {
-            return $this->getPresenter()->link('delete', $row->e_org_id);
-        })
+            ->setLink(function ($row) {
+                return $this->getPresenter()->link('delete', $row->e_org_id);
+            })
             ->setShow(function ($row) use ($presenter) {
                 return $presenter->authorized('delete', ['id' => $row->e_org_id]);
             })

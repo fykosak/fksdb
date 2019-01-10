@@ -2,6 +2,7 @@
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
+use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
@@ -10,15 +11,19 @@ use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Localization\ITranslator;
+use Nette\Templating\FileTemplate;
 
 /**
  * Base presenter for all application presenters.
+ * @property FileTemplate $template
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
@@ -76,7 +81,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     protected $icon = '';
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $authorized = true;
 
@@ -100,7 +105,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     private $subtitle;
 
-    public function getYearCalculator() {
+    public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
     }
 
@@ -108,7 +113,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->yearCalculator = $yearCalculator;
     }
 
-    public function getServiceContest() {
+    public function getServiceContest(): ServiceContest {
         return $this->serviceContest;
     }
 
@@ -136,12 +141,20 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->translator = $translator;
     }
 
+    /**
+     * @param null $class
+     * @return FileTemplate|\Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
+        /**
+         * @var $template FileTemplate
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);
-        $template->beta = $this->globalParameters['beta'];
+
         return $template;
     }
+
 
     protected function startup() {
         parent::startup();
@@ -152,52 +165,98 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Loading assets
      * ****************************** */
 
-    protected function createComponentJsLoader() {
-        $component = new JavaScriptLoader();
-        return $component;
+    protected function createComponentJsLoader(): JavaScriptLoader {
+        return new JavaScriptLoader();
     }
 
-    protected function createComponentCssLoader() {
-        $component = new StylesheetLoader();
-        return $component;
+    protected function createComponentCssLoader(): StylesheetLoader {
+        return new StylesheetLoader();
     }
 
     /*	 * ******************************
      * IJavaScriptCollector
      * ****************************** */
-
+    /**
+     * @param string $file
+     */
     public function registerJSFile($file) {
-        $this['jsLoader']->addFile($file);
+        /**
+         * @var $component JavaScriptLoader
+         */
+        $component = $this->getComponent('jsLoader');
+        $component->addFile($file);
     }
 
+    /**
+     * @param string $code
+     * @param null $tag
+     */
     public function registerJSCode($code, $tag = null) {
-        $this['jsLoader']->addInline($code, $tag);
+        /**
+         * @var $component JavaScriptLoader
+         */
+        $component = $this->getComponent('jsLoader');
+        $component->addInline($code, $tag);
     }
 
+    /**
+     * @param string $tag
+     */
     public function unregisterJSCode($tag) {
-        $this['jsLoader']->removeInline($tag);
+        /**
+         * @var $component JavaScriptLoader
+         */
+        $component = $this->getComponent('jsLoader');
+        $component->removeInline($tag);
     }
 
+    /**
+     * @param string $file
+     */
     public function unregisterJSFile($file) {
-        $this['jsLoader']->removeFile($file);
+        /**
+         * @var $component JavaScriptLoader
+         */
+        $component = $this->getComponent('jsLoader');
+        $component->removeFile($file);
     }
 
     /*	 * ******************************
      * IStylesheetCollector
      * ****************************** */
-
+    /**
+     * @param string $file
+     * @param array $media
+     */
     public function registerStylesheetFile($file, $media = []) {
-        $this['cssLoader']->addFile($file, $media);
+        /**
+         * @var $component StylesheetLoader
+         */
+        $component = $this->getComponent('cssLoader');
+        $component->addFile($file, $media);
     }
 
+    /**
+     * @param string $file
+     * @param array $media
+     */
     public function unregisterStylesheetFile($file, $media = []) {
-        $this['cssLoader']->removeFile($file, $media);
+        /**
+         * @var $component StylesheetLoader
+         */
+        $component = $ $this->getComponent('cssLoader');
+        $component->removeFile($file, $media);
     }
 
     /*	 * ******************************
      * IJSONProvider
      * ****************************** */
-
+    /**
+     * @param $acName
+     * @param $acQ
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
             throw new BadRequestException('Can be called only by AJAX.');
@@ -206,7 +265,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         if (!($component instanceof AutocompleteSelectBox)) {
             throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
         } else {
-            $data = $component->getDataProvider()->getFilteredItems($acQ);
+            $provider = $component->getDataProvider();
+            $data = null;
+            if ($provider instanceof IFilteredDataProvider) {
+                $data = $provider->getFilteredItems($acQ);
+            }
+
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }
@@ -227,6 +291,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return 'title' . $view;
     }
 
+    /**
+     * @param $view
+     * @return Presenter|void
+     */
     public function setView($view) {
         parent::setView($view);
         $method = $this->formatTitleMethod($this->getView());
@@ -261,14 +329,24 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $old;
     }
 
+    /**
+     * @param string $action
+     * @return string
+     */
     public static function publicFormatActionMethod($action) {
         return static::formatActionMethod($action);
     }
 
-    public static function getBacklinkParamName() {
+    /**
+     * @return string
+     */
+    public static function getBacklinkParamName(): string {
         return 'bc';
     }
 
+    /**
+     *
+     */
     protected function beforeRender() {
         parent::beforeRender();
 
@@ -287,37 +365,63 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
+    /**
+     * @return array
+     */
     protected function getNavRoots(): array {
         return [];
     }
 
+    /**
+     * @return array
+     */
     protected function getNavBarVariant(): array {
         return [null, null];
     }
 
+    /**
+     * @return string
+     */
     public function getSubtitle(): string {
         return $this->subtitle ?: '';
     }
 
     protected function putIntoBreadcrumbs() {
-        $this['breadcrumbs']->setBacklink($this->getRequest());
+        /**
+         * @var $component Breadcrumbs
+         */
+        $component =  $this->getComponent('breadcrumbs');
+        $component->setBacklink($this->getRequest());
     }
 
-    protected function createComponentBreadcrumbs() {
-        $component = $this->breadcrumbsFactory->create();
-        return $component;
+    /**
+     * @return Breadcrumbs
+     */
+    protected function createComponentBreadcrumbs(): Breadcrumbs {
+        return $this->breadcrumbsFactory->create();
     }
 
-    protected function createComponentNavigation() {
+    /**
+     * @return Navigation
+     */
+    protected function createComponentNavigation(): Navigation {
         $this->navigationControl->setParent();
         return $this->navigationControl;
     }
 
-    public final function backlinkRedirect($need = false) {
+    /**
+     * @param bool $need
+     * @throws \Nette\Application\AbortException
+     */
+    public final function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
-        $backlink = $this['breadcrumbs']->getBacklinkUrl();
-        if ($backlink) {
-            $this->redirectUrl($backlink);
+        /**
+         * @var $component Breadcrumbs
+         */
+        $component =  $this->getComponent('breadcrumbs');
+        $backLink = $component->getBacklinkUrl();
+        if ($backLink) {
+            $this->redirectUrl($backLink);
         } else if ($need) {
             $this->redirect(':Authentication:login'); // will cause dispatch
         }
@@ -327,19 +431,30 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Extension of Nette ACL
      *      * ****************************** */
 
-    public function isAuthorized() {
+    public function isAuthorized(): bool {
         return $this->authorized;
     }
 
-    public function setAuthorized($access) {
+    public function setAuthorized(bool $access) {
         $this->authorized = $access;
     }
 
+    /**
+     * @param $element
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     public function checkRequirements($element) {
         parent::checkRequirements($element);
         $this->setAuthorized(true);
     }
 
+    /**
+     * @param $destination
+     * @param null $args
+     * @return mixed
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     */
     public function authorized($destination, $args = null) {
         if (substr($destination, -1) === '!' || $destination === 'this') {
             $destination = $this->getAction(true);
@@ -410,14 +525,17 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->_lang;
     }
 
-    public function getTranslator() {
+    public function getTranslator(): ITranslator {
         return $this->translator;
     }
 
     /*	 * *******************************
      * Nette workaround
      *      * ****************************** */
-    function getFullHttpRequest() {
+    /**
+     * @return FullHttpRequest
+     */
+    function getFullHttpRequest(): FullHttpRequest {
         if ($this->fullRequest === null) {
             $payload = file_get_contents('php://input');
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);

@@ -287,7 +287,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /**
          * @var $contestantForm Form
          */
-        $contestantForm = $this['contestantForm'];
+        $contestantForm =  $this->getComponent('contestantForm');
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);

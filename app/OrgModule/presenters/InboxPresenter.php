@@ -112,7 +112,7 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderDefault() {
-        $this['inboxForm']->setDefaults();
+        $this->getComponent('inboxForm')->setDefaults();
     }
 
     public function titleHandout() {
@@ -147,7 +147,7 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        $this['handoutForm']->getForm()->setDefaults($values);
+        $this->getComponent('handoutForm')->getForm()->setDefaults($values);
     }
 
     protected function createComponentInboxForm($name) {

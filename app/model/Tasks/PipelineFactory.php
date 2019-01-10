@@ -78,6 +78,7 @@ class PipelineFactory {
 
     /**
      *
+     * @param $language
      * @return \Pipeline\Pipeline
      */
     public function create($language) {
