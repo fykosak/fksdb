@@ -8,6 +8,7 @@ use Events\Model\Holder\Holder;
 use FKSDB\model\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
+use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
@@ -20,6 +21,10 @@ use Nette\Security\IResource;
  * @property integer event_id
  * @property ActiveRow event_type
  * @property integer event_type_id
+ * @property DateTime begin
+ * @property DateTime end
+ * @property DateTime registration_begin
+ * @property DateTime registration_end
  */
 class ModelEvent extends AbstractModelSingle implements IResource {
 
@@ -90,9 +95,23 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetup) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'), 404);
         }
         return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
+    }
+
+    public function __toArray() {
+        return [
+            'eventId' => $this->event_id,
+            'year' => $this->year,
+            'eventYear' => $this->event_year,
+            'begin' => $this->begin->format('c'),
+            'end' => $this->end->format('c'),
+            'registration_begin' => $this->registration_begin->format('c'),
+            'registration_end' => $this->registration_end->format('c'),
+            'name' => $this->name,
+            'event_type_id' => $this->event_type_id,
+        ];
     }
 
 }

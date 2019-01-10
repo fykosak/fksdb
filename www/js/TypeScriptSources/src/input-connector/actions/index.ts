@@ -3,7 +3,7 @@ import { IInputConnectorItems } from '../reducers';
 
 export const ACTION_SET_INITIAL_DATA = '@@input-connector/ACTION_SET_INITIAL_DATA';
 
-export interface IActionSetInitialData extends Action {
+export interface IActionSetInitialData extends Action<string> {
     data: IInputConnectorItems;
 }
 
@@ -16,7 +16,12 @@ export const setInitialData = (data: IInputConnectorItems): IActionSetInitialDat
 
 export const ACTION_CHANGE_DATA = '@@input-connector/ACTION_CHANGE_DATA';
 
-export const changeData = (key: string, value: number): Action & any => {
+export interface IActionChangeData extends Action<string> {
+    key: string;
+    value: number;
+}
+
+export const changeData = (key: string, value: number): IActionChangeData => {
     return {
         key,
         type: ACTION_CHANGE_DATA,

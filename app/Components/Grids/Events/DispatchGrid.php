@@ -47,7 +47,7 @@ class DispatchGrid extends BaseGrid {
         $dataSource = new NDataSource($events);
 
         $this->setDataSource($dataSource);
-        $this->setDefaultOrder('year DESC begin DESC');
+        $this->setDefaultOrder('begin DESC');
 
 
         //

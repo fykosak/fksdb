@@ -22,7 +22,7 @@ class StoredQuery implements IDataSource, IResource {
     const INNER_QUERY = 'sub';
 
     /**
-     * @var \FKSDB\ORM\ModelStoredQuery
+     * @var ModelStoredQuery
      */
     private $queryPattern;
 

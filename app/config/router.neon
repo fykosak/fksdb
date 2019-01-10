@@ -112,7 +112,7 @@ fksrouter:
             module: Event
             presenter: Dashboard
             flags: SECURED
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventID [0-9]+>]/s/q[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
             action: qrEntry

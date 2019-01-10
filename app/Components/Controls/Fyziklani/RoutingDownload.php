@@ -1,9 +1,8 @@
 <?php
 
-namespace  FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Application\IJavaScriptCollector;
-
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -57,7 +56,6 @@ class RoutingDownload extends Control {
     }
 
     public function render() {
-        parent::render();
         $this->template->rooms = $this->rooms;
         $this->template->buildings = $this->buildings;
         $this->template->teams = $this->teams;

@@ -18,14 +18,16 @@ class FlashDumpFactory {
     const DEFAULT_CONFIGURATION = 'default';
 
     private $configuration;
-
+    /**
+     * @var FlashMessageDump[]
+     */
     private $cache = [];
 
     function __construct($configuration) {
         $this->configuration = $configuration;
     }
 
-    public function __call($name, $arguments) {
+    public function __call($name, $arguments): FlashMessageDump {
         if (Strings::startsWith($name, self::CREATE_PREFIX)) {
             $configName = substr($name, strlen(self::CREATE_PREFIX));
             $configName = lcfirst($configName);
@@ -34,7 +36,7 @@ class FlashDumpFactory {
         throw new MemberAccessException("Unknown method $name.");
     }
 
-    private function create($name) {
+    public function create($name): FlashMessageDump {
         if (!isset($this->configuration[$name])) {
             $name = self::DEFAULT_CONFIGURATION;
         }

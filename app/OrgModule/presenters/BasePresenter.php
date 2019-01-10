@@ -36,19 +36,24 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
-        $this['contestChooser']->syncRedirect();
-        $this['languageChooser']->syncRedirect();
+        /**
+         * @var ContestChooser $contestChooser
+         * @var LanguageChooser $languageChooser
+         */
+        $contestChooser =  $this->getComponent('contestChooser');
+        $contestChooser->syncRedirect();
+        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser->syncRedirect();
     }
 
-    protected function createComponentContestChooser($name) {
+    protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ModelRole::ORG);
         return $control;
     }
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->session);
     }
 
     /**
@@ -56,7 +61,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedContest() {
-        $contestChooser = $this['contestChooser'];
+        /**
+         * @var ContestChooser $contestChooser
+         */
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -68,7 +76,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedYear() {
-        $contestChooser = $this['contestChooser'];
+        /**
+         * @var ContestChooser $contestChooser
+         */
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -88,7 +99,10 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      * @throws BadRequestException
      */
     public function getSelectedLanguage() {
-        $languageChooser = $this['languageChooser'];
+        /**
+         * @var LanguageChooser $languageChooser
+         */
+        $languageChooser =  $this->getComponent('languageChooser');
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);
         }
@@ -101,7 +115,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
         return [null, null];
     }
@@ -110,7 +124,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return sprintf(_('%d. ročník'), $this->year);
     }
 
-    public function getNavRoot() {
-        return 'org.dashboard.default';
+    public function getNavRoots(): array {
+        return ['org.dashboard.default'];
     }
 }

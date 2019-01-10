@@ -37,7 +37,7 @@ class ModelFyziklaniSubmit extends \AbstractModelSingle {
             'points' => $this->points,
             'teamId' => $this->e_fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
-            'created' => $this->created->__toString(),
+            'created' => $this->created->format('c'),
         ];
     }
 }

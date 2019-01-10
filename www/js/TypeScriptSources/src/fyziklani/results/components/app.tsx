@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Powered from '../../../shared/powered';
 import Loading from '../../helpers/components/loading';
 import { IFyziklaniResultsStore } from '../reducers';
 import Results from './results/';
@@ -11,20 +10,19 @@ interface IState {
 }
 
 interface IProps {
-    accessKey: string;
     mode: string;
 }
 
 class App extends React.Component<IState & IProps, {}> {
     public render() {
 
-        const {isReady, mode, accessKey} = this.props;
+        const {isReady, mode} = this.props;
         if (!isReady) {
             return <Loading/>;
         }
         return (<>
             <FilterSelect mode={mode}/>
-            <Results accessKey={accessKey} basePath={'/'} mode={mode}/>
+            <Results mode={mode}/>
         </>);
     }
 }
@@ -35,9 +33,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    (): IState => {
-        return {};
-    },
-)(App);
+export default connect(mapStateToProps, null)(App);

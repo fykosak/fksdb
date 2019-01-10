@@ -49,4 +49,3 @@ class ServiceSubmit extends AbstractServiceSingle {
     }
 
 }
-

@@ -27,8 +27,8 @@ class AutoSwitchControl extends React.Component<IState, {}> {
                     onAutoSwitch(!autoSwitch);
                 }}
             >{autoSwitch ?
-                (<><i className="fa fa-pause mr-3"/>stop auto switch</>) :
-                (<><i className="fa fa-play mr-3"/>run auto switch</>)
+                (<><i className="fa fa-pause mr-3"/>{lang.getText('stop auto switch')}</>) :
+                (<><i className="fa fa-play mr-3"/>{lang.getText('run auto switch')}</>)
             }</button>
 
         </>

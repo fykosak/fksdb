@@ -8,7 +8,6 @@ use Events\Machine\Machine;
 use Events\Model\ExpressionEvaluator;
 use Events\Model\Holder\Holder;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use ServicePersonHistory;

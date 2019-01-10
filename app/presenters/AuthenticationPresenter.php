@@ -328,10 +328,4 @@ final class AuthenticationPresenter extends BasePresenter {
     public function renderLogin() {
         $this->template->login = $this->login;
     }
-
-    public function getNavRoot() {
-        return '';
-    }
-
-
 }
