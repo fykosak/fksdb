@@ -15,8 +15,8 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
 
     use WriteOnlyTrait;
 
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    public function __construct($label = NULL) {
+        parent::__construct($label);
         $this->writeOnlyAppendMonitors();
     }
 

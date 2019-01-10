@@ -7,9 +7,9 @@ use FKSDB\Payment\PriceCalculator\Price;
 
 abstract class AbstractPreProcess {
 
-    abstract public function calculate(ModelPayment $modelPayment): Price;
+    abstract public static function calculate(ModelPayment $modelPayment): Price;
 
-    abstract public function getGridItems(ModelPayment $modelPayment): array;
+    abstract static public function getGridItems(ModelPayment $modelPayment): array;
 
     protected function getData(ModelPayment $modelPayment) {
         return null;

@@ -4,7 +4,6 @@ namespace Authorization;
 
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelContest;
 use Nette\Object;
 use Nette\Security\User;
 

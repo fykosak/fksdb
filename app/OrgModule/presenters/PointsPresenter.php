@@ -6,6 +6,7 @@ use Exception;
 use FKSDB\Components\Forms\Controls\ContestantSubmits;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelTaskContribution;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
@@ -223,6 +224,9 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     private function getGradedTasks() {
+        /**
+         * @var ModelLogin $login
+         */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         if (!$person) {

@@ -2,18 +2,16 @@
 
 namespace EventModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Controls\Payment\DetailControl;
-use FKSDB\Components\Forms\Factories\PaymentFactory;
+use FKSDB\Components\Controls\Payment\DetailControl;
+use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
+use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\ModelPayment;
-use FKSDB\ORM\Services\ServicePaymentAccommodation;
-use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
-use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
-use Nette\Application\UI\Form;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\NotImplementedException;
 
 class PaymentPresenter extends BasePresenter {
@@ -40,77 +38,101 @@ class PaymentPresenter extends BasePresenter {
     private $servicePayment;
 
     /**
-     * @var PaymentFactory
-     */
-    private $eventPaymentFactory;
-
-    /**
      * @var MachineFactory
      */
     private $machineFactory;
+
     /**
-     * @var ServicePaymentAccommodation
+     * @var PaymentComponentFactory
      */
-    private $servicePaymentAccommodation;
+    private $paymentComponentFactory;
 
     public function injectServicePayment(\ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    public function injectServicePaymentAccommodation(ServicePaymentAccommodation $servicePaymentAccommodation) {
-        $this->servicePaymentAccommodation = $servicePaymentAccommodation;
     }
 
     public function injectMachineFactory(MachineFactory $machineFactory) {
         $this->machineFactory = $machineFactory;
     }
 
-    public function injectPaymentFactory(PaymentFactory $eventPaymentFactory) {
-        $this->eventPaymentFactory = $eventPaymentFactory;
+    public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
+        $this->paymentComponentFactory = $paymentComponentFactory;
     }
 
+    /**
+     *
+     */
     public function titleCreate() {
-        $this->setTitle(\sprintf(_('Nová platba akcie %s'), $this->getEvent()->name));
+        $this->setTitle(_('New payment'));
         $this->setIcon('fa fa-credit-card');
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleEdit() {
-        $this->setTitle(\sprintf(_('Úprava platby #%s'), $this->getModel()->getPaymentId()));
+        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function titleDetail() {
         $this->setTitle(\sprintf(_('Payment detail #%s'), $this->getModel()->getPaymentId()));
         $this->setIcon('fa fa-credit-card');
     }
 
+    /**
+     *
+     */
     public function titleList() {
         $this->setTitle(\sprintf(_('List of payments')));
         $this->setIcon('fa fa-credit-card');
     }
 
-    public function authorizedDetail() {
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function authorizedDetail() {
         if (!$this->hasApi()) {
             return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
-    public function authorizedEdit() {
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function authorizedEdit() {
         if (!$this->hasApi()) {
             return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->canEdit());
     }
 
-    public function authorizedCreate() {
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function authorizedCreate() {
         if (!$this->hasApi()) {
             return $this->setAuthorized(false);
         }
         return $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
-    public function authorizedList() {
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function authorizedList() {
         if (!$this->hasApi()) {
             return $this->setAuthorized(false);
         }
@@ -123,25 +145,34 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    private function canEdit() {
+    private function canEdit(): bool {
         return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) ||
-            $this->isContestsOrgAllowed($this->getModel(), 'org');
+            $this->isOrg();
+    }
+
+    private function isOrg(): bool {
+        return $this->isContestsOrgAllowed('event.payment', 'org');
     }
 
     /**
      * @return ModelPayment
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
      */
     private function getModel(): ModelPayment {
         if (!$this->model) {
             $row = $this->servicePayment->findByPrimary($this->id);
+            if (!$row) {
+                throw new BadRequestException(_('Payment does not exists'), 404);
+            }
             $this->model = ModelPayment::createFromTableRow($row);
             $this->model->getRelatedPersonAccommodation();
+            if ($this->model->event_id !== $this->getEvent()->event_id) {
+                throw new ForbiddenRequestException(_('Payment does not belong to this event'), 403);
+            }
         }
         return $this->model;
-    }
-
-    protected function isOrg(): bool {
-        return $this->isContestsOrgAllowed('event.payment', 'org');
     }
 
     /**
@@ -154,7 +185,7 @@ class PaymentPresenter extends BasePresenter {
             $this->machine = $this->machineFactory->setUpMachine($this->getEvent());
         }
         if (!$this->machine instanceof PaymentMachine) {
-            throw new \InvalidArgumentException('Očakávaná trieda PaymentMachine');
+            throw new \InvalidArgumentException(_('Expected class PaymentMachine'), 500);
         }
         return $this->machine;
     }
@@ -163,11 +194,11 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function startup() {
+    protected function startup() {
         parent::startup();
         // protection not implements eventPayment
         if (!$this->hasApi()) {
-            $this->flashMessage('Event has not payment API');
+            $this->flashMessage(_('Event has not payment API'));
             $this->redirect(':Event:Dashboard:default');
         };
     }
@@ -187,94 +218,37 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function createComponentCreateForm(): FormControl {
-        $control = $this->eventPaymentFactory->createCreateForm($this->getEvent());
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleSubmit($form, true);
-        };
-        return $control;
-    }
-
-    /**
      * @param $id
+     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
      */
     public function actionEdit($id) {
-        if ($this->canEdit()) {
-            /**
-             * @var $formControl FormControl
-             */
-            $formControl = $this->getComponent('editForm');
-            $values = $this->getModel()->toArray();
-            $values['payment_accommodation'] = $this->serializePaymentAccommodation();
-            $formControl->getForm()->setDefaults($values);
-        } else {
-            $this->flashMessage(\sprintf(_('Platba #%s sa nedá editvať'), $this->getModel()->getPaymentId()), 'danger');
+        if (!$this->canEdit()) {
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), 'danger');
             $this->redirect(':MyPayment:');
         }
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionCreate() {
-        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0) && !$this->isOrg()) {
-            $this->flashMessage(_('Platby niesu spustené!'));
-            $this->redirect('Dashboard:default');
+        if ((\count($this->getMachine()->getAvailableTransitions(null)) === 0)) {
+            $this->flashMessage(_('Payment is not allowed in this time!'));
+            if (!$this->isOrg()) {
+                $this->redirect('Dashboard:default');
+            }
         };
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function renderEdit() {
         $this->template->model = $this->getModel();
-    }
-
-    private function serializePaymentAccommodation() {
-        $query = $this->getModel()->getRelatedPersonAccommodation();
-        $items = [];
-        foreach ($query as $row) {
-            $items[$row->event_person_accommodation_id] = true;
-        }
-        return \json_encode($items);
-    }
-
-    private function handleSubmit(Form $form, bool $create) {
-        $values = $form->getValues();
-        if ($create) {
-            $model = $this->servicePayment->createNew([
-                'person_id' => $this->getUser()->getIdentity()->getPerson()->person_id,
-                'event_id' => $this->getEvent()->event_id,
-                'state' => $this->getMachine()->getInitState(),
-            ]);
-
-        } else {
-            $model = $this->getModel();
-        }
-        $this->servicePayment->updateModel($model, [
-            'currency' => $values->currency,
-            'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
-        ]);
-        $this->servicePayment->save($model);
-
-        $connection = $this->servicePayment->getConnection();
-        $connection->beginTransaction();
-
-        try {
-            $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
-        } catch (DuplicateAccommodationPaymentException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-            $connection->rollBack();
-            return;
-        } catch (EmptyDataException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-            $connection->rollBack();
-            return;
-        }
-        $connection->commit();
-
-        $this->flashMessage($create ? _('Platba bola vytvorená') : _('Platba bola upravená'));
-        $this->redirect('detail', ['id' => $model->payment_id]);
     }
 
     /**
@@ -282,8 +256,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentDetailControl(): DetailControl {
-        return $this->eventPaymentFactory->createDetailControl($this->getModel(), $this->getTranslator(), $this->getMachine());
+    protected function createComponentDetailControl(): DetailControl {
+        return $this->paymentComponentFactory->createDetailControl($this->getModel(), $this->getMachine());
     }
 
     /**
@@ -292,19 +266,15 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     protected function createComponentOrgGrid(): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->getMachine(), $this->servicePayment, $this->getEvent());
+        return $this->paymentComponentFactory->createOrgGrid($this->getEvent());
     }
 
     /**
-     * @return FormControl
+     * @return SelectForm
+     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentEditForm(): FormControl {
-        $control = $this->eventPaymentFactory->createEditForm($this->isContestsOrgAllowed($this->getModel(), 'org.edit'), $this->getEvent());
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleSubmit($form, false);
-        };
-        return $control;
+    protected function createComponentForm(): SelectForm {
+        return $this->paymentComponentFactory->creteForm($this->getEvent(), $this->isOrg(), $this->getMachine());
     }
 }

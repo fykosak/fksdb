@@ -4,7 +4,6 @@ namespace ORM\ServicesMulti\Events;
 
 use AbstractServiceMulti;
 use ORM\IModel;
-use ORM\ModelsMulti\Events\ModelMSousParticipant;
 use ORM\Services\Events\ServiceSousParticipant;
 use ServiceEventParticipant;
 

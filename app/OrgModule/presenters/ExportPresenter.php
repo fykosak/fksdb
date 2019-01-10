@@ -274,8 +274,6 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function renderCompose() {
-        $query = $this->getPatternQuery();
-
         $values = $this->getDesignFormFromSession();
         if ($values) {
             $this->getComponent('composeForm')->getForm()->setDefaults($values);

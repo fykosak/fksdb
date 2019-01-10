@@ -36,10 +36,16 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     const STATE_CANCELED = 'canceled'; // platba zrušená
     const STATE_NEW = 'new'; // nová platba
 
+    /**
+     * @return ModelPerson
+     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
+    /**
+     * @return ModelEvent
+     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
     }
@@ -56,6 +62,9 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $items;
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'event.payment';
     }
@@ -75,7 +84,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return string
      */
     public function getPaymentId(): string {
-        return \sprintf('%d%04d', $this->event_id, ($this->payment_id));
+        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
     /**
@@ -85,6 +94,9 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
+    /**
+     * @return Price
+     */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);
     }
@@ -120,14 +132,44 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $class;
     }
 
+    /**
+     * @return string
+     */
+    public function getStateLabel() {
+        switch ($this->state) {
+            case ModelPayment::STATE_NEW:
+                return _('New payment');
+
+            case ModelPayment::STATE_WAITING:
+                return _('Waiting for paying');
+
+            case ModelPayment::STATE_CANCELED:
+                return _('Payment canceled');
+
+            case ModelPayment::STATE_RECEIVED:
+                return _('Payment recieved');
+            default:
+                return $this->state;
+        }
+    }
+
+    /**
+     * @param $newState
+     */
     public function updateState($newState) {
         $this->update(['state' => $newState]);
     }
 
+    /**
+     * @return null|string
+     */
     public function getState() {
         return $this->state;
     }
 
+    /**
+     * @param PriceCalculator $priceCalculator
+     */
     public function updatePrice(PriceCalculator $priceCalculator) {
         $priceCalculator->setCurrency($this->currency);
         $price = $priceCalculator->execute($this);

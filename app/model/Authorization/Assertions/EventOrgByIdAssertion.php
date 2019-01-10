@@ -9,10 +9,10 @@ use Nette\Security\User;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class EventOrgAssertion extends AbstractEventOrgAssertion {
+class EventOrgByIdAssertion extends AbstractEventOrgAssertion {
 
     public function __construct($eventTypeId, User $user, Connection $connection) {
-        parent::__construct($eventTypeId, null, $user, $connection);
-    }
+        parent::__construct($eventTypeId, 'event_id', $user, $connection);
 
+    }
 }

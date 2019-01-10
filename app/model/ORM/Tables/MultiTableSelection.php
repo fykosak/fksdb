@@ -2,7 +2,6 @@
 
 namespace ORM\Tables;
 
-use AbstractModelSingle;
 use AbstractServiceMulti;
 use Nette\Database\Connection;
 use Nette\Database\Table\Selection as TableSelection;

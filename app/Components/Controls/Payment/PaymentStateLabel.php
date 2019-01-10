@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Payment;
+namespace FKSDB\Components\Controls\Payment;
 
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\UI\Control;
@@ -31,25 +31,9 @@ class PaymentStateLabel extends Control {
     public function render() {
         $this->template->setTranslator($this->translator);
         $this->template->className = $this->modelPayment->getUIClass();
-
-        $label = $this->modelPayment->state;
-        switch ($this->modelPayment->state) {
-            case ModelPayment::STATE_NEW:
-                $label = _('New payment');
-                break;
-            case ModelPayment::STATE_WAITING:
-                $label = _('Waiting for paying');
-                break;
-            case ModelPayment::STATE_CANCELED:
-                $label = _('Payment canceled');
-                break;
-            case ModelPayment::STATE_RECEIVED:
-                $label = _('Payment recieved');
-        }
-
-        $this->template->label = $label;
-
+        $this->template->label = $this->modelPayment->getStateLabel();
         $this->template->setFile(__DIR__ . '/PaymentStateLabel.latte');
         $this->template->render();
     }
+
 }

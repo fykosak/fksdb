@@ -17,23 +17,23 @@ class EventPrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public function calculate(ModelPayment $modelPayment): Price {
-        $price = new Price(0, $modelPayment->currency);
+    public static function calculate(ModelPayment $modelPayment): Price {
+       /* $price = new Price(0, $modelPayment->currency);
         $ids = $this->getData($modelPayment);
         foreach ($ids as $id) {
             $row = $this->serviceEventParticipant->findByPrimary($id);
             $model = ModelEventParticipant::createFromTableRow($row);
             $price->add($this->getPriceFromModel($model, $price));
-        }
-        return $price;
+        }*/
+        return new Price(0, $modelPayment->currency);
     }
 
     protected function getData(ModelPayment $modelPayment) {
         return [];
     }
 
-    public function getGridItems(ModelPayment $modelPayment): array {
-        $price = new Price(0, $modelPayment->currency);
+    public static function getGridItems(ModelPayment $modelPayment): array {
+        /*$price = new Price(0, $modelPayment->currency);
         $items = [];
         $ids = $this->getData([]);
         foreach ($ids as $id) {
@@ -44,7 +44,8 @@ class EventPrice extends AbstractPreProcess {
                 'label' => '',// TODO
             ];
         }
-        return $items;
+        return $items;*/
+        return [];
     }
 
     private function getPriceFromModel(ModelEventParticipant $modelEventAccommodation, Price $price): Price {

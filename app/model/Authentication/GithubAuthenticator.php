@@ -6,7 +6,6 @@ use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\ModelLogin;
 use FullHttpRequest;
 use Github\Events\Event;
-use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 use ServiceLogin;

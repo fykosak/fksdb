@@ -15,4 +15,4 @@ interface IFilteredDataProvider extends IDataProvider {
     public function getFilteredItems($search);
 }
 
-?>
+

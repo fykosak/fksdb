@@ -25,4 +25,4 @@ class ServiceMPostContact extends AbstractServiceMulti {
 
 }
 
-?>
+

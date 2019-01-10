@@ -24,7 +24,7 @@ class PriceCalculatorFactory {
         $calculator = new PriceCalculator($event);
         // $calculator->addPreProcess(new EventPrice($this->serviceEventParticipant));
         // $calculator->addPreProcess(new EventSchedulePrice($this->serviceEventParticipant));// TODO mergnuť s programom pre FOF
-        $calculator->addPreProcess(new EventAccommodationPrice($this->serviceEventPersonAccommodation));
+        $calculator->addPreProcess(new EventAccommodationPrice());
         return $calculator;
     }
 }

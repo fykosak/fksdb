@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FKSDB\Components\Forms\Controls\Payment;
+namespace FKSDB\Components\Controls\Payment;
 
 
 use FKSDB\Payment\PriceCalculator\Price;

@@ -310,6 +310,7 @@ class Transition extends FreezableObject {
      * @note Assumes mask is valid.
      *
      * @param string $mask
+     * @return array
      */
     private static function parseMask($mask) {
         return explode('->', $mask);

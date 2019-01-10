@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Factories\Payment;
+namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Payment\PriceCalculator\Price;
 use Nette\Forms\Controls\SelectBox;

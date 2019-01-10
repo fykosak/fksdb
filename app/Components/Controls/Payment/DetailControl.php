@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\Payment;
+namespace FKSDB\Components\Controls\Payment;
 
+use EventModule\PaymentPresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Grids\Payment\PaymentStateLabel;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -44,8 +44,12 @@ class DetailControl extends Control {
     public function createComponentForm(): FormControl {
         $formControl = new FormControl();
         $form = $formControl->getForm();
-        if ($this->model->canEdit()) {
-            $submit = $form->addSubmit('edit', _('Edit payment'));
+        /**
+         * @var PaymentPresenter $presenter
+         */
+        $presenter = $this->getPresenter();
+        if ($this->model->canEdit() || $presenter->getContestAuthorizator()->isAllowed($this->model, 'org', $this->model->getEvent()->getContest())) {
+            $submit = $form->addSubmit('edit', _('Edit items'));
             $submit->onClick[] = function () {
                 $this->getPresenter()->redirect('edit');
             };

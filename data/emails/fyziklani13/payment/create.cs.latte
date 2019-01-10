@@ -1,6 +1,23 @@
 <div>
-    Platba {$model->getPaymentId()} vytvorená.
-    Platba vo výške {$model->getPrice()->__toString()}
+    Dobrý den,
+    <p>byla vytvořená platba #{$model->getPaymentId()} s částkou {$model->getPrice()->__toString()}.
+    </p>
 
     {include './items.latte'}
+
+    <p>Prosíme o její uhrazení převodem na účet. Jakmile platbu zaregistrujeme, bude vám zasláno potvrzení.</p>
+
+    <p>Pro snadné zpracování platby z naší strany, prosím, uveďte v platbě variabilní, konstantní a specifický symbol,
+        které charakterizují konkrétní platbu.</p>
+
+    <p>
+        <b>Číslo účtu</b>: {$model->bank_account}<br/>
+        <b>Variabilní symbol</b>: {$model->constant_symbol}<br/>
+        <b>Konstantní symbol</b>: {$model->constant_symbol}<br/>
+        <b>Specifický symbol</b>: {$model->specific_symbol}
+    </p>
+
+    <p>Doba vyřízení transakce je přibližně týden. V případě potíží nás neváhejte kontaktovat na fyziklani@fykos.cz.</p>
+
+    {include './signature.cs.latte'}
 </div>

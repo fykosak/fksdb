@@ -174,4 +174,4 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
 
 }
 
-?>
+

@@ -7,6 +7,7 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
@@ -57,6 +58,8 @@ class TransitionButtonsControl extends Control {
             $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
             return;
         } catch (\Exception $e) {
+            Debugger::barDump($e);
+            Debugger::log($e);
             $this->getPresenter()->flashMessage(_('Nastala chyba'), 'danger');
         }
         $this->redirect('this');

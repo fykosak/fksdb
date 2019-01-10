@@ -30,7 +30,7 @@ class Price {
      */
     public function add(Price $price) {
         if ($this->currency !== $price->getCurrency()) {
-            throw new \LogicException('');
+            throw new \LogicException('Currencies are not same');
         }
         $this->amount += $price->getAmount();
     }
@@ -82,7 +82,7 @@ class Price {
             case self::CURRENCY_KC:
                 return 'Kč';
             default:
-                throw new OutOfRangeException(\sprintf(_('Currency %s doesnt exists'), $currency));
+                throw new OutOfRangeException(\sprintf(_('Currency %s does not exists'), $currency));
         }
     }
 

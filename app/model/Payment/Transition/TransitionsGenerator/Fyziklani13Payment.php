@@ -91,7 +91,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
         $transition->setType(Transition::TYPE_SUCCESS);
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org.edit') ||
+            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org') ||
                 $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
         });
         $transition->beforeExecuteClosures[] = function (ModelPayment &$modelPayment) use ($machine) {

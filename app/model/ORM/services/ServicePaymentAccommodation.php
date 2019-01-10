@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Services;
 
 use AbstractServiceSingle;
@@ -12,6 +11,10 @@ use Nette\ArrayHash;
 use Nette\Diagnostics\Debugger;
 use Submits\StorageException;
 
+/**
+ * Class ServicePaymentAccommodation
+ * @package FKSDB\ORM\Services
+ */
 class ServicePaymentAccommodation extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_PAYMENT_ACCOMMODATION;
     protected $modelClassName = 'FKSDB\ORM\ModelPaymentAccommodation';

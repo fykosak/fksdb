@@ -17,8 +17,8 @@ class EventSchedulePrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public function calculate(ModelPayment $modelPayment): Price {
-        $price = new Price(0, $modelPayment->currency);
+    public static function calculate(ModelPayment $modelPayment): Price {
+        /*$price = new Price(0, $modelPayment->currency);
         $ids = $this->getData($modelPayment);
         $schedule = $modelPayment->getEvent()->getParameter('schedule');
         foreach ($ids as $id) {
@@ -27,8 +27,8 @@ class EventSchedulePrice extends AbstractPreProcess {
                 $schedulePrice = $this->calculateSchedule($participantSchedule, $schedule, $modelPayment->currency);
                 $price->add($schedulePrice);
             }
-        }
-        return $price;
+        }*/
+        return new Price(0, $modelPayment->currency);
     }
 
     private function getParticipantSchedule($id) {
@@ -37,8 +37,8 @@ class EventSchedulePrice extends AbstractPreProcess {
         return $model->schedule;
     }
 
-    public function getGridItems(ModelPayment $modelPayment): array {
-        $ids = $this->getData($modelPayment);
+    public static function getGridItems(ModelPayment $modelPayment): array {
+       /* $ids = $this->getData($modelPayment);
         $items = [];
         $schedule = $modelPayment->getEvent()->getParameter('schedule');
         foreach ($ids as $id) {
@@ -52,7 +52,8 @@ class EventSchedulePrice extends AbstractPreProcess {
 
             }
         }
-        return $items;
+        return $items;*/
+       return [];
     }
 
     private function calculateSchedule($participantSchedule, $schedule, $currency): Price {
