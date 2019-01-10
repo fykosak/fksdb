@@ -47,11 +47,10 @@ class BreadcrumbsFactory {
 
     /**
      *
-     * @return \FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs
+     * @return Breadcrumbs
      */
-    public function create() {
-        $component = new Breadcrumbs($this->expiration, $this->session, $this->router, $this->httpRequest, $this->presenterFactory);
-        return $component;
+    public function create(): Breadcrumbs {
+        return new Breadcrumbs($this->expiration, $this->session, $this->router, $this->httpRequest, $this->presenterFactory);
     }
 
 }

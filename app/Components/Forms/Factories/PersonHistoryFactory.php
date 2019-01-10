@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Factories\PersonHistory\ClassField;
 use FKSDB\Components\Forms\Factories\PersonHistory\StudyYearField;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidArgumentException;
+use Nette\NotImplementedException;
 
 /**
  * Class PersonHistoryFactory
@@ -43,7 +43,7 @@ class PersonHistoryFactory {
             case 'study_year':
                 return new StudyYearField($this->yearCalculator, $acYear);
             default:
-                throw new InvalidArgumentException();
+                throw new NotImplementedException(\sprintf(_('Field %s is not implemented.'), $fieldName), 501);
         }
     }
 }

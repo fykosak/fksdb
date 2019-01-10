@@ -134,5 +134,3 @@ abstract class AbstractModelMulti extends Object implements IModel {
     }
 
 }
-
-?>

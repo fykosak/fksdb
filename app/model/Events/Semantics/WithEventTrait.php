@@ -6,7 +6,6 @@ use Events\Machine\Transition;
 use Events\Model\Holder\BaseHolder;
 use Events\Model\Holder\Field;
 use Events\Model\Holder\Holder;
-use FKSDB\ORM\ModelEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

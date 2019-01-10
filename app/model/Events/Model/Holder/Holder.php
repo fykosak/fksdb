@@ -12,7 +12,6 @@ use Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use Events\Processings\GenKillProcessing;
 use Events\Processings\IProcessing;
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\ModelEvent;
 use IteratorAggregate;
 use LogicException;
 use Nette\Application\UI\Form;
@@ -196,7 +195,7 @@ class Holder extends FreezableObject implements ArrayAccess, IteratorAggregate {
      * Apply processings to the values and sets them to the ORM model.
      *
      * @param ArrayHash $values
-     * @param \Events\Model\Machine $machine
+     * @param Machine $machine
      * @param Transition[] $transitions
      * @param ILogger $logger
      * @param Form $form

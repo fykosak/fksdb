@@ -109,5 +109,3 @@ class GroupOptions extends Object implements IOptionsProvider {
     }
 
 }
-
-?>

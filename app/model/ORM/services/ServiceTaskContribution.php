@@ -9,4 +9,3 @@ class ServiceTaskContribution extends AbstractServiceSingle {
     protected $modelClassName = 'FKSDB\ORM\ModelTaskContribution';
 
 }
-

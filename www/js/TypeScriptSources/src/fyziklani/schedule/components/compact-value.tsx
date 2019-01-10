@@ -76,7 +76,7 @@ const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     return {
         onToggleChooser: () => dispatch(toggleChooser()),
     };

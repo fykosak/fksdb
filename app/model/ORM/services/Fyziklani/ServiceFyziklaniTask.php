@@ -51,15 +51,15 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * @param ModelEvent $event
-     * @param bool $injectName
+     * @param bool $hideName
      * @return array
      */
-    public function getTasks(ModelEvent $event, bool $injectName = true): array {
+    public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {
         $tasks = [];
 
         foreach ($this->findAll($event)->order('label') as $row) {
             $model = ModelFyziklaniTask::createFromTableRow($row);
-            $tasks[] = $model->__toArray();
+            $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;
     }

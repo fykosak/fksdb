@@ -51,7 +51,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @param null $lastUpdated
      * @return array
      */
-    public function getSubmits(ModelEvent $event, $lastUpdated = null) {
+    public function getSubmitsAsArray(ModelEvent $event, $lastUpdated = null): array {
         $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {

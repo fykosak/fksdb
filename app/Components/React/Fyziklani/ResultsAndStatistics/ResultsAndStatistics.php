@@ -25,7 +25,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         if (!($presenter instanceof BasePresenter)) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani', 'results', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
         /**
          * @var \DateTime $lastUpdated
          */
@@ -37,26 +37,26 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => (string)$gameSetup->game_start,
-            'gameEnd' => (string)$gameSetup->game_end,
+            'gameStart' => $gameSetup->game_start->format('c'),
+            'gameEnd' => $gameSetup->game_end->format('c'),
             'times' => [
                 'toStart' => strtotime($gameSetup->game_start) - time(),
                 'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-            'lastUpdated' => (new DateTime())->__toString(),
+            'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,
             'submits' => [],
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmits($this->getEvent(), $lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
         }
         //if (!$lastUpdated) {
         $result['rooms'] = $this->getRooms();
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasks($this->getEvent());
+        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
         // }
 
