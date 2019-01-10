@@ -70,7 +70,7 @@ class MailSenderPresenter extends BasePresenter {
 
             $message->setFrom($values->from);
             $message->addReplyTo($values->replay);
-            $message->setBody($values->text);
+            $message->setHtmlBody($values->text);
             $message->addTo($to);
             $this->mailer->send($message);
             $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), 'success');
