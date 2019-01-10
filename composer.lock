@@ -4,37 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da47dcc7c3afb5153f81580d7a2c372b",
+    "content-hash": "b72cf1db26c59c52ff7678103234a5fc",
     "packages": [
         {
-            "name": "nette/mail",
-            "version": "v2.4.6",
+            "name": "nette/component-model",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nette/mail.git",
-                "reference": "431f1774034cc14ee6a795b6514fe6343f75a68e"
+                "url": "https://github.com/nette/component-model.git",
+                "reference": "6e7980f5ddec31f68a39e767799b1b0be9dd1014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/mail/zipball/431f1774034cc14ee6a795b6514fe6343f75a68e",
-                "reference": "431f1774034cc14ee6a795b6514fe6343f75a68e",
+                "url": "https://api.github.com/repos/nette/component-model/zipball/6e7980f5ddec31f68a39e767799b1b0be9dd1014",
+                "reference": "6e7980f5ddec31f68a39e767799b1b0be9dd1014",
                 "shasum": ""
             },
             "require": {
-                "ext-iconv": "*",
-                "nette/utils": "^2.4 || ~3.0.0",
+                "nette/utils": "^2.5 || ~3.0.0",
                 "php": ">=5.6.0"
             },
             "conflict": {
+                "nette/application": "<2.4",
                 "nette/nette": "<2.2"
             },
             "require-dev": {
-                "nette/di": "^2.4 || ~3.0.0",
                 "nette/tester": "^2.0",
-                "tracy/tracy": "^2.4"
-            },
-            "suggest": {
-                "ext-fileinfo": "to detect type of attached files"
+                "tracy/tracy": "^2.3"
             },
             "type": "library",
             "extra": {
@@ -63,16 +59,13 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "📧 Nette Mail: handy email creation and transfer library for PHP with both text and MIME-compliant support.",
+            "description": "⚛ Nette Component Model",
             "homepage": "https://nette.org",
             "keywords": [
-                "mail",
-                "mailer",
-                "mime",
-                "nette",
-                "smtp"
+                "components",
+                "nette"
             ],
-            "time": "2018-11-21T22:35:13+00:00"
+            "time": "2018-03-20T16:32:50+00:00"
         },
         {
             "name": "nette/utils",

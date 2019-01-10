@@ -8,6 +8,12 @@ $baseDir = dirname($vendorDir);
 return array(
     'Nette\\ArgumentOutOfRangeException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Bridges\\MailDI\\MailExtension' => $vendorDir . '/nette/mail/src/Bridges/MailDI/MailExtension.php',
+    'Nette\\ComponentModel\\ArrayAccess' => $vendorDir . '/nette/component-model/src/ComponentModel/ArrayAccess.php',
+    'Nette\\ComponentModel\\Component' => $vendorDir . '/nette/component-model/src/ComponentModel/Component.php',
+    'Nette\\ComponentModel\\Container' => $vendorDir . '/nette/component-model/src/ComponentModel/Container.php',
+    'Nette\\ComponentModel\\IComponent' => $vendorDir . '/nette/component-model/src/ComponentModel/IComponent.php',
+    'Nette\\ComponentModel\\IContainer' => $vendorDir . '/nette/component-model/src/ComponentModel/IContainer.php',
+    'Nette\\ComponentModel\\RecursiveComponentIterator' => $vendorDir . '/nette/component-model/src/ComponentModel/RecursiveComponentIterator.php',
     'Nette\\DeprecatedException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\DirectoryNotFoundException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\FileNotFoundException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
