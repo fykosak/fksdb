@@ -265,7 +265,7 @@ class ExportPresenter extends SeriesPresenter {
             }
         }
 
-        $this['editForm']->getForm()->setDefaults($values);
+        $this->getComponent('editForm')->getForm()->setDefaults($values);
     }
 
     public function titleCompose() {
@@ -274,11 +274,9 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     public function renderCompose() {
-        $query = $this->getPatternQuery();
-
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this['composeForm']->getForm()->setDefaults($values);
+            $this->getComponent('composeForm')->getForm()->setDefaults($values);
         }
     }
 
@@ -303,15 +301,15 @@ class ExportPresenter extends SeriesPresenter {
 
     public function titleExecute($id) {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name));
-    $this->setIcon('fa fa-play-circle-o');
+        $this->setIcon('fa fa-play-circle-o');
     }
 
     public function renderExecute($id) {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
-    protected function createComponentContestChooser($name) {
-        $component = parent::createComponentContestChooser($name);
+    protected function createComponentContestChooser(): ContestChooser {
+        $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'execute') {
             // Contest and year check is done in StoredQueryComponent
             $component->setContests(ContestChooser::CONTESTS_ALL);

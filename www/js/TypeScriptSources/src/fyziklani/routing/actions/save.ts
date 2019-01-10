@@ -1,5 +1,7 @@
-import { Dispatch } from 'redux';
-import { Action } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
 import { IResponse } from '../../../fetch-api/middleware/interfaces';
 import { ITeam } from '../../helpers/interfaces';

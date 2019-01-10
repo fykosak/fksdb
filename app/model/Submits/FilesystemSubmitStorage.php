@@ -77,7 +77,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
     }
 
     /**
-     * @throws SubmitStorageException for unsuccessful commit
+     * @throws StorageException for unsuccessful commit
      */
     public function commit() {
         if ($this->todo === null) {

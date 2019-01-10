@@ -26,11 +26,20 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         return $result ?: null;
     }
 
-    public function teamExist(int $teamId, ModelEvent $event) {
+    /**
+     * @param int $teamId
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function teamExist(int $teamId, ModelEvent $event): bool {
         /**
          * @var $team ModelFyziklaniTeam
          */
-        $team = $this->findByPrimary($teamId);
+        $row = $this->findByPrimary($teamId);
+        if (!$row) {
+            return false;
+        }
+        $team = ModelFyziklaniTeam::createFromTableRow($row);
         return $team && $team->event_id == $event->event_id;
     }
 
@@ -48,26 +57,12 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      * @param ModelEvent $event
      * @return array
      */
-    public function getTeamsArray(ModelEvent $event) {
+    public function getTeamsAsArray(ModelEvent $event): array {
         $teams = [];
-        /**
-         * @var $row ModelFyziklaniTeam
-         */
-        foreach ($this->findPossiblyAttending($event) as $row) {
-            /**
-             * @var $row ModelFyziklaniTeam
-             */
-            $position = $row->getPosition();
 
-            $teams[] = [
-                'category' => $row->category,
-                'roomId' => $position ? $position->getRoom()->room_id : '',
-                'name' => $row->name,
-                'status' => $row->status,
-                'teamId' => $row->e_fyziklani_team_id,
-                'x' => $position ? $position->col : null,
-                'y' => $position ? $position->row : null,
-            ];
+        foreach ($this->findPossiblyAttending($event) as $row) {
+            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $teams[] = $team->__toArray(true);
         }
         return $teams;
     }

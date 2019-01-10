@@ -39,10 +39,15 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        $paginator = $this['paginator'];
+        $paginator =  $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
         //
         // data
@@ -77,17 +82,17 @@ class SubmitsGrid extends BaseGrid {
         //
         // operations
         //
-        $this->addButton("revoke", _("Zrušit"))
-                ->setClass("btn btn-xs btn-warning")
-                ->setText('Zrušit') //todo i18n
+        $this->addButton('revoke', _('Zrušit'))
+                ->setClass('btn btn-xs btn-warning')
+                ->setText(_('Zrušit'))
                 ->setShow(function($row) {
                             return $this->canRevoke($row);
                         })
                 ->setLink(function($row) {
-                            return $this->link("revoke!", $row->submit_id);
+                            return $this->link('revoke!', $row->submit_id);
                         })
                 ->setConfirmationDialog(function($row) {
-                            return "Opravdu vzít řešení úlohy {$row->getTask()->getFQName()} zpět?"; //todo i18n
+                            return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'),$row->getTask()->getFQName());
                         });
 
 
@@ -133,7 +138,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @internal
-     * @param \FKSDB\Components\Grids\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @return boolean
      */
     public function canRevoke(ModelSubmit $submit) {

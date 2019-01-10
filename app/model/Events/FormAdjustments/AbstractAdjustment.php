@@ -57,6 +57,9 @@ abstract class AbstractAdjustment extends Object implements IFormAdjustment {
         return $result;
     }
 
+    /**
+     * @param Form $form
+     */
     private function setForm($form) {
         $this->pathCache = [];
         foreach ($form->getComponents(true, 'Nette\Forms\IControl') as $control) {
