@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-10 04:19+0100\n"
-"PO-Revision-Date: 2019-01-05 07:32+0100\n"
+"PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
 "Language: en\n"
@@ -159,14 +159,12 @@ msgid "List of payments"
 msgstr ""
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:167
-#, fuzzy
 msgid "Payment does not exists"
-msgstr "Payment doesn't exist."
+msgstr "Payment doesn't exist"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:172
-#, fuzzy
 msgid "Payment does not belong to this event"
-msgstr "Payment doesn't exist."
+msgstr "Payment doesn't belong to this event"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:188
 msgid "Expected class PaymentMachine"
@@ -505,9 +503,9 @@ msgid "Zaplatil"
 msgstr "Payed"
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
-#, fuzzy, php-format
+#, php-format
 msgid "Currency %s is not implemented."
-msgstr "Type \"%s\" is not implemented."
+msgstr ""
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:53
 #, php-format
@@ -515,7 +513,7 @@ msgid "Mena %s nieje implentovaná"
 msgstr "Currency %s is not implemented"
 
 #: i18n/../app/model/Payment/PriceCalculator/Price.php:85
-#, fuzzy, php-format
+#, php-format
 msgid "Currency %s does not exists"
 msgstr "Currency %s doesn't exist"
 
@@ -612,38 +610,40 @@ msgid "CSV soubor neobsahuje platnou hlavičku."
 msgstr "CSV does not contain correct heading."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:156
-#, fuzzy, php-format
+#, php-format
 msgid "Přihláška \"%s\" vytvořena."
-msgstr "Application '%s' created."
+msgstr "Application \"%s\" created."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:159
 msgid "Přihláška smazána."
 msgstr "Application deleted."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:161
-#, fuzzy, php-format
+#, php-format
 msgid "Stav přihlášky \"%s\" změněn."
-msgstr "State of application '%s' changed."
+msgstr "State of application \"%s\" changed."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:164
-#, fuzzy, php-format
+#, php-format
 msgid "Přihláška \"%s\" uložena."
-msgstr "Application '%s' saved."
+msgstr "Application \"%s\" saved."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:170
-#, fuzzy, php-format
+#, php-format
 msgid "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
-msgstr "Some field of group '%s' don't match an existing record."
+msgstr "Some fields of group \"%s\" don't match an existing record."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:175
-#, fuzzy, php-format
+#, php-format
 msgid "Data ve skupině \"%s\" kolidují s již existující přihláškou."
-msgstr "Data in group '%s' collide with an existing application."
+msgstr "Data in group \"%s\" collide with an existing application."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:233
-#, fuzzy, php-format
+#, php-format
 msgid "Ze stavu \"%s\" automatu \"%s\" neexistuje přechod do stavu \"%s\"."
-msgstr "There is on transition from state '%s' of machine '%s' to state '%s'."
+msgstr ""
+"There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
+"\"."
 
 #: i18n/../app/model/Events/Model/ApplicationHandler.php:290
 msgid "Chyba při ukládání přihlášky."
@@ -748,7 +748,7 @@ msgstr ""
 #: i18n/../app/model/ORM/services/ServicePaymentAccommodation.php:60
 #, php-format
 msgid "Ubytovanie \"%s\" má už vygenrovanú inú platbu."
-msgstr "Accommodation \"%s\" has already had generated payment."
+msgstr "Accommodation \"%s\" has already generated payment."
 
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateOrgException.php:8
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateApplicationException.php:8
@@ -1522,9 +1522,8 @@ msgid "Save payment"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:178
-#, fuzzy
 msgid "Platba bola vytvorená"
-msgstr "Payment has been changed"
+msgstr "Payment has been created"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:178
 msgid "Platba bola upravená"
@@ -1993,9 +1992,9 @@ msgid "Třída"
 msgstr "Class"
 
 #: i18n/../app/Components/Forms/Factories/PersonHistoryFactory.php:46
-#, fuzzy, php-format
+#, php-format
 msgid "Field %s is not implemented."
-msgstr "Type \"%s\" is not implemented."
+msgstr "Field \"%s\" is not implemented."
 
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:49
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:55
@@ -2271,9 +2270,9 @@ msgid "Zvolený stát neodpovídá zadanému PSČ."
 msgstr "Chosen country doesn't match provided postal code."
 
 #: i18n/../app/Components/Forms/Factories/PersonAccommodationFactory.php:52
-#, fuzzy, php-format
+#, php-format
 msgid "Mode %s is not implement"
-msgstr "Type \"%s\" is not implemented."
+msgstr "Mode \"%s\" is not implemented"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
@@ -2648,7 +2647,6 @@ msgid "Uzavřít celé Fyziklání"
 msgstr "Seal entire Fyziklani"
 
 #: i18n/../app/Components/Controls/Transitions/TransitionButtonsControl.php:63
-#, fuzzy
 msgid "Nastala chyba"
 msgstr "Some error emerged"
 

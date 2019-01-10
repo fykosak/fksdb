@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-10 04:19+0100\n"
-"PO-Revision-Date: 2019-01-04 20:06+0100\n"
+"PO-Revision-Date: 2019-01-10 12:19+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -139,14 +139,13 @@ msgstr "Seznam akcí"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:66
 #: i18n/../app/model/ORM/models/ModelPayment.php:143
-#, fuzzy
 msgid "New payment"
-msgstr "Moje platba"
+msgstr "Nová  platba"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:76
-#, fuzzy, php-format
+#, php-format
 msgid "Edit payment #%s"
-msgstr "Upravit platbu"
+msgstr "Upravit platbu #%s"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:86
 #, php-format
@@ -159,31 +158,29 @@ msgid "List of payments"
 msgstr "Seznam plateb"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:167
-#, fuzzy
 msgid "Payment does not exists"
-msgstr "Platba neexistuje."
+msgstr "Platba neexistuje"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:172
-#, fuzzy
 msgid "Payment does not belong to this event"
-msgstr "Platba neexistuje."
+msgstr "Platba nepatří k této akci"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:188
 msgid "Expected class PaymentMachine"
-msgstr ""
+msgstr "Očekávaná třída PaymentMachine"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:201
 msgid "Event has not payment API"
-msgstr ""
+msgstr "Akce nemá API pro platby"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:227
 #, php-format
 msgid "Payment #%s can not be edited"
-msgstr ""
+msgstr "Platba #%s nemůže být editována"
 
 #: i18n/../app/modules/EventModule/presenters/PaymentPresenter.php:238
 msgid "Payment is not allowed in this time!"
-msgstr ""
+msgstr "Platba není v tuto chvíli povolena!"
 
 #: i18n/../app/modules/EventModule/presenters/SchedulePresenter.php:19
 #: i18n/../app/Components/Forms/Factories/Events/ScheduleField.php:19
@@ -375,7 +372,7 @@ msgstr ""
 
 #: i18n/../app/model/Exports/StoredQueryFactory.php:150
 msgid "Unsupported format"
-msgstr ""
+msgstr "Nepodporovaný formát"
 
 #: i18n/../app/model/Exports/ExportFormatFactory.php:61
 msgid "Uložit CSV"
@@ -480,7 +477,7 @@ msgstr "Platba #%s má již vygenerované symboly."
 
 #: i18n/../app/model/Payment/SybolGenerator/Generators/Fyziklani13Generator.php:38
 msgid "Unsupported currency"
-msgstr ""
+msgstr "Nepodporovaná měna"
 
 #: i18n/../app/model/Payment/SybolGenerator/SymbolGeneratorFactory.php:27
 #, php-format
@@ -489,7 +486,7 @@ msgstr "Akce %s nemá nastavený generátor plateb"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:71
 msgid "Vytvoriť"
-msgstr ""
+msgstr "Vytvořit"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:89
 msgid "Potvrdiť platbu a napočítať cenu"
@@ -505,9 +502,9 @@ msgid "Zaplatil"
 msgstr ""
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
-#, fuzzy, php-format
+#, php-format
 msgid "Currency %s is not implemented."
-msgstr "Typ \"%s\" není implementovaný."
+msgstr "Měna \"%s\" není implementována."
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventPrice.php:53
 #, php-format
@@ -515,14 +512,14 @@ msgid "Mena %s nieje implentovaná"
 msgstr "Měna %s není implementovaná"
 
 #: i18n/../app/model/Payment/PriceCalculator/Price.php:85
-#, fuzzy, php-format
+#, php-format
 msgid "Currency %s does not exists"
 msgstr "Měna %s neexistuje"
 
 #: i18n/../app/model/Payment/Handler/PaymentDataHandler.php:51
-#, fuzzy, php-format
+#, php-format
 msgid "Item \"%s\" has already generated payment."
-msgstr "Platba #%s má již vygenerované symboly."
+msgstr "Položka #%s má již vygenerovanou platbu."
 
 #: i18n/../app/model/Fyziklani/CloseSubmitStrategy.php:73
 msgid "TeamID"
@@ -587,7 +584,7 @@ msgstr ""
 
 #: i18n/../app/model/Transitions/Machine/MachineFactory.php:58
 msgid "Not implemented"
-msgstr ""
+msgstr "Neimplementováno"
 
 #: i18n/../app/model/Transitions/Machine/Machine.php:77
 #, php-format
@@ -697,7 +694,7 @@ msgstr ""
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:59
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:67
 msgid "Open"
-msgstr ""
+msgstr "Open"
 
 #: i18n/../app/model/Events/Spec/Fol/CategoryProcessing.php:119
 #: i18n/../app/model/Events/Spec/Fyziklani/CategoryProcessing.php:91
@@ -748,7 +745,7 @@ msgstr ""
 #: i18n/../app/model/ORM/services/ServicePaymentAccommodation.php:60
 #, php-format
 msgid "Ubytovanie \"%s\" má už vygenrovanú inú platbu."
-msgstr ""
+msgstr "Ubytování \"%s\" má již vygenerovanou jinou platbu."
 
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateOrgException.php:8
 #: i18n/../app/model/ORM/services/Exceptions/DuplicateApplicationException.php:8
@@ -764,7 +761,7 @@ msgstr "Neplatné PSČ %d."
 #: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:44
 #, php-format
 msgid "Ubytovaní pre osobu %s od %s do %s v hoteli %s"
-msgstr ""
+msgstr "Ubytování pro osobu %s od %s do %s v hotelu %s"
 
 #: i18n/../app/model/ORM/models/ModelEvent.php:98
 msgid "Herné parametre niesu nastavené"
@@ -772,20 +769,20 @@ msgstr "Herní parametry nejsou nastavené"
 
 #: i18n/../app/model/ORM/models/ModelPayment.php:146
 msgid "Waiting for paying"
-msgstr ""
+msgstr "Čeká se platba"
 
 #: i18n/../app/model/ORM/models/ModelPayment.php:149
 msgid "Payment canceled"
-msgstr ""
+msgstr "Platba zrušena"
 
 #: i18n/../app/model/ORM/models/ModelPayment.php:152
 msgid "Payment received"
-msgstr ""
+msgstr "Platba obdržena"
 
 #: i18n/../app/model/ORM/models/ModelEventAccommodation.php:94
 #, php-format
 msgid "Ubytovaní od %s do %s v hoteli %s."
-msgstr ""
+msgstr "Ubytování od %s do %s v hotelu %s."
 
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:77
 msgid "Import úloh"
@@ -1512,19 +1509,16 @@ msgid "Person"
 msgstr "Osoba"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:132
-#, fuzzy
 msgid "Create payment"
-msgstr "Smazat platbu"
+msgstr "Vytvořit platbu"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:132
-#, fuzzy
 msgid "Save payment"
-msgstr "Moje platba"
+msgstr "Uložit platbu"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:178
-#, fuzzy
 msgid "Platba bola vytvorená"
-msgstr "Platba byla upravená"
+msgstr "Platba byla vytvořena"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:178
 msgid "Platba bola upravená"
@@ -1990,9 +1984,9 @@ msgid "Třída"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/PersonHistoryFactory.php:46
-#, fuzzy, php-format
+#, php-format
 msgid "Field %s is not implemented."
-msgstr "Typ \"%s\" není implementovaný."
+msgstr "Pole \"%s\" není implementováno."
 
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:49
 #: i18n/../app/Components/Forms/Factories/Events/AbstractFactory.php:55
@@ -2269,9 +2263,9 @@ msgid "Zvolený stát neodpovídá zadanému PSČ."
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/PersonAccommodationFactory.php:52
-#, fuzzy, php-format
+#, php-format
 msgid "Mode %s is not implement"
-msgstr "Typ \"%s\" není implementovaný."
+msgstr "Mód \"%s\" není implementovaný"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
@@ -2417,7 +2411,7 @@ msgstr "Specifický symbol"
 
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:71
 msgid "Bank acc."
-msgstr "Bankovní účet"
+msgstr "Bankovní účet č."
 
 #: i18n/../app/Components/Grids/Payment/MyPaymentGrid.php:25
 msgid "Event"
@@ -2633,9 +2627,8 @@ msgid "Parametrizovat"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Payment/DetailControl.php:52
-#, fuzzy
 msgid "Edit items"
-msgstr "Upravit učitele %s"
+msgstr "Přidat položky"
 
 #: i18n/../app/Components/Controls/Fyziklani/CloseControl.php:62
 #, php-format
