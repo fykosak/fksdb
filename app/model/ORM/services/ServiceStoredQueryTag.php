@@ -20,4 +20,3 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
         return $result ? : null;
     }
 }
-

@@ -66,7 +66,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         $patternQuery = $this->serviceStoredQuery->createNew(array_merge(array(
             'sql' => $sql,
             'php_post_proc' => 0,
-                        ), $queryData));
+        ), $queryData));
 
         $patternQuery->setParameters($parameters);
         $storedQuery = new StoredQuery($patternQuery, $this->connection);
@@ -146,6 +146,8 @@ class StoredQueryFactory implements IXMLNodeSerializer {
                     $colNode = $doc->createElement('col');
                 } elseif ($format == self::EXPORT_FORMAT_2) {
                     $colNode = $doc->createElement(Utils::xmlName($colName));
+                } else {
+                    throw new BadRequestException(_('Unsupported format'));
                 }
                 $textNode = $doc->createTextNode($value);
                 $colNode->appendChild($textNode);

@@ -45,15 +45,15 @@ class Team extends React.Component<IProps & IState, {}> {
                  id={'team' + team.teamId}>
                 <div className={'card ' + (isDragged ? 'text-white bg-primary' : '')}>
                     <div className="card-body card-block">
-                        <h6 className="card-title">
-                            {team.name + ' '}
-                            <span className={'badge badge-category-' + team.category}>{team.category}</span>
+                        <h6 className="card-title fyziklani-headline-red">
+                            {team.name}
                             {hasPlace && (
                                 <button className="close" onClick={(event) => {
                                     event.stopPropagation();
                                     onRemovePlace(team.teamId);
                                 }}>&times;</button>
                             )}</h6>
+                        <span className={'badge badge-fyziklani'}>Category: {team.category}</span>
                         <small className="text-muted">{team.status}</small>
                         <p>
                             {isUpdated && (<span className="updated-confirm-text text-center">updated</span>)}

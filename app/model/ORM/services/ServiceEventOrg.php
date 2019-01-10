@@ -1,5 +1,6 @@
 <?php
 
+use FKSDB\ORM\ModelEvent;
 use ORM\IModel;
 
 class ServiceEventOrg extends AbstractServiceSingle {
@@ -18,7 +19,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }
 
-    public function findByEventID($eventID) {
-        return $this->getTable()->where('event_id', $eventID);
+    public function findByEventId(ModelEvent $event) {
+        return $this->getTable()->where('event_id', $event->event_id);
     }
 }

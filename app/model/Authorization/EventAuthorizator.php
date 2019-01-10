@@ -4,7 +4,6 @@ namespace Authorization;
 
 use Authorization\Assertions\EventOrgByIdAssertion;
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\Object;
 use Nette\Security\Permission;
 use Nette\Security\User;

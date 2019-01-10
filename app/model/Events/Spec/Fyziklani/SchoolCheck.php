@@ -10,7 +10,7 @@ use ServicePersonHistory;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
@@ -39,7 +39,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
 
     protected final function getSchools($schoolControls, $personControls) {
         $personIds = array_filter(array_map(function(BaseControl $control) {
-                            return $control->getValue(false);
+                            return $control->getValue();
                         }, $personControls));
 
         $schools = $this->servicePersonHistory->getTable()

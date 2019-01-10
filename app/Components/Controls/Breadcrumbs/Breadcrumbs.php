@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
+use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use Nette\Application\IRouter;
 use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
@@ -85,7 +86,7 @@ class Breadcrumbs extends Control {
 
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
-        if (!$presenter instanceof \FKSDB\Components\Controls\Navigation\INavigablePresenter) {
+        if (!$presenter instanceof INavigablePresenter) {
             $class = get_class($presenter);
             throw new InvalidStateException("Expected presenter of INavigablePresenter type, got '$class'.");
         }
@@ -278,7 +279,7 @@ class Breadcrumbs extends Control {
         $requests[$requestKey] = $naviRequest;
     }
 
-    protected function createNaviRequest(\FKSDB\Components\Controls\Navigation\INavigablePresenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backLink) {
         $pathKey = $this->getPathKey($request);
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }

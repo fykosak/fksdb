@@ -40,7 +40,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
 
     protected function startup() {
         parent::startup();
-        $this['contestChooser']->syncRedirect();
+        $this->getComponent('contestChooser')->syncRedirect();
     }
 
     protected function createComponentContestChooser($name) {
@@ -58,7 +58,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     private $contestant = false;
 
     public function getSelectedContest() {
-        $contestChooser = $this['contestChooser'];
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -66,7 +66,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     public function getSelectedYear() {
-        $contestChooser = $this['contestChooser'];
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -78,7 +78,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
     }
 
     public function getSelectedLanguage() {
-        $languageChooser = $this['languageChooser'];
+        $languageChooser =  $this->getComponent('languageChooser');
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);
         }
@@ -105,13 +105,13 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
         return [null, null];
     }
 
-    public function getNavRoot() {
-        return 'public.dashboard.default';
+    public function getNavRoots(): array {
+        return ['public.dashboard.default'];
     }
 
 }

@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use Nette\Database\Connection;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 
 class SchedulePresenter extends BasePresenter {

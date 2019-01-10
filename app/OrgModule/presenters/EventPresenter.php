@@ -30,7 +30,6 @@ use Nette\Utils\NeonException;
 use ORM\IModel;
 use ServiceAuthToken;
 use ServiceEvent;
-use SystemContainer;
 use Utils;
 
 
@@ -128,18 +127,6 @@ class EventPresenter extends EntityPresenter {
             ->isAllowed($model, 'application', $this->getSelectedContest()));
     }
 
-    public function authorizedModel($id) {
-        $model = $this->getModel();
-        if (!$model) {
-            throw new BadRequestException('Neexistující model.', 404);
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($model, 'edit', $this->getSelectedContest()));
-    }
-
-    public function actionModel($id) {
-
-    }
-
     public function titleList() {
         $this->setTitle(_('Akce'));
         $this->setIcon('fa fa-calendar-check-o');
@@ -170,7 +157,7 @@ class EventPresenter extends EntityPresenter {
 
     public function actionDelete() {
 // There's no use case for this. (Errors must be deleted manually via SQL.)
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
     public function renderApplications($id) {

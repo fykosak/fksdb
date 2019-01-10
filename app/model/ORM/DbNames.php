@@ -57,7 +57,7 @@ class DbNames {
     const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
     const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
-    const TAB_BRAWL_ROOM = 'brawl_room';
-    const TAB_BRAWL_TEAM_POSITION = 'brawl_team_position';
+    const TAB_FYZIKLANI_ROOM = 'brawl_room';
+    const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
 
 }

@@ -55,7 +55,9 @@ class ContestantSubmits extends BaseControl {
     /**
      *
      * @param Traversable|array $tasks
-     * @param \FKSDB\Components\Forms\Controls\ServiceSubmit $submitService
+     * @param ModelContestant $contestant
+     * @param ServiceSubmit $submitService
+     * @param $acYear
      * @param string|null $label
      */
     function __construct($tasks, ModelContestant $contestant, ServiceSubmit $submitService, $acYear, $label = null) {
@@ -227,6 +229,7 @@ class ContestantSubmits extends BaseControl {
      *
      * @todo Improve client side so that this is not needed anymore.
      * @param string $source
+     * @param bool $parse
      * @return string
      */
     private function sourceToFormat($source, $parse = false) {

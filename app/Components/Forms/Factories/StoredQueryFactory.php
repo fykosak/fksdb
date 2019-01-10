@@ -90,7 +90,7 @@ class StoredQueryFactory {
     /**
      * @internal
      * @param Container $container
-     * @param type $group
+     * @param mixed $group
      */
     public function buildParameterMetadata(Container $container, $group) {
         $container->setCurrentGroup($group);

@@ -47,12 +47,24 @@ acl:
     - addResource(org)           # create, edit, list, delete
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
-    - addResource(fyziklani)
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
+    - addResource(mail-send) #default
+    #fyziklani
+    - addResource(fyziklani.dashboard) # default
+    - addResource(fyziklani.task) # list, import
+    - addResource(fyziklani.close) # list, team, results
+    - addResource(fyziklani.rooms) # edit, download
+    - addResource(fyziklani.results) # final, correlation, presentation,
+    - addResource(fyziklani.submit) # deafult
+    - addResource(fyziklani.gameSetup) # deafult
+
+#event module
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
     - addResource(event.accommodation) # list, create, edit, billeted
+    - addResource(event.model) #default
+    - addResource(event.applicationsTimeProgress) # default
 
     # ACL
     - allow(contestant, submit, upload)
@@ -71,6 +83,7 @@ acl:
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(org, mail-send, ::constant(Nette\Security\Permission::ALL))
     # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
@@ -105,7 +118,7 @@ acl:
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL)) # in OrgModule
-    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
+
     - allow(eventManager, person, stalk.full)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
@@ -116,19 +129,35 @@ acl:
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
-    - allow(taskManager, fyziklani, ::constant(Nette\Security\Permission::ALL))
+
+# fyziklani
+    - allow(guest,fyziklani.dashboard, default)
+#base for org
+    - allow(org, fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
+    - allow(org, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # može uzatvárať
+    - allow(org, fyziklani.results, presentation) # môže premietať výsledky
+    - allow(org, fyziklani.results, final) # môže pozerať konečné výsledky
+    - allow(org, fyziklani.task, list) # može pozerať úlohy
+    # specific ACL
+    - allow(taskManager, fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # importovať úlohy
+    - allow(boss, fyziklani.rooms, ::constant(Nette\Security\Permission::ALL)) # editovať routing
+    - allow(boss, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
+    - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
+
     # eventModule
-    - allow(registered, event.dashboard)
     - allow(org, event.dashboard)
+    - allow(registered, event.dashboard)
 
-    - allow(org, fyziklani, ::constant(Nette\Security\Permission::ALL)) # taks, taksImport, submit [entrx edit ,table], results (!oprávnenie len k hardVisible)
-    - allow(guest, fyziklani, dashboard)
+    - allow(eventManager, event.schedule)
+    - allow(eventManager, event.model)
+    - allow(boss, event.applicationsTimeProgress)
+    - allow(eventManager, event.accommodation, ::constant(Nette\Security\Permission::ALL)) # in eventModule
 
-    - allow(org, event.schedule)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
-    - allow(superuser, fyziklani, correlation)
+
 
 
 

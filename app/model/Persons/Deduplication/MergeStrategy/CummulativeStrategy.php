@@ -15,7 +15,7 @@ class CummulativeStrategy implements IMergeStrategy {
 
     /**
      *
-     * @param null|enum $precedence trunk|merged
+     * @param null|mixed $precedence trunk|merged
      */
     function __construct($precedence = null) {
         $this->precedence = $precedence;
@@ -42,7 +42,7 @@ class CummulativeStrategy implements IMergeStrategy {
     }
 
     private function equals($trunk, $merged) {
-        if ($trunk instanceof DateTime && $merged instanceof DateTime) {
+        if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {
             return $trunk == $merged;

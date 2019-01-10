@@ -6,7 +6,7 @@ use EventModule\AccommodationPresenter;
 use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use Nette\Utils\Html;
-use SQL\SearchableDataSource;
+use NiftyGrid\DataSource\NDataSource;
 
 class EventBilletedPerson extends BaseGrid {
     /**
@@ -33,10 +33,12 @@ class EventBilletedPerson extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $accommodations = $this->eventAccommodation->getAccommodated();
 
+        $accommodations = $this->serviceEventPersonAccommodation->getTable()->where('event_accommodation_id', $this->eventAccommodation->event_accommodation_id);
+        // $this->eventAccommodation->getAccommodated();
+        $this->paginate = false;
 
-        $dataSource = new SearchableDataSource($accommodations);
+        $dataSource = new NDataSource($accommodations);
 
         $this->setDataSource($dataSource);
         $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
@@ -90,6 +92,10 @@ class EventBilletedPerson extends BaseGrid {
 
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function handleConfirmPayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
         $model = ModelEventPersonAccommodation::createFromTableRow($row);
@@ -103,6 +109,10 @@ class EventBilletedPerson extends BaseGrid {
         $this->redirect('this');
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function handleDeletePayment($id) {
         $row = $this->serviceEventPersonAccommodation->findByPrimary($id);
         $model = ModelEventPersonAccommodation::createFromTableRow($row);

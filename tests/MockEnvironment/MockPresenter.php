@@ -13,10 +13,5 @@ class MockPresenter extends BasePresenter {
     public function getLang() {
         return 'cs';
     }
-
-    public function getNavRoot() {
-        return '';
-    }
-
 }
 
