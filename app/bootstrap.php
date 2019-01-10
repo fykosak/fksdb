@@ -11,8 +11,9 @@ use Nette\Forms\Container;
 use Nette\Utils\Finder;
 
 // Load Nette Framework
-require LIBS_DIR . '/autoload.php';
 require LIBS_DIR . '/../vendor/autoload.php';
+require LIBS_DIR . '/autoload.php';
+
 
 
 
@@ -29,7 +30,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
-
+error_reporting(~E_USER_DEPRECATED);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
