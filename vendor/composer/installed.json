@@ -1,5 +1,76 @@
 [
     {
+        "name": "nette/caching",
+        "version": "v2.5.8",
+        "version_normalized": "2.5.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/caching.git",
+            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/caching/zipball/7fba7c7ab2585fafb7b31152f2595e1551120555",
+            "reference": "7fba7c7ab2585fafb7b31152f2595e1551120555",
+            "shasum": ""
+        },
+        "require": {
+            "nette/finder": "^2.2 || ~3.0.0",
+            "nette/utils": "^2.4 || ~3.0.0",
+            "php": ">=5.6.0"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "^2.4",
+            "nette/di": "^2.4 || ~3.0.0",
+            "nette/tester": "^2.0",
+            "tracy/tracy": "^2.4"
+        },
+        "suggest": {
+            "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
+        },
+        "time": "2018-03-21T11:04:32+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.5-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "⏱ Nette Caching: library with easy-to-use API and many cache backends.",
+        "homepage": "https://nette.org",
+        "keywords": [
+            "cache",
+            "journal",
+            "memcached",
+            "nette",
+            "sqlite"
+        ]
+    },
+    {
         "name": "nette/component-model",
         "version": "v2.4.0",
         "version_normalized": "2.4.0.0",
@@ -261,6 +332,74 @@
             "neon",
             "nette",
             "yaml"
+        ]
+    },
+    {
+        "name": "nette/robot-loader",
+        "version": "v2.4.4",
+        "version_normalized": "2.4.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/robot-loader.git",
+            "reference": "1f7f8792ce4d94162959e6b766822d6051623bca"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/robot-loader/zipball/1f7f8792ce4d94162959e6b766822d6051623bca",
+            "reference": "1f7f8792ce4d94162959e6b766822d6051623bca",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "nette/caching": "~2.2",
+            "nette/finder": "~2.3",
+            "nette/utils": "~2.4",
+            "php": ">=5.6.0"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~2.0",
+            "tracy/tracy": "^2.3"
+        },
+        "time": "2017-08-14T20:23:02+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "🍀 Nette RobotLoader: high performance and comfortable autoloader that will search and autoload classes within your application.",
+        "homepage": "https://nette.org",
+        "keywords": [
+            "autoload",
+            "class",
+            "interface",
+            "nette",
+            "trait"
         ]
     },
     {

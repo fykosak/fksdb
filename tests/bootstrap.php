@@ -31,7 +31,7 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 require LIBS_DIR . '/autoload.php';
-error_reporting(~E_USER_DEPRECATED);
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 
 require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tester/Tester/bootstrap.php';
 
@@ -79,7 +79,7 @@ $container = $configurator->createContainer();
 //
 // Register addons
 //
-error_reporting(~E_USER_DEPRECATED);
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 Replicator::register();
 
 function dumpResponse(TextResponse $response) {

@@ -30,7 +30,7 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
 
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
-error_reporting(~E_USER_DEPRECATED);
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
