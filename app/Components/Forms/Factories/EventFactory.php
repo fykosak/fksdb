@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\DateTimeBox;
+use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use FKSDB\ORM\ModelContest;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SelectBox;
@@ -53,17 +53,19 @@ class EventFactory {
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->setOption('description', _('U soustředka místo.'));
 
-        $container->addDatePicker('begin', _('Začátek akce'))
-            ->addRule(Form::FILLED, _('%label je povinný.'));
+        $control = new DateTimeLocalInput(_('Začátek akce'));
+        $control->addRule(Form::FILLED, _('%label je povinný.'));
+        $container->addComponent($control, 'begin');
 
-        $container->addDatePicker('end', _('Konec akce'))
-            ->addRule(Form::FILLED, _('%label je povinný.'))
+        $control = new DateTimeLocalInput(_('Konec akce'));
+        $control->addRule(Form::FILLED, _('%label je povinný.'))
             ->setOption('description', _('U jednodenních akcí shodný se začátkem.'));
+        $container->addComponent($control, 'end');;
 
-        $control = new DateTimeBox(_('Začátek registrace'));
+        $control = new DateTimeLocalInput(_('Začátek registrace'));
         $container->addComponent($control, 'registration_begin');
 
-        $control = new DateTimeBox(_('Konec registrace'));
+        $control = new DateTimeLocalInput(_('Konec registrace'));
         $container->addComponent($control, 'registration_end');
 
 

@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\ORM\ModelPerson;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -114,9 +115,7 @@ abstract class AbstractReferencedPersonFactory extends Object implements IRefere
     public function createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $evenId);
-
         $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
-
         $container = new ReferencedContainer($hiddenField);
         if ($searchType == self::SEARCH_NONE) {
             $container->setSearch();

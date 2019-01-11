@@ -60,13 +60,13 @@ class OrgFactory {
         $container->addText('tex_signature', _('TeX identifikátor'))
             ->addRule(Form::MAX_LENGTH, null, 32)
             ->addCondition(Form::FILLED)
-            ->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+            ->addRule(Form::PATTERN, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
 
 
         $container->addText('domain_alias', _('Jméno v doméně fykos.cz'))
             ->addRule(Form::MAX_LENGTH, null, 32)
             ->addCondition(Form::FILLED)
-            ->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+            ->addRule(Form::PATTERN, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
 
         $container->addSelect('order', _('Hodnost'))
             ->setOption('description', _('Pro řazení v seznamu organizátorů'))

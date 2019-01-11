@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Utils\Promise;
+use Nette\Diagnostics\Debugger;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use ORM\IModel;
@@ -57,11 +58,12 @@ class ReferencedId extends HiddenField {
 
     function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         parent::__construct();
-        $this->monitor('Nette\Forms\Form');
-
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
+        $this->monitor('Nette\Forms\Form');
+
+
     }
 
     public function getReferencedContainer() {
@@ -102,23 +104,24 @@ class ReferencedId extends HiddenField {
 
     public function setValue($pvalue, $force = false) {
         $isPromise = ($pvalue === self::VALUE_PROMISE);
-        if (!($pvalue instanceof IModel) && !$isPromise) {
-            $pvalue = $this->service->findByPrimary($pvalue);
-        } else if ($isPromise) {
-            $pvalue = $this->service->createNew();
-        } else if ($pvalue instanceof IModel) {
-            $this->model = $pvalue;
+        if($this->service&&$this->referencedContainer){
+            if (!($pvalue instanceof IModel) && !$isPromise) {
+                $pvalue = $this->service->findByPrimary($pvalue);
+            } else if ($isPromise) {
+                $pvalue = $this->service->createNew();
+            } else if ($pvalue instanceof IModel) {
+                $this->model = $pvalue;
+            }
+            $container = $this->referencedContainer;
+            if (!$pvalue) {
+                $container->setSearchButton(true);
+                $container->setClearButton(false);
+            } else {
+                $container->setSearchButton(false);
+                $container->setClearButton(true);
+            }
+            $this->referencedSetter->setModel($container, $pvalue, $force);
         }
-        $container = $this->referencedContainer;
-        if (!$pvalue) {
-            $container->setSearchButton(true);
-            $container->setClearButton(false);
-        } else {
-            $container->setSearchButton(false);
-            $container->setClearButton(true);
-        }
-        $this->referencedSetter->setModel($container, $pvalue, $force);
-
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
         } else if ($pvalue instanceof IModel) {
@@ -126,6 +129,7 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pvalue;
         }
+
         parent::setValue($value);
     }
 
