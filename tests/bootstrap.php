@@ -52,6 +52,7 @@ Debugger::$logDirectory = LOG_DIR;
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
+error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 $configurator->createRobotLoader()
         ->addDirectory(APP_DIR)
         ->addDirectory(LIBS_DIR)
