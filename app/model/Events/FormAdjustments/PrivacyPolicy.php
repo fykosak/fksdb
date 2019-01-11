@@ -10,7 +10,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Components\Forms\Factories\PersonInfo\AgreedField;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FormUtils;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Forms\Form;
 use Nette\Object;
 use ServicePersonInfo;

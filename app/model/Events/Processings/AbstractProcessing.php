@@ -6,7 +6,7 @@ use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;

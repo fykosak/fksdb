@@ -1,6 +1,6 @@
 <?php
 
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use ORM\IModel;
 
 /**

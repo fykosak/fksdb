@@ -9,7 +9,7 @@ use FKSDB\ORM\ModelPerson;
 use FKSDB\ORM\ModelPostContact;
 use FormUtils;
 use ModelException;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\Utils\JsonException;

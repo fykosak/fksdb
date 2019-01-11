@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPerson;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
 use Submits\StorageException;

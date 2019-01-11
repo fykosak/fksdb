@@ -15,7 +15,7 @@ use FKSDB\Logging\ILogger;
 use IteratorAggregate;
 use LogicException;
 use Nette\Application\UI\Form;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Database\Connection;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;

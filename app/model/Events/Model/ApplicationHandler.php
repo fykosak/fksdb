@@ -15,7 +15,7 @@ use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\ModelEvent;
 use FormUtils;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;

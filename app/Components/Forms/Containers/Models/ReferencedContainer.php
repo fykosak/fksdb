@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\ArrayHash;
+use Nette\Utils\ArrayHash;
 use Nette\Callback;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
