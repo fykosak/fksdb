@@ -152,7 +152,7 @@ class StoredQueryFactory {
         }
         $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
         $select->setDataProvider($dataProvider);
-        $select->setMultiselect(true);
+        $select->setMultiSelect(true);
         return $select;
     }
 

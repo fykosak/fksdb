@@ -41,7 +41,7 @@ class EventOrgsGrid extends BaseGrid {
         $this->setDataSource($dataSource);
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
             $eventOrg = ModelEventOrg::createFromTableRow($row);
-            return $eventOrg->getPerson()->getFullname();
+            return $eventOrg->getPerson()->getFullName();
         });
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))

@@ -11,8 +11,8 @@ class DateTimeLocalInput extends TextInput {
 
     const FORMAT = 'Y-m-d\TH:i:s';
 
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    public function __construct($label = NULL, $maxLength = NULL) {
+        parent::__construct($label, $maxLength);
         $this->setType('datetime-local');
     }
 

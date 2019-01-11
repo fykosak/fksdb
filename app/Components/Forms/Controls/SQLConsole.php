@@ -16,8 +16,8 @@ class SQLConsole extends TextArea {
 
     const CSS_CLASS = 'sqlConsole';
 
-    public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
-        parent::__construct($label, $cols, $rows);
+    public function __construct($label = NULL) {
+        parent::__construct($label);
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
         $this->monitor('FKSDB\Application\IStylesheetCollector');
     }

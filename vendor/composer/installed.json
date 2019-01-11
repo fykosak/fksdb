@@ -198,6 +198,76 @@
         ]
     },
     {
+        "name": "nette/forms",
+        "version": "v2.4.9",
+        "version_normalized": "2.4.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/forms.git",
+            "reference": "787a924d09f507c44ead60f3822c31d61d909b65"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/forms/zipball/787a924d09f507c44ead60f3822c31d61d909b65",
+            "reference": "787a924d09f507c44ead60f3822c31d61d909b65",
+            "shasum": ""
+        },
+        "require": {
+            "nette/component-model": "~2.3",
+            "nette/http": "^2.3.8",
+            "nette/utils": "^2.4.6",
+            "php": ">=5.6.0"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "~2.4",
+            "nette/di": "~2.4",
+            "nette/tester": "~2.0",
+            "tracy/tracy": "^2.4"
+        },
+        "time": "2018-09-16T18:32:29+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "https://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "https://nette.org/contributors"
+            }
+        ],
+        "description": "?? Nette Forms: generating, validating and processing secure forms in PHP. Handy API, fully customizable, server & client side validation and mature design.",
+        "homepage": "https://nette.org",
+        "keywords": [
+            "Forms",
+            "bootstrap",
+            "csrf",
+            "javascript",
+            "nette",
+            "validation"
+        ]
+    },
+    {
         "name": "nette/http",
         "version": "v2.4.10",
         "version_normalized": "2.4.10.0",

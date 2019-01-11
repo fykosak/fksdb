@@ -61,7 +61,7 @@ class OrgsGrid extends BaseGrid {
         $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
             $model = ModelOrg::createFromTableRow($row);
             $person = $model->getPerson();
-            return $person->getFullname();
+            return $person->getFullName();
         });
         $this->addColumn('since', _('Začal'));
         $this->addColumn('until', _('Skončil'))->setRenderer(function ($row) {

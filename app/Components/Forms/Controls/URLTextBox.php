@@ -12,8 +12,8 @@ use Nette\Forms\Form;
  */
 class URLTextBox extends TextInput {
 
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
+    public function __construct($label = NULL, $maxLength = NULL) {
+        parent::__construct($label, $maxLength);
 
         $this->addCondition(Form::FILLED)
                 ->addRule(Form::URL, _('%label není platná URL.'));
