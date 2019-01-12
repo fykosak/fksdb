@@ -102,6 +102,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		// http
 		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
+			->addSetup('setEncoding', array('UTF-8'))
 			->setInternal(TRUE);
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility
@@ -215,7 +216,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		// templating
 		$latte = $container->addDefinition($this->prefix('latte'))
-			->setClass('Latte\Engine')
+			->setClass('Nette\Latte\Engine')
 			->setShared(FALSE);
 
 		if (empty($config['xhtml'])) {
