@@ -9,6 +9,7 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Config\Configurator;
 use Nette\Forms\Container;
 use Nette\Utils\Finder;
+use Tracy\Debugger;
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
@@ -29,6 +30,9 @@ $configurator->onCompile[] = function ($configurator, $compiler) {
         };
 
 // Enable Nette Debugger for error visualisation & logging
+
+Debugger::enable();
+
 $configurator->enableDebugger(dirname(__FILE__) . '/../log');
 error_reporting(~E_USER_DEPRECATED&~E_USER_WARNING);
 

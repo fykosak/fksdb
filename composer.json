@@ -1,6 +1,7 @@
 {
   "require": {
     "php": ">=7.0.0",
+    "tracy/tracy": "~2.5.5",
     "nette/utils": "~2.5.3",
     "nette/finder": "~2.4.2",
     "nette/http": "~2.4.10",
