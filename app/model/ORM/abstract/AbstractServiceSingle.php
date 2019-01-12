@@ -1,6 +1,7 @@
 <?php
 
-use Nette\Database\Connection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection as TableSelection;
 use Nette\InvalidStateException;
@@ -30,7 +31,7 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
     protected $tableName;
 
     /**
-     * @var Connection
+     * @var Context
      */
     protected $connection;
 
@@ -39,8 +40,8 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     protected static $instances = [];
 
-    public function __construct(Connection $connection) {
-        parent::__construct($this->tableName, $connection);
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, $this->tableName);
         $this->connection = $connection;
     }
 

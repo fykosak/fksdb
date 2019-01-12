@@ -255,16 +255,15 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$connection = $container->addDefinition($this->prefix("database.$name"))
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
-				->addSetup('setCacheStorage')
 				->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
 			if ($info['reflection']) {
-				$connection->addSetup('setDatabaseReflection', is_string($info['reflection'])
+				/*$connection->addSetup('setDatabaseReflection', is_string($info['reflection'])
 					? array(new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
 					: Nette\Config\Compiler::filterArguments(array($info['reflection']))
-				);
+				);*/
 			}
 
 			if (!$container->parameters['productionMode'] && $info['debugger']) {
