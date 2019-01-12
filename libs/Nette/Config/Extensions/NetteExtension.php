@@ -102,7 +102,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		// http
 		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
-			->addSetup('setEncoding', array('UTF-8'))
 			->setInternal(TRUE);
 
 		$container->addDefinition('httpRequest') // no namespace for back compatibility
