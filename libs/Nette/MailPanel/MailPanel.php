@@ -77,7 +77,7 @@ class MailPanel extends Object implements IBarPanel
 	public function getPanel()
 	{
 		$template = new FileTemplate();
-		$template->registerFilter(new Engine);
+		$template->registerFilter(new \Latte\Engine());
 		$template->setFile(__DIR__ . '/MailPanel.latte');
 		$template->baseUrl = $this->request->getUrl()->getBaseUrl();
 		$template->messages = $this->mailer->getMessages($this->messagesLimit);

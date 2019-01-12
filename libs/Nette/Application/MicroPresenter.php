@@ -11,6 +11,7 @@
 
 namespace NetteModule;
 
+use Latte\Engine;
 use Nette,
 	Nette\Application,
 	Nette\Application\Responses,
@@ -113,7 +114,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 		$template->setCacheStorage($context->getService('nette.templateCacheStorage'));
 		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
-			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
+			$template->registerFilter($latteFactory ? $latteFactory() : new Engine());
 		};
 		return $template;
 	}

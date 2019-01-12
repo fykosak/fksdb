@@ -215,7 +215,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		// templating
 		$latte = $container->addDefinition($this->prefix('latte'))
-			->setClass('Nette\Latte\Engine')
+			->setClass('Latte\Engine')
 			->setShared(FALSE);
 
 		if (empty($config['xhtml'])) {
