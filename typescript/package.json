@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack --color",
+    "build": "webpack --color -mode=\"production\"",
     "dev": "webpack --color --watch -mode=\"development\""
   },
   "author": "",
@@ -36,7 +36,6 @@
     "typescript": "3.2.2",
     "awesome-typescript-loader": "5.0.0-1",
     "ts-loader": "latest",
-    "eslint": "latest",
     "source-map-loader": "latest",
     "tslint-loader": "latest",
     "webpack": "latest",

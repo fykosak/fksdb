@@ -6,7 +6,7 @@ module.exports = {
         all: './src/index.ts'
     },
     output: {
-        path: path.resolve(__dirname, '../'),
+        path: path.resolve(__dirname, '../www/js/'),
         filename: 'bundle-[name].min.js',
         publicPath: '/js/',
     },
