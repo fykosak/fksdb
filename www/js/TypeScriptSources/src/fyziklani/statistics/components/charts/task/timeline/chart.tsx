@@ -1,4 +1,9 @@
-import * as d3 from 'd3';
+import { axisBottom } from 'd3-axis';
+import {
+    ScaleTime,
+    scaleTime,
+} from 'd3-scale';
+import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -28,7 +33,7 @@ class Timeline extends React.Component<IState & IProps, {}> {
 
     private xAxis: SVGGElement;
 
-    private xScale: d3.ScaleTime<number, number>;
+    private xScale: ScaleTime<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -48,7 +53,7 @@ class Timeline extends React.Component<IState & IProps, {}> {
             toDate,
         } = this.props;
 
-        this.xScale = d3.scaleTime().domain([fromDate, toDate]).range([30, 580]);
+        this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
@@ -106,8 +111,8 @@ class Timeline extends React.Component<IState & IProps, {}> {
     }
 
     private getAxis() {
-        const xAxis = d3.axisBottom(this.xScale);
-        d3.select(this.xAxis).call(xAxis);
+        const xAxis = axisBottom(this.xScale);
+        select(this.xAxis).call(xAxis);
     }
 }
 

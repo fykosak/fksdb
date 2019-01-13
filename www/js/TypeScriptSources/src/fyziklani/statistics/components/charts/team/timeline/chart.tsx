@@ -1,4 +1,12 @@
-import * as d3 from 'd3';
+import { axisBottom } from 'd3-axis';
+import {
+    ScaleLinear,
+    scaleLinear,
+    ScaleTime,
+    scaleTime,
+} from 'd3-scale';
+import { select } from 'd3-selection';
+import { timeMinute } from 'd3-time';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -30,8 +38,8 @@ class TimeLine extends React.Component<IState & IProps, {}> {
     private xAxis: any;
     private ySize: number;
 
-    private xScale: d3.ScaleTime<number, number>;
-    private yScale: d3.ScaleLinear<number, number>;
+    private xScale: ScaleTime<number, number>;
+    private yScale: ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -48,8 +56,8 @@ class TimeLine extends React.Component<IState & IProps, {}> {
 
         this.ySize = (activeTasks.length * 12) + 20;
 
-        this.xScale = d3.scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
-        this.yScale = d3.scaleLinear<number, number>().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
+        this.xScale = scaleTime<number, number>().domain([gameStart, gameEnd]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, activeTasks.length]).range([20, this.ySize - 30]);
 
         const dots = activeTasks.map((task, index: number) => {
             const {taskId, from} = task;
@@ -102,8 +110,8 @@ class TimeLine extends React.Component<IState & IProps, {}> {
     }
 
     private getAxis() {
-        const xAxis = d3.axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([d3.timeMinute.every(30)]);
-        d3.select(this.xAxis).call(xAxis);
+        const xAxis = axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([timeMinute.every(30)]);
+        select(this.xAxis).call(xAxis);
     }
 }
 

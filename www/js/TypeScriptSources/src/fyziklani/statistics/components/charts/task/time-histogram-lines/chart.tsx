@@ -1,4 +1,15 @@
-import * as d3 from 'd3';
+import {
+    axisBottom,
+    axisLeft,
+} from 'd3-axis';
+import {
+    ScaleLinear,
+    scaleLinear,
+    ScaleTime,
+    scaleTime,
+} from 'd3-scale';
+import { select } from 'd3-selection';
+import { curveMonotoneX } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -24,7 +35,7 @@ interface IState {
 
 interface IProps {
     taskId: number;
-    availablePoints:number[];
+    availablePoints: number[];
 }
 
 class TimeHistogramLines extends React.Component<IState & IProps, {}> {
@@ -32,8 +43,8 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
 
-    private xScale: d3.ScaleTime<number, number>;
-    private yScale: d3.ScaleLinear<number, number>;
+    private xScale: ScaleTime<number, number>;
+    private yScale: ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -97,8 +108,8 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
                 });
             }
         }
-        this.yScale = d3.scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
-        this.xScale = d3.scaleTime().domain([fromDate, toDate]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
+        this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
         const scales = {
             xScale: this.xScale,
             yScale: this.yScale,
@@ -141,8 +152,8 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
                                     created: gameEnd.toString(),
                                     totalPoints: 0,
                                 }];
-                            const linePath = getLinePath(scales, data, d3.curveMonotoneX);
-                            const areaPath = getAreaPath(scales, data, this.yScale(0), d3.curveMonotoneX);
+                            const linePath = getLinePath(scales, data, curveMonotoneX);
+                            const areaPath = getAreaPath(scales, data, this.yScale(0), curveMonotoneX);
 
                             return <g key={index}>
                                 <path d={linePath} className={'line'} stroke={getColorByPoints(points)}/>
@@ -160,11 +171,11 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
     }
 
     private getAxis(): void {
-        const xAxis = d3.axisBottom<Date>(this.xScale);
-        d3.select(this.xAxis).call(xAxis);
+        const xAxis = axisBottom<Date>(this.xScale);
+        select(this.xAxis).call(xAxis);
 
-        const yAxis = d3.axisLeft<number>(this.yScale);
-        d3.select(this.yAxis).call(yAxis);
+        const yAxis = axisLeft<number>(this.yScale);
+        select(this.yAxis).call(yAxis);
     }
 }
 

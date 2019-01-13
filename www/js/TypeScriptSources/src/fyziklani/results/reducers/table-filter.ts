@@ -4,9 +4,9 @@ import {
     ACTION_SET_AUTO_SWITCH,
     ACTION_SET_FILTER,
     ACTION_SET_NEXT_TABLE_FILTER,
-    IActionWithFilter,
+    ActionWithFilter,
 } from '../actions/table-filter';
-import { Filter } from '../components/results/filter/filter';
+import { Filter } from '../middleware/results/filters/filter';
 
 export interface IFyziklaniTableFilterState {
     filters: Filter[];
@@ -27,7 +27,7 @@ const setNextFilter = (state: IFyziklaniTableFilterState): IFyziklaniTableFilter
     };
 };
 
-const addFilter = (state: IFyziklaniTableFilterState, action: IActionWithFilter): IFyziklaniTableFilterState => {
+const addFilter = (state: IFyziklaniTableFilterState, action: ActionWithFilter): IFyziklaniTableFilterState => {
     const {filter} = action;
     const {filters} = state;
     const isIn = filters.some((actualFilters) => {
@@ -43,7 +43,7 @@ const addFilter = (state: IFyziklaniTableFilterState, action: IActionWithFilter)
     };
 };
 
-const removeFilter = (state: IFyziklaniTableFilterState, action: IActionWithFilter): IFyziklaniTableFilterState => {
+const removeFilter = (state: IFyziklaniTableFilterState, action: ActionWithFilter): IFyziklaniTableFilterState => {
     const {filter} = action;
     const {filters} = state;
     const newFilters = filters.filter((actualFilters) => {
@@ -56,7 +56,7 @@ const removeFilter = (state: IFyziklaniTableFilterState, action: IActionWithFilt
     };
 };
 
-const setFilter = (state: IFyziklaniTableFilterState, action: IActionWithFilter): IFyziklaniTableFilterState => {
+const setFilter = (state: IFyziklaniTableFilterState, action: ActionWithFilter): IFyziklaniTableFilterState => {
     const {filter} = action;
     const {filters} = state;
 
@@ -87,9 +87,6 @@ const setAutoSwitch = (state: IFyziklaniTableFilterState, action): IFyziklaniTab
 
     };
 };
-
-// filters: action.state ? state.filters : [],
-// index: action.state ? state.index : 0,
 
 const initialState: IFyziklaniTableFilterState = {
     autoSwitch: false,

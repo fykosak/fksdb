@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from '../../../helpers/components/timer/timer';
-import { IFyziklaniResultsStore } from '../../reducers';
+import { FyziklaniResultsStore } from '../../reducers';
 
-interface IState {
+interface State {
     toStart?: number;
     toEnd?: number;
     inserted?: Date;
     visible?: boolean;
 }
 
-class Images extends React.Component<IState, {}> {
+class Images extends React.Component<State, {}> {
     private timerId = null;
 
     public componentDidMount() {
@@ -50,7 +50,7 @@ class Images extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+const mapStateToProps = (state: FyziklaniResultsStore): State => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,
