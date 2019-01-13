@@ -24,7 +24,7 @@ interface IState {
 
 interface IProps {
     taskId: number;
-    availablePoints:number[];
+    availablePoints: number[];
 }
 
 class TimeHistogramLines extends React.Component<IState & IProps, {}> {

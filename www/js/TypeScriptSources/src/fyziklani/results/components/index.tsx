@@ -18,7 +18,7 @@ interface IProps {
 
 export default class ResultsApp extends React.Component<IProps, {}> {
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
         const {mode, actions} = this.props;
         return (

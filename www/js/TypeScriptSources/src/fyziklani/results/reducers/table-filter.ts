@@ -88,9 +88,6 @@ const setAutoSwitch = (state: IFyziklaniTableFilterState, action): IFyziklaniTab
     };
 };
 
-// filters: action.state ? state.filters : [],
-// index: action.state ? state.index : 0,
-
 const initialState: IFyziklaniTableFilterState = {
     autoSwitch: false,
     filters: [],

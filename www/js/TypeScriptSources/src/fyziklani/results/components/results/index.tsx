@@ -1,7 +1,8 @@
 import * as React from 'react';
 import ResultsShower from '../../../helpers/components/results-shower';
-import AutoFilter from './filter/index';
+import PositionSwitcher from './filter/PositionSwitcher';
 import ResultsTable from './results-table';
+import ResultsPresentation from './ResultsPresentation';
 
 interface IProps {
     mode: string;
@@ -11,13 +12,24 @@ export default class Results extends React.Component<IProps, {}> {
 
     public render() {
         const {mode} = this.props;
-        return (
-            <div>
-                <ResultsShower className={(mode === 'presentation') ? 'inner-headline' : null}>
-                    <ResultsTable/>
-                </ResultsShower>
-                {(mode === 'presentation') && (<AutoFilter/>)}
-            </div>
-        );
+        switch (mode) {
+            case 'presentation':
+                return <div data-toggle="modal" data-target="#fyziklaniResultsOptionModal">
+                    <ResultsShower className={'inner-headline'}>
+                        <ResultsPresentation/>
+                    </ResultsShower>
+                    <PositionSwitcher/>
+                </div>;
+            default:
+            case 'view':
+                return (
+                    <div>
+                        <ResultsShower className={null}>
+                            <ResultsTable/>
+                        </ResultsShower>
+                    </div>
+                );
+
+        }
     }
 }
