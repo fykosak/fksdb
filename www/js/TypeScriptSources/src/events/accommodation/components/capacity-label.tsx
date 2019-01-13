@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { lang } from '../../../i18n/i18n';
 
-interface IProps {
+interface Props {
     capacity: number;
     usedCapacity: number;
 }
 
-export default class CapacityLabel extends React.Component<IProps, {}> {
+export default class CapacityLabel extends React.Component<Props, {}> {
 
     public render() {
         const {capacity, usedCapacity} = this.props;

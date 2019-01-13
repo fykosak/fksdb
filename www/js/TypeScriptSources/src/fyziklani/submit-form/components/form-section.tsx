@@ -6,39 +6,39 @@ import {
     SubmitHandler,
 } from 'redux-form';
 import {
-    IMessage,
-    IResponse,
+    Message,
+    Response,
 } from '../../../fetch-api/middleware/interfaces';
 import {
-    ITask,
-    ITeam,
+    Task,
+    Team,
 } from '../../helpers/interfaces/';
-import { ISubmitFormRequest } from '../actions';
-import { IFyziklaniSubmitStore } from '../reducers/';
+import { SubmitFormRequest } from '../actions';
+import { Store as SubmitStore } from '../reducers/';
 import CodeInputError from './error-block';
 import { FORM_NAME } from './form-container';
 import CodeInput from './input';
 import SubmitButtons from './submit-buttons';
 import ValueDisplay from './value-display';
 
-export interface IProps {
+export interface Props {
     accessKey: string;
-    tasks: ITask[];
-    teams: ITeam[];
+    tasks: Task[];
+    teams: Team[];
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
     handleSubmit: SubmitHandler<{ code: string }, any, string>;
 
-    onSubmit?(values: ISubmitFormRequest): Promise<IResponse<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-interface IState {
+interface State {
     code?: string;
-    messages?: IMessage[];
+    messages?: Message[];
 }
 
-class FormSection extends React.Component<IProps & IState, {}> {
+class FormSection extends React.Component<Props & State, {}> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, code, tasks, teams, messages, availablePoints} = this.props;
@@ -74,7 +74,7 @@ class FormSection extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniSubmitStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: SubmitStore, ownProps: Props): State => {
     const selector = formValueSelector(FORM_NAME);
     const {accessKey} = ownProps;
     return {

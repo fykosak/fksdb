@@ -1,13 +1,13 @@
-import { ISubmit } from '../../../helpers/interfaces';
+import { Submit } from '../../../helpers/interfaces';
 import { getAverageNStandardDeviation } from './std-dev';
 
-export interface IPreprocessedSubmit extends ISubmit {
+export interface PreprocessedSubmit extends Submit {
     timestamp: number;
 }
 
 export const calculateCorrelation = (
-    firstTeamData: { [taskId: number]: IPreprocessedSubmit },
-    secondTeamData: { [taskId: number]: IPreprocessedSubmit },
+    firstTeamData: { [taskId: number]: PreprocessedSubmit },
+    secondTeamData: { [taskId: number]: PreprocessedSubmit },
     threshold: number = 120000,
 ) => {
     const deltas = [];

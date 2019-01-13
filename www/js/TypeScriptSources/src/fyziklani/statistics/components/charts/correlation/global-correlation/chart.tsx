@@ -8,9 +8,9 @@ import {
 } from 'redux';
 import { lang } from '../../../../../../i18n/i18n';
 import {
-    ISubmits,
-    ITask,
-    ITeam,
+    Submits,
+    Task,
+    Team,
 } from '../../../../../helpers/interfaces';
 import {
     setFirstTeamId,
@@ -19,14 +19,14 @@ import {
 import {
     calculateCorrelation,
     getTimeLabel,
-    IPreprocessedSubmit,
+    PreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
-    tasks?: ITask[];
-    teams?: ITeam[];
+interface State {
+    submits?: Submits;
+    tasks?: Task[];
+    teams?: Team[];
     firstTeamId?: number;
     secondTeamId?: number;
 
@@ -35,7 +35,7 @@ interface IState {
     onChangeSecondTeam?(id: number): void;
 }
 
-class GlobalCorrelation extends React.Component<IState, {}> {
+class GlobalCorrelation extends React.Component<State, {}> {
     private table;
 
     public componentDidMount() {
@@ -47,7 +47,7 @@ class GlobalCorrelation extends React.Component<IState, {}> {
 
         const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
         const {submits, teams} = this.props;
-        const submitsForTeams: { [teamId: number]: { [taskId: number]: IPreprocessedSubmit } } = {};
+        const submitsForTeams: { [teamId: number]: { [taskId: number]: PreprocessedSubmit } } = {};
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit = submits[index];
@@ -106,7 +106,7 @@ class GlobalCorrelation extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,
@@ -116,7 +116,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
         onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),

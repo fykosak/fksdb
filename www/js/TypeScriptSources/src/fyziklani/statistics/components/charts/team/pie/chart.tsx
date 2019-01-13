@@ -4,25 +4,25 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
-    ITeam,
+    Submit,
+    Submits,
+    Team,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { getPieData } from '../../../../middleware/charts/pie';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    teams?: ITeam[];
-    submits?: ISubmits;
+interface State {
+    teams?: Team[];
+    submits?: Submits;
     activePoints?: number;
 }
 
-interface IProps {
+interface Props {
     teamId: number;
 }
 
-class Chart extends React.Component<IState & IProps, {}> {
+class Chart extends React.Component<State & Props, {}> {
 
     public render() {
         const {submits, teamId, activePoints} = this.props;
@@ -40,7 +40,7 @@ class Chart extends React.Component<IState & IProps, {}> {
         let maxPoints = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
 
@@ -92,7 +92,7 @@ class Chart extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         activePoints: state.statistics.activePoints,
         submits: state.data.submits,

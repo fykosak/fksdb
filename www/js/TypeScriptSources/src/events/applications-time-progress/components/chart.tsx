@@ -14,13 +14,13 @@ import {
     line,
 } from 'd3-shape';
 import * as React from 'react';
-import { IData } from './index';
+import { Data } from './index';
 
-interface IProps {
-    data: IData;
+interface Props {
+    data: Data;
 }
 
-export default class Chart extends React.Component<IProps, {}> {
+export default class Chart extends React.Component<Props, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -70,7 +70,7 @@ export default class Chart extends React.Component<IProps, {}> {
         this.yScale = scaleLinear<number, number>().domain([0, max]).range([370, 20]);
         this.xScale = scaleLinear<number, number>().domain([min, 0]).range([30, 580]);
 
-        interface IItem {
+        interface Item {
             x: number;
             y: number;
         }
@@ -80,11 +80,11 @@ export default class Chart extends React.Component<IProps, {}> {
         for (const index in eventsData) {
             if (eventsData.hasOwnProperty(index)) {
 
-                const lineEl = line<IItem>()
-                    .x((element: IItem) => {
+                const lineEl = line<Item>()
+                    .x((element: Item) => {
                         return this.xScale(new Date(element.x));
                     })
-                    .y((element: IItem) => {
+                    .y((element: Item) => {
                         return this.yScale(element.y);
                     })
                     .curve(curveBasis)(eventsData[index]);

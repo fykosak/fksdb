@@ -2,12 +2,12 @@ import * as React from 'react';
 import { lang } from '../../../i18n/i18n';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-interface IProps {
+interface Props {
     date: string;
     options?: DateTimeFormatOptions;
 }
 
-export default class TimeDisplay extends React.Component<IProps, {}> {
+export default class TimeDisplay extends React.Component<Props, {}> {
 
     public render() {
         const {options} = this.props;

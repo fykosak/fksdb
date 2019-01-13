@@ -3,11 +3,11 @@ import { lang } from '../../../../../../i18n/i18n';
 import Legend from '../legend';
 import Chart from './chart';
 
-interface IProps {
+interface Props {
     teamId: number;
 }
 
-export default class PointsInTime extends React.Component<IProps, {}> {
+export default class PointsInTime extends React.Component<Props, {}> {
 
     public render() {
         const {teamId} = this.props;

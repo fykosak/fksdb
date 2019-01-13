@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { lang } from '../../../../../i18n/i18n';
-import { IFyziklaniStatisticsStore } from '../../../reducers';
+import { Store as StatisticsStore } from '../../../reducers';
 import Options from './options';
 import Progress from './progress/';
 import TimeHistogramLines from './time-histogram-lines';
 import TimeHistogram from './time-histogram/';
 import Timeline from './timeline/';
 
-interface IState {
+interface State {
     taskId?: number;
 }
 
-class TaskStats extends React.Component<IState, {}> {
+class TaskStats extends React.Component<State, {}> {
     public render() {
         const {taskId} = this.props;
         const availablePoints = [5, 3, 2, 1];
@@ -36,7 +36,7 @@ class TaskStats extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         taskId: state.statistics.taskId,
     };

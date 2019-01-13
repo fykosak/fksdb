@@ -1,26 +1,27 @@
+import { Action } from 'redux';
 import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_START,
     ACTION_SUBMIT_SUCCESS,
 } from '../actions/submit';
 import {
-    IActionSubmit,
-    IActionSubmitFail,
-    IActionSubmitSuccess,
-    IMessage,
-    IResponse,
+    ActionSubmit,
+    ActionSubmitFail,
+    ActionSubmitSuccess,
+    Message,
+    Response,
 } from '../middleware/interfaces';
 import jqXHR = JQuery.jqXHR;
 
-export interface IFetchApiState<T= any> {
+export interface State<T = any> {
     [accessKey: string]: {
         submitting?: boolean;
         error?: jqXHR<T>;
-        messages?: IMessage[];
+        messages?: Message[];
     };
 }
 
-const submitStart = (state: IFetchApiState, action: IActionSubmit): IFetchApiState => {
+const submitStart = (state: State, action: ActionSubmit): State => {
     const {accessKey} = action;
     return {
         ...state,
@@ -32,7 +33,7 @@ const submitStart = (state: IFetchApiState, action: IActionSubmit): IFetchApiSta
         },
     };
 };
-const submitFail = (state: IFetchApiState, action: IActionSubmitFail): IFetchApiState => {
+const submitFail = (state: State, action: ActionSubmitFail): State => {
     const {accessKey} = action;
     return {
         ...state,
@@ -48,8 +49,8 @@ const submitFail = (state: IFetchApiState, action: IActionSubmitFail): IFetchApi
     };
 };
 
-function submitSuccess<D= any>(state: IFetchApiState, action: IActionSubmitSuccess<D>): IFetchApiState {
-    const data: IResponse<D> = action.data;
+function submitSuccess<D = any>(state: State, action: ActionSubmitSuccess<D>): State {
+    const data: Response<D> = action.data;
     const {accessKey} = action;
     return {
         ...state,
@@ -61,9 +62,9 @@ function submitSuccess<D= any>(state: IFetchApiState, action: IActionSubmitSucce
     };
 }
 
-const initState: IFetchApiState = {};
+const initState: State = {};
 
-export function submit<D= any>(state: IFetchApiState = initState, action): IFetchApiState {
+export function submit<D = any>(state: State = initState, action: Action<string> & any): State {
     switch (action.type) {
         case ACTION_SUBMIT_START:
             return submitStart(state, action);

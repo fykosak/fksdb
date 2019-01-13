@@ -1,13 +1,13 @@
-export interface INetteActions {
+export interface NetteActions {
     [name: string]: string;
 }
 
-export type IApp = (element: Element, module: string, component: string, mode: string, rawData: string, actions: INetteActions) => boolean;
+export type App = (element: Element, module: string, component: string, mode: string, rawData: string, actions: NetteActions) => boolean;
 
 class AppCollector {
-    private items: IApp[] = [];
+    private items: App[] = [];
 
-    public register(item: IApp) {
+    public register(item: App) {
         this.items.push(item);
     }
 

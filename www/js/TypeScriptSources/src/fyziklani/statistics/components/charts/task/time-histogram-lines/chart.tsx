@@ -13,18 +13,18 @@ import { curveMonotoneX } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
+    Submit,
+    Submits,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import {
     getAreaPath,
     getLinePath,
 } from '../../../../middleware/charts/lines';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
+interface State {
+    submits?: Submits;
     fromDate?: Date;
     gameStart?: Date;
     gameEnd?: Date;
@@ -33,12 +33,12 @@ interface IState {
     aggregationTime?: number;
 }
 
-interface IProps {
+interface Props {
     taskId: number;
     availablePoints: number[];
 }
 
-class TimeHistogramLines extends React.Component<IState & IProps, {}> {
+class TimeHistogramLines extends React.Component<State & Props, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -74,7 +74,7 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 if (submit.taskId === taskId) {
                     if (submit.points > 0) {
                         const ms = (new Date(submit.created)).getTime();
@@ -179,7 +179,7 @@ class TimeHistogramLines extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

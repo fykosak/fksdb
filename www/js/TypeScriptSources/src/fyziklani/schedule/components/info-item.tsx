@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { lang } from '../../../i18n/i18n';
-import { ILocalizedInfo } from './index';
+import { LocalizedInfo } from './index';
 import Item from './item';
 
-interface IProps {
-    item: ILocalizedInfo;
+interface Props {
+    item: LocalizedInfo;
     blockName: string;
 }
 
-export default class InfoItem extends React.Component<IProps, {}> {
+export default class InfoItem extends React.Component<Props, {}> {
 
     public render() {
         const {item} = this.props;

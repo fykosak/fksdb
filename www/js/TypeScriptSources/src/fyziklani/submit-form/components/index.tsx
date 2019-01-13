@@ -5,23 +5,23 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { INetteActions } from '../../../app-collector';
+import { NetteActions } from '../../../app-collector';
 import { config } from '../../../config/';
 import {
-    ITask,
-    ITeam,
+    Task,
+    Team,
 } from '../../helpers/interfaces/';
 import { app } from '../reducers/';
 import Container from './container';
 
-interface ITaskCodeProps {
-    tasks: ITask[];
-    teams: ITeam[];
-    actions: INetteActions;
+interface Props {
+    tasks: Task[];
+    teams: Team[];
+    actions: NetteActions;
     availablePoints: number[];
 }
 
-export default class TaskCode extends React.Component<ITaskCodeProps, {}> {
+export default class TaskCode extends React.Component<Props, {}> {
     public render() {
         const {tasks, teams, actions, availablePoints} = this.props;
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

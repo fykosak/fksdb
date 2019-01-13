@@ -4,21 +4,21 @@ import {
 } from 'redux';
 import { dispatchNetteFetch } from '../../../../fetch-api/middleware/fetch';
 import {
-    IRequest,
-    IResponse,
+    Request,
+    Response,
 } from '../../../../fetch-api/middleware/interfaces';
-import { IFetchApiState } from '../../../../fetch-api/reducers/submit';
+import { State as FetchApiState } from '../../../../fetch-api/reducers/submit';
 import {
-    IRoom,
-    ISubmits,
-    ITask,
-    ITeam,
+    Room,
+    Submits,
+    Task,
+    Team,
 } from '../../interfaces/';
-import { IFyziklaniDataState } from '../../reducers/data';
+import { State as DataState } from '../../reducers/data';
 
-interface IState {
-    data: IFyziklaniDataState;
-    fetchApi: IFetchApiState;
+interface State {
+    data: DataState;
+    fetchApi: FetchApiState;
 }
 
 export const fetchResults = (
@@ -26,15 +26,15 @@ export const fetchResults = (
     dispatch: Dispatch<Action<string>>,
     oldLastUpdated: string = null,
     url: string,
-): Promise<IResponse<IResponseData>> => {
-    const data: IRequest<string> = {
+): Promise<Response<ResponseData>> => {
+    const data: Request<string> = {
         act: '@@fyziklani/results',
         requestData: null,
     };
     if (oldLastUpdated) {
         data.requestData = oldLastUpdated;
     }
-    return dispatchNetteFetch<string, IResponseData, IState>(accessKey, dispatch, data, () => null, () => null, url);
+    return dispatchNetteFetch<string, ResponseData, State>(accessKey, dispatch, data, () => null, () => null, url);
 };
 
 export const waitForFetch = (
@@ -49,21 +49,22 @@ export const waitForFetch = (
     }, delay);
 };
 
-export interface IResponseData {
+export interface ResponseData {
     basePath: string;
+    availablePoints: number[];
     gameEnd: string;
     gameStart: string;
     isOrg: boolean;
     lastUpdated: string;
     refreshDelay: number;
-    submits: ISubmits;
+    submits: Submits;
     times: {
         toStart: number;
         toEnd: number;
         visible: boolean;
     };
-    teams: ITeam[];
-    tasks: ITask[];
-    rooms: IRoom[];
+    teams: Team[];
+    tasks: Task[];
+    rooms: Room[];
     categories: string[];
 }

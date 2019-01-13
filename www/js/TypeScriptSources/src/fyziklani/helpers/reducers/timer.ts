@@ -1,8 +1,8 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
-import { IActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
-import { IResponseData } from '../downloader/actions/';
+import { ActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
+import { ResponseData } from '../downloader/actions/';
 
-export interface IFyziklaniTimerState {
+export interface State {
     gameEnd?: Date;
     gameStart?: Date;
     inserted?: Date;
@@ -11,7 +11,7 @@ export interface IFyziklaniTimerState {
     visible?: boolean;
 }
 
-const updateTimes = (state: IFyziklaniTimerState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniTimerState => {
+const updateTimes = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
     const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.responseData;
     return {
         ...state,
@@ -24,7 +24,7 @@ const updateTimes = (state: IFyziklaniTimerState, action: IActionSubmitSuccess<I
     };
 };
 
-export const fyziklaniTimer = (state: IFyziklaniTimerState = {}, action): IFyziklaniTimerState => {
+export const fyziklaniTimer = (state: State = {}, action): State => {
     switch (action.type) {
         case ACTION_SUBMIT_SUCCESS:
             return updateTimes(state, action);

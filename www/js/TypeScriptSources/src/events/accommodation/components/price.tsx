@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { lang } from '../../../i18n/i18n';
-import { IInputConnectorItems } from '../../../input-connector/reducers/';
+import { InputConnectorItems } from '../../../input-connector/reducers/';
 import PriceDisplay from '../../../shared/components/displays/price';
 import { getAccommodationPrice } from '../middleware/helpers';
-import { IEventAccommodation } from '../middleware/interfaces';
-import { IAccommodationStore } from '../reducer/';
+import { EventAccommodation } from '../middleware/interfaces';
+import { Store } from '../reducer/';
 
-interface IProps {
-    accommodationDef?: IEventAccommodation[];
+interface Props {
+    accommodationDef?: EventAccommodation[];
 }
 
-interface IState {
-    accommodation?: IInputConnectorItems;
+interface State {
+    accommodation?: InputConnectorItems;
 }
 
-class Price extends React.Component<IProps & IState, {}> {
+class Price extends React.Component<Props & State, {}> {
 
     public render() {
         const {accommodationDef, accommodation} = this.props;
@@ -28,11 +28,11 @@ class Price extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (): IState => {
+const mapDispatchToProps = (): State => {
     return {};
 };
 
-const mapStateToProps = (state: IAccommodationStore): IState => {
+const mapStateToProps = (state: Store): State => {
     return {
         accommodation: state.inputConnector.data,
     };

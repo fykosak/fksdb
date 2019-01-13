@@ -3,14 +3,14 @@ import {
     Dispatch,
 } from 'redux';
 import { dispatchNetteFetch } from '../../../fetch-api/middleware/fetch';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
-import { ITeam } from '../../helpers/interfaces';
-import { IResponseData } from '../middleware/interfaces';
-import { IFyziklaniRoutingStore } from '../reducers/';
+import { Response } from '../../../fetch-api/middleware/interfaces';
+import { Team } from '../../helpers/interfaces';
+import { ResponseData } from '../middleware/interfaces';
+import { Store as RoutingStore } from '../reducers/';
 
-export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: ITeam[]): Promise<IResponse<IResponseData>> => {
+export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: Team[]): Promise<Response<ResponseData>> => {
     const data = {act: 'routing-save', requestData: teams};
-    return dispatchNetteFetch<ITeam[], IResponseData, IFyziklaniRoutingStore>
+    return dispatchNetteFetch<Team[], ResponseData, RoutingStore>
     (accessKey, dispatch, data, () => null, () => {
         setTimeout(() => {
             dispatch(removeUpdatesTeams());

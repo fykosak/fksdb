@@ -4,7 +4,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { INetteActions } from '../../../../app-collector/';
+import { NetteActions } from '../../../../app-collector/';
 import { lang } from '../../../../i18n/i18n';
 import { FyziklaniResultsStore } from '../../../results/reducers/';
 import {
@@ -13,7 +13,7 @@ import {
 } from '../actions/';
 import jqXHR = JQuery.jqXHR;
 
-interface IState {
+interface State {
     error?: jqXHR<any>;
     isSubmitting?: boolean;
     lastUpdated?: string;
@@ -25,19 +25,19 @@ interface IState {
     onFetch?(): void;
 }
 
-interface IProps {
+interface Props {
     accessKey: string;
-    actions: INetteActions;
+    actions: NetteActions;
 }
 
-class Downloader extends React.Component<IState & IProps, {}> {
+class Downloader extends React.Component<State & Props, {}> {
 
     public componentDidMount() {
         const {onFetch} = this.props;
         onFetch();
     }
 
-    public componentWillReceiveProps(nextProps: IState & IProps) {
+    public componentWillReceiveProps(nextProps: State & Props) {
         const {lastUpdated: oldLastUpdated} = this.props;
         if (oldLastUpdated !== nextProps.lastUpdated) {
 
@@ -66,7 +66,7 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: FyziklaniResultsStore, ownProps: Props): State => {
     const {accessKey} = ownProps;
     return {
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
@@ -77,7 +77,7 @@ const mapStateToProps = (state: FyziklaniResultsStore, ownProps: IProps): IState
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
     const {accessKey, actions} = ownProps;
     if (!actions.hasOwnProperty('refresh')) {
         throw new Error('you need to have refresh URL');

@@ -10,30 +10,30 @@ import { timeMinute } from 'd3-time';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
-    ITask,
+    Submit,
+    Submits,
+    Task,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store } from '../../../../reducers';
 
-interface IState {
+interface State {
     activePoints?: number;
-    submits?: ISubmits;
-    tasks?: ITask[];
+    submits?: Submits;
+    tasks?: Task[];
     gameStart?: Date;
     gameEnd?: Date;
 }
 
-interface IExtendedTask extends ITask {
+interface ExtendedTask extends Task {
     from: Date;
 }
 
-interface IProps {
+interface Props {
     teamId: number;
 }
 
-class TimeLine extends React.Component<IState & IProps, {}> {
+class TimeLine extends React.Component<State & Props, {}> {
 
     private xAxis: any;
     private ySize: number;
@@ -115,7 +115,7 @@ class TimeLine extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: Store): State => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),
@@ -127,11 +127,11 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
 
 export default connect(mapStateToProps, null)(TimeLine);
 
-const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: number, gameStart: Date, teamId: number):
-    { activeTasks: IExtendedTask[]; teamSubmits: ISubmit[] } => {
+const reconstructTeamGame = (submits: Submits, tasks: Task[], taskOnBoard: number, gameStart: Date, teamId: number):
+    { activeTasks: ExtendedTask[]; teamSubmits: Submit[] } => {
     const taskBuffer = [...(tasks.slice(taskOnBoard))];
     const teamSubmits = [];
-    const activeTasks: IExtendedTask[] = [];
+    const activeTasks: ExtendedTask[] = [];
 
     for (let i = 0; i < taskOnBoard; i++) {
         activeTasks.push({
@@ -141,7 +141,7 @@ const reconstructTeamGame = (submits: ISubmits, tasks: ITask[], taskOnBoard: num
     }
     for (const index in submits) {
         if (submits.hasOwnProperty(index)) {
-            const submit: ISubmit = submits[index];
+            const submit: Submit = submits[index];
             const {teamId: submitTeamId, created} = submit;
             if (teamId === submitTeamId) {
                 if (submit.points !== null && submit.points !== 0) {

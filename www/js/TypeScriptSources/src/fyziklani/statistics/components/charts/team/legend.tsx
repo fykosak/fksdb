@@ -8,15 +8,15 @@ import { lang } from '../../../../../i18n/i18n';
 import { setActivePoints } from '../../../actions/';
 import { getColorByPoints } from '../../../middleware/charts/colors';
 
-interface IState {
+interface State {
     onActivePoints?: (points: number) => void;
 }
 
-interface IProps {
+interface Props {
     inline: boolean;
 }
 
-class Legend extends React.Component<IProps & IState, {}> {
+class Legend extends React.Component<Props & State, {}> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];
@@ -55,7 +55,7 @@ class Legend extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): State => {
     return {
         onActivePoints: (points) => dispatch(setActivePoints(+points)),
     };

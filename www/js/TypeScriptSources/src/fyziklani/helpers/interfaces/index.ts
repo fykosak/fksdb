@@ -1,35 +1,35 @@
-export interface ITask {
+export interface Task {
     label: string;
     name: string;
     taskId: number;
 }
 
-export interface ISubmit {
+export interface Submit {
     points: number | null;
     taskId: number;
     teamId: number;
     created: string;
 }
 
-export interface ISubmits {
-    [id: number]: ISubmit;
+export interface Submits {
+    [id: number]: Submit;
 }
 
-export interface IPlace {
+export interface Place {
     room: string;
     roomId: number;
     x: number;
     y: number;
 }
 
-export interface IRoom {
+export interface Room {
     name: string;
     x: number;
     y: number;
     roomId: number;
 }
 
-export interface ITeam {
+export interface Team {
     teamId: number;
     category: string;
     name: string;
@@ -41,7 +41,7 @@ export interface ITeam {
     created: string;
 }
 
-export interface IEvent {
+export interface Event {
     eventId: number;
     year: number;
     eventYear: number;

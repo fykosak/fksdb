@@ -7,18 +7,18 @@ import {
 import logger from 'redux-logger';
 import { config } from '../../../config/';
 import {
-    IRoom,
-    ITeam,
+    Room,
+    Team,
 } from '../../helpers/interfaces';
 import { app } from '../reducers/';
 import App from './app';
 
-interface IProps {
-    teams: ITeam[];
-    rooms: IRoom[];
+interface Props {
+    teams: Team[];
+    rooms: Room[];
 }
 
-export default class extends React.Component<IProps, {}> {
+export default class extends React.Component<Props, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

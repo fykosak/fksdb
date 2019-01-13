@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { IRoom } from '../../../helpers/interfaces/';
-import Room from './room';
+import { Room } from '../../../helpers/interfaces/';
+import RoomComponent from './room';
 
-interface IProps {
-    rooms: IRoom[];
+interface Props {
+    rooms: Room[];
 }
 
-export default class Rooms extends React.Component<IProps, {}> {
+export default class Rooms extends React.Component<Props, {}> {
 
     public render() {
-        const { rooms } = this.props;
+        const {rooms} = this.props;
         return (<div>
             {rooms.map((room, index) => {
-                return (<Room key={index} info={room}/>);
+                return (<RoomComponent key={index} info={room}/>);
             })}
         </div>);
     }

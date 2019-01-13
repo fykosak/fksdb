@@ -7,29 +7,29 @@ import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
-    ITeam,
+    Submit,
+    Submits,
+    Team,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
-    teams?: ITeam[];
+interface State {
+    submits?: Submits;
+    teams?: Team[];
     fromDate?: Date;
     toDate?: Date;
 }
 
-interface IExtendedSubmit extends ISubmit {
-    currentTeam: ITeam;
+interface ExtendedSubmit extends Submit {
+    currentTeam: Team;
 }
 
-interface IProps {
+interface Props {
     taskId: number;
 }
 
-class Timeline extends React.Component<IState & IProps, {}> {
+class Timeline extends React.Component<State & Props, {}> {
 
     private xAxis: SVGGElement;
 
@@ -44,7 +44,7 @@ class Timeline extends React.Component<IState & IProps, {}> {
     }
 
     public render() {
-        const taskSubmits: IExtendedSubmit[] = [];
+        const taskSubmits: ExtendedSubmit[] = [];
         const {
             taskId,
             submits,
@@ -57,7 +57,7 @@ class Timeline extends React.Component<IState & IProps, {}> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 if (submit.taskId === taskId) {
                     const currentTeam = teams.filter((team) => {
                         return submit.teamId === team.teamId;
@@ -116,7 +116,7 @@ class Timeline extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         fromDate: state.statistics.fromDate,
         submits: state.data.submits,
