@@ -1,12 +1,12 @@
 import * as React from 'react';
-import MultiSelect from './multi-select';
-import SingleSelect from './single-select';
+import MultiSelect from './multiSelect';
+import SingleSelect from './singleSelect';
 
-interface IProps {
+interface Props {
     mode: string;
 }
 
-export default class Select extends React.Component<IProps, {}> {
+export default class Index extends React.Component<Props, {}> {
 
     public render() {
         const {mode} = this.props;

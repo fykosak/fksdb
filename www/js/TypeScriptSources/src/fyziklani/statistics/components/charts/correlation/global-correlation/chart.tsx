@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
@@ -6,6 +6,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
+import { lang } from '../../../../../../i18n/i18n';
 import {
     ISubmits,
     ITask,
@@ -21,7 +22,6 @@ import {
     IPreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
 import { IFyziklaniStatisticsStore } from '../../../../reducers';
-import { lang } from '../../../../../../i18n/i18n';
 
 interface IState {
     submits?: ISubmits;
@@ -45,7 +45,7 @@ class GlobalCorrelation extends React.Component<IState, {}> {
 
     public render() {
 
-        const color = d3.scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
+        const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
         const {submits, teams} = this.props;
         const submitsForTeams: { [teamId: number]: { [taskId: number]: IPreprocessedSubmit } } = {};
         for (const index in submits) {

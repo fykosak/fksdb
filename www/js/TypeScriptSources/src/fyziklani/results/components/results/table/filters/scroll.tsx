@@ -4,17 +4,17 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { config } from '../../../../../config';
-import { setNextFilter } from '../../../actions/table-filter';
-import { IFyziklaniResultsStore } from '../../../reducers';
+import { config } from '../../../../../../config';
+import { setNextFilter } from '../../../../actions/table-filter';
+import { FyziklaniResultsStore } from '../../../../reducers';
 
-interface IState {
+interface State {
     autoSwitch?: boolean;
 
     onSetNextFilter?(): void;
 }
 
-class AutoFilter extends React.Component<IState, {}> {
+class Scroll extends React.Component<State, {}> {
 
     public componentDidMount() {
         return this.scroll();
@@ -52,12 +52,12 @@ class AutoFilter extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): State => {
     return {
         onSetNextFilter: () => dispatch(setNextFilter()),
     };
 };
-const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
+const mapStateToPros = (state: FyziklaniResultsStore): State => {
     return {
         autoSwitch: state.tableFilter.autoSwitch,
     };
@@ -66,4 +66,4 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
 export default connect(
     mapStateToPros,
     mapDispatchToProps,
-)(AutoFilter);
+)(Scroll);

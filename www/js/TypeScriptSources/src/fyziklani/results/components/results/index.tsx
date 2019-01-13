@@ -1,23 +1,39 @@
 import * as React from 'react';
 import ResultsShower from '../../../helpers/components/results-shower';
-import AutoFilter from './filter/index';
-import ResultsTable from './results-table';
+import ResultsPresentation from './presentation/index';
+import PositionSwitcher from './presentation/positionSwitcher';
+import Settings from './presentation/settings';
+import FilterSelect from './table/filters/select';
+import ResultsTable from './table/index';
 
-interface IProps {
+interface Props {
     mode: string;
 }
 
-export default class Results extends React.Component<IProps, {}> {
+export default class Results extends React.Component<Props, {}> {
 
     public render() {
         const {mode} = this.props;
-        return (
-            <div>
-                <ResultsShower className={(mode === 'presentation') ? 'inner-headline' : null}>
-                    <ResultsTable/>
-                </ResultsShower>
-                {(mode === 'presentation') && (<AutoFilter/>)}
-            </div>
-        );
+        switch (mode) {
+            case 'presentation':
+                return <div data-toggle="modal" data-target="#fyziklaniResultsOptionModal">
+                    <Settings/>
+                    <ResultsShower className={'inner-headline'}>
+                        <ResultsPresentation/>
+                        <PositionSwitcher/>
+                    </ResultsShower>
+                </div>;
+            default:
+            case 'view':
+                return (
+                    <div>
+                        <FilterSelect mode={mode}/>
+                        <ResultsShower className={null}>
+                            <ResultsTable/>
+                        </ResultsShower>
+                    </div>
+                );
+
+        }
     }
 }

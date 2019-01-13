@@ -4,14 +4,14 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
-import { setFilter } from '../../../actions/table-filter';
-import { IFyziklaniResultsStore } from '../../../reducers';
-import { Filter } from './filter';
-import FilterComponent from './filter-component';
-import { createFilters } from './filters';
+import HardVisibleSwitch from '../../../../../../helpers/options/compoents/hard-visible-switch';
+import { setFilter } from '../../../../../actions/table-filter';
+import { Filter } from '../../../../../middleware/results/filters/filter';
+import FilterComponent from '../../../../../middleware/results/filters/filter-component';
+import { createFilters } from '../../../../../middleware/results/filters/filters';
+import { FyziklaniResultsStore } from '../../../../../reducers';
 
-interface IState {
+interface State {
     filters?: Filter[];
     categories?: string[];
     isOrg?: boolean;
@@ -19,7 +19,7 @@ interface IState {
     onSetFilter?(filter: Filter): void;
 }
 
-class Select extends React.Component<IState, {}> {
+class SingleSelect extends React.Component<State, {}> {
 
     public render() {
         const {categories, filters, onSetFilter, isOrg} = this.props;
@@ -35,16 +35,15 @@ class Select extends React.Component<IState, {}> {
 
             })}
         </>;
-
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
     };
 };
-const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
+const mapStateToPros = (state: FyziklaniResultsStore): State => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
@@ -55,4 +54,4 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
 export default connect(
     mapStateToPros,
     mapDispatchToProps,
-)(Select);
+)(SingleSelect);

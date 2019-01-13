@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {
+    arc,
+} from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -50,14 +52,14 @@ class Chart extends React.Component<IState & IProps, {}> {
                 }
             }
         }
-        const arc = d3.arc().innerRadius(0).outerRadius(150);
+        const arcEl = arc().innerRadius(0).outerRadius(150);
         const pie = getPieData(pointsCategories.filter((item) => item.count !== 0));
 
         const paths = pie.map((item: any, index: number) => {
             return (<path
                     stroke="white"
                     strokeWidth="5px"
-                    d={arc(item)}
+                    d={arcEl(item)}
                     key={index}
                     fill={getColorByPoints(item.data.points)}
                     opacity={(activePoints && (activePoints !== item.data.points)) ? '0.5' : '1'}
@@ -68,7 +70,7 @@ class Chart extends React.Component<IState & IProps, {}> {
         const labels = pie.map((item: any, index: number) => {
             return (
                 <g key={index}>
-                    <text textAnchor="middle" transform={`translate(${arc.centroid(item).toString()})`}>
+                    <text textAnchor="middle" transform={`translate(${arcEl.centroid(item).toString()})`}>
                         {Math.floor(item.data.count * 100 / totalSubmits)}%
                     </text>
                 </g>

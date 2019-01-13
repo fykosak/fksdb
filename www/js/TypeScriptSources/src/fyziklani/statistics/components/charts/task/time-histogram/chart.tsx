@@ -1,4 +1,14 @@
-import * as d3 from 'd3';
+import {
+    axisBottom,
+    axisLeft,
+} from 'd3-axis';
+import {
+    ScaleLinear,
+    scaleLinear,
+    ScaleTime,
+    scaleTime,
+} from 'd3-scale';
+import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -26,8 +36,8 @@ class TimeHistogram extends React.Component<IState & IProps, {}> {
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
 
-    private xScale: d3.ScaleTime<number, number>;
-    private yScale: d3.ScaleLinear<number, number>;
+    private xScale: ScaleTime<number, number>;
+    private yScale: ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -76,8 +86,8 @@ class TimeHistogram extends React.Component<IState & IProps, {}> {
                 maxPoints = maxPoints < sum ? sum : maxPoints;
             }
         }
-        this.yScale = d3.scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
-        this.xScale = d3.scaleTime().domain([fromDate, toDate]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range([370, 20]);
+        this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
 
         const bars = [];
         for (const key in taskTimeSubmits) {
@@ -115,11 +125,11 @@ class TimeHistogram extends React.Component<IState & IProps, {}> {
     }
 
     private getAxis(): void {
-        const xAxis = d3.axisBottom<Date>(this.xScale);
-        d3.select(this.xAxis).call(xAxis);
+        const xAxis = axisBottom<Date>(this.xScale);
+        select(this.xAxis).call(xAxis);
 
-        const yAxis = d3.axisLeft<number>(this.yScale);
-        d3.select(this.yAxis).call(yAxis);
+        const yAxis = axisLeft<number>(this.yScale);
+        select(this.yAxis).call(yAxis);
     }
 }
 

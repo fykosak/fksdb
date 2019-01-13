@@ -3,16 +3,16 @@ import {
     ISubmits,
     ITask,
     ITeam,
-} from '../../../helpers/interfaces';
+} from '../../../../helpers/interfaces';
 
-interface IProps {
+interface Props {
     submits: ISubmits;
     team: ITeam;
     tasks: ITask[];
     visible: boolean;
 }
 
-export default class TeamRow extends React.Component<IProps, {}> {
+export default class Row extends React.Component<Props, {}> {
 
     public render() {
         const {submits, team, tasks, visible} = this.props;
