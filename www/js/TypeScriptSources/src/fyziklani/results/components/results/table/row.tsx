@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-    ISubmits,
-    ITask,
-    ITeam,
+    Submits,
+    Task,
+    Team,
 } from '../../../../helpers/interfaces';
 
 interface Props {
-    submits: ISubmits;
-    team: ITeam;
-    tasks: ITask[];
+    submits: Submits;
+    team: Team;
+    tasks: Task[];
     visible: boolean;
 }
 

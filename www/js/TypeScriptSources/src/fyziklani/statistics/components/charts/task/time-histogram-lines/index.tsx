@@ -3,12 +3,12 @@ import { lang } from '../../../../../../i18n/i18n';
 import Legend from '../../team/legend';
 import Chart from './chart';
 
-interface IProps {
+interface Props {
     taskId: number;
     availablePoints: number[];
 }
 
-export default class Timeline extends React.Component<IProps, {}> {
+export default class Timeline extends React.Component<Props, {}> {
 
     public render() {
         const {taskId, availablePoints} = this.props;

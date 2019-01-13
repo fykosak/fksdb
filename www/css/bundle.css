@@ -91,6 +91,7 @@
 }
 .fyziklani-results table tbody tr td:first-child::before, .fyziklani-statistics table tbody tr td:first-child::before {
   counter-increment: results-table;
+  content: counter(results-table) ".";
 }
 .fyziklani-results table thead tr th[data-task_label^=A], .fyziklani-statistics table thead tr th[data-task_label^=A] {
   background-color: #fccbc7;

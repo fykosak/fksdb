@@ -1,24 +1,24 @@
 import {
     ACTION_SET_VISIBILITY,
     ACTION_TOGGLE_CHOOSER,
-    IActionSetVisibility,
+    ActionSetVisibility,
 } from '../actions';
 
-const toggleChooser = (state: ICompactValueState): ICompactValueState => {
+const toggleChooser = (state: State): State => {
     return {
         ...state,
         showChooser: !state.showChooser,
     };
 };
 
-const setInitialVisibility = (state: ICompactValueState, action: IActionSetVisibility): ICompactValueState => {
+const setInitialVisibility = (state: State, action: ActionSetVisibility): State => {
     return {
         ...state,
         showChooser: !action.state,
     };
 };
 
-export interface ICompactValueState {
+export interface State {
     showChooser: boolean;
 }
 
@@ -26,7 +26,7 @@ const initState = {
     showChooser: true,
 };
 
-export const compactValue = (state: ICompactValueState = initState, action): ICompactValueState => {
+export const compactValue = (state: State = initState, action): State => {
     switch (action.type) {
         case ACTION_TOGGLE_CHOOSER:
             return toggleChooser(state);

@@ -4,21 +4,21 @@ import { Dispatch } from 'redux';
 import { changeData } from '../../../../input-connector/actions';
 import DateDisplay from '../../../../shared/components/displays/date';
 import PriceDisplay from '../../../../shared/components/displays/price/index';
-import { IEventAccommodation } from '../../middleware/interfaces';
-import { IAccommodationStore } from '../../reducer/';
+import { EventAccommodation } from '../../middleware/interfaces';
+import { Store  } from '../../reducer/';
 
-interface IProps {
-    accommodations: IEventAccommodation[];
+interface Props {
+    accommodations: EventAccommodation[];
     hotels: string[];
     date: string;
 }
 
-interface IState {
+interface State {
     onChange?: (value: number) => void;
     value?: number;
 }
 
-class Row extends React.Component<IProps & IState, {}> {
+class Row extends React.Component<Props & State, {}> {
     public render() {
         const {hotels, accommodations, date, onChange, value} = this.props;
         if (!accommodations) {
@@ -69,13 +69,13 @@ class Row extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: Props): State => {
     return {
         onChange: (value) => dispatch(changeData(ownProps.date, value)),
     };
 };
 
-const mapStateToProps = (state: IAccommodationStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: Store, ownProps: Props): State => {
     let value = null;
     if (state.inputConnector.data.hasOwnProperty(ownProps.date)) {
         value = state.inputConnector.data[ownProps.date];

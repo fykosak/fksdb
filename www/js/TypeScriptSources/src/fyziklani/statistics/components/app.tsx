@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import Loading from '../../helpers/components/loading';
 import ResultsShower from '../../helpers/components/results-shower';
 import HardVisibleSwitch from '../../helpers/options/compoents/hard-visible-switch';
-import { IFyziklaniStatisticsStore } from '../reducers';
+import { Store as StatisticsStore } from '../reducers';
 import ChartsContainer from './charts/';
 
-interface IState {
+interface State {
     isReady?: boolean;
     isOrg?: boolean;
 }
 
-interface IProps {
+interface Props {
     mode: string;
 }
 
-class App extends React.Component<IState & IProps, {}> {
+class App extends React.Component<State & Props, {}> {
     public render() {
         const {isReady, mode, isOrg} = this.props;
         if (!isReady) {
@@ -29,7 +29,7 @@ class App extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         isOrg: state.options.isOrg,
         isReady: state.options.isReady,

@@ -4,7 +4,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { ITeam } from '../../../../helpers/interfaces';
+import { Team } from '../../../../helpers/interfaces';
 import { setPosition } from '../../../actions/presentation/setPosition';
 import { FyziklaniResultsStore } from '../../../reducers';
 
@@ -12,7 +12,7 @@ interface State {
     categories?: string[];
     category?: string;
     cols?: number;
-    teams?: ITeam[];
+    teams?: Team[];
     rows?: number;
     delay?: number;
     position?: number;

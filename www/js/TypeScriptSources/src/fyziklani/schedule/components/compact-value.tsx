@@ -6,15 +6,15 @@ import {
 } from 'redux';
 import { lang } from '../../../i18n/i18n';
 import PriceDisplay from '../../../shared/components/displays/price';
-import { IPrice } from '../../../shared/components/displays/price/interfaces';
+import { Price } from '../../../shared/components/displays/price/interfaces';
 import { toggleChooser } from '../actions';
-import { IFyziklaniScheduleStore } from '../reducers/';
+import { Store as ScheduleStore } from '../reducers/';
 import {
-    IData,
-    IScheduleChooserItem,
+    Data,
+    ScheduleChooserItem,
 } from './index';
 
-interface IState {
+interface State {
     values?: {
         [key: string]: number;
     };
@@ -22,15 +22,15 @@ interface IState {
     onToggleChooser?(): void;
 }
 
-interface IProps {
-    data: IData;
+interface Props {
+    data: Data;
 }
 
-class CompactValue extends React.Component<IState & IProps, {}> {
+class CompactValue extends React.Component<State & Props, {}> {
 
     public render() {
         const {data, values, onToggleChooser} = this.props;
-        const price: IPrice = {kc: 0, eur: 0};
+        const price: Price = {kc: 0, eur: 0};
         let count = 0;
         for (const blockName in data) {
             if (data.hasOwnProperty(blockName)) {
@@ -39,7 +39,7 @@ class CompactValue extends React.Component<IState & IProps, {}> {
                 if (type !== 'chooser') {
                     continue;
                 }
-                (blockData as IScheduleChooserItem).parallels.forEach((parallel) => {
+                (blockData as ScheduleChooserItem).parallels.forEach((parallel) => {
                     for (const key in values) {
                         if (values.hasOwnProperty(key)) {
                             if ((blockName === key) && (parallel.id === values[key])) {
@@ -70,13 +70,13 @@ class CompactValue extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (store: IFyziklaniScheduleStore): IState => {
+const mapStateToProps = (store: ScheduleStore): State => {
     return {
         values: store.inputConnector.data,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onToggleChooser: () => dispatch(toggleChooser()),
     };

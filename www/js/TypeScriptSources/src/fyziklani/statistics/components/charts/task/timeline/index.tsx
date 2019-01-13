@@ -2,12 +2,12 @@ import * as React from 'react';
 import { lang } from '../../../../../../i18n/i18n';
 import Chart from './chart';
 
-interface IProps {
+interface Props {
     taskId: number;
     availablePoints: number[];
 }
 
-export default class Timeline extends React.Component<IProps, {}> {
+export default class Timeline extends React.Component<Props, {}> {
     public constructor(props, context) {
         super(props, context);
         this.state = {from: props.gameStart, to: props.gameEnd};

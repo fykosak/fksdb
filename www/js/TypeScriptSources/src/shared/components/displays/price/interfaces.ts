@@ -1,4 +1,4 @@
-export interface IPrice {
+export interface Price {
     eur: number;
     kc: number;
 }

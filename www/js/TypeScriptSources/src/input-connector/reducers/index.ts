@@ -1,23 +1,23 @@
 import {
     ACTION_CHANGE_DATA,
     ACTION_SET_INITIAL_DATA,
-    IActionChangeData,
-    IActionSetInitialData,
+    ActionChangeData,
+    ActionSetInitialData,
 } from '../actions/';
 
-export interface IInputConnectorItems {
+export interface InputConnectorItems {
     [key: string]: number;
 }
 
-export interface IInputConnectorState {
-    data: IInputConnectorItems;
+export interface State {
+    data: InputConnectorItems;
 }
 
-export interface IInputConnectorStore {
-    inputConnector: IInputConnectorState;
+export interface Store {
+    inputConnector: State;
 }
 
-const setData = (state: IInputConnectorState, action: IActionChangeData): IInputConnectorState => {
+const setData = (state: State, action: ActionChangeData): State => {
     return {
         ...state,
         data: {
@@ -27,7 +27,7 @@ const setData = (state: IInputConnectorState, action: IActionChangeData): IInput
     };
 };
 
-const setInitialData = (state: IInputConnectorState, action: IActionSetInitialData): IInputConnectorState => {
+const setInitialData = (state: State, action: ActionSetInitialData): State => {
     if (action.data) {
         return {
             ...state,
@@ -37,7 +37,7 @@ const setInitialData = (state: IInputConnectorState, action: IActionSetInitialDa
     return state;
 };
 
-export const inputConnector = (state: IInputConnectorState = {data: {}}, action): IInputConnectorState => {
+export const inputConnector = (state: State = {data: {}}, action): State => {
     switch (action.type) {
         case ACTION_CHANGE_DATA:
             return setData(state, action);

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ITeam } from '../../../helpers/interfaces/';
-import { IFyziklaniRoutingStore } from '../../reducers/';
-import Team from '../team/';
+import { Team } from '../../../helpers/interfaces/';
+import { Store as RoutingStore } from '../../reducers/';
+import TeamComponent from '../team/';
 
-interface IState {
-    stateTeams?: ITeam[];
+interface State {
+    stateTeams?: Team[];
 }
 
-class UnRoutedTeams extends React.Component<IState, {}> {
+class UnRoutedTeams extends React.Component<State, {}> {
 
     public render() {
         const {stateTeams} = this.props;
@@ -18,7 +18,7 @@ class UnRoutedTeams extends React.Component<IState, {}> {
                 {stateTeams && stateTeams.filter((team) => {
                     return team.x === null && team.y === null;
                 }).map((team, index) => {
-                    return <Team
+                    return <TeamComponent
                         team={team}
                         key={index}
                     />;
@@ -28,14 +28,10 @@ class UnRoutedTeams extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniRoutingStore): IState => {
+const mapStateToProps = (state: RoutingStore): State => {
     return {
         stateTeams: state.teams.availableTeams,
     };
 };
 
-const maxDispatchToProps = (): IState => {
-    return {};
-};
-
-export default connect(mapStateToProps, maxDispatchToProps)(UnRoutedTeams);
+export default connect(mapStateToProps, null)(UnRoutedTeams);

@@ -12,26 +12,26 @@ import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
+    Submit,
+    Submits,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
+interface State {
+    submits?: Submits;
     fromDate?: Date;
     toDate?: Date;
     activePoints?: number;
     aggregationTime?: number;
 }
 
-interface IProps {
+interface Props {
     taskId: number;
     availablePoints: number[];
 }
 
-class TimeHistogram extends React.Component<IState & IProps, {}> {
+class TimeHistogram extends React.Component<State & Props, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -65,7 +65,7 @@ class TimeHistogram extends React.Component<IState & IProps, {}> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 if (submit.taskId === taskId) {
                     if (submit.points > 0) {
                         if (!activePoints || activePoints === submit.points) {
@@ -133,7 +133,7 @@ class TimeHistogram extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

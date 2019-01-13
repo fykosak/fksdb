@@ -7,22 +7,22 @@ import {
 import { lang } from '../../../i18n/i18n';
 import { changeData } from '../../../input-connector/actions';
 import PriceDisplay from '../../../shared/components/displays/price';
-import { IFyziklaniScheduleStore } from '../reducers/';
-import { IChooserParallel } from './index';
+import { Store as ScheduleStore } from '../reducers/';
+import { ChooserParallel } from './index';
 import Item from './item';
 
-interface IProps {
-    item: IChooserParallel;
+interface Props {
+    item: ChooserParallel;
     blockName: string;
 }
 
-interface IState {
+interface State {
     value?: number;
 
     setSchedule?(id: number): void;
 }
 
-class ChooserItem extends React.Component<IProps & IState, {}> {
+class ChooserItem extends React.Component<Props & State, {}> {
 
     public render() {
         const {item, value} = this.props;
@@ -51,14 +51,14 @@ class ChooserItem extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (store: IFyziklaniScheduleStore, ownProps: IProps): IState => {
+const mapStateToProps = (store: ScheduleStore, ownProps: Props): State => {
     const {blockName} = ownProps;
     return {
         value: store.inputConnector.data.hasOwnProperty(blockName) ? store.inputConnector.data[blockName] : null,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
     return {
         setSchedule: (id: number) => dispatch(changeData(ownProps.blockName, id)),
     };

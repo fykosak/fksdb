@@ -1,15 +1,15 @@
 import * as React from 'react';
 import ChooserItem from './chooser-item';
-import { IScheduleItem } from './index';
+import { ScheduleItem } from './index';
 import InfoItem from './info-item';
 import TimeLabel from './time-label';
 
-interface IProps {
-    blockData: IScheduleItem;
+interface Props {
+    blockData: ScheduleItem;
     blockName: string;
 }
 
-export default class Row extends React.Component<IProps, {}> {
+export default class Row extends React.Component<Props, {}> {
 
     public render() {
         const {blockData, blockName} = this.props;

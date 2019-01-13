@@ -2,16 +2,16 @@ import {
     ACTION_SUBMIT_FAIL,
     ACTION_SUBMIT_SUCCESS,
 } from '../../../../fetch-api/actions/submit';
-import { IActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
-import { IResponseData } from '../actions/';
+import { ActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
+import { ResponseData } from '../actions/';
 
-export interface IFyziklaniDownloaderState {
+export interface State {
     lastUpdated?: string;
     refreshDelay?: number;
     isRefreshing?: boolean;
 }
 
-const updateOptions = (state: IFyziklaniDownloaderState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniDownloaderState => {
+const updateOptions = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
     const {lastUpdated, refreshDelay} = action.data.responseData;
     return {
         ...state,
@@ -20,14 +20,14 @@ const updateOptions = (state: IFyziklaniDownloaderState, action: IActionSubmitSu
         refreshDelay,
     };
 };
-const fetchFail = (state: IFyziklaniDownloaderState): IFyziklaniDownloaderState => {
+const fetchFail = (state: State): State => {
     return {
         ...state,
         isRefreshing: false,
     };
 };
 
-export const fyziklaniDownloader = (state: IFyziklaniDownloaderState = {lastUpdated: null}, action) => {
+export const fyziklaniDownloader = (state: State = {lastUpdated: null}, action) => {
     switch (action.type) {
         case ACTION_SUBMIT_SUCCESS:
             return updateOptions(state, action);

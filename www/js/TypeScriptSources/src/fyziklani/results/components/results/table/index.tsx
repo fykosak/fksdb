@@ -3,9 +3,9 @@ import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import { lang } from '../../../../../i18n/i18n';
 import {
-    ISubmits,
-    ITask,
-    ITeam,
+    Submits,
+    Task,
+    Team,
 } from '../../../../helpers/interfaces';
 import { FyziklaniResultsStore } from '../../../reducers';
 import Row from './row';
@@ -13,9 +13,9 @@ import { Filter } from '../../../middleware/results/filters/filter';
 
 interface State {
     filter?: Filter;
-    submits?: ISubmits;
-    teams?: ITeam[];
-    tasks?: ITask[];
+    submits?: Submits;
+    teams?: Team[];
+    tasks?: Task[];
 }
 
 class Index extends React.Component<State, {}> {
@@ -53,7 +53,7 @@ class Index extends React.Component<State, {}> {
             }
         }
 
-        const headCools = tasks.map((task: ITask, taskIndex) => {
+        const headCools = tasks.map((task: Task, taskIndex) => {
             return (<th key={taskIndex} data-task_label={task.label}>{task.label}</th>);
         });
 
@@ -74,7 +74,7 @@ class Index extends React.Component<State, {}> {
                     </tr>
                     </thead>
                     <tbody>
-                    {teams.map((team: ITeam, teamIndex) => {
+                    {teams.map((team: Team, teamIndex) => {
                         return (
                             <Row
                                 tasks={tasks}

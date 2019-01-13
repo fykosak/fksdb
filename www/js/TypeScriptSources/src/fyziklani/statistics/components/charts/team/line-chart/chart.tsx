@@ -12,35 +12,35 @@ import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmit,
-    ISubmits,
-    ITask,
+    Submit,
+    Submits,
+    Task,
 } from '../../../../../helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import {
     getLinePath,
-    IPointData,
+    PointData,
 } from '../../../../middleware/charts/lines';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
-    tasks?: ITask[];
+interface State {
+    submits?: Submits;
+    tasks?: Task[];
     gameStart?: Date;
     gameEnd?: Date;
     activePoints?: number;
 }
 
-interface IProps {
+interface Props {
     teamId: number;
 }
 
-export interface IExtendedSubmit extends ISubmit {
+export interface ExtendedSubmit extends Submit {
     totalPoints: number;
-    currentTask: ITask;
+    currentTask: Task;
 }
 
-class PointsInTime extends React.Component<IState & IProps, {}> {
+class PointsInTime extends React.Component<State & Props, {}> {
 
     private xAxis: any;
     private yAxis: any;
@@ -66,13 +66,13 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
             gameStart,
         } = this.props;
 
-        const teamSubmits: IExtendedSubmit[] = [];
+        const teamSubmits: ExtendedSubmit[] = [];
 
         let maxPoints = 0;
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
                     const currentTask = tasks.filter((task) => {
@@ -108,7 +108,7 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
                 </circle>
             );
         });
-        const pointsData: IPointData[] = [
+        const pointsData: PointData[] = [
             {
                 created: gameStart.toString(),
                 totalPoints: 0,
@@ -144,7 +144,7 @@ class PointsInTime extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

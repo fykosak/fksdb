@@ -1,12 +1,12 @@
 import * as React from 'react';
 import TimeDisplay from '../../../shared/components/displays/time';
 
-interface IProps {
+interface Props {
     start: string;
     end: string;
 }
 
-export default class TimeLabel extends React.Component<IProps, {}> {
+export default class TimeLabel extends React.Component<Props, {}> {
 
     public render() {
         const {start, end} = this.props;

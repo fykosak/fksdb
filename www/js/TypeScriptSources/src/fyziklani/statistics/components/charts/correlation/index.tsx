@@ -5,17 +5,17 @@ import {
     Dispatch,
 } from 'redux';
 import { lang } from '../../../../../i18n/i18n';
-import { ITeam } from '../../../../helpers/interfaces';
+import { Team } from '../../../../helpers/interfaces';
 import {
     setFirstTeamId,
     setSecondTeamId,
 } from '../../../actions';
-import { IFyziklaniStatisticsStore } from '../../../reducers';
+import { Store as StatisticsStore } from '../../../reducers';
 import GlobalCorrelation from './global-correlation/chart';
 import Table from './table/chart';
 
-interface IState {
-    teams?: ITeam[];
+interface State {
+    teams?: Team[];
     firstTeamId?: number;
     secondTeamId?: number;
 
@@ -24,7 +24,7 @@ interface IState {
     onChangeSecondTeam?(id: number): void;
 }
 
-class CorrelationStats extends React.Component<IState, {}> {
+class CorrelationStats extends React.Component<State, {}> {
 
     public render() {
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;
@@ -79,7 +79,7 @@ class CorrelationStats extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,
@@ -88,7 +88,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>):
-    IState => {
+    State => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
         onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),

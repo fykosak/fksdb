@@ -9,11 +9,11 @@ export const toggleChooser = (): Action<string> => {
 
 export const ACTION_SET_VISIBILITY = 'ACTION_SET_VISIBILITY';
 
-export interface IActionSetVisibility extends Action<string> {
+export interface ActionSetVisibility extends Action<string> {
     state: boolean;
 }
 
-export const setVisibility = (state: boolean): IActionSetVisibility => {
+export const setVisibility = (state: boolean): ActionSetVisibility => {
     return {
         state,
         type: ACTION_SET_VISIBILITY,

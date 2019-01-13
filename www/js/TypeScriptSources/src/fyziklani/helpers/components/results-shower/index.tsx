@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { lang } from '../../../../i18n/i18n';
 import Timer from '../../../helpers/components/timer';
 import Images from '../../../results/components/results/images';
-import { IFyziklaniOptionsState } from '../../options/reducers';
-import { IFyziklaniTimerState } from '../../reducers/timer';
-import { lang } from '../../../../i18n/i18n';
+import { State as OptionsState } from '../../options/reducers';
+import { State as TimerState } from '../../reducers/timer';
 
-interface IState {
+interface State {
     visible?: boolean;
     hardVisible?: boolean;
 
 }
 
-interface IProps {
+interface Props {
     className?: string;
 }
 
-class ResultsShower extends React.Component<IState & IProps, {}> {
+class ResultsShower extends React.Component<State & Props, {}> {
 
     public render() {
         const {visible, hardVisible} = this.props;
@@ -45,12 +45,12 @@ class ResultsShower extends React.Component<IState & IProps, {}> {
     }
 }
 
-interface IStore {
-    timer: IFyziklaniTimerState;
-    options: IFyziklaniOptionsState;
+interface Store {
+    timer: TimerState;
+    options: OptionsState;
 }
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: Store): State => {
     return {
         hardVisible: state.options.hardVisible,
         visible: state.timer.visible,

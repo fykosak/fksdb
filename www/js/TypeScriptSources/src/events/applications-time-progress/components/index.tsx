@@ -1,25 +1,25 @@
 import * as React from 'react';
 import {
-    IEvent,
-    ITeam,
+    Event,
+    Team,
 } from '../../../fyziklani/helpers/interfaces';
 import { lang } from '../../../i18n/i18n';
 import Chart from './chart';
 
-export interface IData {
+export interface Data {
     events: {
-        [eventId: number]: IEvent;
+        [eventId: number]: Event;
     };
     teams: {
-        [eventId: number]: ITeam[];
+        [eventId: number]: Team[];
     };
 }
 
-interface IProps {
-    data: IData;
+interface Props {
+    data: Data;
 }
 
-export default class Timeline extends React.Component<IProps, {}> {
+export default class Timeline extends React.Component<Props, {}> {
 
     public render() {
         const {data} = this.props;

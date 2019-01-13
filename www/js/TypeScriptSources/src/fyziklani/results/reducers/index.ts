@@ -1,23 +1,23 @@
 import { combineReducers } from 'redux';
 import {
-    IFetchApiState,
+    State as FetchApiState,
     submit,
 } from '../../../fetch-api/reducers/submit';
 import {
     fyziklaniDownloader,
-    IFyziklaniDownloaderState,
+    State as DownloaderState,
 } from '../../helpers/downloader/reducers/';
 import {
     fyziklaniOptions,
-    IFyziklaniOptionsState,
+    State as OptionsState,
 } from '../../helpers/options/reducers/';
 import {
     fyziklaniData,
-    IFyziklaniDataState,
+    State as DataState,
 } from '../../helpers/reducers/data';
 import {
     fyziklaniTimer,
-    IFyziklaniTimerState,
+    State as TimerState,
 } from '../../helpers/reducers/timer';
 import {
     presentation,
@@ -25,7 +25,7 @@ import {
 } from './presentation';
 import {
     fyziklaniTableFilter,
-    IFyziklaniTableFilterState,
+    State as TableFilterState,
 } from './table-filter';
 
 export const app = combineReducers({
@@ -39,11 +39,11 @@ export const app = combineReducers({
 });
 
 export interface FyziklaniResultsStore {
-    data: IFyziklaniDataState;
-    tableFilter: IFyziklaniTableFilterState;
-    timer: IFyziklaniTimerState;
-    options: IFyziklaniOptionsState;
-    downloader: IFyziklaniDownloaderState;
-    fetchApi: IFetchApiState;
+    data: DataState;
+    tableFilter: TableFilterState;
+    timer: TimerState;
+    options: OptionsState;
+    downloader: DownloaderState;
+    fetchApi: FetchApiState;
     presentation: PresentationState;
 }

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { IApp } from '../app-collector';
+import { App } from '../app-collector';
 import Results from './results/components/';
 import Routing from './routing/components/index';
 import Schedule from './schedule/components/index';
 import Statistics from './statistics/components/';
 import TaskCodeApp from './submit-form/components/index';
 
-const registerRouting: IApp = (element, module, component, mode, rawData, actions) => {
+const registerRouting: App = (element, module, component, mode, rawData, actions) => {
     const wrap = document.querySelector('#wrap > .container');
     if (wrap) {
         wrap.className = wrap.className.split(' ').reduce((className, name) => {
@@ -22,7 +22,7 @@ const registerRouting: IApp = (element, module, component, mode, rawData, action
     return true;
 };
 
-const registerSubmitForm: IApp = (element, module, component, mode, rawData, actions) => {
+const registerSubmitForm: App = (element, module, component, mode, rawData, actions) => {
 
     const c = document.createElement('div');
     const {tasks, teams, availablePoints} = JSON.parse(rawData);
@@ -31,7 +31,7 @@ const registerSubmitForm: IApp = (element, module, component, mode, rawData, act
     return true;
 };
 
-const registerResults: IApp = (element, module, component, mode, rawData, actions) => {
+const registerResults: App = (element, module, component, mode, rawData, actions) => {
 
     switch (mode) {
         case 'presentation':
@@ -54,7 +54,7 @@ const registerResults: IApp = (element, module, component, mode, rawData, action
     }
 };
 
-const registerSchedule: IApp = (element, module, component, mode, rawData, actions) => {
+const registerSchedule: App = (element, module, component, mode, rawData, actions) => {
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
@@ -92,7 +92,7 @@ const registerSchedule: IApp = (element, module, component, mode, rawData, actio
     return true;
 };
 
-const registerStatistics: IApp = (element, module, component, mode, rawData, actions) => {
+const registerStatistics: App = (element, module, component, mode, rawData, actions) => {
 
     switch (mode) {
         case 'team':
@@ -105,7 +105,7 @@ const registerStatistics: IApp = (element, module, component, mode, rawData, act
     }
 };
 
-export const fyziklani: IApp = (element, module, component, mode, rawData, actions) => {
+export const fyziklani: App = (element, module, component, mode, rawData, actions) => {
     if (module !== 'fyziklani') {
         return false;
     }

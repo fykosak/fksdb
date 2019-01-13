@@ -1,34 +1,34 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { lang } from '../../../../../../i18n/i18n';
 import {
-    ISubmit,
-    ISubmits,
-    ITask,
-    ITeam,
+    Submit,
+    Submits,
+    Task,
+    Team,
 } from '../../../../../helpers/interfaces';
 import {
     getTimeLabel,
-    IPreprocessedSubmit,
+    PreprocessedSubmit,
 } from '../../../../middleware/charts/correlation';
 import { getAverageNStandardDeviation } from '../../../../middleware/charts/std-dev';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
-import { lang } from '../../../../../../i18n/i18n';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    submits?: ISubmits;
-    tasks?: ITask[];
-    teams?: ITeam[];
+interface State {
+    submits?: Submits;
+    tasks?: Task[];
+    teams?: Team[];
     firstTeamId?: number;
     secondTeamId?: number;
 }
 
-class Table extends React.Component<IState, {}> {
+class Table extends React.Component<State, {}> {
 
     public render() {
 
         const {firstTeamId, secondTeamId, submits, tasks} = this.props;
-        const firstTeamSubmits: ISubmit[] = [];
-        const secondTeamSubmits: ISubmit[] = [];
+        const firstTeamSubmits: Submit[] = [];
+        const secondTeamSubmits: Submit[] = [];
         for (const id in submits) {
             if (submits.hasOwnProperty(id)) {
                 const submit = submits[id];
@@ -39,7 +39,7 @@ class Table extends React.Component<IState, {}> {
                 }
             }
         }
-        const submitsForTeams: { [teamId: number]: { [taskId: number]: IPreprocessedSubmit } } = {};
+        const submitsForTeams: { [teamId: number]: { [taskId: number]: PreprocessedSubmit } } = {};
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit = submits[index];
@@ -57,7 +57,7 @@ class Table extends React.Component<IState, {}> {
         let count = 0;
         const firstTeamData = submitsForTeams.hasOwnProperty(firstTeamId) ? submitsForTeams[firstTeamId] : {};
         const secondTeamData = submitsForTeams.hasOwnProperty(secondTeamId) ? submitsForTeams[secondTeamId] : {};
-        tasks.forEach((task: ITask, id) => {
+        tasks.forEach((task: Task, id) => {
             const firstSubmit = firstTeamData.hasOwnProperty(task.taskId) ? firstTeamData[task.taskId] : null;
             const secondSubmit = secondTeamData.hasOwnProperty(task.taskId) ? secondTeamData[task.taskId] : null;
             let delta = 0;
@@ -99,7 +99,7 @@ class Table extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

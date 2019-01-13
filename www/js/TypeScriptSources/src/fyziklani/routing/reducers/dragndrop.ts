@@ -2,14 +2,14 @@ import {
     ACTION_DRAG_END,
     ACTION_DRAG_START,
     ACTION_DROP_ITEM,
-    IActionDragStart,
+    ActionDragStart,
 } from '../actions/dragndrop';
 
-export interface IState<D> {
+export interface State<D> {
     data?: D;
 }
 
-function dragStart<D>(state: IState<D>, action: IActionDragStart<D>): IState<D> {
+function dragStart<D>(state: State<D>, action: ActionDragStart<D>): State<D> {
     const {data} = action;
     return {
         ...state,
@@ -17,14 +17,14 @@ function dragStart<D>(state: IState<D>, action: IActionDragStart<D>): IState<D> 
     };
 }
 
-function dragEnd<D>(state: IState<D>): IState<D> {
+function dragEnd<D>(state: State<D>): State<D> {
     return {
         ...state,
         data: null,
     };
 }
 
-export function dragNDrop<D = any>(state: IState<D> = {data: null}, action): IState<D> {
+export function dragNDrop<D = any>(state: State<D> = {data: null}, action): State<D> {
     switch (action.type) {
         case ACTION_DRAG_START:
             return dragStart<D>(state, action);

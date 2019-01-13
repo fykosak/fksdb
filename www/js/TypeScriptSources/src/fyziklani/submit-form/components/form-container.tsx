@@ -4,28 +4,28 @@ import {
     InjectedFormProps,
     reduxForm,
 } from 'redux-form';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
+import { Response } from '../../../fetch-api/middleware/interfaces';
 import {
-    ITask,
-    ITeam,
+    Task,
+    Team,
 } from '../../helpers/interfaces/';
 import {
     ACCESS_KEY,
-    ISubmitFormRequest,
+    SubmitFormRequest,
 } from '../actions';
 import { validate } from '../middleware/form';
 import FormSection from './form-section';
 
-export interface IProps {
-    tasks: ITask[];
-    teams: ITeam[];
+export interface Props {
+    tasks: Task[];
+    teams: Team[];
     availablePoints: number[];
 
-    onSubmit?(values: ISubmitFormRequest): Promise<IResponse<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
 // { code: string }
-class FormContainer extends React.Component<IProps & InjectedFormProps<{ code: string }, IProps>> {
+class FormContainer extends React.Component<Props & InjectedFormProps<{ code: string }, Props>> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints} = this.props;

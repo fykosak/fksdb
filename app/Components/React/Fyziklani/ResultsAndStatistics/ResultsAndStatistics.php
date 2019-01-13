@@ -44,6 +44,7 @@ abstract class ResultsAndStatistics extends FyziklaniModule {
                 'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
+            'availablePoints' => $gameSetup->getAvailablePoints(),
             'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,

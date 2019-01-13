@@ -5,7 +5,7 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
-import { INetteActions } from '../../../app-collector/';
+import { NetteActions } from '../../../app-collector/';
 import { config } from '../../../config/';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
@@ -13,12 +13,12 @@ import App from './app';
 
 interface Props {
     mode: string;
-    actions: INetteActions;
+    actions: NetteActions;
 }
 
 export default class Index extends React.Component<Props, {}> {
     public render() {
-        const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
         const {mode, actions} = this.props;
         return (

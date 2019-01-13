@@ -80,7 +80,7 @@
 
         &:first-child::before {
           counter-increment: results-table;
-       //   content: counter(results-table) ".";
+          content: counter(results-table) ".";
         }
       }
     }

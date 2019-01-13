@@ -1,20 +1,20 @@
 import { combineReducers } from 'redux';
 import {
-    IInputConnectorState,
     inputConnector,
+    State as InputConnectorState,
 } from '../../../input-connector/reducers';
 
 import {
     compactValue,
-    ICompactValueState,
-} from './compart-value';
+    State as CompactValueState,
+} from './compact-value';
 
 export const app = combineReducers({
     compactValue,
     inputConnector,
 });
 
-export interface IFyziklaniScheduleStore {
-    inputConnector: IInputConnectorState;
-    compactValue: ICompactValueState;
+export interface Store {
+    inputConnector: InputConnectorState;
+    compactValue: CompactValueState;
 }
