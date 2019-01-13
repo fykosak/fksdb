@@ -1,16 +1,16 @@
 import * as React from 'react';
 import {
-    ITask,
-    ITeam,
+    Task,
+    Team,
 } from '../../helpers/interfaces/';
 
-interface IProps {
+interface Props {
     code: string;
-    tasks: ITask[];
-    teams: ITeam[];
+    tasks: Task[];
+    teams: Team[];
 }
 
-export default class TaskInput extends React.Component<IProps, {}> {
+export default class TaskInput extends React.Component<Props, {}> {
 
     public render() {
         const {code: value, tasks, teams} = this.props;

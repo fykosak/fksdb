@@ -6,15 +6,15 @@ import {
     ACTION_SET_SECOND_TEAM_ID,
     ACTION_SET_TASK_ID,
     ACTION_SET_TO_DATE,
-    IActionSetActivePoints,
-    IActionSetAggregationTime,
-    IActionSetFromDate,
-    IActionSetTaskId,
-    IActionSetTeamId,
-    IActionSetToDate,
+    ActionSetActivePoints,
+    ActionSetAggregationTime,
+    ActionSetFromDate,
+    ActionSetTaskId,
+    ActionSetTeamId,
+    ActionSetToDate,
 } from '../actions/';
 
-export interface IFyziklaniStatisticsState {
+export interface State {
     activePoints?: number;
     taskId?: number;
     firstTeamId?: number;
@@ -24,7 +24,7 @@ export interface IFyziklaniStatisticsState {
     toDate?: Date;
 }
 
-const setTaskId = (state: IFyziklaniStatisticsState, action: IActionSetTaskId): IFyziklaniStatisticsState => {
+const setTaskId = (state: State, action: ActionSetTaskId): State => {
     const {taskId} = action;
     return {
         ...state,
@@ -32,7 +32,7 @@ const setTaskId = (state: IFyziklaniStatisticsState, action: IActionSetTaskId): 
     };
 };
 
-const setActivePoints = (state: IFyziklaniStatisticsState, action: IActionSetActivePoints): IFyziklaniStatisticsState => {
+const setActivePoints = (state: State, action: ActionSetActivePoints): State => {
     const {activePoints} = action;
     return {
         ...state,
@@ -40,42 +40,42 @@ const setActivePoints = (state: IFyziklaniStatisticsState, action: IActionSetAct
     };
 };
 
-const setFirstTeamId = (state: IFyziklaniStatisticsState, action: IActionSetTeamId): IFyziklaniStatisticsState => {
+const setFirstTeamId = (state: State, action: ActionSetTeamId): State => {
     return {
         ...state,
         firstTeamId: action.teamId,
     };
 };
 
-const setSecondTeamId = (state: IFyziklaniStatisticsState, action: IActionSetTeamId): IFyziklaniStatisticsState => {
+const setSecondTeamId = (state: State, action: ActionSetTeamId): State => {
     return {
         ...state,
         secondTeamId: action.teamId,
     };
 };
 
-const setAggregationTime = (state: IFyziklaniStatisticsState, action: IActionSetAggregationTime): IFyziklaniStatisticsState => {
+const setAggregationTime = (state: State, action: ActionSetAggregationTime): State => {
     return {
         ...state,
         aggregationTime: action.time,
     };
 };
 
-const setFromDate = (state: IFyziklaniStatisticsState, action: IActionSetFromDate): IFyziklaniStatisticsState => {
+const setFromDate = (state: State, action: ActionSetFromDate): State => {
     return {
         ...state,
         fromDate: action.from,
     };
 };
 
-const setToDate = (state: IFyziklaniStatisticsState, action: IActionSetToDate): IFyziklaniStatisticsState => {
+const setToDate = (state: State, action: ActionSetToDate): State => {
     return {
         ...state,
         toDate: action.to,
     };
 };
 
-export const stats = (state: IFyziklaniStatisticsState = {aggregationTime: 5 * 60 * 1000}, action): IFyziklaniStatisticsState => {
+export const stats = (state: State = {aggregationTime: 5 * 60 * 1000}, action): State => {
     switch (action.type) {
         case ACTION_SET_ACTIVE_POINTS:
             return setActivePoints(state, action);

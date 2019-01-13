@@ -6,18 +6,18 @@ import {
 } from 'redux';
 import { lang } from '../../../../../../i18n/i18n';
 import TimeDisplay from '../../../../../../shared/components/displays/time';
-import { ITask } from '../../../../../helpers/interfaces';
+import { Task } from '../../../../../helpers/interfaces';
 import {
     setAggregationTime,
     setFromDate,
     setTaskId,
     setToDate,
 } from '../../../../actions';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
+interface State {
     aggregationTime?: number;
-    tasks?: ITask[];
+    tasks?: Task[];
     taskId?: number;
     fromDate?: Date;
     toDate?: Date;
@@ -33,7 +33,7 @@ interface IState {
     onSetToDate?(date: Date): void;
 }
 
-class Options extends React.Component<IState, {}> {
+class Options extends React.Component<State, {}> {
 
     public componentDidMount() {
         const {onSetFromDate, onSetToDate, gameEnd, gameStart} = this.props;
@@ -128,7 +128,7 @@ class Options extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.statistics.fromDate,
@@ -140,7 +140,7 @@ const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): State => {
     return {
         onChangeAggregationTime: (time: number) => dispatch(setAggregationTime(time)),
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),

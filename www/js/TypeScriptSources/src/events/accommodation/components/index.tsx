@@ -7,19 +7,19 @@ import {
 import logger from 'redux-logger';
 import { config } from '../../../config/';
 import InputConnector from '../../../input-connector/compoenents/index';
-import { IEventAccommodation } from '../middleware/interfaces';
+import { EventAccommodation } from '../middleware/interfaces';
 import { app } from '../reducer/';
 import Matrix from './matrix/index';
 import MultiNights from './multi-nights/';
 import Single from './single/';
 
-interface IProps {
-    accommodationDef: IEventAccommodation[];
+interface Props {
+    accommodationDef: EventAccommodation[];
     input: HTMLInputElement;
     mode: 'matrix' | 'multiNights' | 'multiHotels' | 'single' | string;
 }
 
-export default class Index extends React.Component<IProps, {}> {
+export default class Index extends React.Component<Props, {}> {
 
     public render() {
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

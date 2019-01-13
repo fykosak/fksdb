@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { setInitialData } from '../actions/';
 import {
-    IInputConnectorItems,
-    IInputConnectorStore,
+    InputConnectorItems,
+    Store,
 } from '../reducers';
 import CoreConnector, { CoreProps } from './core-connector';
 
-interface IState {
-    data?: IInputConnectorItems;
+interface State {
+    data?: InputConnectorItems;
 
-    onSetInitialData?(value: IInputConnectorItems): void;
+    onSetInitialData?(value: InputConnectorItems): void;
 }
 
 export default class InputConnector extends React.Component<CoreProps, {}> {
@@ -20,13 +23,13 @@ export default class InputConnector extends React.Component<CoreProps, {}> {
         return <ConnectedComponent input={this.props.input}/>;
     }
 
-    private mapDispatchToProps(dispatch: Dispatch): IState {
+    private mapDispatchToProps(dispatch: Dispatch<Action<string>>): State {
         return {
-            onSetInitialData: (data: IInputConnectorItems) => dispatch(setInitialData(data)),
+            onSetInitialData: (data: InputConnectorItems) => dispatch(setInitialData(data)),
         };
     }
 
-    private mapStateToProps(state: IInputConnectorStore): IState {
+    private mapStateToProps(state: Store): State {
         return {
             data: state.inputConnector.data,
         };

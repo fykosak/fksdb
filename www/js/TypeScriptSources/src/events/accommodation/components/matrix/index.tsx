@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { lang } from '../../../../i18n/i18n';
-import { IEventAccommodation } from '../../middleware/interfaces';
+import { EventAccommodation } from '../../middleware/interfaces';
 import Price from '../price';
 import Row from './row';
 
-interface IProps {
-    accommodationDef: IEventAccommodation[];
+interface Props {
+    accommodationDef: EventAccommodation[];
 }
 
-export default class Matrix extends React.Component<IProps, {}> {
+export default class Matrix extends React.Component<Props, {}> {
 
     public render() {
         const dates = {};

@@ -5,21 +5,21 @@ import {
     Dispatch,
 } from 'redux';
 import { lang } from '../../../../../i18n/i18n';
-import { ITeam } from '../../../../helpers/interfaces';
+import { Team } from '../../../../helpers/interfaces';
 import { setFirstTeamId } from '../../../actions';
-import { IFyziklaniStatisticsStore } from '../../../reducers';
+import { Store as StatisticsStore } from '../../../reducers';
 import PointsInTime from './line-chart/index';
 import PointsPie from './pie/index';
 import TimeLine from './timeline/index';
 
-interface IState {
-    teams?: ITeam[];
+interface State {
+    teams?: Team[];
     teamId?: number;
 
     onChangeFirstTeam?(id: number): void;
 }
 
-class TeamStats extends React.Component<IState, {}> {
+class TeamStats extends React.Component<State, {}> {
 
     public render() {
         const {teams, onChangeFirstTeam, teamId} = this.props;
@@ -59,14 +59,14 @@ class TeamStats extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
     };

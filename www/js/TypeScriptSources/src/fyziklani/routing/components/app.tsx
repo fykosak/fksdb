@@ -6,24 +6,24 @@ import {
 } from 'redux';
 import Powered from '../../../shared/powered';
 import {
-    IRoom,
-    ITeam,
+    Room,
+    Team,
 } from '../../helpers/interfaces';
 import { addTeams } from '../actions/teams';
 import Form from './form/index';
 import Rooms from './rooms/index';
 import UnRoutedTeams from './unrouted-teams/';
 
-interface IState {
-    onAddTeams?: (teams: ITeam[]) => void;
+interface State {
+    onAddTeams?: (teams: Team[]) => void;
 }
 
-interface IProps {
-    teams: ITeam[];
-    rooms: IRoom[];
+interface Props {
+    teams: Team[];
+    rooms: Room[];
 }
 
-class RoutingApp extends React.Component<IState & IProps, {}> {
+class RoutingApp extends React.Component<State & Props, {}> {
 
     public componentDidMount() {
         const {onAddTeams, teams} = this.props;
@@ -52,11 +52,11 @@ class RoutingApp extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (): IState => {
+const mapStateToProps = (): State => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): State => {
     return {
         onAddTeams: (teams) => dispatch(addTeams(teams)),
     };

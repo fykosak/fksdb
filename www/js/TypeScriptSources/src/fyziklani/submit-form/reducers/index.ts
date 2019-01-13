@@ -4,7 +4,7 @@ import {
     reducer as formReducer,
 } from 'redux-form';
 import {
-    IFetchApiState,
+    State as FetchApiState,
     submit,
 } from '../../../fetch-api/reducers/submit';
 
@@ -13,7 +13,7 @@ export const app = combineReducers({
     form: formReducer,
 });
 
-export interface IFyziklaniSubmitStore {
-    fetchApi: IFetchApiState;
+export interface Store {
+    fetchApi: FetchApiState;
     form: FormReducer;
 }

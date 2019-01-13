@@ -1,10 +1,10 @@
-import { IPlace } from '../../helpers/interfaces';
+import { Place } from '../../helpers/interfaces';
 
-export interface IRoutingDragNDropData {
+export interface DragNDropData {
     teamId: number;
-    place?: IPlace;
+    place?: Place;
 }
 
-export interface IResponseData {
+export interface ResponseData {
     updatedTeams: number[];
 }

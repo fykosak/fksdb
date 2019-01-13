@@ -5,22 +5,22 @@ import {
     Dispatch,
 } from 'redux';
 import {
-    ISubmit,
-    ISubmits,
-    ITask,
+    Submit,
+    Submits,
+    Task,
 } from '../../../../../helpers/interfaces/';
 import { setTaskId } from '../../../../actions';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { IFyziklaniStatisticsStore } from '../../../../reducers';
+import { Store as StatisticsStore } from '../../../../reducers';
 
-interface IState {
-    tasks?: ITask[];
-    submits?: ISubmits;
+interface State {
+    tasks?: Task[];
+    submits?: Submits;
 
     onChangeTask?(taskId: number): void;
 }
 
-interface IStatItem extends ITask {
+interface StatItem extends Task {
     5: number;
     3: number;
     2: number;
@@ -28,18 +28,18 @@ interface IStatItem extends ITask {
     total: number;
 }
 
-interface IStats {
-    [taskId: number]: IStatItem;
+interface Stats {
+    [taskId: number]: StatItem;
 }
 
-interface IProps {
+interface Props {
     availablePoints: number[];
 }
 
-class TaskStats extends React.Component<IState & IProps, {}> {
+class TaskStats extends React.Component<State & Props, {}> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
-        const tasksSubmits: IStats = {};
+        const tasksSubmits: Stats = {};
 
         for (const task of tasks) {
             const {taskId} = task;
@@ -55,7 +55,7 @@ class TaskStats extends React.Component<IState & IProps, {}> {
         let max = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ISubmit = submits[index];
+                const submit: Submit = submits[index];
                 const {taskId, points} = submit;
                 if (tasksSubmits.hasOwnProperty(taskId)) {
                     tasksSubmits[taskId][points]++;
@@ -70,7 +70,7 @@ class TaskStats extends React.Component<IState & IProps, {}> {
         const rows = [];
         for (const index in tasksSubmits) {
             if (tasksSubmits.hasOwnProperty(index)) {
-                const submit: IStatItem = tasksSubmits[index];
+                const submit: StatItem = tasksSubmits[index];
 
                 rows.push(
                     <div className="row" key={index}>
@@ -105,13 +105,13 @@ class TaskStats extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniStatisticsStore): IState => {
+const mapStateToProps = (state: StatisticsStore): State => {
     return {
         submits: state.data.submits,
         tasks: state.data.tasks,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<any>>): State => {
     return {
         onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
     };

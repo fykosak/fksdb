@@ -5,7 +5,7 @@ import {
     Dispatch,
 } from 'redux';
 import { lang } from '../../../../../../../i18n/i18n';
-import { IRoom } from '../../../../../../helpers/interfaces';
+import { Room } from '../../../../../../helpers/interfaces';
 import {
     addFilter,
     removeFilter,
@@ -19,7 +19,7 @@ interface State {
     filters?: Filter[];
     index?: number;
     categories?: string[];
-    rooms?: IRoom[];
+    rooms?: Room[];
 
     onAddFilter?(filter: Filter): void;
 

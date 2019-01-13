@@ -4,16 +4,16 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { ITeam } from '../../../helpers/interfaces/';
+import { Team } from '../../../helpers/interfaces/';
 import {
     dragEnd,
     dragStart,
 } from '../../actions/dragndrop';
 import { removeTeamPlace } from '../../actions/teams';
-import { IRoutingDragNDropData } from '../../middleware/interfaces';
-import { IFyziklaniRoutingStore } from '../../reducers/';
+import { DragNDropData } from '../../middleware/interfaces';
+import { Store as RoutingStore } from '../../reducers/';
 
-interface IState {
+interface State {
     isUpdated?: boolean;
     isDragged?: boolean;
     onDragStart?: (teamId: number) => void;
@@ -21,11 +21,11 @@ interface IState {
     onRemovePlace?: (teamId: number) => void;
 }
 
-interface IProps {
-    team: ITeam;
+interface Props {
+    team: Team;
 }
 
-class Team extends React.Component<IProps & IState, {}> {
+class TeamComponent extends React.Component<Props & State, {}> {
     public render() {
 
         const {onDragStart, onDragEnd, team, onRemovePlace, isUpdated, isDragged} = this.props;
@@ -64,19 +64,19 @@ class Team extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniRoutingStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: RoutingStore, ownProps: Props): State => {
     return {
         isDragged: state.dragNDrop.data && (state.dragNDrop.data.teamId === ownProps.team.teamId),
         isUpdated: (state.teams.updatedTeams.indexOf(ownProps.team.teamId) !== -1),
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
-        onDragStart: (teamId) => dispatch(dragStart<IRoutingDragNDropData>({teamId})),
+        onDragStart: (teamId) => dispatch(dragStart<DragNDropData>({teamId})),
         onRemovePlace: (teamId) => dispatch(removeTeamPlace(teamId)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Team);
+export default connect(mapStateToProps, mapDispatchToProps)(TeamComponent);

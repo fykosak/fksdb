@@ -1,13 +1,13 @@
 import { Action } from 'redux';
-import { ITeam } from '../../helpers/interfaces';
+import { Team } from '../../helpers/interfaces';
 
 export const ACTION_ADD_TEAMS = 'ACTION_ADD_TEAMS';
 
-export interface IActionAddTeams extends Action {
-    teams: ITeam[];
+export interface ActionAddTeams extends Action {
+    teams: Team[];
 }
 
-export const addTeams = (teams: ITeam[]): IActionAddTeams => {
+export const addTeams = (teams: Team[]): ActionAddTeams => {
     return {
         teams,
         type: ACTION_ADD_TEAMS,
@@ -16,11 +16,11 @@ export const addTeams = (teams: ITeam[]): IActionAddTeams => {
 
 export const ACTION_REMOVE_PLACE = 'ACTION_REMOVE_PLACE';
 
-export interface IActionRemoveTeamPlace extends Action {
+export interface ActionRemoveTeamPlace extends Action {
     teamId: number;
 }
 
-export const removeTeamPlace = (teamId: number): IActionRemoveTeamPlace => {
+export const removeTeamPlace = (teamId: number): ActionRemoveTeamPlace => {
     return {
         teamId,
         type: ACTION_REMOVE_PLACE,

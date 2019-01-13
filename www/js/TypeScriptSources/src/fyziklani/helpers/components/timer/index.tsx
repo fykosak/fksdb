@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IFyziklaniOptionsState } from '../../options/reducers/';
-import { IFyziklaniTimerState } from '../../reducers/timer';
+import { State as OptionsState } from '../../options/reducers/';
+import { State as TimerState } from '../../reducers/timer';
 import { getCurrentDelta } from './timer';
 
-interface IState {
+interface State {
     toStart?: number;
     toEnd?: number;
     visible?: boolean;
@@ -12,7 +12,7 @@ interface IState {
     hardVisible?: boolean;
 }
 
-class Timer extends React.Component<IState, {}> {
+class Timer extends React.Component<State, {}> {
     private timerId;
 
     public componentDidMount() {
@@ -57,12 +57,12 @@ class Timer extends React.Component<IState, {}> {
     }
 }
 
-interface IStore {
-    timer: IFyziklaniTimerState;
-    options: IFyziklaniOptionsState;
+interface Store {
+    timer: TimerState;
+    options: OptionsState;
 }
 
-const mapStateToProps = (state: IStore): IState => {
+const mapStateToProps = (state: Store): State => {
     return {
         hardVisible: state.options.hardVisible,
         inserted: state.timer.inserted,

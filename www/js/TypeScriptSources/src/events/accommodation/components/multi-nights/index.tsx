@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { IEventAccommodation } from '../../middleware/interfaces';
+import { EventAccommodation } from '../../middleware/interfaces';
 import Row from '../rows/single-row';
 
-interface IProps {
-    accommodationDef: IEventAccommodation[];
+interface Props {
+    accommodationDef: EventAccommodation[];
 }
 
-export default class MultiNights extends React.Component<IProps, {}> {
+export default class MultiNights extends React.Component<Props, {}> {
 
     public render() {
         const {accommodationDef} = this.props;

@@ -1,9 +1,9 @@
 import { lang } from '../../../../../i18n/i18n';
-import { IRoom } from '../../../../helpers/interfaces';
+import { Room } from '../../../../helpers/interfaces';
 import { Filter } from './filter';
 
-export const createFilters = (rooms: IRoom[] = [], categories: string[] = [], includeAll: boolean = true): Filter[] => {
-    const roomFilters = rooms.map((room: IRoom) => {
+export const createFilters = (rooms: Room[] = [], categories: string[] = [], includeAll: boolean = true): Filter[] => {
+    const roomFilters = rooms.map((room: Room) => {
         return new Filter({roomId: room.roomId, category: null, name: 'Room ' + room.name});
     });
 

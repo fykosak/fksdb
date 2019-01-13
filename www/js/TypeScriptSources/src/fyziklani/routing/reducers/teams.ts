@@ -1,28 +1,28 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../fetch-api/actions/submit';
-import { IActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
-import { ITeam } from '../../helpers/interfaces';
+import { ActionSubmitSuccess } from '../../../fetch-api/middleware/interfaces';
+import { Team } from '../../helpers/interfaces';
 import {
     ACTION_DROP_ITEM,
-    IActionDropItem,
+    ActionDropItem,
 } from '../actions/dragndrop';
 import { ACTION_REMOVE_UPDATED_TEAMS } from '../actions/save';
 import {
     ACTION_ADD_TEAMS,
     ACTION_REMOVE_PLACE,
-    IActionAddTeams,
-    IActionRemoveTeamPlace,
+    ActionAddTeams,
+    ActionRemoveTeamPlace,
 } from '../actions/teams';
 import {
-    IResponseData,
-    IRoutingDragNDropData,
+    DragNDropData,
+    ResponseData,
 } from '../middleware/interfaces';
 
-export interface IFyziklaniRoutingTeamsState {
-    availableTeams: ITeam[];
+export interface State {
+    availableTeams: Team[];
     updatedTeams: number[];
 }
 
-function routeTeam(state: IFyziklaniRoutingTeamsState, action: IActionDropItem<IRoutingDragNDropData>): IFyziklaniRoutingTeamsState {
+function routeTeam(state: State, action: ActionDropItem<DragNDropData>): State {
     const {teamId, place: {x, y, roomId}} = action.data;
     const newTeams = state.availableTeams.map((team) => {
         if (team.teamId !== teamId) {
@@ -41,14 +41,14 @@ function routeTeam(state: IFyziklaniRoutingTeamsState, action: IActionDropItem<I
     };
 }
 
-const addTeams = (state: IFyziklaniRoutingTeamsState, action: IActionAddTeams): IFyziklaniRoutingTeamsState => {
+const addTeams = (state: State, action: ActionAddTeams): State => {
     return {
         ...state,
         availableTeams: action.teams,
     };
 };
 
-const removePlace = (state: IFyziklaniRoutingTeamsState, action: IActionRemoveTeamPlace): IFyziklaniRoutingTeamsState => {
+const removePlace = (state: State, action: ActionRemoveTeamPlace): State => {
     const {teamId} = action;
 
     const newTeams = state.availableTeams.map((team) => {
@@ -68,14 +68,14 @@ const removePlace = (state: IFyziklaniRoutingTeamsState, action: IActionRemoveTe
     };
 };
 
-const removeUpdatedTeams = (state: IFyziklaniRoutingTeamsState): IFyziklaniRoutingTeamsState => {
+const removeUpdatedTeams = (state: State): State => {
     return {
         ...state,
         updatedTeams: [],
     };
 };
 
-const addUpdatedTeams = (state: IFyziklaniRoutingTeamsState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniRoutingTeamsState => {
+const addUpdatedTeams = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
     return {
         ...state,
         updatedTeams: action.data.responseData.updatedTeams,
@@ -86,7 +86,7 @@ const initialState = {
     availableTeams: [],
     updatedTeams: [],
 };
-export const teams = (state: IFyziklaniRoutingTeamsState = initialState, action): IFyziklaniRoutingTeamsState => {
+export const teams = (state: State = initialState, action): State => {
     switch (action.type) {
         case ACTION_ADD_TEAMS:
             return addTeams(state, action);

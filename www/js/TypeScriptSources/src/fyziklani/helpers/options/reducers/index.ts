@@ -1,25 +1,25 @@
 import { ACTION_SUBMIT_SUCCESS } from '../../../../fetch-api/actions/submit';
-import { IActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
-import { IResponseData } from '../../downloader/actions/';
+import { ActionSubmitSuccess } from '../../../../fetch-api/middleware/interfaces';
+import { ResponseData } from '../../downloader/actions/';
 import {
     ACTION_SET_HARD_VISIBLE,
-    IActionSetHardVisible,
+    ActionSetHardVisible,
 } from '../actions/';
 
-export interface IFyziklaniOptionsState {
+export interface State {
     isReady?: boolean;
     hardVisible?: boolean;
     isOrg?: boolean;
 }
 
-const setHardVisible = (state: IFyziklaniOptionsState, action: IActionSetHardVisible): IFyziklaniOptionsState => {
+const setHardVisible = (state: State, action: ActionSetHardVisible): State => {
     return {
         ...state,
         hardVisible: action.hardVisible,
     };
 };
 
-const setStatuses = (state: IFyziklaniOptionsState, action: IActionSubmitSuccess<IResponseData>): IFyziklaniOptionsState => {
+const setStatuses = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
     const {isOrg} = action.data.responseData;
     return {
         ...state,
@@ -28,7 +28,7 @@ const setStatuses = (state: IFyziklaniOptionsState, action: IActionSubmitSuccess
     };
 };
 
-export const fyziklaniOptions = (state: IFyziklaniOptionsState = {}, action): IFyziklaniOptionsState => {
+export const fyziklaniOptions = (state: State = {}, action): State => {
     switch (action.type) {
         case ACTION_SET_HARD_VISIBLE:
             return setHardVisible(state, action);

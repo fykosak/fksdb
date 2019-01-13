@@ -1,13 +1,13 @@
 import {
-    ISubmit,
-    ISubmits,
-    ITeam,
+    Submit,
+    Submits,
+    Team,
 } from '../../../helpers/interfaces';
 
 export interface Item {
-    team: ITeam;
+    team: Team;
     submits: {
-        [taskId: number]: ISubmit;
+        [taskId: number]: Submit;
     };
     points: number;
     groups: {
@@ -19,7 +19,7 @@ export interface Item {
     count: number;
 }
 
-export const calculate = (submits: ISubmits, teams: ITeam[]): { [teamId: number]: Item } => {
+export const calculate = (submits: Submits, teams: Team[]): { [teamId: number]: Item } => {
     const submitsForTeams: {
         [teamId: number]: Item;
     } = {};
@@ -40,7 +40,7 @@ export const calculate = (submits: ISubmits, teams: ITeam[]): { [teamId: number]
             }
 
             const {teamId, taskId: taskId} = submit;
-            const [selectedTeam] = teams.filter((team: ITeam) => {
+            const [selectedTeam] = teams.filter((team: Team) => {
                 return team.teamId === submit.teamId;
             });
             if (!selectedTeam) {

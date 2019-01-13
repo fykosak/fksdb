@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { lang } from '../../../../i18n/i18n';
-import { IPrice } from './interfaces';
+import { Price } from './interfaces';
 
-interface IProps {
-    price: IPrice;
+interface Props {
+    price: Price;
 }
 
-export default class PriceDisplay extends React.Component<IProps, {}> {
+export default class PriceDisplay extends React.Component<Props, {}> {
 
     public render() {
         const {price: {eur, kc}} = this.props;

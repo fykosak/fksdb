@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
-import { ISubmitFormRequest } from '../actions';
+import { Response } from '../../../fetch-api/middleware/interfaces';
+import { SubmitFormRequest } from '../actions';
 
-interface IProps {
+interface Props {
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
     handleSubmit: SubmitHandler<{ code: string }, any, string>;
 
-    onSubmit?(values: ISubmitFormRequest): Promise<IResponse<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-export default class TaskInput extends React.Component<IProps, {}> {
+export default class TaskInput extends React.Component<Props, {}> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, availablePoints} = this.props;

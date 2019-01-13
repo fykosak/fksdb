@@ -1,4 +1,4 @@
-import { ITeam } from '../../../../helpers/interfaces';
+import { Team } from '../../../../helpers/interfaces';
 
 export class Filter {
     public name: string;
@@ -11,7 +11,7 @@ export class Filter {
         this.name = name;
     }
 
-    public match(team: ITeam): boolean {
+    public match(team: Team): boolean {
         const {roomId, category} = team;
         if (this.category && this.category !== category) {
             return false;

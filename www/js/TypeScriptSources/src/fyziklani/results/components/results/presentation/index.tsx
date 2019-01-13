@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-    ISubmits,
-    ITask,
-    ITeam,
+    Submits,
+    Task,
+    Team,
 } from '../../../../helpers/interfaces';
 import {
     calculate,
@@ -14,10 +14,11 @@ import Headline from './headline';
 import Row from './row';
 
 interface State {
+    availablePoints?: number[];
     category?: string;
-    submits?: ISubmits;
-    teams?: ITeam[];
-    tasks?: ITask[];
+    submits?: Submits;
+    teams?: Team[];
+    tasks?: Task[];
     cols?: number;
     rows?: number;
     position?: number;
@@ -26,7 +27,7 @@ interface State {
 class Index extends React.Component<State, {}> {
 
     public render() {
-        const {submits, teams, rows, cols, category, position: statePosition} = this.props;
+        const {submits, teams, rows, cols, category, position: statePosition, availablePoints} = this.props;
         let {position} = this.props;
         const submitsForTeams = calculate(submits, teams);
 
@@ -42,8 +43,6 @@ class Index extends React.Component<State, {}> {
             return b.points - a.points;
         });
 
-        const availablePoints = [5, 3, 2, 1];
-
         const resultsItems = [];
         for (let col = 0; col < cols; col++) {
             const colItems = [];
@@ -54,7 +53,6 @@ class Index extends React.Component<State, {}> {
                     colItems.push(<Row key={item.team.teamId} item={item} position={position}
                                        availablePoints={availablePoints}/>);
                 }
-
             }
 
             let table = null;
@@ -97,6 +95,7 @@ class Index extends React.Component<State, {}> {
 
 const mapStateToProps = (state: FyziklaniResultsStore): State => {
     return {
+        availablePoints: state.data.availablePoints,
         category: state.presentation.category,
         cols: state.presentation.cols,
         position: state.presentation.position,

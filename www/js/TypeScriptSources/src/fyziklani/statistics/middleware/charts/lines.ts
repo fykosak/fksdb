@@ -8,37 +8,37 @@ import {
     curveLinear,
     line,
 } from 'd3-shape';
-import { IExtendedSubmit } from '../../components/charts/team/line-chart/chart';
+import { ExtendedSubmit } from '../../components/charts/team/line-chart/chart';
 
-interface IScales {
+interface Scales {
     xScale: ScaleTime<number, number>;
     yScale: ScaleLinear<number, number>;
 }
 
-export interface IPointData {
+export interface PointData {
     created: string;
     totalPoints: number;
 }
 
-export function getLinePath(scales: IScales, data: IPointData[], curve: CurveFactory = curveLinear): string {
+export function getLinePath(scales: Scales, data: PointData[], curve: CurveFactory = curveLinear): string {
     const {xScale, yScale} = scales;
-    return line<IPointData>()
-        .x((element: IExtendedSubmit) => {
+    return line<PointData>()
+        .x((element: ExtendedSubmit) => {
             return xScale(new Date(element.created));
         })
-        .y((element: IExtendedSubmit) => {
+        .y((element: ExtendedSubmit) => {
             return yScale(element.totalPoints);
         })
         .curve(curve)(data);
 }
 
-export function getAreaPath(scales: IScales, data: IPointData[], y0: number, curve: CurveFactory = curveLinear): string {
+export function getAreaPath(scales: Scales, data: PointData[], y0: number, curve: CurveFactory = curveLinear): string {
     const {xScale, yScale} = scales;
-    return area<IPointData>()
-        .x((element: IExtendedSubmit) => {
+    return area<PointData>()
+        .x((element: ExtendedSubmit) => {
             return xScale(new Date(element.created));
         }).y0(y0)
-        .y1((element: IExtendedSubmit) => {
+        .y1((element: ExtendedSubmit) => {
             return yScale(element.totalPoints);
         }).curve(curve)(data);
 }

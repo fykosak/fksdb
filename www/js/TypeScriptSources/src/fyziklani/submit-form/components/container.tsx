@@ -4,31 +4,31 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { INetteActions } from '../../../app-collector';
-import { IResponse } from '../../../fetch-api/middleware/interfaces';
+import { NetteActions } from '../../../app-collector';
+import { Response } from '../../../fetch-api/middleware/interfaces';
 import Powered from '../../../shared/powered';
 import {
-    ITask,
-    ITeam,
+    Task,
+    Team,
 } from '../../helpers/interfaces/';
 import {
-    ISubmitFormRequest,
+    SubmitFormRequest,
     submitStart,
 } from '../actions/';
 import FormContainer from './form-container';
 
-interface IProps {
-    tasks: ITask[];
-    teams: ITeam[];
-    actions: INetteActions;
+interface Props {
+    tasks: Task[];
+    teams: Team[];
+    actions: NetteActions;
     availablePoints: number[];
 }
 
-interface IState {
-    onSubmit?(values: ISubmitFormRequest): Promise<IResponse<void>>;
+interface State {
+    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
-class TaskCode extends React.Component<IProps & IState, {}> {
+class TaskCode extends React.Component<Props & State, {}> {
     public render() {
         const {tasks, teams, onSubmit, availablePoints} = this.props;
         return (
@@ -42,12 +42,12 @@ class TaskCode extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: Props): State => {
     return {
-        onSubmit: (values: ISubmitFormRequest) => submitStart(dispatch, values, ownProps.actions.save),
+        onSubmit: (values: SubmitFormRequest) => submitStart(dispatch, values, ownProps.actions.save),
     };
 };
 
-export default connect((): IState => {
+export default connect((): State => {
     return {};
 }, mapDispatchToProps)(TaskCode);

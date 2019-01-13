@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-interface IProps {
+interface Props {
     icon: JSX.Element;
     children: any;
     className: string;
 }
 
-export default class Item extends React.Component<IProps, {}> {
+export default class Item extends React.Component<Props, {}> {
 
     public render() {
         const {icon} = this.props;

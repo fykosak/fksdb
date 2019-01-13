@@ -4,24 +4,24 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { ITeam } from '../../../helpers/interfaces/';
+import { Team } from '../../../helpers/interfaces/';
 import { saveTeams } from '../../actions/save';
-import { IFyziklaniRoutingStore } from '../../reducers/';
+import { Store as RoutingStore } from '../../reducers/';
 import jqXHR = JQuery.jqXHR;
 
-interface IState {
-    teams?: ITeam[];
+interface State {
+    teams?: Team[];
     saving?: boolean;
     error?: jqXHR<any>;
 
-    onSaveRouting?(teams: ITeam[]): void;
+    onSaveRouting?(teams: Team[]): void;
 }
 
-interface IProps {
+interface Props {
     accessKey: string;
 }
 
-class Form extends React.Component<IState & IProps, {}> {
+class Form extends React.Component<State & Props, {}> {
 
     public render() {
         const {onSaveRouting, teams, saving, error} = this.props;
@@ -35,14 +35,14 @@ class Form extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: IProps): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: Props): State => {
     const {accessKey} = ownProps;
     return {
-        onSaveRouting: (data: ITeam[]) => saveTeams(accessKey, dispatch, data),
+        onSaveRouting: (data: Team[]) => saveTeams(accessKey, dispatch, data),
     };
 };
 
-const mapStateToProps = (state: IFyziklaniRoutingStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: RoutingStore, ownProps: Props): State => {
     const {accessKey} = ownProps;
     return {
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,

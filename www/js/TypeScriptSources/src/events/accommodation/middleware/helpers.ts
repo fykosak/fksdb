@@ -1,10 +1,10 @@
-import { IPrice } from '../../../shared/components/displays/price/interfaces';
+import { Price } from '../../../shared/components/displays/price/interfaces';
 import {
-    IEventAccommodation,
-    IPersonAccommodation,
+    EventAccommodation,
+    PersonAccommodation,
 } from './interfaces';
 
-export const getAccommodationPrice = (accommodationDef: IEventAccommodation[], accommodation: IPersonAccommodation): IPrice => {
+export const getAccommodationPrice = (accommodationDef: EventAccommodation[], accommodation: PersonAccommodation): Price => {
 
     const sum = {
         eur: 0,

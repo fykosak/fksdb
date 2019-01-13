@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-interface IProps {
+interface Props {
     order: number;
 }
 
-export default class Ordinal extends React.Component<IProps, {}> {
+export default class Ordinal extends React.Component<Props, {}> {
 
     public render() {
         const {order} = this.props;

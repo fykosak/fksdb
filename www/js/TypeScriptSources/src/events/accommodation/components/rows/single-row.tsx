@@ -5,20 +5,20 @@ import { lang } from '../../../../i18n/i18n';
 import { changeData } from '../../../../input-connector/actions';
 import PriceDisplay from '../../../../shared/components/displays/price';
 import { recalculateDate } from '../../middleware/dates';
-import { IEventAccommodation } from '../../middleware/interfaces';
-import { IAccommodationStore } from '../../reducer';
+import { EventAccommodation } from '../../middleware/interfaces';
+import { Store } from '../../reducer';
 import CapacityLabel from '../capacity-label';
 
-interface IProps {
-    accommodationItem?: IEventAccommodation;
+interface Props {
+    accommodationItem?: EventAccommodation;
 }
 
-interface IState {
+interface State {
     onChange?: (date: string, value: number) => void;
     value?: number;
 }
 
-class Single extends React.Component<IProps & IState, {}> {
+class Single extends React.Component<Props & State, {}> {
 
     public render() {
         const {accommodationItem, value, onChange} = this.props;
@@ -48,13 +48,13 @@ class Single extends React.Component<IProps & IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch): State => {
     return {
         onChange: (date, value) => dispatch(changeData(date, value)),
     };
 };
 
-const mapStateToProps = (state: IAccommodationStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: Store, ownProps: Props): State => {
     const {accommodationItem} = ownProps;
     let value = null;
     if (state.inputConnector.data.hasOwnProperty(accommodationItem.date)) {

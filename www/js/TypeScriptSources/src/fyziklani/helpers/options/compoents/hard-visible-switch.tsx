@@ -1,16 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import {
+    Action,
+    Dispatch,
+} from 'redux';
 import { lang } from '../../../../i18n/i18n';
 import { setHardVisible } from '../actions/';
-import { IFyziklaniOptionsState } from '../reducers';
+import { State as OptionsState } from '../reducers';
 
-interface IState {
+interface State {
     hardVisible?: boolean;
 
     onHardDisplayChange?(status: boolean): void;
 }
 
-class HardVisibleSwitch extends React.Component<IState, {}> {
+class HardVisibleSwitch extends React.Component<State, {}> {
 
     public render() {
         const {onHardDisplayChange, hardVisible} = this.props;
@@ -30,13 +34,13 @@ class HardVisibleSwitch extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: { options: IFyziklaniOptionsState }): IState => {
+const mapStateToProps = (state: { options: OptionsState }): State => {
     return {
         hardVisible: state.options.hardVisible,
     };
 };
 
-const mapDispatchToProps = (dispatch): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onHardDisplayChange: (status: boolean) => dispatch(setHardVisible(status)),
     };
