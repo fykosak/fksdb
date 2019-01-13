@@ -4,18 +4,18 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { lang } from '../../../../../i18n/i18n';
-import { IRoom } from '../../../../helpers/interfaces';
+import { lang } from '../../../../../../../i18n/i18n';
+import { IRoom } from '../../../../../../helpers/interfaces';
 import {
     addFilter,
     removeFilter,
-} from '../../../actions/table-filter';
-import { IFyziklaniResultsStore } from '../../../reducers';
-import { Filter } from './filter';
-import FilterComponent from './filter-component';
-import { createFilters } from './filters';
+} from '../../../../../actions/table-filter';
+import { Filter } from '../../../../../middleware/results/filters/filter';
+import FilterComponent from '../../../../../middleware/results/filters/filter-component';
+import { createFilters } from '../../../../../middleware/results/filters/filters';
+import { FyziklaniResultsStore } from '../../../../../reducers';
 
-interface IState {
+interface State {
     filters?: Filter[];
     index?: number;
     categories?: string[];
@@ -26,7 +26,7 @@ interface IState {
     onRemoveFilter?(filter: Filter): void;
 }
 
-class MultiFilterControl extends React.Component<IState, {}> {
+class MultiSelect extends React.Component<State, {}> {
 
     public render() {
         const {categories, filters, index, rooms, onRemoveFilter, onAddFilter} = this.props;
@@ -66,13 +66,13 @@ class MultiFilterControl extends React.Component<IState, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onAddFilter: (filter: Filter) => dispatch(addFilter(filter)),
         onRemoveFilter: (filter: Filter) => dispatch(removeFilter(filter)),
     };
 };
-const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
+const mapStateToPros = (state: FyziklaniResultsStore): State => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
@@ -84,4 +84,4 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
 export default connect(
     mapStateToPros,
     mapDispatchToProps,
-)(MultiFilterControl);
+)(MultiSelect);

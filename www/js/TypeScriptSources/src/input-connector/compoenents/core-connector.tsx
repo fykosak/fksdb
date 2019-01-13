@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { IInputConnectorItems } from '../reducers';
 
-export interface ICoreProps {
+export interface CoreProps {
     input: HTMLInputElement;
 }
 
-interface IState {
+interface State {
     onSetInitialData?: (value: IInputConnectorItems) => void;
     data?: IInputConnectorItems;
 }
 
-export default class CoreConnector extends React.Component<ICoreProps & IState, {}> {
+export default class CoreConnector extends React.Component<CoreProps & State, {}> {
 
     public componentDidMount() {
         const {input, onSetInitialData} = this.props;
@@ -19,7 +19,7 @@ export default class CoreConnector extends React.Component<ICoreProps & IState, 
         }
     }
 
-    public componentWillReceiveProps(newProps: ICoreProps & IState) {
+    public componentWillReceiveProps(newProps: CoreProps & State) {
         const data: IInputConnectorItems = {};
         let hasValue = false;
 

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Loading from '../../helpers/components/loading';
-import { IFyziklaniResultsStore } from '../reducers';
+import { FyziklaniResultsStore } from '../reducers';
 import Results from './results/';
-import FilterSelect from './results/filter/select';
+import FilterSelect from './results/table/filters/select';
 
-interface IState {
+interface State {
     isReady?: boolean;
 }
 
-interface IProps {
+interface Props {
     mode: string;
 }
 
-class App extends React.Component<IState & IProps, {}> {
+class App extends React.Component<State & Props, {}> {
     public render() {
 
         const {isReady, mode} = this.props;
@@ -21,13 +21,12 @@ class App extends React.Component<IState & IProps, {}> {
             return <Loading/>;
         }
         return (<>
-            <FilterSelect mode={mode}/>
             <Results mode={mode}/>
         </>);
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+const mapStateToProps = (state: FyziklaniResultsStore): State => {
     return {
         isReady: state.options.isReady,
     };

@@ -4,17 +4,17 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { lang } from '../../../../../i18n/i18n';
-import { setAutoSwitch } from '../../../actions/table-filter';
-import { IFyziklaniResultsStore } from '../../../reducers';
+import { lang } from '../../../../../../i18n/i18n';
+import { setAutoSwitch } from '../../../../actions/table-filter';
+import { FyziklaniResultsStore } from '../../../../reducers';
 
-interface IState {
+interface State {
     autoSwitch?: boolean;
 
     onAutoSwitch?(state: boolean): void;
 }
 
-class AutoSwitchControl extends React.Component<IState, {}> {
+class AutoSwitchControl extends React.Component<State, {}> {
 
     public render() {
         const {autoSwitch, onAutoSwitch} = this.props;
@@ -31,17 +31,16 @@ class AutoSwitchControl extends React.Component<IState, {}> {
                 (<><i className="fa fa-play mr-3"/>{lang.getText('run auto switch')}</>)
             }</button>
 
-        </>
-            ;
+        </>;
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action>): State => {
     return {
         onAutoSwitch: (state) => dispatch(setAutoSwitch(state)),
     };
 };
-const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
+const mapStateToPros = (state: FyziklaniResultsStore): State => {
     return {
         autoSwitch: state.tableFilter.autoSwitch,
     };

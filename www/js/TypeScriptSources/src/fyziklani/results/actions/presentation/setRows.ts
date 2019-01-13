@@ -1,11 +1,11 @@
 import { Action } from 'redux';
 
-export interface IActionSetRows extends Action<string> {
+export interface ActionSetRows extends Action<string> {
     rows: number;
 }
 
 export const ACTION_SET_ROWS = '@@fyziklani/presentation/SET_ROWS';
-export const setRows = (rows: number): IActionSetRows => {
+export const setRows = (rows: number): ActionSetRows => {
     return {
         rows,
         type: ACTION_SET_ROWS,

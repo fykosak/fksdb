@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
-import { lang } from '../../../../i18n/i18n';
+import { lang } from '../../../../../i18n/i18n';
 import {
     ISubmits,
     ITask,
     ITeam,
-} from '../../../helpers/interfaces';
-import { IFyziklaniResultsStore } from '../../reducers';
-import { Filter } from './filter/filter';
-import TeamRow from './team-row';
+} from '../../../../helpers/interfaces';
+import { FyziklaniResultsStore } from '../../../reducers';
+import Row from './row';
+import { Filter } from '../../../middleware/results/filters/filter';
 
-interface IState {
+interface State {
     filter?: Filter;
     submits?: ISubmits;
     teams?: ITeam[];
     tasks?: ITask[];
 }
 
-class ResultsTable extends React.Component<IState, {}> {
+class Index extends React.Component<State, {}> {
     private table;
 
     public constructor(props) {
@@ -68,7 +68,7 @@ class ResultsTable extends React.Component<IState, {}> {
                         <th/>
                         <th/>
                         <th>∑</th>
-                        <th>N</th>
+                        <th>∑</th>
                         <th>x̄</th>
                         {headCools}
                     </tr>
@@ -76,7 +76,7 @@ class ResultsTable extends React.Component<IState, {}> {
                     <tbody>
                     {teams.map((team: ITeam, teamIndex) => {
                         return (
-                            <TeamRow
+                            <Row
                                 tasks={tasks}
                                 submits={submitsForTeams[team.teamId] || {}}
                                 team={team}
@@ -92,7 +92,7 @@ class ResultsTable extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
+const mapStateToProps = (state: FyziklaniResultsStore): State => {
     const {index, filters} = state.tableFilter;
     return {
         filter: (filters.hasOwnProperty(index)) ? filters[index] : null,
@@ -102,4 +102,4 @@ const mapStateToProps = (state: IFyziklaniResultsStore): IState => {
     };
 };
 
-export default connect(mapStateToProps, null)(ResultsTable);
+export default connect(mapStateToProps, null)(Index);

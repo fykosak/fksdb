@@ -1,6 +1,19 @@
-import * as d3 from 'd3';
+import {
+    axisBottom,
+    axisLeft,
+} from 'd3-axis';
+import {
+    ScaleLinear,
+    scaleLinear,
+    scaleOrdinal,
+} from 'd3-scale';
+import { schemeCategory10 } from 'd3-scale-chromatic';
+import { select } from 'd3-selection';
+import {
+    curveBasis,
+    line,
+} from 'd3-shape';
 import * as React from 'react';
-
 import { IData } from './index';
 
 interface IProps {
@@ -12,8 +25,8 @@ export default class Chart extends React.Component<IProps, {}> {
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
 
-    private xScale: d3.ScaleLinear<number, number>;
-    private yScale: d3.ScaleLinear<number, number>;
+    private xScale: ScaleLinear<number, number>;
+    private yScale: ScaleLinear<number, number>;
 
     public componentDidMount() {
         this.getAxis();
@@ -31,13 +44,13 @@ export default class Chart extends React.Component<IProps, {}> {
         const eventsData = {};
         const legends = [];
 
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+        const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data.teams) {
             if (data.teams.hasOwnProperty(eventId) && data.events.hasOwnProperty(eventId)) {
                 const event = data.events[eventId];
                 const begin = new Date(event.begin);
                 let sum = 0;
-                legends.push(<div key={eventId} className={'list-group-item'} style={{color: colorScale(eventId)}}>{event.name}</div>)
+                legends.push(<div key={eventId} className={'list-group-item'} style={{color: colorScale(eventId)}}>{event.name}</div>);
                 const eventData = data.teams[eventId].sort((a, b) => {
                     return ((new Date(a.created)).getTime() - (new Date(b.created)).getTime());
                 }).map((team) => {
@@ -54,8 +67,8 @@ export default class Chart extends React.Component<IProps, {}> {
             }
         }
 
-        this.yScale = d3.scaleLinear<number, number>().domain([0, max]).range([370, 20]);
-        this.xScale = d3.scaleLinear<number, number>().domain([min, 0]).range([30, 580]);
+        this.yScale = scaleLinear<number, number>().domain([0, max]).range([370, 20]);
+        this.xScale = scaleLinear<number, number>().domain([min, 0]).range([30, 580]);
 
         interface IItem {
             x: number;
@@ -67,15 +80,15 @@ export default class Chart extends React.Component<IProps, {}> {
         for (const index in eventsData) {
             if (eventsData.hasOwnProperty(index)) {
 
-                const line = d3.line<IItem>()
+                const lineEl = line<IItem>()
                     .x((element: IItem) => {
                         return this.xScale(new Date(element.x));
                     })
                     .y((element: IItem) => {
                         return this.yScale(element.y);
                     })
-                    .curve(d3.curveBasis)(eventsData[index]);
-                lines.push(<path key={index} d={line} className={'line'} stroke={colorScale(index)}/>);
+                    .curve(curveBasis)(eventsData[index]);
+                lines.push(<path key={index} d={lineEl} className={'line'} stroke={colorScale(index)}/>);
             }
         }
 
@@ -101,10 +114,10 @@ export default class Chart extends React.Component<IProps, {}> {
     }
 
     private getAxis(): void {
-        const xAxis = d3.axisBottom<number>(this.xScale);
-        d3.select(this.xAxis).call(xAxis);
+        const xAxis = axisBottom<number>(this.xScale);
+        select(this.xAxis).call(xAxis);
 
-        const yAxis = d3.axisLeft<number>(this.yScale);
-        d3.select(this.yAxis).call(yAxis);
+        const yAxis = axisLeft<number>(this.yScale);
+        select(this.yAxis).call(yAxis);
     }
 }

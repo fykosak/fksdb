@@ -6,13 +6,12 @@ import {
 } from 'redux';
 import { lang } from '../../../../../i18n/i18n';
 import HardVisibleSwitch from '../../../../helpers/options/compoents/hard-visible-switch';
-import { setCols } from '../../../actions/Presentation/SetCols';
-import { setDelay } from '../../../actions/Presentation/SetDelay';
-import { setRows } from '../../../actions/Presentation/SetRows';
-import { IFyziklaniResultsStore } from '../../../reducers';
-import AutoSwitchControl from './auto-switch-control';
+import { setCols } from '../../../actions/presentation/setCols';
+import { setDelay } from '../../../actions/presentation/setDelay';
+import { setRows } from '../../../actions/presentation/setRows';
+import { FyziklaniResultsStore } from '../../../reducers';
 
-interface IState {
+interface State {
     delay?: number;
     cols?: number;
     rows?: number;
@@ -25,7 +24,7 @@ interface IState {
     onSetRows?(rows: number): void;
 }
 
-class Select extends React.Component<IState, {}> {
+class Settings extends React.Component<State, {}> {
 
     public render() {
         const {isOrg, delay, cols, rows, onSetDelay, onSetCols, onSetRows} = this.props;
@@ -46,8 +45,6 @@ class Select extends React.Component<IState, {}> {
                         </div>
                         <div className="modal-body">
                             {isOrg && <HardVisibleSwitch/>}
-                            <hr/>
-                            <AutoSwitchControl/>
                             <hr/>
                             <div className={'form-group'}>
                                 <label>Delay</label>
@@ -84,7 +81,7 @@ class Select extends React.Component<IState, {}> {
     }
 }
 
-const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
+const mapStateToPros = (state: FyziklaniResultsStore): State => {
     return {
         cols: state.presentation.cols,
         delay: state.presentation.delay,
@@ -92,7 +89,7 @@ const mapStateToPros = (state: IFyziklaniResultsStore): IState => {
         rows: state.presentation.rows,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): State => {
     return {
         onSetCols: (cols: number) => dispatch(setCols(cols)),
         onSetDelay: (position: number) => dispatch(setDelay(position)),
@@ -100,4 +97,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): IState => {
     };
 };
 
-export default connect(mapStateToPros, mapDispatchToProps)(Select);
+export default connect(mapStateToPros, mapDispatchToProps)(Settings);

@@ -6,7 +6,7 @@ import {
 } from 'redux';
 import { INetteActions } from '../../../../app-collector/';
 import { lang } from '../../../../i18n/i18n';
-import { IFyziklaniResultsStore } from '../../../results/reducers/';
+import { FyziklaniResultsStore } from '../../../results/reducers/';
 import {
     fetchResults,
     waitForFetch,
@@ -66,7 +66,7 @@ class Downloader extends React.Component<IState & IProps, {}> {
     }
 }
 
-const mapStateToProps = (state: IFyziklaniResultsStore, ownProps: IProps): IState => {
+const mapStateToProps = (state: FyziklaniResultsStore, ownProps: IProps): IState => {
     const {accessKey} = ownProps;
     return {
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
