@@ -99,6 +99,10 @@ class SelectForm extends Control {
         $this->servicePaymentAccommodation = $servicePaymentAccommodation;
     }
 
+    public function setModel(ModelPayment $modelPayment) {
+        $this->model = $modelPayment;
+    }
+
     /**
      * @return FormControl
      */

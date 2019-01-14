@@ -17,7 +17,7 @@ interface State {
     onSetInitialData?(value: InputConnectorItems): void;
 }
 
-export default class InputConnector extends React.Component<CoreProps, {}> {
+export class InputConnector extends React.Component<CoreProps, {}> {
     public render() {
         const ConnectedComponent = connect(this.mapStateToProps, this.mapDispatchToProps)(CoreConnector);
         return <ConnectedComponent input={this.props.input}/>;
@@ -35,3 +35,5 @@ export default class InputConnector extends React.Component<CoreProps, {}> {
         };
     }
 }
+
+export default InputConnector;

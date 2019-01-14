@@ -231,6 +231,11 @@ class PaymentPresenter extends BasePresenter {
             $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), 'danger');
             $this->redirect(':MyPayment:');
         }
+        /**
+         * @var SelectForm $component
+         */
+        $component = $this->getComponent('form');
+        $component->setModel($this->getModel());
     }
 
     /**

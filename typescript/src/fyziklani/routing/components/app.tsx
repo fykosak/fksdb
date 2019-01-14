@@ -4,7 +4,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import Powered from '../../../shared/powered';
+import { Powered } from '../../../shared/powered';
 import {
     Room,
     Team,
