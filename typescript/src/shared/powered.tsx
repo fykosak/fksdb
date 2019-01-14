@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default class Powered extends React.Component<{}, {}> {
+export class Powered extends React.Component<{}, {}> {
 
     public render() {
         return (
@@ -19,3 +19,5 @@ export default class Powered extends React.Component<{}, {}> {
         );
     }
 }
+
+export default Powered;

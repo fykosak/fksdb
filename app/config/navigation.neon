@@ -45,7 +45,7 @@ navigation:
             - fyziklani
         fyziklani.dashboard.default:
             - fyziklani.submit.entry
-            - fyziklani.submit.table
+            - fyziklani.submit.list
             - fyziklani.close.list
             - fyziklani.results.default
             - fyziklani.task.list
@@ -66,6 +66,8 @@ navigation:
             - fyziklani.results.correlationStatistics
         event.dashboard.default:
             - event.dispatch.default
+            - event.payment.list
+            - event.payment.create
             - fyziklani.dashboard.default
             - event.schedule.default
             - event.accommodation.list

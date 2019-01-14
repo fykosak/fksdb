@@ -10,11 +10,13 @@
         "min-cases": 3
       }
     ],
+    "file-name-casing": [true, {"*.ts": "camel-case", ".tsx": "pascal-case", "^[a-z]": "kebab-case"}],
     "cyclomatic-complexity": false,
     "newline-before-return": false,
     "no-parameter-properties": false,
     "no-unused-variable": false,
     "no-default-export": false,
+    "no-default-import": false,
     "align": {
       "options": [
         "parameters",

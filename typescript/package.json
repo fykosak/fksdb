@@ -25,7 +25,7 @@
     "redux-logger": "latest"
   },
   "devDependencies": {
-    "tslint": "latest",
+    "tslint": "~5.12.1",
     "@types/d3": "latest",
     "@types/jquery": "latest",
     "@types/react": "16.7.17",
