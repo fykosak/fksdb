@@ -78,7 +78,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Vytvoriť'));
         $transition->setCondition(
             function () {
-                return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-15'), new DateTime('2019-02-15'));
+                return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-18'), new DateTime('2019-02-15'));
             });
         $machine->addTransition($transition);
     }
@@ -154,8 +154,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $this->getMailSetupCallback(_('We are receive payment #%s')));
 
         $transition->setCondition(function (ModelPayment $eventPayment) {
-            return $this->transitionFactory->getConditionDateBetween(new DateTime('2019-01-01'), new DateTime('2019-02-15'))
-                && $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
+            return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org');
         });
         $transition->setType(Transition::TYPE_SUCCESS);
         $machine->addTransition($transition);
