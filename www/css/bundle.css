@@ -1,3 +1,29 @@
+.results-presentation {
+  color: black;
+}
+.results-presentation .head-row, .results-presentation .team-row {
+  text-align: center;
+  padding: 0.3rem 0;
+}
+.results-presentation .head-row {
+  padding: 0 0.5rem;
+  color: #f44336;
+  font-weight: bold;
+  border-bottom: solid #f44336 1px;
+}
+.results-presentation .team-row {
+  border-bottom: solid #ccc 1px;
+}
+.results-presentation .team-row:nth-child(even) {
+  background-color: #eee;
+}
+.results-presentation .team-row .team-name-col {
+  text-align: justify;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .fyziklani-results h1, .fyziklani-statistics h1 {
   color: #f44336;
   font-weight: bold;

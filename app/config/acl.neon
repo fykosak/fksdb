@@ -48,6 +48,8 @@ acl:
     - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(teacher)        # create, edit, list
+    - addResource(eventAccommodation) # create, edit, list
+    - addResource(mail-send) #default
 
     #fyziklani
     - addResource(fyziklani.dashboard) # default
@@ -83,6 +85,7 @@ acl:
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(org, mail-send, ::constant(Nette\Security\Permission::ALL))
 
     # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
