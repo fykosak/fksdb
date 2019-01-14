@@ -40,9 +40,9 @@ services:
     ServiceEventAccommodation: ServiceEventAccommodation
     ServiceEventPersonAccommodation: ServiceEventPersonAccommodation
     ServiceTeacher:          ServiceTeacher
-
+    ServicePayment:          ServicePayment
+    ServicePaymentAccommodation: FKSDB\ORM\Services\ServicePaymentAccommodation
     fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
-
 
     event.ServiceEventParticipant:          ServiceEventParticipant
     event.ServiceDsefGroup:                 ORM\Services\Events\ServiceDsefGroup
