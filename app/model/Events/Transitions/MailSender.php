@@ -12,7 +12,6 @@ use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
-use Nette\Diagnostics\Debugger;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
