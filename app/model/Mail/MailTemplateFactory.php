@@ -73,7 +73,6 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-        \var_dump($presenter);
         $template = new FileTemplate($file);
         $template->registerHelperLoader('Nette\Templating\Helpers::loader');
         $template->registerFilter(new Engine());
