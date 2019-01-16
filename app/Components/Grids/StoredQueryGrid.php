@@ -29,6 +29,12 @@ class StoredQueryGrid extends BaseGrid {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
+    /**
+     * @param $presenter
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //

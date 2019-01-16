@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\PersonAccommodation;
 
 use FKSDB\ORM\ModelEventAccommodation;
+use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
@@ -23,22 +24,31 @@ class Handler {
      * @param ModelPerson $person
      * @param integer $eventId
      * @throws StorageException
+     * @throws ExistingPaymentException
      * @return void
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, $eventId) {
         $oldRows = $this->serviceEventPersonAccommodation->getTable()->where('person_id', $person->person_id)->where('event_accommodation.event_id', $eventId);
 
         $newAccommodationIds = $this->prepareData($data);
-        /**
-         * @var $row \FKSDB\ORM\ModelEventPersonAccommodation
-         */
+
         foreach ($oldRows as $row) {
-            if (in_array($row->event_accommodation_id, $newAccommodationIds)) {
+            $modelEventPersonAccommodation = ModelEventPersonAccommodation::createFromTableRow($row);
+            if (in_array($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds)) {
                 // do nothing
-                $index = array_search($row->event_accommodation_id, $newAccommodationIds);
+                $index = array_search($modelEventPersonAccommodation->event_accommodation_id, $newAccommodationIds);
                 unset($newAccommodationIds[$index]);
             } else {
-                $row->delete();
+                try {
+                    $modelEventPersonAccommodation->delete();
+                } catch (\PDOException $e) {
+                    if (\preg_match('/payment_accommodation/', $e->getMessage())) {
+                        throw new ExistingPaymentException(\sprintf(
+                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                            $modelEventPersonAccommodation->getLabel()));
+                    }
+                    throw $e;
+                }
             }
         }
         foreach ($newAccommodationIds as $id) {
@@ -49,7 +59,7 @@ class Handler {
                 $this->serviceEventPersonAccommodation->save($model);
             } else {
                 //$model->delete();
-                throw new StorageException(sprintf(
+                throw new FullAccommodationCapacityException(sprintf(
                     _('Osobu %s sa nepodarilo ubytovať na hotely "%s" v dni %s'),
                     $person->getFullName(),
                     $eventAccommodation->name,
@@ -74,7 +84,7 @@ class Handler {
                     $data = (array)json_decode($datum);
                     break;
                 default:
-                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type));
+                    throw new NotImplementedException(sprintf(_('Type "%s" is not implement.'), $type), 501);
             }
         }
 

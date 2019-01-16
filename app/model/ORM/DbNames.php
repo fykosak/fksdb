@@ -23,6 +23,7 @@ class DbNames {
     const TAB_GRANT = 'grant';
     const TAB_LOGIN = 'login';
     const TAB_ORG = 'org';
+
     const TAB_PERSON = 'person';
     const TAB_PERSON_HAS_FLAG = 'person_has_flag';
     const TAB_PERSON_HISTORY = 'person_history';
@@ -43,6 +44,9 @@ class DbNames {
     const TAB_TASK_STUDY_YEAR = 'task_study_year';
     const TAB_TEACHER = 'teacher';
     const VIEW_CONTESTANT = 'v_contestant';
+    /* payment */
+    const TAB_PAYMENT_ACCOMMODATION = 'payment_accommodation';
+    const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */
     const TAB_E_DSEF_GROUP = 'e_dsef_group';
@@ -55,8 +59,9 @@ class DbNames {
     /* For fyziklani */
     const TAB_FYZIKLANI_TASK = 'fyziklani_task';
     const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
+    const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
-    const TAB_BRAWL_ROOM = 'brawl_room';
-    const TAB_BRAWL_TEAM_POSITION = 'brawl_team_position';
+    const TAB_FYZIKLANI_ROOM = 'brawl_room';
+    const TAB_FYZIKLANI_TEAM_POSITION = 'brawl_team_position';
 
 }

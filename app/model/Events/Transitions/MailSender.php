@@ -148,8 +148,6 @@ class MailSender extends Object {
         $template->baseMachine = $baseMachine;
         $template->baseHolder = $baseHolder;
 
-        Debugger::barDump($template);
-
         $message = new Message();
         $message->setHtmlBody($template);
         $message->setSubject($this->getSubject($event, $application, $machine));
@@ -170,10 +168,6 @@ class MailSender extends Object {
         return $token;
     }
 
-    private function getPerson(BaseHolder $baseHolder) {
-        return $this->servicePerson->findByPrimary($baseHolder->getPersonId());
-    }
-
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
         $application = Strings::truncate((string)$application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
@@ -181,7 +175,6 @@ class MailSender extends Object {
 
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point
-
     }
 
     private function hasBcc() {

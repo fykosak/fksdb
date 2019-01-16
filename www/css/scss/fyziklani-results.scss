@@ -1,13 +1,17 @@
-.brawl-results, .fyziklani-results {
+@import "colors";
+@import "fyziklani/presentation";
+
+.fyziklani-results, .fyziklani-statistics {
   h1 {
-    color: white;
+    color: $fyziklaniMainColor;
+    font-weight: bold;
   }
   .inner-headline {
     margin-top: 15%;
   }
   .clock {
     justify-content: space-between;
-    color: #d7392e;
+    color: $fyziklaniDarkColor;
     padding: .25em;
     font-weight: bold;
     & > span {
@@ -42,7 +46,7 @@
   }
 
   .image-wp {
-    color: #d7392e;
+    color: $fyziklaniDarkColor;
     font-size: 5rem;
     text-align: center;
   }
@@ -52,18 +56,22 @@
       tr td {
         &[data-points="5"] {
           background-color: #2d7dd2;
+
         }
 
         &[data-points="3"] {
           background-color: #98cc04;
+
         }
 
         &[data-points="2"] {
           background-color: #eeb902;
+
         }
 
         &[data-points="1"] {
           background-color: #f45d01;
+
         }
 
         text-align: center;
@@ -78,33 +86,52 @@
     }
     thead tr th {
       &[data-task_label^="A"] {
-        background-color: lightgreen;
+        background-color: lighten($fyziklaniMainColor, 30%);
       }
 
       &[data-task_label^="B"] {
-        background-color: lightyellow;
+        background-color: lighten($fyziklaniMainColor, 20%);
       }
 
       &[data-task_label^="C"] {
-        background-color: lightgoldenrodyellow;
+        background-color: lighten($fyziklaniMainColor, 10%);
       }
 
       &[data-task_label^="D"] {
-        background-color: lightsalmon;
+        background-color: $fyziklaniMainColor;
       }
 
       &[data-task_label^="E"] {
-        background-color: lightcoral;
+        background-color: darken($fyziklaniMainColor, 10%);
+        color: white;
       }
 
       &[data-task_label^="F"] {
-        background-color: lightpink;
+        background-color: darken($fyziklaniMainColor, 20%);
+        color: white;
       }
 
       &[data-task_label^="G"] {
-        background-color: lightskyblue;
+        background-color: darken($fyziklaniMainColor, 30%);
+        color: white;
       }
     }
 
+  }
+}
+
+.time-histogram {
+  polygon {
+    transition-duration: 1s;
+  }
+}
+
+.time-line-histogram {
+  .line {
+    fill: none;
+    stroke-width: 2px;
+  }
+  .area {
+    opacity: .1;
   }
 }

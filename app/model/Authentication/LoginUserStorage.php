@@ -153,7 +153,7 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @return IIdentity|NULL
+     * @return ModelLogin|NULL
      */
     public function getIdentity() {
         $local = parent::getIdentity();

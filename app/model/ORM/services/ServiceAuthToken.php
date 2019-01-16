@@ -17,10 +17,12 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
+     * @param ModelLogin $login
      * @param string $type
      * @param \Nette\DateTime $until
+     * @param null $data
+     * @param bool $refresh
      * @param \Nette\DateTime $since
-     * @param ModelLogin $login
      * @return ModelAuthToken
      */
     public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
@@ -72,8 +74,8 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param string $token
-     * @partm bool $strict
+     * @param $tokenData
+     * @param bool $strict
      * @return ModelAuthToken|null
      */
     public function verifyToken($tokenData, $strict = true) {
@@ -95,7 +97,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param ModelAuthToken|string $tokenData
+     * @param $token
      */
     public function disposeToken($token) {
         if (!$token instanceof ModelAuthToken) {
@@ -106,6 +108,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
     }
 
+    /**
+     * @param $eventId
+     * @return array
+     */
     public function findTokensByEventId($eventId) {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)

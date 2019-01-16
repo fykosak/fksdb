@@ -1,0 +1,21 @@
+@mixin navigation-item($color,$background) {
+  height: 12rem;
+  width: 12rem;
+  border-color: $color;
+  border-radius: 0;
+  background-color: $background;
+  transition-duration: 200ms;
+  color: $color;
+  a {
+    color: $color;
+  }
+  &:hover, &:focus {
+    transition-duration: 200ms;
+    //border-color: $background;
+    background-color: $color;
+    color: $background;
+    a {
+      color: $background;
+    }
+  }
+}

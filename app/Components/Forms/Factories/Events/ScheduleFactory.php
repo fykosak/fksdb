@@ -6,7 +6,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use Events\Machine\BaseMachine;
 use Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
-use Nette\Diagnostics\Debugger;
 use Nette\Forms\Container;
 
 class ScheduleFactory extends AbstractFactory {
@@ -20,7 +19,6 @@ class ScheduleFactory extends AbstractFactory {
             'data' => (array)$data,
             'visible' => $visible,
         ];
-        Debugger::barDump($visible);
     }
 
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
@@ -50,7 +48,7 @@ class ScheduleFactory extends AbstractFactory {
     }
 
     /**
-     * @param ScheduleField $component
+     * @param Component $component
      * @return Component|\Nette\Forms\IControl
      */
     public function getMainControl(Component $component) {

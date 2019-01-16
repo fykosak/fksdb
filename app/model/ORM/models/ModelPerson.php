@@ -354,7 +354,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    public function getAccommodationByEventId($eventId) {
+    public function getSerializedAccommodationByEventId($eventId) {
         if (!$eventId) {
             return null;
         }
@@ -363,9 +363,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         $accommodations = [];
         foreach ($query as $row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
-            /**
-             * @var ModelEventAccommodation $eventAcc
-             */
             $eventAcc = $model->getEventAccommodation();
             $key = $eventAcc->date->format(ModelEventAccommodation::ACC_DATE_FORMAT);
             $accommodations[$key] = $eventAcc->event_accommodation_id;

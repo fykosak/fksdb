@@ -41,6 +41,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
+     * @param \Nette\Database\Connection $database
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
@@ -167,7 +168,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
 
             }
-            \Nette\Diagnostics\Debugger::barDump($controlsUsages);
             foreach ($controlsUsages as $k =>$u ){
                 $us = (array_key_exists($k,$usage) ? $usage[$k] : 0)+$u;
                 if($capacities[$k]-$us<0){

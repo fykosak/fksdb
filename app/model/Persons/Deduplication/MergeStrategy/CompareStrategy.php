@@ -7,7 +7,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CompareStrategy implements IMergeStrategy {
@@ -15,8 +15,8 @@ class CompareStrategy implements IMergeStrategy {
     private $sign;
 
     /**
-     * 
-     * @param enum $compare greater|less
+     *
+     * @param mixed $compare greater|less
      */
     function __construct($compare) {
         if ($compare == 'greater') {

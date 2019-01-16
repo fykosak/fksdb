@@ -8,7 +8,6 @@ use FKSDB\Utils\CSVParser;
 use Nette\ArrayHash;
 use Nette\DI\Container;
 use Nette\Object;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -137,9 +136,5 @@ class ImportHandler extends Object {
         }
         return $result;
     }
-
-}
-
-class ImportHandlerException extends RuntimeException {
 
 }

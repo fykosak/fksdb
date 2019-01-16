@@ -36,6 +36,8 @@ interface IFieldFactory {
      * Checks whether data are filled correctly (more than form validation as the validity
      * can depend on the machine state).
      *
+     * @param Field $field
+     * @param DataValidator $validator
      * @return bool
      */
     public function validate(Field $field, DataValidator $validator);

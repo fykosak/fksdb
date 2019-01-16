@@ -4,6 +4,7 @@ namespace ORM\Services\Events;
 
 use AbstractServiceSingle;
 use DbNames;
+use FKSDB\ORM\ModelEvent;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
@@ -17,57 +18,51 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param int $eventId
+     * @param ModelEvent $event
      * @return \Nette\Database\Table\Selection|null
      */
-    public function findParticipating($eventId) {
-        $result = $this->getTable()->where('status', 'participated');
-        if ($eventId) {
-            $result->where('event_id', $eventId);
-        }
+    public function findParticipating(ModelEvent $event) {
+        $result = $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);;
         return $result ?: null;
     }
 
-    public function teamExist($teamId, $eventId) {
+    /**
+     * @param int $teamId
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function teamExist(int $teamId, ModelEvent $event): bool {
         /**
          * @var $team ModelFyziklaniTeam
          */
-        $team = $this->findByPrimary($teamId);
-        return $team && $team->event_id == $eventId;
+        $row = $this->findByPrimary($teamId);
+        if (!$row) {
+            return false;
+        }
+        $team = ModelFyziklaniTeam::createFromTableRow($row);
+        return $team && $team->event_id == $event->event_id;
     }
+
     /**
      * Syntactic sugar.
-     * @param int $eventId
+     * @param ModelEvent $event
      * @return \Nette\Database\Table\Selection|null
      */
-    public function findPossiblyAttending($eventId = null) {
-        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare']);
-        if ($eventId) {
-            $result->where('event_id', $eventId);
-        }
+    public function findPossiblyAttending(ModelEvent $event) {
+        $result = $this->getTable()->where('status', ['participated', 'approved', 'spare'])->where('event_id', $event->event_id);
         return $result ?: null;
     }
 
-    public function getTeams($eventId) {
+    /**
+     * @param ModelEvent $event
+     * @return array
+     */
+    public function getTeamsAsArray(ModelEvent $event): array {
         $teams = [];
-        /**
-         * @var $row ModelFyziklaniTeam
-         */
-        foreach ($this->findPossiblyAttending($eventId) as $row) {
-            /**
-             * @var $row ModelFyziklaniTeam
-             */
-            $position = $row->getPosition();
 
-            $teams[] = [
-                'category' => $row->category,
-                'roomId' => $position ? $position->getRoom()->room_id : '',
-                'name' => $row->name,
-                'status'=>$row->status,
-                'teamId' => $row->e_fyziklani_team_id,
-                'x' => $position ? $position->col : null,
-                'y' => $position ? $position->row : null,
-            ];
+        foreach ($this->findPossiblyAttending($event) as $row) {
+            $team = ModelFyziklaniTeam::createFromTableRow($row);
+            $teams[] = $team->__toArray(true);
         }
         return $teams;
     }

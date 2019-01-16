@@ -282,7 +282,7 @@ class ApplicationPresenter extends BasePresenter {
                 $data = $this->getTokenAuthenticator()->getTokenData();
                 if ($data) {
                     $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-                    $eventId = $data['id'];
+                    $eventId = $data['id']; // TODO $id?
                 }
             }
             $id = $id ?: $this->getParameter('id');
@@ -322,7 +322,7 @@ class ApplicationPresenter extends BasePresenter {
         );
     }
 
-    public function getNavBarVariant() {
+    public function getNavBarVariant(): array {
         $event = $this->getEvent();
         $parent = parent::getNavBarVariant();;
         if (!$event) {

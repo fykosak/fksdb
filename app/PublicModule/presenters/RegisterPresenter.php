@@ -287,7 +287,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /**
          * @var $contestantForm Form
          */
-        $contestantForm = $this['contestantForm'];
+        $contestantForm =  $this->getComponent('contestantForm');
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -374,18 +374,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-    protected function getNavBarVariant() {
+    protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {
-            return [$contest->getContestSymbol(), 'dark'];
+            return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
         }
-        return null;
-    }
-
-    public function getNavRoot() {
-        return '';
+        return parent::getNavBarVariant();
     }
 }

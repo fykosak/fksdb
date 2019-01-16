@@ -4,20 +4,37 @@ namespace EventModule;
 
 class DashboardPresenter extends BasePresenter {
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function titleDefault() {
-        $this->setTitle(_('Detail of event'));
+        $this->setTitle(\sprintf(_('Event %s'), $this->getEvent()->name));
         $this->setIcon('fa fa-dashboard');
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->eventIsAllowed('event.dashboard', 'default'));
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
     }
 
+    /**
+     * @return string
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     private function getWebUrl() {
         switch ($this->getEvent()->event_type_id) {
             case 1:

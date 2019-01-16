@@ -73,15 +73,15 @@ class SchoolPresenter extends EntityPresenter {
         $this->setIcon('fa fa-plus');
     }
 
-    public function titleEdit($id) {
+    public function titleEdit() {
         $school = $this->getModel();
         $this->setTitle(sprintf(_('Úprava školy %s'), $school->name_abbrev));
         $this->setIcon('fa fa-pencil');
     }
 
-    public function actionDelete($id) {
+    public function actionDelete() {
         // This should set active flag to false.
-        throw new NotImplementedException();
+        throw new NotImplementedException(null, 501);
     }
 
     protected function createComponentCreateComponent($name) {
@@ -141,6 +141,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleCreateFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();
@@ -187,6 +188,7 @@ class SchoolPresenter extends EntityPresenter {
     /**
      * @internal
      * @param Form $form
+     * @throws \Nette\Application\AbortException
      */
     public function handleEditFormSuccess(Form $form) {
         $connection = $this->serviceSchool->getConnection();

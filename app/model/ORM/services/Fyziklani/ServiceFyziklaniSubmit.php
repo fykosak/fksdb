@@ -1,5 +1,8 @@
 <?php
 
+use FKSDB\ORM\ModelEvent;
+use Nette\Database\Table\Selection;
+
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
@@ -17,27 +20,20 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$taskId || !$teamId) {
             return null;
         }
-        /**
-         * @var $result ModelFyziklaniSubmit
-         */
-        $result = $this->getTable()->where([
+        $row = $this->getTable()->where([
             'fyziklani_task_id' => $taskId,
             'e_fyziklani_team_id' => $teamId
         ])->fetch();
-        return $result ?: null;
+        return $row ? ModelFyziklaniSubmit::createFromTableRow($row) : null;
     }
 
     /**
      * Syntactic sugar.
-     * @param $eventId integer
-     * @return \Nette\Database\Table\Selection|null
+     * @param $event ModelEvent
+     * @return Selection|null
      */
-    public function findAll($eventId) {
-        $result = $this->getTable();
-        if ($eventId) {
-            $result->where('e_fyziklani_team_id.event_id', $eventId);
-        }
-        return $result ?: null;
+    public function findAll(ModelEvent $event): Selection {
+        return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
     public function submitExist($taskId, $teamId) {
@@ -50,16 +46,19 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return true;
     }
 
-    public function getSubmits($eventId, $lastUpdated = null) {
-        $query = $this->getTable()->where('e_fyziklani_team.event_id', $eventId);
+    /**
+     * @param ModelEvent $event
+     * @param null $lastUpdated
+     * @return array
+     */
+    public function getSubmitsAsArray(ModelEvent $event, $lastUpdated = null): array {
+        $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
-        /**
-         * @var $submit ModelFyziklaniSubmit
-         */
-        foreach ($query as $submit) {
+        foreach ($query as $row) {
+            $submit = ModelFyziklaniSubmit::createFromTableRow($row);
             $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;

@@ -5,7 +5,6 @@ namespace Mail;
 use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
 use Nette\Templating\FileTemplate;
@@ -41,14 +40,18 @@ class MailTemplateFactory {
     }
 
     /**
+     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @return FileTemplate
      */
     public function createLoginInvitation(Control $control = null, $lang = null) {
         return $this->createFromFile('loginInvitation', $lang, $control);
     }
 
     /**
+     * @param Control|null $control
      * @param string $lang ISO 639-1
+     * @return FileTemplate
      */
     public function createPasswordRecovery(Control $control = null, $lang = null) {
         return $this->createFromFile('passwordRecovery', $lang, $control);
@@ -70,12 +73,14 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-
+        \var_dump($presenter);
         $template = new FileTemplate($file);
         $template->registerHelperLoader('Nette\Templating\Helpers::loader');
         $template->registerFilter(new Engine());
         $template->control = $template->_control = $control;
-        $template->baseUri = $presenter->getContext()->getByType('Nette\Http\IRequest')->getUrl()->getBaseUrl();
+        if ($presenter instanceof BasePresenter) {
+            $template->baseUri = $presenter->getContext()->getByType('Nette\Http\IRequest')->getUrl()->getBaseUrl();
+        }
 
         return $template;
     }

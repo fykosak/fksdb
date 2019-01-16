@@ -42,7 +42,6 @@ abstract class AbstractServiceMulti extends Object implements IService {
      *
      * @param AbstractServiceSingle $mainService
      * @param AbstractServiceSingle $joinedService
-     * @param string $modelClassName
      */
     public function __construct($mainService, $joinedService) {
         $this->setMainService($mainService);
@@ -170,4 +169,4 @@ abstract class AbstractServiceMulti extends Object implements IService {
 
 }
 
-?>
+

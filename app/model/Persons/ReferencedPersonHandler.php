@@ -112,6 +112,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param ArrayHash $values
      * @return \AbstractModelSingle|ModelPerson|null
      * @throws JsonException
+     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
      */
     public function createFromValues(ArrayHash $values) {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
@@ -127,6 +128,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param IModel $model
      * @param ArrayHash $values
      * @throws JsonException
+     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
      */
     public function update(IModel $model, ArrayHash $values) {
         /**
@@ -146,6 +148,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws JsonException
+     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
      * @return void
      */
     private function store(ModelPerson &$person, ArrayHash $data) {
@@ -162,7 +165,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
                 'person' => &$person,
                 'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
-                'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getAccommodationByEventId($this->eventId)) ?: null),
+                'person_accommodation' => ($personAccommodation = ($this->eventId && $person->getSerializedAccommodationByEventId($this->eventId)) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
             ];

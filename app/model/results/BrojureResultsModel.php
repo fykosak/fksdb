@@ -29,6 +29,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * Definition of header.
      *
+     * @param ModelCategory $category
      * @return array
      */
     public function getDataColumns($category) {
@@ -160,5 +161,3 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
     }
 
 }
-
-?>

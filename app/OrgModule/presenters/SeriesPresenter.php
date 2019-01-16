@@ -9,7 +9,7 @@ use SeriesCalculator;
 
 /**
  * Presenter providing series context and a way to modify it.
- * 
+ *
  */
 abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter {
 
@@ -30,7 +30,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
 
     protected function startup() {
         parent::startup();
-        if (!$this['seriesChooser']->isValid()) {
+        if (! $this->getComponent('seriesChooser')->isValid()) {
             throw new BadRequestException('Nejsou dostupné žádné série.', 500);
         }
     }
@@ -39,7 +39,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @return int
      */
     public function getSelectedSeries() {
-        return $this['seriesChooser']->getSeries();
+        return  $this->getComponent('seriesChooser')->getSeries();
     }
 
     public function createComponentSeriesChooser($name) {

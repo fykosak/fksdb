@@ -16,10 +16,15 @@ class SchedulePresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(\sprintf(_('Schedule.')));
+        $this->setTitle(\sprintf(_('Schedule')));
         $this->setIcon('fa fa-calendar-check-o');
     }
 
+    /**
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function hasEventSchedule() {
         try {
             $this->getEvent()->getParameter('schedule');
@@ -29,6 +34,10 @@ class SchedulePresenter extends BasePresenter {
         return true;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function authorizedDefault() {
 
         if ($this->hasEventSchedule()) {
@@ -37,6 +46,10 @@ class SchedulePresenter extends BasePresenter {
         return $this->setAuthorized(false);
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderDefault() {
         $query = $this->connection->query('SELECT p.name,p.person_id,apps.type, group_concat(DISTINCT apps.team separator \', \') AS `team`,schedule
 FROM v_person p
@@ -58,33 +71,31 @@ GROUP BY p.person_id,type,schedule', $this->getEvent()->event_id)->fetchAll();
         $results = [];
         $stats = [];
         foreach ($query as $row) {
-
-            $innerSchedule = [];
             if ($row->schedule) {
                 $innerSchedule = json_decode($row->schedule);
-            };
-            $results[] = [
-                'name' => $row->name,
-                'schedule' => $innerSchedule,
-                'person_id' => $row->person_id,
-                'type' => $row->type,
-                'team' => $row->team,
-            ];
-            foreach ($innerSchedule as $key => $item) {
-                if (!isset($stats[$key])) {
-                    $stats[$key] = [];
-                }
-                if (!isset($stats[$key][$item])) {
-                    $stats[$key][$item] = 0;
-                }
-                $stats[$key][$item] += 1;
+                $results[] = [
+                    'name' => $row->name,
+                    'schedule' => $innerSchedule,
+                    'person_id' => $row->person_id,
+                    'type' => $row->type,
+                    'team' => $row->team,
+                ];
+                foreach ($innerSchedule as $key => $item) {
+                    if (!isset($stats[$key])) {
+                        $stats[$key] = [];
+                    }
+                    if (!isset($stats[$key][$item])) {
+                        $stats[$key][$item] = 0;
+                    }
+                    $stats[$key][$item] += 1;
 
-            }
+                }
+            };
+
         }
 
         $this->template->participants = $results;
         $this->template->schedule = $schedule;
         $this->template->stats = $stats;
-
     }
 }

@@ -210,17 +210,17 @@ class ApplicationComponent extends Control {
         return $result;
     }
 
-    public function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
-        $this->execute($form, $explicitTransitionName, $explicitMachineName);
+    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+        $this->execute($form, $explicitTransitionName);
     }
 
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
     }
 
-    private function execute(Form $form = null, $explicitTransitionName = null, $explicitMachineName = null) {
+    private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName, $explicitMachineName);
+            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $e) {

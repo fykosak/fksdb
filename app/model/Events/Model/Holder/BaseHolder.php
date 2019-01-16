@@ -7,7 +7,6 @@ use Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonScheme;
 use FKSDB\ORM\ModelEvent;
-use Nette\Diagnostics\Debugger;
 use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -259,7 +258,6 @@ class BaseHolder extends FreezableObject {
     }
 
     public function updateModel($values, $alive = true) {
-        Debugger::barDump($alive,'holder::update');
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
