@@ -5,6 +5,7 @@ namespace FKSDB\Transitions;
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
+use FKSDB\Transitions\Conditions\DateBetween;
 use Mail\MailTemplateFactory;
 use Nette\DateTime;
 use Nette\InvalidStateException;
@@ -82,11 +83,11 @@ class TransitionsFactory {
     /* conditions */
     /**
      * @param ModelEvent $event
-     * @param IResource $resource
+     * @param IResource|string $resource
      * @param string $privilege
      * @return bool
      */
-    public function getConditionEventRole(ModelEvent $event, IResource $resource, string $privilege): bool {
+    public function getConditionEventRole(ModelEvent $event, $resource, string $privilege): bool {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $event);
     }
 
@@ -96,7 +97,7 @@ class TransitionsFactory {
      * @return bool
      */
     public function getConditionDateBetween(DateTime $from, DateTime $to): bool {
-        return $this->getConditionDateFrom($from) && $this->getConditionDateTo($to);
+        return (new DateBetween($from, $to))();
     }
 
     /**

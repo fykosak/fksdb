@@ -5,6 +5,7 @@ namespace FKSDB\ORM;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use ORM\IService;
 
 /**
  * Class FKSDB\ORM\ModelEventPersonAccommodation
@@ -54,12 +55,5 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle implements ISta
 
     public function getState() {
         return $this->status;
-    }
-
-    /**
-     * @return ModelPayment
-     */
-    public function refresh(): IStateModel {
-        return self::createFromTableRow($this->getTable()->wherePrimary($this->event_person_accommodation_id)->fetch());
     }
 }

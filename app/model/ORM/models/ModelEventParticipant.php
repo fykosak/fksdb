@@ -3,8 +3,10 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
+use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
+use Nette\InvalidStateException;
 
 /**
  *
@@ -12,6 +14,7 @@ use Nette\DateTime;
  * @property ActiveRow person
  * @property integer event_participant_id
  * @property integer event_id
+ * @property ActiveRow event
  * @property integer person_id
  * @property string note poznámka
  * @property string status
@@ -32,7 +35,7 @@ use Nette\DateTime;
  * @property string used_drugs užívané léky
  * @property string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
@@ -40,10 +43,12 @@ class ModelEventParticipant extends AbstractModelSingle {
 
     public function __toString() {
         if (!$this->getPerson()) {
-            trigger_error("Missing person in application ID '" . $this->getPrimary(false) . "'.");
-            //throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
+            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
-        return $this->getPerson()->getFullname();
+        return $this->getPerson()->getFullName();
     }
 
+    public function getEvent(): ModelEvent {
+        return ModelEvent::createFromTableRow($this->event);
+    }
 }

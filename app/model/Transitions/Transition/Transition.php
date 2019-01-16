@@ -2,6 +2,8 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\Transitions\Conditions\AbstractCondition;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -13,7 +15,7 @@ class Transition {
     const TYPE_DANGER = 'danger';
     const TYPE_PRIMARY = 'primary';
     /**
-     * @var  \Closure
+     * @var \Closure|AbstractCondition
      */
     private $condition;
 
@@ -76,6 +78,9 @@ class Transition {
         return $this->label;
     }
 
+    /**
+     * @param \Closure|AbstractCondition $closure
+     */
     public function setCondition(\Closure $closure) {
         $this->condition = $closure;
     }

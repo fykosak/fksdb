@@ -1,8 +1,6 @@
 <?php
 
-
 namespace FKSDB\Transitions;
-
 
 interface IStateModel {
     public function updateState($newState);
@@ -11,6 +9,4 @@ interface IStateModel {
      * @return string|null
      */
     public function getState();
-
-    public function refresh(): self;
 }

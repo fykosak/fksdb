@@ -6,6 +6,7 @@ use AbstractModelSingle;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
@@ -32,11 +33,13 @@ use Nette\Security\IResource;
  * @property string iban
  * @property string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled
     const STATE_NEW = 'new'; // new payment
+
+    const RESOURCE_ID = 'event.payment';
 
     /**
      * @return ModelPerson
@@ -55,7 +58,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     /**
      * @return ModelEventPersonAccommodation[]
      */
-    public function getRelatedPersonAccommodation() {
+    public function getRelatedPersonAccommodation(): array {
         $query = $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id');
         $items = [];
         foreach ($query as $row) {
@@ -68,7 +71,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @return string
      */
     public function getResourceId(): string {
-        return 'event.payment';
+        return self::RESOURCE_ID;
     }
 
     /**
@@ -180,12 +183,5 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
             'price' => $price->getAmount(),
             'currency' => $price->getCurrency(),
         ]);
-    }
-
-    /**
-     * @return ModelPayment
-     */
-    public function refresh(): IStateModel {
-        return self::createFromTableRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
     }
 }
