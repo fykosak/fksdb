@@ -31,12 +31,16 @@ abstract class Machine {
      * @var IService
      */
     private $service;
+    /**
+     * @var callable
+     * if callback return true, transition is allowed explicit, independently of transition's condition
+     */
+    private $explicitCondition;
 
     public function __construct(Connection $connection, IService $service) {
         $this->connection = $connection;
         $this->service = $service;
     }
-
 
     /**
      * @param Transition $transition
@@ -62,7 +66,7 @@ abstract class Machine {
             $state = self::STATE_INIT;
         }
         return array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
-            return ($transition->getFromState() === $state) && $transition->canExecute($model);
+            return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
 
@@ -94,6 +98,26 @@ abstract class Machine {
         }
         return \array_values($transitions)[0];
     }
+
+    /* ********** CONDITION ******** */
+    /**
+     * @param callable $condition
+     */
+    public function setExplicitCondition(callable $condition) {
+        $this->explicitCondition = $condition;
+    }
+
+    /**
+     * @param Transition $transition
+     * @param IStateModel|null $model
+     * @return bool
+     */
+    protected function canExecute(Transition $transition, IStateModel $model = null): bool {
+        if ($this->explicitCondition && ($this->explicitCondition)($model)) {
+            return true;
+        }
+        return $transition->canExecute($model);
+    }
     /* ********** EXECUTION ******** */
 
     /**
@@ -105,7 +129,7 @@ abstract class Machine {
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
-        if (!$transition->canExecute($model)) {
+        if (!$this->canExecute($transition, $model)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
         return $this->execute($transition, $model);
@@ -172,7 +196,7 @@ abstract class Machine {
      * @throws \Exception
      */
     public function canCreate(): bool {
-        return $this->getCreatingTransition()->canExecute(null);
+        return $this->canExecute($this->getCreatingTransition(), null);
     }
 
     /**
@@ -183,7 +207,7 @@ abstract class Machine {
      */
     public function createNewModel($data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();
-        if (!$transition->canExecute(null)) {
+        if (!$this->canExecute($transition, null)) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
         }
         /**

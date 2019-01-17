@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Transitions\Logic;
+namespace FKSDB\Transitions\Operators;
 
-use FKSDB\Transitions\Conditions\AbstractCondition;
 use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Statement;
 
-class LogicOr extends AbstractLogicOperator {
+class LogicOr extends Statement {
     /**
      * @var callable
      */
@@ -27,6 +27,9 @@ class LogicOr extends AbstractLogicOperator {
         $res = false;
         foreach ($this->args as $arg) {
             $res = $arg($model) || $res;
+            if ($res) {
+                return true;
+            }
         }
         return $res;
     }

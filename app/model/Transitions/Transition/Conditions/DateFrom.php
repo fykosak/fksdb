@@ -1,15 +1,13 @@
 <?php
 
+
 namespace FKSDB\Transitions\Conditions;
+
 
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statement;
 
-class DateBetween extends Statement {
-    /**
-     * @var \DateTime
-     */
-    private $to;
+class DateFrom extends Statement {
     /**
      * @var \DateTime
      */
@@ -18,11 +16,9 @@ class DateBetween extends Statement {
     /**
      * DateBetween constructor.
      * @param \DateTime $from
-     * @param \DateTime $to
      */
-    public function __construct(\DateTime $from, \DateTime $to) {
+    public function __construct(\DateTime $from) {
         $this->from = $from;
-        $this->to = $to;
     }
 
     /**
@@ -30,7 +26,6 @@ class DateBetween extends Statement {
      * @return bool
      */
     protected function evaluate(IStateModel $model = null): bool {
-        return (\time() <= $this->to->getTimestamp()) && (\time() >= $this->from->getTimestamp());
+        return (\time() >= $this->from->getTimestamp());
     }
-
 }

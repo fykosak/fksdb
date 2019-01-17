@@ -2,6 +2,7 @@
 
 namespace FKSDB\Transitions;
 
+use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
@@ -30,13 +31,18 @@ class MachineFactory {
      * @var \ServicePayment
      */
     private $servicePayment;
+    /**
+     * @var EventAuthorizator
+     */
+    private $eventAuthorizator;
 
-    public function __construct(\ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
+    public function __construct(EventAuthorizator $eventAuthorizator, \ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         $this->transitionsFactory = $transitionsFactory;
         $this->servicePayment = $servicePayment;
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;
         $this->priceCalculatorFactory = $priceCalculatorFactory;
         $this->connection = $connection;
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     /**
@@ -62,7 +68,8 @@ class MachineFactory {
                 $this->connection,
                 $this->transitionsFactory,
                 $this->symbolGeneratorFactory,
-                $this->priceCalculatorFactory
+                $this->priceCalculatorFactory,
+                $this->eventAuthorizator
             );
         }
         throw new NotImplementedException(_('Not implemented'), 501);

@@ -2,14 +2,12 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\Transitions\Conditions\AbstractCondition;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition {
+final class Transition {
     const TYPE_SUCCESS = 'success';
     const TYPE_WARNING = 'warning';
     const TYPE_DANGER = 'danger';
@@ -25,13 +23,13 @@ class Transition {
      */
     private $label;
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $beforeExecuteClosures = [];
+    public $beforeExecuteCallbacks = [];
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $afterExecuteClosures = [];
+    public $afterExecuteCallbacks = [];
 
     /**
      * @var string
@@ -79,10 +77,10 @@ class Transition {
     }
 
     /**
-     * @param Callable $closure
+     * @param callable|Statement $callback
      */
-    public function setCondition(callable $closure) {
-        $this->condition = $closure;
+    public function setCondition(callable $callback) {
+        $this->condition = $callback;
     }
 
     public function isCreating(): bool {
@@ -101,8 +99,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function beforeExecute(IStateModel &$model) {
-        foreach ($this->beforeExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->beforeExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 
@@ -110,8 +108,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function afterExecute(IStateModel &$model) {
-        foreach ($this->afterExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->afterExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 }
