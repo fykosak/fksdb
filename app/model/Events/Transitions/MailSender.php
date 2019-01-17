@@ -6,9 +6,11 @@ use Authentication\AccountManager;
 use Events\Machine\BaseMachine;
 use Events\Machine\Machine;
 use Events\Machine\Transition;
+use Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\ModelAuthToken;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelLogin;
+use FKSDB\ORM\ModelPerson;
 use Mail\MailTemplateFactory;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
@@ -45,7 +47,7 @@ class MailSender extends Object {
 
     /**
      *
-     * @var array
+     * @var array|string
      */
     private $addressees;
 
@@ -74,6 +76,16 @@ class MailSender extends Object {
      */
     private $servicePerson;
 
+    /**
+     * MailSender constructor.
+     * @param $filename
+     * @param array|string $addresees
+     * @param IMailer $mailer
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param AccountManager $accountManager
+     * @param ServiceAuthToken $serviceAuthToken
+     * @param ServicePerson $servicePerson
+     */
     function __construct($filename, $addresees, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, ServiceAuthToken $serviceAuthToken, ServicePerson $servicePerson) {
         $this->filename = $filename;
         $this->addressees = $addresees;
@@ -89,14 +101,15 @@ class MailSender extends Object {
     }
 
     private function send(Transition $transition) {
-        $personIds = $this->resolveAdressee($transition);
+        $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)
             ->where('person_info:email IS NOT NULL')
             ->fetchPairs('person_id');
 
         $logins = [];
-        foreach ($persons as $person) {
+        foreach ($persons as $row) {
+            $person = ModelPerson::createFromTableRow($row);
             $login = $person->getLogin();
             if (!$login) {
                 $login = $this->accountManager->createLogin($person);
@@ -134,7 +147,6 @@ class MailSender extends Object {
         $template->baseMachine = $baseMachine;
         $template->baseHolder = $baseHolder;
 
-
         $message = new Message();
         $message->setHtmlBody($template);
         $message->setSubject($this->getSubject($event, $application, $machine));
@@ -168,7 +180,7 @@ class MailSender extends Object {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
-    private function resolveAdressee(Transition $transition) {
+    private function resolveAdressees(Transition $transition) {
         $holder = $transition->getBaseHolder()->getHolder();
         if (is_array($this->addressees)) {
             $names = $this->addressees;
@@ -188,9 +200,10 @@ class MailSender extends Object {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function ($it) {
+                        $names = array_merge($names, array_map(function (BaseHolder $it) {
                             return $it->getName();
-                        }, $group->holders));
+                        }, $group['holders']));
+
                     }
                     break;
                 case self::ADDR_ALL:

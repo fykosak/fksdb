@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -83,6 +84,9 @@ class ApplicationComponent extends Control {
     }
 
     protected function createTemplate($class = NULL) {
+        /**
+         * @var $template FileTemplate
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -116,7 +120,7 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
-    protected function createComponentForm($name) {
+    protected function createComponentForm() {
         $result = new FormControl();
         $form = $result->getForm();
 

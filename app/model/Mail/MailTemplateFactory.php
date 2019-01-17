@@ -60,7 +60,7 @@ class MailTemplateFactory {
     public final function createFromFile($filename, $lang = null, Control $control = null) {
         $presenter = $this->application->getPresenter();
         if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {
-            throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string) $presenter));
+            throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
         }
         if ($lang === null) {
             $lang = $presenter->getLang();
@@ -73,11 +73,13 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-
         $template = new FileTemplate($file);
         $template->registerHelperLoader('Nette\Templating\Helpers::loader');
         $template->registerFilter(new Engine());
         $template->control = $template->_control = $control;
+        if ($presenter instanceof BasePresenter) {
+            $template->baseUri = $presenter->getContext()->getByType('Nette\Http\IRequest')->getUrl()->getBaseUrl();
+        }
 
         return $template;
     }
