@@ -7,7 +7,7 @@ use FKSDB\Transitions\IStateModel;
 
 class LogicOr extends AbstractLogicOperator {
     /**
-     * @var AbstractCondition[]|\Closure
+     * @var callable
      */
     private $args;
 

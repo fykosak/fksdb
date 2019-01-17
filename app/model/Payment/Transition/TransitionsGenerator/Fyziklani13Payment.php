@@ -88,13 +88,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     private function addTransitionInitToNew(PaymentMachine &$machine) {
         $transition = $this->transitionFactory->createTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition(
-            function () use ($machine) {
-                return (new LogicOr(new DateBetween(new DateTime('2019-01-18'), new DateTime('2019-02-15')),
-                    function () use ($machine): bool {
-                        return $this->transitionFactory->getConditionEventRole($machine->getEvent(), ModelPayment::RESOURCE_ID, 'org');
-                    }))();
-                //return (new DateBetween(new DateTime('2019-01-18'), new DateTime('2019-02-15')))();
-            });
+            new LogicOr(
+                new DateBetween(new DateTime('2019-01-18'), new DateTime('2019-02-15')),
+                function () use ($machine): bool {
+                    return $this->transitionFactory->getConditionEventRole($machine->getEvent(), ModelPayment::RESOURCE_ID, 'org');
+                })
+        );
         $machine->addTransition($transition);
     }
 
@@ -109,23 +108,21 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         );
 
         $transition->setType(Transition::TYPE_SUCCESS);
-        $transition->setCondition(function (ModelPayment $eventPayment) {
-            return (new LogicOr(
+        $transition->setCondition(
+            new LogicOr(
                 function (ModelPayment $model): bool {
                     return $this->transitionFactory->getConditionEventRole($model->getEvent(), $model, 'org');
                 },
                 function (ModelPayment $model): bool {
                     return $this->transitionFactory->getConditionOwnerAssertion($model->getPerson());
-                }))($eventPayment);
-            //  return $this->transitionFactory->getConditionEventRole($eventPayment->getEvent(), $eventPayment, 'org') ||
-            //       $this->transitionFactory->getConditionOwnerAssertion($eventPayment->getPerson());
-        });
+                })
+        );
         $transition->beforeExecuteClosures[] = function (ModelPayment &$modelPayment) use ($machine) {
             $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
             $modelPayment->updatePrice($machine->getPriceCalculator());
         };
-        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/create',
-            $this->getMailSetupCallback(_('Payment  #%s created')));
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/create',
+            $this->getMailSetupCallback(_('Payment #%s created')));
 
         $machine->addTransition($transition);
     }
@@ -175,7 +172,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
                 $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
             }
         };
-        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani13/payment/receive',
+        $transition->afterExecuteClosures[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/receive',
             $this->getMailSetupCallback(_('We are receive payment #%s')));
 
         $transition->setCondition(function (ModelPayment $eventPayment) {

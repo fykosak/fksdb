@@ -15,7 +15,7 @@ class Transition {
     const TYPE_DANGER = 'danger';
     const TYPE_PRIMARY = 'primary';
     /**
-     * @var \Closure|AbstractCondition
+     * @var Callable
      */
     private $condition;
 
@@ -79,9 +79,9 @@ class Transition {
     }
 
     /**
-     * @param \Closure|AbstractCondition $closure
+     * @param Callable $closure
      */
-    public function setCondition(\Closure $closure) {
+    public function setCondition(callable $closure) {
         $this->condition = $closure;
     }
 
