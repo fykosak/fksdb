@@ -1,9 +1,11 @@
+{layout '../layout.latte'}
+{block body}
 <div>
     Dobrý den,
     <p>byla vytvořená platba #{$model->getPaymentId()} s částkou {$model->getPrice()->__toString()}.
     </p>
 
-    {include './items.cs.latte'}
+    {include './items.latte'}
 
     <p>Prosíme o její uhrazení převodem na účet. Jakmile platbu zaregistrujeme, bude vám zasláno potvrzení.</p>
 
@@ -59,3 +61,4 @@
 
     {include './signature.cs.latte'}
 </div>
+{/block}
