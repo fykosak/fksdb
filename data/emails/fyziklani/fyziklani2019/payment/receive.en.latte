@@ -1,11 +1,18 @@
 {layout '../layout.latte'}
 {block body}
-<div>
-    Platba #{$model->getPaymentId()} prijatá
-    Platba vo výške {$model->getPrice()->__toString()}
+    <div>
+        <p>
+            Dear sir or madam,<br/>
+            we have successfully received your payment {$model->getPaymentId()} for Fyziklani 2019 of
+            <b>{$model->getPrice()->__toString()}</b>.
+        </p>
 
-    {include './items.latte'}
+        <p>
+            The payment included the following:
+        </p>
 
-    {include './signature.cs.latte'}
-</div>
+        {include './items.latte'}
+
+        {include './signature.en.latte'}
+    </div>
 {/block}

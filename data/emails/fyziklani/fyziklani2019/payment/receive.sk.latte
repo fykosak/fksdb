@@ -1,11 +1,1 @@
-{layout '../layout.latte'}
-{block body}
-<div>
-    Platba #{$model->getPaymentId()} prijatá
-    Platba vo výške {$model->getPrice()->__toString()}
-
-    {include './items.latte'}
-
-    {include './signature.cs.latte'}
-</div>
-{/block}
+{include './receive.cs.latte'}
