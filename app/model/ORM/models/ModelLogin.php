@@ -37,6 +37,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @return ModelPerson|null
+     */
     public function getPerson() {
         if ($this->person) {
             return ModelPerson::createFromTableRow($this->person);
