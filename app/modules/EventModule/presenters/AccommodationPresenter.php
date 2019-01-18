@@ -65,7 +65,6 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function authorizedList() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'list'));
@@ -73,7 +72,6 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function authorizedCreate() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'create'));
@@ -81,7 +79,6 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function authorizedEdit() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'edit'));
@@ -89,7 +86,6 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function authorizedBilleted() {
         return $this->setAuthorized($this->isContestsOrgAllowed('event.accommodation', 'billeted'));
@@ -98,7 +94,6 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function titleEdit() {
         $model = $this->getModel();
@@ -123,7 +118,6 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function titleBilleted() {
         $model = $this->getModel();
@@ -138,7 +132,6 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function actionEdit() {
         $this->getComponent('editForm')->getForm()->setDefaults($this->getDefaults());
@@ -175,7 +168,6 @@ class AccommodationPresenter extends BasePresenter {
     /**
      * @return EventAccommodationGrid
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function createComponentGrid(): EventAccommodationGrid {
         return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
@@ -185,7 +177,6 @@ class AccommodationPresenter extends BasePresenter {
      * @return EventBilletedPerson
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function createComponentBilletedGrid(): EventBilletedPerson {
         return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
@@ -227,7 +218,6 @@ class AccommodationPresenter extends BasePresenter {
      * @return array|null
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     private function getDefaults() {
         $model = $this->getModel();
@@ -244,7 +234,6 @@ class AccommodationPresenter extends BasePresenter {
      * @return ModelEventAccommodation
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function getModel(): ModelEventAccommodation {
         $row = $this->serviceEventAccommodation->findByPrimary($this->id);
@@ -252,7 +241,7 @@ class AccommodationPresenter extends BasePresenter {
             throw new BadRequestException(_('Accommodation does not exists'));
         }
         $model = ModelEventAccommodation::createFromTableRow($row);
-        if ($this->getEventId() !== $model->event_id) {
+        if ($this->getEvent()->event_id !== $model->event_id) {
             throw new ForbiddenRequestException(_('Ubytovanie nepatrí k tomuto eventu'));
         }
         return $model;

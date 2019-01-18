@@ -56,7 +56,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function startup() {
         /**
@@ -65,57 +64,31 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $languageChooser =  $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
-        if (!$this->eventExist()) {
-            throw new BadRequestException('Event not found.', 404);
-        }
         parent::startup();
-    }
-
-    /**
-     * @return bool
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    protected function eventExist(): bool {
-        return !!$this->getEvent();
     }
 
     /**
      * @return string
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     public function getSubtitle(): string {
         return $this->getEvent()->__toString();
     }
 
     /**
-     * @return int
-     * @throws \Nette\Application\AbortException
-     */
-    protected function getEventId(): int {
-        if (!$this->eventId) {
-            $this->redirect('Dispatch:default');
-        }
-        return +$this->eventId;
-    }
-
-    /**
      * @return ModelEvent
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
-            $row = $this->serviceEvent->findByPrimary($this->getEventId());
+            $row = $this->serviceEvent->findByPrimary($this->eventId);
             if (!$row) {
-                throw new BadRequestException('Event not found');
+                throw new BadRequestException('Event not found.', 404);
             }
+
             $this->event = ModelEvent::createFromTableRow($row);
-            if ($this->event) {
-                $holder = $this->container->createEventHolder($this->getEvent());
-                $this->event->setHolder($holder);
-            }
+            $holder = $this->container->createEventHolder($this->event);
+            $this->event->setHolder($holder);
         }
         return $this->event;
     }
@@ -125,13 +98,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function eventIsAllowed($resource, $privilege): bool {
         $event = $this->getEvent();
-        if (!$event) {
-            return false;
-        }
         return $this->getEventAuthorizator()->isAllowed($resource, $privilege, $event);
     }
 
@@ -140,7 +109,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param $privilege
      * @return bool
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected function isContestsOrgAllowed($resource, $privilege): bool {
         $contest = $this->getContest();
@@ -161,7 +129,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return ModelContest
      * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
      */
     protected final function getContest(): ModelContest {
         return $this->getEvent()->getContest();
