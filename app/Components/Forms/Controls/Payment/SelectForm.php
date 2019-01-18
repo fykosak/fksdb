@@ -134,7 +134,7 @@ class SelectForm extends Control {
         $currencyField->setRequired(true);
         $form->addComponent($currencyField, 'currency');
         $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $this->event, !$create), 'payment_accommodation');
-        $form->addSubmit('submit', $create ? _('Create payment') : _('Save payment'));
+        $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
         };
