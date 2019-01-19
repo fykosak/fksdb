@@ -501,7 +501,7 @@ msgstr "Potvrzení výběru položek"
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
 #, php-format
 msgid "Payment #%s was created"
-msgstr ""
+msgstr "Platba #%s byla vytvořena"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:157
 msgid "Cancel payment"
@@ -515,7 +515,7 @@ msgstr "Zaplaceno"
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
 #, php-format
 msgid "We are receive payment #%s"
-msgstr "Obdržali jsme platbu"
+msgstr "Obdržali jsme platbu #%s"
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
 #, php-format
@@ -1609,7 +1609,7 @@ msgstr "Uložit platbu"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:183
 msgid "Payment has been created."
-msgstr "Platba %s byla vytvořena."
+msgstr "Platba byla vytvořena."
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:183
 msgid "Payment has been updated."
