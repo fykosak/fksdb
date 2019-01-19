@@ -2,8 +2,6 @@
 
 namespace FKSDB\Transitions;
 
-use Nette\Diagnostics\Debugger;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -102,9 +100,7 @@ final class Transition {
      */
     public final function beforeExecute(IStateModel &$model) {
         foreach ($this->beforeExecuteCallbacks as $callback) {
-            Debugger::barDump($model, 'b');
             $callback($model);
-            Debugger::barDump($model, 'a');
         }
     }
 
