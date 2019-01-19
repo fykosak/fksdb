@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions\Conditions;
+namespace FKSDB\Transitions\Statements\Conditions;
 
 use Authorization\EventAuthorizator;
 use FKSDB\ORM\ModelEvent;

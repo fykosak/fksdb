@@ -1,11 +1,11 @@
 <?php
 
 
-namespace FKSDB\Transitions\Conditions;
+namespace FKSDB\Transitions\Statements\Conditions;
 
 
 use FKSDB\Transitions\IStateModel;
-use FKSDB\Transitions\Statement;
+use FKSDB\Transitions\Statements\Statement;
 
 class DateFrom extends Statement {
     /**

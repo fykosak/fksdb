@@ -1,11 +1,11 @@
 <?php
 
 
-namespace FKSDB\Transitions\Operators;
+namespace FKSDB\Transitions\Statements\Operators;
 
 
 use FKSDB\Transitions\IStateModel;
-use FKSDB\Transitions\Statement;
+use FKSDB\Transitions\Statements\Statement;
 
 class LogicAnd extends Statement {
     /**

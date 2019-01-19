@@ -1,8 +1,8 @@
 <?php
 
+namespace FKSDB\Transitions\Statements;
 
-namespace FKSDB\Transitions;
-
+use FKSDB\Transitions\IStateModel;
 
 abstract class Statement {
     /**
