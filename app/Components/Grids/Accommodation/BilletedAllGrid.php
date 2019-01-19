@@ -21,6 +21,7 @@ class BilletedAllGrid extends BilletedGrid {
     /**
      * @param AccommodationPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      * @throws \NiftyGrid\DuplicateGlobalButtonException
      */
@@ -46,7 +47,5 @@ class BilletedAllGrid extends BilletedGrid {
 
         $this->addColumnPayment();
         $this->addColumnState();
-
     }
-
 }

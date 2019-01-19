@@ -37,7 +37,6 @@ class AccommodationGrid extends BaseGrid {
         parent::configure($presenter);
         $accommodations = $this->event->related(\DbNames::TAB_EVENT_ACCOMMODATION);
 
-
         $dataSource = new SearchableDataSource($accommodations);
 
         $this->setDataSource($dataSource);
@@ -78,6 +77,10 @@ class AccommodationGrid extends BaseGrid {
 
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function handleDelete($id) {
         $model = $this->serviceEventAccommodation->findByPrimary($id);
         if (!$model) {

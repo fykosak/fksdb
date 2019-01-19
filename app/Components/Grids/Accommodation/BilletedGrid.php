@@ -26,16 +26,17 @@ abstract class BilletedGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $this->addButton('confirmPayment', _('Confirm payment'))
+        $this->addButton('confirmPayment')
             ->setClass('btn btn-sm btn-success')
-            ->setText(_('Confirm payment'))
+            ->setText(_('Receive payment'))
             ->setLink(function ($row) {
                 return $this->link('confirmPayment!', $row->event_person_accommodation_id);
             })->setShow(function ($row) {
                 return $row->status !== ModelEventPersonAccommodation::STATUS_PAID;
             });
 
-        $this->addButton('deletePayment', _('Delete payment'))->setText(_('Delete payment'))
+        $this->addButton('deletePayment')
+            ->setText(_('Delete payment'))
             ->setClass('btn btn-sm btn-warning')
             ->setLink(function ($row) {
                 return $this->link('deletePayment!', $row->event_person_accommodation_id);
@@ -49,8 +50,12 @@ abstract class BilletedGrid extends BaseGrid {
 
     }
 
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnPayment() {
-        $this->addColumn('payment', _('Payment'))->setRenderer(function ($row) {
+        $this->addColumn('payment', _('Payment'))
+            ->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             $modelPayment = $model->getPayment();
             if (!$modelPayment) {
@@ -60,6 +65,9 @@ abstract class BilletedGrid extends BaseGrid {
         });
     }
 
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnState() {
         $this->addColumn('status', _('State'))->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
@@ -70,6 +78,9 @@ abstract class BilletedGrid extends BaseGrid {
         });
     }
 
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnName() {
         $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);

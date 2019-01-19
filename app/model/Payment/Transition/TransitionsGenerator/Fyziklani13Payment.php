@@ -19,6 +19,7 @@ use FKSDB\Transitions\TransitionsFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DateTime;
+use Nette\Diagnostics\Debugger;
 use Nette\Mail\Message;
 
 
@@ -192,6 +193,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private function getClosureDeleteRows(): \Closure {
         return function (ModelPayment $modelPayment) {
+            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
             foreach ($modelPayment->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
                 $row->delete();
             }
