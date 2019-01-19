@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 00:54+0100\n"
+"POT-Creation-Date: 2019-01-19 19:46+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -487,30 +487,9 @@ msgstr ""
 msgid "Expected class %s, got %s"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:101
-msgid "Create"
-msgstr ""
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:110
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:58
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:60
-#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
-msgid "Confirm payment"
-msgstr ""
-
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
 #, php-format
 msgid "Payment #%s was created"
-msgstr ""
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:157
-#, fuzzy
-msgid "Cancel payment"
-msgstr "Nová platba"
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:174
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
-msgid "Paid"
 msgstr ""
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
@@ -603,15 +582,15 @@ msgstr ""
 msgid "Not implemented"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:133
+#: i18n/../app/model/Transitions/Machine/Machine.php:134
 msgid "Prechod sa nedá vykonať"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:159
+#: i18n/../app/model/Transitions/Machine/Machine.php:156
 msgid "Expected instance of IModel"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:211
+#: i18n/../app/model/Transitions/Machine/Machine.php:214
 msgid "Model sa nedá vytvoriť"
 msgstr ""
 
@@ -779,7 +758,7 @@ msgstr ""
 msgid "Invalid postal code %d."
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:45
+#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:57
 #, php-format
 msgid "Ubytovaní pre osobu %s od %s do %s v hoteli %s"
 msgstr ""
@@ -2358,6 +2337,7 @@ msgstr ""
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
 #: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 msgid "Price"
 msgstr ""
 
@@ -2674,24 +2654,39 @@ msgstr ""
 msgid "Contest org"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:49
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:48
+#, fuzzy
+msgid "Payment"
+msgstr "Nová platba"
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:57
 msgid "State"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
+msgid "Paid"
+msgstr ""
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
 msgid "Waiting"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:67
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:66
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:68
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
+msgid "Confirm payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:75
 msgid "Delete payment"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:90
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:83
 msgid "Zoznam ubytovaní"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:103
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:120
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:96
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:113
 msgid "some bullshit...."
 msgstr ""
 
@@ -2916,8 +2911,9 @@ msgid "Registrovat se do dalšího ročníku"
 msgstr ""
 
 #: i18n/../app/PublicModule/templates/Submit/default.latte.latte2php:16
+#, fuzzy
 msgid "Další ročník"
-msgstr ""
+msgstr "Zvoliť ročník"
 
 #: i18n/../app/PublicModule/templates/Submit/default.latte.latte2php:21
 msgid "Odevzdaná řešení"
@@ -2952,8 +2948,9 @@ msgid "Žádné přihlášky."
 msgstr ""
 
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.myApplications.latte.latte2php:7
+#, fuzzy
 msgid "Přihláška"
-msgstr ""
+msgstr "Prihlásiť"
 
 #: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:64
 msgid "Items"
@@ -3043,6 +3040,30 @@ msgstr ""
 #: i18n/../app/templates/@layout.v4.latte.latte2php:54
 msgid "Odhlásit"
 msgstr "Odhlásiť"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:4
+msgid "Constant symbol"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:10
+msgid "Variable symbol"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:16
+msgid "Specific symbol"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
+msgid "Bank account"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
+msgid "IBAN"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
+msgid "SWIFT"
+msgstr ""
 
 #: i18n/../app/config/exports.neon.neon2php:12
 #: i18n/../app/config/exports.neon.neon2php:14
@@ -3511,6 +3532,10 @@ msgstr ""
 #: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:86
 msgid "Další poznámky"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Cancel payment"
+#~ msgstr "Nová platba"
 
 #~ msgid "Fetch"
 #~ msgstr "Stihnúť"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 00:54+0100\n"
+"POT-Creation-Date: 2019-01-19 19:46+0100\n"
 "PO-Revision-Date: 2019-01-10 12:19+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
@@ -487,30 +487,10 @@ msgstr "Akce %s nemá nastavený generátor plateb"
 msgid "Expected class %s, got %s"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:101
-msgid "Create"
-msgstr "Vytvořit platbu"
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:110
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:58
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:60
-#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
-msgid "Confirm payment"
-msgstr "Potvrzení výběru položek"
-
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
 #, php-format
 msgid "Payment #%s was created"
 msgstr "Platba #%s byla vytvořena"
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:157
-msgid "Cancel payment"
-msgstr "Zrušit platbu"
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:174
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
-msgid "Paid"
-msgstr "Zaplaceno"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
 #, php-format
@@ -602,15 +582,15 @@ msgstr ""
 msgid "Not implemented"
 msgstr "Neimplementováno"
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:133
+#: i18n/../app/model/Transitions/Machine/Machine.php:134
 msgid "Prechod sa nedá vykonať"
 msgstr "Přechod není možné vykonat"
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:159
+#: i18n/../app/model/Transitions/Machine/Machine.php:156
 msgid "Expected instance of IModel"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:211
+#: i18n/../app/model/Transitions/Machine/Machine.php:214
 msgid "Model sa nedá vytvoriť"
 msgstr ""
 
@@ -777,7 +757,7 @@ msgstr ""
 msgid "Invalid postal code %d."
 msgstr "Neplatné PSČ %d."
 
-#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:45
+#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:57
 #, php-format
 msgid "Ubytovaní pre osobu %s od %s do %s v hoteli %s"
 msgstr "Ubytování pro osobu %s od %s do %s v hotelu %s"
@@ -2354,6 +2334,7 @@ msgstr "Mód \"%s\" není implementovaný"
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
 #: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 msgid "Price"
 msgstr "Cena"
 
@@ -2670,24 +2651,39 @@ msgstr "Organizátor akce"
 msgid "Contest org"
 msgstr "Organizátor soutěže"
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:49
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:48
+#, fuzzy
+msgid "Payment"
+msgstr "Nová  platba"
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:57
 msgid "State"
 msgstr "Stav"
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
+msgid "Paid"
+msgstr "Zaplaceno"
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
 msgid "Waiting"
 msgstr "Očekáváme"
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:67
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:66
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:68
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
+msgid "Confirm payment"
+msgstr "Potvrzení výběru položek"
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:75
 msgid "Delete payment"
 msgstr "Smazat platbu"
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:90
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:83
 msgid "Zoznam ubytovaní"
 msgstr "Seznam ubytování"
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:103
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:120
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:96
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:113
 msgid "some bullshit...."
 msgstr "nějaká píčovina..."
 
@@ -2947,8 +2943,9 @@ msgid "Žádné přihlášky."
 msgstr ""
 
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.myApplications.latte.latte2php:7
+#, fuzzy
 msgid "Přihláška"
-msgstr ""
+msgstr "Přihlášen"
 
 #: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:64
 msgid "Items"
@@ -3037,6 +3034,30 @@ msgstr ""
 #: i18n/../app/templates/@layout.latte.latte2php:49
 #: i18n/../app/templates/@layout.v4.latte.latte2php:54
 msgid "Odhlásit"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:4
+msgid "Constant symbol"
+msgstr "Konstantní symbol"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:10
+msgid "Variable symbol"
+msgstr "Variabilní symbol"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:16
+msgid "Specific symbol"
+msgstr "Specifický symbol"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
+msgid "Bank account"
+msgstr "Bankovní účet č."
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
+msgid "IBAN"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
+msgid "SWIFT"
 msgstr ""
 
 #: i18n/../app/config/exports.neon.neon2php:12
@@ -3502,6 +3523,91 @@ msgstr ""
 msgid "Další poznámky"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Person Id"
+#~ msgstr "Osoba"
+
+#, fuzzy
+#~ msgid "Contest year"
+#~ msgstr "Organizátor soutěže"
+
+#, fuzzy
+#~ msgid "Event year"
+#~ msgstr "Organizátor akce"
+
+#, fuzzy
+#~ msgid "Event begin"
+#~ msgstr "Organizátor akce"
+
+#, fuzzy
+#~ msgid "Event end"
+#~ msgstr "ID akce"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Akce \"%s\""
+
+#~ msgid "Actions"
+#~ msgstr "Akce"
+
+#, fuzzy
+#~ msgid "Available points"
+#~ msgstr "Dostupné filtry"
+
+#, fuzzy
+#~ msgid "still organizing"
+#~ msgstr "Stále organizuje"
+
+#, fuzzy
+#~ msgid "Role"
+#~ msgstr "Role"
+
+#, fuzzy
+#~ msgid "person_id"
+#~ msgstr "Osoba"
+
+#, fuzzy
+#~ msgid "Born Id"
+#~ msgstr "Osoba"
+
+#, fuzzy
+#~ msgid "Im"
+#~ msgstr "Položka"
+
+#, fuzzy
+#~ msgid "Linkedin id"
+#~ msgstr "LinkedIn ID"
+
+#, fuzzy
+#~ msgid "Contant info"
+#~ msgstr "Organizátor soutěže"
+
+#, fuzzy
+#~ msgid "Person history"
+#~ msgstr "Osoba"
+
+#, fuzzy
+#~ msgid "Contestant"
+#~ msgstr "Soutěž"
+
+#, fuzzy
+#~ msgid "Login info"
+#~ msgstr "Organizátor soutěže"
+
+#, fuzzy
+#~ msgid "Event teacher"
+#~ msgstr "Upravit učitele %s"
+
+#, fuzzy
+#~ msgid "Events"
+#~ msgstr "Akce"
+
+#~ msgid "Create"
+#~ msgstr "Vytvořit platbu"
+
+#~ msgid "Cancel payment"
+#~ msgstr "Zrušit platbu"
+
 #~ msgid "Vytvoriť"
 #~ msgstr "Vytvořit"
 
@@ -3534,9 +3640,6 @@ msgstr ""
 
 #~ msgid "Active filters"
 #~ msgstr "Aktivní filtry"
-
-#~ msgid "Available filters"
-#~ msgstr "Dostupné filtry"
 
 #~ msgid "Auto switch"
 #~ msgstr "Automatický přepínač"
@@ -3661,9 +3764,6 @@ msgstr ""
 #~ msgid "Save"
 #~ msgstr "Uložit"
 
-#~ msgid "Actions"
-#~ msgstr "Akce"
-
 #~ msgid "Detail of event"
 #~ msgstr "Podrobnosti akce"
 
@@ -3684,6 +3784,3 @@ msgstr ""
 
 #~ msgid "lastUpdated"
 #~ msgstr "naposledy upraveno"
-
-#~ msgid "Přihlásen"
-#~ msgstr "Přihlášen"

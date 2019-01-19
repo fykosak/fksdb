@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 00:54+0100\n"
+"POT-Creation-Date: 2019-01-19 19:46+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -488,29 +488,9 @@ msgstr "Evend %s haven't had set payment generator"
 msgid "Expected class %s, got %s"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:101
-msgid "Create"
-msgstr ""
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:110
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:58
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:60
-#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
-msgid "Confirm payment"
-msgstr ""
-
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
 #, php-format
 msgid "Payment #%s was created"
-msgstr ""
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:157
-msgid "Cancel payment"
-msgstr ""
-
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:174
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
-msgid "Paid"
 msgstr ""
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
@@ -603,15 +583,15 @@ msgstr "Some error emerged"
 msgid "Not implemented"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:133
+#: i18n/../app/model/Transitions/Machine/Machine.php:134
 msgid "Prechod sa nedá vykonať"
 msgstr "Transition cannot be done"
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:159
+#: i18n/../app/model/Transitions/Machine/Machine.php:156
 msgid "Expected instance of IModel"
 msgstr ""
 
-#: i18n/../app/model/Transitions/Machine/Machine.php:211
+#: i18n/../app/model/Transitions/Machine/Machine.php:214
 #, fuzzy
 msgid "Model sa nedá vytvoriť"
 msgstr "Transition cannot be done"
@@ -781,7 +761,7 @@ msgstr "Person %s is already applied to the event."
 msgid "Invalid postal code %d."
 msgstr ""
 
-#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:45
+#: i18n/../app/model/ORM/models/ModelEventPersonAccommodation.php:57
 #, php-format
 msgid "Ubytovaní pre osobu %s od %s do %s v hoteli %s"
 msgstr "Accommodation for person %s from %s to %s at hotel %s"
@@ -2362,6 +2342,7 @@ msgstr "Mode \"%s\" is not implemented"
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
 #: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 msgid "Price"
 msgstr ""
 
@@ -2678,24 +2659,38 @@ msgstr ""
 msgid "Contest org"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:49
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:48
+msgid "Payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:57
 msgid "State"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:54
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
+msgid "Paid"
+msgstr ""
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
 msgid "Waiting"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:67
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:66
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:68
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
+msgid "Confirm payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:75
 msgid "Delete payment"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:90
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:83
 msgid "Zoznam ubytovaní"
 msgstr ""
 
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:103
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:120
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:96
+#: i18n/../app/Components/Grids/EventBilletedPerson.php:113
 msgid "some bullshit...."
 msgstr ""
 
@@ -3047,6 +3042,31 @@ msgstr "User"
 #: i18n/../app/templates/@layout.v4.latte.latte2php:54
 msgid "Odhlásit"
 msgstr "Log out"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:4
+#, fuzzy
+msgid "Constant symbol"
+msgstr "CUNI login"
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:10
+msgid "Variable symbol"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:16
+msgid "Specific symbol"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
+msgid "Bank account"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
+msgid "IBAN"
+msgstr ""
+
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
+msgid "SWIFT"
+msgstr ""
 
 #: i18n/../app/config/exports.neon.neon2php:12
 #: i18n/../app/config/exports.neon.neon2php:14
@@ -3539,6 +3559,90 @@ msgstr ""
 msgid "Další poznámky"
 msgstr "Other notes"
 
+#, fuzzy
+#~ msgid "Contest year"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Event year"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Event begin"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Event end"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Spustit dotaz"
+#~ msgstr "Write a query"
+
+#, fuzzy
+#~ msgid "Upravit dotaz"
+#~ msgstr "Write a query"
+
+#, fuzzy
+#~ msgid "still organizing"
+#~ msgstr "Still organises"
+
+#, fuzzy
+#~ msgid "Address"
+#~ msgstr "Addresses"
+
+#, fuzzy
+#~ msgid "Permanent address"
+#~ msgstr "Delete address"
+
+#, fuzzy
+#~ msgid "Delivery address"
+#~ msgstr "Delete address"
+
+#, fuzzy
+#~ msgid "UK login"
+#~ msgstr "Login"
+
+#, fuzzy
+#~ msgid "Linkedin id"
+#~ msgstr "LinkedIn ID"
+
+#, fuzzy
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#, fuzzy
+#~ msgid "Login info"
+#~ msgstr "CUNI login"
+
+#, fuzzy
+#~ msgid "Login_id"
+#~ msgstr "Login"
+
+#, fuzzy
+#~ msgid "Event teacher"
+#~ msgstr "Event ID"
+
+#, fuzzy
+#~ msgid "Uzatváranie bodovaní tímov"
+#~ msgstr "Sealing of the scoring for the team \"%s\""
+
+#, fuzzy
+#~ msgid "Uzatváranie bodovaní celého fyzikláni"
+#~ msgstr "Seal entire Fyziklani"
+
+#, fuzzy
+#~ msgid "Ups! Mrzí nás to, ale požadovaná stránka neexistuje."
+#~ msgstr "Requested page doesn't exist."
+
+#, fuzzy
+#~ msgid "Events"
+#~ msgstr "Event ID"
+
 #~ msgid "Potvrdiť platbu a napočítať cenu"
 #~ msgstr "Confirm payment and count the price"
 
@@ -3620,9 +3724,6 @@ msgstr "Other notes"
 
 #~ msgid "Označení série musí být číslo."
 #~ msgstr "Series must be a number."
-
-#~ msgid "Požadovaná stránka neexistuje."
-#~ msgstr "Requested page doesn't exist."
 
 #~ msgid "chyba"
 #~ msgstr "error"
@@ -3719,12 +3820,6 @@ msgstr "Other notes"
 
 #~ msgid "Je třeba zvolit seminář."
 #~ msgstr "Contest is required."
-
-#~ msgid "Adresy"
-#~ msgstr "Addresses"
-
-#~ msgid "Odebrat adresu"
-#~ msgstr "Delete address"
 
 #~ msgid "Proměnlivé informace"
 #~ msgstr "Time dependent information"

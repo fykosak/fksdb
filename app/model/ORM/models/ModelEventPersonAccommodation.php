@@ -4,8 +4,6 @@ namespace FKSDB\ORM;
 
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
-use ORM\IService;
 
 /**
  * Class FKSDB\ORM\ModelEventPersonAccommodation
@@ -22,21 +20,35 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle implements ISta
     const STATUS_PAID = 'paid';
     const STATUS_WAITING_FOR_PAYMENT = 'waiting';
 
+    /**
+     * @return ModelEventAccommodation
+     */
     public function getEventAccommodation(): ModelEventAccommodation {
         return ModelEventAccommodation::createFromTableRow($this->event_accommodation);
     }
 
+    /**
+     * @return ModelPerson
+     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
     /**
-     * @return \Nette\Database\Table\Selection
+     * @return ModelPayment|null
      */
-    public function getPaymentsAccommodation(): Selection {
-        return $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id');//->where('payment.state !=', ModelPayment::STATE_CANCELED);
+    public function getPayment() {
+        $data = $this->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'event_person_accommodation_id')->select('payment.*')->fetch();
+        if (!$data) {
+            return null;
+        }
+        return ModelPayment::createFromTableRow($data);
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getLabel() {
         $eventAcc = $this->getEventAccommodation();
         $date = clone $eventAcc->date;
@@ -45,14 +57,24 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle implements ISta
         return \sprintf(_('Ubytovaní pre osobu %s od %s do %s v hoteli %s'), $this->getPerson()->getFullName(), $fromDate, $toDate, $eventAcc->name);
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function __toString(): string {
         return $this->getLabel();
     }
 
+    /**
+     * @param string? $newState
+     */
     public function updateState($newState) {
         $this->update(['status' => $newState]);
     }
 
+    /**
+     * @return null|string
+     */
     public function getState() {
         return $this->status;
     }

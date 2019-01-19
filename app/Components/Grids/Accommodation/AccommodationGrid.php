@@ -1,14 +1,15 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Accommodation;
 
 use EventModule\AccommodationPresenter;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventAccommodation;
 use SQL\SearchableDataSource;
 
 
-class EventAccommodationGrid extends BaseGrid {
+class AccommodationGrid extends BaseGrid {
 
     /**
      * @var \ServiceEventAccommodation
@@ -71,6 +72,9 @@ class EventAccommodationGrid extends BaseGrid {
             ->setLabel(_('Add accommodation'))
             ->setLink($this->getPresenter()->link('create'));
 
+        $this->addGlobalButton('billetedAll')
+            ->setLabel(_('List of all persons'))
+            ->setLink($this->getPresenter()->link('billeted-all'));
 
     }
 
