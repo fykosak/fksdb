@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 19:46+0100\n"
+"POT-Creation-Date: 2019-01-19 23:19+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -22,32 +22,36 @@ msgstr ""
 msgid "Applications time progress"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:106
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:115
 #, php-format
 msgid "Úprava ubytovaní v hoteli \"%s\" v dni %s"
 msgstr "Edit of accommodation in hotel \"%s\" on %s"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:114
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:123
 #, php-format
 msgid "Založit ubytovaní"
 msgstr "Create an accommodation"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:119
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:128
 #, php-format
 msgid "Ubytovaní"
 msgstr "Accommodation"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:131
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:140
 #, php-format
 msgid "List of accommodated people of hostel \"%s\" at %s"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:154
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:148
+msgid "List of accommodated people"
+msgstr ""
+
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:168
 #: i18n/../app/OrgModule/presenters/SchoolPresenter.php:91
 msgid "Vložit"
 msgstr "Insert"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:167
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:181
 #: i18n/../app/OrgModule/presenters/ExtendedPersonPresenter.php:93
 #: i18n/../app/OrgModule/presenters/InboxPresenter.php:175
 #: i18n/../app/OrgModule/presenters/InboxPresenter.php:196
@@ -62,65 +66,65 @@ msgstr "Insert"
 msgid "Uložit"
 msgstr "Save"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:200
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:223
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:12
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:43
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:85
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:43
 #: i18n/../app/Components/Grids/TeachersGrid.php:52
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:62
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:59
 #: i18n/../app/Components/Grids/ContestantsGrid.php:49
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:44
 msgid "Name"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:201
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:224
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:13
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:50
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:50
 msgid "Capacity"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:226
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:14
 msgid "Price Kč"
 msgstr "Price CZK"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:203
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:226
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:228
 msgid "Cena by mala byť číslo"
 msgstr "Price should be a number"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:205
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:228
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:15
 msgid "Price €"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:206
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:229
 #: i18n/../app/Components/Forms/Factories/EventAccommodation/Factory.php:16
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:47
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:47
 msgid "Date"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:252
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:275
 msgid "Accommodation does not exists"
 msgstr ""
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:256
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:279
 msgid "Ubytovanie nepatrí k tomuto eventu"
 msgstr "The accommodation does not belong to this event"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:302
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:325
 msgid "Ubytovaní založeno"
 msgstr "Accommodation created"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:308
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:331
 msgid "Chyba při zakládání ubytovani."
 msgstr "Error when creating an accommodation."
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:373
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:396
 msgid "Ubytovaní upraveno"
 msgstr "Accommodation edited"
 
-#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:379
+#: i18n/../app/modules/EventModule/presenters/AccommodationPresenter.php:402
 msgid "Chyba při ubytovaní."
 msgstr "Error while accommodating."
 
@@ -483,17 +487,17 @@ msgstr ""
 msgid "Event %s nemá nastavený generátor platieb"
 msgstr "Evend %s haven't had set payment generator"
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:72
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:73
 #, php-format
 msgid "Expected class %s, got %s"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:122
 #, php-format
 msgid "Payment #%s was created"
 msgstr ""
 
-#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
+#: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:182
 #, php-format
 msgid "We are receive payment #%s"
 msgstr ""
@@ -1585,6 +1589,10 @@ msgstr ""
 msgid "Person"
 msgstr ""
 
+#: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:134
+msgid "Please select currency"
+msgstr ""
+
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:137
 msgid "Proceed to summary"
 msgstr ""
@@ -1610,6 +1618,7 @@ msgid "%label očekává YYYY-MM-DD hh:mm[:ss]."
 msgstr "%label expects YYYY-MM-DD hh:mm[:ss]."
 
 #: i18n/../app/Components/Forms/Controls/PersonAccommodation/AccommodationField.php:20
+#: i18n/../app/Components/Grids/Accommodation/BilletedAllGrid.php:43
 #: i18n/../app/Components/Grids/Events/EventsGrid.php:90
 msgid "Accommodation"
 msgstr ""
@@ -2339,52 +2348,6 @@ msgstr "Chosen country doesn't match provided postal code."
 msgid "Mode %s is not implement"
 msgstr "Mode \"%s\" is not implemented"
 
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
-#: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
-#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
-#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
-msgid "Price"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:54
-#: i18n/../app/Components/Grids/EventOrgsGrid.php:47
-#: i18n/../app/Components/Grids/TeachersGrid.php:75
-#: i18n/../app/Components/Grids/TeachersGrid.php:76
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:74
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:75
-#: i18n/../app/Components/Grids/ContestantsGrid.php:56
-#: i18n/../app/Components/Grids/ContestantsGrid.php:57
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:94
-#: i18n/../app/Components/Grids/StoredQueriesGrid.php:95
-msgid "Edit"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:58
-msgid "Accommodated persons"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:63
-msgid "Remove"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:67
-msgid "Opravdu smazat ubytovaní?"
-msgstr "Do you really want to delete the accommodation?"
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:71
-msgid "Add accommodation"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:80
-msgid "some another bullshit"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventAccommodationGrid.php:87
-msgid "Nelze zmazat ubytovaní, když je nekto ubytovaný"
-msgstr ""
-"It is not possible to delete an accommodation where is someone already "
-"accommodated"
-
 #: i18n/../app/Components/Grids/SchoolsGrid.php:55
 msgid "Existuje?"
 msgstr "Does it exist?"
@@ -2441,6 +2404,19 @@ msgstr "Ended"
 msgid "Still organizes"
 msgstr "Still organises"
 
+#: i18n/../app/Components/Grids/EventOrgsGrid.php:47
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:54
+#: i18n/../app/Components/Grids/TeachersGrid.php:75
+#: i18n/../app/Components/Grids/TeachersGrid.php:76
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:74
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:75
+#: i18n/../app/Components/Grids/ContestantsGrid.php:56
+#: i18n/../app/Components/Grids/ContestantsGrid.php:57
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:94
+#: i18n/../app/Components/Grids/StoredQueriesGrid.php:95
+msgid "Edit"
+msgstr ""
+
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:54
 #: i18n/../app/Components/Grids/Fyziklani/SubmitsGrid.php:66
 msgid "Smazat"
@@ -2453,6 +2429,76 @@ msgstr "Do you really want to delete the organiser?"
 #: i18n/../app/Components/Grids/EventOrgsGrid.php:67
 msgid "Přidat organizátora"
 msgstr "Add organiser"
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:31
+msgid "Receive payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:39
+msgid "Delete payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:48
+msgid "Zoznam ubytovaní"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:57
+msgid "Payment"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:72
+msgid "State"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:77
+msgid "Paid"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:77
+msgid "Waiting"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:100
+#: i18n/../app/Components/Grids/Accommodation/BilletedGrid.php:117
+msgid "some bullshit...."
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:44
+#: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
+#: i18n/../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
+msgid "Price"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:58
+msgid "Accommodated persons"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:63
+msgid "Remove"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:67
+msgid "Opravdu smazat ubytovaní?"
+msgstr "Do you really want to delete the accommodation?"
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:71
+msgid "Add accommodation"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:75
+msgid "List of all persons"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:87
+msgid "some another bullshit"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Accommodation/AccommodationGrid.php:94
+msgid "Nelze zmazat ubytovaní, když je nekto ubytovaný"
+msgstr ""
+"It is not possible to delete an accommodation where is someone already "
+"accommodated"
 
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:25
 #: i18n/../app/Components/Grids/Fyziklani/TaskGrid.php:42
@@ -2657,41 +2703,6 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:77
 msgid "Contest org"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:48
-msgid "Payment"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:57
-msgid "State"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
-msgid "Paid"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:62
-msgid "Waiting"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:66
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:68
-#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
-msgid "Confirm payment"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:75
-msgid "Delete payment"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:83
-msgid "Zoznam ubytovaní"
-msgstr ""
-
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:96
-#: i18n/../app/Components/Grids/EventBilletedPerson.php:113
-msgid "some bullshit...."
 msgstr ""
 
 #: i18n/../app/Components/Grids/StoredQueriesGrid.php:102
@@ -2963,6 +2974,10 @@ msgstr ""
 
 #: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:5
 msgid "Select items"
+msgstr ""
+
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
+msgid "Confirm payment"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:17

@@ -195,6 +195,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         return function (ModelPayment $modelPayment) {
             Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
             foreach ($modelPayment->related(\DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
+                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()));
                 $row->delete();
             }
         };

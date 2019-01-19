@@ -131,7 +131,7 @@ class SelectForm extends Control {
             $form->addHidden('person_id');
         }
         $currencyField = new CurrencyField();
-        $currencyField->setRequired(true);
+        $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
         $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $this->event, !$create), 'payment_accommodation');
         $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
