@@ -184,4 +184,11 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
             'currency' => $price->getCurrency(),
         ]);
     }
+
+    /**
+     * @return ModelPayment
+     */
+    public function refresh(): IStateModel {
+        return self::createFromTableRow($this->getTable()->wherePrimary($this->payment_id)->fetch());
+    }
 }

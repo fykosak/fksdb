@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-18 01:42+0100\n"
+"POT-Creation-Date: 2019-01-19 00:54+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -495,6 +495,7 @@ msgstr ""
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:110
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:58
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:60
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
 msgid "Confirm payment"
 msgstr ""
 
@@ -906,6 +907,7 @@ msgstr "Series"
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:98
 #: i18n/../app/Components/Controls/LanguageChooser.latte.latte2php:4
 #: i18n/../app/Components/Controls/Choosers/LanguageChooser.latte.latte2php:4
+#: i18n/../data/events/fyziklani.grid.latte.latte2php:7
 msgid "Jazyk"
 msgstr "Language"
 
@@ -2359,6 +2361,7 @@ msgstr "Mode \"%s\" is not implemented"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
 msgid "Price"
 msgstr ""
 
@@ -2535,6 +2538,7 @@ msgid "Jméno týmu"
 msgstr "Name"
 
 #: i18n/../app/Components/Grids/Fyziklani/CloseTeamsGrid.php:47
+#: i18n/../data/events/fyziklani.grid.latte.latte2php:6
 #: i18n/../data/events/fol/fol1.neon.neon2php:84
 #: i18n/../data/events/fol/fol8.neon.neon2php:84
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:139
@@ -2953,6 +2957,22 @@ msgstr "No applications."
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.myApplications.latte.latte2php:7
 msgid "Přihláška"
 msgstr "Application"
+
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:64
+msgid "Items"
+msgstr ""
+
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:68
+msgid "Item"
+msgstr ""
+
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:5
+msgid "Select items"
+msgstr ""
+
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:17
+msgid "Payment recieved"
+msgstr ""
 
 #: i18n/../app/Components/Controls/Fyziklani/RoutingDownload.latte.latte2php:2
 msgid "Rooms"

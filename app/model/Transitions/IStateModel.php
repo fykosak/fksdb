@@ -9,4 +9,6 @@ interface IStateModel {
      * @return string|null
      */
     public function getState();
+
+    public function refresh(): self;
 }

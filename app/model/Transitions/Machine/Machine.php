@@ -80,6 +80,7 @@ abstract class Machine {
         $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
             return $transition->getId() === $id;
         });
+
         return $this->selectTransition($transitions);
     }
 
@@ -151,16 +152,18 @@ abstract class Machine {
             $this->connection->rollBack();
             throw $exception;
         }
-
-        $this->connection->commit();
-        $model->updateState($transition->getToState());
-        /* select from DB new (updated) model */
         if (!$model instanceof IModel) {
             throw new BadRequestException(_('Expected instance of IModel'));
         }
+
+        $this->connection->commit();
         $this->service->save($model);
-        $newModel = $model;
-        // $newModel = $model->refresh($this->service);
+        $model->updateState($transition->getToState());
+        /* select from DB new (updated) model */
+
+        $this->service->save($model);
+        // $newModel = $model;
+        $newModel = $model->refresh($this->service);
         $transition->afterExecute($newModel);
         return $newModel;
     }

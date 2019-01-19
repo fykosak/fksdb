@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-18 01:42+0100\n"
+"POT-Creation-Date: 2019-01-19 00:54+0100\n"
 "PO-Revision-Date: 2019-01-10 12:19+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: \n"
@@ -488,25 +488,24 @@ msgid "Expected class %s, got %s"
 msgstr ""
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:101
-#, fuzzy
 msgid "Create"
 msgstr "Vytvořit platbu"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:110
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:58
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:60
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:11
 msgid "Confirm payment"
-msgstr ""
+msgstr "Potvrzení výběru položek"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:121
-#, fuzzy, php-format
+#, php-format
 msgid "Payment #%s was created"
 msgstr ""
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:157
-#, fuzzy
 msgid "Cancel payment"
-msgstr ""
+msgstr "Zrušit platbu"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:174
 #: i18n/../app/Components/Grids/EventBilletedPerson.php:54
@@ -514,9 +513,9 @@ msgid "Paid"
 msgstr "Zaplaceno"
 
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:181
-#, fuzzy, php-format
+#, php-format
 msgid "We are receive payment #%s"
-msgstr "Upravit platbu #%s"
+msgstr "Obdržali jsme platbu"
 
 #: i18n/../app/model/Payment/PriceCalculator/PreProcess/EventAccommodationPrice.php:60
 #, php-format
@@ -612,9 +611,8 @@ msgid "Expected instance of IModel"
 msgstr ""
 
 #: i18n/../app/model/Transitions/Machine/Machine.php:211
-#, fuzzy
 msgid "Model sa nedá vytvoriť"
-msgstr "Přechod není možné vykonat"
+msgstr ""
 
 #: i18n/../app/model/Events/Exceptions.php:22
 #, php-format
@@ -905,6 +903,7 @@ msgstr ""
 #: i18n/../app/OrgModule/presenters/TasksPresenter.php:98
 #: i18n/../app/Components/Controls/LanguageChooser.latte.latte2php:4
 #: i18n/../app/Components/Controls/Choosers/LanguageChooser.latte.latte2php:4
+#: i18n/../data/events/fyziklani.grid.latte.latte2php:7
 msgid "Jazyk"
 msgstr ""
 
@@ -1602,21 +1601,19 @@ msgstr "Osoba"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:137
 msgid "Proceed to summary"
-msgstr ""
+msgstr "Pokračuj na souhrn"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:137
 msgid "Save payment"
 msgstr "Uložit platbu"
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:183
-#, fuzzy
 msgid "Payment has been created."
-msgstr "Učitel %s byl vytvořen."
+msgstr "Platba %s byla vytvořena."
 
 #: i18n/../app/Components/Forms/Controls/Payment/SelectForm.php:183
-#, fuzzy
 msgid "Payment has been updated."
-msgstr "Učitel byl úspěšně upraven"
+msgstr "Platba byla úspěšně upravena."
 
 #: i18n/../app/Components/Forms/Controls/URLTextBox.php:19
 msgid "%label není platná URL."
@@ -2356,6 +2353,7 @@ msgstr "Mód \"%s\" není implementovaný"
 
 #: i18n/../app/Components/Grids/EventAccommodationGrid.php:44
 #: i18n/../app/Components/Grids/Payment/PaymentGrid.php:34
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:69
 msgid "Price"
 msgstr "Cena"
 
@@ -2530,6 +2528,7 @@ msgid "Jméno týmu"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/CloseTeamsGrid.php:47
+#: i18n/../data/events/fyziklani.grid.latte.latte2php:6
 #: i18n/../data/events/fol/fol1.neon.neon2php:84
 #: i18n/../data/events/fol/fol8.neon.neon2php:84
 #: i18n/../data/events/fyziklani/fyziklani13.neon.neon2php:139
@@ -2778,9 +2777,8 @@ msgstr ""
 
 #: i18n/../app/presenters/MyPaymentsPresenter.php:16
 #: i18n/../app/templates/@layout.v4.latte.latte2php:52
-#, fuzzy
 msgid "My payments"
-msgstr "Moje platba"
+msgstr "Moje platby"
 
 #: i18n/../app/presenters/ErrorPresenter.php:20
 msgid "Chyba"
@@ -2951,6 +2949,22 @@ msgstr ""
 #: i18n/../app/Components/Grids/Events/ApplicationsGrid.myApplications.latte.latte2php:7
 msgid "Přihláška"
 msgstr ""
+
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:64
+msgid "Items"
+msgstr "Položky"
+
+#: i18n/../app/Components/Controls/Payment/DetailControl.latte.latte2php:68
+msgid "Item"
+msgstr "Položka"
+
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:5
+msgid "Select items"
+msgstr "Vybrat položky"
+
+#: i18n/../app/Components/Controls/Payment/StateDisplayControl.latte.latte2php:17
+msgid "Payment recieved"
+msgstr "Platba obdržena"
 
 #: i18n/../app/Components/Controls/Fyziklani/RoutingDownload.latte.latte2php:2
 msgid "Rooms"
@@ -3538,9 +3552,6 @@ msgstr ""
 
 #~ msgid "Results of Fyziklani"
 #~ msgstr "Výsledky Fyziklání"
-
-#~ msgid "select team"
-#~ msgstr "vybrat tým"
 
 #~ msgid "Correlation "
 #~ msgstr "Korelace "

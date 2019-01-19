@@ -98,7 +98,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      */
     private function addTransitionInitToNew(PaymentMachine &$machine) {
-        $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
+        $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, 'Create');
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);
     }
@@ -107,7 +107,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      */
     private function addTransitionNewToWaiting(PaymentMachine &$machine) {
-        $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));
+        $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, 'Confirm payment');
 
         $transition->setType(Transition::TYPE_SUCCESS);
         $transition->setCondition($this->getDatesCondition());
@@ -154,7 +154,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     private function addTransitionAllToCanceled(PaymentMachine &$machine) {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
-            $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
+            $transition = new Transition($state, ModelPayment::STATE_CANCELED, 'Cancel payment');
             $transition->setType(Transition::TYPE_DANGER);
             $transition->setCondition(function () {
                 return true;
@@ -171,7 +171,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      */
     private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
-        $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
+        $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, 'Paid');
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
                 $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
