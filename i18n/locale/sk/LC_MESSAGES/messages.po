@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 23:19+0100\n"
+"POT-Creation-Date: 2019-01-19 23:32+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -3039,6 +3039,10 @@ msgstr ""
 
 #: i18n/../app/templates/Error/403.latte.latte2php:16
 msgid "požádat o přidělení role"
+msgstr ""
+
+#: i18n/../app/templates/Dispatch/default.latte.latte2php:44
+msgid "Events"
 msgstr ""
 
 #: i18n/../app/templates/Authentication/login.latte.latte2php:15

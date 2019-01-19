@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-19 23:19+0100\n"
+"POT-Creation-Date: 2019-01-19 23:32+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -3040,6 +3040,11 @@ msgstr "become an organiser"
 msgid "požádat o přidělení role"
 msgstr "ask for a role grant"
 
+#: i18n/../app/templates/Dispatch/default.latte.latte2php:44
+#, fuzzy
+msgid "Events"
+msgstr "Event ID"
+
 #: i18n/../app/templates/Authentication/login.latte.latte2php:15
 msgid "Registrace"
 msgstr "Register"
@@ -3653,10 +3658,6 @@ msgstr "Other notes"
 #, fuzzy
 #~ msgid "Ups! Mrzí nás to, ale požadovaná stránka neexistuje."
 #~ msgstr "Requested page doesn't exist."
-
-#, fuzzy
-#~ msgid "Events"
-#~ msgstr "Event ID"
 
 #~ msgid "Potvrdiť platbu a napočítať cenu"
 #~ msgstr "Confirm payment and count the price"
