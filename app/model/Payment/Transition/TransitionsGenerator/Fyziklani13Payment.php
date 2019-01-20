@@ -26,7 +26,7 @@ use Nette\Mail\Message;
 
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
     const EMAIL_BCC = 'fyziklani@fykos.cz';
-    const EMAIL_FROM = 'fyziklani@fykos.cz';
+    const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
     /**
      * @var SymbolGeneratorFactory
      */
