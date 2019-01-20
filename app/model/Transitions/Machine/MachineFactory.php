@@ -8,6 +8,7 @@ use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
 use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\Transitions\Fyziklani13Payment;
 use Nette\Database\Connection;
+use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
 
 class MachineFactory {
@@ -35,14 +36,19 @@ class MachineFactory {
      * @var EventAuthorizator
      */
     private $eventAuthorizator;
+    /**
+     * @var ITranslator
+     */
+    private $translator;
 
-    public function __construct(EventAuthorizator $eventAuthorizator, \ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
+    public function __construct(ITranslator $translator, EventAuthorizator $eventAuthorizator, \ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         $this->transitionsFactory = $transitionsFactory;
         $this->servicePayment = $servicePayment;
         $this->symbolGeneratorFactory = $symbolGeneratorFactory;
         $this->priceCalculatorFactory = $priceCalculatorFactory;
         $this->connection = $connection;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->translator = $translator;
     }
 
     /**
@@ -69,7 +75,8 @@ class MachineFactory {
                 $this->transitionsFactory,
                 $this->symbolGeneratorFactory,
                 $this->priceCalculatorFactory,
-                $this->eventAuthorizator
+                $this->eventAuthorizator,
+                $this->translator
             );
         }
         throw new NotImplementedException(_('Not implemented'), 501);

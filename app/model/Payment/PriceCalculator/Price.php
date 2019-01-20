@@ -4,8 +4,6 @@
 namespace FKSDB\Payment\PriceCalculator;
 
 
-use Nette\OutOfRangeException;
-
 class Price {
 
     const CURRENCY_EUR = 'eur';
@@ -73,7 +71,7 @@ class Price {
     /**
      * @param $currency
      * @return string
-     * @throws OutOfRangeException
+     * @throws UnsupportedCurrencyException
      */
     public static function getLabel($currency): string {
         switch ($currency) {
@@ -82,12 +80,13 @@ class Price {
             case self::CURRENCY_KC:
                 return 'Kč';
             default:
-                throw new OutOfRangeException(\sprintf(_('Currency %s does not exists'), $currency));
+                throw new UnsupportedCurrencyException($currency);
         }
     }
 
     /**
      * @return string
+     * @throws UnsupportedCurrencyException
      */
     public function __toString(): string {
         return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));

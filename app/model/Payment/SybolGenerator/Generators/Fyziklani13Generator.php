@@ -4,25 +4,44 @@ namespace FKSDB\Payment\SymbolGenerator\Generators;
 
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use Nette\Application\BadRequestException;
+use Nette\OutOfRangeException;
 
 class Fyziklani13Generator extends AbstractSymbolGenerator {
-    const variable_symbol_start = 7292000;
 
+    const variable_symbol_start = 7292000;
+    const variable_symbol_end = 7292999;
+
+    /**
+     * Fyziklani13Generator constructor.
+     * @param \ServicePayment $servicePayment
+     */
     public function __construct(\ServicePayment $servicePayment) {
         parent::__construct($servicePayment);
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return array|mixed
+     * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
+     */
     public function create(ModelPayment $modelPayment) {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
-        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)->count();
+        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)
+            ->where('variable_symbol>=?', self::variable_symbol_start)
+            ->where('variable_symbol<=?', self::variable_symbol_end)
+            ->max('variable_symbol');
 
-        $variableNumber = self::variable_symbol_start + $maxVariableSymbol;
+        $variableNumber = $maxVariableSymbol + 1;
+        if ($variableNumber > self::variable_symbol_end) {
+            throw new OutOfRangeException(_('variable_symbol overflow'));
+        }
         switch ($modelPayment->currency) {
             case Price::CURRENCY_KC:
                 return [
@@ -37,7 +56,7 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
                     'swift' => 'KOMBCZPPXXX',
                 ];
             default:
-                throw new BadRequestException(_('Unsupported currency'), 500);
+                throw new UnsupportedCurrencyException($modelPayment->currency, 501);
         }
     }
 }
