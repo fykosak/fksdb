@@ -6,12 +6,13 @@ use FKSDB\ORM\ModelEventAccommodation;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
-use Nette\NotImplementedException;
+use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
 class EventAccommodationPrice extends AbstractPreProcess {
     /**
      * @param ModelPayment $modelPayment
      * @return Price
+     * @throws UnsupportedCurrencyException
      */
     public static function calculate(ModelPayment $modelPayment): Price {
         $price = new Price(0, $modelPayment->currency);
@@ -26,6 +27,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
     /**
      * @param ModelPayment $modelPayment
      * @return array
+     * @throws UnsupportedCurrencyException
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
         $price = new Price(0, $modelPayment->currency);
@@ -46,7 +48,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
      * @param ModelEventAccommodation $modelEventAccommodation
      * @param Price $price
      * @return Price
-     * @throws NotImplementedException
+     * @throws UnsupportedCurrencyException
      */
     private static function getPriceFromModel(ModelEventAccommodation $modelEventAccommodation, Price &$price): Price {
         switch ($price->getCurrency()) {
@@ -57,7 +59,7 @@ class EventAccommodationPrice extends AbstractPreProcess {
                 $amount = $modelEventAccommodation->price_eur;
                 break;
             default:
-                throw new NotImplementedException(\sprintf(_('Currency %s is not implemented.'), $price->getCurrency()), 501);
+                throw new UnsupportedCurrencyException($price->getCurrency(), 501);
         }
         return new Price($amount, $price->getCurrency());
     }
