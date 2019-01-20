@@ -1,0 +1,32 @@
+{layout '../layout.latte'}
+{block body}
+    <div>
+        <p>
+            Hello<br/>
+            The payment number #{$model->getPaymentId()} in total sum <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2019.
+        </p>
+
+        <p>
+            The payment includes:
+        </p>
+
+        {include './items.latte'}
+
+        <p>
+            Please pay by transfer to the bank account. As soon as we receive the payment we will send you a confirmation.
+        </p>
+
+        <p>
+            Please use the special variable symbol which has been assigned to your payment.
+        </p>
+
+        {include './parameters.latte'}
+
+        <p>
+            The payment processing time is about one week. In case of any questions do not hesitate to contact us at
+            <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>.
+        </p>
+
+        {include './signature.en.latte'}
+    </div>
+{/block}

@@ -3,14 +3,12 @@
 namespace FKSDB\Transitions;
 
 use Authorization\EventAuthorizator;
-use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPerson;
+use FKSDB\Transitions\Callbacks\EmailCallback;
 use Mail\MailTemplateFactory;
-use Nette\DateTime;
 use Nette\InvalidStateException;
 use Nette\Localization\ITranslator;
 use Nette\Mail\IMailer;
-use Nette\Security\IResource;
 use Nette\Security\User;
 
 class TransitionsFactory {
@@ -18,6 +16,42 @@ class TransitionsFactory {
      * @var IMailer
      */
     private $mailer;
+
+    /**
+     * @return IMailer
+     */
+    public function getMailer(): IMailer {
+        return $this->mailer;
+    }
+
+    /**
+     * @return MailTemplateFactory
+     */
+    public function getMailTemplateFactory(): MailTemplateFactory {
+        return $this->mailTemplateFactory;
+    }
+
+    /**
+     * @return EventAuthorizator
+     */
+    public function getEventAuthorizator(): EventAuthorizator {
+        return $this->eventAuthorizator;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User {
+        return $this->user;
+    }
+
+    /**
+     * @return ITranslator
+     */
+    public function getTranslator(): ITranslator {
+        return $this->translator;
+    }
+
     /**
      * @var MailTemplateFactory
      */
@@ -25,7 +59,7 @@ class TransitionsFactory {
     /**
      * @var EventAuthorizator
      */
-    private $eventAuthorizator;
+    public $eventAuthorizator;
     /**
      * @var User
      */
@@ -52,68 +86,14 @@ class TransitionsFactory {
     }
 
     /**
-     * @param string $fromState
-     * @param string $toState
-     * @param string $label
-     * @return Transition
-     */
-    public function createTransition(string $fromState, string $toState, string $label): Transition {
-        $transition = new Transition($fromState, $toState, $label);
-        return $transition;
-    }
-
-    /**
      * @param string $templateFile
-     * @param \Closure $optionsCallback
-     * @return \Closure
+     * @param callable $optionsCallback
+     * @return callable
      */
-    public function createMailCallback(string $templateFile, \Closure $optionsCallback): \Closure {
-        $template = $this->mailTemplateFactory->createFromFile($templateFile);
-        $template->setTranslator($this->translator);
-        return function (IStateModel $model) use ($optionsCallback, $template) {
-            $message = $optionsCallback($model);
-
-            $template->model = $model;
-
-            $message->setHtmlBody($template);
-            $this->mailer->send($message);
-        };
+    public function createMailCallback(string $templateFile, callable $optionsCallback): callable {
+        return new EmailCallback($optionsCallback, $templateFile, $this->getTranslator(), $this->getMailer(), $this->getMailTemplateFactory());
     }
     /* conditions */
-    /**
-     * @param ModelEvent $event
-     * @param IResource $resource
-     * @param string $privilege
-     * @return bool
-     */
-    public function getConditionEventRole(ModelEvent $event, IResource $resource, string $privilege): bool {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $event);
-    }
-
-    /**
-     * @param DateTime $from
-     * @param DateTime $to
-     * @return bool
-     */
-    public function getConditionDateBetween(DateTime $from, DateTime $to): bool {
-        return $this->getConditionDateFrom($from) && $this->getConditionDateTo($to);
-    }
-
-    /**
-     * @param DateTime $from
-     * @return bool
-     */
-    public function getConditionDateFrom(DateTime $from): bool {
-        return \time() >= $from->getTimestamp();
-    }
-
-    /**
-     * @param DateTime $to
-     * @return bool
-     */
-    public function getConditionDateTo(DateTime $to): bool {
-        return \time() <= $to->getTimestamp();
-    }
 
     /**
      * @param ModelPerson $ownerPerson

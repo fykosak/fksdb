@@ -18,6 +18,7 @@ use YearCalculator;
  * @property boolean active
  * @property integer login_id
  * @property DateTime last_login
+ * @property string hash
  * @property ActiveRow person
  * @property string login
  */

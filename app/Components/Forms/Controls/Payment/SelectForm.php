@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\ORM\ModelEvent;
+use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
@@ -130,10 +131,10 @@ class SelectForm extends Control {
             $form->addHidden('person_id');
         }
         $currencyField = new CurrencyField();
-        $currencyField->setRequired(true);
+        $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
         $form->addComponent(new PaymentSelectField($this->serviceEventPersonAccommodation, $this->event, !$create), 'payment_accommodation');
-        $form->addSubmit('submit', $create ? _('Create payment') : _('Save payment'));
+        $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
         $form->onSuccess[] = function (Form $form) use ($create) {
             $this->handleSubmit($form, $create);
         };
@@ -144,15 +145,15 @@ class SelectForm extends Control {
      * @param Form $form
      * @param bool $create
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\ForbiddenRequestException
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
         if ($create) {
-            $model = $this->servicePayment->createNew([
+            $model = $this->machine->createNewModel([
                 'person_id' => $values->person_id,
                 'event_id' => $this->event->event_id,
-                'state' => $this->machine->getInitState(),
-            ]);
+            ], $this->servicePayment);
 
         } else {
             $model = $this->model;
@@ -179,7 +180,7 @@ class SelectForm extends Control {
         }
         $connection->commit();
 
-        $this->flashMessage($create ? _('Platba bola vytvorená') : _('Platba bola upravená'));
+        $this->getPresenter()->flashMessage($create ? _('Payment has been created.') : _('Payment has been updated.'));
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
@@ -191,8 +192,12 @@ class SelectForm extends Control {
          * @var FormControl $control
          */
         $control = $this->getComponent('formCreate');
+        /**
+         * @var $login ModelLogin
+         */
+        $login = $this->getPresenter()->getUser()->getIdentity();
         $control->getForm()->setDefaults([
-            'person_id' => $this->getPresenter()->getUser()->getIdentity()->getPerson()->person_id,
+            'person_id' => $login->getPerson()->person_id,
         ]);
         $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.create.latte');

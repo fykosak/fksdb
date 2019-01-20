@@ -11,7 +11,15 @@ export default class Container extends React.Component<Props, {}> {
     public render() {
         const {items} = this.props;
         const rows = [];
+        items.sort((a, b) => {
+            return b.personId - a.personId;
+        });
+        let lastPerson = null;
         items.forEach((value, index) => {
+            if (lastPerson !== value.personId) {
+                rows.push(<h3 key={value.personId}>{value.personName}</h3>);
+                lastPerson = value.personId;
+            }
             rows.push(<Row key={index} item={value}/>);
         });
         return <>{rows}</>;

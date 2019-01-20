@@ -7,13 +7,13 @@ namespace FKSDB\Transitions;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition {
+final class Transition {
     const TYPE_SUCCESS = 'success';
     const TYPE_WARNING = 'warning';
     const TYPE_DANGER = 'danger';
     const TYPE_PRIMARY = 'primary';
     /**
-     * @var  \Closure
+     * @var Callable
      */
     private $condition;
 
@@ -23,13 +23,13 @@ class Transition {
      */
     private $label;
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $beforeExecuteClosures = [];
+    public $beforeExecuteCallbacks = [];
     /**
-     * @var \Closure[]
+     * @var callable[]
      */
-    public $afterExecuteClosures = [];
+    public $afterExecuteCallbacks = [];
 
     /**
      * @var string
@@ -73,11 +73,14 @@ class Transition {
     }
 
     public function getLabel(): string {
-        return $this->label;
+        return _($this->label);
     }
 
-    public function setCondition(\Closure $closure) {
-        $this->condition = $closure;
+    /**
+     * @param callable|Statement $callback
+     */
+    public function setCondition(callable $callback) {
+        $this->condition = $callback;
     }
 
     public function isCreating(): bool {
@@ -96,8 +99,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function beforeExecute(IStateModel &$model) {
-        foreach ($this->beforeExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->beforeExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 
@@ -105,8 +108,8 @@ class Transition {
      * @param IStateModel $model
      */
     public final function afterExecute(IStateModel &$model) {
-        foreach ($this->afterExecuteClosures as $closure) {
-            $closure($model);
+        foreach ($this->afterExecuteCallbacks as $callback) {
+            $callback($model);
         }
     }
 }

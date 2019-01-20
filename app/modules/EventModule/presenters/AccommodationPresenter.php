@@ -6,8 +6,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateInput;
 use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Grids\EventAccommodationGrid;
-use FKSDB\Components\Grids\EventBilletedPerson;
+use FKSDB\Components\Grids\Accommodation\AccommodationGrid;
+use FKSDB\Components\Grids\Accommodation\BilletedAllGrid;
+use FKSDB\Components\Grids\Accommodation\BilletedSingleGrid;
 use FKSDB\ORM\ModelEventAccommodation;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -97,6 +98,14 @@ class AccommodationPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function authorizedBilletedAll() {
+        return $this->authorizedBilleted();
+    }
+
+    /**
+     * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
@@ -132,6 +141,11 @@ class AccommodationPresenter extends BasePresenter {
                 $model->name,
                 $model->date->format('d. m. Y')
             ));
+        $this->setIcon('fa fa-users');
+    }
+
+    public function titleBilletedAll() {
+        $this->setTitle(_('List of accommodated people'));
         $this->setIcon('fa fa-users');
     }
 
@@ -173,22 +187,31 @@ class AccommodationPresenter extends BasePresenter {
     }
 
     /**
-     * @return EventAccommodationGrid
+     * @return AccommodationGrid
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentGrid(): EventAccommodationGrid {
-        return new EventAccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
+    public function createComponentGrid(): AccommodationGrid {
+        return new AccommodationGrid($this->getEvent(), $this->serviceEventAccommodation);
     }
 
     /**
-     * @return EventBilletedPerson
+     * @return BilletedSingleGrid
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentBilletedGrid(): EventBilletedPerson {
-        return new EventBilletedPerson($this->getModel(), $this->serviceEventPersonAccommodation);
+    public function createComponentBilletedGrid(): BilletedSingleGrid {
+        return new BilletedSingleGrid($this->getModel(), $this->serviceEventPersonAccommodation);
+    }
+
+    /**
+     * @return BilletedAllGrid
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentBilletedAllGrid(): BilletedAllGrid {
+        return new BilletedAllGrid($this->getEvent(), $this->serviceEventPersonAccommodation);
     }
 
     /**

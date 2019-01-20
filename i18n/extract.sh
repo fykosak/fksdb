@@ -2,7 +2,7 @@
 
 # Space separated list of directories to scan for various files
 PHP_FILES="app libs"
-LATTE_FILES="app libs"
+LATTE_FILES="app libs data"
 NEON_FILES="app/config data/events"
 TSX_FILES="www/js/TypeScriptSources"
 

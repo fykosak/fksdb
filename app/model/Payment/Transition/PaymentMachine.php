@@ -2,10 +2,12 @@
 
 namespace FKSDB\Payment\Transition;
 
+use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Transitions\Machine;
+use Nette\Database\Connection;
 
 class PaymentMachine extends Machine {
     /**
@@ -16,12 +18,16 @@ class PaymentMachine extends Machine {
      * @var AbstractSymbolGenerator
      */
     private $symbolGenerator;
-
     /**
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
+     * @var ModelEvent
      */
-    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
+    private $event;
+
+    public function __construct(ModelEvent $event, PriceCalculator $priceCalculator, AbstractSymbolGenerator $abstractSymbolGenerator, Connection $connection, \ServicePayment $servicePayment) {
+        parent::__construct($connection, $servicePayment);
+        $this->priceCalculator = $priceCalculator;
         $this->symbolGenerator = $abstractSymbolGenerator;
+        $this->event = $event;
     }
 
     /**
@@ -32,13 +38,6 @@ class PaymentMachine extends Machine {
     }
 
     /**
-     * @param PriceCalculator $priceCalculator
-     */
-    public function setPriceCalculator(PriceCalculator $priceCalculator) {
-        $this->priceCalculator = $priceCalculator;
-    }
-
-    /**
      * @return PriceCalculator
      */
     public function getPriceCalculator(): PriceCalculator {
@@ -46,9 +45,16 @@ class PaymentMachine extends Machine {
     }
 
     /**
+     * @return ModelEvent
+     */
+    public function getEvent(): ModelEvent {
+        return $this->event;
+    }
+
+    /**
      * @return string
      */
-    public function getInitState(): string {
+    public function getCreatingState(): string {
         return ModelPayment::STATE_NEW;
     }
 }
