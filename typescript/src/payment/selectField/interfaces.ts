@@ -4,4 +4,5 @@ export interface PaymentAccommodationItem {
     hasPayment: boolean;
     personId: number;
     personName: string;
+    personFamilyName: string;
 }

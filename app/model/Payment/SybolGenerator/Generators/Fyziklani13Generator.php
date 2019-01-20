@@ -9,6 +9,8 @@ use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\Application\BadRequestException;
 
 class Fyziklani13Generator extends AbstractSymbolGenerator {
+    const variable_symbol_start = 7292000;
+
     public function __construct(\ServicePayment $servicePayment) {
         parent::__construct($servicePayment);
     }
@@ -18,9 +20,9 @@ class Fyziklani13Generator extends AbstractSymbolGenerator {
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
-        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)->max('variable_symbol');
-        $variableId = $maxVariableSymbol % 729200;
-        $variableNumber = $variableId + 1 + 729200;
+        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)->count();
+
+        $variableNumber = self::variable_symbol_start + $maxVariableSymbol;
         switch ($modelPayment->currency) {
             case Price::CURRENCY_KC:
                 return [

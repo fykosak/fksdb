@@ -49,6 +49,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
                     'accommodation' => $model->getEventAccommodation()->__toArray(),
                     'personId' => $model->person_id,
                     'personName' => $model->getPerson()->getFullName(),
+                    'personFamilyName' => $model->getPerson()->family_name,
                 ];
             }
         }
