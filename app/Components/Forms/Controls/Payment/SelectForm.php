@@ -180,7 +180,7 @@ class SelectForm extends Control {
         }
         $connection->commit();
 
-        $this->flashMessage($create ? _('Payment has been created.') : _('Payment has been updated.'));
+        $this->getPresenter()->flashMessage($create ? _('Payment has been created.') : _('Payment has been updated.'));
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 

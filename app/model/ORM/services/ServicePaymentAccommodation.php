@@ -72,7 +72,6 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      */
     private function prepareData($data): array {
         $data = (array)json_decode($data);
-        Debugger::barDump($data);
         return \array_keys(\array_filter($data, function ($value) {
             return $value;
         }));
