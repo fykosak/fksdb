@@ -56,7 +56,7 @@ parameters:
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
-                    p*.person_id.person_info.id_number: p*.person_accommodation.multiNights
+                    p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
                 visible:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_accommodation.multiNights
                     p*.person_id.person_info.id_number: p*.person_id.person_accommodation.multiNights
