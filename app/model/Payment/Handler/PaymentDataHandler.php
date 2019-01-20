@@ -20,7 +20,7 @@ class PaymentDataHandler {
     /**
      * @param ArrayHash $data
      * @param ModelPayment $payment
-     * @throws StorageException
+     * @throws \Exception
      */
     public function prepareAndUpdate(ArrayHash $data, ModelPayment $payment) {
         $oldRows = $payment->getRelatedPersonAccommodation();
