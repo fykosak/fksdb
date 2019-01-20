@@ -2,13 +2,12 @@
 {block body}
     <div>
         <p>
-            Dear sir or madam,<br/>
-            we have successfully received your payment #{$model->getPaymentId()} for Fyziklani 2019 of
-            <b>{$model->getPrice()->__toString()}</b>.
+            Dear contestant<br/>
+            We confirm the payment #{$model->getPaymentId()} for Fyziklani 2019 in total sum <b>{$model->getPrice()->__toString()}</b> has been accepted.
         </p>
 
         <p>
-            The payment included the following:
+            It includes following:
         </p>
 
         {include './items.latte'}
