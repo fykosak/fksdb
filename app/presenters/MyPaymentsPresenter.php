@@ -2,7 +2,7 @@
 
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 
-class MyPaymentPresenter extends AuthenticatedPresenter {
+class MyPaymentsPresenter extends AuthenticatedPresenter {
     /**
      * @var \ServicePayment
      */
@@ -13,7 +13,7 @@ class MyPaymentPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('My payment'));
+        $this->setTitle(_('My payments'));
         $this->setIcon('fa fa-credit-card');
     }
 

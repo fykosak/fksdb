@@ -18,6 +18,7 @@ use YearCalculator;
  * @property boolean active
  * @property integer login_id
  * @property DateTime last_login
+ * @property string hash
  * @property ActiveRow person
  * @property string login
  */
@@ -36,6 +37,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @return ModelPerson|null
+     */
     public function getPerson() {
         if ($this->person) {
             return ModelPerson::createFromTableRow($this->person);
