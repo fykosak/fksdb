@@ -5,6 +5,7 @@ import {
     createStore,
 } from 'redux';
 import logger from 'redux-logger';
+import { config } from '../../../config';
 import InputConnector from '../../../input-connector/compoenents/index';
 import { PaymentAccommodationItem } from '../interfaces';
 import { app } from '../reducer/';
@@ -18,8 +19,7 @@ interface Props {
 export default class SelectField extends React.Component<Props, {}> {
 
     public render() {
-        // const store = !config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        const store = createStore(app, applyMiddleware(logger));
+        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         return (
             <Provider store={store}>
                 <>

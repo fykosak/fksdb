@@ -20,13 +20,13 @@ class Row extends React.Component<Props & State, {}> {
     public render() {
         const {item, value, onChange} = this.props;
         return <div className={'mb-3'}>
-                <span className={'form-check ' + (value ? 'text-success border-success' : '')}>
-                <span
-                    className={'mr-3 ' + (value ? 'fa fa-check-square-o' : 'fa fa-square-o')}
-                    onClick={() => {
-                        onChange('' + item.id, +!value);
-                    }}
-                />
+                <span className={'form-check ' + (value ? 'text-success border-success' : '')}
+                      onClick={() => {
+                          onChange('' + item.id, +!value);
+                      }}
+                      style={{cursor: 'pointer'}}
+                >
+                <span className={'mr-3 ' + (value ? 'fa fa-check-square-o' : 'fa fa-square-o')}/>
                     {item.hasPayment && (
                         <i className={'mr-2 fa fa-exclamation-circle text-danger'}
                            title={lang.getText('Item has already another payment')}/>)}
