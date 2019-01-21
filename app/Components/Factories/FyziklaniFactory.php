@@ -1,15 +1,18 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani;
+namespace FKSDB\Components\Factories;
 
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
+use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
@@ -17,7 +20,7 @@ use Nette\Localization\ITranslator;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
-class FyziklaniComponentsFactory {
+class FyziklaniFactory {
 
     /**
      * @var \ServiceFyziklaniRoom
@@ -114,6 +117,10 @@ class FyziklaniComponentsFactory {
 
     public function createSubmitsGrid(ModelEvent $event): SubmitsGrid {
         return new SubmitsGrid($event, $this->serviceFyziklaniSubmit);
+    }
+
+    public function createCloseTeamControl(ModelEvent $event) {
+        return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask);
     }
 
 }

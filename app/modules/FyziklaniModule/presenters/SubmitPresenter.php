@@ -3,8 +3,8 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\Components\React\Fyziklani\TaskCodeInput;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
@@ -56,7 +56,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $form Form
          */
-        $form =  $this->getComponent('entryQRForm')->getForm();
+        $form = $this->getComponent('entryQRForm')->getForm();
         $form->setDefaults(['taskCode' => $code]);
         foreach ($this->getGameSetup()->getAvailablePoints() as $points) {
             /**
@@ -93,7 +93,7 @@ class SubmitPresenter extends BasePresenter {
         /**
          * @var $control FormControl
          */
-        $control =  $this->getComponent('submitEditForm');
+        $control = $this->getComponent('submitEditForm');
         $control->getForm()->setDefaults([
             'team_id' => $submit->e_fyziklani_team_id,
             'task' => $submit->getTask()->label,

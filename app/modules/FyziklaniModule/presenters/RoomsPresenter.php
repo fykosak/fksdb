@@ -3,7 +3,7 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
-use FKSDB\Components\React\Fyziklani\RoutingEdit;
+use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 
 /**
  *

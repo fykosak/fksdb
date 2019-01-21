@@ -4,8 +4,8 @@ namespace FyziklaniModule;
 
 use EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
+use FKSDB\Components\Factories\FyziklaniFactory as FyziklaniComponentsFactory;
 use FKSDB\Components\Forms\Factories\FyziklaniFactory;
-use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Application\BadRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;

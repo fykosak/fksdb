@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
@@ -9,7 +9,7 @@ use Nette\DI\Container;
 use Nette\Utils\Json;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
-class TaskCodeInput extends FyziklaniModule {
+class TaskCodeInput extends FyziklaniReactControl {
     /**
      * @var TaskCodeHandler
      */

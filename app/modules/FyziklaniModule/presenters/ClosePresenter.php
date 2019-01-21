@@ -4,6 +4,7 @@ namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use Nette\Application\BadRequestException;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
@@ -42,10 +43,6 @@ class ClosePresenter extends BasePresenter {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
     }
 
-    public function renderTeam() {
-        $this->template->submits = $this->getTeam()->getSubmits();
-    }
-
     /**
      * @param $id
      * @throws BadRequestException
@@ -60,8 +57,10 @@ class ClosePresenter extends BasePresenter {
 
         if (!$this->team->hasOpenSubmit()) {
             $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->getTeam()->name), 'danger');
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
+        } else {
+            $this->getComponent('closeTeamControl')->setTeam($this->getTeam());
         }
     }
 
@@ -75,60 +74,15 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @return FormControl
+     * @return CloseTeamControl
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    protected function createComponentCloseForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
-            ->setRequired(_('Zkontrolujte správnost zadání bodů!'));
-        $form->addText('next_task', _('Úloha u vydavačů'))
-            ->setDisabled()
-            ->setDefaultValue($this->getNextTask());
-        $form->addCheckbox('next_task_correct', _('Úloha u vydavačů se shoduje.'))
-            ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
-        $form->addSubmit('send', 'Potvrdit správnost');
-        $form->onSuccess[] = function () {
-            $this->closeFormSucceeded();
+    protected function createComponentCloseTeamControl(): CloseTeamControl {
+        $control = $this->fyziklaniComponentsFactory->createCloseTeamControl($this->getEvent());
+        $control->getFormControl()->getForm()->onSuccess[] = function () {
+            $this->getPresenter()->redirect('list');
         };
         return $control;
     }
-
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    private function closeFormSucceeded() {
-        $connection = $this->getServiceFyziklaniTeam()->getConnection();
-        $connection->beginTransaction();
-        $submits = $this->team->getSubmits();
-        $sum = 0;
-        foreach ($submits as $submit) {
-            $sum += $submit->points;
-        }
-        $this->getServiceFyziklaniTeam()->updateModel($this->team, ['points' => $sum]);
-        $this->getServiceFyziklaniTeam()->save($this->team);
-        $connection->commit();
-        $this->backlinkRedirect();
-        $this->redirect('list'); // if there's no backlink
-    }
-
-
-    /**
-     * @return string
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    private function getNextTask(): string {
-        $submits = count($this->team->getSubmits());
-
-        $tasksOnBoard = $this->getGameSetup()->tasks_on_board;
-        /**
-         * @var $nextTask \ModelFyziklaniTask
-         */
-        $nextTask = $this->getServiceFyziklaniTask()->findAll($this->getEvent())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
-        return ($nextTask) ? $nextTask->label : '';
-    }
-
 }

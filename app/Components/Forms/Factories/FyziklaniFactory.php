@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\React\Fyziklani\FyziklaniComponentsFactory;
-use FKSDB\Components\React\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
+use FKSDB\Components\Factories\FyziklaniFactory as FyziklaniComponentsFactory;
 use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Forms\Controls\RadioList;

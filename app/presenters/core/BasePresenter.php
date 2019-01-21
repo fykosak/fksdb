@@ -391,7 +391,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
          * @var $component Breadcrumbs
          */
         $component =  $this->getComponent('breadcrumbs');
-        $component->setBacklink($this->getRequest());
+        $component->setBackLink($this->getRequest());
     }
 
     /**
@@ -419,7 +419,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
          * @var $component Breadcrumbs
          */
         $component =  $this->getComponent('breadcrumbs');
-        $backLink = $component->getBacklinkUrl();
+        $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
         } else if ($need) {
@@ -491,7 +491,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameter();
+            /**
+             * @var $testedPresenter BasePresenter
+             */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
                 $this->authorizedCache[$key] = $testedPresenter->isAuthorized();

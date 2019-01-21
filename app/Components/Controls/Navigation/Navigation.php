@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\PresenterBuilder;
 use Nette\Application\UI\Control;
+use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;
 use ReflectionClass;
@@ -96,6 +97,7 @@ class Navigation extends Control {
         }
         return null;
     }
+
     public function getSubTitle($node) {
         if (isset($node->title)) {
             return $node->title;
@@ -206,7 +208,6 @@ class Navigation extends Control {
          */
         $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
         $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
-
         return $presenter->authorized(':' . $node->linkPresenter . ':' . $node->linkAction, $allowedParams);
     }
 
