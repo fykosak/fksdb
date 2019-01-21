@@ -3,8 +3,11 @@
 namespace FKSDB\Components\Grids\Accommodation;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\ORM\ModelEventOrg;
+use FKSDB\ORM\ModelEventParticipant;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use Nette\Utils\Html;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 abstract class BilletedGrid extends BaseGrid {
     /**
@@ -56,13 +59,57 @@ abstract class BilletedGrid extends BaseGrid {
     protected function addColumnPayment() {
         $this->addColumn('payment', _('Payment'))
             ->setRenderer(function ($row) {
-            $model = ModelEventPersonAccommodation::createFromTableRow($row);
-            $modelPayment = $model->getPayment();
-            if (!$modelPayment) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add('No payment found');
-            }
-            return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->add('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
-        });
+                $model = ModelEventPersonAccommodation::createFromTableRow($row);
+                $modelPayment = $model->getPayment();
+                if (!$modelPayment) {
+                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add('No payment found');
+                }
+                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->add('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
+            });
+    }
+
+    protected function addColumnRole() {
+        $this->addColumn('role', _('Role'))
+            ->setRenderer(function ($row) {
+                $container = Html::el('span');
+                $model = ModelEventPersonAccommodation::createFromTableRow($row);
+                $hasRole = false;
+                $person = $model->getPerson();
+                $eventId = $model->getEventAccommodation()->event_id;
+
+                $teachers = $person->getEventTeacher()->where('event_id', $eventId);
+                foreach ($teachers as $row) {
+                    $hasRole = true;
+                    $team = ModelFyziklaniTeam::createFromTableRow($row);
+                    $container->add(Html::el('span')
+                        ->addAttributes(['class' => 'badge badge-primary'])
+                        ->add(_('Teacher') . ' - ' . $team->name));
+                }
+                $eventOrgs = $person->getEventOrg()->where('event_id', $eventId);
+                foreach ($eventOrgs as $row) {
+                    $hasRole = true;
+                    $org = ModelEventOrg::createFromTableRow($row);
+                    $container->add(Html::el('span')
+                        ->addAttributes(['class' => 'badge badge-warning'])
+                        ->add(_('Org') . ' - ' . $org->note));
+                }
+
+                $eventParticipants = $person->getEventParticipant()->where('event_id', $eventId);
+                foreach ($eventParticipants as $row) {
+                    $hasRole = true;
+                    $participant = ModelEventParticipant::createFromTableRow($row);
+                    $container->add(Html::el('span')
+                        ->addAttributes(['class' => 'badge badge-success'])
+                        ->add(_('Participant') . ' - ' . _($participant->status)));
+                }
+
+                if (!$hasRole) {
+                    $container->add(Html::el('span')
+                        ->addAttributes(['class' => 'badge badge-danger'])
+                        ->add(_('No role')));
+                }
+                return $container;
+            });
     }
 
     /**
