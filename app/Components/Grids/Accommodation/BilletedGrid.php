@@ -65,7 +65,7 @@ abstract class BilletedGrid extends BaseGrid {
                     return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->add('No payment found');
                 }
                 return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->add('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
-            });
+            })->setSortable(false);
     }
 
     protected function addColumnRole() {
@@ -109,7 +109,7 @@ abstract class BilletedGrid extends BaseGrid {
                         ->add(_('No role')));
                 }
                 return $container;
-            });
+            })->setSortable(false);
     }
 
     /**
