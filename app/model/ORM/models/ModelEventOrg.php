@@ -12,6 +12,7 @@ use Nette\Security\IResource;
  * Class FKSDB\ORM\ModelEventOrg
  * @property ActiveRow person
  * @property ActiveRow event
+ * @property string note
  */
 class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
 
