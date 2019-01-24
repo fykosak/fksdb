@@ -7,7 +7,6 @@ use FKSDB\Components\Factories\PaymentFactory as PaymentComponentFactory;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\ORM\ModelPayment;
-use FKSDB\ORM\ModelPerson;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\MachineFactory;
@@ -105,15 +104,7 @@ class PaymentPresenter extends BasePresenter {
             $this->setAuthorized(false);
             return;
         }
-        /**
-         * @var $person ModelPerson
-         */
-        $person = $this->getUser()->getIdentity()->getPerson();
-        $this->setAuthorized(
-            ($person->person_id == $this->getModel()->person_id) ||
-            $this->isContestsOrgAllowed($this->getModel(), 'detail')
-        );
-        //$this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
+        $this->setAuthorized($this->isContestsOrgAllowed($this->getModel(), 'detail'));
     }
 
     /**
@@ -125,11 +116,7 @@ class PaymentPresenter extends BasePresenter {
             $this->setAuthorized(false);
             return;
         }
-        /**
-         * @var $person ModelPerson
-         */
-        $person = $this->getUser()->getIdentity()->getPerson();
-        $this->setAuthorized(($person->person_id == $this->getModel()->person_id) || $this->canEdit());
+        $this->setAuthorized($this->canEdit());
     }
 
     /**
@@ -163,13 +150,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     private function canEdit(): bool {
-        /**
-         * @var $person ModelPerson
-         */
-        $person = $this->getUser()->getIdentity()->getPerson();
-
-        return ($person->person_id == $this->getModel()->person_id) ||
-            ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) ||
+        return ($this->getModel()->canEdit() && $this->isContestsOrgAllowed($this->getModel(), 'edit')) ||
             $this->isOrg();
     }
 
@@ -246,10 +227,9 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function actionEdit($id) {
-
         if (!$this->canEdit()) {
             $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), 'danger');
-            $this->redirect(':MyPayments:');
+            $this->redirect(':MyPayment:');
         }
         /**
          * @var SelectForm $component
