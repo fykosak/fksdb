@@ -51,6 +51,9 @@ class ContestAuthorizator extends Object {
         if (!$this->getUser()->isLoggedIn()) {
             return false;
         }
+        /**
+         * @var $login ModelLogin
+         */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
@@ -60,10 +63,9 @@ class ContestAuthorizator extends Object {
         $roles = $login->getRoles();
 
         foreach ($roles as $role) {
-            if ($role->getContestId() != $contestId) {
+            if (($role->getContestId() !== Grant::CONTEST_ALL) && ($role->getContestId() != $contestId)) {
                 continue;
             }
-
             if ($this->acl->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
