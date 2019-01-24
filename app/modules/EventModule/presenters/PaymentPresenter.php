@@ -141,8 +141,7 @@ class PaymentPresenter extends BasePresenter {
             $this->setAuthorized(false);
             return;
         }
-        $this->setAuthorized(true);
-        //$this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
+        $this->setAuthorized($this->isContestsOrgAllowed('event.payment', 'create'));
     }
 
     /**
