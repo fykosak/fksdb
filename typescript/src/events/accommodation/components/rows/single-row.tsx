@@ -29,13 +29,13 @@ class Single extends React.Component<Props & State, {}> {
             .replace('%name%', name)
             .replace('%from%', fromDate.toLocaleDateString(lang.getBCP47()))
             .replace('%to%', toDate.toLocaleDateString(lang.getBCP47()));
-
+        const isChecked = (value === eventAccommodationId);
         return <div className={'mb-3'}>
-                <span className={'form-check ' + (value ? 'text-success border-success' : '')}>
+                <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
                 <span
-                    className={value ? 'fa fa-check-square-o' : 'fa fa-square-o'}
+                    className={isChecked ? 'fa fa-check-square-o' : 'fa fa-square-o'}
                     onClick={() => {
-                        value ? onChange(date, null) : onChange(date, eventAccommodationId);
+                        isChecked ? onChange(date, null) : onChange(date, eventAccommodationId);
                     }}
                 />
                 <span className={'ml-3'}>{label}</span>
