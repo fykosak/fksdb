@@ -14,6 +14,15 @@ export default class MultiNights extends React.Component<Props, {}> {
             console.warn('You can use single type');
         }
         const items = [];
+        accommodationDef.sort((a, b) => {
+            if (a.date > b.date) {
+                return -1;
+            }
+            if (a.date < b.date) {
+                return 1;
+            }
+            return 0;
+        });
         accommodationDef.forEach((item, index) => {
             items.push(<Row key={index} accommodationItem={item}/>);
         });
