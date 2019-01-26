@@ -112,7 +112,11 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     public function renderDefault() {
-        $this['inboxForm']->getForm()->setDefaults();
+        /**
+         * @var $control OptimisticFormControl
+         */
+        $control = $this['inboxForm'];
+        $control->getForm()->setDefaults();
     }
 
     public function titleHandout() {
@@ -149,7 +153,11 @@ class InboxPresenter extends SeriesPresenter {
             }
             $values[$key][] = $personId;
         }
-        $this['handoutForm']->getForm()->setDefaults($values);
+        /**
+         * @var $control FormControl
+         */
+        $control = $this['handoutForm'];
+        $control->getForm()->setDefaults($values);
     }
 
     protected function createComponentInboxForm() {
@@ -171,7 +179,7 @@ class InboxPresenter extends SeriesPresenter {
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromTableRow($row);
-            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullname());
+            $control = new ContestantSubmits($tasks, $contestant, $this->serviceSubmit, $this->getSelectedAcademicYear(), $contestant->getPerson()->getFullName());
             $control->setClassName('inbox');
             $namingContainer = new ModelContainer();
             $container->addComponent($namingContainer, $contestant->ct_id);
@@ -199,7 +207,7 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromTableRow($row);
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $this->getOrgProvider());
-            $control->setMultiselect(true);
+            $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
 
@@ -218,7 +226,10 @@ class InboxPresenter extends SeriesPresenter {
             $submits = $container[SeriesTable::FORM_SUBMIT];
 
             foreach ($submits as $row) {
-                $submit = ModelSubmit::createFromTableRow($row);
+                /**
+                 * @var ModelSubmit $submit
+                 */
+                $submit = $row;
                 // ACL granularity is very rough, we just check it in action* method
                 if ($submit->isEmpty()) {
                     $this->serviceSubmit->dispose($submit);
@@ -235,14 +246,14 @@ class InboxPresenter extends SeriesPresenter {
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
 
-        $ORMservice = $this->serviceTaskContribution;
-        $connection = $ORMservice->getConnection();
+        $service = $this->serviceTaskContribution;
+        $connection = $service->getConnection();
 
         $connection->beginTransaction();
 
         foreach ($this->seriesTable->getTasks() as $row) {
             $task = ModelTask::createFromTableRow($row);
-            $ORMservice->getTable()->where(array(
+            $service->getTable()->where(array(
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
             ))->delete();
@@ -253,8 +264,8 @@ class InboxPresenter extends SeriesPresenter {
                     'person_id' => $personId,
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 );
-                $contribution = $ORMservice->createNew($data);
-                $ORMservice->save($contribution);
+                $contribution = $service->createNew($data);
+                $service->save($contribution);
             }
         }
 
