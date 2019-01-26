@@ -159,9 +159,9 @@ acl:
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
     # payment
-    - allow(guest, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
-    - allow(guest, event.payment, edit, [@ownerAssertion, 'isOwnPayment'])
-    - allow(guest, event.payment, create)
+    - allow(registered, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
+    - allow(registered, event.payment, edit, [@ownerAssertion, 'isOwnPayment'])
+    - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, edit)
     - allow(org, event.payment, create)
