@@ -1,0 +1,17 @@
+{layout '../layout.latte'}
+{block body}
+    <div>
+        <p>
+            Hello<br/>
+            We confirm the payment #{$model->getPaymentId()} for Fyziklani 2019 in total sum <b>{$model->getPrice()->__toString()}</b> has been accepted.
+        </p>
+
+        <p>
+            It includes following:
+        </p>
+
+        {include './items.latte'}
+
+        {include './signature.en.latte'}
+    </div>
+{/block}

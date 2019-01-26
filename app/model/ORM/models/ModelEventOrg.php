@@ -3,6 +3,7 @@
 namespace FKSDB\ORM;
 
 use AbstractModelSingle;
+use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -11,8 +12,9 @@ use Nette\Security\IResource;
  * Class FKSDB\ORM\ModelEventOrg
  * @property ActiveRow person
  * @property ActiveRow event
+ * @property string note
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource {
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);

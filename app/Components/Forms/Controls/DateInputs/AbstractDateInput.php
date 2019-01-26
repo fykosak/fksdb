@@ -15,7 +15,7 @@ abstract class AbstractDateInput extends TextInput {
     public function getControl() {
         $control = parent::getControl();
         if ($this->value) {
-            $control->value = $this->value->format($this->getForm());
+            $control->value = $this->value->format($this->getFormat());
         }
 
         return $control;
@@ -30,9 +30,9 @@ abstract class AbstractDateInput extends TextInput {
     }
 
     /**
-     * @return "datetime-local"|"month"|time"|"date"|"week"
+     * @return string|"datetime-local"|"month"|time"|"date"|"week"
      */
-    abstract protected function getType();
+    abstract protected function getType(): string;
 
-    abstract protected function getFormat();
+    abstract protected function getFormat(): string;
 }

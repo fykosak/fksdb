@@ -217,11 +217,18 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    public function getEventParticipant() {
-        if (!isset($this->person_id)) {
-            $this->person_id = null;
-        }
+    /**
+     * @return GroupedSelection
+     */
+    public function getEventParticipant(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+    }
+
+    /**
+     * @return GroupedSelection
+     */
+    public function getEventTeacher(): GroupedSelection {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
     public function isEventParticipant($eventId = null): bool {

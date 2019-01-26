@@ -115,7 +115,7 @@ class InboxPresenter extends SeriesPresenter {
         /**
          * @var $control OptimisticFormControl
          */
-        $control = $this['inboxForm'];
+        $control = $this->getComponent('inboxForm');
         $control->getForm()->setDefaults();
     }
 
@@ -156,8 +156,9 @@ class InboxPresenter extends SeriesPresenter {
         /**
          * @var $control FormControl
          */
-        $control = $this['handoutForm'];
+        $control = $this->getComponent('handoutForm');
         $control->getForm()->setDefaults($values);
+
     }
 
     protected function createComponentInboxForm() {

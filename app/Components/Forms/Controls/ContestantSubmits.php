@@ -229,6 +229,7 @@ class ContestantSubmits extends BaseControl {
      *
      * @todo Improve client side so that this is not needed anymore.
      * @param string $source
+     * @param bool $parse
      * @return string
      */
     private function sourceToFormat($source, $parse = false) {

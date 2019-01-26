@@ -32,11 +32,11 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      */
     private $serviceSchool;
     private $categoryNames;
-    
+
     private $rulesVersion;
 
     /**
-     * 
+     *
      * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
      * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
@@ -44,12 +44,12 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
-        
+
         if (!in_array($rulesVersion, [1, 2])) {
             throw new \Nette\InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
         }
         $this->rulesVersion = $rulesVersion;
-        
+
         if ($this->rulesVersion == 1) {
             $this->categoryNames = [
                 self::HIGH_SCHOOL_A => _('Středoškoláci A'),
@@ -126,6 +126,8 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
+     * @param $competitors
+     * @return string
      */
     private function getCategory($competitors) {
         // init stats

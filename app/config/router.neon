@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payment
+    rootPresenters: settings|github|my-payments
 
     # Pipe-separated list of modules
     modules: org|public
@@ -112,7 +112,7 @@ fksrouter:
             module: Event
             presenter: Dashboard
             flags: SECURED
-        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventID [0-9]+>]/s/q[/<id>]':
+        '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]':
             subdomain: %subdomain.db%
             presenter: Submit
             action: qrEntry

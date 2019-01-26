@@ -27,7 +27,7 @@ $(document).ready(function() {
     });
     $.nette.init();
     $("form[data-submit-on='enter']").enterSubmitForm();
-    $('a.btn-danger').confirm({
+    $('.btn-danger').confirm({
         text: 'O RLY?',
     });
     // TODO form buttons aren't checked

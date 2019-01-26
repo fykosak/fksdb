@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Callback;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -83,6 +84,9 @@ class ApplicationComponent extends Control {
     }
 
     protected function createTemplate($class = NULL) {
+        /**
+         * @var $template FileTemplate
+         */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
         return $template;
@@ -116,7 +120,7 @@ class ApplicationComponent extends Control {
         $this->template->render();
     }
 
-    protected function createComponentForm($name) {
+    protected function createComponentForm() {
         $result = new FormControl();
         $form = $result->getForm();
 
@@ -206,17 +210,17 @@ class ApplicationComponent extends Control {
         return $result;
     }
 
-    public function handleSubmit(Form $form, $explicitTransitionName = null, $explicitMachineName = null) {
-        $this->execute($form, $explicitTransitionName, $explicitMachineName);
+    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+        $this->execute($form, $explicitTransitionName);
     }
 
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
     }
 
-    private function execute(Form $form = null, $explicitTransitionName = null, $explicitMachineName = null) {
+    private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName, $explicitMachineName);
+            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             $this->flashDump->dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $e) {

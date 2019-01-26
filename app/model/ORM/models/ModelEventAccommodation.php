@@ -3,6 +3,7 @@
 namespace FKSDB\ORM;
 
 use DbNames;
+use FKSDB\Transitions\IEventReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\DateTime;
 use Nette\Security\IResource;
@@ -21,7 +22,7 @@ use Nette\Security\IResource;
  * @property ActiveRow address
  * @property ActiveRow event
  */
-class ModelEventAccommodation extends \AbstractModelSingle implements IResource {
+class ModelEventAccommodation extends \AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';
 
     public function getResourceId(): string {
@@ -64,7 +65,7 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getUsedCapacity(): int {
         return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
@@ -82,7 +83,19 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource 
                 'kc' => $this->price_kc,
                 'eur' => $this->price_eur,
             ],
+            'label' => $this->__toString(),
             'date' => $this->date->format(self::ACC_DATE_FORMAT),
         ];
+    }
+
+    public function getLabel(): string {
+        $date = clone $this->date;
+        $fromDate = $date->format('d. m.');
+        $toDate = $date->add(new \DateInterval('P1D'))->format('d. m. Y');
+        return \sprintf(_('Ubytovaní od %s do %s v hoteli %s.'), $fromDate, $toDate, $this->name);
+    }
+
+    public function __toString(): string {
+        return $this->getLabel();
     }
 }

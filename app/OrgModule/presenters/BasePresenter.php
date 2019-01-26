@@ -40,9 +40,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
          * @var ContestChooser $contestChooser
          * @var LanguageChooser $languageChooser
          */
-        $contestChooser = $this['contestChooser'];
+        $contestChooser =  $this->getComponent('contestChooser');
         $contestChooser->syncRedirect();
-        $languageChooser = $this['languageChooser'];
+        $languageChooser =  $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
     }
 
@@ -64,7 +64,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         /**
          * @var ContestChooser $contestChooser
          */
-        $contestChooser = $this['contestChooser'];
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -79,7 +79,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         /**
          * @var ContestChooser $contestChooser
          */
-        $contestChooser = $this['contestChooser'];
+        $contestChooser =  $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
@@ -102,7 +102,7 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         /**
          * @var LanguageChooser $languageChooser
          */
-        $languageChooser = $this['languageChooser'];
+        $languageChooser =  $this->getComponent('languageChooser');
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);
         }

@@ -27,7 +27,7 @@ class ModelPresenter extends BasePresenter {
         $this->setIcon('fa fa-cubes');
     }
 
-    protected function createComponentGraphComponent() {
+    protected function createComponentGraphComponent(): GraphComponent {
         $event = $this->getEvent();
         /**
          * @var Machine $machine

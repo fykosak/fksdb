@@ -6,7 +6,6 @@ use Pipeline\Stage;
 use ServiceStudyYear;
 use ServiceTaskStudyYear;
 use SimpleXMLElement;
-use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -62,7 +61,7 @@ class StudyYearsFromXML2 extends Stage {
 
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
-        $tasknr = (int) (string) $XMLTask->number;
+        $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->serviceTaskStudyYear->getConnection()->beginTransaction();
@@ -76,7 +75,7 @@ class StudyYearsFromXML2 extends Stage {
         $contributors = [];
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
-                $studyYear = (string) $element;
+                $studyYear = (string)$element;
                 $studyYear = trim($studyYear);
                 if (!$studyYear) {
                     continue;

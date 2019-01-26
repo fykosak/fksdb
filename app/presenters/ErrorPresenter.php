@@ -17,8 +17,7 @@ class ErrorPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $title = _('Chyba');
-        $this->setTitle($title);
+        $this->setTitle(_('Chyba'));
     }
 
     /**

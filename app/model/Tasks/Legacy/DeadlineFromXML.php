@@ -10,7 +10,7 @@ use Tasks\SeriesData;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML extends Stage {
@@ -67,7 +67,7 @@ class DeadlineFromXML extends Stage {
 
     /**
      * @param string $string
-     * @return DateTime
+     * @return \DateTime
      */
     private function datetimeFromString($string) {
         $compactString = strtr($string, '~', ' ');

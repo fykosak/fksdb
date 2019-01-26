@@ -7,7 +7,6 @@ use FKSDB\model\Fyziklani\TaskCodePreprocessor;
 use FKSDB\ORM\ModelEvent;
 use FyziklaniModule\BasePresenter;
 use Nette\Database\Table\Selection;
-use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 use SQL\SearchableDataSource;
 

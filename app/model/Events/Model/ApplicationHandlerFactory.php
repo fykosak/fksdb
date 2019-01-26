@@ -20,7 +20,7 @@ class ApplicationHandlerFactory {
     private $connection;
 
     /**
-     * @var SystemContainer
+     * @var Container
      */
     private $container;
 

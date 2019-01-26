@@ -18,6 +18,7 @@ use YearCalculator;
  * @property boolean active
  * @property integer login_id
  * @property DateTime last_login
+ * @property string hash
  * @property ActiveRow person
  * @property string login
  */
@@ -36,6 +37,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @return ModelPerson|null
+     */
     public function getPerson() {
         if ($this->person) {
             return ModelPerson::createFromTableRow($this->person);
@@ -119,16 +123,19 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     public function getRoles() {
         if ($this->roles === null) {
+
             if (!$this->yearCalculator) {
                 throw new InvalidStateException('To obtain current roles, you have to inject YearCalculator to this Login instance.');
             }
             $this->roles = [];
+            $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
             /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
              * that Identity is known, however user is not logged in.
              */
 
             // explicitly assigned roles
-            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
+            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
+                $grant = ModelGrant::createFromTableRow($row);
                 $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
             }
             // roles from other tables

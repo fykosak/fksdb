@@ -49,6 +49,8 @@ acl:
     - addResource(event)         # create, edit, list, application
     - addResource(teacher)        # create, edit, list
     - addResource(eventAccommodation) # create, edit, list
+    - addResource(mail-send) #default
+
     #fyziklani
     - addResource(fyziklani.dashboard) # default
     - addResource(fyziklani.task) # list, import
@@ -59,12 +61,13 @@ acl:
     - addResource(fyziklani.gameSetup) # deafult
 
 #event module
+
     - addResource(event.dashboard) # default
     - addResource(event.schedule) # default
     - addResource(event.accommodation) # list, create, edit, billeted
     - addResource(event.model) #default
     - addResource(event.applicationsTimeProgress) # default
-
+    - addResource(event.payment) # create, edit, list
     # ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
@@ -82,6 +85,8 @@ acl:
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(org, mail-send, ::constant(Nette\Security\Permission::ALL))
+
     # TODO - allow(org, export, execute, and(qid('sous.prihlasky'), isEventOrgById(::constant(FKSDB\ORM\ModelEventType::XXX))))
     # TODO - allow(org, event, application, isEventOrgBy())))
 
@@ -115,7 +120,6 @@ acl:
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, eventAccommodation, ::constant(Nette\Security\Permission::ALL)) # in OrgModule
 
     - allow(eventManager, person, stalk.full)
 
@@ -154,10 +158,16 @@ acl:
 
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
-
-
-
-
+    # payment
+    - allow(registered, event.payment, detail, [@ownerAssertion, 'isOwnPayment'])
+    - allow(registered, event.payment, edit, [@ownerAssertion, 'isOwnPayment'])
+    - allow(registered, event.payment, create)
+    #paymnet org
+    - allow(org, event.payment, edit)
+    - allow(org, event.payment, create)
+    - allow(org, event.payment, detail)
+    - allow(org, event.payment, org)
+    - allow(org, event.payment, list)
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
 

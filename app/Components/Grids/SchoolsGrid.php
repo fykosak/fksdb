@@ -24,6 +24,13 @@ class SchoolsGrid extends BaseGrid {
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $presenter
+     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws \NiftyGrid\DuplicateColumnException
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         //
