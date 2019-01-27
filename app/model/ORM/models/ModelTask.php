@@ -11,6 +11,7 @@ use Utils;
  * @property integer series
  * @property string label
  * @property string name_cs
+ * @property int task_id
  */
 class ModelTask extends AbstractModelSingle {
 
