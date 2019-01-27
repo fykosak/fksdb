@@ -101,13 +101,16 @@ class SeriesTable {
      */
     public function getContestants($series = null) {
         return $this->serviceContestant->getTable()->where([
-                    'contest_id' => $this->getContest()->contest_id,
-                    'year' => $this->getYear(),
+            'contest_id' => $this->getContest()->contest_id,
+            'year' => $this->getYear(),
         ])->order('person.family_name, person.other_name, person.person_id');
         //TODO series
     }
 
-    public function getTasks() {
+    /**
+     * @return Selection
+     */
+    public function getTasks(): Selection {
         $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->getContest()->contest_id,
             'year' => $this->getYear(),
@@ -122,8 +125,8 @@ class SeriesTable {
 
     public function getSubmitsTable($ctId = null, $task = null) {
         $submits = $this->serviceSubmit->getTable()
-                ->where('ct_id', $this->getContestants())
-                ->where('task_id', $this->getTasks());
+            ->where('ct_id', $this->getContestants())
+            ->where('task_id', $this->getTasks());
 
         // store submits in 2D hash for better access
         $submitsTable = [];

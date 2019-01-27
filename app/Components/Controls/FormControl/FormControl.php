@@ -21,8 +21,12 @@ class FormControl extends Control {
     public function __construct(IContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
-        $form = new Form();
+        $form = $this->createForm();
         $this->addComponent($form, 'form');
+    }
+
+    protected function createForm(): Form {
+        return new Form();
     }
 
     /**
