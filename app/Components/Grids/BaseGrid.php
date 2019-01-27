@@ -18,9 +18,9 @@ abstract class BaseGrid extends Grid {
     public $searchTerm;
 
     protected function configure($presenter) {
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.v4.latte');
+        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         $paginator = $this->getComponent('paginator');
-        $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.v4.latte');
+        $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
     protected function createTemplate($class = NULL) {
