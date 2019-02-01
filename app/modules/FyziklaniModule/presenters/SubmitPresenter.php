@@ -2,106 +2,15 @@
 
 namespace FyziklaniModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Fyziklani\EditSubmitControl;
+use FKSDB\Components\Controls\Fyziklani\QREntryControl;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\model\Fyziklani\TaskCodeException;
-use FKSDB\model\Fyziklani\TaskCodeHandler;
-use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
-use ModelFyziklaniSubmit;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
-use Nette\Forms\Controls\Button;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 class SubmitPresenter extends BasePresenter {
 
-    /**
-     *
-     * @var ModelFyziklaniSubmit
-     */
-    private $editSubmit;
-    /**
-     * @var TaskCodeHandlerFactory
-     */
-    private $taskCodeHandlerFactory;
-
-    public function injectTaskCodeHandlerFactory(TaskCodeHandlerFactory $taskCodeHandlerFactory) {
-        $this->taskCodeHandlerFactory = $taskCodeHandlerFactory;
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionQrEntry($id) {
-        if (!$id) {
-            $this->flashMessage('Code is required', 'danger');
-            return;
-        }
-        $l = strlen($id);
-        if ($l > 9) {
-            $this->flashMessage('Code is too long', 'danger');
-            return;
-        }
-        $code = str_repeat('0', 9 - $l) . strtoupper($id);
-        $handler = $this->getTaskCodeHandler();
-        try {
-            $handler->checkTaskCode($code);
-        } catch (TaskCodeException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-            return;
-        }
-        /**
-         * @var $form Form
-         */
-        $form = $this->getComponent('entryQRForm')->getForm();
-        $form->setDefaults(['taskCode' => $code]);
-        foreach ($this->getGameSetup()->getAvailablePoints() as $points) {
-            /**
-             * @var $button Button
-             */
-            $button = $form['points' . $points];
-            $button->setDisabled(false);
-        }
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionEdit($id) {
-        $this->editSubmit = $this->getServiceFyziklaniSubmit()->findByPrimary($id);
-
-        if (!$this->editSubmit) {
-            throw new BadRequestException(_('Neexistující submit.'), 404);
-        }
-
-        $teamId = $this->editSubmit->e_fyziklani_team_id;
-
-        /* Uzatvorené bodovanie nejde editovať; */
-        $team = ModelFyziklaniTeam::createFromTableRow($this->getServiceFyziklaniTeam()->findByPrimary($teamId));
-        if (!$team->hasOpenSubmit()) {
-            $this->flashMessage(_('Bodování tohoto týmu je uzavřené.'), 'danger');
-            $this->backlinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        }
-        $submit = $this->editSubmit;
-        $this->template->fyziklani_submit_id = $submit ? true : false;
-        /**
-         * @var $control FormControl
-         */
-        $control = $this->getComponent('submitEditForm');
-        $control->getForm()->setDefaults([
-            'team_id' => $submit->e_fyziklani_team_id,
-            'task' => $submit->getTask()->label,
-            'points' => $submit->points,
-            'team' => $submit->getTeam()->name,
-        ]);
-    }
-
+    /* ***** Title methods *****/
     public function titleEntry() {
         $this->setTitle(_('Zadávání bodů'));
         $this->setIcon('fa fa-pencil-square-o');
@@ -112,15 +21,13 @@ class SubmitPresenter extends BasePresenter {
     }
 
     public function titleAutoClose() {
-        $this->titleEntry();
+        $this->setTitle(_('You can close this page'));
+        $this->setIcon('fa fa-pencil-square-o');
     }
 
-    public function authorizedEntry() {
-        $this->setAuthorized(($this->eventIsAllowed('fyziklani.submit', 'default')));
-    }
-
-    public function authorizedQrEntry() {
-        $this->authorizedEntry();
+    public function titleList() {
+        $this->setTitle(_('Submits'));
+        $this->setIcon('fa fa-table');
     }
 
     public function titleEdit() {
@@ -128,39 +35,80 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-pencil');
     }
 
-    public function authorizedEdit() {
+    /* ***** Authorized methods *****/
+    public function authorizedEntry() {
+        $this->setAuthorized($this->eventIsAllowed('fyziklani.submit', 'default'));
+    }
+
+    public function authorizedQrEntry() {
         $this->authorizedEntry();
     }
 
-    public function titleTable() {
-        $this->setTitle(_('Submits'));
-        $this->setIcon('fa fa-table');
+    public function authorizedEdit() {
+        $this->authorizedEntry();
     }
 
     public function authorizedList() {
         $this->authorizedEntry();
     }
 
-    private function getTaskCodeHandler(): TaskCodeHandler {
-        return $this->taskCodeHandlerFactory->createHandler($this->getEvent());
+    public function authorizedAutoClose() {
+        $this->authorizedEntry();
+    }
+    /* ******** ACTION METHODS ********/
+    /**
+     * @param $id
+     */
+    public function actionQrEntry($id) {
+        if (!$id) {
+            $this->flashMessage('Code is required', 'danger');
+            return;
+        }
+        /**
+         * @var $control QREntryControl
+         */
+        $control = $this->getComponent('entryQRControl');
+        $control->setCode($id);
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit($id) {
+        /**
+         * @var $control EditSubmitControl
+         */
+        $control = $this->getComponent('editControl');
+        try {
+            $control->setSubmit(+$id);
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage(), 'danger');
+            $this->redirect('list');
+        }
+    }
+
+    /* ****** COMPONENTS **********/
     /**
      * @return TaskCodeInput
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentEntryForm(): TaskCodeInput {
-        return $this->fyziklaniFactory->createEntryForm($this->getEvent());
+    public function createComponentEntryControl(): TaskCodeInput {
+        return $this->fyziklaniComponentsFactory->createTaskCodeInput($this->getEvent());
     }
 
-    public function createComponentEntryQRForm() {
-        $form = $this->fyziklaniFactory->createEntryQRForm($this->getGameSetup());
-
-        $form->getForm()->onSuccess[] = function (Form $form) {
-            $this->entryFormSucceeded($form);
+    /**
+     * @return QREntryControl
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
+    public function createComponentEntryQRControl(): QREntryControl {
+        $control = $this->fyziklaniComponentsFactory->createQREntryControl($this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('autoClose');
         };
-        return $form;
+        return $control;
     }
 
     /**
@@ -168,67 +116,20 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentSubmitsGrid(): SubmitsGrid {
+    public function createComponentGrid(): SubmitsGrid {
         return $this->fyziklaniComponentsFactory->createSubmitsGrid($this->getEvent());
     }
 
     /**
-     * @return FormControl
+     * @return EditSubmitControl
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function createComponentSubmitEditForm(): FormControl {
-        $control = $this->fyziklaniFactory->createEditForm($this->getGameSetup());
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->editFormSucceeded($form);
+    public function createComponentEditControl(): EditSubmitControl {
+        $control = $this->fyziklaniComponentsFactory->createEditSubmitControl($this->getEvent());
+        $control->getForm()->onSuccess[] = function () {
+            $this->redirect('list');
         };
         return $control;
-    }
-
-
-    /**
-     * @param Form $form
-     * @throws \Nette\Application\AbortException
-     */
-    private function entryFormSucceeded(Form $form) {
-        $handler = $this->getTaskCodeHandler();
-        $values = $form->getValues();
-        $httpData = $form->getHttpData();
-
-        $points = 0;
-        foreach ($httpData as $key => $value) {
-            if (preg_match('/points([0-9])/', $key, $match)) {
-                $points = +$match[1];
-            }
-        }
-        try {
-            $log = $handler->preProcess($values->taskCode, $points);
-            $this->flashMessage($log, 'success');
-            $this->redirect('list');
-        } catch (TaskCodeException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
-        }
-    }
-
-    /**
-     * @param Form $form
-     * @throws \Nette\Application\AbortException
-     */
-    private function editFormSucceeded(Form $form) {
-        $values = $form->getValues();
-
-        $submit = $this->editSubmit;
-        $this->getServiceFyziklaniSubmit()->updateModel($submit, [
-            'points' => $values->points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null
-        ]);
-        $this->getServiceFyziklaniSubmit()->save($submit);
-        $this->flashMessage(_('Body byly změněny.'), 'success');
-        $this->backlinkRedirect();
-        $this->redirect('list'); // if there's no backlink
     }
 }

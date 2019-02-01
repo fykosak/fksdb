@@ -197,8 +197,12 @@ class ApplicationPresenter extends BasePresenter {
         $this->getMachine()->setHolder($this->getHolder());
     }
 
-    protected function createComponentContestChooser($name) {
-        $component = parent::createComponentContestChooser($name);
+    /**
+     * @return ContestChooser
+     * @throws BadRequestException
+     */
+    protected function createComponentContestChooser(): ContestChooser {
+        $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'default') {
             if (!$this->getEvent()) {
                 throw new BadRequestException(_('Neexistující akce.'), 404);
@@ -218,7 +222,7 @@ class ApplicationPresenter extends BasePresenter {
         $flashDump = $this->flashDumpFactory->createApplication();
         $component = new ApplicationComponent($handler, $this->getHolder(), $flashDump);
         $component->setRedirectCallback(function ($modelId, $eventId) {
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('this', array(
                 'eventId' => $eventId,
                 'id' => $modelId,

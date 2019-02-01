@@ -5,7 +5,9 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use DateTime;
 use DbNames;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
+use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  *
@@ -15,6 +17,9 @@ use Nette\Security\IResource;
  * @property string source
  * @property string note
  * @property integer raw_points
+ * @property ActiveRow e_fyziklani_team
+ * @property int e_fyziklani_team_id
+ * @property int points
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 
@@ -31,6 +36,10 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     public function getTask(): ModelTask {
         $data = $this->ref(DbNames::TAB_TASK, 'task_id');
         return ModelTask::createFromTableRow($data);
+    }
+
+    public function getTeam(): ModelFyziklaniTeam {
+        return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
     }
 
     public function getContestant(): ModelContestant {

@@ -11,16 +11,6 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStat
 use Nette\Application\BadRequestException;
 
 class ResultsPresenter extends BasePresenter {
-
-    /**
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     */
-    protected function unauthorizedAccess() {
-        $this->requiresLogin() ? parent::unauthorizedAccess() : null;
-    }
-
     /**
      * @return bool
      * @throws BadRequestException
@@ -173,7 +163,9 @@ class ResultsPresenter extends BasePresenter {
         return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
     }
 
-
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
         $roots[] = 'fyziklani.results.default';

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\ORM\ModelEvent;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -52,9 +53,13 @@ class CloseTeamControl extends Control {
 
     /**
      * @param ModelFyziklaniTeam $team
+     * @throws BadRequestException
      */
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;
+        if (!$team->hasOpenSubmit()) {
+            throw  new BadRequestException(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name));
+        }
     }
 
     public function getFormControl(): FormControl {

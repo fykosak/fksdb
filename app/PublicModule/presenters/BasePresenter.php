@@ -7,6 +7,7 @@ use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\ModelContestant;
+use FKSDB\ORM\ModelPerson;
 use FKSDB\ORM\ModelRole;
 use IContestPresenter;
 use Nette\Application\BadRequestException;
@@ -20,9 +21,8 @@ use Nette\Application\BadRequestException;
  */
 abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
 
-    const PRESETS_KEY = 'publicPresets';
-
     /**
+     * @var int
      * @persistent
      */
     public $contestId;
@@ -38,55 +38,104 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
      */
     public $lang;
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     protected function startup() {
         parent::startup();
-        $this->getComponent('contestChooser')->syncRedirect();
+        /**
+         * @var ContestChooser $contestChooser
+         * @var LanguageChooser $languageChooser
+         */
+        $contestChooser = $this->getComponent('contestChooser');
+        $contestChooser->syncRedirect();
+        $languageChooser = $this->getComponent('languageChooser');
+        $languageChooser->syncRedirect();
     }
 
-    protected function createComponentContestChooser($name) {
+    /**
+     * @return ContestChooser
+     */
+    protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ModelRole::CONTESTANT);
         return $control;
     }
 
-    protected function createComponentLanguageChooser($name) {
-        $control = new LanguageChooser($this->session);
-        return $control;
+    /**
+     * @return LanguageChooser
+     */
+    protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->session);
     }
 
     /** @var ModelContestant|null|false */
     private $contestant = false;
 
+    /**
+     * @return \FKSDB\ORM\ModelContest
+     * @throws BadRequestException
+     */
     public function getSelectedContest() {
-        $contestChooser =  $this->getComponent('contestChooser');
+        /**
+         * @var ContestChooser $contestChooser
+         */
+        $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
         return $contestChooser->getContest();
     }
 
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
     public function getSelectedYear() {
-        $contestChooser =  $this->getComponent('contestChooser');
+        /**
+         * @var ContestChooser $contestChooser
+         */
+        $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser->isValid()) {
             throw new BadRequestException('No contests available.', 403);
         }
         return $contestChooser->getYear();
     }
 
+    /**
+     * @return int
+     * @throws BadRequestException
+     */
     public function getSelectedAcademicYear() {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
+    /**
+     * @return mixed
+     * @throws BadRequestException
+     */
     public function getSelectedLanguage() {
-        $languageChooser =  $this->getComponent('languageChooser');
+        /**
+         * @var LanguageChooser $languageChooser
+         */
+        $languageChooser = $this->getComponent('languageChooser');
         if (!$languageChooser->isValid()) {
             throw new BadRequestException('No languages available.', 403);
         }
         return $languageChooser->getLanguage();
     }
 
+    /**
+     * @return false|ModelContestant|null
+     * @throws BadRequestException
+     */
     public function getContestant() {
         if ($this->contestant === false) {
+            /**
+             * @var $person ModelPerson
+             */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(array(
                 'contest_id' => $this->getSelectedContest()->contest_id,
@@ -99,6 +148,9 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         return $this->contestant;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavBarVariant(): array {
         /**
          * @var $contest \FKSDB\ORM\ModelContest
@@ -107,11 +159,20 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         if ($contest) {
             return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
         }
-        return [null, null];
+        return parent::getNavBarVariant();
     }
 
+    /**
+     * @return string
+     */
+    public function getSubTitle(): string {
+        return sprintf(_('%d. ročník'), $this->year);
+    }
+
+    /**
+     * @return string[]
+     */
     public function getNavRoots(): array {
         return ['public.dashboard.default'];
     }
-
 }

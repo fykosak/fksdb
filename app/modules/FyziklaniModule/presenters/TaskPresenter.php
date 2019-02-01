@@ -14,8 +14,13 @@ class TaskPresenter extends BasePresenter {
     const IMPORT_STATE_INSERT = 3;
 
     public function titleList() {
-        $this->setTitle(_('Úlohy Fyziklání'));
+        $this->setTitle(_('Tasks'));
         $this->setIcon('fa fa-tasks');
+    }
+
+    public function titleImport() {
+        $this->setTitle(_('Tasks Import'));
+        $this->setIcon('fa fa-upload');
     }
 
     /**
@@ -24,11 +29,6 @@ class TaskPresenter extends BasePresenter {
      */
     public function authorizedList() {
         $this->setAuthorized(($this->eventIsAllowed('fyziklani.task', 'list')));
-    }
-
-    public function titleImport() {
-        $this->setTitle(_('Tasks Import of Fyziklani'));
-        $this->setIcon('fa fa-upload');
     }
 
     /**
@@ -53,7 +53,9 @@ class TaskPresenter extends BasePresenter {
             self::IMPORT_STATE_INSERT => _('Přidat pokud neexistuje')
         ]);
         $form->addSubmit('import', _('Importovat'));
-        $form->onSuccess[] = [$this, 'taskImportFormSucceeded'];
+        $form->onSuccess[] = function (Form $form) {
+            $this->taskImportFormSucceeded($form);
+        };
         return $control;
     }
 
@@ -78,7 +80,7 @@ class TaskPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
      */
-    public function createComponentTaskGrid(): TaskGrid {
-        return new TaskGrid($this->getEvent(), $this->getServiceFyziklaniTask());
+    public function createComponentGrid(): TaskGrid {
+        return $this->fyziklaniComponentsFactory->createTasksGrid($this->getEvent());
     }
 }

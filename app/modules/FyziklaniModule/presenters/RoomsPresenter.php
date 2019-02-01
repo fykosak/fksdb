@@ -73,12 +73,7 @@ class RoomsPresenter extends BasePresenter {
      * @throws \Nette\Application\BadRequestException
      */
     public function createComponentDownload(): RoutingDownload {
-        $control = new RoutingDownload($this->getTranslator());
-        $buildings = $this->getEvent()->getParameter('gameSetup')['buildings'];
-        $control->setBuildings($buildings);
-        $control->setRooms($this->getRooms());
-        $control->setTeams($this->getServiceFyziklaniTeam()->getTeamsAsArray($this->getEvent()));
-        return $control;
+        return $this->fyziklaniComponentsFactory->createRoutingDownload($this->getEvent());
     }
 
     /**

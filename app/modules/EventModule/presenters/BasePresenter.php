@@ -62,7 +62,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         /**
          * @var $languageChooser LanguageChooser
          */
-        $languageChooser =  $this->getComponent('languageChooser');
+        $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
 
         if (!$this->eventExist()) {
@@ -85,7 +85,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function getSubtitle(): string {
+    public function getSubTitle(): string {
         return $this->getEvent()->__toString();
     }
 

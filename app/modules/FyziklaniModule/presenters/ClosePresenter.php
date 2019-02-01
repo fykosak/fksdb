@@ -25,26 +25,38 @@ class ClosePresenter extends BasePresenter {
         return $this->team;
     }
 
+    /* ******* TITLE ***********/
     public function titleList() {
         $this->setTitle(_('Uzavírání bodování'));
         $this->setIcon('fa fa-check');
     }
+
 
     public function titleTeam() {
         $this->setTitle(sprintf(_('Uzavírání bodování týmu "%s"'), $this->getTeam()->name));
         $this->setIcon('fa fa-check-square-o');
     }
 
+    /* ******* authorized methods ***********/
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedList() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'list'));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function authorizedTeam() {
         $this->setAuthorized($this->eventIsAllowed('fyziklani.close', 'team'));
     }
 
+
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
@@ -55,13 +67,17 @@ class ClosePresenter extends BasePresenter {
         }
         $this->team = ModelFyziklaniTeam::createFromTableRow($row);
 
-        if (!$this->team->hasOpenSubmit()) {
-            $this->flashMessage(sprintf(_('Tým %s má již uzavřeno bodování'), $this->getTeam()->name), 'danger');
-            $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } else {
-            $this->getComponent('closeTeamControl')->setTeam($this->getTeam());
+        try {
+            /**
+             * @var $control CloseTeamControl
+             */
+            $control = $this->getComponent('closeTeamControl');
+            $control->setTeam($this->team);
+        } catch (BadRequestException $exception) {
+            $this->flashMessage($exception->getMessage(), 'danger');
+            $this->redirect('list');
         }
+
     }
 
     /**

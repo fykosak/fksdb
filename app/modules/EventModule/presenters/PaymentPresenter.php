@@ -58,7 +58,7 @@ class PaymentPresenter extends BasePresenter {
     public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
         $this->paymentComponentFactory = $paymentComponentFactory;
     }
-
+    /* ********* titles *****************/
     /**
      *
      */
@@ -94,7 +94,7 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(_('List of payments'));
         $this->setIcon('fa fa-credit-card');
     }
-
+    /* ********* Authorization *****************/
     /**
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
@@ -154,6 +154,11 @@ class PaymentPresenter extends BasePresenter {
             $this->isOrg();
     }
 
+    /**
+     * @return bool
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     private function isOrg(): bool {
         return $this->isContestsOrgAllowed('event.payment', 'org');
     }
@@ -195,19 +200,6 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    protected function startup() {
-        parent::startup();
-        // protection not implements eventPayment
-        if (!$this->hasApi()) {
-            $this->flashMessage(_('Event has not payment API'));
-            $this->redirect(':Event:Dashboard:default');
-        };
-    }
-
-    /**
      * @return bool
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Application\BadRequestException
@@ -220,7 +212,20 @@ class PaymentPresenter extends BasePresenter {
         }
         return true;
     }
-
+    /* ********* startup *****************/
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    protected function startup() {
+        parent::startup();
+        // protection not implements eventPayment
+        if (!$this->hasApi()) {
+            $this->flashMessage(_('Event has not payment API'));
+            $this->redirect(':Event:Dashboard:default');
+        };
+    }
+    /* ********* actions *****************/
     /**
      * @param $id
      * @throws BadRequestException
@@ -250,7 +255,7 @@ class PaymentPresenter extends BasePresenter {
             }
         };
     }
-
+    /* ********* render *****************/
     /**
      * @throws BadRequestException
      * @throws ForbiddenRequestException
@@ -259,7 +264,7 @@ class PaymentPresenter extends BasePresenter {
     public function renderEdit() {
         $this->template->model = $this->getModel();
     }
-
+    /* ********* Components *****************/
     /**
      * @return DetailControl
      * @throws \Nette\Application\AbortException

@@ -244,7 +244,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component StylesheetLoader
          */
-        $component = $ $this->getComponent('cssLoader');
+        $component = $$this->getComponent('cssLoader');
         $component->removeFile($file, $media);
     }
 
@@ -323,7 +323,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->subtitle = $subtitle;
     }
 
-    public function setBacklink($backlink) {
+    public function setBackLink($backlink) {
         $old = $this->bc;
         $this->bc = $backlink;
         return $old;
@@ -340,7 +340,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return string
      */
-    public static function getBacklinkParamName(): string {
+    public static function getBackLinkParamName(): string {
         return 'bc';
     }
 
@@ -390,7 +390,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component Breadcrumbs
          */
-        $component =  $this->getComponent('breadcrumbs');
+        $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
     }
 
@@ -418,7 +418,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component Breadcrumbs
          */
-        $component =  $this->getComponent('breadcrumbs');
+        $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);

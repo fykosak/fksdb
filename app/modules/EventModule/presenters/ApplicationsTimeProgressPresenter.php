@@ -20,7 +20,11 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
     }
 
     public function authorizedDefault() {
-       $this->setAuthorized($this->eventIsAllowed('event.applicationsTimeProgress', 'default'));
+        if (!\in_array($this->getEvent()->event_type_id, [1, 9])) {
+            $this->setAuthorized(false);
+            return;
+        }
+        $this->setAuthorized($this->eventIsAllowed('event.applicationsTimeProgress', 'default'));
     }
 
     public function titleDefault() {
