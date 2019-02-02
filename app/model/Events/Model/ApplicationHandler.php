@@ -170,33 +170,33 @@ class ApplicationHandler {
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (SecondaryModelDataConflictException $e) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $e->getBaseHolder()->getLabel());
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (DuplicateApplicationException $e) {
             $message = $e->getMessage();
             $this->logger->log($message, ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (MachineExecutionException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (SubmitProcessingException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (FullAccommodationCapacityException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         } catch (ExistingPaymentException $e) {
             $this->logger->log($e->getMessage(), ILogger::ERROR);
             $this->formRollback($data);
-            $this->reraise($e);
+            $this->reRaise($e);
         }
     }
 

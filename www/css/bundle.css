@@ -265,19 +265,19 @@ ul.inbox-swappable {
   cursor: move;
 }
 
-#wrap.login {
+main.login {
   background: url(/images/bg/1.jpg) 50%;
   background-size: cover;
 }
-#wrap.login[data-bg="1"] {
+main.login[data-bg="1"] {
   background: url(/images/bg/1.jpg) 50%;
   background-size: cover;
 }
-#wrap.login[data-bg="2"] {
+main.login[data-bg="2"] {
   background: url(/images/bg/2.jpg) 0 10%;
   background-size: cover;
 }
-#wrap.login[data-bg="3"] {
+main.login[data-bg="3"] {
   background: url(/images/bg/3.jpg) 0 10%;
   background-size: cover;
 }
@@ -777,7 +777,7 @@ html, body {
 }
 
 /* Wrapper for page content to push down footer */
-#wrap {
+main {
   /* Negative indent footer by its height */
   margin: 0 auto -55px;
   /* Pad bottom by footer height */

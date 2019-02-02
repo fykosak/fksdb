@@ -3,24 +3,14 @@
 namespace FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Results\ResultsView;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
-use FKSDB\Components\React\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsPresentation;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Results\ResultsView;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\CorrelationStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\Application\BadRequestException;
 
 class ResultsPresenter extends BasePresenter {
-
-    /**
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     */
-    protected function unauthorizedAccess() {
-        $this->requiresLogin() ? parent::unauthorizedAccess() : null;
-    }
-
     /**
      * @return bool
      * @throws BadRequestException
@@ -36,7 +26,7 @@ class ResultsPresenter extends BasePresenter {
             case 'resultsFinal':
                 return !$this->getGameSetup()->result_hard_display;
             default:
-                return true;
+                return parent::requiresLogin();
         }
     }
 
@@ -96,7 +86,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws \Nette\Application\AbortException
      */
     public function authorizedResultsFinal() {
-        if($this->getGameSetup()->result_hard_display){
+        if ($this->getGameSetup()->result_hard_display) {
             $this->authorizedDefault();
             return;
         }
@@ -173,7 +163,9 @@ class ResultsPresenter extends BasePresenter {
         return $this->fyziklaniComponentsFactory->createFinalResults($this->getEvent());
     }
 
-
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
         $roots[] = 'fyziklani.results.default';

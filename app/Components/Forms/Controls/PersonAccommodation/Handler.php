@@ -8,7 +8,6 @@ use FKSDB\ORM\ModelPerson;
 use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
-use Submits\StorageException;
 
 class Handler {
     private $serviceEventPersonAccommodation;
@@ -23,7 +22,7 @@ class Handler {
      * @param ArrayHash $data
      * @param ModelPerson $person
      * @param integer $eventId
-     * @throws StorageException
+     * @throws FullAccommodationCapacityException
      * @throws ExistingPaymentException
      * @return void
      */
@@ -46,8 +45,9 @@ class Handler {
                         throw new ExistingPaymentException(\sprintf(
                             _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
                             $modelEventPersonAccommodation->getLabel()));
+                    } else {
+                        throw $e;
                     }
-                    throw $e;
                 }
             }
         }

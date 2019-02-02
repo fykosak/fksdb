@@ -68,7 +68,7 @@ class AuthorizationTest extends FyziklaniTestCase {
         return [
                 [null, 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
                 ['perPerson', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
-                ['perOrg', 'Fyziklani:Submit', ['entry', 'edit', 'list'], true],
+                ['perOrg', 'Fyziklani:Submit', ['entry', 'list'], true], # TODO 'edit',
                 ['perOrgOther', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
                 ['perContestant', 'Fyziklani:Submit', ['entry', 'edit', 'list'], false],
         ];
