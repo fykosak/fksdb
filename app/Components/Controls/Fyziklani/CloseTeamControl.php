@@ -69,7 +69,7 @@ class CloseTeamControl extends Control {
     /**
      * @return FormControl
      */
-    protected function createComponentCloseForm(): FormControl {
+    protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addCheckbox('submit_task_correct', _('Úkoly a počty bodů jsou správně.'))
