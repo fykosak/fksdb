@@ -38,10 +38,6 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
         return ModelTask::createFromTableRow($data);
     }
 
-    public function getTeam(): ModelFyziklaniTeam {
-        return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
-    }
-
     public function getContestant(): ModelContestant {
         return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }

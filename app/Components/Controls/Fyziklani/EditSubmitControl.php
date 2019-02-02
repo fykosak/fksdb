@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\ORM\ModelEvent;
-use FKSDB\ORM\ModelSubmit;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
@@ -23,7 +22,7 @@ class EditSubmitControl extends Control {
      */
     private $serviceFyziklaniSubmit;
     /**
-     * @var ModelSubmit
+     * @var \ModelFyziklaniSubmit
      */
     private $editSubmit;
     /**
