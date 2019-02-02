@@ -94,7 +94,7 @@ class FyziklaniFactory {
     }
 
     public function createEditSubmitControl(ModelEvent $event): EditSubmitControl {
-        return new EditSubmitControl($event, $this->serviceFyziklaniSubmit);
+        return new EditSubmitControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
     /* *************** CLOSING ***************/
@@ -148,7 +148,7 @@ class FyziklaniFactory {
     }
 
     public function createRoutingDownload(ModelEvent $event): RoutingDownload {
-        return new RoutingDownload($event,$this->translator,$this->serviceFyziklaniTeam,$this->serviceFyziklaniRoom);
+        return new RoutingDownload($event, $this->translator, $this->serviceFyziklaniTeam, $this->serviceFyziklaniRoom);
     }
 
 

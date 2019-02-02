@@ -57,7 +57,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'contestId' => 1,
             'year' => 1,
             'eventId' => $this->eventId,
-            'do' => 'EntryQRControl-form-submit',
+            'do' => 'entryQRControl-form-form-submit',
         ]);
 
         $request = new Request('Fyziklani:Submit', 'POST', $post, $postData);
