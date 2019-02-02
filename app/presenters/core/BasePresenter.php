@@ -244,7 +244,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component StylesheetLoader
          */
-        $component = $ $this->getComponent('cssLoader');
+        $component = $$this->getComponent('cssLoader');
         $component->removeFile($file, $media);
     }
 
@@ -323,7 +323,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->subtitle = $subtitle;
     }
 
-    public function setBacklink($backlink) {
+    public function setBackLink($backlink) {
         $old = $this->bc;
         $this->bc = $backlink;
         return $old;
@@ -340,7 +340,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return string
      */
-    public static function getBacklinkParamName(): string {
+    public static function getBackLinkParamName(): string {
         return 'bc';
     }
 
@@ -390,8 +390,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component Breadcrumbs
          */
-        $component =  $this->getComponent('breadcrumbs');
-        $component->setBacklink($this->getRequest());
+        $component = $this->getComponent('breadcrumbs');
+        $component->setBackLink($this->getRequest());
     }
 
     /**
@@ -418,8 +418,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         /**
          * @var $component Breadcrumbs
          */
-        $component =  $this->getComponent('breadcrumbs');
-        $backLink = $component->getBacklinkUrl();
+        $component = $this->getComponent('breadcrumbs');
+        $backLink = $component->getBackLinkUrl();
         if ($backLink) {
             $this->redirectUrl($backLink);
         } else if ($need) {
@@ -491,7 +491,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameter();
+            /**
+             * @var $testedPresenter BasePresenter
+             */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
                 $this->authorizedCache[$key] = $testedPresenter->isAuthorized();

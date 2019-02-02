@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
-abstract class FyziklaniModule extends ReactComponent {
+abstract class FyziklaniReactControl extends ReactComponent {
 
     /**
      * @var \ServiceFyziklaniRoom

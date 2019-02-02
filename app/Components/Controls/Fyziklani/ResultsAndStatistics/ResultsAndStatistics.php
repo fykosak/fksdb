@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani\ResultsAndStatistics;
+namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
-use FKSDB\Components\React\Fyziklani\FyziklaniModule;
+use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DateTime;
 
-abstract class ResultsAndStatistics extends FyziklaniModule {
+abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
     public final function getData(): string {
         return '';

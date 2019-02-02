@@ -81,7 +81,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
     protected function createComponentSettingsForm($name) {
         $control = new FormControl();
         $form = $control->getForm();
-
+        /**
+         * @var $login \FKSDB\ORM\ModelLogin
+         */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

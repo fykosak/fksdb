@@ -4,6 +4,7 @@ namespace Persons;
 
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\PersonAccommodation\Handler;
 use FKSDB\ORM\ModelPerson;
 use FKSDB\ORM\ModelPostContact;
@@ -112,7 +113,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param ArrayHash $values
      * @return \AbstractModelSingle|ModelPerson|null
      * @throws JsonException
-     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
+     * @throws ExistingPaymentException
      */
     public function createFromValues(ArrayHash $values) {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
@@ -128,7 +129,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @param IModel $model
      * @param ArrayHash $values
      * @throws JsonException
-     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
+     * @throws ExistingPaymentException
      */
     public function update(IModel $model, ArrayHash $values) {
         /**
@@ -148,7 +149,7 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws JsonException
-     * @throws \FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException
+     * @throws ExistingPaymentException
      * @return void
      */
     private function store(ModelPerson &$person, ArrayHash $data) {

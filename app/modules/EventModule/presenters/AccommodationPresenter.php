@@ -323,7 +323,7 @@ class AccommodationPresenter extends BasePresenter {
             }
 
             $this->flashMessage(_('Ubytovaní založeno'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (\ModelException $e) {
             $connection->rollBack();
@@ -394,7 +394,7 @@ class AccommodationPresenter extends BasePresenter {
             }
 
             $this->flashMessage(_('Ubytovaní upraveno'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (\ModelException $e) {
             $connection->rollBack();

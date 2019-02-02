@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Components\React\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani;
 
 use Nette\Utils\Json;
 
 /**
  * Class Routing
  */
-class RoutingEdit extends FyziklaniModule {
+class RoutingEdit extends FyziklaniReactControl {
 
     public function getData(): string {
 

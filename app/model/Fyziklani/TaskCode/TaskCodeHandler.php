@@ -3,6 +3,7 @@
 namespace FKSDB\model\Fyziklani;
 
 use FKSDB\ORM\ModelEvent;
+use Nette\Diagnostics\Debugger;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
@@ -33,6 +34,12 @@ class TaskCodeHandler {
 
     }
 
+    /**
+     * @param $values
+     * @param $httpData
+     * @return string
+     * @throws TaskCodeException
+     */
     public function saveTaskCode($values, $httpData) {
         try {
             $this->checkTaskCode($values->taskCode);
@@ -68,12 +75,13 @@ class TaskCodeHandler {
     }
 
     /**
-     * @param $fullCode
-     * @param $points
+     * @param string $code
+     * @param int $points
      * @return string
      * @throws \Exception
      */
-    private function savePoints($fullCode, $points): string {
+    private function savePoints(string $code, int $points): string {
+        $fullCode = self::createFullCode($code);
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
         $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
@@ -115,37 +123,76 @@ class TaskCodeHandler {
     }
 
     /**
-     * @param $taskCode
+     * @param string $code
+     * @return string
+     * @throws TaskCodeException
+     */
+    public static function createFullCode(string $code): string {
+        $l = strlen($code);
+        if ($l > 9) {
+            throw new TaskCodeException(_('Code is too long'));
+        }
+
+        return str_repeat('0', 9 - $l) . strtoupper($code);
+    }
+
+    /**
+     * @param string $code
      * @return bool
      * @throws TaskCodeException
      */
-    public function checkTaskCode($taskCode): bool {
+    public function checkTaskCode(string $code): bool {
+        $fullCode = self::createFullCode($code);
         /** skontroluje pratnosť kontrolu */
-        if (!TaskCodePreprocessor::checkControlNumber($taskCode)) {
+        if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
             throw new TaskCodeException(_('Chybně zadaný kód úlohy.'));
         }
-        /* Existenica týmu */
-        $teamId = TaskCodePreprocessor::extractTeamId($taskCode);
+        $team = $this->getTeamFromCode($code);
+        /* otvorenie submitu */
+        if (!$team->hasOpenSubmit()) {
+            throw new TaskCodeException(_('Bodování tohoto týmu je uzavřené.'));
+        }
+        $task = $this->getTaskFromCode($code);
+        /* Nezadal sa duplicitne toto nieje editácia */
+        Debugger::barDump($task);
+        if ($this->serviceFyziklaniSubmit->submitExist($task->fyziklani_task_id, $team->e_fyziklani_team_id)) {
+            throw new TaskCodeException(sprintf(_('Úloha %s už byla zadaná.'), $task->label));
+        }
+        return true;
+    }
+
+    /**
+     * @param string $code
+     * @return ModelFyziklaniTeam
+     * @throws TaskCodeException
+     */
+    public function getTeamFromCode(string $code): ModelFyziklaniTeam {
+        $fullCode = self::createFullCode($code);
+
+        $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
             throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
         }
         $teamRow = $this->serviceFyziklaniTeam->findByPrimary($teamId);
-        $team = ModelFyziklaniTeam::createFromTableRow($teamRow);
-        /* otvorenie submitu */
-        if (!$team->hasOpenSubmit()) {
-            throw new TaskCodeException(_('Bodování tohoto týmu je uzavřené.'));
-        }
+        return ModelFyziklaniTeam::createFromTableRow($teamRow);
+
+    }
+
+    /**
+     * @param string $code
+     * @return \ModelFyziklaniTask
+     * @throws TaskCodeException
+     */
+    public function getTaskFromCode(string $code): \ModelFyziklaniTask {
+        $fullCode = self::createFullCode($code);
         /* správny label */
-        $taskLabel = TaskCodePreprocessor::extractTaskLabel($taskCode);
+        $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
         $taskId = $this->serviceFyziklaniTask->taskLabelToTaskId($taskLabel, $this->event);
         if (!$taskId) {
             throw new TaskCodeException(sprintf(_('Úloha %s neexistuje.'), $taskLabel));
         }
-        /* Nezadal sa duplicitne toto nieje editácia */
-        if ($this->serviceFyziklaniSubmit->submitExist($taskId, $teamId)) {
-            throw new TaskCodeException(sprintf(_('Úloha %s už byla zadaná.'), $taskLabel));
-        }
-        return true;
+        $row = $this->serviceFyziklaniTask->findByPrimary($taskId);
+        return \ModelFyziklaniTask::createFromTableRow($row);
     }
 }

@@ -34,13 +34,6 @@ class FyziklaniChooser extends Control {
     }
 
     /**
-     * @return ModelEvent
-     */
-    private function getEvent() {
-        return $this->event;
-    }
-
-    /**
      * @return ModelEvent[]
      */
     private function getAllFyziklani(): array {
@@ -54,7 +47,7 @@ class FyziklaniChooser extends Control {
 
     public function render() {
         $this->template->availableFyziklani = $this->getAllFyziklani();
-        $this->template->currentEvent = $this->getEvent();
+        $this->template->currentEvent = $this->event;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FyziklaniChooser.latte');
         $this->template->render();
     }
