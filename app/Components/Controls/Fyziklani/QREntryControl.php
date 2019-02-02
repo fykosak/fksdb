@@ -30,6 +30,10 @@ class QREntryControl extends Control {
      * @var TaskCodeHandler
      */
     private $handler;
+    /**
+     * @var string
+     */
+    private $code;
 
     public function __construct(ModelEvent $event, TaskCodeHandler $taskCodeHandler, ITranslator $translator) {
         parent::__construct();
@@ -59,6 +63,7 @@ class QREntryControl extends Control {
     }
 
     public function setCode(string $code) {
+        $this->code = $code;
         try {
             $this->handler->checkTaskCode($code);
         } catch (TaskCodeException $e) {
@@ -96,7 +101,16 @@ class QREntryControl extends Control {
      *
      */
     public function render() {
+
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'QREntryControl.latte');
+        $this->template->setTranslator($this->translator);
+        $this->template->code = $this->code;
+        try {
+            $this->template->task = $this->handler->getTaskFromCode($this->code);
+            $this->template->team = $this->handler->getTeamFromCode($this->code);
+        } catch (TaskCodeException$e) {
+        }
+
         $this->template->render();
     }
 
