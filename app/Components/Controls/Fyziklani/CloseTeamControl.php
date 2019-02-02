@@ -63,7 +63,7 @@ class CloseTeamControl extends Control {
     }
 
     public function getFormControl(): FormControl {
-        return $this->getComponent('closeForm');
+        return $this->getComponent('form');
     }
 
     /**
@@ -80,7 +80,7 @@ class CloseTeamControl extends Control {
             ->setRequired(_('Zkontrolujte prosím shodnost úlohy u vydavačů'));
         $form->addSubmit('send', 'Potvrdit správnost');
         $form->onSuccess[] = function () {
-            $this->closeFormSucceeded();
+            $this->formSucceeded();
         };
         return $control;
     }
@@ -88,7 +88,7 @@ class CloseTeamControl extends Control {
     /**
      *
      */
-    private function closeFormSucceeded() {
+    private function formSucceeded() {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
