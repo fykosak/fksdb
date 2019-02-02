@@ -66,7 +66,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
 
     public function testEntryValid() {
         $request = $this->createPostRequest([
-            'taskCode' => '000001AA9',
+            'task_code' => '000001AA9',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
         ], ['action' => 'qrEntry', 'id' => '000001AA9']);
@@ -81,7 +81,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
 
     public function testEntryInvalid() {
         $request = $this->createPostRequest([
-            'taskCode' => '000001AA8',
+            'task_code' => '000001AA8',
             'points5' => '5 bodů',
             '_token_' => self::TOKEN,
         ], ['action' => 'qrEntry', 'id' => '000001AA8']);
