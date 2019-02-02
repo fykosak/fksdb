@@ -56,6 +56,9 @@ class QREntryControl extends Control {
                 ->setAttribute('class', 'btn-' . $points . '-points')->setDisabled(true);
         }
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->onValidate[] = function (Form $form) {
+            $this->formValidate($form);
+        };
         $form->onSuccess[] = function (Form $form) {
             $this->entryFormSucceeded($form);
         };
@@ -132,6 +135,17 @@ class QREntryControl extends Control {
             $this->getPresenter()->flashMessage($log, 'success');
         } catch (TaskCodeException $e) {
             $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+        }
+    }
+
+    /**
+     * @param Form $form
+     */
+    private function formValidate(Form $form) {
+        try {
+            $this->handler->checkTaskCode($form->getValues()->task_code);
+        } catch (TaskCodeException$e) {
+            $form->addError($e->getMessage());
         }
     }
 }
