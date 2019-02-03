@@ -44,6 +44,11 @@ class CloseSubmitStrategy {
         $this->event = $event;
     }
 
+    /**
+     * @param $category
+     * @param null $msg
+     * @throws BadRequestException
+     */
     public function closeByCategory($category, &$msg = null) {
         $total = is_null($category);
         $connection = $this->serviceFyziklaniTeam->getConnection();
@@ -55,10 +60,19 @@ class CloseSubmitStrategy {
         $connection->commit();
     }
 
+    /**
+     * @param null $msg
+     * @throws BadRequestException
+     */
     public function closeGlobal(&$msg = null) {
         $this->closeByCategory(null, $msg);
     }
 
+    /**
+     * @param $data
+     * @param $total
+     * @param null $msg
+     */
     private function saveResults($data, $total, &$msg = null) {
         $msg = '';
         foreach ($data as $index => &$teamData) {
@@ -129,15 +143,16 @@ class CloseSubmitStrategy {
     }
 
     /**
-     * @param integer $team_id
+     * @param integer $teamId
      * @return array
      */
-    protected function getAllSubmits(int $team_id): array {
-        $submits = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($team_id))->getSubmits();
+    protected function getAllSubmits(int $teamId): array {
+        $team = ModelFyziklaniTeam::createFromTableRow($this->serviceFyziklaniTeam->findByPrimary($teamId));
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        foreach ($submits as $submit) {
+        foreach ($team->getSubmits() as $row) {
+            $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

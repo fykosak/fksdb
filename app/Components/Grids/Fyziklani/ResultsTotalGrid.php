@@ -49,8 +49,5 @@ class ResultsTotalGrid extends BaseGrid {
             ->order('rank_total');
         $dataSource = new NDataSource($teams);
         $this->setDataSource($dataSource);
-
     }
-
-
 }

@@ -36,6 +36,10 @@ class FinalResults extends Control {
         $this->translator = $translator;
     }
 
+    /**
+     * @param string $category
+     * @return bool
+     */
     public function isClosedCategory(string $category): bool {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         $query->where('category', $category)->where('rank_category', null);
@@ -43,6 +47,9 @@ class FinalResults extends Control {
         return $count == 0;
     }
 
+    /**
+     * @return bool
+     */
     public function isClosedTotal(): bool {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         $query->where('rank_total', null);
@@ -50,22 +57,37 @@ class FinalResults extends Control {
         return $count == 0;
     }
 
+    /**
+     * @return ResultsCategoryGrid
+     */
     public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'A');
     }
 
+    /**
+     * @return ResultsCategoryGrid
+     */
     public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'B');
     }
 
+    /**
+     * @return ResultsCategoryGrid
+     */
     public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, $this->serviceFyziklaniTeam, 'C');
     }
 
+    /**
+     * @return ResultsTotalGrid
+     */
     public function createComponentResultsTotalGrid(): ResultsTotalGrid {
         return new ResultsTotalGrid($this->event, $this->serviceFyziklaniTeam);
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->that = $this;
 

@@ -59,6 +59,10 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->setIcon('fa fa-graduation-cap');
     }
 
+    /**
+     * @param $name
+     * @return TeachersGrid
+     */
     protected function createComponentGrid($name): TeachersGrid {
         return new TeachersGrid($this->serviceTeacher);
     }

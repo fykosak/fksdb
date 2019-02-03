@@ -68,6 +68,9 @@ abstract class BilletedGrid extends BaseGrid {
             })->setSortable(false);
     }
 
+    /**
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function addColumnRole() {
         $this->addColumn('role', _('Role'))
             ->setRenderer(function ($row) {

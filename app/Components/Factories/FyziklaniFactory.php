@@ -15,12 +15,14 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStat
 use FKSDB\Components\Controls\Fyziklani\RoutingDownload;
 use FKSDB\Components\Controls\Fyziklani\RoutingEdit;
 use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
-use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\model\Fyziklani\TaskCodeHandlerFactory;
 use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
+use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
@@ -104,7 +106,7 @@ class FyziklaniFactory {
     }
 
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
-        return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask);
+        return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask, $this);
     }
 
     /* ************** ROUTING *************/
@@ -139,8 +141,8 @@ class FyziklaniFactory {
     }
 
     /* ********** GRIDS *************/
-    public function createSubmitsGrid(ModelEvent $event): SubmitsGrid {
-        return new SubmitsGrid($event, $this->serviceFyziklaniSubmit);
+    public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
+        return new AllSubmitsGrid($event, $this->serviceFyziklaniSubmit);
     }
 
     public function createTasksGrid(ModelEvent $event): TaskGrid {
@@ -151,5 +153,7 @@ class FyziklaniFactory {
         return new RoutingDownload($event, $this->translator, $this->serviceFyziklaniTeam, $this->serviceFyziklaniRoom);
     }
 
-
+    public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
+        return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit);
+    }
 }
