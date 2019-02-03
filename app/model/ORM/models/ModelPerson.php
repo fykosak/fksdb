@@ -267,11 +267,17 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    public function getFullName() {
+    /**
+     * @return string
+     */
+    public function getFullName(): string {
         return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     */
+    public function __toString(): string {
         return $this->getFullName();
     }
 

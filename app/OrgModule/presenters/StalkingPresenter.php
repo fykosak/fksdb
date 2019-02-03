@@ -46,23 +46,31 @@ class StalkingPresenter extends BasePresenter {
      */
     private $mode;
 
-    /**
-     * @return ModelPerson
-     * @throws BadRequestException
-     */
-    private function getPerson(): ModelPerson {
-        if (!$this->person) {
-            $id = $this->getParameter('id');
-            $row = $this->servicePerson->findByPrimary($id);
-            if (!$row) {
-                throw new BadRequestException(_('Osoba neexistuje'), 404);
-            }
-            $this->person = ModelPerson::createFromTableRow($row);
-        }
-
-        return $this->person;
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
+    function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+        $this->referencedPersonFactory = $referencedPersonFactory;
+    }
+
+
+    public function titleDefault() {
+        $this->setTitle(_('Stalking'));
+        $this->setIcon('fa fa-search');
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function titleView() {
+        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+        $this->setIcon('fa fa-eye');
+    }
+
+    /**
+     * @throws BadRequestException
+     */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('person', 'stalk.search', $this->getSelectedContest()));
     }
@@ -80,14 +88,6 @@ class StalkingPresenter extends BasePresenter {
         $basic = $this->getContestAuthorizator()->isAllowed($person, 'stalk.basic', $this->getSelectedContest());
 
         $this->setAuthorized($full || $restrict || $basic);
-    }
-
-    public function injectServicePerson(ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
-    }
-
-    function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
     /**
@@ -231,16 +231,20 @@ class StalkingPresenter extends BasePresenter {
         return $this->mode;
     }
 
-    public function titleDefault() {
-        $this->setTitle(_('Stalking'));
-        $this->setIcon('fa fa-search');
-    }
-
     /**
+     * @return ModelPerson
      * @throws BadRequestException
      */
-    public function titleView() {
-        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
-        $this->setIcon('fa fa-eye');
+    private function getPerson(): ModelPerson {
+        if (!$this->person) {
+            $id = $this->getParameter('id');
+            $row = $this->servicePerson->findByPrimary($id);
+            if (!$row) {
+                throw new BadRequestException(_('Osoba neexistuje'), 404);
+            }
+            $this->person = ModelPerson::createFromTableRow($row);
+        }
+
+        return $this->person;
     }
 }

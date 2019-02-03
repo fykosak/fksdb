@@ -4,7 +4,7 @@ namespace ORM\Models\Events;
 
 use AbstractModelSingle;
 use DbNames;
-use ModelFyziklaniSubmit;
+use Nette\Database\Table\Selection;
 use Nette\DateTime;
 
 /**
@@ -22,20 +22,15 @@ use Nette\DateTime;
  */
 class ModelFyziklaniTeam extends AbstractModelSingle {
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->name;
     }
 
     /**
-     *
-     * @return ModelFyziklaniSubmit[]
+     * @return \Nette\Database\Table\Selection
      */
-    public function getSubmits() {
-        $result = [];
-        foreach ($this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id') as $row) {
-            $result[] = ModelFyziklaniSubmit::createFromTableRow($row);
-        }
-        return $result;
+    public function getSubmits(): Selection {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id')->where('points IS NOT NULL');
     }
 
     /**
@@ -49,7 +44,10 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
         return null;
     }
 
-    public function hasOpenSubmit() {
+    /**
+     * @return bool
+     */
+    public function hasOpenSubmitting(): bool {
         $points = $this->points;
         return !is_numeric($points);
     }

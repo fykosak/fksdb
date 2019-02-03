@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\ORM\ModelEvent;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -31,28 +32,16 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param $event ModelEvent
-     * @return \Nette\Database\Table\Selection|null
+     * @return Selection
      */
-    public function findAll(ModelEvent $event) {
-        $result = $this->getTable()->where('event_id', $event->event_id);
-        return $result ?: null;
-    }
-
-    public function taskLabelToTaskId($taskLabel, $eventId) {
-        /**
-         * @var $task ModelFyziklaniTask
-         */
-        $task = $this->findByLabel($taskLabel, $eventId);
-        if ($task) {
-            return $task->fyziklani_task_id;
-        }
-        return false;
+    public function findAll(ModelEvent $event): Selection {
+        return $this->getTable()->where('event_id', $event->event_id);
     }
 
     /**
      * @param ModelEvent $event
      * @param bool $hideName
-     * @return array
+     * @return ModelFyziklaniTask[]
      */
     public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {
         $tasks = [];

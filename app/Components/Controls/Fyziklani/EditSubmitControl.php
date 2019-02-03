@@ -7,7 +7,6 @@ use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\RadioList;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -42,6 +41,9 @@ class EditSubmitControl extends Control {
         $this->event = $event;
     }
 
+    /**
+     * @return Form
+     */
     public function getForm(): Form {
         /**
          * @var $control FormControl
@@ -62,7 +64,7 @@ class EditSubmitControl extends Control {
         }
 
         $team = $this->submit->getTeam();
-        if (!$team->hasOpenSubmit()) {
+        if (!$team->hasOpenSubmitting()) {
             throw new BadRequestException(_('Bodování tohoto týmu je uzavřené.'));
         }
         /**

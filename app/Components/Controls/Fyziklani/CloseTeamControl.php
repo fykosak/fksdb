@@ -3,8 +3,11 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Factories\FyziklaniFactory;
+use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\BadSignalException;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
@@ -37,18 +40,24 @@ class CloseTeamControl extends Control {
      * @var \ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
+    /**
+     * @var FyziklaniFactory
+     */
+    private $fyziklaniFactory;
 
     public function __construct(
         ModelEvent $event,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ITranslator $translator,
-        \ServiceFyziklaniTask $serviceFyziklaniTask
+        \ServiceFyziklaniTask $serviceFyziklaniTask,
+        FyziklaniFactory $fyziklaniFactory
     ) {
         parent::__construct();
         $this->event = $event;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->translator = $translator;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->fyziklaniFactory = $fyziklaniFactory;
     }
 
     /**
@@ -57,13 +66,29 @@ class CloseTeamControl extends Control {
      */
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;
-        if (!$team->hasOpenSubmit()) {
-            throw  new BadRequestException(sprintf(_('Tým %s má již uzavřeno bodování'), $this->team->name));
+        if (!$team->hasOpenSubmitting()) {
+            throw  new BadRequestException(sprintf(_('Team %s has already closed submitting,'), $this->team->name));
         }
+        $this->getFormControl()->getForm()->setDefaults(['next_task' => $this->getNextTask()]);
     }
 
+    /**
+     * @return FormControl
+     * @throws BadSignalException
+     */
     public function getFormControl(): FormControl {
-        return $this->getComponent('form');
+        $control = $this->getComponent('form');
+        if ($control instanceof FormControl) {
+            return $control;
+        }
+        throw new BadSignalException('Expected FormControl got ' . \get_class($control));
+    }
+
+    /**
+     * @return TeamSubmitsGrid
+     */
+    protected function createComponentGrid(): TeamSubmitsGrid {
+        return $this->fyziklaniFactory->createTeamSubmitsGrid($this->team);
     }
 
     /**
@@ -93,21 +118,20 @@ class CloseTeamControl extends Control {
         $connection->beginTransaction();
         $submits = $this->team->getSubmits();
         $sum = 0;
-        foreach ($submits as $submit) {
+        foreach ($submits as $row) {
+            $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
             $sum += $submit->points;
         }
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
         $this->serviceFyziklaniTeam->save($this->team);
         $connection->commit();
-        $this->getPresenter()->flashMessage(\sprintf(_('Tím %s má úspešňe uzatvorené bodovanie s počtom bodov %d'), $this->team->name, $sum), 'success');
+        $this->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $this->team->name, $sum), 'success');
     }
 
     /**
      *
      */
     public function render() {
-        $this->getFormControl()->getForm()->setDefaults(['next_task' => $this->getNextTask()]);
-        $this->template->submits = $this->team->getSubmits();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
         $this->template->setTranslator($this->translator);
         $this->template->render();

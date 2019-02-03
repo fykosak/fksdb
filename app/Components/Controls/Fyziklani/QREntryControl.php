@@ -144,7 +144,7 @@ class QREntryControl extends Control {
     private function formValidate(Form $form) {
         try {
             $this->handler->checkTaskCode($form->getValues()->task_code);
-        } catch (TaskCodeException$e) {
+        } catch (TaskCodeException $e) {
             $form->addError($e->getMessage());
         }
     }

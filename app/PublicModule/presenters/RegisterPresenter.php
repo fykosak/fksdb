@@ -46,7 +46,6 @@ use ServiceContestant;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
-
     /**
      * @var integer
      * @persistent

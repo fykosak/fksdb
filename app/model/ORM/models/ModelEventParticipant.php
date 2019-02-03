@@ -36,18 +36,26 @@ use Nette\InvalidStateException;
  * @property string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel {
-
+    /**
+     * @return ModelPerson
+     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     */
+    public function __toString(): string {
         if (!$this->getPerson()) {
             throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
-        return $this->getPerson()->getFullName();
+        return $this->getPerson()->__toString();
     }
 
+    /**
+     * @return ModelEvent
+     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
     }

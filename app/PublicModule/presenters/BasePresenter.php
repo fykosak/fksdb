@@ -2,14 +2,11 @@
 
 namespace PublicModule;
 
-use AuthenticatedPresenter;
 use DbNames;
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\ModelContestant;
 use FKSDB\ORM\ModelPerson;
 use FKSDB\ORM\ModelRole;
-use IContestPresenter;
 use Nette\Application\BadRequestException;
 
 /**
@@ -19,41 +16,12 @@ use Nette\Application\BadRequestException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends AuthenticatedPresenter implements IContestPresenter {
+abstract class BasePresenter extends \ContestPresenter {
 
     /**
-     * @var int
-     * @persistent
+     * @var ModelContestant|null|false
      */
-    public $contestId;
-
-    /**
-     * @var int
-     * @persistent
-     */
-    public $year;
-
-    /**
-     * @persistent
-     */
-    public $lang;
-
-    /**
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\ForbiddenRequestException
-     */
-    protected function startup() {
-        parent::startup();
-        /**
-         * @var ContestChooser $contestChooser
-         * @var LanguageChooser $languageChooser
-         */
-        $contestChooser = $this->getComponent('contestChooser');
-        $contestChooser->syncRedirect();
-        $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->syncRedirect();
-    }
+    private $contestant = false;
 
     /**
      * @return ContestChooser
@@ -62,69 +30,6 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         $control = new ContestChooser($this->session, $this->yearCalculator, $this->serviceContest);
         $control->setContests(ModelRole::CONTESTANT);
         return $control;
-    }
-
-    /**
-     * @return LanguageChooser
-     */
-    protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session);
-    }
-
-    /** @var ModelContestant|null|false */
-    private $contestant = false;
-
-    /**
-     * @return \FKSDB\ORM\ModelContest
-     * @throws BadRequestException
-     */
-    public function getSelectedContest() {
-        /**
-         * @var ContestChooser $contestChooser
-         */
-        $contestChooser = $this->getComponent('contestChooser');
-        if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
-        }
-        return $contestChooser->getContest();
-    }
-
-    /**
-     * @return int
-     * @throws BadRequestException
-     */
-    public function getSelectedYear() {
-        /**
-         * @var ContestChooser $contestChooser
-         */
-        $contestChooser = $this->getComponent('contestChooser');
-        if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
-        }
-        return $contestChooser->getYear();
-    }
-
-    /**
-     * @return int
-     * @throws BadRequestException
-     */
-    public function getSelectedAcademicYear() {
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
-    }
-
-    /**
-     * @return mixed
-     * @throws BadRequestException
-     */
-    public function getSelectedLanguage() {
-        /**
-         * @var LanguageChooser $languageChooser
-         */
-        $languageChooser = $this->getComponent('languageChooser');
-        if (!$languageChooser->isValid()) {
-            throw new BadRequestException('No languages available.', 403);
-        }
-        return $languageChooser->getLanguage();
     }
 
     /**
@@ -146,27 +51,6 @@ abstract class BasePresenter extends AuthenticatedPresenter implements IContestP
         }
 
         return $this->contestant;
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getNavBarVariant(): array {
-        /**
-         * @var $contest \FKSDB\ORM\ModelContest
-         */
-        $contest = $this->serviceContest->findByPrimary($this->contestId);
-        if ($contest) {
-            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
-        }
-        return parent::getNavBarVariant();
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubTitle(): string {
-        return sprintf(_('%d. ročník'), $this->year);
     }
 
     /**

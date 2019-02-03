@@ -49,7 +49,7 @@ class ModelEventPersonAccommodation extends \AbstractModelSingle implements ISta
      * @return string
      * @throws \Exception
      */
-    public function getLabel() {
+    public function getLabel(): string {
         $eventAcc = $this->getEventAccommodation();
         $date = clone $eventAcc->date;
         $fromDate = $date->format('d. m.');

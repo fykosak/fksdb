@@ -64,11 +64,11 @@ abstract class PaymentGrid extends BaseGrid {
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      */
-    protected function addColumnsSymbols(){
-        $this->addColumn('constant_symbol', _('CS'));
+    protected function addColumnsSymbols() {
+        //$this->addColumn('constant_symbol', _('CS'));
         $this->addColumn('variable_symbol', _('VS'));
-        $this->addColumn('specific_symbol', _('SS'));
-        $this->addColumn('bank_account', _('Bank acc.'));
+        // $this->addColumn('specific_symbol', _('SS'));
+        // $this->addColumn('bank_account', _('Bank acc.'));
     }
 
 }

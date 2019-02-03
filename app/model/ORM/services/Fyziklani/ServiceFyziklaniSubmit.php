@@ -12,11 +12,11 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     protected $modelClassName = 'ModelFyziklaniSubmit';
 
     /**
-     * @param $taskId integer
-     * @param $teamId integer
+     * @param int $taskId
+     * @param int $teamId integer
      * @return ModelFyziklaniSubmit|null
      */
-    public function findByTaskAndTeam($taskId, $teamId) {
+    public function findByTaskAndTeam(int $taskId, int $teamId) {
         if (!$taskId || !$teamId) {
             return null;
         }
@@ -30,17 +30,23 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      * @param $event ModelEvent
-     * @return Selection|null
+     * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
-    public function submitExist($taskId, $teamId) {
-        if (is_null($this->findByTaskAndTeam($taskId, $teamId))) {
+    /**
+     * @param int $taskId
+     * @param int $teamId
+     * @return bool
+     */
+    public function submitExist(int $taskId, int $teamId): bool {
+        $submit = $this->findByTaskAndTeam($taskId, $teamId);
+        if (is_null($submit)) {
             return false;
         }
-        if (is_null($this->findByTaskAndTeam($taskId, $teamId)->points)) {
+        if (is_null($submit->points)) {
             return false;
         }
         return true;

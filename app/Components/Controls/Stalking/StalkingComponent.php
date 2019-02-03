@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\ModelPerson;
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -27,11 +28,11 @@ abstract class StalkingComponent extends Control {
      */
     protected $modelPerson;
     /**
-     * @var GettextTranslator
+     * @var ITranslator
      */
     protected $translator;
 
-    public function __construct(ModelPerson $modelPerson, GettextTranslator $translator, $mode) {
+    public function __construct(ModelPerson $modelPerson, ITranslator $translator, $mode) {
         parent::__construct();
         $this->mode = $mode;
         $this->modelPerson = $modelPerson;
