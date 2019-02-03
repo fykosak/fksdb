@@ -550,9 +550,9 @@ msgid "Chybně zadaný kód úlohy."
 msgstr "Wrong task number."
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:131
-#, php-format
+#, php-format, fuzzy
 msgid "Tým %s neexistuje."
-msgstr "Team with name '%s' already exists."
+msgstr "Team '%s' does not exists."
 
 #: i18n/../app/model/Fyziklani/TaskCode/TaskCodeHandler.php:143
 #, php-format

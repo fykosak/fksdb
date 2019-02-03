@@ -42,14 +42,14 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     /**
      * @return ModelEventType
      */
-    public function getEventType() {
+    public function getEventType(): ModelEventType {
         return ModelEventType::createFromTableRow($this->event_type);
     }
 
     /**
      * @return ModelEventAccommodation[]
      */
-    public function getEventAccommodations() {
+    public function getEventAccommodationsAsArray(): array {
         $data = [];
         foreach ($this->related(DbNames::TAB_EVENT_ACCOMMODATION) as $item) {
             $data[] = ModelEventAccommodation::createFromTableRow($item);
@@ -60,7 +60,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
     /**
      * @return ModelContest
      */
-    public function getContest() {
+    public function getContest(): ModelContest {
         return ModelContest::createFromTableRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 
@@ -69,10 +69,14 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      *
      * @return int
      */
-    public function getAcYear() {
+    public function getAcYear(): int {
         return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function getParameter($name) {
         if (!$this->holder) {
             throw new InvalidStateException('Event does not have any holder assigned.');
@@ -80,11 +84,17 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return $this->holder->getParameter($name);
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'event';
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     */
+    public function __toString(): string {
         return $this->name;
     }
 
@@ -100,7 +110,7 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
     }
 
-    public function __toArray() {
+    public function __toArray(): array {
         return [
             'eventId' => $this->event_id,
             'year' => $this->year,

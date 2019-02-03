@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -183,6 +184,9 @@ class ReferencedId extends HiddenField {
             } catch (ModelDataConflictException $e) {
                 $e->setReferencedId($this);
                 throw $e;
+            } catch (ExistingPaymentException $e) {
+                $this->addError($e->getMessage());
+                $this->rollback();
             }
         });
         $this->setValue($referencedId);

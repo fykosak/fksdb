@@ -25,16 +25,22 @@ use Nette\Security\IResource;
 class ModelEventAccommodation extends \AbstractModelSingle implements IResource, IEventReferencedModel {
     const ACC_DATE_FORMAT = 'Y-m-d';
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'event.accommodation';
     }
 
+    /**
+     * @return ModelEvent
+     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromTableRow($this->event);
     }
 
     /**
-     * @return ModelAddress
+     * @return ModelAddress|null
      */
     public function getAddress() {
         if ($this->address) {
@@ -71,6 +77,10 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource,
         return $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION)->count();
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function __toArray(): array {
         return [
             'eventAccommodationId' => $this->event_accommodation_id,
@@ -88,6 +98,10 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource,
         ];
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getLabel(): string {
         $date = clone $this->date;
         $fromDate = $date->format('d. m.');
@@ -95,6 +109,10 @@ class ModelEventAccommodation extends \AbstractModelSingle implements IResource,
         return \sprintf(_('Ubytovaní od %s do %s v hoteli %s.'), $fromDate, $toDate, $this->name);
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function __toString(): string {
         return $this->getLabel();
     }

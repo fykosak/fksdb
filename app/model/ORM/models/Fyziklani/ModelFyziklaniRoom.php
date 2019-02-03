@@ -11,7 +11,7 @@
 
 class ModelFyziklaniRoom extends \AbstractModelSingle {
 
-    public function __toArray() {
+    public function __toArray(): array {
         return [
             'roomId' => $this->room_id,
             'name' => $this->name,

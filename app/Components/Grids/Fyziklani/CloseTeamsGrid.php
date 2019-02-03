@@ -69,7 +69,7 @@ class CloseTeamsGrid extends BaseGrid {
             /**
              * @var $row ModelFyziklaniTeam
              */
-            return $row->hasOpenSubmit();
+            return $row->hasOpenSubmitting();
         });
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
         $this->setDataSource(new NDataSource($teams));

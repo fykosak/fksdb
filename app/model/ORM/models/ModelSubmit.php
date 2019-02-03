@@ -20,6 +20,8 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  * @property ActiveRow e_fyziklani_team
  * @property int e_fyziklani_team_id
  * @property int points
+ * @property int ct_id
+ * @property int task_id
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
 

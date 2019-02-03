@@ -35,7 +35,7 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
      * @return string
      */
     public function getData(): string {
-        $accommodations = $this->event->getEventAccommodations();
+        $accommodations = $this->event->getEventAccommodationsAsArray();
 
         $accommodationDef = [];
         foreach ($accommodations as $accommodation) {

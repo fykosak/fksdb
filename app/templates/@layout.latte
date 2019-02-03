@@ -29,15 +29,15 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
-            {block nav }
+            {block nav}
                 {foreach $navRoots as $root}
                     {control navigation:navbar $root}
                 {/foreach}
             {/block}
+            <ul class="nav navbar-nav ml-auto">
+                {block user-info}
+                    {if $user->isLoggedIn()}
 
-            {block user-info}
-                {if $user->isLoggedIn()}
-                    <ul class="nav navbar-nav navbar-right">
                         {var $login => $user->getIdentity()}
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
@@ -54,10 +54,10 @@
                                 <a class="dropdown-item" n:href=":Authentication:logout">{_'Odhlásit'}</a>
                             </div>
                         </li>
-                    </ul>
-                {/if}
-            {/block}
 
+                    {/if}
+                {/block}
+            </ul>
         </div><!-- /.navbar-collapse -->
     </nav>
     <main id="wrap" style="min-height:100%">

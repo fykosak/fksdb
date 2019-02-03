@@ -1,5 +1,7 @@
 <?php
 
+use Nette\Database\Table\ActiveRow;
+use Nette\DateTime;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
@@ -11,28 +13,28 @@ use ORM\Models\Events\ModelFyziklaniTeam;
  * @property integer fyziklani_task_id
  * @property integer fyziklani_submit_id
  * @property integer task_id
- * @property \Nette\DateTime created
- * @property \Nette\DateTime modified
+ * @property ActiveRow e_fyziklani_team
+ * @property ActiveRow fyziklani_task
+ * @property DateTime created
+ * @property DateTime modified
  */
 class ModelFyziklaniSubmit extends \AbstractModelSingle {
 
     /**
      * @return ModelFyziklaniTask
      */
-    public function getTask() {
-        $data = $this->ref(DbNames::TAB_FYZIKLANI_TASK, 'fyziklani_task_id');
-        return ModelFyziklaniTask::createFromTableRow($data);
+    public function getTask(): ModelFyziklaniTask {
+        return ModelFyziklaniTask::createFromTableRow($this->fyziklani_task);
     }
 
     /**
      * @return ModelFyziklaniTeam
      */
-    public function getTeam() {
-        $data = $this->ref(DbNames::TAB_E_FYZIKLANI_TEAM, 'e_fyziklani_team_id');
-        return ModelFyziklaniTeam::createFromTableRow($data);
+    public function getTeam(): ModelFyziklaniTeam {
+        return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
     }
 
-    public function __toArray() {
+    public function __toArray(): array {
         return [
             'points' => $this->points,
             'teamId' => $this->e_fyziklani_team_id,

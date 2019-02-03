@@ -10,9 +10,9 @@ use FKSDB\ORM\ModelSubmit;
  */
 interface IStorageProcessing {
 
-    public function setInputFile($filename);
+    public function setInputFile(string $filename);
 
-    public function setOutputFile($filename);
+    public function setOutputFile(string $filename);
 
     public function process(ModelSubmit $submit);
 }
