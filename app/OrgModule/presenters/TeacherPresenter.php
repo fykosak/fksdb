@@ -45,7 +45,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
          * @var $model \FKSDB\ORM\ModelTeacher
          */
         $model = $this->getModel();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullname()));
+        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
         $this->setIcon('fa fa-pencil');
     }
 

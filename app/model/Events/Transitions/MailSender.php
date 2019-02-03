@@ -155,7 +155,7 @@ class MailSender extends Object {
         if ($this->hasBcc()) {
             $message->addBcc($holder->getParameter(self::BCC_PARAM));
         }
-        $message->addTo($email, $person->getFullname());
+        $message->addTo($email, $person->getFullName());
 
         return $message;
     }

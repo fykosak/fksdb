@@ -56,7 +56,7 @@ class Authentication {
         $redirectURL = $this->setHttpParams($this->loginURL, $data);
 
         header("Location: $redirectURL", true);
-        echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlSpecialChars($redirectURL) . "\">Please click here to continue</a>.</p>";
+        echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlspecialchars($redirectURL) . "\">Please click here to continue</a>.</p>";
         exit;
     }
 
@@ -72,7 +72,7 @@ class Authentication {
         $redirectURL = $this->setHttpParams($this->logoutURL, $data);
 
         header("Location: $redirectURL", true);
-        echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlSpecialChars($redirectURL) . "\">Please click here to continue</a>.</p>";
+        echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlspecialchars($redirectURL) . "\">Please click here to continue</a>.</p>";
         exit;
     }
 

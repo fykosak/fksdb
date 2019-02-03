@@ -7,7 +7,6 @@ use DateTime;
 use DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
-use ORM\Models\Events\ModelFyziklaniTeam;
 
 /**
  *

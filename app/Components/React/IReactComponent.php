@@ -23,4 +23,9 @@ interface IReactComponent {
      * @return string
      */
     function getData(): string;
+
+    /**
+     * @return array
+     */
+    function getActions(): array;
 }

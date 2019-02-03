@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\ModelEvent;
@@ -20,6 +21,10 @@ class TaskCodeInput extends FyziklaniReactControl {
         $this->handler = $handler;
     }
 
+    /**
+     * @return string
+     * @throws \Nette\Utils\JsonException
+     */
     public function getData(): string {
         return Json::encode([
             'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
@@ -28,20 +33,33 @@ class TaskCodeInput extends FyziklaniReactControl {
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function getMode(): string {
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getComponentName(): string {
         return 'submit-form';
     }
 
-    protected function getActions() {
+    /**
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    public function getActions(): array {
         $actions = parent::getActions();
         $actions['save'] = $this->link('save!');
         return $actions;
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function handleSave() {
         $request = $this->getReactRequest();
         $response = new \ReactResponse();
@@ -50,6 +68,8 @@ class TaskCodeInput extends FyziklaniReactControl {
             $log = $this->handler->preProcess($request->requestData['code'], +$request->requestData['points']);
             $response->addMessage(new \ReactMessage($log, 'success'));
         } catch (TaskCodeException $e) {
+            $response->addMessage(new \ReactMessage($e->getMessage(), 'danger'));
+        } catch (ClosedSubmittingException $e) {
             $response->addMessage(new \ReactMessage($e->getMessage(), 'danger'));
         }
         $this->getPresenter()->sendResponse($response);

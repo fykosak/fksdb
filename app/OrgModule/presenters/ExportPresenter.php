@@ -420,7 +420,7 @@ class ExportPresenter extends SeriesPresenter {
             $this->handleSave($values, $storedQuery);
 
             $this->flashMessage(_('Dotaz upraven.'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (BadRequestException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);
@@ -443,7 +443,7 @@ class ExportPresenter extends SeriesPresenter {
 
 
             $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (BadRequestException $e) {
             $this->flashMessage($e->getMessage(), self::FLASH_ERROR);

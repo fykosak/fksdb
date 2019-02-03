@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Stalking\Helpers\ContestBadge;
 use FKSDB\Components\Controls\Stalking\Helpers\PermissionDenied;
-use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\ModelPerson;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;

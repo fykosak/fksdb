@@ -86,7 +86,7 @@ class PersonProvider implements IFilteredDataProvider {
             $place = $address->getAddress()->city;
         }
         return [
-            self::LABEL => $person->getFullname(),
+            self::LABEL => $person->getFullName(),
             self::VALUE => $person->person_id,
             self::PLACE => $place,
         ];

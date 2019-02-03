@@ -43,6 +43,7 @@ class CloseControl extends Control {
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
@@ -110,6 +111,7 @@ class CloseControl extends Control {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);

@@ -25,7 +25,7 @@ class RoutingEdit extends FyziklaniReactControl {
         return 'routing';
     }
 
-    protected function getActions(): array {
+    public function getActions(): array {
         $actions = parent::getActions();
         $actions['save'] = $this->link('save!');
         return $actions;

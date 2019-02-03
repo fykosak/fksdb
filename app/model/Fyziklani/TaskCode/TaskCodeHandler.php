@@ -37,6 +37,7 @@ class TaskCodeHandler {
      * @param string $code
      * @param int $points
      * @return string
+     * @throws ClosedSubmittingException
      * @throws TaskCodeException
      */
     public function preProcess(string $code, int $points): string {
@@ -97,6 +98,7 @@ class TaskCodeHandler {
     /**
      * @param string $code
      * @return bool
+     * @throws ClosedSubmittingException
      * @throws TaskCodeException
      */
     public function checkTaskCode(string $code): bool {
@@ -108,7 +110,7 @@ class TaskCodeHandler {
         $team = $this->getTeamFromCode($code);
         /* otvorenie submitu */
         if (!$team->hasOpenSubmitting()) {
-            throw new TaskCodeException(_('Bodování tohoto týmu je uzavřené.'));
+            throw new ClosedSubmittingException($team);
         }
         $task = $this->getTaskFromCode($code);
         /* Nezadal sa duplicitne toto nieje editácia */

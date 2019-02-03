@@ -118,7 +118,7 @@ class PersonsGrid extends BaseGrid {
         $el = Html::el('a');
         $el->addAttributes(['href' => $this->presenter->link(':Org:Stalking:view', ['id' => $person->person_id,])]);
         $el->title('person.created ' . $person->created);
-        $el->setText($person->getFullname() . ' (' . $person->person_id . ')');
+        $el->setText($person->getFullName() . ' (' . $person->person_id . ')');
         return $el;
     }
 }

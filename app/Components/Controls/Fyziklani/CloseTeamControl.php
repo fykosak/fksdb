@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Factories\FyziklaniFactory;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\BadSignalException;
@@ -67,7 +68,7 @@ class CloseTeamControl extends Control {
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;
         if (!$team->hasOpenSubmitting()) {
-            throw  new BadRequestException(sprintf(_('Team %s has already closed submitting,'), $this->team->name));
+            throw new ClosedSubmittingException($this->team);
         }
         $this->getFormControl()->getForm()->setDefaults(['next_task' => $this->getNextTask()]);
     }

@@ -13,7 +13,7 @@ abstract class ResultsAndStatistics extends FyziklaniReactControl {
         return '';
     }
 
-    protected function getActions() {
+    public function getActions(): array {
         $actions = parent::getActions();
         $actions['refresh'] = $this->link('refresh!');
         return $actions;

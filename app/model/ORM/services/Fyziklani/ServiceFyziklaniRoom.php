@@ -1,7 +1,5 @@
 <?php
 
-use Nette\Database\Table\ActiveRow;
-
 class ServiceFyziklaniRoom extends \AbstractServiceSingle {
 
     protected $tableName = \DbNames::TAB_FYZIKLANI_ROOM;

@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\PresenterBuilder;
 use Nette\Application\UI\Control;
-use Nette\Diagnostics\Debugger;
 use Nette\InvalidArgumentException;
 use Nette\Templating\FileTemplate;
 use ReflectionClass;

@@ -33,6 +33,7 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function getData(): string {
         $accommodations = $this->event->getEventAccommodationsAsArray();
@@ -48,5 +49,9 @@ abstract class AccommodationField extends TextInput implements IReactComponent {
     public function attached($obj) {
         parent::attached($obj);
         $this->attachedReact($obj);
+    }
+
+    public function getActions(): array {
+        return [];
     }
 }
