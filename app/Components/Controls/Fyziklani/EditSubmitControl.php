@@ -121,7 +121,7 @@ class EditSubmitControl extends Control {
             'modified' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-        $this->getPresenter()->flashMessage(\sprintf(_('Body byly změněny: Tým "%s", body %d.'), $submit->getTeam()->name, $submit->points), 'success');
+        $this->getPresenter()->flashMessage(\sprintf(_('Body byly změněny: Tým "%s", body %d.'), $submit->getTeam()->name, $submit->points), \BasePresenter::FLASH_SUCCESS);
 
     }
 

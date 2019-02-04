@@ -45,4 +45,8 @@ class ScheduleField extends TextInput implements IReactComponent {
         parent::attached($obj);
         $this->attachedReact($obj);
     }
+
+    public function getActions(): array {
+        return [];
+    }
 }

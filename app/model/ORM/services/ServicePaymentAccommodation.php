@@ -8,7 +8,6 @@ use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use Nette\ArrayHash;
-use Nette\Diagnostics\Debugger;
 use Submits\StorageException;
 
 /**
@@ -23,7 +22,6 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
      * @param ArrayHash $data
      * @param ModelPayment $payment
      * @throws DuplicateAccommodationPaymentException
-     * @throws EmptyDataException
      */
     public function prepareAndUpdate($data, ModelPayment $payment) {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);

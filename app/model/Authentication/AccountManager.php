@@ -98,7 +98,7 @@ class AccountManager {
         $message->setHtmlBody($template);
         $message->setSubject(_('Založení účtu'));
         $message->setFrom($this->getEmailFrom());
-        $message->addTo($email, $person->getFullname());
+        $message->addTo($email, $person->getFullName());
 
         try {
             $this->mailer->send($message);

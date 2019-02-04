@@ -43,11 +43,12 @@ class CloseControl extends Control {
 
     /**
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     private function closeGlobalFormSucceeded() {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
         $closeStrategy->closeGlobal($msg);
-        $this->getPresenter()->flashMessage(Html::el()->add(Html::el('h3')->add('pořadí bylo uložené'))->add(Html::el('ul')->add($msg)), 'success');
+        $this->getPresenter()->flashMessage(Html::el()->add(Html::el('h3')->add('pořadí bylo uložené'))->add(Html::el('ul')->add($msg)), \BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 
@@ -110,11 +111,12 @@ class CloseControl extends Control {
     /**
      * @param Form $form
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
      */
     public function closeCategoryFormSucceeded(Form $form) {
         $closeStrategy = new CloseSubmitStrategy($this->event, $this->serviceFyziklaniTeam);
         $closeStrategy->closeByCategory($form->getValues()->category, $msg);
-        $this->getPresenter()->flashMessage(Html::el()->add(Html::el('h3')->add('pořadí bylo uložené'))->add(Html::el('ul')->add($msg)), 'success');
+        $this->getPresenter()->flashMessage(Html::el()->add(Html::el('h3')->add('pořadí bylo uložené'))->add(Html::el('ul')->add($msg)), \BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 

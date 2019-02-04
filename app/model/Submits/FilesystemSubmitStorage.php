@@ -246,7 +246,7 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $label = Strings::webalize($task->label, null, false);
 
         $contestant = $submit->getContestant();
-        $contestantName = $contestant->getPerson()->getFullname();
+        $contestantName = $contestant->getPerson()->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 

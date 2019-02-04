@@ -131,7 +131,7 @@ class PointsPresenter extends SeriesPresenter {
 
         foreach ($contestants as $row) {
             $contestant = ModelContestant::createFromTableRow($row);
-            $fullname = $contestant->getPerson()->getFullname();
+            $fullname = $contestant->getPerson()->getFullName();
             $schoolAbbrev = $contestant->getPerson()->getHistory($this->getSelectedAcademicYear())->getSchool()->name_abbrev;
             $schoolLabel = Html::el('small');
             $schoolLabel->setText('(' . $schoolAbbrev . ')');

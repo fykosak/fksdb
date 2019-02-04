@@ -233,7 +233,7 @@ class PaymentPresenter extends BasePresenter {
      */
     public function actionEdit($id) {
         if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), 'danger');
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getModel()->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
         }
         /**

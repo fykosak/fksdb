@@ -74,7 +74,7 @@ class ClosePresenter extends BasePresenter {
             $control = $this->getComponent('closeTeamControl');
             $control->setTeam($this->team);
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), 'danger');
+            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $this->redirect('list');
         }
 
