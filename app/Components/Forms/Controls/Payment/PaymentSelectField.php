@@ -34,6 +34,7 @@ class PaymentSelectField extends TextInput implements IReactComponent {
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function getData(): string {
         $query = $this->serviceEventPersonAccommodation->where('event_accommodation.event_id', $this->event->event_id);
@@ -66,5 +67,9 @@ class PaymentSelectField extends TextInput implements IReactComponent {
 
     public function getModuleName(): string {
         return 'payment';
+    }
+
+    public function getActions(): array {
+        return [];
     }
 }

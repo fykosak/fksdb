@@ -751,6 +751,65 @@ body[data-contest=vyfuk] h1, body[data-contest=vyfuk] h2, body[data-contest=vyfu
   color: #d9534f;
 }
 
+.badge-1 {
+  color: white;
+  background-color: #1f77b4;
+}
+
+/* style 2 */
+.badge-2 {
+  color: black;
+  background-color: #ff7f0e;
+}
+
+/* style 3 */
+.badge-3 {
+  color: white;
+  background-color: #2ca02c;
+}
+
+/* style 4 */
+.badge-4 {
+  color: white;
+  background-color: #d62728;
+}
+
+/* style 5 */
+.badge-5 {
+  color: white;
+  background-color: #9467bd;
+}
+
+/* style 6 */
+.badge-6 {
+  color: white;
+  background-color: #8c564b;
+}
+
+/* style 7 */
+.badge-7 {
+  color: black;
+  background-color: #e377c2;
+}
+
+/* style 8 */
+.badge-8 {
+  color: black;
+  background-color: #cccccc;
+}
+
+/* style 9 */
+.badge-9 {
+  color: black;
+  background-color: #bcbd22;
+}
+
+/* style 10 */
+.badge-10 {
+  color: black;
+  background-color: #17becf;
+}
+
 .bg-white-container {
   background-color: rgba(255, 255, 255, 0.85);
 }

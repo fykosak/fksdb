@@ -5,7 +5,6 @@ namespace Persons;
 use Authentication\AccountManager;
 use BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\PersonAccommodation\ExistingPaymentException;
 use FKSDB\ORM\ModelContest;
 use FKSDB\ORM\ModelPerson;
 use FormUtils;

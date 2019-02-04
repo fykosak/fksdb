@@ -64,7 +64,7 @@ class StalkingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleView() {
-        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullname()));
+        $this->setTitle(sprintf(_('Stalking %s'), $this->getPerson()->getFullName()));
         $this->setIcon('fa fa-eye');
     }
 

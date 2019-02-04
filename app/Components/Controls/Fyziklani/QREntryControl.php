@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\ModelEvent;
@@ -70,8 +71,10 @@ class QREntryControl extends Control {
         try {
             $this->handler->checkTaskCode($code);
         } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
+        } catch (ClosedSubmittingException $e) {
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
         }
         /**
          * @var $control FormControl
@@ -119,6 +122,7 @@ class QREntryControl extends Control {
 
     /**
      * @param Form $form
+     * @throws ClosedSubmittingException
      */
     private function entryFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -132,9 +136,9 @@ class QREntryControl extends Control {
         }
         try {
             $log = $this->handler->preProcess($values->task_code, $points);
-            $this->getPresenter()->flashMessage($log, 'success');
+            $this->getPresenter()->flashMessage($log, \BasePresenter::FLASH_SUCCESS);
         } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
         }
     }
 
@@ -145,6 +149,8 @@ class QREntryControl extends Control {
         try {
             $this->handler->checkTaskCode($form->getValues()->task_code);
         } catch (TaskCodeException $e) {
+            $form->addError($e->getMessage());
+        } catch (ClosedSubmittingException $e) {
             $form->addError($e->getMessage());
         }
     }

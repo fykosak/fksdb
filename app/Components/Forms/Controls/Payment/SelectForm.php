@@ -170,11 +170,11 @@ class SelectForm extends Control {
         try {
             $this->servicePaymentAccommodation->prepareAndUpdate($values->payment_accommodation, $model);
         } catch (DuplicateAccommodationPaymentException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
+            $this->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         } catch (EmptyDataException $e) {
-            $this->flashMessage($e->getMessage(), 'danger');
+            $this->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         }

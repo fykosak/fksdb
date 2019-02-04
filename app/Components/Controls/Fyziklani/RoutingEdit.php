@@ -25,7 +25,7 @@ class RoutingEdit extends FyziklaniReactControl {
         return 'routing';
     }
 
-    protected function getActions(): array {
+    public function getActions(): array {
         $actions = parent::getActions();
         $actions['save'] = $this->link('save!');
         return $actions;
@@ -37,7 +37,7 @@ class RoutingEdit extends FyziklaniReactControl {
         $response = new \ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
+        $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
         $this->getPresenter()->sendResponse($response);
     }
 }

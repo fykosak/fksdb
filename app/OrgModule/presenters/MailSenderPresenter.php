@@ -51,12 +51,12 @@ class MailSenderPresenter extends BasePresenter {
         $values = $form->getValues();
         $toAddress = \explode(',', $values->to);
         if (\count($toAddress) > 40) {
-            $this->flashMessage(_('Max 40 to address (safety limit)'), 'warning');
+            $this->flashMessage(_('Max 40 to address (safety limit)'), \BasePresenter::FLASH_WARNING);
             return;
         }
         foreach (\explode(',', $values->to) as $to) {
             if (!$to) {
-                $this->flashMessage(_('Address is empty'), 'warning');
+                $this->flashMessage(_('Address is empty'), \BasePresenter::FLASH_WARNING);
                 continue;
             }
             $message = new Message();
@@ -73,7 +73,7 @@ class MailSenderPresenter extends BasePresenter {
             $message->setHtmlBody($values->text);
             $message->addTo($to);
             $this->mailer->send($message);
-            $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), 'success');
+            $this->flashMessage(\sprintf(_('%s: Message "%s" send to %s'), \date('c'), $values->subject, $to), \BasePresenter::FLASH_SUCCESS);
             \sleep(\rand(0, 2));
         }
     }

@@ -95,14 +95,14 @@ class AllSubmitsGrid extends SubmitsGrid {
     public function handleDelete($id) {
         $row = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$row) {
-            $this->flashMessage(_('Submit dos not exists.'), 'danger');
+            $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
             return;
         }
         $submit = \ModelFyziklaniSubmit::createFromTableRow($row);
 
         if (!$submit->getTeam()->hasOpenSubmitting()) {
 
-            $this->flashMessage('Tento tým má už uzavřené bodování', 'warning');
+            $this->flashMessage('Tento tým má už uzavřené bodování', \BasePresenter::FLASH_WARNING);
             return;
         }
         $this->serviceFyziklaniSubmit->updateModel($submit, [
@@ -114,6 +114,6 @@ class AllSubmitsGrid extends SubmitsGrid {
             'modified' => null
         ]);
         $this->serviceFyziklaniSubmit->save($submit);
-        $this->flashMessage(_('Submit has been deleted.'), 'success');
+        $this->flashMessage(_('Submit has been deleted.'), \BasePresenter::FLASH_SUCCESS);
     }
 }

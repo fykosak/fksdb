@@ -190,11 +190,11 @@ class PersonPresenter extends EntityPresenter {
         $this->servicePersonInfo->save($trunkPI);
 
         $this->flashMessage(_('Osoby úspešně nesloučeny.'), self::FLASH_SUCCESS);
-        $this->backlinkRedirect(true);
+        $this->backLinkRedirect(true);
     }
 
     public function titleMerge() {
-        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullname(), $this->trunkPerson->person_id, $this->mergedPerson->getFullname(), $this->mergedPerson->person_id));
+        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
     }
 
     public function titleList() {
@@ -291,7 +291,7 @@ class PersonPresenter extends EntityPresenter {
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
-            $this->backlinkRedirect(true);
+            $this->backLinkRedirect(true);
         }
 
         $values = $form->getValues();
@@ -306,7 +306,7 @@ class PersonPresenter extends EntityPresenter {
             $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
             $flashDump = $this->flashDumpFactory->createPersonMerge();
             $flashDump->dump($logger, $this);
-            $this->backlinkRedirect(true);
+            $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());
             $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);

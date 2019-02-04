@@ -337,7 +337,7 @@ class EventPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();

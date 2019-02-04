@@ -112,7 +112,7 @@ class AutocompleteSelectBox extends TextBase {
 
         $control->data['ac'] = (int)true;
         $control->data['ac-ajax'] = (int)$this->isAjax();
-        $control->data['ac-multiselect'] = (int)$this->isMultiselect();
+        $control->data['ac-multiselect'] = (int)$this->isMultiSelect();
         $control->data['ac-ajax-url'] = $this->ajaxUrl;
         $control->data['ac-render-method'] = $this->renderMethod;
 
@@ -120,7 +120,7 @@ class AutocompleteSelectBox extends TextBase {
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
-            if ($this->isMultiselect()) {
+            if ($this->isMultiSelect()) {
                 $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
@@ -159,7 +159,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     public function setValue($value) {
-        if ($this->isMultiselect()) {
+        if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
             } else if ($value === '') {

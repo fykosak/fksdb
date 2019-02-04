@@ -53,7 +53,7 @@ abstract class ReactComponent extends Control implements IReactComponent {
         $this->template->render();
     }
 
-    protected function getActions() {
+    public function getActions(): array {
         return [];
     }
 

@@ -176,7 +176,7 @@ class SchoolPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(_('Škola založena'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();
@@ -223,7 +223,7 @@ class SchoolPresenter extends EntityPresenter {
             }
 
             $this->flashMessage(_('Škola upravena'), self::FLASH_SUCCESS);
-            $this->backlinkRedirect();
+            $this->backLinkRedirect();
             $this->redirect('list'); // if there's no backlink
         } catch (ModelException $e) {
             $connection->rollBack();

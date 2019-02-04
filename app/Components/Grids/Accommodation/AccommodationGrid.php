@@ -91,7 +91,7 @@ class AccommodationGrid extends BaseGrid {
             $model->delete();
         } catch (\PDOException $exception) {
             if ($exception->getCode() == 23000) {
-                $this->flashMessage(_('Nelze zmazat ubytovaní, když je nekto ubytovaný'), 'danger');
+                $this->flashMessage(_('Nelze zmazat ubytovaní, když je nekto ubytovaný'), \BasePresenter::FLASH_ERROR);
                 $this->redirect('this');
             };
         };
