@@ -126,7 +126,7 @@ class CloseTeamControl extends Control {
         $this->serviceFyziklaniTeam->updateModel($this->team, ['points' => $sum]);
         $this->serviceFyziklaniTeam->save($this->team);
         $connection->commit();
-        $this->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $this->team->name, $sum), 'success');
+        $this->getPresenter()->flashMessage(\sprintf(_('Team %s has successfully closed submitting, with total %d points.'), $this->team->name, $sum), \BasePresenter::FLASH_SUCCESS);
     }
 
     /**

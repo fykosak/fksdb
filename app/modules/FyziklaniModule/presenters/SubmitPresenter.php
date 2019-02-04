@@ -61,7 +61,7 @@ class SubmitPresenter extends BasePresenter {
      */
     public function actionQrEntry($id) {
         if (!$id) {
-            $this->flashMessage('Code is required', 'danger');
+            $this->flashMessage('Code is required', \BasePresenter::FLASH_ERROR);
             return;
         }
         /**
@@ -83,7 +83,7 @@ class SubmitPresenter extends BasePresenter {
         try {
             $control->setSubmit(+$id);
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), 'danger');
+            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
             $this->redirect('list');
         }
     }

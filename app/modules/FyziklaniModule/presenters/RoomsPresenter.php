@@ -62,7 +62,7 @@ class RoomsPresenter extends BasePresenter {
             $response = new \ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), 'success'));
+            $response->addMessage(new \ReactMessage(_('Zmeny boli uložené'), \BasePresenter::FLASH_SUCCESS));
             $this->sendResponse($response);
         }
     }

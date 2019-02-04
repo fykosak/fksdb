@@ -37,9 +37,12 @@ use Nette\InvalidStateException;
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel {
     /**
-     * @return ModelPerson
+     * @return ModelPerson|null
      */
-    public function getPerson(): ModelPerson {
+    public function getPerson() {
+        if (!$this->person) {
+            return null;
+        }
         return ModelPerson::createFromTableRow($this->person);
     }
 

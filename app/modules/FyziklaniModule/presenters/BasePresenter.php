@@ -98,7 +98,7 @@ abstract class BasePresenter extends EventBasePresenter {
     protected function startup() {
         parent::startup();
         if (!$this->isEventFyziklani()) {
-            $this->flashMessage('Event nieje fyziklani', 'warning');
+            $this->flashMessage('Event nieje fyziklani', \BasePresenter::FLASH_WARNING);
             $this->redirect(':Event:Dashboard:default');
         }
         /**

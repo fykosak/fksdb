@@ -33,7 +33,7 @@ class BilletedSingleGrid extends BilletedGrid {
         $dataSource = new NDataSource($accommodations);
         $this->setDataSource($dataSource);
 
-        $this->addColumnName();
+        $this->addColumnPerson();
 
         $this->addColumnPayment();
 

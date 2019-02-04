@@ -38,10 +38,10 @@ class BilletedAllGrid extends BilletedGrid {
 
         $this->setDataSource($dataSource);
 
-        $this->addColumnName();
+        $this->addColumnPerson();
         $this->addColumnRole();
 
-        $this->addColumn('accommodation', _('Accommodation'))->setRenderer(function ($row) {
+        $this->addColumn('event_accommodation_id', _('Accommodation'))->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             return $model->getEventAccommodation()->getLabel();
         });

@@ -47,13 +47,13 @@ class FyziklaniTaskImportProcessor {
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
-                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), 'success'];
+                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                         $this->serviceFyziklaniTask->updateModel($task, [
                             'label' => $row['label'],
                             'name' => $row['name']
                         ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), 'info'];
+                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']),\BasePresenter::FLASH_INFO];
                 } else {
                         $messages[] = [
                             sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
@@ -62,7 +62,7 @@ class FyziklaniTaskImportProcessor {
                 }
                 $this->serviceFyziklaniTask->save($task);
             } catch (\Exception $e) {
-                $messages[] = [_('Vyskytla se chyba'), 'danger'];
+                $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
                 Debugger::log($e);
                 $connection->rollBack();
                 return;

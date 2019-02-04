@@ -71,10 +71,10 @@ class QREntryControl extends Control {
         try {
             $this->handler->checkTaskCode($code);
         } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
             return;
         } catch (ClosedSubmittingException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
         }
         /**
          * @var $control FormControl
@@ -136,9 +136,9 @@ class QREntryControl extends Control {
         }
         try {
             $log = $this->handler->preProcess($values->task_code, $points);
-            $this->getPresenter()->flashMessage($log, 'success');
+            $this->getPresenter()->flashMessage($log, \BasePresenter::FLASH_SUCCESS);
         } catch (TaskCodeException $e) {
-            $this->getPresenter()->flashMessage($e->getMessage(), 'danger');
+            $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
         }
     }
 

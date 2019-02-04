@@ -85,15 +85,16 @@ abstract class BilletedGrid extends BaseGrid {
                     $hasRole = true;
                     $team = ModelFyziklaniTeam::createFromTableRow($row);
                     $container->add(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-primary'])
+                        ->addAttributes(['class' => 'badge badge-9'])
                         ->add(_('Teacher') . ' - ' . $team->name));
                 }
+
                 $eventOrgs = $person->getEventOrg()->where('event_id', $eventId);
                 foreach ($eventOrgs as $row) {
                     $hasRole = true;
                     $org = ModelEventOrg::createFromTableRow($row);
                     $container->add(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-warning'])
+                        ->addAttributes(['class' => 'badge badge-7'])
                         ->add(_('Org') . ' - ' . $org->note));
                 }
 
@@ -102,7 +103,7 @@ abstract class BilletedGrid extends BaseGrid {
                     $hasRole = true;
                     $participant = ModelEventParticipant::createFromTableRow($row);
                     $container->add(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-success'])
+                        ->addAttributes(['class' => 'badge badge-10'])
                         ->add(_('Participant') . ' - ' . _($participant->status)));
                 }
 
@@ -131,8 +132,8 @@ abstract class BilletedGrid extends BaseGrid {
     /**
      * @throws \NiftyGrid\DuplicateColumnException
      */
-    protected function addColumnName() {
-        $this->addColumn('name', _('Name'))->setRenderer(function ($row) {
+    protected function addColumnPerson() {
+        $this->addColumn('person_id', _('Person'))->setRenderer(function ($row) {
             $model = ModelEventPersonAccommodation::createFromTableRow($row);
             return $model->getPerson()->getFullName();
         });
