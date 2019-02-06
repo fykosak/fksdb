@@ -27,10 +27,19 @@ class StoredQueryFactory {
      */
     private $serviceStoredQueryTagType;
 
+    /**
+     * StoredQueryFactory constructor.
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
+     */
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createConsole($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
@@ -41,6 +50,11 @@ class StoredQueryFactory {
         return $container;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createMetadata($options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
@@ -67,6 +81,11 @@ class StoredQueryFactory {
         return $container;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return Replicator
+     */
     public function createParametersMetadata($options = 0, ControlGroup $group = null) {
         $replicator = new Replicator(function($replContainer) use ($group) {
                     $this->buildParameterMetadata($replContainer, $group);
@@ -112,6 +131,12 @@ class StoredQueryFactory {
         $container->addText('default', _('Výchozí hodnota'));
     }
 
+    /**
+     * @param ModelStoredQuery $queryPattern
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     */
     public function createParametersValues(ModelStoredQuery $queryPattern, $options = 0, ControlGroup $group = null) {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
@@ -144,6 +169,13 @@ class StoredQueryFactory {
         return $container;
     }
 
+    /**
+     * @param $ajax
+     * @param $label
+     * @param IDataProvider $dataProvider
+     * @param null $renderMethod
+     * @return AutocompleteSelectBox
+     */
     private function createTagSelect($ajax, $label, IDataProvider $dataProvider, $renderMethod = null) {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")

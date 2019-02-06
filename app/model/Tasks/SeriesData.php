@@ -41,6 +41,14 @@ class SeriesData {
      */
     private $tasks = [];
 
+    /**
+     * SeriesData constructor.
+     * @param ModelContest $contest
+     * @param $year
+     * @param $series
+     * @param $language
+     * @param $data
+     */
     function __construct(ModelContest $contest, $year, $series, $language, $data) {
         $this->contest = $contest;
         $this->year = $year;
@@ -49,30 +57,52 @@ class SeriesData {
         $this->data = $data;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @return mixed
+     */
     public function getData() {
         return $this->data;
     }
 
+    /**
+     * @return string
+     */
     function getLanguage() {
         return $this->language;
     }
 
+    /**
+     * @return array
+     */
     public function getTasks() {
         return $this->tasks;
     }
 
+    /**
+     * @param $tasknr
+     * @param $task
+     */
     public function addTask($tasknr, $task) {
         $this->tasks[$tasknr] = $task;
     }

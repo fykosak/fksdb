@@ -29,10 +29,16 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     private $yearCalculator;
 
+    /**
+     * @return null|YearCalculator
+     */
     protected function getYearCalculator() {
         return $this->yearCalculator;
     }
 
+    /**
+     * @param YearCalculator $yearCalculator
+     */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
@@ -65,10 +71,18 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
+    /**
+     * @param $yearCalculator
+     * @return bool
+     */
     public function isOrg($yearCalculator): bool {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
+    /**
+     * @param $yearCalculator
+     * @return bool
+     */
     public function isContestant($yearCalculator) {
         $person = $this->getPerson();
         if ($person && count($person->getActiveContestants($yearCalculator)) > 0) {
@@ -95,6 +109,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
+    /**
+     * @return string
+     */
     public function __toString() {
         return $this->getName();
     }
@@ -112,6 +129,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     // ----- IIdentity implementation ----------
 
+    /**
+     * @return int|mixed
+     */
     public function getId() {
         return $this->login_id;
     }
@@ -121,6 +141,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
      */
     private $roles;
 
+    /**
+     * @return array|Grant[]|null
+     */
     public function getRoles() {
         if ($this->roles === null) {
 

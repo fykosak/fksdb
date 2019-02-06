@@ -10,10 +10,16 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     protected $stored = true;
 
+    /**
+     * @return bool|mixed
+     */
     public function isNew() {
         return !$this->stored;
     }
 
+    /**
+     * @param bool $value
+     */
     public function setNew($value = true) {
         $this->stored = !$value;
     }

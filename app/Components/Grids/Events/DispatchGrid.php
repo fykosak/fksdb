@@ -10,6 +10,10 @@ use FKSDB\ORM\ModelPerson;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\NDataSource;
 
+/**
+ * Class DispatchGrid
+ * @package FKSDB\Components\Grids\Events
+ */
 class DispatchGrid extends BaseGrid {
 
     /**
@@ -25,6 +29,12 @@ class DispatchGrid extends BaseGrid {
      */
     private $yearCalculator;
 
+    /**
+     * DispatchGrid constructor.
+     * @param \ServiceEvent $serviceEvent
+     * @param ModelPerson $person
+     * @param \YearCalculator $yearCalculator
+     */
     function __construct(\ServiceEvent $serviceEvent, ModelPerson $person, \YearCalculator $yearCalculator) {
         parent::__construct();
         $this->person = $person;

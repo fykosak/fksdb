@@ -40,24 +40,42 @@ class AccountManager {
     private $recoveryExpiration = '+1 day';
     private $emailFrom;
 
+    /**
+     * AccountManager constructor.
+     * @param ServiceLogin $serviceLogin
+     * @param ServiceAuthToken $serviceAuthToken
+     * @param IMailer $mailer
+     */
     function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken, IMailer $mailer) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->mailer = $mailer;
     }
 
+    /**
+     * @return string
+     */
     public function getInvitationExpiration() {
         return $this->invitationExpiration;
     }
 
+    /**
+     * @param $invitationExpiration
+     */
     public function setInvitationExpiration($invitationExpiration) {
         $this->invitationExpiration = $invitationExpiration;
     }
 
+    /**
+     * @return string
+     */
     public function getRecoveryExpiration() {
         return $this->recoveryExpiration;
     }
 
+    /**
+     * @param $recoveryExpiration
+     */
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
     }
@@ -66,6 +84,9 @@ class AccountManager {
         return $this->emailFrom;
     }
 
+    /**
+     * @param $emailFrom
+     */
     public function setEmailFrom($emailFrom) {
         $this->emailFrom = $emailFrom;
     }
@@ -149,6 +170,9 @@ class AccountManager {
         }
     }
 
+    /**
+     * @param ModelLogin $login
+     */
     public function cancelRecovery(ModelLogin $login) {
         $this->serviceAuthToken->getTable()->where(array(
             'login_id' => $login->login_id,
@@ -181,12 +205,24 @@ class AccountManager {
 
 }
 
+/**
+ * Class RecoveryException
+ * @package Authentication
+ */
 abstract class RecoveryException extends RuntimeException {
 
 }
 
+/**
+ * Class RecoveryExistsException
+ * @package Authentication
+ */
 class RecoveryExistsException extends RecoveryException {
 
+    /**
+     * RecoveryExistsException constructor.
+     * @param null $previous
+     */
     public function __construct($previous = null) {
         $message = _('Obnova účtu již probíhá.');
         $code = null;
@@ -195,8 +231,16 @@ class RecoveryExistsException extends RecoveryException {
 
 }
 
+/**
+ * Class RecoveryNotImplementedException
+ * @package Authentication
+ */
 class RecoveryNotImplementedException extends RecoveryException {
 
+    /**
+     * RecoveryNotImplementedException constructor.
+     * @param null $previous
+     */
     public function __construct($previous = null) {
         $message = _('Přístup k účtu nelze obnovit.');
         $code = null;

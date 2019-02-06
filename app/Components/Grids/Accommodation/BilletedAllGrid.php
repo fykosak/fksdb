@@ -7,12 +7,21 @@ use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use NiftyGrid\DataSource\NDataSource;
 
+/**
+ * Class BilletedAllGrid
+ * @package FKSDB\Components\Grids\Accommodation
+ */
 class BilletedAllGrid extends BilletedGrid {
     /**
      * @var ModelEvent
      */
     private $event;
 
+    /**
+     * BilletedAllGrid constructor.
+     * @param ModelEvent $event
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     */
     function __construct(ModelEvent $event, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         parent::__construct($serviceEventPersonAccommodation);
         $this->event = $event;

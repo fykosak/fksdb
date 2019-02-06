@@ -61,26 +61,40 @@ class LanguageChooser extends Control {
         $this->languages = $languages;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLanguages() {
         return $this->languages;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDefaultLanguage() {
         return $this->defaultLanguage;
     }
 
+    /**
+     * @param $defaultLanguage
+     */
     public function setDefaultLanguage($defaultLanguage) {
         $this->defaultLanguage = $defaultLanguage;
     }
 
+    /**
+     * @param $language
+     * @return bool
+     */
     public function isLanguage($language) {
         return in_array($language, $this->languages);
     }
 
     /**
-     * @param $params object
+     * @param object $params
      * @return boolean
      * Redirect to correct address accorging to the resolved values.
+     * @throws \Exception
      */
     public function syncRedirect(&$params) {
         $this->init($params);
@@ -93,10 +107,17 @@ class LanguageChooser extends Control {
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLanguage() {
         return $this->language;
     }
 
+    /**
+     * @param $params
+     * @throws \Exception
+     */
     private function init($params) {
         if ($this->initialized) {
             return;
@@ -136,9 +157,13 @@ class LanguageChooser extends Control {
 
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate|Template
+     */
     protected function createTemplate($class = NULL) {
         /**
-         * @var $template Template
+         * @var Template $template
          */
         $presenter = $this->getPresenter();
 
@@ -159,9 +184,13 @@ class LanguageChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $language
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChangeLang($language) {
         /**
-         * @var $presenter \BasePresenter
+         * @var \BasePresenter $presenter
          */
         $presenter = $this->getPresenter();
         $translator = $presenter->getTranslator();

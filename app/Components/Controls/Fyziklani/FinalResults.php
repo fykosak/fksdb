@@ -29,6 +29,12 @@ class FinalResults extends Control {
      */
     private $translator;
 
+    /**
+     * FinalResults constructor.
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ITranslator $translator
+     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator) {
         parent::__construct();
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;

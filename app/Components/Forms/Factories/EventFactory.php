@@ -24,6 +24,10 @@ class EventFactory {
      */
     private $serviceEventType;
 
+    /**
+     * EventFactory constructor.
+     * @param ServiceEventType $serviceEventType
+     */
     function __construct(ServiceEventType $serviceEventType) {
         $this->serviceEventType = $serviceEventType;
     }
@@ -79,6 +83,10 @@ class EventFactory {
         return $container;
     }
 
+    /**
+     * @param ModelContest $contest
+     * @return SelectBox
+     */
     public function createEventType(ModelContest $contest): SelectBox {
         $element = new SelectBox(_('Typ akce'));
 

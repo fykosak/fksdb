@@ -6,7 +6,14 @@ namespace FKSDB\Components\Forms\Factories\EventAccommodation;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\DateTimeBox;
 
+/**
+ * Class Factory
+ * @package FKSDB\Components\Forms\Factories\EventAccommodation
+ */
 class Factory {
+    /**
+     * @return ModelContainer
+     */
     public function createForm(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name', _('Name'))->setRequired(true);

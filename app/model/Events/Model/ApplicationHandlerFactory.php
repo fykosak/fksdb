@@ -24,11 +24,21 @@ class ApplicationHandlerFactory {
      */
     private $container;
 
+    /**
+     * ApplicationHandlerFactory constructor.
+     * @param Connection $connection
+     * @param Container $container
+     */
     function __construct(Connection $connection, Container $container) {
         $this->connection = $connection;
         $this->container = $container;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @param ILogger $logger
+     * @return ApplicationHandler
+     */
     public function create(ModelEvent $event, ILogger $logger) {
         return new ApplicationHandler($event, $logger, $this->connection, $this->container);
     }

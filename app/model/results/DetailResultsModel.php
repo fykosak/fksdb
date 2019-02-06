@@ -47,20 +47,33 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
+    /**
+     * @return int|mixed
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param mixed $series
+     */
     public function setSeries($series) {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
     }
 
+    /**
+     * @return array
+     */
     public function getCategories() {
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * @param $category
+     * @return mixed|string
+     */
     protected function composeQuery($category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');

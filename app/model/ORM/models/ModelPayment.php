@@ -77,7 +77,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     /**
      * @param Machine $machine
      * @param $id
-     * @throws \FKSDB\Transitions\UnavailableTransitionException
      * @throws \Nette\Application\ForbiddenRequestException
      */
     public function executeTransition(Machine $machine, $id) {

@@ -32,7 +32,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
              throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
          };*/
         /**
-         * @var $row \FKSDB\ORM\ModelPaymentAccommodation
+         * @var \FKSDB\ORM\ModelPaymentAccommodation $row
          */
         foreach ($oldRows as $row) {
             if (in_array($row->event_person_accommodation_id, $newAccommodationIds)) {
@@ -49,7 +49,7 @@ class ServicePaymentAccommodation extends AbstractServiceSingle {
         foreach ($newAccommodationIds as $id) {
 
             /**
-             * @var $model \FKSDB\ORM\ModelPaymentAccommodation
+             * @var \FKSDB\ORM\ModelPaymentAccommodation $model
              */
             $model = $this->createNew(['payment_id' => $payment->payment_id, 'event_person_accommodation_id' => $id]);
             $count = $this->getTable()->where('event_person_accommodation_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)->count();

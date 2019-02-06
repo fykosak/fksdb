@@ -38,18 +38,42 @@ class SettingsPresenter extends AuthenticatedPresenter {
      */
     private $uniqueLoginFactory;
 
+    /**
+     * @param LoginFactory $loginFactory
+     */
+    /**
+     * @param LoginFactory $loginFactory
+     */
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
     }
 
+    /**
+     * @param ServiceLogin $loginService
+     */
+    /**
+     * @param ServiceLogin $loginService
+     */
     public function injectLoginService(ServiceLogin $loginService) {
         $this->loginService = $loginService;
     }
 
+    /**
+     * @param UniqueEmailFactory $uniqueEmailFactory
+     */
+    /**
+     * @param UniqueEmailFactory $uniqueEmailFactory
+     */
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
+    /**
+     * @param UniqueLoginFactory $uniqueLoginFactory
+     */
+    /**
+     * @param UniqueLoginFactory $uniqueLoginFactory
+     */
     public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
@@ -60,7 +84,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     public function renderDefault() {
         /**
-         * @var $login \FKSDB\ORM\ModelLogin
+         * @var \FKSDB\ORM\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
 
@@ -78,11 +102,19 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentSettingsForm($name) {
         $control = new FormControl();
         $form = $control->getForm();
         /**
-         * @var $login \FKSDB\ORM\ModelLogin
+         * @var \FKSDB\ORM\ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =

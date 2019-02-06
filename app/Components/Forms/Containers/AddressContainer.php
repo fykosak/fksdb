@@ -18,6 +18,9 @@ class AddressContainer extends ModelContainer {
      */
     private $serviceRegion;
 
+    /**
+     * @param ServiceRegion $serviceRegion
+     */
     public function setServiceRegion(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }
@@ -40,6 +43,11 @@ class AddressContainer extends ModelContainer {
         $this->setDefaults($value === null ? [] : $value);
     }
 
+    /**
+     * @param $values
+     * @param bool $erase
+     * @return \Nette\Forms\Container|void
+     */
     public function setValues($values, $erase = FALSE) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
@@ -58,6 +66,10 @@ class AddressContainer extends ModelContainer {
         parent::setValues($values, $erase);
     }
 
+    /**
+     * @param bool $asArray
+     * @return array|\Nette\ArrayHash
+     */
     public function getValues($asArray = FALSE) {
         $values = parent::getValues($asArray);
         if (count($values) && !isset($values['region_id'])) {

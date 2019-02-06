@@ -24,6 +24,14 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      */
     private $cumulativeResultsModel;
 
+    /**
+     * SchoolCumulativeResultsModel constructor.
+     * @param CumulativeResultsModel $cumulativeResultsModel
+     * @param \FKSDB\ORM\ModelContest $contest
+     * @param ServiceTask $serviceTask
+     * @param \Nette\Database\Connection $connection
+     * @param $year
+     */
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, \FKSDB\ORM\ModelContest $contest, \ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
@@ -73,10 +81,16 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
+    /**
+     * @return int|mixed
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param mixed $series
+     */
     public function setSeries($series) {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
@@ -84,6 +98,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         $this->dataColumns = [];
     }
 
+    /**
+     * @return array
+     */
     public function getCategories() {
         //return $this->evaluationStrategy->getCategories();
         return [
@@ -91,6 +108,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         ];
     }
 
+    /**
+     * @param $category
+     * @return mixed|void
+     */
     protected function composeQuery($category) {
         throw new \Nette\NotSupportedException;
     }
@@ -156,10 +177,20 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     //TODO better have somehow in evaluation strategy
+
+    /**
+     * @param $i
+     * @return mixed
+     */
     private function weightVector($i){
         return max([1.0-0.1*$i, 0.1]);
     }
 
+    /**
+     * @param $schoolContestants
+     * @param $category
+     * @return array
+     */
     private function createResultRow($schoolContestants, $category){
         $resultRow = [];
         foreach($this->getDataColumns($category) as $column){

@@ -50,6 +50,14 @@ class ImportComponent extends Control {
      */
     private $container;
 
+    /**
+     * ImportComponent constructor.
+     * @param Machine $machine
+     * @param SingleEventSource $source
+     * @param ApplicationHandler $handler
+     * @param FlashMessageDump $flashDump
+     * @param Container $container
+     */
     function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, FlashMessageDump $flashDump, Container $container) {
         parent::__construct();
         $this->machine = $machine;
@@ -59,6 +67,10 @@ class ImportComponent extends Control {
         $this->container = $container;
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentFormImport($name) {
         $control = new FormControl();
         $form = $control->getForm();
@@ -103,6 +115,10 @@ class ImportComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     private function handleFormImport(Form $form) {
         $values = $form->getValues();
         try {
@@ -139,6 +155,9 @@ class ImportComponent extends Control {
         }
     }
 
+    /**
+     * @return SelectBox
+     */
     private function createKeyElement() {
         $baseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $options = [];

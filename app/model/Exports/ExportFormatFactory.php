@@ -51,6 +51,14 @@ class ExportFormatFactory extends Object {
     private $serviceContest;
     private $defaultFormats;
 
+    /**
+     * ExportFormatFactory constructor.
+     * @param GlobalParameters $globalParameters
+     * @param Container $container
+     * @param StoredQueryFactory $storedQueryFactory
+     * @param ServiceEvent $serviceEvent
+     * @param ServiceContest $serviceContest
+     */
     function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
@@ -85,6 +93,10 @@ class ExportFormatFactory extends Object {
         }
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @return array|mixed
+     */
     public function getFormats(StoredQuery $storedQuery) {
         $queryPattern = $storedQuery->getQueryPattern();
         $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
@@ -96,6 +108,11 @@ class ExportFormatFactory extends Object {
         }
     }
 
+    /**
+     * @param $name
+     * @param StoredQuery $storedQuery
+     * @return AESOPFormat
+     */
     private function createAesop($name, StoredQuery $storedQuery) {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
@@ -140,6 +157,12 @@ class ExportFormatFactory extends Object {
         return $format;
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @param $header
+     * @param bool $quote
+     * @return CSVFormat
+     */
     private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE) {
         $format = new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
         return $format;

@@ -48,6 +48,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
+    /**
+     * @param $groups
+     * @return array
+     */
     private function transformGroups($groups) {
         $result = [];
         foreach ($groups as $name => $capacity) {
@@ -59,6 +63,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $result;
     }
 
+    /**
+     * @param $eventId
+     * @return mixed
+     */
     private function getGroups($eventId) {
         if (!isset($this->groups[$eventId])) {
             $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
@@ -69,6 +77,10 @@ class GroupOptions extends Object implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
+    /**
+     * @param Field $field
+     * @return array
+     */
     public function getOptions(Field $field) {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();

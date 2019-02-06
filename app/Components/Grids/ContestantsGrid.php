@@ -18,6 +18,10 @@ class ContestantsGrid extends BaseGrid {
      */
     private $serviceContestant;
 
+    /**
+     * ContestantsGrid constructor.
+     * @param ServiceContestant $serviceContestant
+     */
     function __construct(ServiceContestant $serviceContestant) {
         parent::__construct();
 

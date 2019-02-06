@@ -28,6 +28,14 @@ abstract class AbstractProcessing extends Object implements IProcessing {
     private $holder;
     private $values;
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     */
     public final function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
@@ -36,8 +44,21 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         $this->_process($states, $values, $machine, $holder, $logger, $form);
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed
+     */
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
+    /**
+     * @param $mask
+     * @return bool
+     */
     protected final function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
@@ -102,6 +123,10 @@ abstract class AbstractProcessing extends Object implements IProcessing {
         return false;
     }
 
+    /**
+     * @param ArrayHash $values
+     * @param string $prefix
+     */
     private function setValues(ArrayHash $values, $prefix = '') {
         if (!$prefix) {
             $this->values = $values;

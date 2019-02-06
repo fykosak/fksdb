@@ -24,6 +24,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      */
     private $searchTable;
 
+    /**
+     * StoredQueryTagTypeProvider constructor.
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
+     */
     function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();
@@ -43,11 +47,18 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
+    /**
+     * @param mixed $id
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|Selection|null
+     */
     public function getItemLabel($id) {
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
         return $tagType->name;
     }
 
+    /**
+     * @return array
+     */
     public function getItems() {
         $tagTypes = $this->searchTable
                 ->order('name');
@@ -63,6 +74,9 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         return $result;
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }

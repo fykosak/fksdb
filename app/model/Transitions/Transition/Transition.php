@@ -54,24 +54,42 @@ final class Transition {
         return $this->toState;
     }
 
+    /**
+     * Transition constructor.
+     * @param string $fromState
+     * @param string $toState
+     * @param string $label
+     */
     function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;
         $this->label = $label;
     }
 
+    /**
+     * @return string
+     */
     public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
 
+    /**
+     * @return string
+     */
     public function getType() {
         return $this->type;
     }
 
+    /**
+     * @param string $type
+     */
     public function setType(string $type) {
         $this->type = $type;
     }
 
+    /**
+     * @return string
+     */
     public function getLabel(): string {
         return _($this->label);
     }
@@ -83,6 +101,9 @@ final class Transition {
         $this->condition = $callback;
     }
 
+    /**
+     * @return bool
+     */
     public function isCreating(): bool {
         return $this->fromState === Machine::STATE_INIT;
     }

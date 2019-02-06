@@ -5,6 +5,10 @@ namespace FKSDB\Transitions\Statements\Operators;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
+/**
+ * Class LogicOr
+ * @package FKSDB\Transitions\Statements\Operators
+ */
 class LogicOr extends Statement {
     /**
      * @var callable

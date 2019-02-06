@@ -4,6 +4,10 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use Authorization\Grant;
 
+/**
+ * Class Role
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class Role extends StalkingComponent {
 
     public function render() {

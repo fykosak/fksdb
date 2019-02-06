@@ -35,12 +35,21 @@ class TokenGSIDHolder implements IGSIDHolder {
      */
     private $request;
 
+    /**
+     * TokenGSIDHolder constructor.
+     * @param Session $session
+     * @param ServiceAuthToken $serviceAuthToken
+     * @param Request $request
+     */
     function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
         $this->session = $session;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->request = $request;
     }
 
+    /**
+     * @return mixed|null|string
+     */
     public function getGSID() {
         // try obtain GSID from auth token in URL
         $tokenData = $this->request->getQuery(TokenAuthenticator::PARAM_AUTH_TOKEN);
@@ -61,6 +70,9 @@ class TokenGSIDHolder implements IGSIDHolder {
         }
     }
 
+    /**
+     * @param $gsid
+     */
     public function setGSID($gsid) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section[self::GSID_KEY] = $gsid;

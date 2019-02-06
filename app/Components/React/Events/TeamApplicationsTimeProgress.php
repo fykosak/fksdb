@@ -8,6 +8,10 @@ use Nette\DI\Container;
 use Nette\Utils\Json;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class TeamApplicationsTimeProgress
+ * @package FKSDB\Components\React\ReactComponent\Events
+ */
 class TeamApplicationsTimeProgress extends ReactComponent {
     /**
      * @var ServiceFyziklaniTeam
@@ -19,6 +23,12 @@ class TeamApplicationsTimeProgress extends ReactComponent {
      */
     private $events;
 
+    /**
+     * TeamApplicationsTimeProgress constructor.
+     * @param Container $context
+     * @param array $events
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function __construct(Container $context, array $events, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         parent::__construct($context);
         $this->events = $events;
@@ -57,7 +67,7 @@ class TeamApplicationsTimeProgress extends ReactComponent {
             'events'=>[],
         ];
         /**
-         * @var $event ModelEvent
+         * @var ModelEvent $event
          */
         foreach ($this->events as $event) {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);

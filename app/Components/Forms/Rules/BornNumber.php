@@ -14,6 +14,10 @@ use Nette\Forms\Controls\BaseControl;
  */
 class BornNumber {
 
+    /**
+     * @param BaseControl $control
+     * @return bool
+     */
     public function __invoke(BaseControl $control) {
         $rc = $control->getValue();
         // suppose once validated is always valid

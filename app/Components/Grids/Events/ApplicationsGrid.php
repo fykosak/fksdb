@@ -76,6 +76,13 @@ class ApplicationsGrid extends Control {
      */
     private $searchable = false;
 
+    /**
+     * ApplicationsGrid constructor.
+     * @param Container $container
+     * @param IHolderSource $source
+     * @param ApplicationHandlerFactory $handlerFactory
+     * @param FlashMessageDump $flashDump
+     */
     function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
         parent::__construct();
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
@@ -88,6 +95,9 @@ class ApplicationsGrid extends Control {
 
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -107,10 +117,16 @@ class ApplicationsGrid extends Control {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSearchable() {
         return $this->searchable;
     }
 
+    /**
+     * @param $searchable
+     */
     public function setSearchable($searchable) {
         $this->searchable = $searchable;
     }
@@ -125,6 +141,10 @@ class ApplicationsGrid extends Control {
         }
     }
 
+    /**
+     * @param $name
+     * @return ApplicationComponent|\Nette\ComponentModel\IComponent
+     */
     protected function createComponent($name) {
         $key = null;
         if (Strings::startsWith($name, self::NAME_PREFIX)) {
@@ -139,6 +159,10 @@ class ApplicationsGrid extends Control {
         return $component;
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());

@@ -33,7 +33,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
      */
     public function teamExist(int $teamId, ModelEvent $event): bool {
         /**
-         * @var $team ModelFyziklaniTeam
+         * @var ModelFyziklaniTeam $team
          */
         $row = $this->findByPrimary($teamId);
         if (!$row) {

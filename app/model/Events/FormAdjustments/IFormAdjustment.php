@@ -18,7 +18,6 @@ interface IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return
      */
     public function adjust(Form $form, Machine $machine, Holder $holder);
 }

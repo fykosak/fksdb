@@ -113,6 +113,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
+    /**
+     * @return GroupedSelection
+     */
     public function getFlags(): GroupedSelection {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -131,16 +134,19 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
 
         $result = [];
-        foreach ($personFlags as $personFlag) {
-            $personFlag->flag_id; // stupid touch
-            $flag = $personFlag->ref(DbNames::TAB_FLAG, 'flag_id');
+        foreach ($personFlags as $row) {
+            $flag = $row->ref(DbNames::TAB_FLAG, 'flag_id');
             $result[] = ModelMPersonHasFlag::createFromExistingModels(
-                ModelFlag::createFromTableRow($flag), ModelPersonHasFlag::createFromTableRow($personFlag)
+                ModelFlag::createFromTableRow($flag), ModelPersonHasFlag::createFromTableRow($row)
             );
         }
         return $result;
     }
 
+    /**
+     * @param $fid
+     * @return ModelMPersonHasFlag|null
+     */
     public function getMPersonHasFlag($fid) {
         $flags = $this->getMPersonHasFlags();
 
@@ -156,6 +162,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return null;
     }
 
+    /**
+     * @return GroupedSelection
+     */
     public function getPostContacts() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -231,6 +240,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
+    /**
+     * @param int|null $eventId
+     * @return bool
+     */
     public function isEventParticipant($eventId = null): bool {
         $tmp = $this->getEventParticipant();
         if ($eventId) {
@@ -244,6 +257,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
+    /**
+     * @return GroupedSelection
+     */
     public function getEventOrg() {
         if (!isset($this->person_id)) {
             $this->person_id = null;
@@ -324,11 +340,11 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      *
-     * @param string $fullname
+     * @param string $fullName
      * @return array
      */
-    public static function parseFullName($fullname) {
-        $names = explode(' ', $fullname);
+    public static function parseFullName($fullName) {
+        $names = explode(' ', $fullName);
         $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
         $familyName = $names[count($names) - 1];
         if (mb_substr($familyName, -1) == 'á') {
@@ -357,7 +373,9 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /*
      * IResource
      */
-
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'person';
     }
@@ -390,11 +408,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param $eventId
      * Definitely ugly but, there is only this way... Mišo
      */
-    public
-    function removeAccommodationForEvent($eventId) {
+    public function removeAccommodationForEvent($eventId) {
         $query = $this->related(DbNames::TAB_EVENT_PERSON_ACCOMMODATION, 'person_id')->where('event_accommodation.event_id=?', $eventId);
         /**
-         * @var $row ModelEventPersonAccommodation
+         * @var ModelEventPersonAccommodation $row
          */
         foreach ($query as $row) {
             $row->delete();

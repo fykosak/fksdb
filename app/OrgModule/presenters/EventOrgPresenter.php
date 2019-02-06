@@ -11,6 +11,10 @@ use Persons\ExtendedPersonHandler;
 use ServiceEvent;
 use ServiceEventOrg;
 
+/**
+ * Class EventOrgPresenter
+ * @package OrgModule
+ */
 class EventOrgPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'eventOrg';
@@ -36,10 +40,16 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      */
     public $eventId;
 
+    /**
+     * @param ServiceEventOrg $serviceEventOrg
+     */
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -60,6 +70,10 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->setIcon('fa fa-users');
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function renderEdit($id) {
         parent::renderEdit($id);
 
@@ -71,6 +85,10 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         }
     }
 
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDelete($id) {
         $success = $this->serviceEventOrg->getTable()->where('e_org_id', $id)->delete();
         if ($success) {
@@ -81,15 +99,27 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->redirect('list');
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         parent::setDefaults($model, $form);
         //$form[ExtendedPersonHandler::CONT_MODEL]->setDefaults([]);
     }
 
+    /**
+     * @param $name
+     * @return EventOrgsGrid
+     */
     protected function createComponentGrid($name): EventOrgsGrid {
         return new EventOrgsGrid($this->getEvent(), $this->serviceEventOrg);
     }
 
+    /**
+     * @param Form $form
+     * @return mixed|void
+     */
     protected function appendExtendedContainer(Form $form) {
         $container = new ModelContainer();
         $container->setCurrentGroup(null);
@@ -98,22 +128,37 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
+    /**
+     * @return ServiceEventOrg
+     */
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
 
+    /**
+     * @return string
+     */
     public function messageCreate() {
         return _('Organizátor akce %s založen.');
     }
 
+    /**
+     * @return string
+     */
     public function messageEdit() {
         return _('Organizátor akce %s upraven.');
     }
 
+    /**
+     * @return string
+     */
     public function messageError() {
         return _('Chyba při zakládání organizátora akce.');
     }
 
+    /**
+     * @return string
+     */
     public function messageExists() {
         return _('Organizátor akce již existuje.');
     }

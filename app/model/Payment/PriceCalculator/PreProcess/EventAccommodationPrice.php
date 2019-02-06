@@ -8,6 +8,10 @@ use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
+/**
+ * Class EventAccommodationPrice
+ * @package FKSDB\Payment\PriceCalculator\PreProcess
+ */
 class EventAccommodationPrice extends AbstractPreProcess {
     /**
      * @param ModelPayment $modelPayment

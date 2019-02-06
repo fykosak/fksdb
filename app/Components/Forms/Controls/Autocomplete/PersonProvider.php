@@ -27,6 +27,10 @@ class PersonProvider implements IFilteredDataProvider {
      */
     private $searchTable;
 
+    /**
+     * PersonProvider constructor.
+     * @param ServicePerson $servicePerson
+     */
     function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
@@ -62,11 +66,18 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
+    /**
+     * @param mixed $id
+     * @return mixed
+     */
     public function getItemLabel($id) {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullname();
     }
 
+    /**
+     * @return array
+     */
     public function getItems() {
         $persons = $this->searchTable
                 ->order('family_name, other_name');
@@ -79,6 +90,10 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
+    /**
+     * @param ModelPerson $person
+     * @return array
+     */
     private function getItem(ModelPerson $person) {
         $place = null;
         $address = $person->getDeliveryAddress();
@@ -92,6 +107,9 @@ class PersonProvider implements IFilteredDataProvider {
         ];
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }

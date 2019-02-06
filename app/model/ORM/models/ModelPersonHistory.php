@@ -14,15 +14,24 @@ use DbNames;
  * @property integer study_year
  */
 class ModelPersonHistory extends AbstractModelSingle {
-
+    /**
+     * @return ModelPerson
+     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
+    /**
+     * @return ModelSchool
+     */
     public function getSchool(): ModelSchool {
         return ModelSchool::createFromTableRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
+    /**
+     * @param int $acYear
+     * @return ModelPersonHistory
+     */
     public function extrapolate(int $acYear): ModelPersonHistory {
         $diff = $acYear - $this->ac_year;
         $data = [
@@ -38,12 +47,20 @@ class ModelPersonHistory extends AbstractModelSingle {
         return $result;
     }
 
+    /**
+     * @var string[][]
+     */
     private static $classProgress = [
         ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
         ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
+    /**
+     * @param $class
+     * @param $diff
+     * @return null|string|string[]
+     */
     private function extrapolateClass($class, $diff) {
         if (!$class) {
             return null;
@@ -63,6 +80,11 @@ class ModelPersonHistory extends AbstractModelSingle {
         return $class;
     }
 
+    /**
+     * @param $studyYear
+     * @param $diff
+     * @return int|null
+     */
     private function extrapolateStudyYear($studyYear, $diff) {
         if (!$studyYear) {
             return null;

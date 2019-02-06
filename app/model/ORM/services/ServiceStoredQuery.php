@@ -17,6 +17,11 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      */
     private $serviceStoredQueryTag;
 
+    /**
+     * ServiceStoredQuery constructor.
+     * @param Connection $connection
+     * @param ServiceStoredQueryTag $serviceStoredQueryTag
+     */
     public function __construct(Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
         parent::__construct($connection);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;

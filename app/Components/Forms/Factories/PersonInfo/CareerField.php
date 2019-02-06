@@ -4,6 +4,10 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 
 use Nette\Forms\Controls\TextArea;
 
+/**
+ * Class CareerField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 class CareerField extends TextArea {
 
     public function __construct() {

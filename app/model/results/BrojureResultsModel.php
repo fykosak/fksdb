@@ -76,10 +76,16 @@ class BrojureResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
+    /**
+     * @return array|mixed
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param mixed $series
+     */
     public function setSeries($series) {
         $this->dataColumns = null;
         $this->series = $series;
@@ -87,20 +93,33 @@ class BrojureResultsModel extends AbstractResultsModel {
         $this->dataColumns = [];
     }
 
+    /**
+     * @return int
+     */
     public function getListedSeries() {
         return $this->listedSeries;
     }
 
+    /**
+     * @param $listedSeries
+     */
     public function setListedSeries($listedSeries) {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];
     }
 
+    /**
+     * @return array
+     */
     public function getCategories() {
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * @param $category
+     * @return mixed|string
+     */
     protected function composeQuery($category) {
         if (!$this->series) {
             throw new \Nette\InvalidStateException('Series not set.');

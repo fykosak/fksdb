@@ -20,6 +20,10 @@ class OwnerAssertion {
      */
     private $user;
 
+    /**
+     * OwnerAssertion constructor.
+     * @param User $user
+     */
     public function __construct(User $user) {
         $this->user = $user;
     }
@@ -90,12 +94,19 @@ class OwnerAssertion {
         return count($contestants) > 0;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @return bool
+     */
     public function isOwnPayment(Permission $acl, $role, $resourceId, $privilege) {
         if (!$this->user->isLoggedIn()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /**
-         * @var $loggedPerson ModelPerson
+         * @var ModelPerson $loggedPerson
          * $payment
          */
         $loggedPerson = $this->user->getIdentity()->getPerson();

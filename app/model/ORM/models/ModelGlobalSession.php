@@ -14,7 +14,9 @@ use DateTime;
  *
  */
 class ModelGlobalSession extends AbstractModelSingle {
-
+    /**
+     * @return bool
+     */
     public function isValid() {
         $now = time();
         return ($this->until->getTimestamp() >= $now) && ($this->since->getTimestamp() <= $now);

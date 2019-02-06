@@ -17,6 +17,13 @@ use Nette\DateTime;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 
+/**
+ * Class AuthenticationPresenter
+ */
+
+/**
+ * Class AuthenticationPresenter
+ */
 final class AuthenticationPresenter extends BasePresenter {
 
     use \LanguageNav;
@@ -82,30 +89,72 @@ final class AuthenticationPresenter extends BasePresenter {
     private $login;
 
 
+    /**
+     * @param FacebookAuthenticator $facebookAuthenticator
+     */
+    /**
+     * @param FacebookAuthenticator $facebookAuthenticator
+     */
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
     }
 
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
+    /**
+     * @param IGlobalSession $globalSession
+     */
+    /**
+     * @param IGlobalSession $globalSession
+     */
     public function injectGlobalSession(IGlobalSession $globalSession) {
         $this->globalSession = $globalSession;
     }
 
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
+    /**
+     * @param AccountManager $accountManager
+     */
+    /**
+     * @param AccountManager $accountManager
+     */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
     }
 
+    /**
+     * @param MailTemplateFactory $mailTemplateFactory
+     */
+    /**
+     * @param MailTemplateFactory $mailTemplateFactory
+     */
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
+    /**
+     * @param ServicePerson $servicePerson
+     */
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
@@ -155,7 +204,7 @@ final class AuthenticationPresenter extends BasePresenter {
     public function actionLogin() {
         if ($this->isLoggedIn()) {
             /**
-             * @var $login ModelLogin
+             * @var ModelLogin $login
              */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
@@ -240,11 +289,19 @@ final class AuthenticationPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * @param $form
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param $form
+     * @throws \Nette\Application\AbortException
+     */
     public function loginFormSubmitted($form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
             /**
-             * @var $login ModelLogin
+             * @var ModelLogin $login
              */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
@@ -254,6 +311,14 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
         try {
@@ -261,7 +326,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
             $connection->beginTransaction();
             /**
-             * @var $login ModelLogin
+             * @var ModelLogin $login
              */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $template = $this->mailTemplateFactory->createPasswordRecovery($this, $this->getLang());
@@ -282,6 +347,14 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param null $login
+     * @throws \Nette\Application\AbortException
+     */
+    /**
+     * @param null $login
+     * @throws \Nette\Application\AbortException
+     */
     private function loginBackLinkRedirect($login = null) {
         if (!$this->backlink) {
             return;

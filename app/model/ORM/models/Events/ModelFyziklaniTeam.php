@@ -22,6 +22,9 @@ use Nette\DateTime;
  */
 class ModelFyziklaniTeam extends AbstractModelSingle {
 
+    /**
+     * @return string
+     */
     public function __toString(): string {
         return $this->name;
     }
@@ -52,6 +55,10 @@ class ModelFyziklaniTeam extends AbstractModelSingle {
         return !is_numeric($points);
     }
 
+    /**
+     * @param bool $includePosition
+     * @return array
+     */
     public function __toArray(bool $includePosition = false): array {
         $data = [
             'created' => $this->created->format('c'),

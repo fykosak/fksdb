@@ -31,6 +31,12 @@ class SubmitsGrid extends BaseGrid {
      */
     private $contestant;
 
+    /**
+     * SubmitsGrid constructor.
+     * @param ServiceSubmit $submitService
+     * @param FilesystemSubmitStorage $submitStorage
+     * @param ModelContestant $contestant
+     */
     function __construct(ServiceSubmit $submitService, FilesystemSubmitStorage $submitStorage, ModelContestant $contestant) {
         parent::__construct();
 
@@ -104,6 +110,11 @@ class SubmitsGrid extends BaseGrid {
         $this->enableSorting = false;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function handleRevoke($id) {
         $submit = $this->submitService->findByPrimary($id);
 

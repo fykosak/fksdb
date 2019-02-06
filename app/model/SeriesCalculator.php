@@ -3,6 +3,9 @@
 use FKSDB\ORM\ModelContest;
 use Nette\Object;
 
+/**
+ * Class SeriesCalculator
+ */
 class SeriesCalculator extends Object {
 
     /**
@@ -17,6 +20,11 @@ class SeriesCalculator extends Object {
      */
     private $yearCalculator;
 
+    /**
+     * SeriesCalculator constructor.
+     * @param ServiceTask $serviceTask
+     * @param YearCalculator $yearCalculator
+     */
     public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
         $this->serviceTask = $serviceTask;
         $this->yearCalculator = $yearCalculator;

@@ -16,6 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use ServiceEventAccommodation;
 
+/**
+ * Class AccommodationPresenter
+ * @package EventModule
+ */
 class AccommodationPresenter extends BasePresenter {
 
     const CONT_ACCOMMODATION = 'CONT_ACCOMMODATION';
@@ -48,18 +52,30 @@ class AccommodationPresenter extends BasePresenter {
     public $id;
 
 
+    /**
+     * @param AddressFactory $addressFactory
+     */
     public function injectAddressFactory(AddressFactory $addressFactory) {
         $this->addressFactory = $addressFactory;
     }
 
+    /**
+     * @param \ServiceAddress $serviceAddress
+     */
     public function injectServiceAddress(\ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
     }
 
+    /**
+     * @param ServiceEventAccommodation $serviceEventAccommodation
+     */
     public function injectServiceEventAccommodation(ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventAccommodation = $serviceEventAccommodation;
     }
 
+    /**
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     */
     public function injectServiceEventPersonAccommodation(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
     }
@@ -307,8 +323,8 @@ class AccommodationPresenter extends BasePresenter {
              */
             $data = $this->getAccommodationFormData($values);
             /**
-             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
-             * @var $address \FKSDB\ORM\ModelAddress
+             * @var \FKSDB\ORM\ModelEventAccommodation $accommodation
+             * @var \FKSDB\ORM\ModelAddress $address
              */
             $accommodation = $this->serviceEventAccommodation->createNew($data);
             $accommodation->event_id = $this->eventId;
@@ -363,7 +379,7 @@ class AccommodationPresenter extends BasePresenter {
                 throw new \ModelException();
             }
             /**
-             * @var $accommodation \FKSDB\ORM\ModelEventAccommodation
+             * @var \FKSDB\ORM\ModelEventAccommodation $accommodation
              */
             $accommodation = $this->getModel();
 

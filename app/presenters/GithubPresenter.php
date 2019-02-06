@@ -19,15 +19,24 @@ class GithubPresenter extends AuthenticatedPresenter {
 	/** @var EventFactory */
 	private $eventFactory;
 
-	public function injectEventFactory(EventFactory $eventFactory) {
+    /**
+     * @param EventFactory $eventFactory
+     */
+    public function injectEventFactory(EventFactory $eventFactory) {
 		$this->eventFactory = $eventFactory;
 	}
 
-	public function injectUpdater(Updater $updater) {
+    /**
+     * @param Updater $updater
+     */
+    public function injectUpdater(Updater $updater) {
 		$this->updater = $updater;
 	}
 
-	public function getAllowedAuthMethods() {
+    /**
+     * @return bool|int|string
+     */
+    public function getAllowedAuthMethods() {
 		return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
 	}
 

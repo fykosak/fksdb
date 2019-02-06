@@ -70,6 +70,9 @@ class ContestantSubmits extends BaseControl {
         $this->acYear = $acYear;
     }
 
+    /**
+     * @param $component
+     */
     protected function attached($component) {
         parent::attached($component);
         if ($component instanceof IJavaScriptCollector) {
@@ -77,14 +80,23 @@ class ContestantSubmits extends BaseControl {
         }
     }
 
+    /**
+     * @return string
+     */
     public function getClassName() {
         return $this->className;
     }
 
+    /**
+     * @param $className
+     */
     public function setClassName($className) {
         $this->className = $className;
     }
 
+    /**
+     * @param $tasks
+     */
     private function setTasks($tasks) {
         $this->tasks = [];
         foreach ($tasks as $task) {
@@ -92,6 +104,10 @@ class ContestantSubmits extends BaseControl {
         }
     }
 
+    /**
+     * @param $taskId
+     * @return mixed|null
+     */
     private function getTask($taskId) {
         foreach ($this->tasks as $task) {
             if ($task->task_id == $taskId) {
@@ -101,6 +117,9 @@ class ContestantSubmits extends BaseControl {
         return null;
     }
 
+    /**
+     * @return bool
+     */
     private function isTaskDisabled() {
         return false;
     }
@@ -122,6 +141,9 @@ class ContestantSubmits extends BaseControl {
         return $control;
     }
 
+    /**
+     * @return string
+     */
     public function getRawValue() {
         return $this->rawValue;
     }
@@ -147,6 +169,10 @@ class ContestantSubmits extends BaseControl {
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return false|string
+     */
     private function serializeValue($value) {
         $result = [];
 
@@ -178,6 +204,10 @@ class ContestantSubmits extends BaseControl {
         return json_encode($result);
     }
 
+    /**
+     * @param $value
+     * @return array
+     */
     private function deserializeValue($value) {
         $value = json_decode($value, true);
 
@@ -194,6 +224,10 @@ class ContestantSubmits extends BaseControl {
         return $result;
     }
 
+    /**
+     * @param ModelSubmit $submit
+     * @return array
+     */
     private function serializeSubmit(ModelSubmit $submit) {
         $data = $submit->toArray();
         $format = $this->sourceToFormat($submit->source);
@@ -205,6 +239,11 @@ class ContestantSubmits extends BaseControl {
         return $data;
     }
 
+    /**
+     * @param $data
+     * @param $tasknr
+     * @return \AbstractModelSingle|ModelSubmit|null
+     */
     private function deserializeSubmit($data, $tasknr) {
         unset($data['submit_id']); // security
         $data['ct_id'] = $this->contestant->ct_id; // security

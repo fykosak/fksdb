@@ -5,6 +5,10 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 use FKSDB\Payment\PriceCalculator\Price;
 use Nette\Forms\Controls\SelectBox;
 
+/**
+ * Class CurrencyField
+ * @package FKSDB\Components\Forms\Controls\Payment
+ */
 class CurrencyField extends SelectBox {
     public function __construct() {
         parent::__construct(_('Currency'));

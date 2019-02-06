@@ -3,6 +3,10 @@
 
 namespace FyziklaniModule;
 
+/**
+ * Class GameSetupPresenter
+ * @package FyziklaniModule
+ */
 class GameSetupPresenter extends BasePresenter {
     /**
      * @return void

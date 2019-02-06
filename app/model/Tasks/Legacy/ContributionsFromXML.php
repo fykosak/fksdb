@@ -37,12 +37,21 @@ class ContributionsFromXML extends Stage {
      */
     private $serviceOrg;
 
+    /**
+     * ContributionsFromXML constructor.
+     * @param $contributionFromXML
+     * @param ServiceTaskContribution $taskContributionService
+     * @param ServiceOrg $serviceOrg
+     */
     public function __construct($contributionFromXML, ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->contributionFromXML = $contributionFromXML;
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -53,10 +62,16 @@ class ContributionsFromXML extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $tasks = $this->data->getTasks();
         $tasknr = (int) (string) $XMLTask->number;

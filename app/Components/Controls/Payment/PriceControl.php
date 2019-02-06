@@ -22,6 +22,11 @@ class PriceControl extends Control {
      */
     private $translator;
 
+    /**
+     * PriceControl constructor.
+     * @param ITranslator $translator
+     * @param Price $price
+     */
     public function __construct(ITranslator $translator, Price $price) {
         parent::__construct();
         $this->translator = $translator;

@@ -24,13 +24,17 @@ abstract class ReactComponent extends Control implements IReactComponent {
      */
     protected $container;
 
+    /**
+     * ReactComponent constructor.
+     * @param Container $context
+     */
     public function __construct(Container $context) {
         parent::__construct();
         $this->container = $context;
     }
 
     /**
-     * @param $obj IComponent
+     * @param IComponent $obj
      */
     protected function attached($obj) {
         if (!static::$reactJSAttached && $obj instanceof IJavaScriptCollector) {
@@ -53,10 +57,16 @@ abstract class ReactComponent extends Control implements IReactComponent {
         $this->template->render();
     }
 
+    /**
+     * @return array
+     */
     public function getActions(): array {
         return [];
     }
 
+    /**
+     * @return IRequest
+     */
     protected function getHttpRequest(): IRequest {
         return $this->container->getByType('Nette\Http\IRequest');
     }

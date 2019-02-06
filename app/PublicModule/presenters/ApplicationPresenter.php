@@ -83,30 +83,52 @@ class ApplicationPresenter extends BasePresenter {
      */
     private $flashDumpFactory;
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param RelatedPersonAuthorizator $relatedPersonAuthorizator
+     */
     public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
     }
 
+    /**
+     * @param LayoutResolver $layoutResolver
+     */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
     }
 
+    /**
+     * @param ApplicationHandlerFactory $handlerFactory
+     */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param $eventId
+     * @param $id
+     */
     public function authorizedDefault($eventId, $id) {
 
     }
@@ -145,10 +167,19 @@ class ApplicationPresenter extends BasePresenter {
         parent::unauthorizedAccess();
     }
 
+    /**
+     * @return bool
+     */
     public function requiresLogin() {
         return $this->getAction() != 'default';
     }
 
+    /**
+     * @param $eventId
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
             throw new BadRequestException(_('Neexistující akce.'), 404);
@@ -216,6 +247,9 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
+    /**
+     * @return ApplicationComponent
+     */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
@@ -233,6 +267,10 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
+    /**
+     * @return ApplicationsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentApplicationsGrid() {
         $person = $this->getUser()->getIdentity()->getPerson();
         $events = $this->serviceEvent->getTable();
@@ -248,6 +286,10 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
+    /**
+     * @return ApplicationsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentNewApplicationsGrid() {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
@@ -262,6 +304,9 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
+    /**
+     * @return \FKSDB\ORM\ModelEvent|\Nette\Database\Table\ActiveRow|null
+     */
     private function getEvent() {
         if ($this->event === false) {
             $eventId = null;
@@ -279,6 +324,9 @@ class ApplicationPresenter extends BasePresenter {
         return $this->event;
     }
 
+    /**
+     * @return ModelEventParticipant|mixed|IModel|ModelFyziklaniTeam
+     */
     private function getEventApplication() {
         if ($this->eventApplication === false) {
             $id = null;
@@ -297,6 +345,9 @@ class ApplicationPresenter extends BasePresenter {
         return $this->eventApplication;
     }
 
+    /**
+     * @return Holder
+     */
     private function getHolder() {
         if (!$this->holder) {
             $this->holder = $this->container->createEventHolder($this->getEvent());
@@ -304,6 +355,9 @@ class ApplicationPresenter extends BasePresenter {
         return $this->holder;
     }
 
+    /**
+     * @return Machine
+     */
     private function getMachine() {
         if (!$this->machine) {
             $this->machine = $this->container->createEventMachine($this->getEvent());
@@ -311,10 +365,19 @@ class ApplicationPresenter extends BasePresenter {
         return $this->machine;
     }
 
+    /**
+     * @param $eventId
+     * @param $id
+     * @return string
+     */
     public static function encodeParameters($eventId, $id) {
         return "$eventId:$id";
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public static function decodeParameters($data) {
         $parts = explode(':', $data);
         if (count($parts) != 2) {
@@ -326,6 +389,9 @@ class ApplicationPresenter extends BasePresenter {
         );
     }
 
+    /**
+     * @return array
+     */
     public function getNavBarVariant(): array {
         $event = $this->getEvent();
         $parent = parent::getNavBarVariant();;

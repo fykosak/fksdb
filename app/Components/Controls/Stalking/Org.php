@@ -2,6 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+/**
+ * Class Org
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class Org extends StalkingComponent {
 
     public function render() {

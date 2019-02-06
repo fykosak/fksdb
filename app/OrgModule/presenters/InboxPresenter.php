@@ -22,6 +22,10 @@ use ServiceTaskContribution;
 use Submits\ISubmitStorage;
 use Submits\SeriesTable;
 
+/**
+ * Class InboxPresenter
+ * @package OrgModule
+ */
 class InboxPresenter extends SeriesPresenter {
 
     const POST_CT_ID = 'ctId';
@@ -63,30 +67,51 @@ class InboxPresenter extends SeriesPresenter {
      */
     private $personFactory;
 
+    /**
+     * @param ISubmitStorage $submitStorage
+     */
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
 
+    /**
+     * @param ServiceTaskContribution $serviceTaskContribution
+     */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param ServiceSubmit $serviceSubmit
+     */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @param ServiceContestant $serviceContestant
+     */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
+    /**
+     * @param SeriesTable $seriesTable
+     */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
 
+    /**
+     * @param PersonFactory $personFactory
+     */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
     }
@@ -113,7 +138,7 @@ class InboxPresenter extends SeriesPresenter {
 
     public function renderDefault() {
         /**
-         * @var $control OptimisticFormControl
+         * @var OptimisticFormControl $control
          */
         $control = $this->getComponent('inboxForm');
         $control->getForm()->setDefaults();
@@ -154,13 +179,17 @@ class InboxPresenter extends SeriesPresenter {
             $values[$key][] = $personId;
         }
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('handoutForm');
         $control->getForm()->setDefaults($values);
 
     }
 
+    /**
+     * @return OptimisticFormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentInboxForm() {
         $controlForm = new OptimisticFormControl([$this->seriesTable, 'getFingerprint'], [$this->seriesTable, 'formatAsFormValues']);
         /*$form = new OptimisticForm(
@@ -201,6 +230,10 @@ class InboxPresenter extends SeriesPresenter {
         return $controlForm;
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentHandoutForm() {
         $formControl = new FormControl();
         $form = $formControl->getForm();
@@ -218,6 +251,10 @@ class InboxPresenter extends SeriesPresenter {
         return $formControl;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function inboxFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -244,6 +281,10 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function handoutFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -278,6 +319,10 @@ class InboxPresenter extends SeriesPresenter {
 
     private $orgProvider;
 
+    /**
+     * @return PersonProvider
+     * @throws \Nette\Application\BadRequestException
+     */
     private function getOrgProvider() {
         if (!$this->orgProvider) {
             $this->orgProvider = new PersonProvider($this->servicePerson);

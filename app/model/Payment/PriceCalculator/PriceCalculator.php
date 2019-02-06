@@ -6,6 +6,10 @@ use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
 
+/**
+ * Class PriceCalculator
+ * @package FKSDB\Payment\PriceCalculator
+ */
 class PriceCalculator {
     /**
      * @var AbstractPreProcess[]
@@ -20,6 +24,10 @@ class PriceCalculator {
      */
     private $currency;
 
+    /**
+     * PriceCalculator constructor.
+     * @param ModelEvent $event
+     */
     public function __construct(ModelEvent $event) {
         $this->event = $event;
     }

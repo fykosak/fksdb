@@ -34,6 +34,12 @@ class CloseControl extends Control {
      */
     private $translator;
 
+    /**
+     * CloseControl constructor.
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ITranslator $translator
+     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ITranslator $translator) {
         parent::__construct();
         $this->event = $event;

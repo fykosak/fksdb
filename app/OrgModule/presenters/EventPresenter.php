@@ -85,39 +85,67 @@ class EventPresenter extends EntityPresenter {
      */
     private $serviceAuthToken;
 
+    /**
+     * @param ServiceAuthToken $serviceAuthToken
+     */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param EventFactory $eventFactory
+     */
     public function injectEventFactory(EventFactory $eventFactory) {
         $this->eventFactory = $eventFactory;
     }
 
+    /**
+     * @param LayoutResolver $layoutResolver
+     */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
     }
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ExpressionPrinter $expressionPrinter
+     */
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
     }
 
+    /**
+     * @param ApplicationHandlerFactory $handlerFactory
+     */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     public function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedApplications($id) {
         $model = $this->getModel();
         if (!$model) {
@@ -160,10 +188,18 @@ class EventPresenter extends EntityPresenter {
         throw new NotImplementedException(null, 501);
     }
 
+    /**
+     * @param $id
+     */
     public function renderApplications($id) {
         $this->template->event = $this->getModel();
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -176,6 +212,11 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return FormControl|mixed
+     * @throws BadRequestException
+     */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -187,10 +228,18 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return EventsGrid|mixed
+     */
     protected function createComponentGrid($name) {
         return new EventsGrid($this->serviceEvent);
     }
 
+    /**
+     * @param $name
+     * @return ApplicationsGrid
+     */
     protected function createComponentApplicationsGrid($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $source->order('created');
@@ -204,6 +253,10 @@ class EventPresenter extends EntityPresenter {
         return $grid;
     }
 
+    /**
+     * @param $name
+     * @return ImportComponent
+     */
     protected function createComponentApplicationsImport($name) {
         $source = new SingleEventSource($this->getModel(), $this->container);
         $logger = new MemoryLogger(); //TODO log to file?
@@ -215,6 +268,10 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @param $name
+     * @return GraphComponent
+     */
     protected function createComponentGraphComponent($name) {
         $event = $this->getModel();
         $machine = $this->container->createEventMachine($event);
@@ -223,6 +280,10 @@ class EventPresenter extends EntityPresenter {
         return $component;
     }
 
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
     private function createForm() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -256,6 +317,10 @@ class EventPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $scheme
+     * @return Html
+     */
     private function createParamDescription($scheme) {
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -272,6 +337,10 @@ class EventPresenter extends EntityPresenter {
         return $result;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
@@ -282,6 +351,10 @@ class EventPresenter extends EntityPresenter {
         $form->setDefaults($defaults);
     }
 
+    /**
+     * @param $id
+     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     */
     protected function loadModel($id) {
         return $this->serviceEvent->findByPrimary($id);
     }

@@ -35,6 +35,9 @@ class ModelEvent extends AbstractModelSingle implements IResource {
      */
     private $holder;
 
+    /**
+     * @param Holder $holder
+     */
     function setHolder(Holder $holder) {
         $this->holder = $holder;
     }
@@ -110,6 +113,9 @@ class ModelEvent extends AbstractModelSingle implements IResource {
         return ModelFyziklaniGameSetup::createFromTableRow($gameSetup);
     }
 
+    /**
+     * @return array
+     */
     public function __toArray(): array {
         return [
             'eventId' => $this->event_id,

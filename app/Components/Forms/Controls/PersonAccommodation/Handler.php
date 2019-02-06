@@ -9,10 +9,19 @@ use Nette\ArrayHash;
 use Nette\NotImplementedException;
 use ServiceEventPersonAccommodation;
 
+/**
+ * Class Handler
+ * @package FKSDB\Components\Forms\Controls\PersonAccommodation
+ */
 class Handler {
     private $serviceEventPersonAccommodation;
     private $serviceEventAccommodation;
 
+    /**
+     * Handler constructor.
+     * @param ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param \ServiceEventAccommodation $serviceEventAccommodation
+     */
     public function __construct(ServiceEventPersonAccommodation $serviceEventPersonAccommodation, \ServiceEventAccommodation $serviceEventAccommodation) {
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
         $this->serviceEventAccommodation = $serviceEventAccommodation;

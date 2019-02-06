@@ -22,7 +22,6 @@ class ACLExtension extends CompilerExtension {
 
     public function __construct() {
         Helpers::registerSemantic(self::$semanticMap);
-
     }
 
     public function loadConfiguration() {

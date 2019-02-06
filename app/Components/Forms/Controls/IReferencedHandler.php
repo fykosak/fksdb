@@ -18,12 +18,29 @@ interface IReferencedHandler {
 
     public function getResolution();
 
+    /**
+     * @param $resolution
+     * @return mixed
+     */
     public function setResolution($resolution);
 
+    /**
+     * @param IModel $model
+     * @param ArrayHash $values
+     * @return mixed
+     */
     public function update(IModel $model, ArrayHash $values);
 
+    /**
+     * @param ArrayHash $values
+     * @return mixed
+     */
     public function createFromValues(ArrayHash $values);
 
+    /**
+     * @param $field
+     * @return mixed
+     */
     public function isSecondaryKey($field);
 
     /**

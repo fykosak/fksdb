@@ -41,18 +41,30 @@ abstract class BasePresenter extends EventBasePresenter {
      */
     private $gameSetup;
 
+    /**
+     * @param FyziklaniFactory $fyziklaniComponentsFactory
+     */
     public function injectFyziklaniComponentsFactory(FyziklaniFactory $fyziklaniComponentsFactory) {
         $this->fyziklaniComponentsFactory = $fyziklaniComponentsFactory;
     }
 
+    /**
+     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     */
     public function injectServiceFyziklaniTeamPosition(\ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
+    /**
+     * @return \ServiceFyziklaniTeamPosition
+     */
     protected function getServiceFyziklaniTeamPosition(): \ServiceFyziklaniTeamPosition {
         return $this->serviceFyziklaniTeamPosition;
     }
 
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -64,6 +76,9 @@ abstract class BasePresenter extends EventBasePresenter {
         return $this->serviceFyziklaniTeam;
     }
 
+    /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     */
     public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
@@ -102,7 +117,7 @@ abstract class BasePresenter extends EventBasePresenter {
             $this->redirect(':Event:Dashboard:default');
         }
         /**
-         * @var $fyziklaniChooser FyziklaniChooser
+         * @var FyziklaniChooser $fyziklaniChooser
          */
         $fyziklaniChooser = $this->getComponent('fyziklaniChooser');
         $fyziklaniChooser->setEvent($this->getEvent());

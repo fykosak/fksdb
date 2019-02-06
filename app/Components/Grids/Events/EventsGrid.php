@@ -24,6 +24,10 @@ class EventsGrid extends BaseGrid {
      */
     private $serviceEvent;
 
+    /**
+     * EventsGrid constructor.
+     * @param ServiceEvent $serviceEvent
+     */
     function __construct(ServiceEvent $serviceEvent) {
         parent::__construct();
         $this->serviceEvent = $serviceEvent;

@@ -7,6 +7,10 @@ use NiftyGrid\DataSource\NDataSource;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
+/**
+ * Class TeamSubmitsGrid
+ * @package FKSDB\Components\Grids\Fyziklani
+ */
 class TeamSubmitsGrid extends SubmitsGrid {
 
     /**

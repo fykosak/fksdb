@@ -29,11 +29,19 @@ class DuplicateFinder {
      */
     private $parameters;
 
+    /**
+     * DuplicateFinder constructor.
+     * @param ServicePerson $servicePerson
+     * @param GlobalParameters $parameters
+     */
     function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
         $this->servicePerson = $servicePerson;
         $this->parameters = $parameters['deduplication']['finder'];
     }
 
+    /**
+     * @return array
+     */
     public function getPairs() {
         $buckets = [];
         /* Create buckets for quadratic search. */
@@ -67,6 +75,10 @@ class DuplicateFinder {
         return $pairs;
     }
 
+    /**
+     * @param ActiveRow $row
+     * @return string
+     */
     private function getBucketKey(ActiveRow $row) {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
@@ -109,6 +121,10 @@ class DuplicateFinder {
         return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
     }
 
+    /**
+     * @param ActiveRow $person
+     * @return array
+     */
     private function getDifferentPersons(ActiveRow $person) {
         if (!isset($person->duplicates)) {
             return [];
@@ -122,10 +138,20 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return float|int
+     */
     private function stringScore($a, $b) {
         return 1 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return float|int
+     */
     private function relativeDistance($a, $b) {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {

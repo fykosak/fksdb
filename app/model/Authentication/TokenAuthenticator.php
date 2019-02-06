@@ -29,6 +29,13 @@ class TokenAuthenticator extends AbstractAuthenticator {
      */
     private $session;
 
+    /**
+     * TokenAuthenticator constructor.
+     * @param ServiceAuthToken $authTokenService
+     * @param Session $session
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
@@ -83,6 +90,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
             throw new InvalidStateException('Not authenticated by token.');
@@ -99,6 +109,9 @@ class TokenAuthenticator extends AbstractAuthenticator {
         unset($section->data);
     }
 
+    /**
+     * @param ModelAuthToken $token
+     */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;

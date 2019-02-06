@@ -9,6 +9,10 @@ use FKSDB\ORM\ModelEventAccommodation;
 use SQL\SearchableDataSource;
 
 
+/**
+ * Class AccommodationGrid
+ * @package FKSDB\Components\Grids\Accommodation
+ */
 class AccommodationGrid extends BaseGrid {
 
     /**
@@ -20,6 +24,11 @@ class AccommodationGrid extends BaseGrid {
      */
     private $event;
 
+    /**
+     * AccommodationGrid constructor.
+     * @param ModelEvent $event
+     * @param \ServiceEventAccommodation $serviceEventAccommodation
+     */
     function __construct(ModelEvent $event, \ServiceEventAccommodation $serviceEventAccommodation) {
         parent::__construct();
         $this->event = $event;

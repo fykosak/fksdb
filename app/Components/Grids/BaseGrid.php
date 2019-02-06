@@ -17,12 +17,19 @@ abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
 
+    /**
+     * @param $presenter
+     */
     protected function configure($presenter) {
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $this->getComponent('paginator')->getTemplate()->setTranslator($this->presenter->getTranslator());
         $template = parent::createTemplate($class);
@@ -69,10 +76,16 @@ abstract class BaseGrid extends Grid {
      * Search
      * ****************************** */
 
+    /**
+     * @return bool
+     */
     public function isSearchable() {
         return $this->dataSource instanceof SearchableDataSource;
     }
 
+    /**
+     * @return Form
+     */
     protected function createComponentSearchForm() {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
@@ -110,6 +123,12 @@ abstract class BaseGrid extends Grid {
         return $button;
     }
 
+    /**
+     * @param $name
+     * @param null $label
+     * @return \NiftyGrid\Components\GlobalButton
+     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     */
     public function addGlobalButton($name, $label = NULL) {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');

@@ -19,6 +19,10 @@ use ServiceTaskStudyYear;
 use SQLResultsCache;
 use Submits\SeriesTable;
 
+/**
+ * Class PointsPresenter
+ * @package OrgModule
+ */
 class PointsPresenter extends SeriesPresenter {
 
     /**
@@ -58,26 +62,44 @@ class PointsPresenter extends SeriesPresenter {
      */
     private $serviceTaskStudyYear;
 
+    /**
+     * @param SQLResultsCache $SQLResultsCache
+     */
     public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
         $this->SQLResultsCache = $SQLResultsCache;
     }
 
+    /**
+     * @param SeriesTable $seriesTable
+     */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
     }
 
+    /**
+     * @param ServiceSubmit $serviceSubmit
+     */
     public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @param ServiceTask $serviceTask
+     */
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
     }
 
+    /**
+     * @param ServiceTaskContribution $serviceTaskContribution
+     */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
+    /**
+     * @param ServiceTaskStudyYear $serviceTaskStudyYear
+     */
     public function injectServiceTaskStudyYear(ServiceTaskStudyYear $serviceTaskStudyYear) {
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
     }
@@ -112,6 +134,11 @@ class PointsPresenter extends SeriesPresenter {
         $this->template->showAll = (bool)$this->all;
     }
 
+    /**
+     * @param $name
+     * @return OptimisticForm
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentPointsForm($name) {
         //   $controlContainer = new FormControl();
         //   $formToRemove = $controlContainer->getForm();
@@ -157,6 +184,10 @@ class PointsPresenter extends SeriesPresenter {
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
     public function pointsFormSuccess(Form $form) {
         $values = $form->getValues();
 
@@ -223,6 +254,9 @@ class PointsPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @return array
+     */
     private function getGradedTasks() {
         /**
          * @var ModelLogin $login

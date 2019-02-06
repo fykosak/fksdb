@@ -5,12 +5,19 @@ namespace EventModule;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 
+/**
+ * Class SchedulePresenter
+ * @package EventModule
+ */
 class SchedulePresenter extends BasePresenter {
     /**
      * @var Connection
      */
     private $connection;
 
+    /**
+     * @param Connection $connection
+     */
     public function injectConnection(Connection $connection) {
         $this->connection = $connection;
     }

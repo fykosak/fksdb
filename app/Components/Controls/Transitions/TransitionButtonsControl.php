@@ -30,6 +30,12 @@ class TransitionButtonsControl extends Control {
      */
     private $model;
 
+    /**
+     * TransitionButtonsControl constructor.
+     * @param Machine $machine
+     * @param ITranslator $translator
+     * @param IStateModel $model
+     */
     public function __construct(Machine $machine, ITranslator $translator, IStateModel $model) {
         parent::__construct();
         $this->machine = $machine;

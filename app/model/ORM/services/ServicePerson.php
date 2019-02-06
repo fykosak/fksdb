@@ -25,6 +25,10 @@ class ServicePerson extends AbstractServiceSingle {
         return $result ? ModelPerson::createFromTableRow($result) : null;
     }
 
+    /**
+     * @param IModel $model
+     * @return mixed|void
+     */
     public function save(IModel &$model) {
         if (!isset($model->gender)) {
             $model->inferGender();

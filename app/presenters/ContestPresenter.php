@@ -5,6 +5,9 @@ use FKSDB\Components\Controls\LanguageChooser;
 use FKSDB\ORM\ModelContest;
 use Nette\Application\BadRequestException;
 
+/**
+ * Class ContestPresenter
+ */
 abstract class ContestPresenter extends AuthenticatedPresenter implements IContestPresenter {
 
     /**

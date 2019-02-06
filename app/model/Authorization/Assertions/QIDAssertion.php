@@ -9,13 +9,17 @@ use Nette\Security\Permission;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class QIDAssertion extends Object {
 
     private $qids;
 
+    /**
+     * QIDAssertion constructor.
+     * @param $qids
+     */
     function __construct($qids) {
         if (!is_array($qids)) {
             $qids = array($qids);
@@ -23,6 +27,13 @@ class QIDAssertion extends Object {
         $this->qids = $qids;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @return bool
+     */
     public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {

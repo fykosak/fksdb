@@ -5,8 +5,16 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use Nette\Forms\Form;
 
+/**
+ * Class IPhoneField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 abstract class IPhoneField extends WriteOnlyInput {
 
+    /**
+     * IPhoneField constructor.
+     * @param $label
+     */
     public function __construct($label) {
         parent::__construct($label);
         $this->setAttribute("placeholder", 've tvaru +420123456789');

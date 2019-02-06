@@ -19,6 +19,11 @@ class StatsModelFactory {
      */
     private $serviceTask;
 
+    /**
+     * StatsModelFactory constructor.
+     * @param \Nette\Database\Connection $connection
+     * @param ServiceTask $serviceTask
+     */
     public function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;

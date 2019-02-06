@@ -11,6 +11,10 @@ use FKSDB\ORM\ModelPerson;
 use Nette\DI\Container;
 use ServiceEvent;
 
+/**
+ * Class DispatchPresenter
+ * @package EventModule
+ */
 class DispatchPresenter extends AuthenticatedPresenter {
 
     /**
@@ -58,7 +62,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function createComponentDispatchGrid(): DispatchGrid {
         /**
-         * @var $person ModelPerson
+         * @var ModelPerson $person
          */
         $person = $this->user->getIdentity()->getPerson();
         return new DispatchGrid($this->serviceEvent, $person, $this->yearCalculator);
@@ -75,7 +79,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
      */
     public function startup() {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
         $languageChooser =  $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
