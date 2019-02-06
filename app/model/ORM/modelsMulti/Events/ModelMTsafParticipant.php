@@ -11,6 +11,9 @@ use AbstractModelMulti;
  */
 class ModelMTsafParticipant extends AbstractModelMulti {
 
+    /**
+     * @return mixed
+     */
     public function __toString() {
         if (!$this->getMainModel()->getPerson()) {
             trigger_error("Missing person in '" . $this->getMainModel() . "'.");

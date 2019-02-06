@@ -53,6 +53,13 @@ class SeriesChooser extends Control {
      */
     private $valid;
 
+    /**
+     * SeriesChooser constructor.
+     * @param Session $session
+     * @param SeriesCalculator $seriesCalculator
+     * @param ServiceContest $serviceContest
+     * @param ITranslator $translator
+     */
     function __construct(Session $session, SeriesCalculator $seriesCalculator, ServiceContest $serviceContest, ITranslator $translator) {
         parent::__construct();
         $this->session = $session;
@@ -61,11 +68,17 @@ class SeriesChooser extends Control {
         $this->translator = $translator;
     }
 
+    /**
+     * @return bool
+     */
     public function isValid() {
         $this->init();
         return $this->valid;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         $this->init();
         return $this->series;
@@ -125,6 +138,10 @@ class SeriesChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $contestId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChange($contestId) {
         $presenter = $this->getPresenter();
         $backupYear = null;
@@ -162,10 +179,18 @@ class SeriesChooser extends Control {
         }
     }
 
+    /**
+     * @param $series
+     * @return bool
+     */
     private function isValidSeries($series) {
         return in_array($series, $this->getAllowedSeries());
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);

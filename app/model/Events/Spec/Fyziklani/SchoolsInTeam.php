@@ -32,6 +32,9 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      */
     private $evaluator;
 
+    /**
+     * @return int|mixed
+     */
     public function getSchoolsInTeam() {
         if ($this->schoolsInTeamValue === null) {
             $this->schoolsInTeamValue = $this->evaluator->evaluate($this->schoolsInTeam, $this->getHolder());
@@ -39,16 +42,31 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         return $this->schoolsInTeamValue;
     }
 
+    /**
+     * @param $schoolsInTeam
+     */
     public function setSchoolsInTeam($schoolsInTeam) {
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
+    /**
+     * SchoolsInTeam constructor.
+     * @param $schoolsInTeam
+     * @param ExpressionEvaluator $evaluator
+     * @param ServicePersonHistory $servicePersonHistory
+     */
     function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
         $this->evaluator = $evaluator;
         $this->setSchoolsInTeam($schoolsInTeam);
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
@@ -75,6 +93,10 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
                 };
     }
 
+    /**
+     * @param $schools
+     * @return bool
+     */
     private function checkMixture($schools) {
         return count(array_unique($schools)) <= $this->getSchoolsInTeam();
     }

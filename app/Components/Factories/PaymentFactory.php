@@ -13,6 +13,10 @@ use FKSDB\ORM\Services\ServicePaymentAccommodation;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Localization\ITranslator;
 
+/**
+ * Class PaymentFactory
+ * @package FKSDB\Components\Factories
+ */
 class PaymentFactory {
     /**
      * @var ITranslator
@@ -41,6 +45,15 @@ class PaymentFactory {
     private $servicePaymentAccommodation;
 
 
+    /**
+     * PaymentFactory constructor.
+     * @param ServicePaymentAccommodation $servicePaymentAccommodation
+     * @param PersonFactory $personFactory
+     * @param PersonProvider $personProvider
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ITranslator $translator
+     * @param \ServicePayment $servicePayment
+     */
     public function __construct(ServicePaymentAccommodation $servicePaymentAccommodation, PersonFactory $personFactory, PersonProvider $personProvider, \ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ITranslator $translator, \ServicePayment $servicePayment) {
         $this->translator = $translator;
         $this->servicePayment = $servicePayment;

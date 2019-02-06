@@ -19,6 +19,10 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     const TYPE_STR = 'string';
     const TYPE_BOOL = 'bool';
 
+    /**
+     * @return int|string
+     * @throws InvalidStateException
+     */
     public function getDefaultValue() {
         switch ($this->type) {
             case self::TYPE_INT:
@@ -31,6 +35,10 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
         }
     }
 
+    /**
+     * @param $value
+     * @throws InvalidStateException
+     */
     public function setDefaultValue($value) {
         switch ($this->type) {
             case self::TYPE_INT:
@@ -45,6 +53,10 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
         }
     }
 
+    /**
+     * @return int
+     * @throws InvalidStateException
+     */
     public function getPDOType() {
         switch ($this->type) {
             case self::TYPE_INT:

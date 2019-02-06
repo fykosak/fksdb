@@ -9,6 +9,10 @@ use Nette\Utils\Json;
  */
 class RoutingEdit extends FyziklaniReactControl {
 
+    /**
+     * @return string
+     * @throws \Nette\Utils\JsonException
+     */
     public function getData(): string {
 
         return Json::encode([
@@ -17,14 +21,24 @@ class RoutingEdit extends FyziklaniReactControl {
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function getMode(): string {
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getComponentName(): string {
         return 'routing';
     }
 
+    /**
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function getActions(): array {
         $actions = parent::getActions();
         $actions['save'] = $this->link('save!');

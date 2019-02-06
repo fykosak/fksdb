@@ -36,6 +36,11 @@ class NavigationExtension extends CompilerExtension {
         $navbar->addSetup('$service->setStructure(?);', [$config['structure']]);
     }
 
+    /**
+     * @param $navbar
+     * @param $nodeId
+     * @param array $arguments
+     */
     private function createNode($navbar, $nodeId, $arguments = []) {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
@@ -45,6 +50,11 @@ class NavigationExtension extends CompilerExtension {
         $navbar->addSetup('$service->createNode(?, ?);', [$nodeId, $arguments]);
     }
 
+    /**
+     * @param $structure
+     * @param $navbar
+     * @param null $parent
+     */
     private function createFromStructure($structure, $navbar, $parent = null) {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
@@ -67,6 +77,10 @@ class NavigationExtension extends CompilerExtension {
         }
     }
 
+    /**
+     * @param $nodeId
+     * @param $arguments
+     */
     private function parseIdAsLink($nodeId, &$arguments) {
         $FQAction = str_replace('.', ':', $nodeId);
         $a = strrpos($FQAction, ':');

@@ -7,16 +7,28 @@ use FKSDB\ORM\ModelEventParticipant;
 use FKSDB\ORM\ModelPayment;
 use Nette\Application\BadRequestException;
 
+/**
+ * Class EventSchedulePrice
+ * @package FKSDB\Payment\PriceCalculator\PreProcess
+ */
 class EventSchedulePrice extends AbstractPreProcess {
     /**
      * @var \ServiceEventParticipant
      */
     private $serviceEventParticipant;
 
+    /**
+     * EventSchedulePrice constructor.
+     * @param \ServiceEventParticipant $serviceEventParticipant
+     */
     public function __construct(\ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return Price
+     */
     public static function calculate(ModelPayment $modelPayment): Price {
         /*$price = new Price(0, $modelPayment->currency);
         $ids = $this->getData($modelPayment);
@@ -31,12 +43,20 @@ class EventSchedulePrice extends AbstractPreProcess {
         return new Price(0, $modelPayment->currency);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     private function getParticipantSchedule($id) {
         $row = $this->serviceEventParticipant->findByPrimary($id);
         $model = ModelEventParticipant::createFromTableRow($row);
         return $model->schedule;
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @return array
+     */
     public static function getGridItems(ModelPayment $modelPayment): array {
        /* $ids = $this->getData($modelPayment);
         $items = [];
@@ -56,6 +76,13 @@ class EventSchedulePrice extends AbstractPreProcess {
        return [];
     }
 
+    /**
+     * @param $participantSchedule
+     * @param $schedule
+     * @param $currency
+     * @return Price
+     * @throws BadRequestException
+     */
     private function calculateSchedule($participantSchedule, $schedule, $currency): Price {
         $data = \json_decode($participantSchedule);
 
@@ -75,6 +102,13 @@ class EventSchedulePrice extends AbstractPreProcess {
     }
 
 
+    /**
+     * @param $schedule
+     * @param string $key
+     * @param int $id
+     * @return mixed
+     * @throws BadRequestException
+     */
     private function findScheduleItem($schedule, string $key, int $id) {
         foreach ($schedule as $scheduleKey => $item) {
             if ($scheduleKey !== $key) {

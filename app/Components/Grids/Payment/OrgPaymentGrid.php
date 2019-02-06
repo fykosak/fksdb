@@ -16,6 +16,11 @@ class OrgPaymentGrid extends PaymentGrid {
      */
     private $event;
 
+    /**
+     * OrgPaymentGrid constructor.
+     * @param \ServicePayment $servicePayment
+     * @param ModelEvent $event
+     */
     public function __construct(\ServicePayment $servicePayment, ModelEvent $event) {
         parent::__construct($servicePayment);
         $this->event = $event;
@@ -51,5 +56,6 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->addColumnState();
 
         $this->addButtonDetail();
+        $this->paginate = false;
     }
 }

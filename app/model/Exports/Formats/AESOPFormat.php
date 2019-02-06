@@ -7,13 +7,19 @@ use WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AESOPFormat extends XSLFormat {
 
     const ID_SCOPE = 'fksdb.person_id';
 
+    /**
+     * AESOPFormat constructor.
+     * @param StoredQuery $storedQuery
+     * @param $xslFile
+     * @param IXMLNodeSerializer $xmlSerializer
+     */
     function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 
@@ -24,6 +30,9 @@ class AESOPFormat extends XSLFormat {
         ));
     }
 
+    /**
+     * @return PlainTextResponse|\Nette\Application\IResponse
+     */
     public function getResponse() {
         $response = parent::getResponse();
 

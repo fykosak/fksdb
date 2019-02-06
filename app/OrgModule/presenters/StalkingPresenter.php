@@ -25,6 +25,10 @@ use Persons\DenyResolver;
 use Persons\ExtendedPersonHandler;
 use ServicePerson;
 
+/**
+ * Class StalkingPresenter
+ * @package OrgModule
+ */
 class StalkingPresenter extends BasePresenter {
 
     /**
@@ -46,10 +50,16 @@ class StalkingPresenter extends BasePresenter {
      */
     private $mode;
 
+    /**
+     * @param ServicePerson $servicePerson
+     */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param ReferencedPersonFactory $referencedPersonFactory
+     */
     function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
@@ -181,6 +191,7 @@ class StalkingPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws \Nette\Utils\RegexpException
      */
     public function createComponentFormSearch(): FormControl {
         $control = new FormControl();

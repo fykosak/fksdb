@@ -36,6 +36,10 @@ class PDFStamper implements IStorageProcessing {
      */
     const STAMP_MASK = 'S%dU%s, %s, %s';
 
+    /**
+     * PDFStamper constructor.
+     * @param int $fontSize
+     */
     function __construct(int $fontSize) {
         $this->fontSize = $fontSize;
     }

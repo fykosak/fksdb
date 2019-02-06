@@ -29,11 +29,19 @@ class TasksFromXML extends Stage {
      */
     private $taskService;
 
+    /**
+     * TasksFromXML constructor.
+     * @param array $xmlToColumnMap
+     * @param ServiceTask $taskService
+     */
     public function __construct(array $xmlToColumnMap, ServiceTask $taskService) {
         $this->xmlToColumnMap = $xmlToColumnMap;
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -44,10 +52,16 @@ class TasksFromXML extends Stage {
         }
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
 
+    /**
+     * @param SimpleXMLElement $XMLTask
+     */
     private function processTask(SimpleXMLElement $XMLTask) {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();

@@ -4,6 +4,10 @@
 namespace FKSDB\Payment\PriceCalculator;
 
 
+/**
+ * Class Price
+ * @package FKSDB\Payment\PriceCalculator
+ */
 class Price {
 
     const CURRENCY_EUR = 'eur';
@@ -17,6 +21,11 @@ class Price {
      */
     private $amount = 0;
 
+    /**
+     * Price constructor.
+     * @param float|null $amount
+     * @param string|null $currency
+     */
     public function __construct(float $amount = null, string $currency = null) {
         $this->amount = $amount;
         $this->currency = $currency;

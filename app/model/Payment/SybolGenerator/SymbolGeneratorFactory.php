@@ -6,12 +6,20 @@ use FKSDB\ORM\ModelEvent;
 use FKSDB\Payment\SymbolGenerator\Generators\Fyziklani13Generator;
 use Nette\NotImplementedException;
 
+/**
+ * Class SymbolGeneratorFactory
+ * @package FKSDB\Payment\SymbolGenerator
+ */
 class SymbolGeneratorFactory {
     /**
      * @var \ServicePayment;
      */
     protected $servicePayment;
 
+    /**
+     * SymbolGeneratorFactory constructor.
+     * @param \ServicePayment $servicePayment
+     */
     public function __construct(\ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }

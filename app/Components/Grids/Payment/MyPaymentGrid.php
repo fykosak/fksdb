@@ -5,6 +5,10 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\ORM\ModelPayment;
 use NiftyGrid\DataSource\NDataSource;
 
+/**
+ * Class MyPaymentGrid
+ * @package FKSDB\Components\Grids\Payment
+ */
 class MyPaymentGrid extends PaymentGrid {
 
     /**

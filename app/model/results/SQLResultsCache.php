@@ -19,6 +19,11 @@ class SQLResultsCache {
      */
     private $serviceTask;
 
+    /**
+     * SQLResultsCache constructor.
+     * @param \Nette\Database\Connection $connection
+     * @param ServiceTask $serviceTask
+     */
     function __construct(\Nette\Database\Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;

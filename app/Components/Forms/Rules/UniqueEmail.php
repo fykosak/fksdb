@@ -23,18 +23,32 @@ class UniqueEmail {
      */
     private $ignoredPerson;
 
+    /**
+     * UniqueEmail constructor.
+     * @param ServicePersonInfo $servicePersonInfo
+     */
     function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
+    /**
+     * @return ModelPerson
+     */
     public function getIgnoredPerson() {
         return $this->ignoredPerson;
     }
 
+    /**
+     * @param ModelPerson|null $ignoredPerson
+     */
     public function setIgnoredPerson(ModelPerson $ignoredPerson = null) {
         $this->ignoredPerson = $ignoredPerson;
     }
 
+    /**
+     * @param BaseControl $control
+     * @return bool
+     */
     public function __invoke(BaseControl $control) {
         $email = $control->getValue();
 

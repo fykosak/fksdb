@@ -21,10 +21,17 @@ class SchoolFactory {
      */
     private $schoolProvider;
 
+    /**
+     * SchoolFactory constructor.
+     * @param SchoolProvider $schoolProvider
+     */
     function __construct(SchoolProvider $schoolProvider) {
         $this->schoolProvider = $schoolProvider;
     }
 
+    /**
+     * @return ModelContainer
+     */
     public function createSchool(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name_full', _('Plný název'))
@@ -61,6 +68,10 @@ class SchoolFactory {
         return $container;
     }
 
+    /**
+     * @param int $options
+     * @return AutocompleteSelectBox
+     */
     public function createSchoolSelect($options = 0): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);

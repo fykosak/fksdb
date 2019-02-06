@@ -2,6 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+/**
+ * Class Contestant
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class Contestant extends StalkingComponent {
 
     public function render() {

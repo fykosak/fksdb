@@ -66,6 +66,15 @@ class PersonContainer extends Container {
     private $createResolution = PersonHandler2::RESOLUTION_EXCEPTION;
     private $updateResolution = PersonHandler2::RESOLUTION_OVERWRITE;
 
+    /**
+     * PersonContainer constructor.
+     * @param PersonId $personId
+     * @param PersonFactory $personFactory
+     * @param PersonProvider $personProvider
+     * @param ServicePerson $servicePerson
+     * @param PersonHandler2 $handler
+     * @param $acYear
+     */
     public function __construct(PersonId $personId, PersonFactory $personFactory, PersonProvider $personProvider, ServicePerson $servicePerson, PersonHandler2 $handler, $acYear) {
         parent::__construct();
         $this->monitor('Nette\Forms\Form');
@@ -82,6 +91,9 @@ class PersonContainer extends Container {
         $personId->setPersonContainer($this);
     }
 
+    /**
+     * @return mixed
+     */
     public function getSearchType() {
         return $this->searchType;
     }
@@ -107,30 +119,52 @@ class PersonContainer extends Container {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function getAllowClear() {
         return $this->allowClear;
     }
 
+    /**
+     * @param $allowClear
+     */
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCreateResolution() {
         return $this->createResolution;
     }
 
+    /**
+     * @param $createResolution
+     */
     public function setCreateResolution($createResolution) {
         $this->createResolution = $createResolution;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUpdateResolution() {
         return $this->updateResolution;
     }
 
+    /**
+     * @param $updateResolution
+     */
     public function setUpdateResolution($updateResolution) {
         $this->updateResolution = $updateResolution;
     }
 
+    /**
+     * @param $value
+     * @throws \Nette\Utils\RegexpException
+     */
     public function showSearch($value) {
         static $searchComponents = array(
     self::CONTROL_SEARCH,
@@ -156,6 +190,9 @@ class PersonContainer extends Container {
         }
     }
 
+    /**
+     * @param $value
+     */
     public function setClearButton($value) {
         if (!$this->getAllowClear()) {
             $value = false;
@@ -176,6 +213,10 @@ class PersonContainer extends Container {
     }
 
     //TODO move to person ID?
+
+    /**
+     * @param Form $form
+     */
     private function createOrUpdatePerson(Form $form) {
         $personId = $this->personId->getValue();
         if (!$personId) {
@@ -204,6 +245,9 @@ class PersonContainer extends Container {
 
     private $attachedOnValidate = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedOnValidate && $obj instanceof Form) {
@@ -238,6 +282,10 @@ class PersonContainer extends Container {
                 };
     }
 
+    /**
+     * @param $term
+     * @return \FKSDB\ORM\ModelPerson|\Nette\Database\Table\ActiveRow|null
+     */
     private function findPerson($term) {
         switch ($this->searchType) {
             case PersonContainer::SEARCH_EMAIL:
@@ -248,6 +296,10 @@ class PersonContainer extends Container {
         return null;
     }
 
+    /**
+     * @param $term
+     * @return array
+     */
     private function getPersonSearchData($term) {
         switch ($this->searchType) {
             case PersonContainer::SEARCH_EMAIL:

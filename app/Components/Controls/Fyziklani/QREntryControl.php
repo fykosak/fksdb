@@ -36,6 +36,12 @@ class QREntryControl extends Control {
      */
     private $code;
 
+    /**
+     * QREntryControl constructor.
+     * @param ModelEvent $event
+     * @param TaskCodeHandler $taskCodeHandler
+     * @param ITranslator $translator
+     */
     public function __construct(ModelEvent $event, TaskCodeHandler $taskCodeHandler, ITranslator $translator) {
         parent::__construct();
         $this->event = $event;
@@ -66,6 +72,9 @@ class QREntryControl extends Control {
         return $control;
     }
 
+    /**
+     * @param string $code
+     */
     public function setCode(string $code) {
         $this->code = $code;
         try {
@@ -77,7 +86,7 @@ class QREntryControl extends Control {
             $this->getPresenter()->flashMessage($e->getMessage(), \BasePresenter::FLASH_ERROR);
         }
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('form');
         $form = $control->getForm();
@@ -85,7 +94,7 @@ class QREntryControl extends Control {
 
         foreach ($this->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             /**
-             * @var $button Button
+             * @var Button $button
              */
             $button = $form['points' . $points];
             $button->setDisabled(false);
@@ -97,7 +106,7 @@ class QREntryControl extends Control {
      */
     public function getForm(): Form {
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('form');
         return $control->getForm();

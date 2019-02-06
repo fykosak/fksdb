@@ -5,6 +5,10 @@ namespace FKSDB\Transitions\Statements\Conditions;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
+/**
+ * Class DateBetween
+ * @package FKSDB\Transitions\Statements\Conditions
+ */
 class DateBetween extends Statement {
     /**
      * @var \DateTime

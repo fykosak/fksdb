@@ -10,6 +10,10 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TaskStat
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\Statistics\TeamStatistics;
 use Nette\Application\BadRequestException;
 
+/**
+ * Class ResultsPresenter
+ * @package FyziklaniModule
+ */
 class ResultsPresenter extends BasePresenter {
     /**
      * @return bool

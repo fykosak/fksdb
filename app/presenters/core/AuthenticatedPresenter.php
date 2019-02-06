@@ -52,34 +52,58 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     protected $contestAuthorizator;
 
+    /**
+     * @param TokenAuthenticator $tokenAuthenticator
+     */
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
         $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
+    /**
+     * @param PasswordAuthenticator $passwordAuthenticator
+     */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
+    /**
+     * @param GithubAuthenticator $githubAuthenticator
+     */
     public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
     }
 
+    /**
+     * @param ContestAuthorizator $contestAuthorizator
+     */
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
+    /**
+     * @return ContestAuthorizator
+     */
     public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
+    /**
+     * @param EventAuthorizator $eventAuthorizator
+     */
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
+    /**
+     * @return EventAuthorizator
+     */
     public function getEventAuthorizator() {
         return $this->eventAuthorizator;
     }
 
+    /**
+     * @return TokenAuthenticator
+     */
     public function getTokenAuthenticator() {
         return $this->tokenAuthenticator;
     }

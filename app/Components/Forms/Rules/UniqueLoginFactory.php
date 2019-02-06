@@ -17,10 +17,18 @@ class UniqueLoginFactory {
      */
     private $serviceLogin;
 
+    /**
+     * UniqueLoginFactory constructor.
+     * @param ServiceLogin $serviceLogin
+     */
     function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
+    /**
+     * @param ModelLogin|null $login
+     * @return UniqueLogin
+     */
     public function create(ModelLogin $login = null) {
         $rule = new UniqueLogin($this->serviceLogin);
         $rule->setIgnoredLogin($login);

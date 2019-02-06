@@ -39,6 +39,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
      */
     protected static $instances = [];
 
+    /**
+     * AbstractServiceSingle constructor.
+     * @param Connection $connection
+     */
     public function __construct(Connection $connection) {
         parent::__construct($this->tableName, $connection);
         $this->connection = $connection;
@@ -72,6 +76,10 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
         return $result;
     }
 
+    /**
+     * @param ActiveRow $row
+     * @return mixed
+     */
     public function createFromTableRow(ActiveRow $row) {
         $className = $this->modelClassName;
         return new $className($row->toArray(), $row->getTable());
@@ -209,6 +217,9 @@ abstract class AbstractServiceSingle extends TableSelection implements IService 
 
     private $columns;
 
+    /**
+     * @return array
+     */
     private function getColumnMetadata() {
         if ($this->columns === null) {
             $this->columns = $this->getConnection()->getSupplementalDriver()->getColumns($this->tableName);

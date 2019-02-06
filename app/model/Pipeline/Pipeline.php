@@ -35,6 +35,9 @@ class Pipeline {
      */
     private $logger = null;
 
+    /**
+     * @param ILogger $logger
+     */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
     }
@@ -86,6 +89,10 @@ class Pipeline {
         return $data;
     }
 
+    /**
+     * @param $message
+     * @param int $level
+     */
     public function log($message, $level = ILogger::INFO) {
         if ($this->logger) {
             $this->logger->log($message, $level);

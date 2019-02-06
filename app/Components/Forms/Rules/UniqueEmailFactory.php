@@ -17,10 +17,18 @@ class UniqueEmailFactory {
      */
     private $servicePersonInfo;
 
+    /**
+     * UniqueEmailFactory constructor.
+     * @param ServicePersonInfo $servicePersonInfo
+     */
     function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
+    /**
+     * @param ModelPerson|null $person
+     * @return UniqueEmail
+     */
     public function create(ModelPerson $person = null) {
         $rule = new UniqueEmail($this->servicePersonInfo);
         $rule->setIgnoredPerson($person);

@@ -2,6 +2,7 @@
 
 namespace Authentication;
 
+use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPerson;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -20,6 +21,12 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      */
     private $servicePerson;
 
+    /**
+     * PasswordAuthenticator constructor.
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     * @param ServicePerson $servicePerson
+     */
     function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
@@ -29,7 +36,10 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * Performs an authentication.
      * @param array $credentials
      * @return IIdentity
-     * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws InvalidCredentialsException
+     * @throws NoLoginException
+     * @throws UnknownLoginException
      */
     public function authenticate(array $credentials) {
         list($id, $password) = $credentials;
@@ -47,6 +57,13 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
         return $login;
     }
 
+    /**
+     * @param $id
+     * @return ModelLogin
+     * @throws InactiveLoginException
+     * @throws NoLoginException
+     * @throws UnknownLoginException
+     */
     public function findLogin($id) {
         $row = $this->servicePerson->getTable()->where('person_info:email = ?', $id)->fetch();
         $login = null;

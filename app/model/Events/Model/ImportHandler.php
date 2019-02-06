@@ -40,19 +40,37 @@ class ImportHandler extends Object {
      */
     private $keyName;
 
+    /**
+     * ImportHandler constructor.
+     * @param Container $container
+     */
     function __construct(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param CSVParser $parser
+     * @param $keyName
+     */
     public function setInput(CSVParser $parser, $keyName) {
         $this->parser = $parser;
         $this->keyName = $keyName;
     }
 
+    /**
+     * @param SingleEventSource $source
+     */
     public function setSource(SingleEventSource $source) {
         $this->source = $source;
     }
 
+    /**
+     * @param ApplicationHandler $handler
+     * @param $transitions
+     * @param $errorMode
+     * @param $stateless
+     * @return bool
+     */
     public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
@@ -92,6 +110,10 @@ class ImportHandler extends Object {
         return !$hasError;
     }
 
+    /**
+     * @param $row
+     * @return ArrayHash
+     */
     private function rowToValues($row) {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = new ArrayHash();
@@ -120,6 +142,9 @@ class ImportHandler extends Object {
         return $values;
     }
 
+    /**
+     * @return array
+     */
     private function createHoldersMap() {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();

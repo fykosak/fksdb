@@ -15,6 +15,11 @@ class ServiceMVikendParticipant extends AbstractServiceMulti {
     protected $modelClassName = 'ORM\ModelsMulti\Events\ModelMVikendParticipant';
     protected $joiningColumn = 'event_participant_id';
 
+    /**
+     * ServiceMVikendParticipant constructor.
+     * @param ServiceEventParticipant $mainService
+     * @param ServiceVikendParticipant $joinedService
+     */
     public function __construct(ServiceEventParticipant $mainService, ServiceVikendParticipant $joinedService) {
         parent::__construct($mainService, $joinedService);
     }

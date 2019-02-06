@@ -96,10 +96,16 @@ class MailSender extends Object {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param Transition $transition
+     */
     public function __invoke(Transition $transition) {
         $this->send($transition);
     }
 
+    /**
+     * @param Transition $transition
+     */
     private function send(Transition $transition) {
         $personIds = $this->resolveAdressees($transition);
         $persons = $this->servicePerson->getTable()
@@ -123,6 +129,12 @@ class MailSender extends Object {
         }
     }
 
+    /**
+     * @param $filename
+     * @param ModelLogin $login
+     * @param BaseMachine $baseMachine
+     * @return Message
+     */
     private function composeMessage($filename, ModelLogin $login, BaseMachine $baseMachine) {
         $machine = $baseMachine->getMachine();
         $holder = $machine->getHolder();
@@ -160,6 +172,12 @@ class MailSender extends Object {
         return $message;
     }
 
+    /**
+     * @param ModelLogin $login
+     * @param ModelEvent $event
+     * @param IModel $application
+     * @return ModelAuthToken
+     */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application) {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
@@ -167,19 +185,36 @@ class MailSender extends Object {
         return $token;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @param IModel $application
+     * @param Machine $machine
+     * @return string
+     */
     private function getSubject(ModelEvent $event, IModel $application, Machine $machine) {
         $application = Strings::truncate((string)$application, 20); //TODO extension point
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName());
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return \Nette\DateTime
+     */
     private function getUntil(ModelEvent $event) {
         return $event->registration_end ?: $event->end; //TODO extension point
     }
 
+    /**
+     * @return bool
+     */
     private function hasBcc() {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
+    /**
+     * @param Transition $transition
+     * @return array
+     */
     private function resolveAdressees(Transition $transition) {
         $holder = $transition->getBaseHolder()->getHolder();
         if (is_array($this->addressees)) {

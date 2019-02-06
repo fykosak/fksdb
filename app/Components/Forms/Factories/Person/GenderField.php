@@ -4,6 +4,10 @@ namespace FKSDB\Components\Forms\Factories\Person;
 
 use Nette\Forms\Controls\RadioList;
 
+/**
+ * Class GenderField
+ * @package FKSDB\Components\Forms\Factories\Person
+ */
 class GenderField extends RadioList {
 
     public function __construct() {
@@ -11,6 +15,9 @@ class GenderField extends RadioList {
         $this->setDefaultValue('M');
     }
 
+    /**
+     * @return array
+     */
     private function createOptions() {
         return ['M' => 'muž', 'F' => 'žena'];
     }

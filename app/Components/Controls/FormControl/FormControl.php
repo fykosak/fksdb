@@ -18,6 +18,11 @@ class FormControl extends Control {
 
     const templatePath = 'FormControl.containers.latte';
 
+    /**
+     * FormControl constructor.
+     * @param IContainer|NULL $parent
+     * @param null $name
+     */
     public function __construct(IContainer $parent = NULL, $name = NULL) {
         parent::__construct($parent, $name);
 
@@ -25,6 +30,9 @@ class FormControl extends Control {
         $this->addComponent($form, 'form');
     }
 
+    /**
+     * @return Form
+     */
     protected function createForm(): Form {
         return new Form();
     }
@@ -36,6 +44,9 @@ class FormControl extends Control {
         return $this->getComponent('form');
     }
 
+    /**
+     * @return string
+     */
     private function getTemplateFile() {
         return __DIR__ . DIRECTORY_SEPARATOR . self::templatePath;
     }

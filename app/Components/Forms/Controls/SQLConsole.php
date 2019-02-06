@@ -16,6 +16,12 @@ class SQLConsole extends TextArea {
 
     const CSS_CLASS = 'sqlConsole';
 
+    /**
+     * SQLConsole constructor.
+     * @param null $label
+     * @param null $cols
+     * @param null $rows
+     */
     public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
         parent::__construct($label, $cols, $rows);
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
@@ -25,6 +31,9 @@ class SQLConsole extends TextArea {
     private $attachedJS = false;
     private $attachedCSS = false;
 
+    /**
+     * @param $component
+     */
     protected function attached($component) {
         parent::attached($component);
         if (!$this->attachedJS && $component instanceof IJavaScriptCollector) {
@@ -38,6 +47,9 @@ class SQLConsole extends TextArea {
         }
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
         $control->class = self::CSS_CLASS;

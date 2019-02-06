@@ -31,11 +31,21 @@ class AddressFactory {
      */
     private $serviceRegion;
 
+    /**
+     * AddressFactory constructor.
+     * @param ServiceAddress $serviceAddress
+     * @param ServiceRegion $serviceRegion
+     */
     function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
     }
 
+    /**
+     * @param int $options
+     * @param IControl|null $conditioningField
+     * @return AddressContainer
+     */
     public function createAddress($options = 0, IControl $conditioningField = null) {
         $container = new AddressContainer();
         $this->buildAddress($container, $options, $conditioningField);

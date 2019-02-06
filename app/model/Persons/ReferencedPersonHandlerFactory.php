@@ -50,6 +50,16 @@ class ReferencedPersonHandlerFactory extends Object {
      */
     private $eventAccommodationHandler;
 
+    /**
+     * ReferencedPersonHandlerFactory constructor.
+     * @param Handler $eventAccommodationAdjustment
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServicePerson $servicePerson
+     * @param ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonHistory $servicePersonHistory
+     * @param ServiceMPostContact $serviceMPostContact
+     * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     */
     function __construct(
         Handler $eventAccommodationAdjustment,
         \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
@@ -68,6 +78,12 @@ class ReferencedPersonHandlerFactory extends Object {
         $this->eventAccommodationHandler = $eventAccommodationAdjustment;
     }
 
+    /**
+     * @param $acYear
+     * @param string $resolution
+     * @param $eventId
+     * @return ReferencedPersonHandler
+     */
     public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
         $handler = new ReferencedPersonHandler(
             $this->eventAccommodationHandler,

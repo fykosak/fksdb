@@ -2,6 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+/**
+ * Class PersonHistory
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class PersonHistory extends StalkingComponent {
 
     public function render() {

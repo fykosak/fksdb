@@ -2,6 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+/**
+ * Class Address
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class Address extends StalkingComponent {
 
     public function render() {

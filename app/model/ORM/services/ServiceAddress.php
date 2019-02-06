@@ -15,6 +15,10 @@ class ServiceAddress extends AbstractServiceSingle {
     protected $tableName = DbNames::TAB_ADDRESS;
     protected $modelClassName = 'FKSDB\ORM\ModelAddress';
 
+    /**
+     * @param IModel $model
+     * @return mixed|void
+     */
     public function save(IModel &$model) {
         if (!$model instanceof $this->modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->modelClassName . ' cannot store ' . get_class($model));

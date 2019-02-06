@@ -69,7 +69,7 @@ class ClosePresenter extends BasePresenter {
 
         try {
             /**
-             * @var $control CloseTeamControl
+             * @var CloseTeamControl $control
              */
             $control = $this->getComponent('closeTeamControl');
             $control->setTeam($this->team);

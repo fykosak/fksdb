@@ -18,6 +18,10 @@ class PipelineFactory {
      */
     private $serviceTeam;
 
+    /**
+     * PipelineFactory constructor.
+     * @param ServiceFyziklaniTeam $serviceTeam
+     */
     function __construct(ServiceFyziklaniTeam $serviceTeam) {
         $this->serviceTeam = $serviceTeam;
     }

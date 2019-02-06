@@ -19,6 +19,10 @@ class SchoolsGrid extends BaseGrid {
      */
     private $serviceSchool;
 
+    /**
+     * SchoolsGrid constructor.
+     * @param ServiceSchool $serviceSchool
+     */
     public function __construct(ServiceSchool $serviceSchool) {
         parent::__construct();
         $this->serviceSchool = $serviceSchool;

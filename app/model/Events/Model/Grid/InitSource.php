@@ -19,10 +19,19 @@ use ORM\Tables\TypedTableSelection;
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 
 
+    /**
+     * InitSource constructor.
+     * @param TypedTableSelection $events
+     * @param Container $container
+     */
     function __construct(TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return mixed
+     */
     public function processEvent(ModelEvent $event) {
 
         $holder = $this->container->createEventHolder($event);

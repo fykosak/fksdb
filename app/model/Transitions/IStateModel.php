@@ -2,7 +2,15 @@
 
 namespace FKSDB\Transitions;
 
+/**
+ * Interface IStateModel
+ * @package FKSDB\Transitions
+ */
 interface IStateModel {
+    /**
+     * @param $newState
+     * @return mixed
+     */
     public function updateState($newState);
 
     /**
@@ -10,5 +18,8 @@ interface IStateModel {
      */
     public function getState();
 
+    /**
+     * @return IStateModel
+     */
     public function refresh(): self;
 }

@@ -3,6 +3,10 @@
 namespace FKSDB\Components\React;
 
 
+/**
+ * Interface IReactComponent
+ * @package FKSDB\Components\React
+ */
 interface IReactComponent {
     /**
      * @return string

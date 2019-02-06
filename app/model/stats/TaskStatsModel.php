@@ -29,16 +29,28 @@ class TaskStatsModel {
      */
     protected $series;
 
+    /**
+     * TaskStatsModel constructor.
+     * @param ModelContest $contest
+     * @param $year
+     * @param \Nette\Database\Connection $connection
+     */
     function __construct(ModelContest $contest, $year, \Nette\Database\Connection $connection) {
         $this->contest = $contest;
         $this->connection = $connection;
         $this->year = $year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param $series
+     */
     public function setSeries($series) {
         $this->series = $series;
     }

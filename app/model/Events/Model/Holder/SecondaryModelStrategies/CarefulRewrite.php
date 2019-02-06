@@ -15,10 +15,20 @@ class CarefulRewrite extends SecondaryModelStrategy {
 
     private $safeKeys = [];
 
+    /**
+     * CarefulRewrite constructor.
+     * @param array $safeKeys
+     */
     function __construct($safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
+    /**
+     * @param BaseHolder $holder
+     * @param $secondaries
+     * @param $joinData
+     * @return mixed|void
+     */
     protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData) {
         if (count($secondaries) > 1) {
             throw new SecondaryModelConflictException($holder->getModel(), $secondaries);
@@ -36,6 +46,13 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $holder->setModel($foundModel); // "swap" models
     }
 
+    /**
+     * @param IModel $currentModel
+     * @param IModel $foundModel
+     * @param $joinData
+     * @param IService $service
+     * @return array
+     */
     private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
@@ -55,6 +72,12 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
+    /**
+     * @param IModel $currentModel
+     * @param IModel $foundModel
+     * @param $joinData
+     * @param IService $service
+     */
     private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
         $currentArray = $currentModel->toArray();
         $data = [];

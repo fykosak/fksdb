@@ -62,6 +62,10 @@ class ReferencedContainer extends ContainerWithOptions {
      */
     private $termToValuesCallback;
 
+    /**
+     * ReferencedContainer constructor.
+     * @param ReferencedId $referencedId
+     */
     function __construct(ReferencedId $referencedId) {
         parent::__construct();
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
@@ -75,16 +79,28 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId->setReferencedContainer($this);
     }
 
+    /**
+     * @return ReferencedId
+     */
     public function getReferencedId() {
         return $this->referencedId;
     }
 
+    /**
+     * @param bool $value
+     */
     public function setDisabled($value = TRUE) {
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
         }
     }
 
+    /**
+     * @param IControl|null $control
+     * @param null $searchCallback
+     * @param null $termToValuesCallback
+     * @throws \Nette\Utils\RegexpException
+     */
     public function setSearch(IControl $control = null, $searchCallback = null, $termToValuesCallback = null) {
         if ($control == null) {
             $this->referencedId->setValue(null); //is it needed?
@@ -98,24 +114,40 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->createSearchButton();
     }
 
+    /**
+     * @return bool
+     */
     public function getAllowClear() {
         return $this->allowClear;
     }
 
+    /**
+     * @param $allowClear
+     */
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
     }
 
+    /**
+     * @param IComponent $child
+     */
     protected function validateChildComponent(IComponent $child) {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSearchSubmitted() {
         return $this->getForm(false) && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
+    /**
+     * @param ArrayHash $conflicts
+     * @param null $container
+     */
     public function setConflicts(ArrayHash $conflicts, $container = null) {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
@@ -234,6 +266,9 @@ class ReferencedContainer extends ContainerWithOptions {
     private $attachedJS = false;
     private $attachedAjax = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -247,6 +282,9 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
+    /**
+     * @param $obj
+     */
     protected function detached($obj) {
         parent::detached($obj);
         if ($obj instanceof IJavaScriptCollector) {
@@ -267,6 +305,10 @@ class ReferencedContainer extends ContainerWithOptions {
         ]);
     }
 
+    /**
+     * @param $name
+     * @param $component
+     */
     private function hideComponent($name, $component) {
         $component->setOption('visible', false);
         if ($name) {
@@ -282,6 +324,10 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
+    /**
+     * @param $name
+     * @param $component
+     */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);
         if ($name) {

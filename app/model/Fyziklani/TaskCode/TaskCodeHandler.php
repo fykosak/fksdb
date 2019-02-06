@@ -7,6 +7,10 @@ use Nette\Diagnostics\Debugger;
 use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class TaskCodeHandler
+ * @package FKSDB\model\Fyziklani
+ */
 class TaskCodeHandler {
 
     /**
@@ -26,6 +30,13 @@ class TaskCodeHandler {
      */
     private $event;
 
+    /**
+     * TaskCodeHandler constructor.
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ModelEvent $event
+     */
     public function __construct(ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniTask $serviceFyziklaniTask, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ModelEvent $event) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;

@@ -9,6 +9,10 @@
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
 
+    /**
+     * @param bool $hideName
+     * @return array
+     */
     public function __toArray(bool $hideName = false): array {
         return [
             'label' => $this->label,

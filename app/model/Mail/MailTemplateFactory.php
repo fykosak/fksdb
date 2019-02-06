@@ -26,6 +26,11 @@ class MailTemplateFactory {
      */
     private $application;
 
+    /**
+     * MailTemplateFactory constructor.
+     * @param $templateDir
+     * @param Application $application
+     */
     function __construct($templateDir, Application $application) {
         $this->templateDir = $templateDir;
         $this->application = $application;
@@ -57,6 +62,12 @@ class MailTemplateFactory {
         return $this->createFromFile('passwordRecovery', $lang, $control);
     }
 
+    /**
+     * @param $filename
+     * @param null $lang
+     * @param Control|null $control
+     * @return FileTemplate
+     */
     public final function createFromFile($filename, $lang = null, Control $control = null) {
         $presenter = $this->application->getPresenter();
         if (($lang === null || $control === null) && !$presenter instanceof BasePresenter) {

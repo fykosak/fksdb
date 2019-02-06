@@ -77,6 +77,10 @@ class EventsExtension extends CompilerExtension {
     private $schemeFile;
     private $baseDefinitions = ['machines' => [], 'holders' => []];
 
+    /**
+     * EventsExtension constructor.
+     * @param $schemaFile
+     */
     function __construct($schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
@@ -132,6 +136,11 @@ class EventsExtension extends CompilerExtension {
         $this->scheme = $loader->load($this->schemeFile);
     }
 
+    /**
+     * @param $definitionName
+     * @param $baseName
+     * @return mixed
+     */
     private function getBaseMachineConfig($definitionName, $baseName) {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
@@ -165,6 +174,9 @@ class EventsExtension extends CompilerExtension {
         return $this->baseMachineConfig[$key];
     }
 
+    /**
+     * @param $name
+     */
     private function validateConfigName($name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
@@ -175,6 +187,10 @@ class EventsExtension extends CompilerExtension {
      * Dispatch factories
      */
 
+    /**
+     * @param Method $method
+     * @param $nameCallback
+     */
     private function createDispatchFactoryBody(Method $method, $nameCallback) {
         $method->setBody(NULL);
         $method->addBody('$eventTypeId = $event->event_type_id;');
@@ -217,6 +233,9 @@ class EventsExtension extends CompilerExtension {
         $method->addBody('}');
     }
 
+    /**
+     * @return array
+     */
     private function getTransposedDefinitions() {
         $result = [];
         foreach ($this->definitionsMap as $definitionName => $definition) {
@@ -248,6 +267,9 @@ class EventsExtension extends CompilerExtension {
         $def->setParameters(['FKSDB\ORM\ModelEvent event']);
     }
 
+    /**
+     * @param ClassType $class
+     */
     public function afterCompile(ClassType $class) {
         $methodName = Container::getMethodName(self::MAIN_FACTORY, false);
         $method = $class->methods[$methodName];
@@ -314,6 +336,11 @@ class EventsExtension extends CompilerExtension {
      * Specialized machine factories
      */
 
+    /**
+     * @param $name
+     * @param $definition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createMachineFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
@@ -366,6 +393,13 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('freeze');
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @param $definition
+     * @return \Nette\DI\ServiceDefinition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createBaseMachineFactory($name, $baseName, $definition) {
         $factoryName = $this->getBaseMachineName($name, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
@@ -408,6 +442,11 @@ class EventsExtension extends CompilerExtension {
      * Specialized data factories
      */
 
+    /**
+     * @param $name
+     * @param $definition
+     * @throws \FKSDB\Config\NeonSchemaException
+     */
     private function createHolderFactory($name, $definition) {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
 
@@ -461,6 +500,14 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('freeze');
     }
 
+    /**
+     * @param $definitionName
+     * @param $baseName
+     * @param $definition
+     * @return \Nette\DI\ServiceDefinition
+     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws \Nette\Utils\RegexpException
+     */
     private function createBaseHolderFactory($definitionName, $baseName, $definition) {
         $factoryName = $this->getBaseHolderName($definitionName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
@@ -527,32 +574,60 @@ class EventsExtension extends CompilerExtension {
      * Naming
      */
 
+    /**
+     * @param $name
+     * @return string
+     */
     private function getMachineName($name) {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
+    /**
+     * @param $name
+     * @return string
+     */
     private function getHolderName($name) {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @return string
+     */
     private function getBaseMachineName($name, $baseName) {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
+    /**
+     * @param $name
+     * @param $baseName
+     * @return string
+     */
     private function getBaseHolderName($name, $baseName) {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
+    /**
+     * @return string
+     */
     private function getTransitionName() {
         return $this->prefix(self::TRANSITION_FACTORY);
     }
 
+    /**
+     * @return string
+     */
     private function getFieldName() {
         return $this->prefix(self::FIELD_FACTORY);
     }
 
 }
 
+/**
+ * Class MachineDefinitionException
+ * @package Events
+ */
 class MachineDefinitionException extends InvalidStateException {
 
 }

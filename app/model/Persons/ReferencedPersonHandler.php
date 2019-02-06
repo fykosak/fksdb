@@ -79,6 +79,18 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
      */
     private $eventAccommodationHandler;
 
+    /**
+     * ReferencedPersonHandler constructor.
+     * @param Handler $eventAccommodation
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ServicePerson $servicePerson
+     * @param ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonHistory $servicePersonHistory
+     * @param ServiceMPostContact $serviceMPostContact
+     * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param $acYear
+     * @param $resolution
+     */
     function __construct(
         Handler $eventAccommodation,
         \ServiceEventPersonAccommodation $serviceEventPersonAccommodation,
@@ -101,10 +113,17 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->eventAccommodationHandler = $eventAccommodation;
     }
 
+    /**
+     * @return mixed
+     */
     public function getResolution() {
         return $this->resolution;
     }
 
+    /**
+     * @param $resolution
+     * @return mixed|void
+     */
     public function setResolution($resolution) {
         $this->resolution = $resolution;
     }
@@ -138,6 +157,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         $this->store($model, $values);
     }
 
+    /**
+     * @param $eventId
+     */
     public function setEventId($eventId) {
         $this->eventId = $eventId;
     }
@@ -235,6 +257,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
 
     private $outerTransaction = false;
 
+    /**
+     * @param $model
+     * @param ArrayHash $values
+     * @return ArrayHash
+     */
     private function getConflicts($model, ArrayHash $values) {
         $conflicts = new ArrayHash();
         foreach ($values as $key => $value) {
@@ -255,6 +282,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         return $conflicts;
     }
 
+    /**
+     * @param ArrayHash $data
+     * @param ArrayHash $conflicts
+     * @return ArrayHash
+     */
     private function removeConflicts(ArrayHash $data, ArrayHash $conflicts) {
         $result = $data;
         foreach ($conflicts as $key => $value) {
@@ -270,6 +302,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         return $result;
     }
 
+    /**
+     * @param $models
+     */
     private function preparePostContactModels(&$models) {
         if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
             $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
@@ -280,6 +315,9 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         }
     }
 
+    /**
+     * @param ArrayHash $data
+     */
     private function resolvePostContacts(ArrayHash $data) {
         foreach (array(self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT) as $type) {
             if (!isset($data[$type])) {
@@ -302,6 +340,11 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         }
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param ArrayHash $data
+     * @param $models
+     */
     private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
         if (!isset($data['person_has_flag'])) {
             return;
@@ -320,6 +363,10 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         unset($data['person_has_flag']);
     }
 
+    /**
+     * @param ArrayHash $data
+     * @param $services
+     */
     private function prepareFlagServices(ArrayHash &$data, &$services) {
         if (!isset($data['person_has_flag'])) {
             return;
@@ -354,10 +401,19 @@ class ReferencedPersonHandler extends Object implements IReferencedHandler {
         //else: TODO ? throw an exception?
     }
 
+    /**
+     * @param $field
+     * @return bool|mixed
+     */
     public function isSecondaryKey($field) {
         return $field == 'person_info.email';
     }
 
+    /**
+     * @param string $field
+     * @param mixed $key
+     * @return ModelPerson|null|IModel
+     */
     public function findBySecondaryKey($field, $key) {
         if (!$this->isSecondaryKey($field)) {
             throw new InvalidArgumentException("'$field' is not a secondary key.");

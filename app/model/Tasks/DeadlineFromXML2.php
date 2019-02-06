@@ -25,10 +25,17 @@ class DeadlineFromXML2 extends Stage {
      */
     private $taskService;
 
+    /**
+     * DeadlineFromXML2 constructor.
+     * @param ServiceTask $taskService
+     */
     function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @return mixed|SeriesData
+     */
     public function getOutput() {
         return $this->data;
     }
@@ -49,6 +56,9 @@ class DeadlineFromXML2 extends Stage {
         }
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }

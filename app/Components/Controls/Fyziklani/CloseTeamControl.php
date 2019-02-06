@@ -46,6 +46,14 @@ class CloseTeamControl extends Control {
      */
     private $fyziklaniFactory;
 
+    /**
+     * CloseTeamControl constructor.
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ITranslator $translator
+     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param FyziklaniFactory $fyziklaniFactory
+     */
     public function __construct(
         ModelEvent $event,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
@@ -146,7 +154,7 @@ class CloseTeamControl extends Control {
 
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
         /**
-         * @var $nextTask \ModelFyziklaniTask
+         * @var \ModelFyziklaniTask $nextTask
          */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';

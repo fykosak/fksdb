@@ -37,6 +37,11 @@ abstract class Machine {
      */
     private $explicitCondition;
 
+    /**
+     * Machine constructor.
+     * @param Connection $connection
+     * @param IService $service
+     */
     public function __construct(Connection $connection, IService $service) {
         $this->connection = $connection;
         $this->service = $service;

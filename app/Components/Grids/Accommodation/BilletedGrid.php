@@ -9,12 +9,20 @@ use FKSDB\ORM\ModelEventPersonAccommodation;
 use Nette\Utils\Html;
 use ORM\Models\Events\ModelFyziklaniTeam;
 
+/**
+ * Class BilletedGrid
+ * @package FKSDB\Components\Grids\Accommodation
+ */
 abstract class BilletedGrid extends BaseGrid {
     /**
      * @var \ServiceEventPersonAccommodation
      */
     protected $serviceEventPersonAccommodation;
 
+    /**
+     * BilletedGrid constructor.
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     */
     function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation) {
         parent::__construct();
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;

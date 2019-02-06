@@ -13,11 +13,16 @@ use Nette\Security\IResource;
  * @property string name_abbrev
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
-
+    /**
+     * @return ModelAddress
+     */
     public function getAddress(): ModelAddress {
         return ModelAddress::createFromTableRow($this->address);
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'school';
     }

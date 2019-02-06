@@ -16,10 +16,16 @@ use Nette\Database\Table\ActiveRow;
  * @property int payment_accommodation_id
  */
 class ModelPaymentAccommodation extends AbstractModelSingle {
+    /**
+     * @return ModelPayment
+     */
     public function getPayment(): ModelPayment {
         return ModelPayment::createFromTableRow($this->payment);
     }
 
+    /**
+     * @return ModelEventPersonAccommodation
+     */
     public function getEventPersonAccommodation(): ModelEventPersonAccommodation {
         return ModelEventPersonAccommodation::createFromTableRow($this->event_person_accommodation);
     }

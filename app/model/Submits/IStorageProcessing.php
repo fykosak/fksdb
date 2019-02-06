@@ -10,10 +10,22 @@ use FKSDB\ORM\ModelSubmit;
  */
 interface IStorageProcessing {
 
+    /**
+     * @param string $filename
+     * @return mixed
+     */
     public function setInputFile(string $filename);
 
+    /**
+     * @param string $filename
+     * @return mixed
+     */
     public function setOutputFile(string $filename);
 
+    /**
+     * @param ModelSubmit $submit
+     * @return mixed
+     */
     public function process(ModelSubmit $submit);
 }
 

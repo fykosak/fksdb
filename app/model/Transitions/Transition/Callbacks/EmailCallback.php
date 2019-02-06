@@ -9,6 +9,10 @@ use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Templating\FileTemplate;
 
+/**
+ * Class EmailCallback
+ * @package FKSDB\Transitions\Callbacks
+ */
 class EmailCallback extends AbstractCallback {
     /**
      * @var callable
@@ -32,6 +36,14 @@ class EmailCallback extends AbstractCallback {
      */
     private $translator;
 
+    /**
+     * EmailCallback constructor.
+     * @param callable $optionsCallback
+     * @param string $templateFile
+     * @param ITranslator $translator
+     * @param IMailer $mailer
+     * @param MailTemplateFactory $mailTemplateFactory
+     */
     public function __construct(callable $optionsCallback, string $templateFile, ITranslator $translator, IMailer $mailer, MailTemplateFactory $mailTemplateFactory) {
         $this->mailer = $mailer;
         $this->optionsCallback = $optionsCallback;
@@ -55,7 +67,7 @@ class EmailCallback extends AbstractCallback {
     protected function evaluate(IStateModel $model = null) {
         $template = $this->createTemplate();
         /**
-         * @var $message Message
+         * @var Message $message
          */
         $message = ($this->optionsCallback)($model);
 

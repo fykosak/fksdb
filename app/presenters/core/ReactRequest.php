@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Trait ReactRequest
+ */
 trait ReactRequest {
     /**
      * @return object

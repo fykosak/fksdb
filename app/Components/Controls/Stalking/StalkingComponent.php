@@ -31,6 +31,12 @@ abstract class StalkingComponent extends Control {
      */
     protected $translator;
 
+    /**
+     * StalkingComponent constructor.
+     * @param ModelPerson $modelPerson
+     * @param ITranslator $translator
+     * @param $mode
+     */
     public function __construct(ModelPerson $modelPerson, ITranslator $translator, $mode) {
         parent::__construct();
         $this->mode = $mode;
@@ -43,11 +49,17 @@ abstract class StalkingComponent extends Control {
         $this->template->mode = $this->mode;
     }
 
+    /**
+     * @return ContestBadge
+     */
     public function createComponentContestBadge() {
         $control = new ContestBadge();
         return $control;
     }
 
+    /**
+     * @return PermissionDenied
+     */
     public function createComponentPermissionDenied() {
         $control = new PermissionDenied();
         return $control;

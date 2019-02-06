@@ -27,6 +27,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
      */
     private $globalParameters;
 
+    /**
+     * GithubAuthenticator constructor.
+     * @param GlobalParameters $globalParameters
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->globalParameters = $globalParameters;

@@ -4,6 +4,10 @@ namespace FKSDB\Transitions\Callbacks;
 
 use FKSDB\Transitions\IStateModel;
 
+/**
+ * Class AbstractCallback
+ * @package FKSDB\Transitions\Callbacks
+ */
 abstract class AbstractCallback {
 
     /**

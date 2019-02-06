@@ -8,6 +8,9 @@
 
 use FKSDB\ORM\ModelContest;
 
+/**
+ * Interface IContestPresenter
+ */
 interface IContestPresenter {
 
     /** @return ModelContest */

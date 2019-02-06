@@ -33,10 +33,20 @@ class DBReflectionFactory extends AbstractFactory {
      */
     private $columns = [];
 
+    /**
+     * DBReflectionFactory constructor.
+     * @param Connection $connection
+     */
     function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
+    /**
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return TimeBox|Checkbox|TextArea|TextInput
+     */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
@@ -66,6 +76,12 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
+    /**
+     * @param $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -76,14 +92,28 @@ class DBReflectionFactory extends AbstractFactory {
         $component->setDefaultValue($default);
     }
 
+    /**
+     * @param $component
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
     }
 
+    /**
+     * @param Component $component
+     * @return Component|\Nette\Forms\IControl
+     */
     public function getMainControl(Component $component) {
         return $component;
     }
 
+    /**
+     * @param Field $field
+     * @return null
+     */
     private function resolveColumn(Field $field) {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
@@ -106,6 +136,11 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
+    /**
+     * @param $table
+     * @param $column
+     * @return null
+     */
     private function getColumnMetadata($table, $column) {
         if (!isset($this->columns[$table])) {
             $columns = [];

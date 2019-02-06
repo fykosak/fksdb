@@ -10,24 +10,44 @@ use FKSDB\Components\Forms\Controls\PersonAccommodation\SingleField;
 use FKSDB\ORM\ModelEvent;
 use Nette\NotImplementedException;
 
+/**
+ * Class PersonAccommodationFactory
+ * @package FKSDB\Components\Forms\Factories
+ */
 class PersonAccommodationFactory {
     /**
      * @var string;
      */
     const RESOLUTION_AUTO = 'RESOLUTION_AUTO';
 
+    /**
+     * @param ModelEvent $event
+     * @return MatrixField
+     */
     private function createMatrixSelect(ModelEvent $event): MatrixField {
         return new MatrixField($event);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return MultiHotelsField
+     */
     private function createMultiHotelsSelect(ModelEvent $event): MultiHotelsField {
         return new MultiHotelsField($event);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return MultiNightsField
+     */
     private function createMultiNightsSelect(ModelEvent $event): MultiNightsField {
         return new MultiNightsField($event);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return SingleField
+     */
     private function createBooleanSelect(ModelEvent $event): SingleField {
         return new SingleField($event);
     }
@@ -53,6 +73,10 @@ class PersonAccommodationFactory {
         }
     }
 
+    /**
+     * @param $eventId
+     * @return null
+     */
     private function autoResolution($eventId) {
         // $accommodations = $this->serviceEventAccommodation->getAccommodationForEvent($eventId);
         return null;

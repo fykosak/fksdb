@@ -41,6 +41,14 @@ class MailSender {
      */
     private $servicePerson;
 
+    /**
+     * MailSender constructor.
+     * @param $filename
+     * @param $address
+     * @param IMailer $mailer
+     * @param MailTemplateFactory $mailTemplateFactory
+     * @param ServicePerson $servicePerson
+     */
     function __construct($filename, $address, IMailer $mailer, MailTemplateFactory $mailTemplateFactory, ServicePerson $servicePerson) {
         $this->filename = $filename;
         $this->address = $address;
@@ -54,6 +62,10 @@ class MailSender {
         $this->mailer->send($message);
     }
 
+    /**
+     * @param $filename
+     * @return Message
+     */
     private function composeMessage($filename) {
         // prepare and send email
         $template = $this->mailTemplateFactory->createFromFile($filename);

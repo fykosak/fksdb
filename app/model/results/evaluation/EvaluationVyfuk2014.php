@@ -11,6 +11,9 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
 
     private $categories = null;
 
+    /**
+     * @return array|null
+     */
     public function getCategories() {
         if ($this->categories == null) {
             $this->categories = array(
@@ -23,6 +26,10 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
         return $this->categories;
     }
 
+    /**
+     * @param ModelCategory $category
+     * @return array|int
+     */
     public function categoryToStudyYears($category) {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -39,6 +46,10 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @param \Nette\Database\Row $task
+     * @return string
+     */
     public function getPointsColumn($task) {
         if ($task->label == '1') {
             return "IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)";
@@ -47,10 +58,18 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @return string
+     */
     public function getSumColumn() {
         return "IF (t.series < 7, IF (t.label IN ('1'), IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), s.raw_points), s.raw_points)";
     }
 
+    /**
+     * @param \Nette\Database\Row $task
+     * @param ModelCategory $category
+     * @return int|null
+     */
     public function getTaskPoints($task, \ModelCategory $category) {
         if ($task->label == '1' && $task->series < 7) {
             if (in_array($category->id, array(
@@ -66,6 +85,10 @@ class EvaluationVyfuk2014 implements IEvaluationStrategy {
         }
     }
 
+    /**
+     * @param ModelCategory $category
+     * @return int|string
+     */
     public function getTaskPointsColumn(\ModelCategory $category) {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:

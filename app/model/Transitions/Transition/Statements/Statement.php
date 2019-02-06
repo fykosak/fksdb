@@ -4,6 +4,10 @@ namespace FKSDB\Transitions\Statements;
 
 use FKSDB\Transitions\IStateModel;
 
+/**
+ * Class Statement
+ * @package FKSDB\Transitions\Statements
+ */
 abstract class Statement {
     /**
      * @param IStateModel? $model

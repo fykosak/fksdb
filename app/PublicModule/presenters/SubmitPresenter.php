@@ -35,14 +35,23 @@ class SubmitPresenter extends BasePresenter {
      */
     private $submitStorage;
 
+    /**
+     * @param ServiceTask $taskService
+     */
     public function injectTaskService(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
+    /**
+     * @param ServiceSubmit $submitService
+     */
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
 
+    /**
+     * @param ISubmitStorage $submitStorage
+     */
     public function injectSubmitStorage(ISubmitStorage $submitStorage) {
         $this->submitStorage = $submitStorage;
     }
@@ -56,6 +65,10 @@ class SubmitPresenter extends BasePresenter {
         $this->setIcon('fa fa-cloud-upload');
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     */
     public function authorizedDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -87,6 +100,11 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     public function actionDownload($id) {
         $submit = $this->submitService->findByPrimary($id);
 
@@ -100,6 +118,11 @@ class SubmitPresenter extends BasePresenter {
         $this->sendResponse($response);
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     * @throws BadRequestException
+     */
     public function createComponentUploadForm($name) {
         $control = new FormControl();
         $form = $control->getForm();
@@ -156,6 +179,11 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return SubmitsGrid
+     * @throws BadRequestException
+     */
     public function createComponentSubmitsGrid($name) {
         $grid = new SubmitsGrid($this->submitService, $this->submitStorage, $this->getContestant());
 
@@ -236,6 +264,10 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return \Nette\Database\Table\Selection
+     * @throws BadRequestException
+     */
     private function getAvailableTasks() {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());

@@ -27,6 +27,9 @@ class Helpers {
         'leq' => 'FKSDB\Expressions\Comparison\Leq',
     ];
 
+    /**
+     * @param $semanticMap
+     */
     public static function registerSemantic($semanticMap) {
         self::$semanticMap += $semanticMap;
     }
@@ -86,6 +89,11 @@ class Helpers {
         }
     }
 
+    /**
+     * @param $expressionArray
+     * @param Container $container
+     * @return array|mixed
+     */
     public static function evalExpressionArray($expressionArray, Container $container) {
         if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
             $result = [];
