@@ -34,6 +34,14 @@ abstract class AbstractResultsModel implements IResultsModel {
      */
     protected $evaluationStrategy;
 
+    /**
+     * AbstractResultsModel constructor.
+     * @param ModelContest $contest
+     * @param ServiceTask $serviceTask
+     * @param \Nette\Database\Connection $connection
+     * @param $year
+     * @param IEvaluationStrategy $evaluationStrategy
+     */
     function __construct(ModelContest $contest, ServiceTask $serviceTask, \Nette\Database\Connection $connection, $year, IEvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
@@ -79,6 +87,10 @@ abstract class AbstractResultsModel implements IResultsModel {
         ];
     }
 
+    /**
+     * @param $category
+     * @return mixed
+     */
     abstract protected function composeQuery($category);
 
     /**

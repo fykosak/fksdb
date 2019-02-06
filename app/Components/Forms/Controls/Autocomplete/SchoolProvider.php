@@ -29,6 +29,10 @@ class SchoolProvider implements IFilteredDataProvider {
      */
     private $defaultValue;
 
+    /**
+     * SchoolProvider constructor.
+     * @param ServiceSchool $serviceSchool
+     */
     function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -66,6 +70,10 @@ class SchoolProvider implements IFilteredDataProvider {
         return $result;
     }
 
+    /**
+     * @param mixed $id
+     * @return bool|mixed|\Nette\Database\Table\ActiveRow|\Nette\Database\Table\Selection|null
+     */
     public function getItemLabel($id) {
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
@@ -74,10 +82,17 @@ class SchoolProvider implements IFilteredDataProvider {
         return $school->name_abbrev;
     }
 
+    /**
+     * @return array|void
+     */
     public function getItems() {
         throw new NotImplementedException();
     }
 
+    /**
+     * @param ModelSchool $school
+     * @return array
+     */
     private function getItem(ModelSchool $school) {
         return [
             self::LABEL => $school->name_abbrev,
@@ -85,6 +100,9 @@ class SchoolProvider implements IFilteredDataProvider {
         ];
     }
 
+    /**
+     * @param $id
+     */
     public function setDefaultValue($id) {
         $this->defaultValue = $id;
     }

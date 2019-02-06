@@ -7,12 +7,20 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\ModelPayment;
 use Nette\Utils\Html;
 
+/**
+ * Class PaymentGrid
+ * @package FKSDB\Components\Grids\Payment
+ */
 abstract class PaymentGrid extends BaseGrid {
     /**
      * @var \ServicePayment
      */
     protected $servicePayment;
 
+    /**
+     * PaymentGrid constructor.
+     * @param \ServicePayment $servicePayment
+     */
     function __construct(\ServicePayment $servicePayment) {
         parent::__construct();
         $this->servicePayment = $servicePayment;

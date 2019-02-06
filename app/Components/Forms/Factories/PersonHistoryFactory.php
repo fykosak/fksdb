@@ -24,6 +24,11 @@ class PersonHistoryFactory {
      */
     private $yearCalculator;
 
+    /**
+     * PersonHistoryFactory constructor.
+     * @param SchoolFactory $factorySchool
+     * @param \YearCalculator $yearCalculator
+     */
     public function __construct(SchoolFactory $factorySchool, \YearCalculator $yearCalculator) {
         $this->schoolFactory = $factorySchool;
         $this->yearCalculator = $yearCalculator;

@@ -12,6 +12,9 @@ use Nette\Templating\FileTemplate;
  */
 class ContestBadge extends Control {
 
+    /**
+     * @param $contestId
+     */
     public function render($contestId) {
         $this->template->contestId = $contestId;
         $this->template->setFile(__DIR__ . '/ContestBadge.latte');

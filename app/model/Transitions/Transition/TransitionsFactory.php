@@ -11,6 +11,10 @@ use Nette\Localization\ITranslator;
 use Nette\Mail\IMailer;
 use Nette\Security\User;
 
+/**
+ * Class TransitionsFactory
+ * @package FKSDB\Transitions
+ */
 class TransitionsFactory {
     /**
      * @var IMailer
@@ -105,7 +109,7 @@ class TransitionsFactory {
             throw new InvalidStateException('Expecting logged user.');
         }
         /**
-         * @var $loggedPerson ModelPerson
+         * @var ModelPerson $loggedPerson
          */
         $loggedPerson = $this->user->getIdentity()->getPerson();
         return $loggedPerson->person_id === $ownerPerson->person_id;

@@ -29,14 +29,24 @@ trait WriteOnlyTrait {
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
     }
 
+    /**
+     * @return bool
+     */
     public function getWriteOnly() {
         return $this->writeOnly;
     }
 
+    /**
+     * @param bool $writeOnly
+     */
     public function setWriteOnly($writeOnly = true) {
         $this->writeOnly = $writeOnly;
     }
 
+    /**
+     * @param Html $control
+     * @return Html
+     */
     private function writeOnlyAdjustControl(Html $control) {
 // rendered control may not disabled
         $control->disabled = $this->actuallyDisabled;
@@ -66,6 +76,9 @@ trait WriteOnlyTrait {
     private $writeOnlyAttachedOnValidate = false;
     private $writeOnlyAttachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function writeOnlyAttached($obj) {
         parent::attached($obj);
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {

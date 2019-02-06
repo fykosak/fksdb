@@ -8,6 +8,9 @@ use Nette\Diagnostics\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
+    /**
+     * @return array
+     */
     public function getNavBarVariant(): array {
         return ['error', 'bg-error navbar-dark'];
     }

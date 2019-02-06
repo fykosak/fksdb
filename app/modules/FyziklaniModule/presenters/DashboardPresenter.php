@@ -2,6 +2,10 @@
 
 namespace FyziklaniModule;
 
+/**
+ * Class DashboardPresenter
+ * @package FyziklaniModule
+ */
 class DashboardPresenter extends BasePresenter {
     /**
      * @return void

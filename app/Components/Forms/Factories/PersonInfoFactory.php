@@ -38,6 +38,10 @@ class PersonInfoFactory {
      */
     private $serviceRegion;
 
+    /**
+     * PersonInfoFactory constructor.
+     * @param \ServiceRegion $serviceRegion
+     */
     public function __construct(\ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }

@@ -22,6 +22,10 @@ class OrgsGrid extends BaseGrid {
      */
     private $serviceOrg;
 
+    /**
+     * OrgsGrid constructor.
+     * @param ServiceOrg $serviceOrg
+     */
     function __construct(ServiceOrg $serviceOrg) {
         parent::__construct();
 

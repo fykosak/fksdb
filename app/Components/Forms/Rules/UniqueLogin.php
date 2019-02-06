@@ -24,18 +24,32 @@ class UniqueLogin {
      */
     private $ignoredLogin;
 
+    /**
+     * UniqueLogin constructor.
+     * @param ServiceLogin $serviceLogin
+     */
     function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
+    /**
+     * @return ModelLogin
+     */
     public function getIgnoredLogin() {
         return $this->ignoredLogin;
     }
 
+    /**
+     * @param ModelLogin|null $ignoredLogin
+     */
     public function setIgnoredLogin(ModelLogin $ignoredLogin = null) {
         $this->ignoredLogin = $ignoredLogin;
     }
 
+    /**
+     * @param BaseControl $control
+     * @return bool
+     */
     public function __invoke(BaseControl $control) {
         $login = $control->getValue();
 

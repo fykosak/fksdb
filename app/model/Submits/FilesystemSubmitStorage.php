@@ -61,6 +61,13 @@ class FilesystemSubmitStorage implements ISubmitStorage {
      */
     private $processings = [];
 
+    /**
+     * FilesystemSubmitStorage constructor.
+     * @param $root
+     * @param $directoryMask
+     * @param $filenameMask
+     * @param $contestMap
+     */
     function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
@@ -68,6 +75,9 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
+    /**
+     * @param IStorageProcessing $processing
+     */
     public function addProcessing(IStorageProcessing $processing) {
         $this->processings[] = $processing;
     }
@@ -156,6 +166,11 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         ];
     }
 
+    /**
+     * @param ModelSubmit $submit
+     * @param int $type
+     * @return null|string
+     */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
@@ -191,6 +206,9 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         return (bool) $filename;
     }
 
+    /**
+     * @param ModelSubmit $submit
+     */
     public function deleteFile(ModelSubmit $submit) {
         $fails = [];
         $files = $this->retrieveFiles($submit);
@@ -205,6 +223,10 @@ class FilesystemSubmitStorage implements ISubmitStorage {
         }
     }
 
+    /**
+     * @param ModelSubmit $submit
+     * @return array
+     */
     private function retrieveFiles(ModelSubmit $submit) {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 

@@ -9,6 +9,10 @@ use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\OutOfRangeException;
 
+/**
+ * Class Fyziklani13Generator
+ * @package FKSDB\Payment\SymbolGenerator\Generators
+ */
 class Fyziklani13Generator extends AbstractSymbolGenerator {
 
     const variable_symbol_start = 7292000;

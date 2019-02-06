@@ -25,6 +25,11 @@ class PersonsGrid extends BaseGrid {
      */
     private $pairs;
 
+    /**
+     * PersonsGrid constructor.
+     * @param TypedTableSelection $trunkPersons
+     * @param $pairs
+     */
     function __construct(TypedTableSelection $trunkPersons, $pairs) {
         parent::__construct();
         $this->trunkPersons = $trunkPersons;
@@ -32,7 +37,7 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter \AuthenticatedPresenter
+     * @param \AuthenticatedPresenter $presenter
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException
      */

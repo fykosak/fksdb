@@ -9,12 +9,19 @@ use FKSDB\ORM\ModelEvent;
 use Nette\Application\ForbiddenRequestException;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class ApplicationsTimeProgressPresenter
+ * @package EventModule
+ */
 class ApplicationsTimeProgressPresenter extends BasePresenter {
     /**
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
 
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -32,6 +39,12 @@ class ApplicationsTimeProgressPresenter extends BasePresenter {
         $this->setIcon('fa fa-line-chart');
     }
 
+    /**
+     * @return TeamApplicationsTimeProgress
+     * @throws ForbiddenRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentTeamApplicationsTimeProgress() {
         $events = [];
         foreach ($this->getEventIdsByType() as $id) {

@@ -26,11 +26,22 @@ class OrgFactory {
      */
     private $yearCalculator;
 
+    /**
+     * OrgFactory constructor.
+     * @param ServicePerson $servicePerson
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(ServicePerson $servicePerson, YearCalculator $yearCalculator) {
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @param int $options
+     * @param ControlGroup|null $group
+     * @param ModelContest $contest
+     * @return ModelContainer
+     */
     public function createOrg($options = 0, ControlGroup $group = null, ModelContest $contest): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);

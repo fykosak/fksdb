@@ -25,11 +25,21 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
      */
     private $person;
 
+    /**
+     * RelatedPersonSource constructor.
+     * @param ModelPerson $person
+     * @param TypedTableSelection $events
+     * @param Container $container
+     */
     function __construct(ModelPerson $person, TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
         $this->person = $person;
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return SingleEventSource|null
+     */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();
 

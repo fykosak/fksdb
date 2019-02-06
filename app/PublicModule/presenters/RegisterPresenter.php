@@ -96,39 +96,66 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     protected $seriesCalculator;
 
+    /**
+     * @param \SeriesCalculator $seriesCalculator
+     */
     public function injectSeriesCalculator(\SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @param ServiceContestant $serviceContestant
+     */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
+    /**
+     * @param \ServicePerson $servicePerson
+     */
     public function injectServicePerson(\ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
 
+    /**
+     * @param ReferencedPersonFactory $referencedPersonFactory
+     */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
+    /**
+     * @param ExtendedPersonHandlerFactory $handlerFactory
+     */
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
 
+    /**
+     * @return \FKSDB\ORM\ModelContest|\Nette\Database\Table\ActiveRow|null
+     */
     public function getSelectedContest() {
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
 
+    /**
+     * @return int
+     */
     public function getSelectedYear() {
         return $this->year;
     }
 
+    /**
+     * @return int|mixed
+     */
     public function getSelectedAcademicYear() {
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
@@ -136,6 +163,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
+    /**
+     * @return ModelPerson|null
+     */
     private function getPerson() {
         if (!$this->person) {
 
@@ -259,6 +289,9 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
 
+    /**
+     * @return FormControl
+     */
     public function createComponentEmailForm() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -284,7 +317,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $person = $this->getPerson();
         /**
-         * @var $contestantForm Form
+         * @var Form $contestantForm
          */
         $contestantForm =  $this->getComponent('contestantForm');
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
@@ -295,12 +328,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
+    /**
+     * @return array|mixed
+     */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
         return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->container);
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Utils\RegexpException
+     */
     public function createComponentContestantForm() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -349,33 +389,54 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
+    /**
+     * @return null|\ORM\IModel
+     */
     public function getModel() {
         return null; //we always create new contestant
     }
 
+    /**
+     * @return string
+     */
     public function messageCreate() {
         return _('Řešitel %s zaregistrován.');
     }
 
+    /**
+     * @return string
+     */
     public function messageEdit() {
         return _('Řešitel %s upraven.');
     }
 
+    /**
+     * @return string
+     */
     public function messageError() {
         return _('Chyba při registraci.');
     }
 
+    /**
+     * @return string
+     */
     public function messageExists() {
         return _('Řešitel je již registrován.');
     }
 
+    /**
+     * @return null
+     */
     public function getSelectedSeries() {
         return null;
     }
 
+    /**
+     * @return array
+     */
     protected function getNavBarVariant(): array {
         /**
-         * @var $contest \FKSDB\ORM\ModelContest
+         * @var \FKSDB\ORM\ModelContest $contest
          */
         $contest = $this->serviceContest->findByPrimary($this->contestId);
         if ($contest) {

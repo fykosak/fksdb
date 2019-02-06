@@ -15,6 +15,12 @@ class TypedTableSelection extends TableSelection {
      */
     protected $modelClassName;
 
+    /**
+     * TypedTableSelection constructor.
+     * @param $modelClassName
+     * @param $table
+     * @param Connection $connection
+     */
     public function __construct($modelClassName, $table, Connection $connection) {
         parent::__construct($table, $connection);
         $this->modelClassName = $modelClassName;

@@ -100,6 +100,9 @@ class SelectForm extends Control {
         $this->servicePaymentAccommodation = $servicePaymentAccommodation;
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     */
     public function setModel(ModelPayment $modelPayment) {
         $this->model = $modelPayment;
     }
@@ -193,7 +196,7 @@ class SelectForm extends Control {
          */
         $control = $this->getComponent('formCreate');
         /**
-         * @var $login ModelLogin
+         * @var ModelLogin $login
          */
         $login = $this->getPresenter()->getUser()->getIdentity();
         $control->getForm()->setDefaults([

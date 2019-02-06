@@ -11,7 +11,7 @@ use XSLTProcessor;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class XSLFormat extends Object implements IExportFormat {
@@ -36,24 +36,42 @@ class XSLFormat extends Object implements IExportFormat {
      */
     private $xmlSerializer;
 
+    /**
+     * XSLFormat constructor.
+     * @param StoredQuery $storedQuery
+     * @param $xslFile
+     * @param IXMLNodeSerializer $xmlSerializer
+     */
     function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
     }
 
+    /**
+     * @return array
+     */
     public function getParameters() {
         return $this->parameters;
     }
 
+    /**
+     * @param $parameters
+     */
     public function setParameters($parameters) {
         $this->parameters = $parameters;
     }
 
+    /**
+     * @param $parameters
+     */
     public function addParameters($parameters) {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
+    /**
+     * @return PlainTextResponse|\Nette\Application\IResponse
+     */
     public function getResponse() {
         // Prepare XSLT processor
         $xsl = new DOMDocument();

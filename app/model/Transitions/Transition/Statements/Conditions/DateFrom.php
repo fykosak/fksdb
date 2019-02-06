@@ -7,6 +7,10 @@ namespace FKSDB\Transitions\Statements\Conditions;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
+/**
+ * Class DateFrom
+ * @package FKSDB\Transitions\Statements\Conditions
+ */
 class DateFrom extends Statement {
     /**
      * @var \DateTime

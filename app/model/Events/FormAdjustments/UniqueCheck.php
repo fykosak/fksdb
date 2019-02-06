@@ -21,11 +21,22 @@ class UniqueCheck extends AbstractAdjustment {
     private $field;
     private $message;
 
+    /**
+     * UniqueCheck constructor.
+     * @param $field
+     * @param $message
+     */
     function __construct($field, $message) {
         $this->field = $field;
         $this->message = $message;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     * @return mixed|void
+     */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $controls = $this->getControl($this->field);
         if (!$controls) {

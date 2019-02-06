@@ -34,6 +34,9 @@ class ModelFyziklaniSubmit extends \AbstractModelSingle {
         return ModelFyziklaniTeam::createFromTableRow($this->e_fyziklani_team);
     }
 
+    /**
+     * @return array
+     */
     public function __toArray(): array {
         return [
             'points' => $this->points,

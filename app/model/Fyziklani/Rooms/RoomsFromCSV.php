@@ -31,11 +31,19 @@ class RoomsFromCSV extends Stage {
      */
     private $serviceTeam;
 
+    /**
+     * RoomsFromCSV constructor.
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceTeam
+     */
     function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
         $this->event = $event;
         $this->serviceTeam = $serviceTeam;
     }
 
+    /**
+     * @param mixed $data
+     */
     public function setInput($data) {
         $this->data = $data;
     }
@@ -78,6 +86,9 @@ class RoomsFromCSV extends Stage {
         }
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getOutput() {
         return null;
     }

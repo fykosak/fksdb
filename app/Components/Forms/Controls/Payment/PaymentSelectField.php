@@ -9,6 +9,10 @@ use FKSDB\ORM\ModelEvent;
 use FKSDB\ORM\ModelEventPersonAccommodation;
 use Nette\Forms\Controls\TextInput;
 
+/**
+ * Class PaymentSelectField
+ * @package FKSDB\Components\Forms\Controls\Payment
+ */
 class PaymentSelectField extends TextInput implements IReactComponent {
 
     use ReactField;
@@ -24,6 +28,12 @@ class PaymentSelectField extends TextInput implements IReactComponent {
 
     private $showAll = true;
 
+    /**
+     * PaymentSelectField constructor.
+     * @param \ServiceEventPersonAccommodation $serviceEventPersonAccommodation
+     * @param ModelEvent $event
+     * @param bool $showAll
+     */
     public function __construct(\ServiceEventPersonAccommodation $serviceEventPersonAccommodation, ModelEvent $event, bool $showAll = true) {
         parent::__construct();
         $this->serviceEventPersonAccommodation = $serviceEventPersonAccommodation;
@@ -57,18 +67,30 @@ class PaymentSelectField extends TextInput implements IReactComponent {
         return \json_encode($items);
     }
 
+    /**
+     * @return string
+     */
     public function getComponentName(): string {
         return 'accommodation-select';
     }
 
+    /**
+     * @return string
+     */
     public function getMode(): string {
         return '';
     }
 
+    /**
+     * @return string
+     */
     public function getModuleName(): string {
         return 'payment';
     }
 
+    /**
+     * @return array
+     */
     public function getActions(): array {
         return [];
     }

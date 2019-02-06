@@ -11,6 +11,10 @@ use Nette\Database\Connection;
 use Nette\Localization\ITranslator;
 use Nette\NotImplementedException;
 
+/**
+ * Class MachineFactory
+ * @package FKSDB\Transitions
+ */
 class MachineFactory {
     /**
      * @var TransitionsFactory
@@ -41,6 +45,16 @@ class MachineFactory {
      */
     private $translator;
 
+    /**
+     * MachineFactory constructor.
+     * @param ITranslator $translator
+     * @param EventAuthorizator $eventAuthorizator
+     * @param \ServicePayment $servicePayment
+     * @param Connection $connection
+     * @param TransitionsFactory $transitionsFactory
+     * @param SymbolGeneratorFactory $symbolGeneratorFactory
+     * @param PriceCalculatorFactory $priceCalculatorFactory
+     */
     public function __construct(ITranslator $translator, EventAuthorizator $eventAuthorizator, \ServicePayment $servicePayment, Connection $connection, TransitionsFactory $transitionsFactory, SymbolGeneratorFactory $symbolGeneratorFactory, PriceCalculatorFactory $priceCalculatorFactory) {
         $this->transitionsFactory = $transitionsFactory;
         $this->servicePayment = $servicePayment;

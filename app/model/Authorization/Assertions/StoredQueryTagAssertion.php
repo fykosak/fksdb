@@ -9,13 +9,17 @@ use Nette\Security\Permission;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- * 
+ *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class StoredQueryTagAssertion extends Object {
 
     private $tagNames;
 
+    /**
+     * StoredQueryTagAssertion constructor.
+     * @param $tagNames
+     */
     function __construct($tagNames) {
         if (!is_array($tagNames)) {
             $tagNames = array($tagNames);
@@ -23,6 +27,13 @@ class StoredQueryTagAssertion extends Object {
         $this->tagNames = $tagNames;
     }
 
+    /**
+     * @param Permission $acl
+     * @param $role
+     * @param $resourceId
+     * @param $privilege
+     * @return bool
+     */
     public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {

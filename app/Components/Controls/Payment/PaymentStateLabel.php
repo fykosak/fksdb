@@ -22,6 +22,11 @@ class PaymentStateLabel extends Control {
      */
     private $translator;
 
+    /**
+     * PaymentStateLabel constructor.
+     * @param ModelPayment $modelPayment
+     * @param ITranslator $translator
+     */
     public function __construct(ModelPayment $modelPayment, ITranslator $translator) {
         parent::__construct();
         $this->modelPayment = $modelPayment;

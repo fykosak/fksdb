@@ -14,6 +14,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\NotImplementedException;
 
+/**
+ * Class PaymentPresenter
+ * @package EventModule
+ */
 class PaymentPresenter extends BasePresenter {
 
     /**
@@ -47,14 +51,23 @@ class PaymentPresenter extends BasePresenter {
      */
     private $paymentComponentFactory;
 
+    /**
+     * @param \ServicePayment $servicePayment
+     */
     public function injectServicePayment(\ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
+    /**
+     * @param MachineFactory $machineFactory
+     */
     public function injectMachineFactory(MachineFactory $machineFactory) {
         $this->machineFactory = $machineFactory;
     }
 
+    /**
+     * @param PaymentComponentFactory $paymentComponentFactory
+     */
     public function injectPaymentComponentFactory(PaymentComponentFactory $paymentComponentFactory) {
         $this->paymentComponentFactory = $paymentComponentFactory;
     }

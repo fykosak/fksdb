@@ -39,10 +39,16 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected $serviceEvent;
 
+    /**
+     * @param Container $container
+     */
     public function injectContainer(Container $container) {
         $this->container = $container;
     }
 
+    /**
+     * @param ServiceEvent $serviceEvent
+     */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
@@ -60,7 +66,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function startup() {
         /**
-         * @var $languageChooser LanguageChooser
+         * @var LanguageChooser $languageChooser
          */
         $languageChooser = $this->getComponent('languageChooser');
         $languageChooser->syncRedirect();
@@ -150,10 +156,18 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $contest);
     }
 
+    /**
+     * @return array
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     */
     protected function getNavBarVariant(): array {
         return ['event event-type-' . $this->getEvent()->event_type_id, ($this->getEvent()->event_type_id == 1) ? 'bg-fyziklani navbar-dark' : 'bg-light navbar-light'];
     }
 
+    /**
+     * @return array
+     */
     protected function getNavRoots(): array {
         return ['event.dashboard.default'];
     }

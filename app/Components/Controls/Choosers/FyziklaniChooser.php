@@ -24,11 +24,18 @@ class FyziklaniChooser extends Control {
      */
     private $serviceEvent;
 
+    /**
+     * FyziklaniChooser constructor.
+     * @param ServiceEvent $serviceEvent
+     */
     function __construct(ServiceEvent $serviceEvent) {
         parent::__construct();
         $this->serviceEvent = $serviceEvent;
     }
 
+    /**
+     * @param ModelEvent $event
+     */
     public function setEvent(ModelEvent $event) {
         $this->event = $event;
     }
@@ -52,6 +59,10 @@ class FyziklaniChooser extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $eventId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleChange($eventId) {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', ['eventId' => $eventId]);

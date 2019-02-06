@@ -7,6 +7,10 @@ namespace FKSDB\Transitions\Statements\Operators;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Statements\Statement;
 
+/**
+ * Class LogicAnd
+ * @package FKSDB\Transitions\Statements\Operators
+ */
 class LogicAnd extends Statement {
     /**
      * @var callable[]

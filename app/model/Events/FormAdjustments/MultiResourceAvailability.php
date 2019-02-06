@@ -29,6 +29,9 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $message;
     private $database;
 
+    /**
+     * @param $fields
+     */
     private function setFields($fields) {
         if(!is_array($fields)){
             $fields = array($fields);
@@ -54,7 +57,12 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function _adjust(Form $form,Machine $machine,Holder $holder) {
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
+    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = array(
             'service' => $holder->getPrimaryHolder()->getService(),

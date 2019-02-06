@@ -37,6 +37,13 @@ class RoutingDownload extends Control {
      */
     private $serviceFyziklaniRoom;
 
+    /**
+     * RoutingDownload constructor.
+     * @param ModelEvent $event
+     * @param ITranslator $translator
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
+     */
     public function __construct(ModelEvent $event, ITranslator $translator, ServiceFyziklaniTeam $serviceFyziklaniTeam, \ServiceFyziklaniRoom $serviceFyziklaniRoom) {
         $this->translator = $translator;
         $this->event = $event;
@@ -60,6 +67,9 @@ class RoutingDownload extends Control {
         $this->template->render();
     }
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!self::$JSAttached && $obj instanceof IJavaScriptCollector) {

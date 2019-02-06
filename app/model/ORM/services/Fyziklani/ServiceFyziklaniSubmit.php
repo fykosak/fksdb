@@ -29,7 +29,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param $event ModelEvent
+     * @param ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {

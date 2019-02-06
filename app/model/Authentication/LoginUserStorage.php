@@ -58,6 +58,15 @@ class LoginUserStorage extends UserStorage {
      */
     private $request;
 
+    /**
+     * LoginUserStorage constructor.
+     * @param Session $sessionHandler
+     * @param ServiceLogin $loginService
+     * @param YearCalculator $yearCalculator
+     * @param GlobalSession $globalSession
+     * @param Application $application
+     * @param Request $request
+     */
     function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
         parent::__construct($sessionHandler);
         $this->loginService = $loginService;
@@ -67,6 +76,9 @@ class LoginUserStorage extends UserStorage {
         $this->request = $request;
     }
 
+    /**
+     * @return IPresenter
+     */
     public function getPresenter() {
         if ($this->application->getPresenter()) {
             return $this->application->getPresenter();
@@ -84,6 +96,10 @@ class LoginUserStorage extends UserStorage {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param $state
+     * @return UserStorage|void
+     */
     public function setAuthenticated($state) {
         parent::setAuthenticated($state);
         if ($state) {
@@ -94,6 +110,10 @@ class LoginUserStorage extends UserStorage {
         }
     }
 
+    /**
+     * @return bool
+     * @throws \Nette\Application\AbortException
+     */
     public function isAuthenticated() {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
@@ -114,7 +134,7 @@ class LoginUserStorage extends UserStorage {
              */
             //parent::setAuthenticated(false);
             /**
-             * @var $presenter AuthenticatedPresenter
+             * @var AuthenticatedPresenter $presenter
              */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);

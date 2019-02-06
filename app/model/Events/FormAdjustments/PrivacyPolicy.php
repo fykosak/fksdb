@@ -30,10 +30,19 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
      */
     private $servicePersonInfo;
 
-    function __construct(PersonInfoFactory $personFactory, ServicePersonInfo $servicePersonInfo) {
+    /**
+     * PrivacyPolicy constructor.
+     * @param ServicePersonInfo $servicePersonInfo
+     */
+    function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
+    /**
+     * @param Form $form
+     * @param Machine $machine
+     * @param Holder $holder
+     */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT) {
             return;
@@ -46,10 +55,21 @@ class PrivacyPolicy extends Object implements IProcessing, IFormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->trySetAgreed($values);
     }
 
+    /**
+     * @param ArrayHash $values
+     */
     private function trySetAgreed(ArrayHash $values) {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {

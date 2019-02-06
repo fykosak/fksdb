@@ -25,11 +25,20 @@ class FyziklaniTaskImportProcessor {
      */
     private $event;
 
+    /**
+     * FyziklaniTaskImportProcessor constructor.
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     */
     public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
+    /**
+     * @param $values
+     * @param $messages
+     */
     public function __invoke($values, &$messages) {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();

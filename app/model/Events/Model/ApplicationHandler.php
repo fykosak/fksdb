@@ -64,6 +64,13 @@ class ApplicationHandler {
      */
     private $machine;
 
+    /**
+     * ApplicationHandler constructor.
+     * @param ModelEvent $event
+     * @param ILogger $logger
+     * @param Connection $connection
+     * @param Container $container
+     */
     function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
@@ -71,10 +78,16 @@ class ApplicationHandler {
         $this->container = $container;
     }
 
+    /**
+     * @return int
+     */
     public function getErrorMode() {
         return $this->errorMode;
     }
 
+    /**
+     * @param $errorMode
+     */
     public function setErrorMode($errorMode) {
         $this->errorMode = $errorMode;
     }
@@ -88,10 +101,17 @@ class ApplicationHandler {
         return $this->machine;
     }
 
+    /**
+     * @return ILogger
+     */
     public function getLogger() {
         return $this->logger;
     }
 
+    /**
+     * @param Holder $holder
+     * @param $data
+     */
     public final function store(Holder $holder, $data) {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
     }

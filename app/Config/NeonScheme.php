@@ -19,6 +19,12 @@ class NeonScheme {
     const TYPE_EXPRESSION = 'expression';
     const QUALIFIER_ARRAY = 'array';
 
+    /**
+     * @param $section
+     * @param $sectionScheme
+     * @return array
+     * @throws NeonSchemaException
+     */
     public static function readSection($section, $sectionScheme) {
         if (!is_array($section)) {
             throw new NeonSchemaException('Expected array got \'' . (string) $section . '\'.');
@@ -66,6 +72,10 @@ class NeonScheme {
 
 }
 
+/**
+ * Class NeonSchemaException
+ * @package FKSDB\Config
+ */
 class NeonSchemaException extends NeonException {
 
 }

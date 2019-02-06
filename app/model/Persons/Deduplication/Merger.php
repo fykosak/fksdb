@@ -54,25 +54,43 @@ class Merger {
      */
     private $tableMergers = [];
 
+    /**
+     * Merger constructor.
+     * @param $configuration
+     * @param Connection $connection
+     */
     function __construct($configuration, Connection $connection) {
         $this->configuration = $configuration;
         $this->connection = $connection;
         $this->logger = new DevNullLogger();
     }
 
+    /**
+     * @return DevNullLogger|ILogger
+     */
     public function getLogger() {
         return $this->logger;
     }
 
+    /**
+     * @param ILogger $logger
+     */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
     }
 
+    /**
+     * @param ActiveRow $trunkRow
+     * @param ActiveRow $mergedRow
+     */
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
+    /**
+     * @return array
+     */
     public function getConflicts() {
         return $this->conflicts;
     }
@@ -146,6 +164,10 @@ class Merger {
         return $this->tableMergers[$table];
     }
 
+    /**
+     * @param $table
+     * @return TableMerger
+     */
     private function createTableMerger($table) {
         $tableMerger = new TableMerger($table, $this, $this->connection, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
@@ -169,6 +191,9 @@ class Merger {
         }
     }
 
+    /**
+     * @return bool
+     */
     private function hasConflicts() {
         foreach ($this->conflicts as $table => $conflictPairs) {
             foreach ($conflictPairs as $pairId => $data) {
@@ -217,10 +242,20 @@ class Merger {
         return $data[self::IDX_RESOLUTION][$column];
     }
 
+    /**
+     * @param ActiveRow $trunkRow
+     * @param ActiveRow $mergedRow
+     * @return string
+     */
     private function getPairId(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
+    /**
+     * @param ActiveRow $trunkRow
+     * @param ActiveRow $mergedRow
+     * @return mixed
+     */
     private function & getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);
@@ -228,6 +263,11 @@ class Merger {
         return $this->getPairDataById($table, $pairId);
     }
 
+    /**
+     * @param $table
+     * @param $pairId
+     * @return mixed
+     */
     private function & getPairDataById($table, $pairId) {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];

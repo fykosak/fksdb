@@ -7,12 +7,23 @@ use FyziklaniModule\BasePresenter;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DateTime;
 
+/**
+ * Class ResultsAndStatistics
+ * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
+ */
 abstract class ResultsAndStatistics extends FyziklaniReactControl {
 
+    /**
+     * @return string
+     */
     public final function getData(): string {
         return '';
     }
 
+    /**
+     * @return array
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function getActions(): array {
         $actions = parent::getActions();
         $actions['refresh'] = $this->link('refresh!');

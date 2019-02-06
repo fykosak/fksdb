@@ -11,6 +11,12 @@ use Nette\Security\User;
  */
 class EventOrgAssertion extends AbstractEventOrgAssertion {
 
+    /**
+     * EventOrgAssertion constructor.
+     * @param $eventTypeId
+     * @param User $user
+     * @param Connection $connection
+     */
     public function __construct($eventTypeId, User $user, Connection $connection) {
         parent::__construct($eventTypeId, null, $user, $connection);
     }

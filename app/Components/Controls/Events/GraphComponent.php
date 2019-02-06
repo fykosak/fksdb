@@ -19,6 +19,11 @@ class GraphComponent extends Control {
     private $baseMachine;
     private $expressionPrinter;
 
+    /**
+     * GraphComponent constructor.
+     * @param BaseMachine $baseMachine
+     * @param ExpressionPrinter $expressionPrinter
+     */
     function __construct(BaseMachine $baseMachine, ExpressionPrinter $expressionPrinter) {
         parent::__construct();
         $this->monitor('FKSDB\Application\IJavaScriptCollector');
@@ -28,6 +33,9 @@ class GraphComponent extends Control {
 
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
@@ -38,6 +46,10 @@ class GraphComponent extends Control {
         }
     }
 
+    /**
+     * @param null $class
+     * @return \Nette\Templating\ITemplate
+     */
     protected function createTemplate($class = NULL) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->presenter->getTranslator());
@@ -62,6 +74,9 @@ class GraphComponent extends Control {
         $this->template->render();
     }
 
+    /**
+     * @return string
+     */
     private function getHtmlId() {
         return 'graph-' . $this->getUniqueId();
     }

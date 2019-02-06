@@ -18,15 +18,23 @@ use Nette\Security\IResource;
  * @property ActiveRow school
  */
 class ModelTeacher extends AbstractModelSingle implements IResource {
-
+    /**
+     * @return ModelPerson
+     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromTableRow($this->person);
     }
 
+    /**
+     * @return ModelSchool
+     */
     public function getSchool(): ModelSchool {
         return ModelSchool::createFromTableRow( $this->school);
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'teacher';
     }

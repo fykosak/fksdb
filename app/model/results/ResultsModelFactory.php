@@ -24,6 +24,11 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
      */
     private $serviceTask;
 
+    /**
+     * ResultsModelFactory constructor.
+     * @param Connection $connection
+     * @param ServiceTask $serviceTask
+     */
     public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
@@ -112,6 +117,14 @@ class ResultsModelFactory extends Object implements IXMLNodeSerializer {
         return null;
     }
 
+    /**
+     * @param $dataSource
+     * @param DOMNode $node
+     * @param DOMDocument $doc
+     * @param $format
+     * @return mixed|void
+     * @throws SoapFault
+     */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
         if (!$dataSource instanceof IResultsModel) {
             throw new InvalidArgumentException('Expected IResultsModel, got ' . get_class($dataSource) . '.');

@@ -7,6 +7,10 @@ use Events\Machine\Machine;
 use FKSDB\Components\Events\ExpressionPrinter;
 use FKSDB\Components\Events\GraphComponent;
 
+/**
+ * Class ModelPresenter
+ * @package EventModule
+ */
 class ModelPresenter extends BasePresenter {
 
     /**
@@ -14,6 +18,9 @@ class ModelPresenter extends BasePresenter {
      */
     private $expressionPrinter;
 
+    /**
+     * @param ExpressionPrinter $expressionPrinter
+     */
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
     }
@@ -27,6 +34,11 @@ class ModelPresenter extends BasePresenter {
         $this->setIcon('fa fa-cubes');
     }
 
+    /**
+     * @return GraphComponent
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentGraphComponent(): GraphComponent {
         $event = $this->getEvent();
         /**

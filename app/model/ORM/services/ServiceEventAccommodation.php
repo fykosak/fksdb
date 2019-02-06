@@ -2,6 +2,9 @@
 
 use Nette\Database\Table\Selection;
 
+/**
+ * Class ServiceEventAccommodation
+ */
 class ServiceEventAccommodation extends \AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_ACCOMMODATION;

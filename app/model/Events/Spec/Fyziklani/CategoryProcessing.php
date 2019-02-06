@@ -30,11 +30,25 @@ class CategoryProcessing extends AbstractProcessing {
      */
     private $serviceSchool;
 
+    /**
+     * CategoryProcessing constructor.
+     * @param YearCalculator $yearCalculator
+     * @param \ServiceSchool $serviceSchool
+     */
     function __construct(YearCalculator $yearCalculator, \ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param $states
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Holder $holder
+     * @param ILogger $logger
+     * @param Form|null $form
+     * @return mixed|void
+     */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
         if (!isset($values['team'])) {
@@ -66,7 +80,7 @@ class CategoryProcessing extends AbstractProcessing {
                     continue;
                 }
                 /**
-                 * @var $person \FKSDB\ORM\ModelPerson
+                 * @var \FKSDB\ORM\ModelPerson $person
                  */
                 $person = $baseHolder->getModel()->getMainModel()->person;
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
@@ -92,6 +106,10 @@ class CategoryProcessing extends AbstractProcessing {
         }
     }
 
+    /**
+     * @param $participants
+     * @return string
+     */
     private function getCategory($participants) {
         $coefficient_sum = 0;
         $count_4 = 0;

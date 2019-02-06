@@ -2,6 +2,10 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+/**
+ * Class BaseInfo
+ * @package FKSDB\Components\Controls\Stalking
+ */
 class BaseInfo extends StalkingComponent {
 
     public function render() {

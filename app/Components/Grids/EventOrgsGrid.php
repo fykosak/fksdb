@@ -7,6 +7,10 @@ use FKSDB\ORM\ModelEventOrg;
 use ServiceEventOrg;
 use SQL\SearchableDataSource;
 
+/**
+ * Class EventOrgsGrid
+ * @package FKSDB\Components\Grids
+ */
 class EventOrgsGrid extends BaseGrid {
 
     /**
@@ -18,6 +22,11 @@ class EventOrgsGrid extends BaseGrid {
      */
     private $event;
 
+    /**
+     * EventOrgsGrid constructor.
+     * @param ModelEvent $event
+     * @param ServiceEventOrg $serviceEventOrg
+     */
     function __construct(ModelEvent $event, ServiceEventOrg $serviceEventOrg) {
         parent::__construct();
         $this->event = $event;

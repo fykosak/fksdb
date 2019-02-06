@@ -7,6 +7,10 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\model\Fyziklani\FyziklaniTaskImportProcessor;
 use Nette\Application\UI\Form;
 
+/**
+ * Class TaskPresenter
+ * @package FyziklaniModule
+ */
 class TaskPresenter extends BasePresenter {
 
     const IMPORT_STATE_UPDATE_N_INSERT = 1;

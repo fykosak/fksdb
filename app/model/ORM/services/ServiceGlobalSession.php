@@ -21,6 +21,11 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      */
     private $request;
 
+    /**
+     * ServiceGlobalSession constructor.
+     * @param Request $request
+     * @param Connection $connection
+     */
     function __construct(Request $request, Connection $connection) {
         parent::__construct($connection);
         $this->request = $request;

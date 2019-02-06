@@ -22,6 +22,11 @@ class StateDisplayControl extends Control {
      */
     private $translator;
 
+    /**
+     * StateDisplayControl constructor.
+     * @param ITranslator $translator
+     * @param ModelPayment $model
+     */
     public function __construct(ITranslator $translator, ModelPayment $model) {
         parent::__construct();
         $this->model = $model;

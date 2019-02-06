@@ -52,6 +52,12 @@ class AutocompleteSelectBox extends TextBase {
      */
     private $renderMethod;
 
+    /**
+     * AutocompleteSelectBox constructor.
+     * @param $ajax
+     * @param null $label
+     * @param null $renderMethod
+     */
     function __construct($ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
 
@@ -64,6 +70,9 @@ class AutocompleteSelectBox extends TextBase {
     private $attachedJSON = false;
     private $attachedJS = false;
 
+    /**
+     * @param $obj
+     */
     protected function attached($obj) {
         parent::attached($obj);
         if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
@@ -87,18 +96,30 @@ class AutocompleteSelectBox extends TextBase {
         return $this->dataProvider;
     }
 
+    /**
+     * @return null|string
+     */
     public function getRenderMethod() {
         return $this->renderMethod;
     }
 
+    /**
+     * @return bool
+     */
     public function isAjax() {
         return $this->ajax;
     }
 
+    /**
+     * @return bool
+     */
     public function isMultiSelect() {
         return $this->multiSelect;
     }
 
+    /**
+     * @param IDataProvider $dataProvider
+     */
     public function setDataProvider(IDataProvider $dataProvider) {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
@@ -107,6 +128,9 @@ class AutocompleteSelectBox extends TextBase {
         $this->dataProvider->setDefaultValue($this->getValue());
     }
 
+    /**
+     * @return \Nette\Utils\Html
+     */
     public function getControl() {
         $control = parent::getControl();
 
@@ -158,6 +182,10 @@ class AutocompleteSelectBox extends TextBase {
         }
     }
 
+    /**
+     * @param $value
+     * @return TextBase|void
+     */
     public function setValue($value) {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
@@ -179,6 +207,10 @@ class AutocompleteSelectBox extends TextBase {
         }
     }
 
+    /**
+     * @param $value
+     * @return \Nette\Forms\Controls\BaseControl
+     */
     public function setDefaultValue($value) {
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($value);
@@ -186,10 +218,16 @@ class AutocompleteSelectBox extends TextBase {
         return parent::setDefaultValue($value);
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getValue() {
         return $this->value;
     }
 
+    /**
+     * @param $multiSelect
+     */
     public function setMultiSelect($multiSelect) {
         $this->multiSelect = $multiSelect;
     }

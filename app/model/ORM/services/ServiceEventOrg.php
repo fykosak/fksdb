@@ -3,11 +3,18 @@
 use FKSDB\ORM\ModelEvent;
 use ORM\IModel;
 
+/**
+ * Class ServiceEventOrg
+ */
 class ServiceEventOrg extends AbstractServiceSingle {
 
     protected $tableName = DbNames::TAB_EVENT_ORG;
     protected $modelClassName = 'FKSDB\ORM\ModelEventOrg';
 
+    /**
+     * @param IModel $model
+     * @return mixed|void
+     */
     public function save(IModel &$model) {
         try {
             parent::save($model);
@@ -19,6 +26,10 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return \Nette\Database\Table\Selection
+     */
     public function findByEventId(ModelEvent $event) {
         return $this->getTable()->where('event_id', $event->event_id);
     }

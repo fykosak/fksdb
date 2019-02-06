@@ -9,12 +9,19 @@ use Nette\Forms\Form;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 
+/**
+ * Class MailSenderPresenter
+ * @package OrgModule
+ */
 class MailSenderPresenter extends BasePresenter {
     /**
      * @var IMailer
      */
     private $mailer;
 
+    /**
+     * @param IMailer $mailer
+     */
     public function injectMailer(IMailer $mailer) {
         $this->mailer = $mailer;
     }
@@ -28,6 +35,9 @@ class MailSenderPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('mail-send', 'default', $this->getSelectedContest()));
     }
 
+    /**
+     * @return FormControl
+     */
     protected function createComponentMailForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
@@ -47,6 +57,9 @@ class MailSenderPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @param Form $form
+     */
     private function handleForm(Form $form) {
         $values = $form->getValues();
         $toAddress = \explode(',', $values->to);

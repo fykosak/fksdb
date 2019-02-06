@@ -8,7 +8,7 @@ use Nette\Callback;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
- * 
+ *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class OptimisticForm extends Form {
@@ -36,7 +36,7 @@ class OptimisticForm extends Form {
     private $refreshOnConflict = true;
 
     /**
-     * 
+     *
      * @param callback $fingerprintCallback returns fingerprint of current version of the data
      * @param callback $defaultsCallback    returns current version of data, formatted as an array
      */
@@ -49,21 +49,30 @@ class OptimisticForm extends Form {
         $this->addHidden(self::FINGERPRINT);
     }
 
+    /**
+     * @return string
+     */
     public function getCustomError() {
         return $this->customError;
     }
 
+    /**
+     * @param $customError
+     */
     public function setCustomError($customError) {
         $this->customError = $customError;
     }
 
+    /**
+     * @return bool
+     */
     public function getRefreshOnConflict() {
         return $this->refreshOnConflict;
     }
 
     /**
      * Sets whether form values are refreshed when conflict occured.
-     * 
+     *
      * @param boolean $refreshOnConflict
      */
     public function setRefreshOnConflict($refreshOnConflict) {
@@ -89,6 +98,9 @@ class OptimisticForm extends Form {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isValid() {
         $receivedFingerprint = $this[self::FINGERPRINT]->getValue();
         $currentFingerprint = $this->fingerprintCallback->invoke();
@@ -97,7 +109,7 @@ class OptimisticForm extends Form {
             $this->addError(_('Od zobrazení formuláře byla změněna jeho data.')); //TODO customize message accordint to refreshOnConflict value
             $this->setFingerprint($currentFingerprint);
 
-            
+
             if ($this->getRefreshOnConflict()) {
                 parent::setValues($this->defaultsCallback->invoke());
             }
@@ -108,6 +120,9 @@ class OptimisticForm extends Form {
         return parent::isValid();
     }
 
+    /**
+     * @param $fingerprint
+     */
     private function setFingerprint($fingerprint) {
         $this[self::FINGERPRINT]->setValue($fingerprint);
     }

@@ -66,6 +66,14 @@ class Breadcrumbs extends Control {
      */
     private $storedRequest = false;
 
+    /**
+     * Breadcrumbs constructor.
+     * @param $expiration
+     * @param Session $session
+     * @param IRouter $router
+     * @param HttpRequest $httpRequest
+     * @param PresenterFactory $presenterFactory
+     */
     function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
         parent::__construct();
         $this->session = $session;
@@ -83,6 +91,10 @@ class Breadcrumbs extends Control {
      * Public API
      * ********************** */
 
+    /**
+     * @param AppRequest $request
+     * @throws \ReflectionException
+     */
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
@@ -123,7 +135,7 @@ class Breadcrumbs extends Control {
             );
         }
         /**
-         * @var $template FileTemplate
+         * @var FileTemplate $template
          */
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
@@ -136,6 +148,9 @@ class Breadcrumbs extends Control {
      * Path traversal
      * ********************** */
 
+    /**
+     * @return NULL|string
+     */
     public function getBackLinkUrl() {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
@@ -257,6 +272,10 @@ class Breadcrumbs extends Control {
      * Storing requests and their IDs
      * ********************** */
 
+    /**
+     * @param $backLink
+     * @throws \ReflectionException
+     */
     private function storeRequest($backLink) {
         if ($this->storedRequest) {
             return;
@@ -278,11 +297,22 @@ class Breadcrumbs extends Control {
         $requests[$requestKey] = $naviRequest;
     }
 
+    /**
+     * @param INavigablePresenter $presenter
+     * @param AppRequest $request
+     * @param $backLink
+     * @return Request
+     * @throws \ReflectionException
+     */
     protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backLink) {
         $pathKey = $this->getPathKey($request);
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }
 
+    /**
+     * @param AppRequest $request
+     * @return string
+     */
     protected function getRequestKey(AppRequest $request) {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
@@ -291,6 +321,10 @@ class Breadcrumbs extends Control {
         return $key;
     }
 
+    /**
+     * @param $requestKey
+     * @return mixed|string
+     */
     private function getBackLinkId($requestKey) {
         $reverseBackLinkMap = $this->getReverseBackLinkMap();
 

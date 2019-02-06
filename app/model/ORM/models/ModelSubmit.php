@@ -34,19 +34,31 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
         return !($this->submitted_on || $this->note);
     }
 
+    /**
+     * @return ModelTask
+     */
     public function getTask(): ModelTask {
         $data = $this->ref(DbNames::TAB_TASK, 'task_id');
         return ModelTask::createFromTableRow($data);
     }
 
+    /**
+     * @return ModelContestant
+     */
     public function getContestant(): ModelContestant {
         return ModelContestant::createFromTableRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
+    /**
+     * @return string
+     */
     public function getResourceId(): string {
         return 'submit';
     }
 
+    /**
+     * @return string
+     */
     public function getFingerprint() {
         return md5(implode(':', [
             $this->submit_id,

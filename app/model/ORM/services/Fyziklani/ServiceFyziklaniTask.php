@@ -13,13 +13,13 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param $label string
-     * @param $event ModelEvent
+     * @param string $label
+     * @param ModelEvent $event
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
         /**
-         * @var $result ModelFyziklaniTask
+         * @var ModelFyziklaniTask $result
          */
         $result = $this->getTable()->where([
             'label' => $label,
@@ -31,7 +31,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
 
     /**
      * Syntactic sugar.
-     * @param $event ModelEvent
+     * @param ModelEvent $event
      * @return Selection
      */
     public function findAll(ModelEvent $event): Selection {

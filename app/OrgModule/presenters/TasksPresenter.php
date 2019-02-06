@@ -53,18 +53,30 @@ class TasksPresenter extends BasePresenter {
      */
     private $downloader;
 
+    /**
+     * @param SeriesCalculator $seriesCalculator
+     */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
     }
 
+    /**
+     * @param PipelineFactory $pipelineFactory
+     */
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
     }
 
+    /**
+     * @param FlashDumpFactory $flashDumpFactory
+     */
     function injectFlashDumpFactory(FlashDumpFactory $flashDumpFactory) {
         $this->flashDumpFactory = $flashDumpFactory;
     }
 
+    /**
+     * @param Downloader $downloader
+     */
     function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
@@ -78,6 +90,10 @@ class TasksPresenter extends BasePresenter {
         $this->setIcon('fa fa-upload');
     }
 
+    /**
+     * @return FormControl
+     * @throws \Nette\Application\BadRequestException
+     */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
@@ -110,10 +126,19 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     * @return bool
+     */
     private function isLegacyXml(SimpleXMLElement $xml) {
         return $xml->getName() == 'problems';
     }
 
+    /**
+     * @param Form $seriesForm
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
     public function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
         $series = $values['series'];

@@ -25,11 +25,19 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */ {
      */
     protected $yearCalculator;
 
+    /**
+     * AbstractAuthenticator constructor.
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
+     */
     function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         $this->serviceLogin = $serviceLogin;
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @param ModelLogin $login
+     */
     protected function logAuthentication(ModelLogin $login) {
         $login->last_login = DateTime::from(time());
         $this->serviceLogin->save($login);

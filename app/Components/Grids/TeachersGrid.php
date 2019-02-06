@@ -18,13 +18,17 @@ class TeachersGrid extends BaseGrid {
      */
     private $serviceTeacher;
 
+    /**
+     * TeachersGrid constructor.
+     * @param \ServiceTeacher $serviceTeacher
+     */
     function __construct(\ServiceTeacher $serviceTeacher) {
         parent::__construct();
         $this->serviceTeacher = $serviceTeacher;
     }
 
     /**
-     * @param $presenter TeacherPresenter
+     * @param TeacherPresenter $presenter
      * @throws \Nette\Application\UI\InvalidLinkException
      * @throws \NiftyGrid\DuplicateButtonException
      * @throws \NiftyGrid\DuplicateColumnException

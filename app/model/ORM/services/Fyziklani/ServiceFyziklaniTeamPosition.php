@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class ServiceFyziklaniTeamPosition
+ */
 class ServiceFyziklaniTeamPosition extends \AbstractServiceSingle {
 
     protected $tableName = \DbNames::TAB_FYZIKLANI_TEAM_POSITION;
@@ -27,7 +30,7 @@ class ServiceFyziklaniTeamPosition extends \AbstractServiceSingle {
             $teamData = (object)$teamData;
             try {
                 /**
-                 * @var $model \ModelFyziklaniTeamPosition
+                 * @var \ModelFyziklaniTeamPosition $model
                  */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {

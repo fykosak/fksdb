@@ -50,7 +50,7 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->addColumn('room', _('Místnost'))->setRenderer(function ($row) {
             /**
-             * @var $row ModelFyziklaniTeam
+             * @var ModelFyziklaniTeam $row
              */
             $position = $row->getPosition();
             if (!$position) {
@@ -67,7 +67,7 @@ class CloseTeamsGrid extends BaseGrid {
             ]);
         })->setText(_('Uzavřít bodování'))->setShow(function ($row) {
             /**
-             * @var $row ModelFyziklaniTeam
+             * @var ModelFyziklaniTeam $row
              */
             return $row->hasOpenSubmitting();
         });

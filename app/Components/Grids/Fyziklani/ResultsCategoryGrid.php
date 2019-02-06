@@ -10,6 +10,10 @@ use FyziklaniModule\BasePresenter;
 use NiftyGrid\DataSource\NDataSource;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class ResultsCategoryGrid
+ * @package FKSDB\Components\Grids\Fyziklani
+ */
 class ResultsCategoryGrid extends BaseGrid {
 
     /**

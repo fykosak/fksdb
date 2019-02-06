@@ -5,6 +5,10 @@ namespace FKSDB\Components\Forms\Factories\PersonInfo;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
+/**
+ * Class AgreedField
+ * @package FKSDB\Components\Forms\Factories\PersonInfo
+ */
 class AgreedField extends Checkbox {
 
     public function __construct() {

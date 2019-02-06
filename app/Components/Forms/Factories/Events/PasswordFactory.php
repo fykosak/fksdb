@@ -15,6 +15,12 @@ use Nette\Forms\Controls\TextInput;
  */
 class PasswordFactory extends AbstractFactory {
 
+    /**
+     * @param Field $field
+     * @param BaseMachine $machine
+     * @param Container $container
+     * @return TextInput
+     */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
         $element = new TextInput($field->getLabel());
         $element->setType('password');
@@ -42,6 +48,10 @@ class PasswordFactory extends AbstractFactory {
         $component->setDisabled();
     }
 
+    /**
+     * @param Component $component
+     * @return Component|\Nette\Forms\IControl
+     */
     public function getMainControl(Component $component) {
         return $component;
     }

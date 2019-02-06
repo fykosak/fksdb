@@ -34,6 +34,12 @@ class EditSubmitControl extends Control {
      */
     private $translator;
 
+    /**
+     * EditSubmitControl constructor.
+     * @param ModelEvent $event
+     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ITranslator $translator
+     */
     public function __construct(ModelEvent $event, \ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ITranslator $translator) {
         parent::__construct();
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
@@ -46,7 +52,7 @@ class EditSubmitControl extends Control {
      */
     public function getForm(): Form {
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('form');
         return $control->getForm();
@@ -68,7 +74,7 @@ class EditSubmitControl extends Control {
             throw new BadRequestException(_('Bodování tohoto týmu je uzavřené.'));
         }
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('form');
         $control->getForm()->setDefaults([

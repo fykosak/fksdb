@@ -47,18 +47,30 @@ class SchoolPresenter extends EntityPresenter {
      */
     private $addressFactory;
 
+    /**
+     * @param ServiceSchool $serviceSchool
+     */
     public function injectServiceSchool(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
+    /**
+     * @param ServiceAddress $serviceAddress
+     */
     public function injectServiceAddress(ServiceAddress $serviceAddress) {
         $this->serviceAddress = $serviceAddress;
     }
 
+    /**
+     * @param SchoolFactory $schoolFactory
+     */
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
     }
 
+    /**
+     * @param AddressFactory $addressFactory
+     */
     public function injectAddressFactory(AddressFactory $addressFactory) {
         $this->addressFactory = $addressFactory;
     }
@@ -84,6 +96,10 @@ class SchoolPresenter extends EntityPresenter {
         throw new NotImplementedException(null, 501);
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentCreateComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -94,6 +110,10 @@ class SchoolPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $name
+     * @return FormControl
+     */
     protected function createComponentEditComponent($name) {
         $control = $this->createForm();
         $form = $control->getForm();
@@ -103,12 +123,16 @@ class SchoolPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param IModel|null $model
+     * @param Form $form
+     */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
             return;
         }
         /**
-         * @var $model \FKSDB\ORM\ModelEventAccommodation
+         * @var \FKSDB\ORM\ModelEventAccommodation $model
          */
         $defaults = [
             self::CONT_SCHOOL => $model->toArray(),
@@ -118,10 +142,17 @@ class SchoolPresenter extends EntityPresenter {
         $form->setDefaults($defaults);
     }
 
+    /**
+     * @param $name
+     * @return SchoolsGrid
+     */
     protected function createComponentGrid($name) {
         return new SchoolsGrid($this->serviceSchool);
     }
 
+    /**
+     * @return FormControl
+     */
     private function createForm() {
         $control = new FormControl();
         $form = $control->getForm();
@@ -134,6 +165,10 @@ class SchoolPresenter extends EntityPresenter {
         return $control;
     }
 
+    /**
+     * @param $id
+     * @return \AbstractModelSingle|\Nette\Database\Table\ActiveRow|null
+     */
     protected function loadModel($id) {
         return $this->serviceSchool->findByPrimary($id);
     }

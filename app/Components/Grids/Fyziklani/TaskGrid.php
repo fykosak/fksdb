@@ -36,6 +36,10 @@ class TaskGrid extends BaseGrid {
         parent::__construct();
     }
 
+    /**
+     * @param $presenter
+     * @throws \NiftyGrid\DuplicateColumnException
+     */
     protected function configure($presenter) {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id', _('Id úlohy'));

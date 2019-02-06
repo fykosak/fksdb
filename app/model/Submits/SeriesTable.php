@@ -58,40 +58,70 @@ class SeriesTable {
      */
     private $taskFilter;
 
+    /**
+     * SeriesTable constructor.
+     * @param ServiceContestant $serviceContestant
+     * @param ServiceTask $serviceTask
+     * @param ServiceSubmit $serviceSubmit
+     */
     function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
         $this->serviceSubmit = $serviceSubmit;
     }
 
+    /**
+     * @return ModelContest
+     */
     public function getContest() {
         return $this->contest;
     }
 
+    /**
+     * @param ModelContest $contest
+     */
     public function setContest(ModelContest $contest) {
         $this->contest = $contest;
     }
 
+    /**
+     * @return int
+     */
     public function getYear() {
         return $this->year;
     }
 
+    /**
+     * @param $year
+     */
     public function setYear($year) {
         $this->year = $year;
     }
 
+    /**
+     * @return int
+     */
     public function getSeries() {
         return $this->series;
     }
 
+    /**
+     * @param $series
+     */
     public function setSeries($series) {
         $this->series = $series;
     }
 
+    /**
+     * @return array|null
+     */
     public function getTaskFilter() {
         return $this->taskFilter;
     }
 
+    /**
+     * @param $taskFilter
+     */
     public function setTaskFilter($taskFilter) {
         $this->taskFilter = $taskFilter;
     }
@@ -172,7 +202,7 @@ class SeriesTable {
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
                 /**
-                 * @var $submit ModelSubmit
+                 * @var ModelSubmit $submit
                  */
                 $fingerprint .= $submit->getFingerprint();
             }

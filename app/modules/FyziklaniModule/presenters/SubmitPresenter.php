@@ -8,6 +8,10 @@ use FKSDB\Components\Controls\Fyziklani\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use Nette\Application\BadRequestException;
 
+/**
+ * Class SubmitPresenter
+ * @package FyziklaniModule
+ */
 class SubmitPresenter extends BasePresenter {
 
     /* ***** Title methods *****/
@@ -65,7 +69,7 @@ class SubmitPresenter extends BasePresenter {
             return;
         }
         /**
-         * @var $control QREntryControl
+         * @var QREntryControl $control
          */
         $control = $this->getComponent('entryQRControl');
         $control->setCode($id);
@@ -77,7 +81,7 @@ class SubmitPresenter extends BasePresenter {
      */
     public function actionEdit($id) {
         /**
-         * @var $control EditSubmitControl
+         * @var EditSubmitControl $control
          */
         $control = $this->getComponent('editControl');
         try {

@@ -26,6 +26,10 @@ use ORM\Models\Events\ModelFyziklaniTeam;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 use ServiceFyziklaniSubmit;
 
+/**
+ * Class FyziklaniFactory
+ * @package FKSDB\Components\Factories
+ */
 class FyziklaniFactory {
 
     /**
@@ -64,6 +68,17 @@ class FyziklaniFactory {
      */
     private $translator;
 
+    /**
+     * FyziklaniFactory constructor.
+     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param TaskCodeHandlerFactory $taskCodeHandlerFactory
+     * @param Container $context
+     * @param ITranslator $translator
+     */
     public function __construct(
         \ServiceFyziklaniRoom $serviceFyziklaniRoom,
         \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
@@ -85,74 +100,138 @@ class FyziklaniFactory {
     }
 
     /* ********** ENTRY FORMS + EDIT **********/
+    /**
+     * @param ModelEvent $event
+     * @return TaskCodeInput
+     */
     public function createTaskCodeInput(ModelEvent $event): TaskCodeInput {
         $handler = $this->taskCodeHandlerFactory->createHandler($event);
         return new TaskCodeInput($handler, $this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return QREntryControl
+     */
     public function createQREntryControl(ModelEvent $event): QREntryControl {
         $handler = $this->taskCodeHandlerFactory->createHandler($event);
         return new QREntryControl($event, $handler, $this->translator);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return EditSubmitControl
+     */
     public function createEditSubmitControl(ModelEvent $event): EditSubmitControl {
         return new EditSubmitControl($event, $this->serviceFyziklaniSubmit, $this->translator);
     }
 
     /* *************** CLOSING ***************/
 
+    /**
+     * @param ModelEvent $event
+     * @return CloseControl
+     */
     public function createCloseControl(ModelEvent $event): CloseControl {
         return new CloseControl($event, $this->serviceFyziklaniTeam, $this->translator);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return CloseTeamControl
+     */
     public function createCloseTeamControl(ModelEvent $event): CloseTeamControl {
         return new CloseTeamControl($event, $this->serviceFyziklaniTeam, $this->translator, $this->serviceFyziklaniTask, $this);
     }
 
     /* ************** ROUTING *************/
 
+    /**
+     * @param ModelEvent $event
+     * @return RoutingEdit
+     */
     public function createRoutingEdit(ModelEvent $event): RoutingEdit {
         return new RoutingEdit($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /* *********** RESULTS & STATS ********/
+    /**
+     * @param ModelEvent $event
+     * @return FinalResults
+     */
     public function createFinalResults(ModelEvent $event): FinalResults {
         return new FinalResults($event, $this->serviceFyziklaniTeam, $this->translator);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return ResultsView
+     */
     public function createResultsView(ModelEvent $event): ResultsView {
         return new ResultsView($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return ResultsPresentation
+     */
     public function createResultsPresentation(ModelEvent $event): ResultsPresentation {
         return new ResultsPresentation($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return TeamStatistics
+     */
     public function createTeamStatistics(ModelEvent $event): TeamStatistics {
         return new TeamStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return TaskStatistics
+     */
     public function createTaskStatistics(ModelEvent $event): TaskStatistics {
         return new TaskStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return CorrelationStatistics
+     */
     public function createCorrelationStatistics(ModelEvent $event): CorrelationStatistics {
         return new CorrelationStatistics($this->context, $event, $this->serviceFyziklaniRoom, $this->serviceFyziklaniTeamPosition, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
     }
 
     /* ********** GRIDS *************/
+    /**
+     * @param ModelEvent $event
+     * @return AllSubmitsGrid
+     */
     public function createSubmitsGrid(ModelEvent $event): AllSubmitsGrid {
         return new AllSubmitsGrid($event, $this->serviceFyziklaniSubmit);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return TaskGrid
+     */
     public function createTasksGrid(ModelEvent $event): TaskGrid {
         return new TaskGrid($event, $this->serviceFyziklaniTask);
     }
 
+    /**
+     * @param ModelEvent $event
+     * @return RoutingDownload
+     */
     public function createRoutingDownload(ModelEvent $event): RoutingDownload {
         return new RoutingDownload($event, $this->translator, $this->serviceFyziklaniTeam, $this->serviceFyziklaniRoom);
     }
 
+    /**
+     * @param ModelFyziklaniTeam $team
+     * @return TeamSubmitsGrid
+     */
     public function createTeamSubmitsGrid(ModelFyziklaniTeam $team): TeamSubmitsGrid {
         return new TeamSubmitsGrid($team, $this->serviceFyziklaniSubmit);
     }

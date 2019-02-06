@@ -9,6 +9,10 @@ use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 use ServiceTeacher;
 
+/**
+ * Class TeacherPresenter
+ * @package OrgModule
+ */
 class TeacherPresenter extends ExtendedPersonPresenter {
 
     protected $modelResourceId = 'teacher';
@@ -28,21 +32,30 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      */
     private $schoolFactory;
 
+    /**
+     * @param ServiceTeacher $serviceTeacher
+     */
     public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
         $this->serviceTeacher = $serviceTeacher;
     }
 
+    /**
+     * @param TeacherFactory $teacherFactory
+     */
     public function injectTeacherFactory(TeacherFactory $teacherFactory) {
         $this->teacherFactory = $teacherFactory;
     }
 
+    /**
+     * @param SchoolFactory $schoolFactory
+     */
     public function injectSchoolFactory(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
     }
 
     public function titleEdit() {
         /**
-         * @var $model \FKSDB\ORM\ModelTeacher
+         * @var \FKSDB\ORM\ModelTeacher $model
          */
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()));
@@ -67,6 +80,10 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         return new TeachersGrid($this->serviceTeacher);
     }
 
+    /**
+     * @param Form $form
+     * @return mixed|void
+     */
     protected function appendExtendedContainer(Form $form) {
         $container = $this->teacherFactory->createTeacher();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
@@ -74,22 +91,37 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
+    /**
+     * @return mixed|ServiceTeacher
+     */
     protected function getORMService() {
         return $this->serviceTeacher;
     }
 
+    /**
+     * @return string
+     */
     public function messageCreate() {
         return _('Teacher %s has been created.');
     }
 
+    /**
+     * @return string
+     */
     public function messageEdit() {
         return _('Teacher has been edited');
     }
 
+    /**
+     * @return string
+     */
     public function messageError() {
         return _('Error during creating new teacher.');
     }
 
+    /**
+     * @return string
+     */
     public function messageExists() {
         return _('Teacher already exist');
     }

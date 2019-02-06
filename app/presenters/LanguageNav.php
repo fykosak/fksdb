@@ -8,7 +8,7 @@ use \FKSDB\Components\Controls;
 
 /**
  * Trait ContestNav
- * @param $serviceContest ServiceContest
+ * @param ServiceContest $serviceContest
  */
 trait LanguageNav {
 
@@ -29,12 +29,18 @@ trait LanguageNav {
      */
     private $newParams = null;
 
+    /**
+     * @return Controls\Navs\LanguageNav
+     */
     protected function createComponentLanguageNav() {
         $control = new Controls\Navs\LanguageNav($this->session);
         return $control;
     }
 
-      public function getSelectedLanguage() {
+    /**
+     * @return mixed
+     */
+    public function getSelectedLanguage() {
         $this->init();
         return $this->lang;
     }
@@ -52,7 +58,7 @@ trait LanguageNav {
             return;
         }
         /**
-         * @var $languageNav Controls\Navs\LanguageNav
+         * @var Controls\Navs\LanguageNav $languageNav
          */
         $languageNav =  $this->getComponent('languageNav');
         $this->newParams = $languageNav->init((object)[

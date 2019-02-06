@@ -26,15 +26,26 @@ class ContestAuthorizator extends Object {
      */
     private $acl;
 
+    /**
+     * ContestAuthorizator constructor.
+     * @param User $identity
+     * @param Permission $acl
+     */
     function __construct(User $identity, Permission $acl) {
         $this->user = $identity;
         $this->acl = $acl;
     }
 
+    /**
+     * @return User
+     */
     public function getUser() {
         return $this->user;
     }
 
+    /**
+     * @return Permission
+     */
     protected function getAcl() {
         return $this->acl;
     }
@@ -54,12 +65,19 @@ class ContestAuthorizator extends Object {
             return $this->acl->isAllowed($role, $resource, $privilege);
         }
         /**
-         * @var $login ModelLogin
+         * @var ModelLogin $login
          */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
 
+    /**
+     * @param ModelLogin $login
+     * @param $resource
+     * @param $privilege
+     * @param $contest
+     * @return bool
+     */
     public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest) {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();

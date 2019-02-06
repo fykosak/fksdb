@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class ReactResponse
+ */
 final class ReactResponse extends Nette\Object implements Nette\Application\IResponse {
     /**
      * @var ReactMessage[]

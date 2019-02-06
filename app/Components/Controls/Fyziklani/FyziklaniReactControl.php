@@ -7,6 +7,10 @@ use FKSDB\ORM\ModelEvent;
 use Nette\DI\Container;
 use ORM\Services\Events\ServiceFyziklaniTeam;
 
+/**
+ * Class FyziklaniReactControl
+ * @package FKSDB\Components\Controls\Fyziklani
+ */
 abstract class FyziklaniReactControl extends ReactComponent {
 
     /**
@@ -43,6 +47,16 @@ abstract class FyziklaniReactControl extends ReactComponent {
      */
     protected $context;
 
+    /**
+     * FyziklaniReactControl constructor.
+     * @param Container $container
+     * @param ModelEvent $event
+     * @param \ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @param \ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param \ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param \ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     */
     public function __construct(
         Container $container,
         ModelEvent $event,
@@ -64,10 +78,16 @@ abstract class FyziklaniReactControl extends ReactComponent {
     }
 
 
+    /**
+     * @return string
+     */
     public final function getModuleName(): string {
         return 'fyziklani';
     }
 
+    /**
+     * @return ModelEvent
+     */
     protected final function getEvent() {
         return $this->event;
     }

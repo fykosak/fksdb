@@ -60,6 +60,11 @@ class SingleEventSource extends Object implements IHolderSource {
      */
     private $holders = [];
 
+    /**
+     * SingleEventSource constructor.
+     * @param ModelEvent $event
+     * @param Container $container
+     */
     function __construct(ModelEvent $event, Container $container) {
         $this->event = $event;
         $this->container = $container;
@@ -71,10 +76,16 @@ class SingleEventSource extends Object implements IHolderSource {
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 
+    /**
+     * @return ModelEvent
+     */
     public function getEvent() {
         return $this->event;
     }
 
+    /**
+     * @return Holder
+     */
     public function getDummyHolder() {
         return $this->dummyHolder;
     }
@@ -162,6 +173,9 @@ class SingleEventSource extends Object implements IHolderSource {
         }
     }
 
+    /**
+     * @return ArrayIterator|\Traversable
+     */
     public function getIterator() {
         if ($this->primaryModels === null) {
             $this->loadData();

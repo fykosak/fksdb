@@ -31,6 +31,12 @@ class DetailControl extends Control {
      */
     private $machine;
 
+    /**
+     * DetailControl constructor.
+     * @param ITranslator $translator
+     * @param PaymentMachine $machine
+     * @param ModelPayment $model
+     */
     public function __construct(ITranslator $translator, PaymentMachine $machine, ModelPayment $model) {
         parent::__construct();
         $this->model = $model;
@@ -91,7 +97,7 @@ class DetailControl extends Control {
      */
     public function getFormControl(): FormControl {
         /**
-         * @var $control FormControl
+         * @var FormControl $control
          */
         $control = $this->getComponent('form');
         return $control;

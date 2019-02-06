@@ -105,38 +105,65 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     private $subtitle;
 
+    /**
+     * @return YearCalculator
+     */
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
     }
 
+    /**
+     * @param YearCalculator $yearCalculator
+     */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
 
+    /**
+     * @return ServiceContest
+     */
     public function getServiceContest(): ServiceContest {
         return $this->serviceContest;
     }
 
+    /**
+     * @param ServiceContest $serviceContest
+     */
     public function injectServiceContest(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
     }
 
+    /**
+     * @param GlobalParameters $globalParameters
+     */
     public function injectGlobalParameters(GlobalParameters $globalParameters) {
         $this->globalParameters = $globalParameters;
     }
 
+    /**
+     * @param BreadcrumbsFactory $breadcrumbsFactory
+     */
     public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
+    /**
+     * @param Navigation $navigationControl
+     */
     public function injectNavigationControl(Navigation $navigationControl) {
         $this->navigationControl = $navigationControl;
     }
 
+    /**
+     * @param PresenterBuilder $presenterBuilder
+     */
     public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
         $this->presenterBuilder = $presenterBuilder;
     }
 
+    /**
+     * @param GettextTranslator $translator
+     */
     public function injectTranslator(GettextTranslator $translator) {
         $this->translator = $translator;
     }
@@ -147,7 +174,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected function createTemplate($class = NULL) {
         /**
-         * @var $template FileTemplate
+         * @var FileTemplate $template
          */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);
@@ -165,10 +192,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Loading assets
      * ****************************** */
 
+    /**
+     * @return JavaScriptLoader
+     */
     protected function createComponentJsLoader(): JavaScriptLoader {
         return new JavaScriptLoader();
     }
 
+    /**
+     * @return StylesheetLoader
+     */
     protected function createComponentCssLoader(): StylesheetLoader {
         return new StylesheetLoader();
     }
@@ -181,7 +214,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function registerJSFile($file) {
         /**
-         * @var $component JavaScriptLoader
+         * @var JavaScriptLoader $component
          */
         $component = $this->getComponent('jsLoader');
         $component->addFile($file);
@@ -193,7 +226,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function registerJSCode($code, $tag = null) {
         /**
-         * @var $component JavaScriptLoader
+         * @var JavaScriptLoader $component
          */
         $component = $this->getComponent('jsLoader');
         $component->addInline($code, $tag);
@@ -204,7 +237,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function unregisterJSCode($tag) {
         /**
-         * @var $component JavaScriptLoader
+         * @var JavaScriptLoader $component
          */
         $component = $this->getComponent('jsLoader');
         $component->removeInline($tag);
@@ -215,7 +248,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function unregisterJSFile($file) {
         /**
-         * @var $component JavaScriptLoader
+         * @var JavaScriptLoader $component
          */
         $component = $this->getComponent('jsLoader');
         $component->removeFile($file);
@@ -230,7 +263,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function registerStylesheetFile($file, $media = []) {
         /**
-         * @var $component StylesheetLoader
+         * @var StylesheetLoader $component
          */
         $component = $this->getComponent('cssLoader');
         $component->addFile($file, $media);
@@ -242,7 +275,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function unregisterStylesheetFile($file, $media = []) {
         /**
-         * @var $component StylesheetLoader
+         * @var StylesheetLoader $component
          */
         $component = $$this->getComponent('cssLoader');
         $component->removeFile($file, $media);
@@ -303,26 +336,45 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         }
     }
 
+    /**
+     * @return null|string
+     */
     public function getTitle() {
         return $this->title;
     }
 
+    /**
+     * @param $title
+     */
     protected function setTitle($title) {
         $this->title = $title;
     }
 
+    /**
+     * @return string
+     */
     public function getIcon() {
         return $this->icon;
     }
 
+    /**
+     * @param $icon
+     */
     protected function setIcon($icon) {
         $this->icon = $icon;
     }
 
+    /**
+     * @param $subtitle
+     */
     protected function setSubtitle($subtitle) {
         $this->subtitle = $subtitle;
     }
 
+    /**
+     * @param string $backLink
+     * @return null|string
+     */
     public function setBackLink($backLink) {
         $old = $this->bc;
         $this->bc = $backLink;
@@ -388,7 +440,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     protected function putIntoBreadcrumbs() {
         /**
-         * @var $component Breadcrumbs
+         * @var Breadcrumbs $component
          */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
@@ -416,7 +468,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public final function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
         /**
-         * @var $component Breadcrumbs
+         * @var Breadcrumbs $component
          */
         $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
@@ -431,10 +483,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Extension of Nette ACL
      *      * ****************************** */
 
+    /**
+     * @return bool
+     */
     public function isAuthorized(): bool {
         return $this->authorized;
     }
 
+    /**
+     * @param bool $access
+     */
     public function setAuthorized(bool $access) {
         $this->authorized = $access;
     }
@@ -492,7 +550,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
              */
             $baseParams = $this->getParameter();
             /**
-             * @var $testedPresenter BasePresenter
+             * @var BasePresenter $testedPresenter
              */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
@@ -529,6 +587,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->_lang;
     }
 
+    /**
+     * @return ITranslator
+     */
     public function getTranslator(): ITranslator {
         return $this->translator;
     }

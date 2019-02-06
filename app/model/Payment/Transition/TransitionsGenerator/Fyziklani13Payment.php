@@ -24,6 +24,10 @@ use Nette\Localization\ITranslator;
 use Nette\Mail\Message;
 
 
+/**
+ * Class Fyziklani13Payment
+ * @package FKSDB\Payment\Transition\Transitions
+ */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
     const EMAIL_BCC = 'fyziklani@fykos.cz';
     const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
@@ -53,6 +57,16 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      */
     private $translator;
 
+    /**
+     * Fyziklani13Payment constructor.
+     * @param \ServicePayment $servicePayment
+     * @param Connection $connection
+     * @param TransitionsFactory $transitionFactory
+     * @param SymbolGeneratorFactory $symbolGeneratorFactory
+     * @param PriceCalculatorFactory $priceCalculatorFactory
+     * @param EventAuthorizator $eventAuthorizator
+     * @param ITranslator $translator
+     */
     public function __construct(
         \ServicePayment $servicePayment,
         Connection $connection,
