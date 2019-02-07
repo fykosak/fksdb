@@ -137,9 +137,10 @@ class CategoryProcessing extends AbstractProcessing {
 
         $category_handle = $participants ? ($coefficient_sum / count($participants)) : 999;
 
-        if ($abroad > 0) {
-            $result = 'F';
-        } else if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
+        // if ($abroad > 0) {
+        //     $result = 'F';
+        // } else
+        if ($category_handle <= 2 && $count_4 == 0 && $count_3 <= 2) {
             $result = 'C';
         } else if ($category_handle <= 3 && $count_4 <= 2) {
             $result = 'B';
