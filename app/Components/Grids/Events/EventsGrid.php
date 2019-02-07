@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use OrgModule\OrgPresenter;
@@ -48,13 +49,8 @@ class EventsGrid extends BaseGrid {
         //
         $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
-        $dataSource = new SearchableDataSource($events);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('event.name LIKE CONCAT(\'%\', ? , \'%\') OR event_type.name LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-            }
-        });
+        $dataSource = new NDataSource($events);
+
         $this->setDefaultOrder('event.begin ASC');
         $this->setDataSource($dataSource);
 
@@ -69,11 +65,10 @@ class EventsGrid extends BaseGrid {
         //
         // operations
         //
-
-        $this->addButton('model', _('Model'))
-            ->setText(_('Model'))
+        $this->addButton('detail')
+            ->setText(_('Detail'))
             ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:Model:', ['eventId' => $row->event_id]);
+                return $this->getPresenter()->link(':Event:Detail:', ['eventId' => $row->event_id]);
             });
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
@@ -89,17 +84,6 @@ class EventsGrid extends BaseGrid {
             ->setText(_('Organisers'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
-            });
-        $this->addButton('accommodation')
-            ->setText(_('Accommodation'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:Accommodation:list', ['eventId' => $row->event_id]);
-            });
-
-        $this->addButton('schedule')
-            ->setText(_('Schedule'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:Schedule:', ['eventId' => $row->event_id]);
             });
 
         $this->addGlobalButton('add')
