@@ -12,18 +12,8 @@
         </div>
     </div>
     {if $control->isSearchable() }
-        <div class="row mb-3">
-            <div class="col-5 pull-right">
-                {form $control['searchForm']}
-                    <div class="input-group">
-                        {$control['searchForm']['term']->getControl()->addClass('form-control')->placeholder(_('Vyhledat'))}
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                {/form}
-            </div>
+        <div class="mb-3">
+            {control searchForm}
         </div>
     {/if}
 
@@ -35,7 +25,8 @@
         {$control['gridForm']->render('begin')}
     {/if}
 
-    <table n:attr="style => $control->width ? 'width: '.$control->width.';'" class="table table-condensed table-hover table-striped">
+    <table n:attr="style => $control->width ? 'width: '.$control->width.';'"
+            class="table table-condensed table-hover table-striped">
         <thead>
         <tr class="grid-flash grid-error" n:foreach="$control['gridForm']->errors as $error">
             <th colspan="{$colsCount}">

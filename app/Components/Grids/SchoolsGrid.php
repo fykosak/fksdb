@@ -54,23 +54,23 @@ class SchoolsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('name', _('Název'));
-        $this->addColumn('city', _('Město'));
-        $this->addColumn('active', _('Existuje?'))->setRenderer(function ($row) {
+        $this->addColumn('name', _('Name'));
+        $this->addColumn('city', _('City'));
+        $this->addColumn('active', _('Exists?'))->setRenderer(function ($row) {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->add(($row->active));
         });
 
         //
         // operations
         //
-        $this->addButton('edit', _('Upravit'))
-            ->setText(_('Upravit'))
+        $this->addButton('edit', _('Edit'))
+            ->setText(_('Edit'))
             ->setLink(function ($row) {
                 return $this->getPresenter()->link('edit', $row->school_id);
             });
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
-            ->setLabel(_('Vložit školu'))
+            ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
 
         //

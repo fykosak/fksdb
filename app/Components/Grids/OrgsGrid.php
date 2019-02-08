@@ -62,7 +62,7 @@ class OrgsGrid extends BaseGrid {
         //
         // columns
         //
-        $this->addColumn('display_name', _('Jméno'))->setRenderer(function ($row) {
+        $this->addColumn('display_name', _('Person'))->setRenderer(function ($row) {
             $model = ModelOrg::createFromTableRow($row);
             $person = $model->getPerson();
             return $person->getFullName();
@@ -82,7 +82,7 @@ class OrgsGrid extends BaseGrid {
                 return $this->getPresenter()->link('edit', $row->org_id);
             })
             ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', array('id' => $row->org_id));
+                return $presenter->authorized('edit', ['id' => $row->org_id]);
             });
 
         if ($presenter->authorized('create')) {

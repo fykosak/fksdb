@@ -8,7 +8,7 @@ use NiftyGrid\DataSource\NDataSource;
 
 /**
  *
- * @author Mišo <miso@fykoscz>
+ * @author Mišo <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**
