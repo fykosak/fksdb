@@ -24,16 +24,43 @@
   text-overflow: ellipsis;
 }
 
+main.no-bg {
+  padding-top: 0;
+  min-height: 100%;
+}
+
 .fyziklani-results h1, .fyziklani-statistics h1 {
   color: #f44336;
   font-weight: bold;
 }
 .fyziklani-results .inner-headline, .fyziklani-statistics .inner-headline {
-  margin-top: 15%;
+  background-image: url("/images/fof/prague-layout.svg");
+  background-size: cover;
+}
+.fyziklani-results .inner-headline .clock, .fyziklani-results .inner-headline .image-wp, .fyziklani-statistics .inner-headline .clock, .fyziklani-statistics .inner-headline .image-wp {
+  color: white;
+}
+.fyziklani-results .inner-headline .clock-big, .fyziklani-statistics .inner-headline .clock-big {
+  align-items: center;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+.fyziklani-results .inner-headline .image-wp, .fyziklani-statistics .inner-headline .image-wp {
+  padding-top: 3rem;
+}
+.fyziklani-results .inner-headline .sponsors img, .fyziklani-statistics .inner-headline .sponsors img {
+  max-width: 50%;
+}
+.fyziklani-results .inner-headline .logo, .fyziklani-statistics .inner-headline .logo {
+  display: block;
+}
+.fyziklani-results .logo, .fyziklani-statistics .logo {
+  display: none;
 }
 .fyziklani-results .clock, .fyziklani-statistics .clock {
   justify-content: space-between;
-  color: #d7392e;
   padding: 0.25em;
   font-weight: bold;
 }
@@ -41,32 +68,34 @@
   display: flex;
   flex-wrap: wrap;
 }
-.fyziklani-results .clock.small, .fyziklani-statistics .clock.small {
+.fyziklani-results .clock.clock-small, .fyziklani-statistics .clock.clock-small {
   font-size: 200%;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 10000;
 }
-.fyziklani-results .clock.small .time-label, .fyziklani-statistics .clock.small .time-label {
+.fyziklani-results .clock.clock-small .time-label, .fyziklani-statistics .clock.clock-small .time-label {
   width: 100%;
   font-size: 0.75rem;
 }
-.fyziklani-results .clock.big, .fyziklani-statistics .clock.big {
+.fyziklani-results .clock.clock-big, .fyziklani-statistics .clock.clock-big {
   text-align: center;
-  position: initial;
 }
-.fyziklani-results .clock.big .time-value, .fyziklani-statistics .clock.big .time-value {
+.fyziklani-results .clock.clock-big .time-value, .fyziklani-statistics .clock.clock-big .time-value {
   width: 100%;
   font-size: 8rem;
 }
-.fyziklani-results .clock.big .time-label, .fyziklani-statistics .clock.big .time-label {
+.fyziklani-results .clock.clock-big .time-label, .fyziklani-statistics .clock.clock-big .time-label {
   width: 100%;
   font-size: 2rem;
 }
-.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
+.fyziklani-results .image-wp, .fyziklani-results .clock, .fyziklani-statistics .image-wp, .fyziklani-statistics .clock {
   color: #d7392e;
-  font-size: 5rem;
+}
+.fyziklani-results .image-wp, .fyziklani-statistics .image-wp {
+  font-size: 4rem;
   text-align: center;
 }
 .fyziklani-results table tbody, .fyziklani-statistics table tbody {
@@ -159,9 +188,6 @@
   cursor: pointer;
 }
 
-[data-contest~=event-type-1] main:not(.no-bg) {
-  background: url("/images/fof/prague-layout.svg") no-repeat;
-}
 [data-contest~=event-type-1] main:not(.no-bg) h1, [data-contest~=event-type-1] main:not(.no-bg) h2, [data-contest~=event-type-1] main:not(.no-bg) h3 {
   font-weight: bold;
 }
@@ -319,6 +345,7 @@ main.login[data-bg="3"] {
   right: 0;
   bottom: 0;
   padding: 0.5em;
+  z-index: 10000;
 }
 
 .legend-item .icon {

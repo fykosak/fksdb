@@ -27,7 +27,7 @@ export default class Statistics extends React.Component<Props, {}> {
         return (
             <div className="container">
                 {content}
-                <Timer/>
+                <Timer mode={'small'}/>
             </div>
         );
     }

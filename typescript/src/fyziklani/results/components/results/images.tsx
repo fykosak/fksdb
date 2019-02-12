@@ -22,22 +22,22 @@ class Images extends React.Component<State, {}> {
     }
 
     public render() {
-        const {inserted, toStart, toEnd} = this.props;
-        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
+        const {inserted, toStart: rawToStart, toEnd: rawToEnd} = this.props;
+        const {toStart, toEnd} = getCurrentDelta(rawToStart, rawToEnd, inserted);
 
-        if (currentToStart === 0 || currentToEnd === 0) {
+        if (toStart === 0 || toEnd === 0) {
             return (<div/>);
         }
         let label = '';
-        if (currentToStart > 300 * 1000) {
+        if (toStart > 300 * 1000) {
             label = 'Have not begun yet/Ješte nezačalo';
-        } else if (currentToStart > 0) {
+        } else if (toStart > 0) {
             label = 'Will soon begin/Brzo začne';
-        } else if (currentToStart > -120 * 1000) {
+        } else if (toStart > -120 * 1000) {
             label = 'Start!';
-        } else if (currentToEnd > 0) {
+        } else if (toEnd > 0) {
             label = null;
-        } else if (currentToEnd > -240 * 1000) {
+        } else if (toEnd > -240 * 1000) {
             label = 'Ended/Skončilo';
         } else {
             label = 'Waiting for results/Čeká na výsledky';

@@ -49,7 +49,7 @@ class Index extends React.Component<State, {}> {
             for (let row = 0; row < rows; row++) {
                 if (submitsForTeamsArray.hasOwnProperty(position)) {
                     const item = submitsForTeamsArray[position];
-                    position++;
+                    position += 1;
                     colItems.push(<Row key={item.team.teamId} item={item} position={position}
                                        availablePoints={availablePoints}/>);
                 }
@@ -85,7 +85,7 @@ class Index extends React.Component<State, {}> {
 
         }
         return (
-            <div className="mb-3">
+            <div className="mt-3">
                 <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
                 <div className={'row justify-content-around results-presentation'}>{resultsItems}</div>
             </div>

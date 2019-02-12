@@ -21,6 +21,7 @@ interface State {
 }
 
 class PositionSwitcher extends React.Component<State, {}> {
+    private abortRun = false;
 
     public componentDidMount() {
         return this.run();
@@ -30,7 +31,11 @@ class PositionSwitcher extends React.Component<State, {}> {
         return null;
     }
 
-    private async run() {
+    public componentWillUnmount() {
+        this.abortRun = true;
+    }
+
+    private async run(): Promise<void> {
 
         const {cols, rows, position, delay, onSetNewPosition, category, teams} = this.props;
         let activeTeams;
@@ -54,6 +59,9 @@ class PositionSwitcher extends React.Component<State, {}> {
                 resolve();
             }, delay);
         });
+        if (this.abortRun) {
+            return;
+        }
         return this.run();
     }
 

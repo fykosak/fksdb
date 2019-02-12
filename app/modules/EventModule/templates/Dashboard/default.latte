@@ -1,35 +1,35 @@
 {block content}
 
-    <h2>{_('Info')}</h2>
+    <h2>{_'Info'}</h2>
     <h3>{$event->name}</h3>
     <p>{$event->report}</p>
     <ul class="list-group mb-3">
         <li class="list-group-item ">
 
-            <span class="col-6">{_('Contest year')}: </span>
+            <span class="col-6">{_'Contest year'}: </span>
             <span class="col-6">{$event->year}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Event year')}: </span>
+            <span class="col-6">{_'Event year'}: </span>
             <span class="col-6">{$event->event_year}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Event begin')}: </span>
+            <span class="col-6">{_'Event begin'}: </span>
             <span class="col-6">{$event->begin->format('d. m. Y')}</span>
         </li>
         <li class="list-group-item">
-            <span class="col-6">{_('Event end')}: </span>
+            <span class="col-6">{_'Event end'}: </span>
             <span class="col-6">{$event->end->format('d. m. Y')}</span>
         </li>
         <li class="list-group-item">
-            <a class="col-12" href="{$webUrl}">{_('Event web-site')}</a>
+            <a class="col-12" href="{$webUrl}">{_'Event web-site'}</a>
         </li>
     </ul>
-    <h2>{_('Actions')}</h2>
+    <h2>{_'Actions'}</h2>
     {control navigation, "event.dashboard.default"}
     <h2>{_'Old system "fast" links'}</h2>
     <a class="btn btn-secondary"
-       href="{plink :Org:EventOrg:list id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Organizers'}</a>
+       href="{plink :Org:EventOrg:list eventId=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Organizers'}</a>
     <a class="btn btn-secondary"
        href="{plink :Org:Event:applications id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Applications'}</a>
     <a class="btn btn-secondary"
