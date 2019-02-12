@@ -8,10 +8,10 @@ import {
 import {
     calculate,
     Item,
-} from '../../../middleware/results/calculate-data';
+} from '../../../middleware/results/calculateData';
 import { FyziklaniResultsStore } from '../../../reducers';
-import Headline from './headline';
-import Row from './row';
+import Headline from './Headline';
+import Row from './Row';
 
 interface State {
     availablePoints?: number[];

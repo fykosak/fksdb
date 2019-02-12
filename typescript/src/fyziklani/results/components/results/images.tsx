@@ -11,7 +11,7 @@ interface State {
 }
 
 class Images extends React.Component<State, {}> {
-    private timerId = null;
+    private timerId: number;
 
     public componentDidMount() {
         this.timerId = setInterval(() => this.forceUpdate(), 1000);

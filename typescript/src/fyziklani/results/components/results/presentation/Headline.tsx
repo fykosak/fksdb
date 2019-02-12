@@ -18,13 +18,13 @@ export default class Headline extends React.Component<Props, {}> {
                 <span className={'mr-3'}>
                     <span>{category ?
                         (lang.getLocalizedText('Category', 'en') + ' ' + category) :
-                        lang.getLocalizedText('Results of Fyziklani', 'en')} </span>
+                        lang.getLocalizedText('Global results', 'en')} </span>
                     <small className={'text-muted'}><Ordinal order={startPosition}/>-<Ordinal order={endPosition}/></small>
                 </span>
                 <span className={'ml-3'}>
                     <span>{category ?
                         (lang.getLocalizedText('Category', 'cs') + ' ' + category) :
-                        lang.getLocalizedText('Results of Fyziklani', 'cs')} </span>
+                        lang.getLocalizedText('Global results', 'cs')} </span>
                     <small className={'text-muted'}>{startPosition}.-{endPosition}.</small>
                     </span>
             </h1>

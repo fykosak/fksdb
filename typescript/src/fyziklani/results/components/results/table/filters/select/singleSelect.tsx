@@ -7,7 +7,7 @@ import {
 import HardVisibleSwitch from '../../../../../../helpers/options/compoents/hard-visible-switch';
 import { setFilter } from '../../../../../actions/table-filter';
 import { Filter } from '../../../../../middleware/results/filters/filter';
-import FilterComponent from '../../../../../middleware/results/filters/filter-component';
+import FilterComponent from '../../../../../middleware/results/filters/FilterComponent';
 import { createFilters } from '../../../../../middleware/results/filters/filters';
 import { FyziklaniResultsStore } from '../../../../../reducers';
 
