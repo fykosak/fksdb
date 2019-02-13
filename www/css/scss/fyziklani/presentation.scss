@@ -17,6 +17,13 @@
     &:nth-child(even) {
       background-color: #eee;
     }
+    & > div {
+      align-items: center;
+      display: flex;
+    }
+    .progress {
+      width: 100%;
+    }
     .team-name-col {
       text-align: justify;
       white-space: nowrap;
