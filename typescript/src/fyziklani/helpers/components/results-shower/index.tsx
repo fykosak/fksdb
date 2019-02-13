@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Timer from '../../../helpers/components/timer';
-import Images from '../../../results/components/results/images';
 import { State as OptionsState } from '../../options/reducers';
 import { State as TimerState } from '../../reducers/timer';
+import Images from '../timer/Images';
+import Timer from '../timer/Index';
 
 interface State {
     visible?: boolean;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import ResultsShower from '../../../helpers/components/results-shower';
 import ResultsPresentation from './presentation/Index';
 import PositionSwitcher from './presentation/PositionSwitcher';
-import Settings from './presentation/settings';
+import Settings from './presentation/settings/Index';
 import FilterSelect from './table/filters/select';
 import ResultsTable from './table/index';
 

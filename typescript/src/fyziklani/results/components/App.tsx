@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Loading from '../../helpers/components/loading';
 import { FyziklaniResultsStore } from '../reducers';
-import Results from './results/';
+import Results from './results/Index';
 
 interface State {
     isReady?: boolean;

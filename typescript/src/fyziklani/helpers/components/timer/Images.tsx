@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentDelta } from '../../../helpers/components/timer/timer';
-import { FyziklaniResultsStore } from '../../reducers';
+import { FyziklaniResultsStore } from '../../../results/reducers';
+import { getCurrentDelta } from './timer';
 
 interface State {
     toStart?: number;

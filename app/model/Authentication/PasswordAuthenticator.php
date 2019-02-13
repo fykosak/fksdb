@@ -4,7 +4,6 @@ namespace Authentication;
 
 use FKSDB\ORM\ModelLogin;
 use FKSDB\ORM\ModelPerson;
-use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\IIdentity;
 use ServiceLogin;

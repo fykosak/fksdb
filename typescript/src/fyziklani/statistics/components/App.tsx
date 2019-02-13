@@ -4,7 +4,7 @@ import Loading from '../../helpers/components/loading';
 import ResultsShower from '../../helpers/components/results-shower';
 import HardVisibleSwitch from '../../helpers/options/compoents/hard-visible-switch';
 import { Store as StatisticsStore } from '../reducers';
-import ChartsContainer from './charts/';
+import ChartsContainer from './charts/Index';
 
 interface State {
     isReady?: boolean;

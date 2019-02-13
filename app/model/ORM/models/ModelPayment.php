@@ -5,7 +5,6 @@ namespace FKSDB\ORM;
 use AbstractModelSingle;
 use FKSDB\Payment\PriceCalculator\Price;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use FKSDB\Transitions\IEventReferencedModel;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { App } from '../app-collector';
-import Results from './results/components/';
+import Results from './results/components/Index';
 import Routing from './routing/components/index';
 import Schedule from './schedule/components/index';
 import Statistics from './statistics/components/';

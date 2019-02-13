@@ -41,7 +41,7 @@ abstract class BaseGrid extends Grid {
     protected function createTemplate($class = NULL): ITemplate {
         /**
          * @var GridPaginator $paginator
-         * @var $template FileTemplate
+         * @var FileTemplate $template
          */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($this->presenter->getTranslator());

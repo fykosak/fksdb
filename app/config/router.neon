@@ -6,11 +6,11 @@ parameters:
     # Available domain names
     domain:
         # (Language) domains
-        cz: fykos.cz
-        org: fykos.org
+        cz: fykos.local
+        org: fykos.local
 
         # Default top level domain
-        tld: cz
+        tld: local
 
         # Main domain
         host: fykos
