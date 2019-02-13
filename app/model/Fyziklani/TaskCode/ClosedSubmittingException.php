@@ -17,6 +17,6 @@ class ClosedSubmittingException extends BadRequestException {
      * @param \Exception|NULL $previous
      */
     public function __construct(ModelFyziklaniTeam $team, int $code = 0, \Exception $previous = NULL) {
-        parent::__construct(sprintf(_('Team %s has already closed submitting,'), $team->name), $code, $previous);
+        parent::__construct(sprintf(_('Team %s has already closed submitting.'), $team->name), $code, $previous);
     }
 }

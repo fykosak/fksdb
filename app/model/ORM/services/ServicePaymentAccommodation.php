@@ -6,7 +6,6 @@ use AbstractServiceSingle;
 use DbNames;
 use FKSDB\ORM\ModelPayment;
 use FKSDB\Payment\Handler\DuplicateAccommodationPaymentException;
-use FKSDB\Payment\Handler\EmptyDataException;
 use Nette\ArrayHash;
 use Submits\StorageException;
 

@@ -71,7 +71,8 @@ class CloseTeamControl extends Control {
 
     /**
      * @param ModelFyziklaniTeam $team
-     * @throws BadRequestException
+     * @throws ClosedSubmittingException
+     * @throws BadSignalException
      */
     public function setTeam(ModelFyziklaniTeam $team) {
         $this->team = $team;

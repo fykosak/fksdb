@@ -4,15 +4,17 @@ import { State as OptionsState } from '../../options/reducers/';
 import { State as TimerState } from '../../reducers/timer';
 import { getCurrentDelta } from './timer';
 
+interface Props {
+    mode: "big" | "small";
+}
+
 interface State {
     toStart?: number;
     toEnd?: number;
-    visible?: boolean;
     inserted?: Date;
-    hardVisible?: boolean;
 }
 
-class Timer extends React.Component<State, {}> {
+class Timer extends React.Component<State & Props, {}> {
     private timerId;
 
     public componentDidMount() {
@@ -24,13 +26,13 @@ class Timer extends React.Component<State, {}> {
     }
 
     public render() {
-        const {inserted, visible, toStart, toEnd, hardVisible} = this.props;
-        const {currentToStart, currentToEnd} = getCurrentDelta({toStart, toEnd}, inserted);
+        const {inserted, toStart: rawToStart, toEnd: rawToEnd, mode} = this.props;
+        const {toStart, toEnd} = getCurrentDelta(rawToStart, rawToEnd, inserted);
         let timeStamp = 0;
-        if (currentToStart > 0) {
-            timeStamp = currentToStart;
-        } else if (currentToEnd > 0) {
-            timeStamp = currentToEnd;
+        if (toStart > 0) {
+            timeStamp = toStart;
+        } else if (toEnd > 0) {
+            timeStamp = toEnd;
         } else {
             return null;
         }
@@ -39,14 +41,14 @@ class Timer extends React.Component<State, {}> {
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'row clock ' + ((visible || hardVisible) ? 'small' : 'big')}>
+            <div className={'row clock clock-' + mode}>
                 <span className={'col'}>
                     <span className={'time-value'}>{(h < 10 ? '0' + h : '' + h)}</span>
                     <span className={'time-label'}>Hours/Hodin</span>
                 </span>
                 <span className={'col'}>
                     <span className={'time-value'}>{(m < 10 ? '0' + m : '' + m)}</span>
-                    <span className={'time-label'}>Minutes/Minút</span>
+                    <span className={'time-label'}>Minutes/Minut</span>
                 </span>
                 <span className={'col'}>
                     <span className={'time-value'}>{(s < 10 ? '0' + s : '' + s)}</span>
@@ -64,11 +66,9 @@ interface Store {
 
 const mapStateToProps = (state: Store): State => {
     return {
-        hardVisible: state.options.hardVisible,
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,
         toStart: state.timer.toStart,
-        visible: state.timer.visible,
     };
 };
 

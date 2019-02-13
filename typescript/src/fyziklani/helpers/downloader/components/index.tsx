@@ -53,7 +53,7 @@ class Downloader extends React.Component<State & Props, {}> {
         return (
             <div className="last-update-info bg-white">
                 <span
-                className={isRefreshing ? 'text-success' : 'text-danger'}>
+                    className={isRefreshing ? 'text-success' : 'text-danger'}>
                 {lastUpdated}
                 </span>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
@@ -76,11 +76,13 @@ const mapStateToProps = (state: FyziklaniResultsStore, ownProps: Props): State =
         refreshDelay: state.downloader.refreshDelay,
     };
 };
-
+/**
+ * @throws Error
+ */
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: Props): State => {
     const {accessKey, actions} = ownProps;
     if (!actions.hasOwnProperty('refresh')) {
-        throw new Error('you need to have refresh URL');
+        throw new Error('You need refresh URL');
     }
     const url = actions.refresh;
     return {

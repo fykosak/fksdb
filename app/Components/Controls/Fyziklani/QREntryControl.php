@@ -7,6 +7,7 @@ use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\model\Fyziklani\TaskCodeException;
 use FKSDB\model\Fyziklani\TaskCodeHandler;
 use FKSDB\ORM\ModelEvent;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Form;
@@ -103,13 +104,14 @@ class QREntryControl extends Control {
 
     /**
      * @return Form
+     * @throws BadRequestException
      */
     public function getForm(): Form {
-        /**
-         * @var FormControl $control
-         */
         $control = $this->getComponent('form');
-        return $control->getForm();
+        if ($control instanceof FormControl) {
+            return $control->getForm();
+        }
+        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
     }
 
     /**

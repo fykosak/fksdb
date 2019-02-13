@@ -22,7 +22,7 @@ class HardVisibleSwitch extends React.Component<State, {}> {
         return <div className="form-group">
             <label>{lang.getText('Not public results')}</label>
             <button
-                className={hardVisible ? 'btn btn-outline-danger' : 'btn btn-danger'}
+                className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-warning'}
                 onClick={(event) => {
                     event.preventDefault();
                     onHardDisplayChange(!hardVisible);

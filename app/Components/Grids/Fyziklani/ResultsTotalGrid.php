@@ -27,7 +27,6 @@ class ResultsTotalGrid extends BaseGrid {
      */
     private $event;
 
-
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event

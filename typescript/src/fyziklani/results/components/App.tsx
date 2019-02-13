@@ -2,8 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Loading from '../../helpers/components/loading';
 import { FyziklaniResultsStore } from '../reducers';
-import Results from './results/';
-import Settings from './results/presentation/settings/';
+import Results from './results/Index';
 
 interface State {
     isReady?: boolean;
@@ -20,11 +19,7 @@ class App extends React.Component<State & Props, {}> {
         if (!isReady) {
             return <Loading/>;
         }
-
-        return (<>
-            {(mode === 'presentation') ? (<Settings/>) : null}
-            <Results mode={mode}/>
-        </>);
+        return (<Results mode={mode}/>);
     }
 }
 
