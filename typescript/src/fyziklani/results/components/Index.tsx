@@ -9,7 +9,7 @@ import { NetteActions } from '../../../app-collector/';
 import { config } from '../../../config/';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
-import App from './app';
+import App from './App';
 
 interface Props {
     mode: string;

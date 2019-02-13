@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { getColorByPoints } from '../../../../statistics/middleware/charts/colors';
-import { Item } from '../../../middleware/results/calculate-data';
+import { Item } from '../../../middleware/results/calculateData';
 
 interface Props {
     item: Item;
@@ -14,7 +14,7 @@ export default class Row extends React.Component<Props, {}> {
 
         const average = item.count > 0 ? Math.round(item.points / item.count * 100) / 100 : '-';
         return <div className={'row team-row'} key={item.team.teamId}>
-            <div className={'col-1'}>{position}.</div>
+            <div className={'col-1'}>{position}</div>
             <div className={'col-1'}>{item.team.category}</div>
             <div className={'col-4 team-name-col'}>{item.team.name}</div>
             <div className={'col-1'}>{item.points}</div>

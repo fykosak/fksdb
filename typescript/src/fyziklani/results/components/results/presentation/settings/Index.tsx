@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { lang } from '../../../../../../i18n/i18n';
 import HardVisibleSwitch from '../../../../../helpers/options/compoents/hard-visible-switch';
 import { FyziklaniResultsStore } from '../../../../reducers';
-import ColsField from './colsField';
-import DelayField from './delayField';
-import RowsField from './rowsField';
+import ColsField from './ColsField';
+import DelayField from './DelayField';
+import RowsField from './RowsField';
 
 interface State {
     isOrg?: boolean;

@@ -10,7 +10,7 @@ import { config } from '../../../config';
 import Powered from '../../../shared/powered';
 import Downloader from '../../helpers/downloader/components/index';
 import { app } from '../reducers';
-import App from './app';
+import App from './App';
 
 interface Props {
     mode: string;

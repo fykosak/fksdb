@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\model\Fyziklani\ClosedSubmittingException;
 use FKSDB\ORM\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -49,29 +50,32 @@ class EditSubmitControl extends Control {
 
     /**
      * @return Form
+     * @throws BadRequestException
      */
     public function getForm(): Form {
-        /**
-         * @var FormControl $control
-         */
         $control = $this->getComponent('form');
-        return $control->getForm();
+        if ($control instanceof FormControl) {
+            return $control->getForm();
+        }
+        throw new BadRequestException('Expected FormControl got ' . \get_class($control));
     }
 
     /**
      * @param int $id
      * @throws BadRequestException
+     * @throws ClosedSubmittingException
      */
     public function setSubmit(int $id) {
-        $this->submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        $row = $this->serviceFyziklaniSubmit->findByPrimary($id);
 
         if (!$this->submit) {
             throw new BadRequestException(_('Neexistující submit.'), 404);
         }
+        $this->submit = \ModelFyziklaniSubmit::createFromTableRow($row);
 
         $team = $this->submit->getTeam();
         if (!$team->hasOpenSubmitting()) {
-            throw new BadRequestException(_('Bodování tohoto týmu je uzavřené.'));
+            throw new ClosedSubmittingException($team);
         }
         /**
          * @var FormControl $control

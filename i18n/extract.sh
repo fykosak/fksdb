@@ -4,7 +4,7 @@
 PHP_FILES="app libs"
 LATTE_FILES="app libs data"
 NEON_FILES="app/config data/events"
-TSX_FILES="www/js/TypeScriptSources"
+TSX_FILES="typescript/src"
 
 
 # Output
@@ -34,10 +34,12 @@ function neon2php {
 	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
 function tsx2php {
-    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" $1 >$1.$TSX_SUFFIX
+sed "s/lang.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
 }
 function ts2php {
-    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" $1 >$1.$TS_SUFFIX
+sed "s/lang.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`
