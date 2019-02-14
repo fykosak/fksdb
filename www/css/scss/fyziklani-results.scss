@@ -25,7 +25,7 @@ main.no-bg {
       width: 100%;
     }
     .image-wp {
-      padding-top: 3rem;
+      padding-top: 6rem;
     }
     .sponsors {
       img {
@@ -33,6 +33,7 @@ main.no-bg {
       }
     }
     .logo {
+      padding-top: 7rem;
       display: block;
     }
   }
@@ -43,13 +44,23 @@ main.no-bg {
     justify-content: space-between;
     padding: .25em;
     font-weight: bold;
+    .time-value, .time-label {
+      width: 100%;
+      text-align: center;
+    }
     & > span {
       display: flex;
       flex-wrap: wrap;
 
     }
     &.clock-small {
+      & > span {
+        flex-grow: initial;
+      }
       font-size: 200%;
+      display: flex;
+      width: 100%;
+      justify-content: center;
       background: white;
       position: fixed;
       bottom: 0;
@@ -64,11 +75,9 @@ main.no-bg {
 
       text-align: center;
       .time-value {
-        width: 100%;
         font-size: 8rem;
       }
       .time-label {
-        width: 100%;
         font-size: 2rem;
       }
     }

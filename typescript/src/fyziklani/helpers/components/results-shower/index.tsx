@@ -27,7 +27,7 @@ class ResultsShower extends React.Component<State & Props, {}> {
                         {this.props.children}
                     </div>) :
                     (<div className={this.props.className}>
-                        <div className={'logo row py-4'}>
+                        <div className={'logo row'}>
                             <img className={'col-3 offset-1'} alt="" src="/images/fof/logo2.svg"/>
                         </div>
                         <Images/>
